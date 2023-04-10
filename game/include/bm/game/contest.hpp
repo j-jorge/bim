@@ -19,13 +19,13 @@ namespace bm
 
       void tick();
 
-      const arena& arena() const;
+      const bm::game::arena& arena() const;
       std::span<const player> players() const;
       std::span<const flame> flames() const;
       std::span<const bomb> bombs() const;
 
     private:
-      arena m_arena;
+      bm::game::arena m_arena;
       std::vector<player> m_players;
       std::vector<flame> m_flames;
       std::vector<bomb> m_bombs;

@@ -6,7 +6,7 @@ namespace bm
 {
   namespace game
   {
-    struct fire
+    struct bomb
     {
       std::uint8_t countdown_before_explosion;
     };

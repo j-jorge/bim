@@ -1,6 +1,8 @@
 #pragma once
 
-#include <bm/game/arena.hpp>
+#include <bm/game/entity.hpp>
+
+#include <vector>
 
 namespace bm
 {

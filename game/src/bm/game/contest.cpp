@@ -1,9 +1,9 @@
 #include <bm/game/contest.hpp>
 
-static void update_bombs(std::span<bomb> bombs, arena& arena) {}
-static void update_flames(std::span<flame> flames, arena& arena) {}
-static void update_player_movement(std::span<player> players, arena& arena) {}
-static void check_player_collision(std::span<player> players, arena& arena) {}
+static void update_bombs(std::span<bm::game::bomb> bombs, bm::game::arena& arena) {}
+static void update_flames(std::span<bm::game::flame> flames, bm::game::arena& arena) {}
+static void update_player_movement(std::span<bm::game::player> players, bm::game::arena& arena) {}
+static void check_player_collision(std::span<bm::game::player> players, bm::game::arena& arena) {}
 
 bm::game::contest::contest() = default;
 
@@ -20,22 +20,22 @@ void bm::game::contest::tick()
   check_player_collision(m_players, m_arena);
 }
 
-const arena& bm::game::contest::arena() const
+const bm::game::arena& bm::game::contest::arena() const
 {
   return m_arena;
 }
 
-std::span<const player> bm::game::contest::players() const
+std::span<const bm::game::player> bm::game::contest::players() const
 {
   return m_players;
 }
 
-std::span<const flame> bm::game::contest::flames() const
+std::span<const bm::game::flame> bm::game::contest::flames() const
 {
   return m_flames;
 }
 
-std::span<const bomb> bm::game::contest::bombs() const
+std::span<const bm::game::bomb> bm::game::contest::bombs() const
 {
   return m_bombs;
 }
