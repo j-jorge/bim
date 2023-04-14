@@ -4,6 +4,8 @@ project(bombers-man)
 
 set(CMAKE_CXX_STANDARD 20)
 
+find_package(EnTT 3.11.1 REQUIRED)
+
 add_library(bm_game
   STATIC
   game/src/bm/game/arena.cpp

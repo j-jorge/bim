@@ -1,1 +1,3 @@
-/build/
+/.backroom/
+/.local
+/build
