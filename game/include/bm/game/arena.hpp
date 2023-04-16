@@ -17,6 +17,8 @@ namespace bm
       std::uint8_t width() const;
       std::uint8_t height() const;
 
+      entt::entity at(uint8_t x, uint8_t y) const;
+
     private:
       std::uint8_t m_width;
       std::uint8_t m_height;

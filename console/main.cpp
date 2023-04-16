@@ -1,4 +1,6 @@
 #include <bm/game/contest.hpp>
+#include <bm/game/position_on_grid.hpp>
+#include <bm/game/wall.hpp>
 
 #include <entt/entity/registry.hpp>
 
@@ -7,6 +9,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <iostream>
+#include <string>
 #include <string_view>
 #include <thread>
 #include <unordered_map>
@@ -30,36 +33,34 @@ static const std::unordered_map<bm::game::item_type, std::string_view> g_assets
     = { { bm::game::item_type::solid_wall, "\033[90;0m░" },
         { bm::game::item_type::player, "\033[90;0m🯅" } };
 
-static void display(const bm::game::contest& contest)
+static void display(const entt::registry& registry,
+                    const bm::game::contest& contest)
 {
+  const bm::game::arena& arena = contest.arena();
+  const std::uint8_t arena_width = arena.width();
+  const std::uint8_t arena_height = arena.height();
+
+  std::vector<std::vector<std::string> > screen_buffer(
+      arena_height, std::vector<std::string>(arena_width, " "));
+
+  registry.view<const bm::game::position_on_grid, const bm::game::wall>().each(
+      [&screen_buffer](const bm::game::position_on_grid& position) -> void
+      {
+        screen_buffer[position.y][position.x] = "\033[90;0m░";
+      });
+
   constexpr std::string_view clear_screen = "\x1B[2J";
   constexpr std::string_view move_top_left = "\x1B[H";
 
   std::cout << clear_screen << move_top_left;
 
-  const bm::game::arena& arena = contest.arena();
-  const std::string_view solid_wall
-      = g_assets.find(bm::game::item_type::solid_wall)->second;
-
-  for(int x = 0, width = arena.width(); x != width + 2; ++x)
-    std::cout << solid_wall;
-
-  std::cout << '\n';
-
-  for(int y = 0, height = arena.height(); y != height; ++y)
+  for(std::uint8_t y = 0; y != arena_height; ++y)
     {
-      std::cout << solid_wall;
+      for(std::uint8_t x = 0; x != arena_width; ++x)
+        std::cout << screen_buffer[y][x];
 
-      for(int x = 0, width = arena.width(); x != width; ++x)
-        std::cout << ' ';
-
-      std::cout << solid_wall << '\n';
+      std::cout << '\n';
     }
-
-  for(int x = 0, width = arena.width(); x != width + 2; ++x)
-    std::cout << solid_wall;
-
-  std::cout << '\n';
 }
 
 int main()
@@ -124,7 +125,7 @@ int main()
 
       special = false;
       contest.tick();
-      display(contest);
+      display(registry, contest);
       std::this_thread::sleep_for(std::chrono::milliseconds(15));
     }
 
