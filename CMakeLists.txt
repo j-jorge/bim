@@ -4,6 +4,10 @@ project(bombers-man)
 
 set(CMAKE_CXX_STANDARD 20)
 
+if (CMAKE_CXX_COMPILER_ID STREQUAL GNU)
+  add_compile_options(-Wall -pedantic)
+endif()
+
 find_package(EnTT 3.11.1 REQUIRED)
 
 add_library(bm_game
