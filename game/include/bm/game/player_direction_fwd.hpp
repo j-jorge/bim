@@ -9,4 +9,3 @@ namespace bm
     enum class player_direction : std::uint8_t;
   }
 }
-

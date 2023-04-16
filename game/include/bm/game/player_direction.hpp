@@ -7,11 +7,11 @@ namespace bm
   namespace game
   {
     enum class player_direction : std::uint8_t
-      {
-        up,
-        down,
-        left,
-        right
-      };
+    {
+      up,
+      down,
+      left,
+      right
+    };
   }
 }
