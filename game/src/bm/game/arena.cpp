@@ -1,19 +1,23 @@
 #include <bm/game/arena.hpp>
 
-bm::game::arena::arena() = default;
+#include <entt/entity/registry.hpp>
 
-bm::game::arena::arena(uint8_t width, uint8_t height)
+bm::game::arena::arena(entt::registry& registry, std::uint8_t width,
+                       std::uint8_t height)
   : m_width(width)
   , m_height(height)
   , m_cells(width * height)
-{}
+{
+  for(entt::entity& e : m_cells)
+    e = registry.create();
+}
 
-uint8_t bm::game::arena::width() const
+std::uint8_t bm::game::arena::width() const
 {
   return m_width;
 }
 
-uint8_t bm::game::arena::height() const
+std::uint8_t bm::game::arena::height() const
 {
   return m_height;
 }

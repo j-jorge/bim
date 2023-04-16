@@ -1,7 +1,8 @@
 #pragma once
 
-#include <bm/game/entity.hpp>
+#include <entt/entity/fwd.hpp>
 
+#include <cstdint>
 #include <vector>
 
 namespace bm
@@ -11,17 +12,16 @@ namespace bm
     class arena
     {
     public:
-      arena();
-      arena(uint8_t width, uint8_t height);
+      arena(entt::registry& registry, std::uint8_t width, std::uint8_t height);
 
-      uint8_t width() const;
-      uint8_t height() const;
+      std::uint8_t width() const;
+      std::uint8_t height() const;
 
     private:
-      uint8_t m_width;
-      uint8_t m_height;
+      std::uint8_t m_width;
+      std::uint8_t m_height;
 
-      std::vector<entity> m_cells;
+      std::vector<entt::entity> m_cells;
     };
   }
 }

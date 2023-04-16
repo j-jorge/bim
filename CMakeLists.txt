@@ -12,6 +12,7 @@ add_library(bm_game
   game/src/bm/game/contest.cpp
 )
 target_include_directories(bm_game PUBLIC ./game/include)
+target_link_libraries(bm_game PUBLIC EnTT::EnTT)
 
 add_executable(bombers-man-console console/main.cpp)
 target_link_libraries(bombers-man-console PRIVATE bm_game)

@@ -14,8 +14,8 @@ namespace bm
     class contest
     {
     public:
-      contest();
-      contest(int player_count, int arena_width, int arena_height);
+      contest(entt::registry& registry, int player_count, int arena_width,
+              int arena_height);
 
       void tick();
 

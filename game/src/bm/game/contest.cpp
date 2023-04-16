@@ -13,10 +13,9 @@ static void check_player_collision(std::span<bm::game::player> players,
                                    bm::game::arena& arena)
 {}
 
-bm::game::contest::contest() = default;
-
-bm::game::contest::contest(int player_count, int arena_width, int arena_height)
-  : m_arena(arena_width, arena_height)
+bm::game::contest::contest(entt::registry& registry, int player_count,
+                           int arena_width, int arena_height)
+  : m_arena(registry, arena_width, arena_height)
   , m_players(player_count)
 {}
 
