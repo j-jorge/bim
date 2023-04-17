@@ -33,6 +33,8 @@ BreakBeforeBraces: Custom
 NamespaceIndentation: All
 PointerAlignment: Left
 BreakInheritanceList: BeforeComma
+IndentPPDirectives: BeforeHash
+Standard: c++20
 
 # break before parenthesis
 # all params on next line if overflow
