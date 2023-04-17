@@ -16,14 +16,18 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL GNU)
 endif()
 
 find_package(EnTT 3.11.1 REQUIRED)
+find_package(GTest 1.13.0 REQUIRED)
 
 add_library(bm_game
   STATIC
-  game/src/bm/game/arena.cpp
-  game/src/bm/game/contest.cpp
+  game/main/src/bm/game/arena.cpp
+  game/main/src/bm/game/contest.cpp
 )
-target_include_directories(bm_game PUBLIC ./game/include)
+target_include_directories(bm_game PUBLIC ./game/main/include)
 target_link_libraries(bm_game PUBLIC EnTT::EnTT)
+
+add_executable(game-tests ./game/tests/src/bm/game/arena.cpp)
+target_link_libraries(game-tests PRIVATE bm_game GTest::gtest GTest::gtest_main)
 
 add_executable(bombers-man-console console/main.cpp)
 target_link_libraries(bombers-man-console PRIVATE bm_game)

@@ -1,5 +1,6 @@
 #include <bm/game/arena.hpp>
 
+#include <bm/game/assume.hpp>
 #include <bm/game/position_on_grid.hpp>
 #include <bm/game/wall.hpp>
 
@@ -11,6 +12,9 @@ bm::game::arena::arena(entt::registry& registry, std::uint8_t width,
   , m_height(height)
   , m_cells(width * height)
 {
+  bm_assume(width >= 3);
+  bm_assume(height >= 3);
+
   for(entt::entity& e : m_cells)
     e = registry.create();
 
