@@ -22,11 +22,15 @@ add_library(bm_game
   STATIC
   game/main/src/bm/game/arena.cpp
   game/main/src/bm/game/contest.cpp
+  game/main/src/bm/game/level_generation.cpp
 )
 target_include_directories(bm_game PUBLIC ./game/main/include)
 target_link_libraries(bm_game PUBLIC EnTT::EnTT)
 
-add_executable(game-tests ./game/tests/src/bm/game/arena.cpp)
+add_executable(game-tests
+  ./game/tests/src/bm/game/arena.cpp
+  ./game/tests/src/bm/game/level_generation.cpp
+)
 target_link_libraries(game-tests PRIVATE bm_game GTest::gtest GTest::gtest_main)
 
 add_executable(bombers-man-console console/main.cpp)

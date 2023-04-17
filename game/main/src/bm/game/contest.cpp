@@ -1,5 +1,7 @@
 #include <bm/game/contest.hpp>
 
+#include <bm/game/level_generation.hpp>
+
 static void update_bombs(std::span<bm::game::bomb> bombs,
                          bm::game::arena& arena)
 {}
@@ -17,7 +19,9 @@ bm::game::contest::contest(entt::registry& registry, int player_count,
                            int arena_width, int arena_height)
   : m_arena(registry, arena_width, arena_height)
   , m_players(player_count)
-{}
+{
+  generate_basic_level(registry, m_arena);
+}
 
 void bm::game::contest::tick()
 {
