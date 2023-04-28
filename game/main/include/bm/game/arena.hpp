@@ -12,18 +12,22 @@ namespace bm
     class arena
     {
     public:
-      arena(entt::registry& registry, std::uint8_t width, std::uint8_t height);
+      arena(std::uint8_t width, std::uint8_t height);
 
       std::uint8_t width() const;
       std::uint8_t height() const;
 
-      entt::entity at(uint8_t x, uint8_t y) const;
+      entt::entity entity_at(std::uint8_t x, std::uint8_t y) const;
+
+      bool is_static_wall(std::uint8_t x, std::uint8_t y) const;
+      void set_static_wall(std::uint8_t x, std::uint8_t y);
 
     private:
       std::uint8_t m_width;
       std::uint8_t m_height;
 
-      std::vector<entt::entity> m_cells;
+      std::vector<entt::entity> m_entities;
+      std::vector<bool> m_walls;
     };
   }
 }

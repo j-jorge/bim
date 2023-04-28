@@ -12,8 +12,6 @@ namespace bm
       std::uint8_t y;
 
       player_direction current_direction;
-
-      player_action pending_action;
     };
   }
 }

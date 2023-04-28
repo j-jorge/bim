@@ -1,34 +1,47 @@
 #include <bm/game/arena.hpp>
 #include <bm/game/position_on_grid.hpp>
 
-#include <entt/entity/registry.hpp>
-
 #include <gtest/gtest.h>
 
 class bm_game_arena_test
   : public ::testing::TestWithParam<std::tuple<int, int>>
 {};
 
-TEST_P(bm_game_arena_test, dimensions)
+TEST_P(bm_game_arena_test, defaults)
 {
-  entt::registry registry;
   const uint8_t width = std::get<0>(GetParam());
   const uint8_t height = std::get<1>(GetParam());
-  const bm::game::arena arena(registry, width, height);
+  bm::game::arena arena(width, height);
 
   EXPECT_EQ(width, arena.width());
   EXPECT_EQ(height, arena.height());
 
   for(int y = 0; y != height; ++y)
     for(int x = 0; x != width; ++x)
-      {
-        const bm::game::position_on_grid p
-            = registry.get<bm::game::position_on_grid>(arena.at(x, y));
-        EXPECT_EQ(x, p.x);
-        EXPECT_EQ(y, p.y);
-      }
+      EXPECT_FALSE(arena.is_static_wall(x, y)) << "x=" << x << ", y=" << y;
+
+  arena.set_static_wall(0, 0);
+  EXPECT_TRUE(arena.is_static_wall(0, 0));
+
+  arena.set_static_wall(width / 2, 0);
+  EXPECT_TRUE(arena.is_static_wall(width / 2, 0));
+
+  arena.set_static_wall(0, height / 2);
+  EXPECT_TRUE(arena.is_static_wall(0, height / 2));
+
+  arena.set_static_wall(width / 2, height / 2);
+  EXPECT_TRUE(arena.is_static_wall(width / 2, height / 2));
+
+  for(int y = 0; y != height; ++y)
+    for(int x = 0; x != width; ++x)
+      if(((y == 0) && (x == 0)) || ((y == 0) && (x == width / 2))
+         || ((y == height / 2) && (x == 0))
+         || ((y == height / 2) && (x == width / 2)))
+        EXPECT_TRUE(arena.is_static_wall(x, y)) << "x=" << x << ", y=" << y;
+      else
+        EXPECT_FALSE(arena.is_static_wall(x, y)) << "x=" << x << ", y=" << y;
 }
 
 INSTANTIATE_TEST_CASE_P(bm_game_arena_suite, bm_game_arena_test,
-                        ::testing::Combine(::testing::Range(0, 10),
-                                           ::testing::Range(0, 10)));
+                        ::testing::Combine(::testing::Range(1, 10),
+                                           ::testing::Range(1, 10)));

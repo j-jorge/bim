@@ -3,22 +3,12 @@
 #include <bm/game/assume.hpp>
 #include <bm/game/position_on_grid.hpp>
 
-#include <entt/entity/registry.hpp>
-
-bm::game::arena::arena(entt::registry& registry, std::uint8_t width,
-                       std::uint8_t height)
+bm::game::arena::arena(std::uint8_t width, std::uint8_t height)
   : m_width(width)
   , m_height(height)
-  , m_cells(width * height)
-{
-  for(entt::entity& e : m_cells)
-    e = registry.create();
-
-  // Positions on the grid, such that we can get them for the entities.
-  for(int y = 0; y != height; ++y)
-    for(int x = 0; x != width; ++x)
-      registry.emplace<position_on_grid>(at(x, y), x, y);
-}
+  , m_entities(width * height, entt::entity{})
+  , m_walls(width * height, false)
+{}
 
 std::uint8_t bm::game::arena::width() const
 {
@@ -30,7 +20,17 @@ std::uint8_t bm::game::arena::height() const
   return m_height;
 }
 
-entt::entity bm::game::arena::at(uint8_t x, uint8_t y) const
+entt::entity bm::game::arena::entity_at(std::uint8_t x, std::uint8_t y) const
 {
-  return m_cells[y * m_width + x];
+  return m_entities[y * m_width + x];
+}
+
+bool bm::game::arena::is_static_wall(std::uint8_t x, std::uint8_t y) const
+{
+  return m_walls[y * m_width + x];
+}
+
+void bm::game::arena::set_static_wall(std::uint8_t x, std::uint8_t y)
+{
+  m_walls[y * m_width + x] = true;
 }

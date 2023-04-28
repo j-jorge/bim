@@ -1,6 +1,5 @@
 #include <bm/game/contest.hpp>
 #include <bm/game/position_on_grid.hpp>
-#include <bm/game/wall.hpp>
 
 #include <entt/entity/registry.hpp>
 
@@ -40,14 +39,13 @@ static void display(const entt::registry& registry,
   const std::uint8_t arena_width = arena.width();
   const std::uint8_t arena_height = arena.height();
 
-  std::vector<std::vector<std::string> > screen_buffer(
+  std::vector<std::vector<std::string>> screen_buffer(
       arena_height, std::vector<std::string>(arena_width, " "));
 
-  registry.view<const bm::game::position_on_grid, const bm::game::wall>().each(
-      [&screen_buffer](const bm::game::position_on_grid& position) -> void
-      {
-        screen_buffer[position.y][position.x] = "\033[90;0m░";
-      });
+  for(std::uint8_t y = 0; y != arena_height; ++y)
+    for(std::uint8_t x = 0; x != arena_width; ++x)
+      if(arena.is_static_wall(x, y))
+        screen_buffer[y][x] = "\033[90;0m░";
 
   constexpr std::string_view clear_screen = "\x1B[2J";
   constexpr std::string_view move_top_left = "\x1B[H";

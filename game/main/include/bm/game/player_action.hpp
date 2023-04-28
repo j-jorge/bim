@@ -8,7 +8,7 @@ namespace bm
   {
     struct player_action
     {
-      player_direction _requested;
+      player_direction requested;
       bool bomb_drop;
     };
   }
