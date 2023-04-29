@@ -1,8 +1,10 @@
 #include <bm/game/arena.hpp>
+#include <bm/game/brick_wall.hpp>
 #include <bm/game/level_generation.hpp>
 #include <bm/game/position_on_grid.hpp>
-#include <bm/game/wall.hpp>
+#include <bm/game/random_generator.hpp>
 
+#include <entt/entity/entity.hpp>
 #include <entt/entity/registry.hpp>
 
 #include <gtest/gtest.h>
@@ -11,14 +13,13 @@ class bm_game_level_generation_test
   : public ::testing::TestWithParam<std::tuple<int, int>>
 {};
 
-TEST_P(bm_game_level_generation_test, solid_structure)
+TEST_P(bm_game_level_generation_test, basic_solid_structure)
 {
-  entt::registry registry;
   const uint8_t width = std::get<0>(GetParam());
   const uint8_t height = std::get<1>(GetParam());
   bm::game::arena arena(width, height);
 
-  bm::game::generate_basic_level(registry, arena);
+  bm::game::generate_basic_level_structure(arena);
 
   // Top border: solid walls everywhere.
   for(int x = 0; x != width; ++x)
@@ -52,6 +53,43 @@ TEST_P(bm_game_level_generation_test, solid_structure)
   for(int x = 0; x != width; ++x)
     EXPECT_TRUE(arena.is_static_wall(x, height - 1))
         << "height - 1=" << (height - 1) << "x=" << x;
+}
+
+TEST_P(bm_game_level_generation_test, random_brick_walls)
+{
+  const uint8_t width = std::get<0>(GetParam());
+  const uint8_t height = std::get<1>(GetParam());
+  bm::game::arena arena(width, height);
+
+  bm::game::generate_basic_level_structure(arena);
+
+  entt::registry registry;
+  bm::game::random_generator random(1234);
+  bm::game::insert_random_brick_walls(arena, registry, random, 50);
+
+  int free_cell_count = 0;
+
+  for(int y = 0; y != height; ++y)
+    for(int x = 0; x != width; ++x)
+      {
+        const entt::entity entity = arena.entity_at(x, y);
+
+        if(arena.is_static_wall(x, y))
+          EXPECT_TRUE(entt::null == entity);
+        else
+          ++free_cell_count;
+      }
+
+  int brick_wall_count = 0;
+
+  registry.view<bm::game::position_on_grid, bm::game::brick_wall>().each(
+      [&brick_wall_count](const bm::game::position_on_grid&) -> void
+      {
+        ++brick_wall_count;
+      });
+
+  EXPECT_LT(0, brick_wall_count);
+  EXPECT_LE(brick_wall_count, free_cell_count);
 }
 
 INSTANTIATE_TEST_CASE_P(bm_game_arena_suite, bm_game_level_generation_test,

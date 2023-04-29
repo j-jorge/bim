@@ -1,7 +1,6 @@
+#include <bm/game/brick_wall.hpp>
 #include <bm/game/contest.hpp>
 #include <bm/game/position_on_grid.hpp>
-
-#include <entt/entity/registry.hpp>
 
 #include <atomic>
 #include <chrono>
@@ -32,9 +31,9 @@ static const std::unordered_map<bm::game::item_type, std::string_view> g_assets
     = { { bm::game::item_type::solid_wall, "\033[90;0m░" },
         { bm::game::item_type::player, "\033[90;0m🯅" } };
 
-static void display(const entt::registry& registry,
-                    const bm::game::contest& contest)
+static void display(const bm::game::contest& contest)
 {
+  const entt::registry& registry = contest.registry();
   const bm::game::arena& arena = contest.arena();
   const std::uint8_t arena_width = arena.width();
   const std::uint8_t arena_height = arena.height();
@@ -45,7 +44,13 @@ static void display(const entt::registry& registry,
   for(std::uint8_t y = 0; y != arena_height; ++y)
     for(std::uint8_t x = 0; x != arena_width; ++x)
       if(arena.is_static_wall(x, y))
-        screen_buffer[y][x] = "\033[90;0m░";
+        screen_buffer[y][x] = "\033[100m \033[0;0m";
+
+  registry.view<bm::game::position_on_grid, bm::game::brick_wall>().each(
+      [&screen_buffer](const bm::game::position_on_grid& p) -> void
+      {
+        screen_buffer[p.y][p.x] = "\033[33m#\033[0;0m";
+      });
 
   constexpr std::string_view clear_screen = "\x1B[2J";
   constexpr std::string_view move_top_left = "\x1B[H";
@@ -70,8 +75,7 @@ int main()
   custom_terminal.c_lflag &= ~(ICANON | ECHO);
   tcsetattr(STDIN_FILENO, TCSANOW, &custom_terminal);
 
-  entt::registry registry;
-  bm::game::contest contest(registry, 1, 13, 11);
+  bm::game::contest contest(1234, 80, 1, 13, 11);
   bool special = false;
 
   std::atomic<bool> quit(false);
@@ -123,7 +127,7 @@ int main()
 
       special = false;
       contest.tick();
-      display(registry, contest);
+      display(contest);
       std::this_thread::sleep_for(std::chrono::milliseconds(15));
     }
 

@@ -18,6 +18,7 @@ namespace bm
       std::uint8_t height() const;
 
       entt::entity entity_at(std::uint8_t x, std::uint8_t y) const;
+      void put_entity(std::uint8_t x, std::uint8_t y, entt::entity e);
 
       bool is_static_wall(std::uint8_t x, std::uint8_t y) const;
       void set_static_wall(std::uint8_t x, std::uint8_t y);

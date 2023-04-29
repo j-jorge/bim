@@ -4,7 +4,7 @@ namespace bm
 {
   namespace game
   {
-    class wall
+    class brick_wall
     {};
   }
 }

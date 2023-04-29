@@ -1,6 +1,8 @@
 #include <bm/game/arena.hpp>
 #include <bm/game/position_on_grid.hpp>
 
+#include <entt/entity/registry.hpp>
+
 #include <gtest/gtest.h>
 
 class bm_game_arena_test
@@ -45,3 +47,18 @@ TEST_P(bm_game_arena_test, defaults)
 INSTANTIATE_TEST_CASE_P(bm_game_arena_suite, bm_game_arena_test,
                         ::testing::Combine(::testing::Range(1, 10),
                                            ::testing::Range(1, 10)));
+
+TEST(bm_game_arena, put_entity)
+{
+  bm::game::arena arena(2, 2);
+
+  entt::registry registry;
+  const entt::entity entity = registry.create();
+
+  arena.put_entity(0, 1, entity);
+
+  EXPECT_NE(entity, arena.entity_at(0, 0));
+  EXPECT_EQ(entity, arena.entity_at(0, 1));
+  EXPECT_NE(entity, arena.entity_at(1, 0));
+  EXPECT_NE(entity, arena.entity_at(1, 1));
+}

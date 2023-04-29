@@ -4,12 +4,16 @@
 #include <bm/game/player.hpp>
 #include <bm/game/player_direction.hpp>
 
-#include <entt/entity/registry.hpp>
-
-bm::game::contest::contest(entt::registry& registry, std::uint8_t player_count,
-                           std::uint8_t arena_width, std::uint8_t arena_height)
-  : m_arena(arena_width, arena_height)
+bm::game::contest::contest(std::uint64_t seed,
+                           std::uint8_t brick_wall_probability,
+                           std::uint8_t player_count, std::uint8_t arena_width,
+                           std::uint8_t arena_height)
+  : m_random(seed)
+  , m_arena(arena_width, arena_height)
 {
+  for(int i = 0; i != 10; ++i)
+    m_random();
+
   bm_assume(player_count > 0);
 
   const int player_start_position_x[] = { 1, arena_width - 1 };
@@ -19,15 +23,17 @@ bm::game::contest::contest(entt::registry& registry, std::uint8_t player_count,
 
   for(std::size_t i = 0; i != player_count; ++i)
     {
-      entt::entity p = registry.create();
+      entt::entity p = m_registry.create();
       const int start_position_index = i % start_position_count;
-      registry.emplace<player>(p,
-                               player_start_position_x[start_position_index],
-                               player_start_position_y[start_position_index],
-                               player_direction::down);
+      m_registry.emplace<player>(p,
+                                 player_start_position_x[start_position_index],
+                                 player_start_position_y[start_position_index],
+                                 player_direction::down);
     }
 
-  generate_basic_level(registry, m_arena);
+  generate_basic_level_structure(m_arena);
+  insert_random_brick_walls(m_arena, m_registry, m_random,
+                            brick_wall_probability);
 }
 
 void bm::game::contest::tick()
@@ -36,6 +42,11 @@ void bm::game::contest::tick()
   // update_flames(m_flames, m_arena);
   // update_player_movement(m_players, m_arena);
   // check_player_collision(m_players, m_arena);
+}
+
+const entt::registry& bm::game::contest::registry() const
+{
+  return m_registry;
 }
 
 const bm::game::arena& bm::game::contest::arena() const
