@@ -67,7 +67,6 @@ usage()
 Usage: build.sh OPTIONS
 
 Where OPTIONS is
-  --config FILE    Load this configuration file before doing anything else.
   --build-type T   Build for this configuration (debug or release).
   --help, -h       Display this message and exit.
 EOF
@@ -81,10 +80,6 @@ do
     case "$arg" in
         --build-type)
             bomb_build_type="$1"
-            shift
-            ;;
-        --config)
-            . "$1"
             shift
             ;;
         --help|-h)
@@ -105,7 +100,12 @@ then
     exit 1
 fi
 
-: "${shell_utils_commit=7704dbdb07dc3c9480cc44b3d64ce9152a6afd58}"
+if [[ -f "$script_dir/.setup.conf" ]]
+then
+    . "$script_dir/.setup.conf"
+fi
+
+: "${shell_utils_commit=4384d9b582e53cee0b8448db6a4d2cc2ebfda22d}"
 : "${shell_utils_repository:=https://github.com/j-jorge/shell-utils}"
 : "${paco_commit=0b92d834ceee4d23a02ce138475e5afcc4569756}"
 : "${paco_repository:=https://github.com/j-jorge/cpp-package-manager}"
@@ -152,7 +152,7 @@ export backroom
 export bomb_app_prefix
 export bomb_build_type
 export bomb_packages_root="$backroom"/packages
-export PATH="$host_prefix":"$PATH"
+export PATH="$host_prefix"/bin:"$PATH"
 export -f git_clone_repository
 export -f git_fetch
 
