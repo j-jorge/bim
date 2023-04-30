@@ -18,22 +18,6 @@
 #include <termios.h>
 #include <unistd.h>
 
-namespace bm
-{
-  namespace game
-  {
-    enum class item_type : uint8_t
-    {
-      solid_wall,
-      player
-    };
-  }
-}
-
-static const std::unordered_map<bm::game::item_type, std::string_view> g_assets
-    = { { bm::game::item_type::solid_wall, "\033[90;0m░" },
-        { bm::game::item_type::player, "\033[90;0m🯅" } };
-
 static void display(const bm::game::contest& contest)
 {
   const entt::registry& registry = contest.registry();

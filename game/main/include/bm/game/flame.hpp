@@ -2,13 +2,10 @@
 
 #include <cstdint>
 
-namespace bm
+namespace bm::game
 {
-  namespace game
+  struct flame
   {
-    struct flame
-    {
-      std::uint8_t time_to_live;
-    };
-  }
+    std::uint8_t time_to_live;
+  };
 }

@@ -5,27 +5,24 @@
 
 #include <entt/entity/registry.hpp>
 
-namespace bm
+namespace bm::game
 {
-  namespace game
+  class contest
   {
-    class contest
-    {
-    public:
-      contest(std::uint64_t seed, std::uint8_t brick_wall_probability,
-              std::uint8_t player_count, std::uint8_t arena_width,
-              std::uint8_t arena_height);
+  public:
+    contest(std::uint64_t seed, std::uint8_t brick_wall_probability,
+            std::uint8_t player_count, std::uint8_t arena_width,
+            std::uint8_t arena_height);
 
-      void tick();
+    void tick();
 
-      entt::registry& registry();
-      const entt::registry& registry() const;
-      const bm::game::arena& arena() const;
+    entt::registry& registry();
+    const entt::registry& registry() const;
+    const bm::game::arena& arena() const;
 
-    private:
-      entt::registry m_registry;
-      bm::game::random_generator m_random;
-      bm::game::arena m_arena;
-    };
-  }
+  private:
+    entt::registry m_registry;
+    bm::game::random_generator m_random;
+    bm::game::arena m_arena;
+  };
 }

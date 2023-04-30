@@ -1,10 +1,7 @@
 #pragma once
 
-namespace bm
+namespace bm::game
 {
-  namespace game
-  {
-    class brick_wall
-    {};
-  }
+  class brick_wall
+  {};
 }

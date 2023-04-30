@@ -2,13 +2,10 @@
 
 #include <cstdint>
 
-namespace bm
+namespace bm::game
 {
-  namespace game
+  struct bomb
   {
-    struct bomb
-    {
-      std::uint8_t countdown_before_explosion;
-    };
-  }
+    std::uint8_t countdown_before_explosion;
+  };
 }

@@ -2,10 +2,7 @@
 
 #include <cstdint>
 
-namespace bm
+namespace bm::game
 {
-  namespace game
-  {
-    enum class player_direction : std::uint8_t;
-  }
+  enum class player_direction : std::uint8_t;
 }

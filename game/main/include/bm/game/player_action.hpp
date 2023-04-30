@@ -4,14 +4,11 @@
 
 #include <optional>
 
-namespace bm
+namespace bm::game
 {
-  namespace game
+  struct player_action
   {
-    struct player_action
-    {
-      std::optional<player_direction> requested;
-      bool drop_bomb;
-    };
-  }
+    std::optional<player_direction> requested;
+    bool drop_bomb;
+  };
 }

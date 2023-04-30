@@ -2,16 +2,13 @@
 
 #include <bm/game/player_action.hpp>
 
-namespace bm
+namespace bm::game
 {
-  namespace game
+  struct player
   {
-    struct player
-    {
-      std::uint8_t x;
-      std::uint8_t y;
+    std::uint8_t x;
+    std::uint8_t y;
 
-      player_direction current_direction;
-    };
-  }
+    player_direction current_direction;
+  };
 }
