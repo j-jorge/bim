@@ -7,6 +7,7 @@
 
 #include <entt/entity/registry.hpp>
 
+#include <boost/algorithm/cxx11/any_of.hpp>
 #include <boost/random/uniform_int_distribution.hpp>
 
 void bm::game::generate_basic_level_structure(arena& arena)
@@ -50,15 +51,29 @@ void bm::game::insert_random_brick_walls(arena& arena,
                                      std::uint8_t y) -> entt::entity
   {
     const entt::entity entity = registry.create();
-    registry.emplace<bm::game::brick_wall>(entity);
-    registry.emplace<bm::game::position_on_grid>(entity, x, y);
+    registry.emplace<brick_wall>(entity);
+    registry.emplace<position_on_grid>(entity, x, y);
 
     return entity;
   };
 
+  std::vector<position_on_grid> forbidden_positions;
+  // Typically 4 players in the arena, and 9 blocks each them.
+  forbidden_positions.reserve(4 * 9);
+
+  registry.view<bm::game::player>().each(
+      [&forbidden_positions](const bm::game::player& p) -> void
+      {
+        for(int y : { -1, 0, 1 })
+          for(int x : { -1, 0, 1 })
+            forbidden_positions.push_back(position_on_grid(p.x + x, p.y + y));
+      });
+
   for(int y = 0; y != height; ++y)
     for(int x = 0; x != width; ++x)
       if(!arena.is_static_wall(x, y)
+         && !boost::algorithm::any_of_equal(forbidden_positions,
+                                            position_on_grid(x, y))
          && (random(random_generator) < brick_wall_probability))
         arena.put_entity(x, y, new_brick_wall(registry, x, y));
 }

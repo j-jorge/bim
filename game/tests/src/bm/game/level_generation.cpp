@@ -1,6 +1,8 @@
 #include <bm/game/arena.hpp>
 #include <bm/game/brick_wall.hpp>
 #include <bm/game/level_generation.hpp>
+#include <bm/game/player.hpp>
+#include <bm/game/player_direction.hpp>
 #include <bm/game/position_on_grid.hpp>
 #include <bm/game/random_generator.hpp>
 
@@ -95,3 +97,63 @@ TEST_P(bm_game_level_generation_test, random_brick_walls)
 INSTANTIATE_TEST_CASE_P(bm_game_arena_suite, bm_game_level_generation_test,
                         ::testing::Combine(::testing::Range(3, 10),
                                            ::testing::Range(3, 10)));
+
+TEST(bm_game_insert_random_brick_walls, no_walls_near_player)
+{
+  // insert_random_brick_walls should not create brick_walls around the
+  // players.
+
+  const uint8_t width = 10;
+  const uint8_t height = 10;
+  bm::game::arena arena(width, height);
+
+  entt::registry registry;
+
+  // Insert one player in each corner, and one in the center.
+  const entt::entity player_entities[]
+      = { registry.create(), registry.create(), registry.create(),
+          registry.create(), registry.create() };
+  const bm::game::position_on_grid player_positions[]
+      = { { 1, 1 },
+          { width - 2, 1 },
+          { width / 2, height / 2 },
+          { 1, height - 2 },
+          { width - 2, height - 2 } };
+
+  // Create the actual player entities that should be used by
+  // insert_random_brick_walls to avoid creating walls.
+  int i = 0;
+  for(entt::entity e : player_entities)
+    {
+      registry.emplace<bm::game::player>(e, player_positions[i].x,
+                                         player_positions[i].y,
+                                         bm::game::player_direction::down);
+      ++i;
+    }
+
+  bm::game::random_generator random(1234);
+
+  // Insert brick walls with a 100% probability, i.e. create a wall every time.
+  bm::game::insert_random_brick_walls(arena, registry, random, 100);
+
+  for(int y = 0; y != height; ++y)
+    for(int x = 0; x != width; ++x)
+      {
+        bool near_player_position = false;
+
+        for(bm::game::position_on_grid p : player_positions)
+          if((std::abs(p.x - x) <= 1) && (std::abs(p.y - y) <= 1))
+            {
+              near_player_position = true;
+              break;
+            }
+
+        const entt::entity entity_in_arena = arena.entity_at(x, y);
+
+        if(near_player_position)
+          EXPECT_TRUE(entt::null == entity_in_arena);
+        else
+          EXPECT_TRUE(registry.storage<bm::game::brick_wall>().contains(
+              entity_in_arena));
+      }
+}
