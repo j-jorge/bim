@@ -18,6 +18,7 @@ namespace bm
 
       void tick();
 
+      entt::registry& registry();
       const entt::registry& registry() const;
       const bm::game::arena& arena() const;
 

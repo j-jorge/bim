@@ -2,6 +2,7 @@
 
 #include <bm/game/level_generation.hpp>
 #include <bm/game/player.hpp>
+#include <bm/game/player_action.hpp>
 #include <bm/game/player_direction.hpp>
 
 bm::game::contest::contest(std::uint64_t seed,
@@ -29,6 +30,7 @@ bm::game::contest::contest(std::uint64_t seed,
                                  player_start_position_x[start_position_index],
                                  player_start_position_y[start_position_index],
                                  player_direction::down);
+      m_registry.emplace<player_action>(p);
     }
 
   generate_basic_level_structure(m_arena);
@@ -38,10 +40,49 @@ bm::game::contest::contest(std::uint64_t seed,
 
 void bm::game::contest::tick()
 {
+  m_registry.view<player, player_action>().each(
+      [this](player& p, const player_action& a) -> void
+      {
+        int x = p.x;
+        int y = p.y;
+
+        if(a.requested)
+          {
+            switch(*a.requested)
+              {
+              case player_direction::left:
+                x -= 1;
+                break;
+              case player_direction::right:
+                x += 1;
+                break;
+              case player_direction::up:
+                y -= 1;
+                break;
+              case player_direction::down:
+                y += 1;
+                break;
+              }
+
+            if((x >= 0) && (y >= 0) && (x < m_arena.width())
+               && (y < m_arena.height()) && !m_arena.is_static_wall(x, y)
+               && (m_arena.entity_at(x, y) == entt::null))
+              {
+                p.x = x;
+                p.y = y;
+              }
+          }
+      });
+
   // update_bombs(m_bombs, m_arena);
   // update_flames(m_flames, m_arena);
   // update_player_movement(m_players, m_arena);
   // check_player_collision(m_players, m_arena);
+}
+
+entt::registry& bm::game::contest::registry()
+{
+  return m_registry;
 }
 
 const entt::registry& bm::game::contest::registry() const

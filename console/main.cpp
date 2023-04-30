@@ -1,5 +1,8 @@
 #include <bm/game/brick_wall.hpp>
 #include <bm/game/contest.hpp>
+#include <bm/game/player.hpp>
+#include <bm/game/player_action.hpp>
+#include <bm/game/player_direction.hpp>
 #include <bm/game/position_on_grid.hpp>
 
 #include <atomic>
@@ -52,6 +55,12 @@ static void display(const bm::game::contest& contest)
         screen_buffer[p.y][p.x] = "\033[33m#\033[0;0m";
       });
 
+  registry.view<bm::game::player>().each(
+      [&screen_buffer](const bm::game::player& p) -> void
+      {
+        screen_buffer[p.y][p.x] = "\033[32mA\033[0;0m";
+      });
+
   constexpr std::string_view clear_screen = "\x1B[2J";
   constexpr std::string_view move_top_left = "\x1B[H";
 
@@ -76,7 +85,7 @@ int main()
   tcsetattr(STDIN_FILENO, TCSANOW, &custom_terminal);
 
   bm::game::contest contest(1234, 80, 1, 13, 11);
-  bool special = false;
+  entt::registry& registry = contest.registry();
 
   std::atomic<bool> quit(false);
   std::atomic<int> input(0);
@@ -88,47 +97,41 @@ int main()
           input.store(std::getchar());
       });
 
+  // Only a single player currently.
+  entt::entity local_player = registry.view<bm::game::player>()[0];
+  bm::game::player_action& player_action
+      = registry.get<bm::game::player_action>(local_player);
+
   while(!quit.load())
     {
-      switch(input.load())
+      player_action = bm::game::player_action{};
+
+      switch(input.exchange(0))
         {
         case 'q':
           quit.store(true);
           break;
 
         case 'A':
-          if(special)
-            {}
-          // up
+          player_action.requested = bm::game::player_direction::up;
           break;
         case 'B':
-          if(special)
-            {}
-          // down
+          player_action.requested = bm::game::player_direction::down;
           break;
         case 'C':
-          if(special)
-            {}
-          // right
+          player_action.requested = bm::game::player_direction::right;
           break;
         case 'D':
-          if(special)
-            {}
-          // left
+          player_action.requested = bm::game::player_direction::left;
           break;
         case ' ':
-          // bomb
-          break;
-
-        case 91:
-          special = true;
+          player_action.drop_bomb = true;
           break;
         }
 
-      special = false;
       contest.tick();
       display(contest);
-      std::this_thread::sleep_for(std::chrono::milliseconds(15));
+      std::this_thread::sleep_for(std::chrono::milliseconds(16));
     }
 
   if(input_thread.joinable())

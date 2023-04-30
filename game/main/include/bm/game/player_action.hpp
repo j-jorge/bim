@@ -2,14 +2,16 @@
 
 #include <bm/game/player_direction_fwd.hpp>
 
+#include <optional>
+
 namespace bm
 {
   namespace game
   {
     struct player_action
     {
-      player_direction requested;
-      bool bomb_drop;
+      std::optional<player_direction> requested;
+      bool drop_bomb;
     };
   }
 }
