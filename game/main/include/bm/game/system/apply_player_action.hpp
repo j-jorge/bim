@@ -22,5 +22,5 @@ namespace bm::game
 {
   class arena;
 
-  void update_player_movement(entt::registry& registry, const arena& arena);
+  void apply_player_action(entt::registry& registry, arena& arena);
 }

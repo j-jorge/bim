@@ -16,12 +16,12 @@
 */
 #pragma once
 
-#include <cstdint>
+#include <chrono>
 
 namespace bm::game
 {
   struct bomb
   {
-    std::uint8_t countdown_before_explosion;
+    std::chrono::milliseconds milliseconds_before_explosion;
   };
 }

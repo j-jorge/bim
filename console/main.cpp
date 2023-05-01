@@ -16,6 +16,7 @@
 */
 #include <bm/game/contest.hpp>
 
+#include <bm/game/component/bomb.hpp>
 #include <bm/game/component/brick_wall.hpp>
 #include <bm/game/component/player.hpp>
 #include <bm/game/component/player_action.hpp>
@@ -54,6 +55,13 @@ static void display(const bm::game::contest& contest)
       [&screen_buffer](const bm::game::position_on_grid& p) -> void
       {
         screen_buffer[p.y][p.x] = "\033[33m#\033[0;0m";
+      });
+
+  registry.view<bm::game::position_on_grid, bm::game::bomb>().each(
+      [&screen_buffer](const bm::game::position_on_grid& p,
+                       const bm::game::bomb& b) -> void
+      {
+        screen_buffer[p.y][p.x] = "\033[31mó\033[0;0m";
       });
 
   registry.view<bm::game::player>().each(

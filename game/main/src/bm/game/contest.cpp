@@ -20,7 +20,7 @@
 #include <bm/game/component/player_action.hpp>
 #include <bm/game/component/player_direction.hpp>
 
-#include <bm/game/system/update_player_movement.hpp>
+#include <bm/game/system/apply_player_action.hpp>
 
 #include <bm/game/level_generation.hpp>
 
@@ -59,7 +59,7 @@ bm::game::contest::contest(std::uint64_t seed,
 
 void bm::game::contest::tick()
 {
-  update_player_movement(m_registry, m_arena);
+  apply_player_action(m_registry, m_arena);
 
   // update_bombs(m_bombs, m_arena);
   // update_flames(m_flames, m_arena);
