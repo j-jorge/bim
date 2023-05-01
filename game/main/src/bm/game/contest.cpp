@@ -20,6 +20,8 @@
 #include <bm/game/component/player_action.hpp>
 #include <bm/game/component/player_direction.hpp>
 
+#include <bm/game/system/update_player_movement.hpp>
+
 #include <bm/game/level_generation.hpp>
 
 bm::game::contest::contest(std::uint64_t seed,
@@ -57,39 +59,7 @@ bm::game::contest::contest(std::uint64_t seed,
 
 void bm::game::contest::tick()
 {
-  m_registry.view<player, player_action>().each(
-      [this](player& p, const player_action& a) -> void
-      {
-        int x = p.x;
-        int y = p.y;
-
-        if(a.requested)
-          {
-            switch(*a.requested)
-              {
-              case player_direction::left:
-                x -= 1;
-                break;
-              case player_direction::right:
-                x += 1;
-                break;
-              case player_direction::up:
-                y -= 1;
-                break;
-              case player_direction::down:
-                y += 1;
-                break;
-              }
-
-            if((x >= 0) && (y >= 0) && (x < m_arena.width())
-               && (y < m_arena.height()) && !m_arena.is_static_wall(x, y)
-               && (m_arena.entity_at(x, y) == entt::null))
-              {
-                p.x = x;
-                p.y = y;
-              }
-          }
-      });
+  update_player_movement(m_registry, m_arena);
 
   // update_bombs(m_bombs, m_arena);
   // update_flames(m_flames, m_arena);

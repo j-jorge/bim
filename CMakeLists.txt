@@ -25,6 +25,8 @@ add_library(bm_game
   game/main/src/bm/game/contest.cpp
   game/main/src/bm/game/level_generation.cpp
   game/main/src/bm/game/random_generator.cpp
+
+  game/main/src/bm/game/system/update_player_movement.cpp
 )
 target_include_directories(bm_game PUBLIC ./game/main/include)
 target_link_libraries(bm_game PUBLIC EnTT::EnTT)
