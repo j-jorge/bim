@@ -24,7 +24,7 @@ namespace bm::game
 {
   struct player_action
   {
-    std::optional<player_direction> requested;
+    std::optional<player_direction> requested_direction;
     bool drop_bomb;
   };
 }

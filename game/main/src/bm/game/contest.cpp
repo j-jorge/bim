@@ -19,10 +19,13 @@
 #include <bm/game/component/player.hpp>
 #include <bm/game/component/player_action.hpp>
 #include <bm/game/component/player_direction.hpp>
+#include <bm/game/component/position_on_grid.hpp>
 
 #include <bm/game/system/apply_player_action.hpp>
 
 #include <bm/game/level_generation.hpp>
+
+#include <bm/game/assume.hpp>
 
 bm::game::contest::contest(std::uint64_t seed,
                            std::uint8_t brick_wall_probability,
@@ -36,19 +39,19 @@ bm::game::contest::contest(std::uint64_t seed,
 
   bm_assume(player_count > 0);
 
-  const int player_start_position_x[] = { 1, arena_width - 1 };
-  const int player_start_position_y[] = { 1, arena_height - 1 };
-  const int start_position_count = std::size(player_start_position_x);
-  assert(start_position_count == std::size(player_start_position_y));
+  const position_on_grid player_start_position[]
+      = { position_on_grid(1, 1), position_on_grid(arena_width - 2, 1),
+          position_on_grid(1, arena_height - 2),
+          position_on_grid(arena_width - 2, arena_height - 2) };
+  const int start_position_count = std::size(player_start_position);
 
   for (std::size_t i = 0; i != player_count; ++i)
     {
       entt::entity p = m_registry.create();
       const int start_position_index = i % start_position_count;
-      m_registry.emplace<player>(p,
-                                 player_start_position_x[start_position_index],
-                                 player_start_position_y[start_position_index],
-                                 player_direction::down);
+      m_registry.emplace<player>(p, player_direction::down);
+      m_registry.emplace<position_on_grid>(
+          p, player_start_position[start_position_index]);
       m_registry.emplace<player_action>(p);
     }
 

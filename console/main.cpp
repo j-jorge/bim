@@ -64,8 +64,9 @@ static void display(const bm::game::contest& contest)
         screen_buffer[p.y][p.x] = "\033[31mó\033[0;0m";
       });
 
-  registry.view<bm::game::player>().each(
-      [&screen_buffer](const bm::game::player& p) -> void
+  registry.view<bm::game::player, bm::game::position_on_grid>().each(
+      [&screen_buffer](const bm::game::player&,
+                       const bm::game::position_on_grid& p) -> void
       {
         screen_buffer[p.y][p.x] = "\033[32mA\033[0;0m";
       });
@@ -122,16 +123,17 @@ int main()
           break;
 
         case 'A':
-          player_action.requested = bm::game::player_direction::up;
+          player_action.requested_direction = bm::game::player_direction::up;
           break;
         case 'B':
-          player_action.requested = bm::game::player_direction::down;
+          player_action.requested_direction = bm::game::player_direction::down;
           break;
         case 'C':
-          player_action.requested = bm::game::player_direction::right;
+          player_action.requested_direction
+              = bm::game::player_direction::right;
           break;
         case 'D':
-          player_action.requested = bm::game::player_direction::left;
+          player_action.requested_direction = bm::game::player_direction::left;
           break;
         case ' ':
           player_action.drop_bomb = true;

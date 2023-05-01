@@ -14,7 +14,7 @@
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#pragma once
+#include <bm/game/system/apply_player_action.hpp>
 
 #include <bm/game/arena.hpp>
 
@@ -27,28 +27,28 @@
 #include <entt/entity/registry.hpp>
 
 static void drop_bomb(entt::registry& registry, bm::game::arena& arena,
-                      const bm::game::player& player)
+                      const bm::game::player& player,
+                      const bm::game::position_on_grid& position)
 {
-  const std::uint8_t x = player.x;
-  const std::uint8_t y = player.y;
-
-  if (arena.entity_at(x, y) != entt::null)
+  if (arena.entity_at(position.x, position.y) != entt::null)
     return;
 
   const entt::entity bomb_entity = registry.create();
   registry.emplace<bm::game::bomb>(bomb_entity, std::chrono::seconds(1));
-  registry.emplace<bm::game::position_on_grid>(bomb_entity, player.x,
-                                               player.y);
+  registry.emplace<bm::game::position_on_grid>(bomb_entity, position);
 
-  arena.put_entity(x, y, bomb_entity);
+  arena.put_entity(position.x, position.y, bomb_entity);
 }
 
 static void move_player(bm::game::player& player,
+                        bm::game::position_on_grid& position,
                         bm::game::player_direction direction,
                         const bm::game::arena& arena)
 {
-  int x = player.x;
-  int y = player.y;
+  player.current_direction = direction;
+
+  int x = position.x;
+  int y = position.y;
 
   switch (direction)
     {
@@ -69,20 +69,21 @@ static void move_player(bm::game::player& player,
   if ((x >= 0) && (y >= 0) && (x < arena.width()) && (y < arena.height())
       && !arena.is_static_wall(x, y) && (arena.entity_at(x, y) == entt::null))
     {
-      player.x = x;
-      player.y = y;
+      position.x = x;
+      position.y = y;
     }
 }
 
 void bm::game::apply_player_action(entt::registry& registry, arena& arena)
 {
-  registry.view<player, player_action>().each(
-      [&registry, &arena](player& p, const player_action& a) -> void
+  registry.view<player, position_on_grid, player_action>().each(
+      [&registry, &arena](player& player, position_on_grid& position,
+                          const player_action& action) -> void
       {
-        if (a.drop_bomb)
-          drop_bomb(registry, arena, p);
+        if (action.drop_bomb)
+          drop_bomb(registry, arena, player, position);
 
-        if (a.requested)
-          move_player(p, *a.requested, arena);
+        if (action.requested_direction)
+          move_player(player, position, *action.requested_direction, arena);
       });
 }

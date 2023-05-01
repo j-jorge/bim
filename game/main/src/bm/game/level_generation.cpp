@@ -16,7 +16,10 @@
 */
 #include <bm/game/level_generation.hpp>
 
+#include <bm/game/arena.hpp>
+
 #include <bm/game/component/brick_wall.hpp>
+#include <bm/game/component/player.hpp>
 #include <bm/game/component/position_on_grid.hpp>
 
 #include <bm/game/assume.hpp>
@@ -78,8 +81,9 @@ void bm::game::insert_random_brick_walls(arena& arena,
   // Typically 4 players in the arena, and 9 blocks each them.
   forbidden_positions.reserve(4 * 9);
 
-  registry.view<bm::game::player>().each(
-      [&forbidden_positions](const bm::game::player& p) -> void
+  registry.view<bm::game::player, bm::game::position_on_grid>().each(
+      [&forbidden_positions](const bm::game::player&,
+                             const bm::game::position_on_grid& p) -> void
       {
         for (int y : { -1, 0, 1 })
           for (int x : { -1, 0, 1 })
