@@ -16,15 +16,15 @@
 */
 #pragma once
 
-#include <bm/game/player_action.hpp>
+#include <bm/game/component/player_direction_fwd.hpp>
 
 namespace bm::game
 {
-  struct player
+  enum class player_direction : std::uint8_t
   {
-    std::uint8_t x;
-    std::uint8_t y;
-
-    player_direction current_direction;
+    up,
+    down,
+    left,
+    right
   };
 }

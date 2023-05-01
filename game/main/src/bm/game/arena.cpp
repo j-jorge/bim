@@ -16,8 +16,9 @@
 */
 #include <bm/game/arena.hpp>
 
+#include <bm/game/component/position_on_grid.hpp>
+
 #include <bm/game/assume.hpp>
-#include <bm/game/position_on_grid.hpp>
 
 #include <entt/entity/entity.hpp>
 

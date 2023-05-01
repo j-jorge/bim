@@ -16,7 +16,7 @@
 */
 #pragma once
 
-#include <bm/game/player_direction_fwd.hpp>
+#include <bm/game/component/player_direction_fwd.hpp>
 
 #include <optional>
 

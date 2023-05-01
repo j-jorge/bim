@@ -16,9 +16,10 @@
 */
 #include <bm/game/level_generation.hpp>
 
+#include <bm/game/component/brick_wall.hpp>
+#include <bm/game/component/position_on_grid.hpp>
+
 #include <bm/game/assume.hpp>
-#include <bm/game/brick_wall.hpp>
-#include <bm/game/position_on_grid.hpp>
 #include <bm/game/random_generator.hpp>
 
 #include <entt/entity/registry.hpp>

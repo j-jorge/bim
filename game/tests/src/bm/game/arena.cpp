@@ -15,7 +15,8 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include <bm/game/arena.hpp>
-#include <bm/game/position_on_grid.hpp>
+
+#include <bm/game/component/position_on_grid.hpp>
 
 #include <entt/entity/registry.hpp>
 

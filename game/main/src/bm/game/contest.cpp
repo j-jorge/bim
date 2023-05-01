@@ -16,10 +16,11 @@
 */
 #include <bm/game/contest.hpp>
 
+#include <bm/game/component/player.hpp>
+#include <bm/game/component/player_action.hpp>
+#include <bm/game/component/player_direction.hpp>
+
 #include <bm/game/level_generation.hpp>
-#include <bm/game/player.hpp>
-#include <bm/game/player_action.hpp>
-#include <bm/game/player_direction.hpp>
 
 bm::game::contest::contest(std::uint64_t seed,
                            std::uint8_t brick_wall_probability,

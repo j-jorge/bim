@@ -14,12 +14,13 @@
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include <bm/game/brick_wall.hpp>
 #include <bm/game/contest.hpp>
-#include <bm/game/player.hpp>
-#include <bm/game/player_action.hpp>
-#include <bm/game/player_direction.hpp>
-#include <bm/game/position_on_grid.hpp>
+
+#include <bm/game/component/brick_wall.hpp>
+#include <bm/game/component/player.hpp>
+#include <bm/game/component/player_action.hpp>
+#include <bm/game/component/player_direction.hpp>
+#include <bm/game/component/position_on_grid.hpp>
 
 #include <atomic>
 #include <chrono>
