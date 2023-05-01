@@ -31,9 +31,9 @@ static void update_player_movement(bm::game::player& player,
   int x = player.x;
   int y = player.y;
 
-  if(action.requested)
+  if (action.requested)
     {
-      switch(*action.requested)
+      switch (*action.requested)
         {
         case bm::game::player_direction::left:
           x -= 1;
@@ -49,9 +49,9 @@ static void update_player_movement(bm::game::player& player,
           break;
         }
 
-      if((x >= 0) && (y >= 0) && (x < arena.width()) && (y < arena.height())
-         && !arena.is_static_wall(x, y)
-         && (arena.entity_at(x, y) == entt::null))
+      if ((x >= 0) && (y >= 0) && (x < arena.width()) && (y < arena.height())
+          && !arena.is_static_wall(x, y)
+          && (arena.entity_at(x, y) == entt::null))
         {
           player.x = x;
           player.y = y;

@@ -45,9 +45,9 @@ static void display(const bm::game::contest& contest)
   std::vector<std::vector<std::string>> screen_buffer(
       arena_height, std::vector<std::string>(arena_width, " "));
 
-  for(std::uint8_t y = 0; y != arena_height; ++y)
-    for(std::uint8_t x = 0; x != arena_width; ++x)
-      if(arena.is_static_wall(x, y))
+  for (std::uint8_t y = 0; y != arena_height; ++y)
+    for (std::uint8_t x = 0; x != arena_width; ++x)
+      if (arena.is_static_wall(x, y))
         screen_buffer[y][x] = "\033[100m \033[0;0m";
 
   registry.view<bm::game::position_on_grid, bm::game::brick_wall>().each(
@@ -67,9 +67,9 @@ static void display(const bm::game::contest& contest)
 
   std::cout << clear_screen << move_top_left;
 
-  for(std::uint8_t y = 0; y != arena_height; ++y)
+  for (std::uint8_t y = 0; y != arena_height; ++y)
     {
-      for(std::uint8_t x = 0; x != arena_width; ++x)
+      for (std::uint8_t x = 0; x != arena_width; ++x)
         std::cout << screen_buffer[y][x];
 
       std::cout << '\n';
@@ -94,7 +94,7 @@ int main()
   std::thread input_thread(
       [&input, &quit]() -> void
       {
-        while(!quit.load())
+        while (!quit.load())
           input.store(std::getchar());
       });
 
@@ -103,11 +103,11 @@ int main()
   bm::game::player_action& player_action
       = registry.get<bm::game::player_action>(local_player);
 
-  while(!quit.load())
+  while (!quit.load())
     {
       player_action = bm::game::player_action{};
 
-      switch(input.exchange(0))
+      switch (input.exchange(0))
         {
         case 'q':
           quit.store(true);
@@ -135,7 +135,7 @@ int main()
       std::this_thread::sleep_for(std::chrono::milliseconds(16));
     }
 
-  if(input_thread.joinable())
+  if (input_thread.joinable())
     input_thread.join();
 
   tcsetattr(STDIN_FILENO, TCSANOW, &original_terminal);

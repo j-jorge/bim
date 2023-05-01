@@ -35,8 +35,8 @@ TEST_P(bm_game_arena_test, defaults)
   EXPECT_EQ(width, arena.width());
   EXPECT_EQ(height, arena.height());
 
-  for(int y = 0; y != height; ++y)
-    for(int x = 0; x != width; ++x)
+  for (int y = 0; y != height; ++y)
+    for (int x = 0; x != width; ++x)
       EXPECT_FALSE(arena.is_static_wall(x, y)) << "x=" << x << ", y=" << y;
 
   arena.set_static_wall(0, 0);
@@ -51,11 +51,11 @@ TEST_P(bm_game_arena_test, defaults)
   arena.set_static_wall(width / 2, height / 2);
   EXPECT_TRUE(arena.is_static_wall(width / 2, height / 2));
 
-  for(int y = 0; y != height; ++y)
-    for(int x = 0; x != width; ++x)
-      if(((y == 0) && (x == 0)) || ((y == 0) && (x == width / 2))
-         || ((y == height / 2) && (x == 0))
-         || ((y == height / 2) && (x == width / 2)))
+  for (int y = 0; y != height; ++y)
+    for (int x = 0; x != width; ++x)
+      if (((y == 0) && (x == 0)) || ((y == 0) && (x == width / 2))
+          || ((y == height / 2) && (x == 0))
+          || ((y == height / 2) && (x == width / 2)))
         EXPECT_TRUE(arena.is_static_wall(x, y)) << "x=" << x << ", y=" << y;
       else
         EXPECT_FALSE(arena.is_static_wall(x, y)) << "x=" << x << ", y=" << y;

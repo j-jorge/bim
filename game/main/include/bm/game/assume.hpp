@@ -24,10 +24,10 @@
   #define bm_assume(b)                                                        \
     do                                                                        \
       {                                                                       \
-        if(b)                                                                 \
+        if (b)                                                                \
           __builtin_unreachable();                                            \
       }                                                                       \
-    while(false)
+    while (false)
 #else
   #define bm_assume(b)
 #endif

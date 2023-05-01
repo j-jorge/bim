@@ -43,22 +43,22 @@ TEST_P(bm_game_level_generation_test, basic_solid_structure)
   bm::game::generate_basic_level_structure(arena);
 
   // Top border: solid walls everywhere.
-  for(int x = 0; x != width; ++x)
+  for (int x = 0; x != width; ++x)
     EXPECT_TRUE(arena.is_static_wall(x, 0)) << "x=" << x;
 
-  for(int y = 1; y != height - 1; ++y)
+  for (int y = 1; y != height - 1; ++y)
     {
       // Left border: solid walls everywhere.
       EXPECT_TRUE(arena.is_static_wall(0, y)) << "y=" << y;
 
       // Odd line: no wall.
-      if(y % 2 == 1)
-        for(int x = 1; x != width - 1; ++x)
+      if (y % 2 == 1)
+        for (int x = 1; x != width - 1; ++x)
           EXPECT_FALSE(arena.is_static_wall(x, y)) << "y=" << y << ", x=" << x;
       else
         // Even line: a wall every two cells.
-        for(int x = 1; x != width - 1; ++x)
-          if(x % 2 == 0)
+        for (int x = 1; x != width - 1; ++x)
+          if (x % 2 == 0)
             EXPECT_TRUE(arena.is_static_wall(x, y))
                 << "y=" << y << ", x=" << x;
           else
@@ -71,7 +71,7 @@ TEST_P(bm_game_level_generation_test, basic_solid_structure)
     }
 
   // Bottom border: solid walls everywhere.
-  for(int x = 0; x != width; ++x)
+  for (int x = 0; x != width; ++x)
     EXPECT_TRUE(arena.is_static_wall(x, height - 1))
         << "height - 1=" << (height - 1) << "x=" << x;
 }
@@ -90,12 +90,12 @@ TEST_P(bm_game_level_generation_test, random_brick_walls)
 
   int free_cell_count = 0;
 
-  for(int y = 0; y != height; ++y)
-    for(int x = 0; x != width; ++x)
+  for (int y = 0; y != height; ++y)
+    for (int x = 0; x != width; ++x)
       {
         const entt::entity entity = arena.entity_at(x, y);
 
-        if(arena.is_static_wall(x, y))
+        if (arena.is_static_wall(x, y))
           EXPECT_TRUE(entt::null == entity);
         else
           ++free_cell_count;
@@ -142,7 +142,7 @@ TEST(bm_game_insert_random_brick_walls, no_walls_near_player)
   // Create the actual player entities that should be used by
   // insert_random_brick_walls to avoid creating walls.
   int i = 0;
-  for(entt::entity e : player_entities)
+  for (entt::entity e : player_entities)
     {
       registry.emplace<bm::game::player>(e, player_positions[i].x,
                                          player_positions[i].y,
@@ -155,13 +155,13 @@ TEST(bm_game_insert_random_brick_walls, no_walls_near_player)
   // Insert brick walls with a 100% probability, i.e. create a wall every time.
   bm::game::insert_random_brick_walls(arena, registry, random, 100);
 
-  for(int y = 0; y != height; ++y)
-    for(int x = 0; x != width; ++x)
+  for (int y = 0; y != height; ++y)
+    for (int x = 0; x != width; ++x)
       {
         bool near_player_position = false;
 
-        for(bm::game::position_on_grid p : player_positions)
-          if((std::abs(p.x - x) <= 1) && (std::abs(p.y - y) <= 1))
+        for (bm::game::position_on_grid p : player_positions)
+          if ((std::abs(p.x - x) <= 1) && (std::abs(p.y - y) <= 1))
             {
               near_player_position = true;
               break;
@@ -169,7 +169,7 @@ TEST(bm_game_insert_random_brick_walls, no_walls_near_player)
 
         const entt::entity entity_in_arena = arena.entity_at(x, y);
 
-        if(near_player_position)
+        if (near_player_position)
           EXPECT_TRUE(entt::null == entity_in_arena);
         else
           EXPECT_TRUE(registry.storage<bm::game::brick_wall>().contains(

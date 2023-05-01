@@ -31,7 +31,7 @@ bm::game::contest::contest(std::uint64_t seed,
   : m_random(seed)
   , m_arena(arena_width, arena_height)
 {
-  for(int i = 0; i != 10; ++i)
+  for (int i = 0; i != 10; ++i)
     m_random();
 
   bm_assume(player_count > 0);
@@ -41,7 +41,7 @@ bm::game::contest::contest(std::uint64_t seed,
   const int start_position_count = std::size(player_start_position_x);
   assert(start_position_count == std::size(player_start_position_y));
 
-  for(std::size_t i = 0; i != player_count; ++i)
+  for (std::size_t i = 0; i != player_count; ++i)
     {
       entt::entity p = m_registry.create();
       const int start_position_index = i % start_position_count;

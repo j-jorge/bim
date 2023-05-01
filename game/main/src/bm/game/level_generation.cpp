@@ -36,21 +36,21 @@ void bm::game::generate_basic_level_structure(arena& arena)
   bm_assume(height >= 3);
 
   // Unbreakable walls on the borders.
-  for(int x = 0; x != width; ++x)
+  for (int x = 0; x != width; ++x)
     arena.set_static_wall(x, 0);
 
-  for(int x = 0; x != width; ++x)
+  for (int x = 0; x != width; ++x)
     arena.set_static_wall(x, height - 1);
 
-  for(int y = 1; y < height - 1; ++y)
+  for (int y = 1; y < height - 1; ++y)
     arena.set_static_wall(0, y);
 
-  for(int y = 1; y < height - 1; ++y)
+  for (int y = 1; y < height - 1; ++y)
     arena.set_static_wall(width - 1, y);
 
   // Unbreakable walls in the game area.
-  for(int y = 2; y < height - 1; y += 2)
-    for(int x = 2; x < width - 1; x += 2)
+  for (int y = 2; y < height - 1; y += 2)
+    for (int x = 2; x < width - 1; x += 2)
       arena.set_static_wall(x, y);
 }
 
@@ -81,16 +81,16 @@ void bm::game::insert_random_brick_walls(arena& arena,
   registry.view<bm::game::player>().each(
       [&forbidden_positions](const bm::game::player& p) -> void
       {
-        for(int y : { -1, 0, 1 })
-          for(int x : { -1, 0, 1 })
+        for (int y : { -1, 0, 1 })
+          for (int x : { -1, 0, 1 })
             forbidden_positions.push_back(position_on_grid(p.x + x, p.y + y));
       });
 
-  for(int y = 0; y != height; ++y)
-    for(int x = 0; x != width; ++x)
-      if(!arena.is_static_wall(x, y)
-         && !boost::algorithm::any_of_equal(forbidden_positions,
-                                            position_on_grid(x, y))
-         && (random(random_generator) < brick_wall_probability))
+  for (int y = 0; y != height; ++y)
+    for (int x = 0; x != width; ++x)
+      if (!arena.is_static_wall(x, y)
+          && !boost::algorithm::any_of_equal(forbidden_positions,
+                                             position_on_grid(x, y))
+          && (random(random_generator) < brick_wall_probability))
         arena.put_entity(x, y, new_brick_wall(registry, x, y));
 }
