@@ -61,7 +61,14 @@ static void display(const bm::game::contest& contest)
       [&screen_buffer](const bm::game::position_on_grid& p,
                        const bm::game::bomb& b) -> void
       {
-        screen_buffer[p.y][p.x] = "\033[31mó\033[0;0m";
+        const size_t f = (b.duration_until_explosion > std::chrono::seconds(1))
+                             ? 300
+                             : 100;
+
+        if (b.duration_until_explosion.count() / f % 2 == 0)
+          screen_buffer[p.y][p.x] = "\033[31mó\033[0;0m";
+        else
+          screen_buffer[p.y][p.x] = "\033[91mó\033[0;0m";
       });
 
   registry.view<bm::game::player, bm::game::position_on_grid>().each(

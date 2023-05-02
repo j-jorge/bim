@@ -16,12 +16,24 @@
 */
 #pragma once
 
-#include <chrono>
+#include <bm/game/system/update_bombs.hpp>
 
-namespace bm::game
+#include <bm/game/component/bomb.hpp>
+
+#include <entt/entity/registry.hpp>
+
+void bm::game::update_bombs(entt::registry& registry, arena& arena,
+                            std::chrono::milliseconds elapsed_time)
 {
-  struct bomb
-  {
-    std::chrono::milliseconds duration_until_explosion;
-  };
+  registry.view<bomb>().each(
+      [&](bomb& b) -> void
+      {
+        if (elapsed_time >= b.duration_until_explosion)
+          {
+            // remove_bomb();
+            // create_flames();
+          }
+        else
+          b.duration_until_explosion -= elapsed_time;
+      });
 }

@@ -16,12 +16,14 @@
 */
 #pragma once
 
+#include <entt/entity/fwd.hpp>
+
 #include <chrono>
 
 namespace bm::game
 {
-  struct bomb
-  {
-    std::chrono::milliseconds duration_until_explosion;
-  };
+  class arena;
+
+  void update_bombs(entt::registry& registry, arena& arena,
+                    std::chrono::milliseconds elapsed_time);
 }

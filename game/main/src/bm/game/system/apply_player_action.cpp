@@ -34,7 +34,7 @@ static void drop_bomb(entt::registry& registry, bm::game::arena& arena,
     return;
 
   const entt::entity bomb_entity = registry.create();
-  registry.emplace<bm::game::bomb>(bomb_entity, std::chrono::seconds(1));
+  registry.emplace<bm::game::bomb>(bomb_entity, std::chrono::seconds(2));
   registry.emplace<bm::game::position_on_grid>(bomb_entity, position);
 
   arena.put_entity(position.x, position.y, bomb_entity);

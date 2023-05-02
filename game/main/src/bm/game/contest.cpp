@@ -22,6 +22,7 @@
 #include <bm/game/component/position_on_grid.hpp>
 
 #include <bm/game/system/apply_player_action.hpp>
+#include <bm/game/system/update_bombs.hpp>
 
 #include <bm/game/level_generation.hpp>
 
@@ -69,7 +70,7 @@ void bm::game::contest::tick(std::chrono::nanoseconds elapsed_time)
        m_elapsed_time -= tick_interval)
     {
       apply_player_action(m_registry, m_arena);
-      // update_bombs(m_registry, m_arena, tick_interval);
+      update_bombs(m_registry, m_arena, tick_interval);
 
       // update_flames(m_flames, m_arena);
       // update_player_movement(m_players, m_arena);

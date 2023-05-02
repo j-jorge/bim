@@ -27,6 +27,7 @@ add_library(bm_game
   game/main/src/bm/game/random_generator.cpp
 
   game/main/src/bm/game/system/apply_player_action.cpp
+  game/main/src/bm/game/system/update_bombs.cpp
 )
 target_include_directories(bm_game PUBLIC ./game/main/include)
 target_link_libraries(bm_game PUBLIC EnTT::EnTT)
