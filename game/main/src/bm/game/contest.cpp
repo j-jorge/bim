@@ -33,6 +33,7 @@ bm::game::contest::contest(std::uint64_t seed,
                            std::uint8_t arena_height)
   : m_random(seed)
   , m_arena(arena_width, arena_height)
+  , m_elapsed_time(0)
 {
   for (int i = 0; i != 10; ++i)
     m_random();
@@ -60,14 +61,20 @@ bm::game::contest::contest(std::uint64_t seed,
                             brick_wall_probability);
 }
 
-void bm::game::contest::tick()
+void bm::game::contest::tick(std::chrono::nanoseconds elapsed_time)
 {
-  apply_player_action(m_registry, m_arena);
+  constexpr std::chrono::milliseconds tick_interval(20);
 
-  // update_bombs(m_bombs, m_arena);
-  // update_flames(m_flames, m_arena);
-  // update_player_movement(m_players, m_arena);
-  // check_player_collision(m_players, m_arena);
+  for (m_elapsed_time += elapsed_time; m_elapsed_time >= tick_interval;
+       m_elapsed_time -= tick_interval)
+    {
+      apply_player_action(m_registry, m_arena);
+      // update_bombs(m_registry, m_arena, tick_interval);
+
+      // update_flames(m_flames, m_arena);
+      // update_player_movement(m_players, m_arena);
+      // check_player_collision(m_players, m_arena);
+    }
 }
 
 entt::registry& bm::game::contest::registry()

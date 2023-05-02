@@ -112,8 +112,15 @@ int main()
   bm::game::player_action& player_action
       = registry.get<bm::game::player_action>(local_player);
 
+  // 60 updates per second.
+  constexpr std::chrono::duration<std::size_t, std::ratio<1, 60>>
+      update_interval(1);
+
   while (!quit.load())
     {
+      const std::chrono::steady_clock::time_point now
+          = std::chrono::steady_clock::now();
+
       player_action = bm::game::player_action{};
 
       switch (input.exchange(0))
@@ -140,9 +147,11 @@ int main()
           break;
         }
 
-      contest.tick();
+      contest.tick(std::chrono::duration_cast<std::chrono::nanoseconds>(
+          update_interval));
       display(contest);
-      std::this_thread::sleep_for(std::chrono::milliseconds(16));
+
+      std::this_thread::sleep_until(now + update_interval);
     }
 
   if (input_thread.joinable())

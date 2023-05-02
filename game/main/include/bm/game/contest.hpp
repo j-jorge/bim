@@ -21,6 +21,8 @@
 
 #include <entt/entity/registry.hpp>
 
+#include <chrono>
+
 namespace bm::game
 {
   class contest
@@ -30,7 +32,7 @@ namespace bm::game
             std::uint8_t player_count, std::uint8_t arena_width,
             std::uint8_t arena_height);
 
-    void tick();
+    void tick(std::chrono::nanoseconds elapsed_time);
 
     entt::registry& registry();
     const entt::registry& registry() const;
@@ -40,5 +42,6 @@ namespace bm::game
     entt::registry m_registry;
     bm::game::random_generator m_random;
     bm::game::arena m_arena;
+    std::chrono::nanoseconds m_elapsed_time;
   };
 }
