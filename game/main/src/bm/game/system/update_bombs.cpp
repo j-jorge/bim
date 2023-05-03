@@ -19,18 +19,21 @@
 #include <bm/game/system/update_bombs.hpp>
 
 #include <bm/game/component/bomb.hpp>
+#include <bm/game/component/position_on_grid.hpp>
 
 #include <entt/entity/registry.hpp>
 
 void bm::game::update_bombs(entt::registry& registry, arena& arena,
                             std::chrono::milliseconds elapsed_time)
 {
-  registry.view<bomb>().each(
-      [&](bomb& b) -> void
+  registry.view<bomb, position_on_grid>().each(
+      [&](entt::entity e, bomb& b, position_on_grid position) -> void
       {
         if (elapsed_time >= b.duration_until_explosion)
           {
-            // remove_bomb();
+            registry.destroy(e);
+            arena.erase_entity(position.x, position.y);
+
             // create_flames();
           }
         else

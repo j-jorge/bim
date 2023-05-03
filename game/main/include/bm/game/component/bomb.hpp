@@ -17,11 +17,13 @@
 #pragma once
 
 #include <chrono>
+#include <cstdint>
 
 namespace bm::game
 {
   struct bomb
   {
     std::chrono::milliseconds duration_until_explosion;
+    uint8_t strength;
   };
 }

@@ -47,7 +47,13 @@ entt::entity bm::game::arena::entity_at(std::uint8_t x, std::uint8_t y) const
 void bm::game::arena::put_entity(std::uint8_t x, std::uint8_t y,
                                  entt::entity e)
 {
+  assert(entity_at(x, y) == entt::null);
   m_entities[y * m_width + x] = e;
+}
+
+void bm::game::arena::erase_entity(std::uint8_t x, std::uint8_t y)
+{
+  m_entities[y * m_width + x] = entt::null;
 }
 
 bool bm::game::arena::is_static_wall(std::uint8_t x, std::uint8_t y) const

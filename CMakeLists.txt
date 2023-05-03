@@ -35,6 +35,8 @@ target_link_libraries(bm_game PUBLIC EnTT::EnTT)
 add_executable(game-tests
   ./game/tests/src/bm/game/arena.cpp
   ./game/tests/src/bm/game/level_generation.cpp
+
+  ./game/tests/src/bm/game/system/update_bombs.cpp
 )
 target_link_libraries(game-tests PRIVATE bm_game GTest::gtest GTest::gtest_main)
 
