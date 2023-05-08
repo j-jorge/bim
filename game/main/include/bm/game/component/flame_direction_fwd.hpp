@@ -16,17 +16,9 @@
 */
 #pragma once
 
-#include <bm/game/component/flame_direction_fwd.hpp>
-
-#include <chrono>
-
 namespace bm::game
 {
-  struct flame
-  {
-    flame_horizontal horizontal;
-    flame_vertical vertical;
-    flame_end end;
-    std::chrono::milliseconds time_to_live;
-  };
+  enum class flame_horizontal : bool;
+  enum class flame_vertical : bool;
+  enum class flame_end : bool;
 }

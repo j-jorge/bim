@@ -14,19 +14,24 @@
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#pragma once
+#include <bm/game/factory/flame.hpp>
 
-#include <bm/game/component/flame_direction_fwd.hpp>
+#include <bm/game/component/flame.hpp>
+#include <bm/game/component/position_on_grid.hpp>
 
-#include <chrono>
+#include <entt/entity/registry.hpp>
 
-namespace bm::game
+entt::entity bm::game::flame_factory(entt::registry& registry, std::uint8_t x,
+                                     std::uint8_t y,
+                                     flame_horizontal horizontal,
+                                     flame_vertical vertical, flame_end end)
 {
-  struct flame
-  {
-    flame_horizontal horizontal;
-    flame_vertical vertical;
-    flame_end end;
-    std::chrono::milliseconds time_to_live;
-  };
+  const entt::entity entity = registry.create();
+
+  registry.emplace<flame>(entity, horizontal, vertical, end,
+                          std::chrono::milliseconds(800));
+
+  registry.emplace<position_on_grid>(entity, x, y);
+
+  return entity;
 }

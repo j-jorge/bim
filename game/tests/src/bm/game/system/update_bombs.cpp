@@ -20,6 +20,7 @@
 
 #include <bm/game/component/bomb.hpp>
 #include <bm/game/component/flame.hpp>
+#include <bm/game/component/flame_direction.hpp>
 #include <bm/game/component/position_on_grid.hpp>
 
 #include <entt/entity/registry.hpp>

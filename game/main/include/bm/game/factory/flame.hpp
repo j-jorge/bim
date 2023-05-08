@@ -18,15 +18,13 @@
 
 #include <bm/game/component/flame_direction_fwd.hpp>
 
-#include <chrono>
+#include <entt/entity/fwd.hpp>
+
+#include <cstdint>
 
 namespace bm::game
 {
-  struct flame
-  {
-    flame_horizontal horizontal;
-    flame_vertical vertical;
-    flame_end end;
-    std::chrono::milliseconds time_to_live;
-  };
+  entt::entity flame_factory(entt::registry& registry, std::uint8_t x,
+                             std::uint8_t y, flame_horizontal horizontal,
+                             flame_vertical vertical, flame_end end);
 }

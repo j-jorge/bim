@@ -26,6 +26,8 @@ add_library(bm_game
   game/main/src/bm/game/level_generation.cpp
   game/main/src/bm/game/random_generator.cpp
 
+  game/main/src/bm/game/factory/flame.cpp
+
   game/main/src/bm/game/system/apply_player_action.cpp
   game/main/src/bm/game/system/update_bombs.cpp
 )
