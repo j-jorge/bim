@@ -84,9 +84,10 @@ TEST(update_bombs, explode_strength_2)
   bm::game::arena arena(5, 3);
   const std::uint8_t bomb_x = arena.width() / 2;
   const std::uint8_t bomb_y = arena.height() / 2;
+  const std::uint8_t strength = 2;
 
   const entt::entity entity = bm::game::bomb_factory(
-      registry, bomb_x, bomb_y, 2, std::chrono::milliseconds(24));
+      registry, bomb_x, bomb_y, strength, std::chrono::milliseconds(24));
 
   bm::game::update_bombs(registry, arena, std::chrono::milliseconds(12));
   EXPECT_TRUE(registry.storage<bm::game::bomb>().contains(entity));
@@ -98,4 +99,31 @@ TEST(update_bombs, explode_strength_2)
   EXPECT_EQ("  V  ", flames[0]);
   EXPECT_EQ("hHBHh", flames[1]);
   EXPECT_EQ("  V  ", flames[2]);
+}
+
+TEST(update_bombs, explode_strength_5)
+{
+  entt::registry registry;
+  bm::game::arena arena(11, 11);
+  const std::uint8_t bomb_x = arena.width() / 2;
+  const std::uint8_t bomb_y = arena.height() / 2;
+  const std::uint8_t strength = 5;
+
+  bm::game::bomb_factory(registry, bomb_x, bomb_y, strength,
+                         std::chrono::milliseconds(0));
+
+  bm::game::update_bombs(registry, arena, std::chrono::milliseconds(24));
+
+  const std::vector<std::string> flames = flames_map(arena, registry);
+  EXPECT_EQ("     v     ", flames[0]);
+  EXPECT_EQ("     V     ", flames[1]);
+  EXPECT_EQ("     V     ", flames[2]);
+  EXPECT_EQ("     V     ", flames[3]);
+  EXPECT_EQ("     V     ", flames[4]);
+  EXPECT_EQ("hHHHHBHHHHh", flames[5]);
+  EXPECT_EQ("     V     ", flames[6]);
+  EXPECT_EQ("     V     ", flames[7]);
+  EXPECT_EQ("     V     ", flames[8]);
+  EXPECT_EQ("     V     ", flames[9]);
+  EXPECT_EQ("     v     ", flames[10]);
 }
