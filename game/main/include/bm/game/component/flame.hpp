@@ -16,12 +16,33 @@
 */
 #pragma once
 
-#include <cstdint>
+#include <chrono>
 
 namespace bm::game
 {
+  enum class flame_horizontal : bool
+  {
+    yes,
+    no
+  };
+
+  enum class flame_vertical : bool
+  {
+    yes,
+    no
+  };
+
+  enum class flame_end : bool
+  {
+    yes,
+    no
+  };
+
   struct flame
   {
-    std::uint8_t time_to_live;
+    flame_horizontal horizontal;
+    flame_vertical vertical;
+    flame_end end;
+    std::chrono::milliseconds time_to_live;
   };
 }

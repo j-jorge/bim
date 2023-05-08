@@ -19,11 +19,47 @@
 #include <bm/game/arena.hpp>
 
 #include <bm/game/component/bomb.hpp>
+#include <bm/game/component/flame.hpp>
 #include <bm/game/component/position_on_grid.hpp>
 
 #include <entt/entity/registry.hpp>
 
+#include <string>
+#include <vector>
+
 #include <gtest/gtest.h>
+
+static std::vector<std::string> flames_map(const bm::game::arena& arena,
+                                           const entt::registry& registry)
+{
+  std::vector<std::string> result(arena.height(),
+                                  std::string(arena.width(), ' '));
+
+  registry.view<bm::game::flame, bm::game::position_on_grid>().each(
+      [&](entt::entity e, bm::game::flame f,
+          bm::game::position_on_grid p) -> void
+      {
+        EXPECT_TRUE(arena.entity_at(p.x, p.y) == e);
+        EXPECT_EQ(' ', result[p.y][p.x]);
+
+        EXPECT_TRUE((f.horizontal == bm::game::flame_horizontal::yes)
+                    || (f.vertical == bm::game::flame_vertical::yes));
+
+        if (f.horizontal == bm::game::flame_horizontal::yes)
+          if (f.vertical == bm::game::flame_vertical::yes)
+            result[p.y][p.x] = 'B';
+          else if (f.end == bm::game::flame_end::yes)
+            result[p.y][p.x] = 'h';
+          else
+            result[p.y][p.x] = 'H';
+        else if (f.end == bm::game::flame_end::yes)
+          result[p.y][p.x] = 'v';
+        else
+          result[p.y][p.x] = 'V';
+      });
+
+  return result;
+}
 
 TEST(update_bombs, delay)
 {
@@ -49,13 +85,17 @@ TEST(update_bombs, explode_strength_2)
   const std::uint8_t bomb_y = arena.height() / 2;
 
   const entt::entity entity = registry.create();
-  registry.emplace<bm::game::bomb>(entity, std::chrono::milliseconds(24), 0);
+  registry.emplace<bm::game::bomb>(entity, std::chrono::milliseconds(24), 2);
   registry.emplace<bm::game::position_on_grid>(entity, bomb_x, bomb_y);
 
   bm::game::update_bombs(registry, arena, std::chrono::milliseconds(12));
   EXPECT_TRUE(registry.storage<bm::game::bomb>().contains(entity));
 
   bm::game::update_bombs(registry, arena, std::chrono::milliseconds(12));
-  EXPECT_TRUE(entt::null == arena.entity_at(bomb_x, bomb_y));
   EXPECT_FALSE(registry.storage<bm::game::bomb>().contains(entity));
+
+  const std::vector<std::string> flames = flames_map(arena, registry);
+  EXPECT_EQ("  V  ", flames[0]);
+  EXPECT_EQ("hHBHh", flames[1]);
+  EXPECT_EQ("  V  ", flames[2]);
 }
