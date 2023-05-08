@@ -18,11 +18,11 @@
 
 #include <bm/game/arena.hpp>
 
-#include <bm/game/component/bomb.hpp>
 #include <bm/game/component/player.hpp>
 #include <bm/game/component/player_action.hpp>
 #include <bm/game/component/player_direction.hpp>
 #include <bm/game/component/position_on_grid.hpp>
+#include <bm/game/factory/bomb.hpp>
 
 #include <entt/entity/registry.hpp>
 
@@ -33,11 +33,9 @@ static void drop_bomb(entt::registry& registry, bm::game::arena& arena,
   if (arena.entity_at(position.x, position.y) != entt::null)
     return;
 
-  const entt::entity bomb_entity = registry.create();
-  registry.emplace<bm::game::bomb>(bomb_entity, std::chrono::seconds(2));
-  registry.emplace<bm::game::position_on_grid>(bomb_entity, position);
-
-  arena.put_entity(position.x, position.y, bomb_entity);
+  arena.put_entity(position.x, position.y,
+                   bm::game::bomb_factory(registry, position.x, position.y,
+                                          player.bomb_strength));
 }
 
 static void move_player(bm::game::player& player,

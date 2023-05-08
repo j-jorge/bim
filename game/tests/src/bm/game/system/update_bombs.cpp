@@ -22,6 +22,7 @@
 #include <bm/game/component/flame.hpp>
 #include <bm/game/component/flame_direction.hpp>
 #include <bm/game/component/position_on_grid.hpp>
+#include <bm/game/factory/bomb.hpp>
 
 #include <entt/entity/registry.hpp>
 
@@ -67,10 +68,9 @@ TEST(update_bombs, delay)
   entt::registry registry;
   bm::game::arena arena(3, 3);
 
-  const entt::entity entity = registry.create();
-  const bm::game::bomb& bomb = registry.emplace<bm::game::bomb>(
-      entity, std::chrono::milliseconds(24), 0);
-  registry.emplace<bm::game::position_on_grid>(entity, 0, 0);
+  const entt::entity entity = bm::game::bomb_factory(
+      registry, 0, 0, 0, std::chrono::milliseconds(24));
+  bm::game::bomb& bomb = registry.get<bm::game::bomb>(entity);
 
   EXPECT_EQ(std::chrono::milliseconds(24), bomb.duration_until_explosion);
 
@@ -85,9 +85,8 @@ TEST(update_bombs, explode_strength_2)
   const std::uint8_t bomb_x = arena.width() / 2;
   const std::uint8_t bomb_y = arena.height() / 2;
 
-  const entt::entity entity = registry.create();
-  registry.emplace<bm::game::bomb>(entity, std::chrono::milliseconds(24), 2);
-  registry.emplace<bm::game::position_on_grid>(entity, bomb_x, bomb_y);
+  const entt::entity entity = bm::game::bomb_factory(
+      registry, bomb_x, bomb_y, 2, std::chrono::milliseconds(24));
 
   bm::game::update_bombs(registry, arena, std::chrono::milliseconds(12));
   EXPECT_TRUE(registry.storage<bm::game::bomb>().contains(entity));

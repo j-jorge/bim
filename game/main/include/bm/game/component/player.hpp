@@ -18,10 +18,13 @@
 
 #include <bm/game/component/player_action.hpp>
 
+#include <cstdint>
+
 namespace bm::game
 {
   struct player
   {
     player_direction current_direction;
+    std::uint8_t bomb_strength;
   };
 }

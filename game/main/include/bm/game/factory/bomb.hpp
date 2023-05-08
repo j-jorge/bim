@@ -16,14 +16,17 @@
 */
 #pragma once
 
+#include <entt/entity/fwd.hpp>
+
 #include <chrono>
 #include <cstdint>
 
 namespace bm::game
 {
-  struct bomb
-  {
-    std::chrono::milliseconds duration_until_explosion;
-    std::uint8_t strength;
-  };
+  entt::entity bomb_factory(entt::registry& registry, std::uint8_t x,
+                            std::uint8_t y, std::uint8_t strength);
+  entt::entity
+  bomb_factory(entt::registry& registry, std::uint8_t x, std::uint8_t y,
+               std::uint8_t strength,
+               std::chrono::milliseconds duration_until_explosion);
 }
