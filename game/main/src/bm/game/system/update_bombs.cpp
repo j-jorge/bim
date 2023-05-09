@@ -21,6 +21,7 @@
 #include <bm/game/system/update_bombs.hpp>
 
 #include <bm/game/component/bomb.hpp>
+#include <bm/game/component/burning.hpp>
 #include <bm/game/component/flame_direction.hpp>
 #include <bm/game/component/position_on_grid.hpp>
 
@@ -38,10 +39,9 @@ static bool burn(entt::registry& registry, bm::game::arena& arena,
 
   if (entity != entt::null)
     {
-      if (bm::game::bomb* bomb = registry.try_get<bm::game::bomb>(entity))
-        bomb->duration_until_explosion = std::chrono::seconds(0);
+      if (!registry.storage<bm::game::burning>().contains(entity))
+        registry.emplace<bm::game::burning>(entity);
 
-      // burning: wall destroy, player death, bonus pop, flame horizontal
       return false;
     }
   else
@@ -103,6 +103,12 @@ static void create_flames(entt::registry& registry, bm::game::arena& arena,
 void bm::game::update_bombs(entt::registry& registry, arena& arena,
                             std::chrono::milliseconds elapsed_time)
 {
+  registry.view<bomb, burning>().each(
+      [&](bomb& b) -> void
+      {
+        b.duration_until_explosion = std::chrono::seconds(0);
+      });
+
   registry.view<bomb, position_on_grid>().each(
       [&](entt::entity e, bomb& b, position_on_grid position) -> void
       {
