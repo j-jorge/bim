@@ -127,3 +127,60 @@ TEST(update_bombs, explode_strength_5)
   EXPECT_EQ("     V     ", flames[9]);
   EXPECT_EQ("     v     ", flames[10]);
 }
+
+TEST(update_bombs, chain_reaction)
+{
+  entt::registry registry;
+  bm::game::arena arena(8, 7);
+  const std::uint8_t strength = 2;
+
+  arena.put_entity(3, 3,
+                   bm::game::bomb_factory(registry, 3, 3, strength,
+                                          std::chrono::milliseconds(10)));
+  arena.put_entity(4, 3,
+                   bm::game::bomb_factory(registry, 4, 3, strength,
+                                          std::chrono::milliseconds(200)));
+  arena.put_entity(6, 3,
+                   bm::game::bomb_factory(registry, 6, 3, strength,
+                                          std::chrono::milliseconds(200)));
+  arena.put_entity(4, 5,
+                   bm::game::bomb_factory(registry, 4, 5, strength,
+                                          std::chrono::milliseconds(200)));
+  arena.put_entity(6, 5,
+                   bm::game::bomb_factory(registry, 6, 5, strength,
+                                          std::chrono::milliseconds(200)));
+
+  bm::game::update_bombs(registry, arena, std::chrono::milliseconds(10));
+
+  std::vector<std::string> flames = flames_map(arena, registry);
+  EXPECT_EQ("        ", flames[0]);
+  EXPECT_EQ("   v    ", flames[1]);
+  EXPECT_EQ("   V    ", flames[2]);
+  EXPECT_EQ(" hHB    ", flames[3]);
+  EXPECT_EQ("   V    ", flames[4]);
+  EXPECT_EQ("   v    ", flames[5]);
+  EXPECT_EQ("        ", flames[6]);
+
+  bm::game::update_bombs(registry, arena, std::chrono::milliseconds(10));
+
+  flames = flames_map(arena, registry);
+  EXPECT_EQ("        ", flames[0]);
+  EXPECT_EQ("   vv   ", flames[1]);
+  EXPECT_EQ("   VV   ", flames[2]);
+  EXPECT_EQ(" hHBBH  ", flames[3]);
+  EXPECT_EQ("   VV   ", flames[4]);
+  EXPECT_EQ("   v    ", flames[5]);
+  EXPECT_EQ("        ", flames[6]);
+
+  bm::game::update_bombs(registry, arena, std::chrono::milliseconds(10));
+
+  flames = flames_map(arena, registry);
+  EXPECT_EQ("         ", flames[0]);
+  EXPECT_EQ("   vv v  ", flames[1]);
+  EXPECT_EQ("   VV V  ", flames[2]);
+  EXPECT_EQ(" hHBBHBHh", flames[3]);
+  EXPECT_EQ("   VV V  ", flames[4]);
+  EXPECT_EQ("   vBHv  ", flames[5]);
+  EXPECT_EQ("    V    ", flames[6]);
+  EXPECT_EQ("    v    ", flames[7]);
+}

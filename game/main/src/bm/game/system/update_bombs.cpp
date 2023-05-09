@@ -38,7 +38,11 @@ static bool burn(entt::registry& registry, bm::game::arena& arena,
 
   if (entity != entt::null)
     {
+      if (bm::game::bomb* bomb = registry.try_get<bm::game::bomb>(entity))
+        bomb->duration_until_explosion = std::chrono::seconds(0);
+
       // burning: wall destroy, player death, bonus pop, flame horizontal
+      return false;
     }
   else
     arena.put_entity(
