@@ -26,11 +26,19 @@ entt::entity bm::game::flame_factory(entt::registry& registry, std::uint8_t x,
                                      flame_horizontal horizontal,
                                      flame_vertical vertical, flame_end end)
 {
+  return flame_factory(registry, x, y, horizontal, vertical, end,
+                       std::chrono::milliseconds(800));
+}
+
+entt::entity bm::game::flame_factory(entt::registry& registry, std::uint8_t x,
+                                     std::uint8_t y,
+                                     flame_horizontal horizontal,
+                                     flame_vertical vertical, flame_end end,
+                                     std::chrono::milliseconds time_to_live)
+{
   const entt::entity entity = registry.create();
 
-  registry.emplace<flame>(entity, horizontal, vertical, end,
-                          std::chrono::milliseconds(800));
-
+  registry.emplace<flame>(entity, horizontal, vertical, end, time_to_live);
   registry.emplace<position_on_grid>(entity, x, y);
 
   return entity;

@@ -16,20 +16,27 @@
 */
 #pragma once
 
-#include <bm/game/component/flame_direction_fwd.hpp>
+#include <bm/game/arena.hpp>
 
-#include <entt/entity/fwd.hpp>
+#include <bm/game/system/update_flames.hpp>
 
-#include <chrono>
-#include <cstdint>
+#include <bm/game/component/flame.hpp>
+#include <bm/game/component/position_on_grid.hpp>
 
-namespace bm::game
+#include <entt/entity/registry.hpp>
+
+void bm::game::update_flames(entt::registry& registry, arena& arena,
+                             std::chrono::milliseconds elapsed_time)
 {
-  entt::entity flame_factory(entt::registry& registry, std::uint8_t x,
-                             std::uint8_t y, flame_horizontal horizontal,
-                             flame_vertical vertical, flame_end end);
-  entt::entity flame_factory(entt::registry& registry, std::uint8_t x,
-                             std::uint8_t y, flame_horizontal horizontal,
-                             flame_vertical vertical, flame_end end,
-                             std::chrono::milliseconds time_to_live);
+  registry.view<flame, position_on_grid>().each(
+      [&](entt::entity e, flame& f, position_on_grid position) -> void
+      {
+        if (elapsed_time >= f.time_to_live)
+          {
+            registry.destroy(e);
+            arena.erase_entity(position.x, position.y);
+          }
+        else
+          f.time_to_live -= elapsed_time;
+      });
 }

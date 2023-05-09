@@ -16,20 +16,14 @@
 */
 #pragma once
 
-#include <bm/game/component/flame_direction_fwd.hpp>
-
 #include <entt/entity/fwd.hpp>
 
 #include <chrono>
-#include <cstdint>
 
 namespace bm::game
 {
-  entt::entity flame_factory(entt::registry& registry, std::uint8_t x,
-                             std::uint8_t y, flame_horizontal horizontal,
-                             flame_vertical vertical, flame_end end);
-  entt::entity flame_factory(entt::registry& registry, std::uint8_t x,
-                             std::uint8_t y, flame_horizontal horizontal,
-                             flame_vertical vertical, flame_end end,
-                             std::chrono::milliseconds time_to_live);
+  class arena;
+
+  void update_flames(entt::registry& registry, arena& arena,
+                     std::chrono::milliseconds elapsed_time);
 }

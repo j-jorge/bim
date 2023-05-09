@@ -31,6 +31,7 @@ add_library(bm_game
 
   game/main/src/bm/game/system/apply_player_action.cpp
   game/main/src/bm/game/system/update_bombs.cpp
+  game/main/src/bm/game/system/update_flames.cpp
 )
 target_include_directories(bm_game PUBLIC ./game/main/include)
 target_link_libraries(bm_game PUBLIC EnTT::EnTT)
@@ -40,6 +41,7 @@ add_executable(game-tests
   ./game/tests/src/bm/game/level_generation.cpp
 
   ./game/tests/src/bm/game/system/update_bombs.cpp
+  ./game/tests/src/bm/game/system/update_flames.cpp
 )
 target_link_libraries(game-tests PRIVATE bm_game GTest::gtest GTest::gtest_main)
 
