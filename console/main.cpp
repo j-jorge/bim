@@ -18,6 +18,8 @@
 
 #include <bm/game/component/bomb.hpp>
 #include <bm/game/component/brick_wall.hpp>
+#include <bm/game/component/flame.hpp>
+#include <bm/game/component/flame_direction.hpp>
 #include <bm/game/component/player.hpp>
 #include <bm/game/component/player_action.hpp>
 #include <bm/game/component/player_direction.hpp>
@@ -69,6 +71,19 @@ static void display(const bm::game::contest& contest)
           screen_buffer[p.y][p.x] = "\033[31mó\033[0;0m";
         else
           screen_buffer[p.y][p.x] = "\033[91mó\033[0;0m";
+      });
+
+  registry.view<bm::game::position_on_grid, bm::game::flame>().each(
+      [&screen_buffer](const bm::game::position_on_grid& p,
+                       const bm::game::flame& f) -> void
+      {
+        if (f.horizontal == bm::game::flame_horizontal::yes)
+          if (f.vertical == bm::game::flame_vertical::yes)
+            screen_buffer[p.y][p.x] = "\033[31m+\033[0;0m";
+          else
+            screen_buffer[p.y][p.x] = "\033[31m-\033[0;0m";
+        else
+          screen_buffer[p.y][p.x] = "\033[31m|\033[0;0m";
       });
 
   registry.view<bm::game::player, bm::game::position_on_grid>().each(
