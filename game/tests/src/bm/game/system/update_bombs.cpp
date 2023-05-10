@@ -134,6 +134,16 @@ TEST(update_bombs, chain_reaction)
   bm::game::arena arena(8, 7);
   const std::uint8_t strength = 2;
 
+  /*
+    Bombs:
+    .........
+    .........
+    .........
+    ...xx.x..
+    .........
+    ....x.x..
+    .........
+  */
   arena.put_entity(3, 3,
                    bm::game::bomb_factory(registry, 3, 3, strength,
                                           std::chrono::milliseconds(10)));
@@ -175,12 +185,22 @@ TEST(update_bombs, chain_reaction)
   bm::game::update_bombs(registry, arena, std::chrono::milliseconds(10));
 
   flames = flames_map(arena, registry);
-  EXPECT_EQ("         ", flames[0]);
-  EXPECT_EQ("   vv v  ", flames[1]);
-  EXPECT_EQ("   VV V  ", flames[2]);
-  EXPECT_EQ(" hHBBHBHh", flames[3]);
-  EXPECT_EQ("   VV V  ", flames[4]);
-  EXPECT_EQ("   vBHv  ", flames[5]);
-  EXPECT_EQ("    V    ", flames[6]);
-  EXPECT_EQ("    v    ", flames[7]);
+  EXPECT_EQ("        ", flames[0]);
+  EXPECT_EQ("   vv v ", flames[1]);
+  EXPECT_EQ("   VV V ", flames[2]);
+  EXPECT_EQ(" hHBBHBH", flames[3]);
+  EXPECT_EQ("   VV V ", flames[4]);
+  EXPECT_EQ("   vBH  ", flames[5]);
+  EXPECT_EQ("    V   ", flames[6]);
+
+  bm::game::update_bombs(registry, arena, std::chrono::milliseconds(10));
+
+  flames = flames_map(arena, registry);
+  EXPECT_EQ("        ", flames[0]);
+  EXPECT_EQ("   vv v ", flames[1]);
+  EXPECT_EQ("   VV V ", flames[2]);
+  EXPECT_EQ(" hHBBHBH", flames[3]);
+  EXPECT_EQ("   VV V ", flames[4]);
+  EXPECT_EQ("   vBHBH", flames[5]);
+  EXPECT_EQ("    V V ", flames[6]);
 }
