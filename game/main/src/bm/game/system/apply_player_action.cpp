@@ -76,12 +76,14 @@ void bm::game::apply_player_action(entt::registry& registry, arena& arena)
 {
   registry.view<player, position_on_grid, player_action>().each(
       [&registry, &arena](player& player, position_on_grid& position,
-                          const player_action& action) -> void
+                          player_action& action) -> void
       {
         if (action.drop_bomb)
           drop_bomb(registry, arena, player, position);
 
         if (action.requested_direction)
           move_player(player, position, *action.requested_direction, arena);
+
+        action = player_action{};
       });
 }

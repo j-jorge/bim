@@ -143,8 +143,6 @@ int main()
       const std::chrono::steady_clock::time_point now
           = std::chrono::steady_clock::now();
 
-      player_action = bm::game::player_action{};
-
       switch (input.exchange(0))
         {
         case 'q':
