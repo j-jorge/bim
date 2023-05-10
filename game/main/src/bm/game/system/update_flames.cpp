@@ -14,11 +14,9 @@
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#pragma once
+#include <bm/game/system/update_flames.hpp>
 
 #include <bm/game/arena.hpp>
-
-#include <bm/game/system/update_flames.hpp>
 
 #include <bm/game/component/flame.hpp>
 #include <bm/game/component/position_on_grid.hpp>
