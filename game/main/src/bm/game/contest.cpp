@@ -23,6 +23,7 @@
 
 #include <bm/game/system/apply_player_action.hpp>
 #include <bm/game/system/update_bombs.hpp>
+#include <bm/game/system/update_brick_walls.hpp>
 #include <bm/game/system/update_flames.hpp>
 
 #include <bm/game/level_generation.hpp>
@@ -73,6 +74,7 @@ void bm::game::contest::tick(std::chrono::nanoseconds elapsed_time)
       apply_player_action(m_registry, m_arena);
       update_bombs(m_registry, m_arena, tick_interval);
       update_flames(m_registry, m_arena, tick_interval);
+      update_brick_walls(m_registry, m_arena);
 
       // update_player_movement(m_players, m_arena);
       // check_player_collision(m_players, m_arena);

@@ -18,9 +18,9 @@
 
 #include <bm/game/arena.hpp>
 
-#include <bm/game/component/brick_wall.hpp>
 #include <bm/game/component/player.hpp>
 #include <bm/game/component/position_on_grid.hpp>
+#include <bm/game/factory/brick_wall.hpp>
 
 #include <bm/game/assume.hpp>
 #include <bm/game/random_generator.hpp>
@@ -67,16 +67,6 @@ void bm::game::insert_random_brick_walls(arena& arena,
 
   boost::random::uniform_int_distribution<std::uint8_t> random(0, 99);
 
-  constexpr auto new_brick_wall = [](entt::registry& registry, std::uint8_t x,
-                                     std::uint8_t y) -> entt::entity
-  {
-    const entt::entity entity = registry.create();
-    registry.emplace<brick_wall>(entity);
-    registry.emplace<position_on_grid>(entity, x, y);
-
-    return entity;
-  };
-
   std::vector<position_on_grid> forbidden_positions;
   // Typically 4 players in the arena, and 9 blocks each them.
   forbidden_positions.reserve(4 * 9);
@@ -96,5 +86,5 @@ void bm::game::insert_random_brick_walls(arena& arena,
           && !boost::algorithm::any_of_equal(forbidden_positions,
                                              position_on_grid(x, y))
           && (random(random_generator) < brick_wall_probability))
-        arena.put_entity(x, y, new_brick_wall(registry, x, y));
+        brick_wall_factory(registry, arena, x, y);
 }

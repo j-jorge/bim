@@ -19,10 +19,12 @@
 #include <bm/game/arena.hpp>
 
 #include <bm/game/component/bomb.hpp>
+#include <bm/game/component/burning.hpp>
 #include <bm/game/component/flame.hpp>
 #include <bm/game/component/flame_direction.hpp>
 #include <bm/game/component/position_on_grid.hpp>
 #include <bm/game/factory/bomb.hpp>
+#include <bm/game/factory/brick_wall.hpp>
 
 #include <entt/entity/registry.hpp>
 
@@ -203,4 +205,25 @@ TEST(update_bombs, chain_reaction)
   EXPECT_EQ("   VV V ", flames[4]);
   EXPECT_EQ("   vBHBH", flames[5]);
   EXPECT_EQ("    V V ", flames[6]);
+}
+
+TEST(update_bombs, burning_walls)
+{
+  entt::registry registry;
+  bm::game::arena arena(6, 6);
+
+  bm::game::bomb_factory(registry, 2, 2, 2, std::chrono::milliseconds(0));
+
+  const entt::entity walls[]
+      = { bm::game::brick_wall_factory(registry, arena, 2, 1),
+          bm::game::brick_wall_factory(registry, arena, 4, 2),
+          bm::game::brick_wall_factory(registry, arena, 5, 2),
+          bm::game::brick_wall_factory(registry, arena, 2, 5) };
+
+  bm::game::update_bombs(registry, arena, std::chrono::milliseconds(12));
+
+  EXPECT_TRUE(registry.storage<bm::game::burning>().contains(walls[0]));
+  EXPECT_TRUE(registry.storage<bm::game::burning>().contains(walls[1]));
+  EXPECT_FALSE(registry.storage<bm::game::burning>().contains(walls[2]));
+  EXPECT_FALSE(registry.storage<bm::game::burning>().contains(walls[3]));
 }
