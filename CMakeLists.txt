@@ -19,34 +19,7 @@ find_package(Boost 1.82.0 REQUIRED)
 find_package(EnTT 3.11.1 REQUIRED)
 find_package(GTest 1.13.0 REQUIRED)
 
-add_library(bm_game
-  STATIC
-  game/main/src/bm/game/arena.cpp
-  game/main/src/bm/game/contest.cpp
-  game/main/src/bm/game/level_generation.cpp
-  game/main/src/bm/game/random_generator.cpp
-
-  game/main/src/bm/game/factory/bomb.cpp
-  game/main/src/bm/game/factory/brick_wall.cpp
-  game/main/src/bm/game/factory/flame.cpp
-
-  game/main/src/bm/game/system/apply_player_action.cpp
-  game/main/src/bm/game/system/update_bombs.cpp
-  game/main/src/bm/game/system/update_brick_walls.cpp
-  game/main/src/bm/game/system/update_flames.cpp
-)
-target_include_directories(bm_game PUBLIC ./game/main/include)
-target_link_libraries(bm_game PUBLIC EnTT::EnTT)
-
-add_executable(game-tests
-  ./game/tests/src/bm/game/arena.cpp
-  ./game/tests/src/bm/game/level_generation.cpp
-
-  ./game/tests/src/bm/game/system/update_bombs.cpp
-  ./game/tests/src/bm/game/system/update_brick_walls.cpp
-  ./game/tests/src/bm/game/system/update_flames.cpp
-)
-target_link_libraries(game-tests PRIVATE bm_game GTest::gtest GTest::gtest_main)
+add_subdirectory(modules/game)
 
 add_executable(bombers-man-console console/main.cpp)
 target_link_libraries(bombers-man-console PRIVATE bm_game)

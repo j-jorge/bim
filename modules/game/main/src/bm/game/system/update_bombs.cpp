@@ -22,6 +22,7 @@
 #include <bm/game/component/burning.hpp>
 #include <bm/game/component/flame_direction.hpp>
 #include <bm/game/component/position_on_grid.hpp>
+#include <bm/game/factory/flame.hpp>
 
 #include <entt/entity/registry.hpp>
 
