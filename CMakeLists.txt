@@ -18,8 +18,11 @@ endif()
 find_package(Boost 1.82.0 REQUIRED)
 find_package(EnTT 3.11.1 REQUIRED)
 find_package(GTest 1.13.0 REQUIRED)
+find_package(iscool-core 1.8.0 REQUIRED)
 
 add_subdirectory(modules/game)
+add_subdirectory(modules/message)
+add_subdirectory(modules/server)
 
 add_executable(bombers-man-console console/main.cpp)
 target_link_libraries(bombers-man-console PRIVATE bm_game)
