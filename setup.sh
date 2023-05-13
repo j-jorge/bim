@@ -107,7 +107,7 @@ fi
 
 : "${shell_utils_commit=4384d9b582e53cee0b8448db6a4d2cc2ebfda22d}"
 : "${shell_utils_repository:=https://github.com/j-jorge/shell-utils}"
-: "${paco_commit=0b92d834ceee4d23a02ce138475e5afcc4569756}"
+: "${paco_commit=188e7ece603c8b0c275e7f82a5bee6fdab7108b9}"
 : "${paco_repository:=https://github.com/j-jorge/cpp-package-manager}"
 
 host_prefix="$backroom"/host-prefix-"$bomb_build_type"

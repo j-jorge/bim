@@ -4,7 +4,7 @@ set -euo pipefail
 
 boost_version=1.82.0
 boost_version_underscore="${boost_version//./_}"
-package_revision=1
+package_revision=2
 version="$boost_version"-"$package_revision"
 build_type=release
 
@@ -19,7 +19,7 @@ iscool_include_root=$(iscool-shell-config --shell-include)
 ! install_package boost "$version" "$build_type" 2>/dev/null \
     || exit 0
 
-libraries=("program_options")
+libraries=("program_options" "system")
 
 archive_basename=boost_"${boost_version_underscore}"
 archive_name="${archive_basename}".tar.bz2

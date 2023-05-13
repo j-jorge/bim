@@ -1,4 +1,4 @@
-# -*- sh -*-
+#!/bin/bash
 
 install_package()
 {
@@ -21,12 +21,29 @@ package_and_install()
     local version="$3"
     local flavor="$4"
 
-    paco-publish --disable-remote \
-                 --root "$install_dir" \
-                 --name "$name" \
-                 --version "$version" \
-                 --flavor "$flavor" \
-                 --platform linux
+    shift 4
+
+    local publish_args=("--disable-remote"
+                        "--root" "$install_dir"
+                        "--name" "$name"
+                        "--version" "$version"
+                        "--flavor" "$flavor"
+                        "--platform" linux)
+
+    local dependency_version
+
+    for d in "$@"
+    do
+        dependency_version="$(paco-info \
+                                  --name "$d" \
+                                  --prefix "$bomb_app_prefix" \
+                                  | grep '^Version:' \
+                                  | cut -d: -f2)"
+
+        publish_args+=("--requires" "$d"="$dependency_version")
+    done
+
+    paco-publish "${publish_args[@]}"
 
     install_package "$name" "$version" "$flavor"
 }

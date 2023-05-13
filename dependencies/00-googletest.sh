@@ -3,9 +3,9 @@
 set -euo pipefail
 
 : "${googletest_repository:=https://github.com/google/googletest/}"
-: "${googletest_commit:=v1.13.0}"
+: "${googletest_version:=1.13.0}"
 package_revision=1
-version="$googletest_commit"-"$package_revision"
+version="$googletest_version"-"$package_revision"
 build_type=release
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd)"
@@ -20,7 +20,8 @@ install_dir="$bomb_packages_root"/googletest/install-"$build_type"
 
 mkdir --parents "$source_dir" "$build_dir" "$install_dir"
 
-git_clone_repository "$googletest_repository" "$googletest_commit" "$source_dir"
+git_clone_repository \
+    "$googletest_repository" "v$googletest_version" "$source_dir"
 
 cd "$build_dir"
 cmake "$source_dir" \
