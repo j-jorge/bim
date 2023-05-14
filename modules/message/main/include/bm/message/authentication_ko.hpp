@@ -16,11 +16,15 @@
 */
 #pragma once
 
-#include <iscool/net/message/message_type.h>
+#include <bm/message/authentication_error_code.hpp>
+#include <bm/message/client_token.hpp>
+#include <bm/message/message_type.hpp>
 
-namespace bm::message::message_type
+#include <iscool/net/message/raw_message.h>
+
+namespace bm::message
 {
-  constexpr iscool::net::message_type authentication = 1;
-  constexpr iscool::net::message_type authentication_ok = 2;
-  constexpr iscool::net::message_type authentication_ko = 3;
+  DECLARE_RAW_MESSAGE(authentication_ko, message_type::authentication_ko,
+                      ((client_token)(request_token)) //
+                      ((authentication_error_code)(error_code)));
 }

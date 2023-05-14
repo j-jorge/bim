@@ -16,11 +16,12 @@
 */
 #pragma once
 
-#include <iscool/net/message/message_type.h>
+#include <cstdint>
 
-namespace bm::message::message_type
+namespace bm::message
 {
-  constexpr iscool::net::message_type authentication = 1;
-  constexpr iscool::net::message_type authentication_ok = 2;
-  constexpr iscool::net::message_type authentication_ko = 3;
+  enum class authentication_error_code : std::uint8_t
+  {
+    bad_protocol = 1
+  };
 }

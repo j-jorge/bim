@@ -17,6 +17,9 @@
 #include <bm/server/server.hpp>
 
 #include <bm/message/authentication.hpp>
+#include <bm/message/authentication_ko.hpp>
+#include <bm/message/authentication_ok.hpp>
+#include <bm/message/protocol_version.hpp>
 
 #include <iscool/net/message_deserializer.impl.tpp>
 
@@ -36,4 +39,31 @@ bm::server::server::server(unsigned short port)
 void bm::server::server::check_authentication(
     const iscool::net::endpoint& endpoint,
     const bm::message::authentication& message)
-{}
+{
+  const bm::message::client_token token = message.get_request_token();
+
+  if (message.get_protocol_version() != bm::message::protocol_version)
+    {
+      m_message_channel.send(
+          endpoint,
+          bm::message::authentication_ko(
+              token, bm::message::authentication_error_code::bad_protocol)
+              .build_message());
+      return;
+    }
+
+  const iscool::net::session_id session = m_next_session_id;
+
+  client_map::const_iterator it;
+  bool inserted;
+
+  std::tie(it, inserted) = m_clients.emplace(token, session);
+
+  if (inserted)
+    ++m_next_session_id;
+
+  m_sessions_time_to_live[session] = std::chrono::minutes(10);
+  m_message_channel.send(
+      endpoint,
+      bm::message::authentication_ok(token, it->second).build_message());
+}
