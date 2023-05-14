@@ -25,3 +25,4 @@ add_subdirectory(modules/message)
 add_subdirectory(modules/server)
 
 add_subdirectory(apps/console)
+add_subdirectory(apps/server)
