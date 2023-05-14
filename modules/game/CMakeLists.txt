@@ -26,3 +26,4 @@ add_executable(game-tests
   tests/src/bm/game/system/update_flames.cpp
 )
 target_link_libraries(game-tests PRIVATE bm_game GTest::gtest GTest::gtest_main)
+run_when_built(game-tests)
