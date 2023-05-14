@@ -24,5 +24,4 @@ add_subdirectory(modules/game)
 add_subdirectory(modules/message)
 add_subdirectory(modules/server)
 
-add_executable(bombers-man-console console/main.cpp)
-target_link_libraries(bombers-man-console PRIVATE bm_game)
+add_subdirectory(apps/console)
