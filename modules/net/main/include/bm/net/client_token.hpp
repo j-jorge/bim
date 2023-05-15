@@ -16,11 +16,9 @@
 */
 #pragma once
 
-#include <iscool/net/message/message_type.h>
+#include <cstdint>
 
-namespace bm::message::message_type
+namespace bm::net
 {
-  constexpr iscool::net::message_type authentication = 1;
-  constexpr iscool::net::message_type authentication_ok = 2;
-  constexpr iscool::net::message_type authentication_ko = 3;
+  using client_token = std::uint64_t;
 }

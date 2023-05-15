@@ -18,10 +18,7 @@
 
 #include <cstdint>
 
-namespace bm::message
+namespace bm::net
 {
-  enum class authentication_error_code : std::uint8_t
-  {
-    bad_protocol = 1
-  };
+  using version = std::uint32_t;
 }

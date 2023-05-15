@@ -1,3 +1,0 @@
-add_library(bm_message INTERFACE)
-target_include_directories(bm_message INTERFACE main/include)
-target_link_libraries(bm_message INTERFACE iscool_net)

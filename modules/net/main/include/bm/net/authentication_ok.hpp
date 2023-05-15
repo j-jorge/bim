@@ -16,9 +16,14 @@
 */
 #pragma once
 
-#include <cstdint>
+#include <bm/net/client_token.hpp>
+#include <bm/net/message_type.hpp>
 
-namespace bm::message
+#include <iscool/net/message/raw_message.h>
+
+namespace bm::net
 {
-  using client_token = std::uint64_t;
+  DECLARE_RAW_MESSAGE(authentication_ok, message_type::authentication_ok,
+                      ((client_token)(request_token)) //
+                      ((iscool::net::session_id)(session_id)));
 }

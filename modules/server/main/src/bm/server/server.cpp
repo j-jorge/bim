@@ -16,10 +16,10 @@
 */
 #include <bm/server/server.hpp>
 
-#include <bm/message/authentication.hpp>
-#include <bm/message/authentication_ko.hpp>
-#include <bm/message/authentication_ok.hpp>
-#include <bm/message/protocol_version.hpp>
+#include <bm/net/authentication.hpp>
+#include <bm/net/authentication_ko.hpp>
+#include <bm/net/authentication_ok.hpp>
+#include <bm/net/protocol_version.hpp>
 
 #include <iscool/net/message_deserializer.impl.tpp>
 
@@ -31,23 +31,23 @@ bm::server::server::server(unsigned short port)
       &iscool::net::message_deserializer::interpret_received_message,
       &m_message_deserializer, std::placeholders::_1, std::placeholders::_2));
 
-  m_message_deserializer.connect_signal<bm::message::authentication>(
+  m_message_deserializer.connect_signal<bm::net::authentication>(
       std::bind(&server::check_authentication, this, std::placeholders::_1,
                 std::placeholders::_2));
 }
 
 void bm::server::server::check_authentication(
     const iscool::net::endpoint& endpoint,
-    const bm::message::authentication& message)
+    const bm::net::authentication& message)
 {
-  const bm::message::client_token token = message.get_request_token();
+  const bm::net::client_token token = message.get_request_token();
 
-  if (message.get_protocol_version() != bm::message::protocol_version)
+  if (message.get_protocol_version() != bm::net::protocol_version)
     {
       m_message_channel.send(
           endpoint,
-          bm::message::authentication_ko(
-              token, bm::message::authentication_error_code::bad_protocol)
+          bm::net::authentication_ko(
+              token, bm::net::authentication_error_code::bad_protocol)
               .build_message());
       return;
     }
@@ -64,6 +64,5 @@ void bm::server::server::check_authentication(
 
   m_sessions_time_to_live[session] = std::chrono::minutes(10);
   m_message_channel.send(
-      endpoint,
-      bm::message::authentication_ok(token, it->second).build_message());
+      endpoint, bm::net::authentication_ok(token, it->second).build_message());
 }

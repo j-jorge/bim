@@ -16,9 +16,9 @@
 */
 #pragma once
 
-#include <bm/message/version.hpp>
+#include <bm/net/version.hpp>
 
-namespace bm::message
+namespace bm::net
 {
   constexpr version protocol_version = 1;
 }

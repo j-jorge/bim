@@ -16,14 +16,12 @@
 */
 #pragma once
 
-#include <bm/message/client_token.hpp>
-#include <bm/message/message_type.hpp>
+#include <cstdint>
 
-#include <iscool/net/message/raw_message.h>
-
-namespace bm::message
+namespace bm::net
 {
-  DECLARE_RAW_MESSAGE(authentication_ok, message_type::authentication_ok,
-                      ((client_token)(request_token)) //
-                      ((iscool::net::session_id)(session_id)));
+  enum class authentication_error_code : std::uint8_t
+  {
+    bad_protocol = 1
+  };
 }

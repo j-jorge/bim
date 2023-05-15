@@ -23,7 +23,7 @@ find_package(iscool-core 1.8.0 REQUIRED)
 include(./cmake/run-when-built.cmake)
 
 add_subdirectory(modules/game)
-add_subdirectory(modules/message)
+add_subdirectory(modules/net)
 add_subdirectory(modules/server)
 
 add_subdirectory(apps/console)
