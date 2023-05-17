@@ -16,43 +16,40 @@
 */
 #pragma once
 
-#include <bm/net/message/client_token.hpp>
-
+#include <iscool/net/message/message.h>
 #include <iscool/net/message_channel.h>
 #include <iscool/net/message_deserializer.h>
-#include <iscool/net/message_stream.h>
-#include <iscool/net/socket_stream.h>
+#include <iscool/signals/scoped_connection.h>
+
+namespace iscool::net
+{
+  class message_stream;
+}
 
 namespace bm::net
 {
-  class authentication;
-}
-
-namespace bm::server
-{
-  class server
+  template <typename ClientMessage, typename AnswerOK, typename AnswerKO>
+  class exchange
   {
+    DECLARE_SIGNAL(void(const iscool::net::endpoint&, const AnswerOK), ok, _ok)
+    DECLARE_SIGNAL(void(const iscool::net::endpoint&, const AnswerKO), ko, _ko)
+
   public:
-    explicit server(unsigned short port);
+    exchange(iscool::net::message_stream& stream,
+             iscool::net::session_id session, iscool::net::channel_id channel);
+
+    void start(const ClientMessage& message);
+    void stop();
 
   private:
-    using client_map
-        = std::unordered_map<bm::net::client_token, iscool::net::session_id>;
+    void tick();
 
   private:
-    void check_authentication(const iscool::net::endpoint& endpoint,
-                              const bm::net::authentication& message);
-
-  private:
-    iscool::net::socket_stream m_socket;
-    iscool::net::message_stream m_message_stream;
     iscool::net::message_channel m_message_channel;
-    iscool::net::message_deserializer m_message_deserializer;
+    iscool::net::message_deserializer m_deserializer;
+    iscool::signals::scoped_connection m_channel_signal_connection;
+    iscool::signals::scoped_connection m_update_connection;
 
-    client_map m_clients;
-    std::unordered_map<iscool::net::session_id, std::chrono::nanoseconds>
-        m_sessions_time_to_live;
-
-    iscool::net::session_id m_next_session_id;
+    iscool::net::message m_client_message;
   };
 }

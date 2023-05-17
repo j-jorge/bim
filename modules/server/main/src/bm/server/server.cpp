@@ -21,12 +21,21 @@
 #include <bm/net/message/authentication_ok.hpp>
 #include <bm/net/message/protocol_version.hpp>
 
+#include <iscool/log/causeless_log.h>
+#include <iscool/log/nature/info.h>
 #include <iscool/net/message_deserializer.impl.tpp>
+
+#include <iostream>
 
 bm::server::server::server(unsigned short port)
   : m_socket(port)
-  , m_message_channel(m_socket, 0, 0, iscool::net::xor_key{})
+  , m_message_stream(m_socket)
+  , m_message_channel(m_message_stream, 0, 0)
+  , m_next_session_id(1)
 {
+  ic_causeless_log(iscool::log::nature::info(), "server",
+                   "Server is up on port %d.", port);
+
   m_message_channel.connect_to_message(std::bind(
       &iscool::net::message_deserializer::interpret_received_message,
       &m_message_deserializer, std::placeholders::_1, std::placeholders::_2));
@@ -42,8 +51,16 @@ void bm::server::server::check_authentication(
 {
   const bm::net::client_token token = message.get_request_token();
 
+  ic_causeless_log(iscool::log::nature::info(), "server",
+                   "Received authentication request from token %d.", token);
+
   if (message.get_protocol_version() != bm::net::protocol_version)
     {
+      ic_causeless_log(
+          iscool::log::nature::info(), "server",
+          "Authentication request from token %d: bad protocol %d.", token,
+          message.get_protocol_version());
+
       m_message_channel.send(
           endpoint,
           bm::net::authentication_ko(
@@ -58,6 +75,9 @@ void bm::server::server::check_authentication(
   bool inserted;
 
   std::tie(it, inserted) = m_clients.emplace(token, session);
+
+  ic_causeless_log(iscool::log::nature::info(), "server",
+                   "Attach session %d to token %d.", it->second, token);
 
   if (inserted)
     ++m_next_session_id;
