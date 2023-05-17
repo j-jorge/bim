@@ -16,7 +16,7 @@
 */
 #pragma once
 
-#include <bm/net/client_token.hpp>
+#include <bm/net/message/client_token.hpp>
 
 #include <iscool/net/message_channel.h>
 #include <iscool/net/message_deserializer.h>

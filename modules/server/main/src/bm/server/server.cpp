@@ -16,10 +16,10 @@
 */
 #include <bm/server/server.hpp>
 
-#include <bm/net/authentication.hpp>
-#include <bm/net/authentication_ko.hpp>
-#include <bm/net/authentication_ok.hpp>
-#include <bm/net/protocol_version.hpp>
+#include <bm/net/message/authentication.hpp>
+#include <bm/net/message/authentication_ko.hpp>
+#include <bm/net/message/authentication_ok.hpp>
+#include <bm/net/message/protocol_version.hpp>
 
 #include <iscool/net/message_deserializer.impl.tpp>
 

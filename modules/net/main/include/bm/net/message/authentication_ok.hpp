@@ -16,15 +16,14 @@
 */
 #pragma once
 
-#include <bm/net/client_token.hpp>
-#include <bm/net/message_type.hpp>
-#include <bm/net/version.hpp>
+#include <bm/net/message/client_token.hpp>
+#include <bm/net/message/message_type.hpp>
 
 #include <iscool/net/message/raw_message.h>
 
 namespace bm::net
 {
-  DECLARE_RAW_MESSAGE(authentication, message_type::authentication,
-                      ((version)(protocol_version)) //
-                      ((client_token)(request_token)));
+  DECLARE_RAW_MESSAGE(authentication_ok, message_type::authentication_ok,
+                      ((client_token)(request_token)) //
+                      ((iscool::net::session_id)(session_id)));
 }

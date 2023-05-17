@@ -16,9 +16,15 @@
 */
 #pragma once
 
-#include <bm/net/version.hpp>
+#include <bm/net/message/authentication_error_code.hpp>
+#include <bm/net/message/client_token.hpp>
+#include <bm/net/message/message_type.hpp>
+
+#include <iscool/net/message/raw_message.h>
 
 namespace bm::net
 {
-  constexpr version protocol_version = 1;
+  DECLARE_RAW_MESSAGE(authentication_ko, message_type::authentication_ko,
+                      ((client_token)(request_token)) //
+                      ((authentication_error_code)(error_code)));
 }
