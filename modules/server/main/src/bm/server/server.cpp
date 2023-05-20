@@ -16,73 +16,20 @@
 */
 #include <bm/server/server.hpp>
 
-#include <bm/net/message/authentication.hpp>
-#include <bm/net/message/authentication_ko.hpp>
-#include <bm/net/message/authentication_ok.hpp>
-#include <bm/net/message/protocol_version.hpp>
-
 #include <iscool/log/causeless_log.h>
 #include <iscool/log/nature/info.h>
-#include <iscool/net/message_deserializer.impl.tpp>
-
-#include <iostream>
 
 bm::server::server::server(unsigned short port)
   : m_socket(port)
-  , m_message_stream(m_socket)
-  , m_message_channel(m_message_stream, 0, 0)
-  , m_next_session_id(1)
+  , m_authentication_service(m_socket)
 {
   ic_causeless_log(iscool::log::nature::info(), "server",
                    "Server is up on port %d.", port);
 
-  m_message_channel.connect_to_message(std::bind(
-      &iscool::net::message_deserializer::interpret_received_message,
-      &m_message_deserializer, std::placeholders::_1, std::placeholders::_2));
-
-  m_message_deserializer.connect_signal<bm::net::authentication>(
-      std::bind(&server::check_authentication, this, std::placeholders::_1,
-                std::placeholders::_2));
+  m_authentication_service.connect_to_message(std::bind(
+      &server::dispatch, this, std::placeholders::_1, std::placeholders::_2));
 }
 
-void bm::server::server::check_authentication(
-    const iscool::net::endpoint& endpoint,
-    const bm::net::authentication& message)
-{
-  const bm::net::client_token token = message.get_request_token();
-
-  ic_causeless_log(iscool::log::nature::info(), "server",
-                   "Received authentication request from token %d.", token);
-
-  if (message.get_protocol_version() != bm::net::protocol_version)
-    {
-      ic_causeless_log(
-          iscool::log::nature::info(), "server",
-          "Authentication request from token %d: bad protocol %d.", token,
-          message.get_protocol_version());
-
-      m_message_channel.send(
-          endpoint,
-          bm::net::authentication_ko(
-              token, bm::net::authentication_error_code::bad_protocol)
-              .build_message());
-      return;
-    }
-
-  const iscool::net::session_id session = m_next_session_id;
-
-  client_map::const_iterator it;
-  bool inserted;
-
-  std::tie(it, inserted) = m_clients.emplace(token, session);
-
-  ic_causeless_log(iscool::log::nature::info(), "server",
-                   "Attach session %d to token %d.", it->second, token);
-
-  if (inserted)
-    ++m_next_session_id;
-
-  m_sessions_time_to_live[session] = std::chrono::minutes(10);
-  m_message_channel.send(
-      endpoint, bm::net::authentication_ok(token, it->second).build_message());
-}
+void bm::server::server::dispatch(const iscool::net::endpoint& endpoint,
+                                  const iscool::net::message& message)
+{}

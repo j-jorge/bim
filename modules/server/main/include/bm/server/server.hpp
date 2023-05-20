@@ -16,17 +16,9 @@
 */
 #pragma once
 
-#include <bm/net/message/client_token.hpp>
+#include <bm/server/service/authentication_service.hpp>
 
-#include <iscool/net/message_channel.h>
-#include <iscool/net/message_deserializer.h>
-#include <iscool/net/message_stream.h>
 #include <iscool/net/socket_stream.h>
-
-namespace bm::net
-{
-  class authentication;
-}
 
 namespace bm::server
 {
@@ -36,23 +28,11 @@ namespace bm::server
     explicit server(unsigned short port);
 
   private:
-    using client_map
-        = std::unordered_map<bm::net::client_token, iscool::net::session_id>;
-
-  private:
-    void check_authentication(const iscool::net::endpoint& endpoint,
-                              const bm::net::authentication& message);
+    void dispatch(const iscool::net::endpoint& endpoint,
+                  const iscool::net::message& message);
 
   private:
     iscool::net::socket_stream m_socket;
-    iscool::net::message_stream m_message_stream;
-    iscool::net::message_channel m_message_channel;
-    iscool::net::message_deserializer m_message_deserializer;
-
-    client_map m_clients;
-    std::unordered_map<iscool::net::session_id, std::chrono::nanoseconds>
-        m_sessions_time_to_live;
-
-    iscool::net::session_id m_next_session_id;
+    bm::server::authentication_service m_authentication_service;
   };
 }

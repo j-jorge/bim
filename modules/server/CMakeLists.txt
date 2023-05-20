@@ -1,6 +1,7 @@
 add_library(bm_server
   STATIC
   main/src/bm/server/server.cpp
+  main/src/bm/server/service/authentication_service.cpp
 )
 
 target_include_directories(bm_server PUBLIC main/include)
