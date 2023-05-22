@@ -11,7 +11,10 @@ flavor="$bomb_build_type"
 case "$bomb_build_type" in
     asan)
         cmake_options=("-DCMAKE_BUILD_TYPE=RelWithDebInfo"
-                       "-DCMAKE_CXX_FLAGS=-fsanitize=address -fno-omit-frame-pointer")
+                       "-DCMAKE_CXX_FLAGS=-fsanitize=address \
+                            -fsanitize=undefined \
+                            -fno-omit-frame-pointer"
+                      )
         ;;
     debug)
         cmake_options=("-DCMAKE_BUILD_TYPE=Debug")
