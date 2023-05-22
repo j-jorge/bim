@@ -109,7 +109,7 @@ void authentication_test::test_full_exchange(
             m_answer_ko = std::move(answer);
           });
 
-  for (int i = 0; (i != 100) && !m_answer_ok && !m_answer_ko; ++i)
+  for (int i = 0; (i != 10) && !m_answer_ok && !m_answer_ko; ++i)
     {
       m_message_channel.send(message.build_message());
       tick(std::chrono::seconds(1));
@@ -118,7 +118,7 @@ void authentication_test::test_full_exchange(
 
 void authentication_test::tick(std::chrono::milliseconds duration)
 {
-  std::this_thread::sleep_for(std::chrono::nanoseconds(1));
+  std::this_thread::sleep_for(std::chrono::milliseconds(1));
   m_current_date += duration;
   m_scheduler.update_interval(duration);
 }
