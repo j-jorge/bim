@@ -4,7 +4,7 @@ set -euo pipefail
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd)"
 backroom="$script_dir/.backroom"
-bomb_build_type=debug
+build_types=(debug release asan tsan)
 
 git_fetch()
 {
@@ -67,7 +67,7 @@ usage()
 Usage: build.sh OPTIONS
 
 Where OPTIONS is
-  --build-type T   Build for this configuration (debug or release).
+  --build-type T   Build for this configuration (debug, release, asan, tsan).
   --help, -h       Display this message and exit.
 EOF
 }
@@ -79,7 +79,7 @@ do
 
     case "$arg" in
         --build-type)
-            bomb_build_type="$1"
+            build_types=("$1")
             shift
             ;;
         --help|-h)
@@ -110,79 +110,109 @@ fi
 : "${paco_commit=188e7ece603c8b0c275e7f82a5bee6fdab7108b9}"
 : "${paco_repository:=https://github.com/j-jorge/cpp-package-manager}"
 
-host_prefix="$backroom"/host-prefix-"$bomb_build_type"
-bomb_app_prefix="$backroom"/linux-prefix-"$bomb_build_type"
 
-# Shell Utils
-echo -e "\033[1;32mInstalling the shell utils scripts\033[0;0m"
-mkdir --parents "$bomb_app_prefix" "$host_prefix"
+launch_build()
+{
+    local bomb_build_type="$1"
+    host_prefix="$backroom"/host-prefix-"$bomb_build_type"
+    bomb_app_prefix="$backroom"/linux-prefix-"$bomb_build_type"
 
-git_clone_repository "$shell_utils_repository" \
-                     "$shell_utils_commit" \
-                     "$backroom"/repositories/shell-utils
+    # Shell Utils
+    echo -e "\033[1;32mInstalling the shell utils scripts\033[0;0m"
+    mkdir --parents "$bomb_app_prefix" "$host_prefix"
 
-cd "$backroom"/repositories/shell-utils
-mkdir --parents build
-cd build
-cmake ../build-scripts/cmake -DCMAKE_INSTALL_PREFIX="$host_prefix" \
-      > ../../shell-utils.configure.out.txt
-cmake --build . --parallel --target install \
-      > ../../shell-utils.build.out.txt
+    git_clone_repository "$shell_utils_repository" \
+                         "$shell_utils_commit" \
+                         "$backroom"/repositories/shell-utils
 
-. "$host_prefix"/share/iscoolentertainment/shell/colors.sh
+    cd "$backroom"/repositories/shell-utils
+    mkdir --parents build
+    cd build
+    cmake ../build-scripts/cmake -DCMAKE_INSTALL_PREFIX="$host_prefix" \
+          > ../../shell-utils.configure.out.txt
+    cmake --build . --parallel --target install \
+          > ../../shell-utils.build.out.txt
 
-# Package manager
-echo -e "${green_bold}Installing the package manager${term_color}"
-git_clone_repository "$paco_repository" \
-                     "$paco_commit" \
-                     "$backroom"/repositories/cpp-package-manager
+    . "$host_prefix"/share/iscoolentertainment/shell/colors.sh
 
-cd "$backroom"/repositories/cpp-package-manager
-mkdir --parents build
-cd build
-cmake ../build-scripts/cmake -DCMAKE_INSTALL_PREFIX="$host_prefix" \
-      > ../../cpp-package-manager.configure.out.txt
-cmake --build . --parallel --target install \
-      > ../../cpp-package-manager.build.out.txt
+    # Package manager
+    echo -e "${green_bold}Installing the package manager${term_color}"
+    git_clone_repository "$paco_repository" \
+                         "$paco_commit" \
+                         "$backroom"/repositories/cpp-package-manager
 
-# App dependencies.
-echo -e "${green_bold}Installing app dependencies${term_color}"
+    cd "$backroom"/repositories/cpp-package-manager
+    mkdir --parents build
+    cd build
+    cmake ../build-scripts/cmake -DCMAKE_INSTALL_PREFIX="$host_prefix" \
+          > ../../cpp-package-manager.configure.out.txt
+    cmake --build . --parallel --target install \
+          > ../../cpp-package-manager.build.out.txt
 
-export backroom
-export bomb_app_prefix
-export bomb_build_type
-export bomb_packages_root="$backroom"/packages
-export PATH="$host_prefix"/bin:"$PATH"
-export -f git_clone_repository
-export -f git_fetch
+    # App dependencies.
+    echo -e "${green_bold}Installing app dependencies${term_color}"
 
-find "$script_dir"/dependencies -mindepth 1 -maxdepth 1 -type f -executable \
-    | sort \
-    | while read -r script
-do
-    "$script"
-done
+    export backroom
+    export bomb_app_prefix
+    export bomb_build_type
+    export bomb_packages_root="$backroom"/packages
+    export PATH="$host_prefix"/bin:"$PATH"
+    export -f git_clone_repository
+    export -f git_fetch
 
-# Actual build
-echo -e "${green_bold}Building${term_color}"
+    find "$script_dir"/dependencies -mindepth 1 -maxdepth 1 -type f \
+         -executable \
+        | sort \
+        | while read -r script
+    do
+        "$script"
+    done
 
-build_dir="$script_dir"/build/"$bomb_build_type"
+    # Actual build
+    echo -e "${green_bold}Building${term_color}"
 
-if [[ ! -f "$build_dir"/build.ninja ]]
-then
-    rm --force --recursive "$build_dir"
-    mkdir --parents "$build_dir"
+    build_dir="$script_dir"/build/"$bomb_build_type"
+
+    if [[ ! -f "$build_dir"/build.ninja ]]
+    then
+        rm --force --recursive "$build_dir"
+        mkdir --parents "$build_dir"
+
+        cmake_options=()
+        case "$bomb_build_type" in
+            asan)
+                cmake_options=(-DCMAKE_BUILD_TYPE=RelWithDebInfo
+                               -DBOMB_ADDRESS_SANITIZER=ON)
+                ;;
+            debug)
+                cmake_options=(-DCMAKE_BUILD_TYPE=Debug)
+                ;;
+            release)
+                cmake_options=(-DCMAKE_BUILD_TYPE=Release)
+                ;;
+            tsan)
+                cmake_options=(-DCMAKE_BUILD_TYPE=RelWithDebInfo
+                               -DBOMB_THREAD_SANITIZER=ON)
+                ;;
+        esac
+
+        cd "$build_dir"
+        cmake "$script_dir" -G Ninja \
+              -DCMAKE_PREFIX_PATH="$bomb_app_prefix" \
+              -DCMAKE_UNITY_BUILD=ON \
+              -DCMAKE_UNITY_BUILD_BATCH_SIZE=65535 \
+              -DCMAKE_C_COMPILER_LAUNCHER=ccache \
+              -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
+              "${cmake_options[@]}"
+        cd - > /dev/null
+    fi
 
     cd "$build_dir"
-    cmake "$script_dir" -G Ninja \
-          -DCMAKE_BUILD_TYPE="${bomb_build_type^}" \
-          -DCMAKE_PREFIX_PATH="$bomb_app_prefix" \
-          -DCMAKE_UNITY_BUILD=ON \
-          -DCMAKE_UNITY_BUILD_BATCH_SIZE=65535 \
-          -DCMAKE_C_COMPILER_LAUNCHER=ccache \
-          -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
-    cd - > /dev/null
-fi
+    cmake --build . --parallel
+}
 
-cd "$build_dir"
-cmake --build . --parallel
+for build_type in "${build_types[@]}"
+do
+    echo -e "\033[1;35m== Build type '$build_type' ==\033[0;0m"
+    launch_build "$build_type"
+done
