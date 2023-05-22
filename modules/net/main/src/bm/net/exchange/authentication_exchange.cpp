@@ -40,6 +40,8 @@ bm::net::authentication_exchange::authentication_exchange(
       &authentication_exchange::check_ko, this, std::placeholders::_2));
 }
 
+bm::net::authentication_exchange::~authentication_exchange() = default;
+
 void bm::net::authentication_exchange::start()
 {
   // TODO: random<client_token>()

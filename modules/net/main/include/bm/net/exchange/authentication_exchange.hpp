@@ -37,6 +37,7 @@ namespace bm::net
 
   public:
     authentication_exchange(iscool::net::message_stream& stream);
+    ~authentication_exchange();
 
     void start();
     void stop();

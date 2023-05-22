@@ -24,6 +24,7 @@
 #include <iscool/log/setup.h>
 #include <iscool/net/message_channel.h>
 #include <iscool/net/message_deserializer.h>
+#include <iscool/net/message_deserializer.impl.tpp>
 #include <iscool/schedule/manual_scheduler.h>
 #include <iscool/schedule/setup.h>
 #include <iscool/signals/scoped_connection.h>
