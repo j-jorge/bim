@@ -16,13 +16,44 @@
 */
 #pragma once
 
-#include <bm/net/exchange/exchange.hpp>
-#include <bm/net/message/authentication.hpp>
-#include <bm/net/message/authentication_ko.hpp>
-#include <bm/net/message/authentication_ok.hpp>
+#include <bm/net/message/authentication_error_code.hpp>
+#include <bm/net/message/client_token.hpp>
+
+#include <iscool/net/message/message.h>
+#include <iscool/net/message_channel.h>
+#include <iscool/net/message_deserializer.h>
+#include <iscool/signals/scoped_connection.h>
 
 namespace bm::net
 {
-  using authentication_exchange
-      = exchange<authentication, authentication_ok, authentication_ko>;
+  class authentication_ok;
+  class authentication_ko;
+
+  class authentication_exchange
+  {
+    DECLARE_SIGNAL(void(iscool::net::session_id), authenticated,
+                   _authenticated)
+    DECLARE_SIGNAL(void(authentication_error_code), error, _error)
+
+  public:
+    authentication_exchange(iscool::net::message_stream& stream);
+
+    void start();
+    void stop();
+
+  private:
+    void tick();
+
+    void check_ok(const authentication_ok& message);
+    void check_ko(const authentication_ko& message);
+
+  private:
+    iscool::net::message_channel m_message_channel;
+    iscool::net::message_deserializer m_deserializer;
+    iscool::signals::scoped_connection m_channel_signal_connection;
+    iscool::signals::scoped_connection m_update_connection;
+
+    client_token m_token;
+    iscool::net::message m_client_message;
+  };
 }
