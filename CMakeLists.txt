@@ -13,6 +13,13 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL GNU)
     add_compile_options(-fsanitize=address -fno-omit-frame-pointer)
     add_link_options(-fsanitize=address)
   endif()
+
+  option(BOMB_THREAD_SANITIZER "Compile with ThreadSanitizer enabled" OFF)
+
+  if(BOMB_THREAD_SANITIZER)
+    add_compile_options(-fsanitize=thread -fno-omit-frame-pointer)
+    add_link_options(-fsanitize=thread)
+  endif()
 endif()
 
 find_package(Boost 1.82.0 REQUIRED)
