@@ -22,7 +22,8 @@
 bm::server::server::server(unsigned short port)
   : m_socket(port)
   , m_authentication_service(m_socket)
-  , m_matchmaking_service(m_socket)
+  , m_game_service(m_socket)
+  , m_matchmaking_service(m_socket, m_game_service)
 {
   ic_causeless_log(iscool::log::nature::info(), "server",
                    "Server is up on port %d.", port);

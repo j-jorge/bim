@@ -17,7 +17,7 @@
 #pragma once
 
 #include <bm/net/message/client_token.hpp>
-#include <bm/net/message/game_id.hpp>
+#include <bm/net/message/encounter_id.hpp>
 
 #include <iscool/net/message_stream.h>
 
@@ -32,56 +32,65 @@ namespace bm::net
 
 namespace bm::server
 {
+  class game_service;
+
   class matchmaking_service
   {
   public:
-    explicit matchmaking_service(iscool::net::socket_stream& socket);
+    matchmaking_service(iscool::net::socket_stream& socket,
+                        game_service& game_service);
     ~matchmaking_service();
 
     void process(const iscool::net::endpoint& endpoint,
                  const iscool::net::message& message);
 
   private:
-    struct game_info;
-    using game_map = std::unordered_map<bm::net::game_id, game_info>;
-    using name_to_game_id_map
-        = std::unordered_map<std::string, bm::net::game_id>;
-    using game_id_to_name_map
-        = std::unordered_map<bm::net::game_id, std::string>;
+    struct encounter_info;
+    using encounter_map
+        = std::unordered_map<bm::net::encounter_id, encounter_info>;
+    using name_to_encounter_id_map
+        = std::unordered_map<std::string, bm::net::encounter_id>;
+    using encounter_id_to_name_map
+        = std::unordered_map<bm::net::encounter_id, std::string>;
 
   private:
-    void create_or_update_game(const iscool::net::endpoint& endpoint,
-                               iscool::net::session_id session,
-                               const bm::net::new_game_request& request);
-    void create_game(const iscool::net::endpoint& endpoint,
-                     const iscool::net::session_id session,
-                     const bm::net::new_game_request& request,
-                     std::string name);
-    void update_game(const iscool::net::endpoint& endpoint,
-                     const iscool::net::session_id session,
-                     const bm::net::new_game_request& request,
-                     bm::net::game_id game_id, game_info& game);
+    void create_or_update_encounter(const iscool::net::endpoint& endpoint,
+                                    iscool::net::session_id session,
+                                    const bm::net::new_game_request& request);
+    void create_encounter(const iscool::net::endpoint& endpoint,
+                          const iscool::net::session_id session,
+                          const bm::net::new_game_request& request,
+                          std::string name);
+    void update_encounter(const iscool::net::endpoint& endpoint,
+                          const iscool::net::session_id session,
+                          const bm::net::new_game_request& request,
+                          bm::net::encounter_id encounter_id,
+                          encounter_info& encounter);
     void send_game_on_hold(const iscool::net::endpoint& endpoint,
                            bm::net::client_token token,
                            iscool::net::session_id session,
-                           bm::net::game_id game_id,
+                           bm::net::encounter_id encounter_id,
                            std::uint8_t player_count);
 
     void mark_as_ready(const iscool::net::endpoint& endpoint,
                        iscool::net::session_id session,
                        const bm::net::accept_game& message);
 
-    void remove_inactive_sessions(bm::net::game_id game_id, game_info& game);
+    void remove_inactive_sessions(bm::net::encounter_id encounter_id,
+                                  encounter_info& encounter);
 
-    iscool::signals::connection schedule_clean_up(bm::net::game_id game_id);
+    iscool::signals::connection
+    schedule_clean_up(bm::net::encounter_id encounter_id);
 
-    void clean_up(bm::net::game_id game_id);
+    void clean_up(bm::net::encounter_id encounter_id);
 
   private:
     iscool::net::message_stream m_message_stream;
-    name_to_game_id_map m_game_ids;
-    game_id_to_name_map m_game_names;
-    game_map m_games;
-    bm::net::game_id m_next_game_id;
+    game_service& m_game_service;
+
+    name_to_encounter_id_map m_encounter_ids;
+    encounter_id_to_name_map m_game_names;
+    encounter_map m_encounters;
+    bm::net::encounter_id m_next_encounter_id;
   };
 }

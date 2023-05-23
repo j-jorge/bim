@@ -2,6 +2,8 @@ add_library(bm_server
   STATIC
   main/src/bm/server/server.cpp
   main/src/bm/server/service/authentication_service.cpp
+  main/src/bm/server/service/game_info.cpp
+  main/src/bm/server/service/game_service.cpp
   main/src/bm/server/service/matchmaking_service.cpp
 )
 
@@ -11,6 +13,9 @@ target_link_libraries(bm_server PUBLIC bm_net)
 add_executable(server-tests
   tests/src/bm/server/authentication.cpp
   tests/src/bm/server/new_game.cpp
+
+  tests/src/bm/server/service/game_info.cpp
+  tests/src/bm/server/service/game_service.cpp
 )
 target_link_libraries(
   server-tests

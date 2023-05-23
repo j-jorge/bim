@@ -16,6 +16,8 @@
 */
 #include <bm/server/service/matchmaking_service.hpp>
 
+#include <bm/server/service/game_service.hpp>
+
 #include <bm/net/message/accept_game.hpp>
 #include <bm/net/message/game_on_hold.hpp>
 #include <bm/net/message/launch_game.hpp>
@@ -25,7 +27,9 @@
 #include <iscool/log/nature/info.h>
 #include <iscool/time/now.h>
 
+#include <algorithm>
 #include <cassert>
+#include <optional>
 
 static std::chrono::nanoseconds date_for_next_release()
 {
@@ -33,13 +37,14 @@ static std::chrono::nanoseconds date_for_next_release()
          + std::chrono::minutes(1);
 }
 
-struct bm::server::matchmaking_service::game_info
+struct bm::server::matchmaking_service::encounter_info
 {
   std::uint8_t player_count;
   std::array<iscool::net::session_id, 4> sessions;
   std::array<std::chrono::nanoseconds, 4> release_at_this_date;
   std::array<bool, 4> ready;
   iscool::signals::scoped_connection clean_up_connection;
+  std::optional<iscool::net::channel_id> channel;
 
   void erase(std::size_t i)
   {
@@ -63,9 +68,10 @@ struct bm::server::matchmaking_service::game_info
 };
 
 bm::server::matchmaking_service::matchmaking_service(
-    iscool::net::socket_stream& socket)
+    iscool::net::socket_stream& socket, game_service& game_service)
   : m_message_stream(socket)
-  , m_next_game_id(1)
+  , m_game_service(game_service)
+  , m_next_encounter_id(1)
 {}
 
 bm::server::matchmaking_service::~matchmaking_service() = default;
@@ -79,14 +85,15 @@ void bm::server::matchmaking_service::process(
     return;
 
   if (message.get_type() == bm::net::message_type::new_game_request)
-    create_or_update_game(endpoint, message.get_session_id(),
-                          bm::net::new_game_request(message.get_content()));
+    create_or_update_encounter(
+        endpoint, message.get_session_id(),
+        bm::net::new_game_request(message.get_content()));
   else if (message.get_type() == bm::net::message_type::accept_game)
     mark_as_ready(endpoint, message.get_session_id(),
                   bm::net::accept_game(message.get_content()));
 }
 
-void bm::server::matchmaking_service::create_or_update_game(
+void bm::server::matchmaking_service::create_or_update_encounter(
     const iscool::net::endpoint& endpoint,
     const iscool::net::session_id session,
     const bm::net::new_game_request& request)
@@ -98,92 +105,98 @@ void bm::server::matchmaking_service::create_or_update_game(
   std::copy(request.get_name().begin(), request.get_name().end(), name);
   name[std::size(name) - 1] = '\0';
 
-  const name_to_game_id_map::iterator it = m_game_ids.find(name);
+  const name_to_encounter_id_map::iterator it = m_encounter_ids.find(name);
 
-  if (it == m_game_ids.end())
-    create_game(endpoint, session, request, name);
+  if (it == m_encounter_ids.end())
+    create_encounter(endpoint, session, request, name);
   else
-    update_game(endpoint, session, request, it->second, m_games[it->second]);
+    update_encounter(endpoint, session, request, it->second,
+                     m_encounters[it->second]);
 }
 
-void bm::server::matchmaking_service::create_game(
+void bm::server::matchmaking_service::create_encounter(
     const iscool::net::endpoint& endpoint,
     const iscool::net::session_id session,
     const bm::net::new_game_request& request, std::string name)
 {
-  ic_causeless_log(iscool::log::nature::info(), "matchmaking_service",
-                   "Creating new game %d ('%s') on request of session %d.",
-                   m_next_game_id, name, session);
-
-  const bm::net::game_id game_id
-      = m_game_ids.emplace(name, m_next_game_id).first->second;
-  ++m_next_game_id;
-
-  m_game_names[game_id] = std::move(name);
-
-  game_info& game = m_games[game_id];
-
-  game.player_count = 1;
-  game.sessions[0] = session;
-  game.release_at_this_date[0] = date_for_next_release();
-  game.clean_up_connection = schedule_clean_up(game_id);
-
-  send_game_on_hold(endpoint, request.get_request_token(), session, game_id,
-                    game.player_count);
-}
-
-void bm::server::matchmaking_service::update_game(
-    const iscool::net::endpoint& endpoint,
-    const iscool::net::session_id session,
-    const bm::net::new_game_request& request, bm::net::game_id game_id,
-    game_info& game)
-{
   ic_causeless_log(
       iscool::log::nature::info(), "matchmaking_service",
-      "Refreshing game '%d' with %d players on request of session %d.",
-      game_id, (int)game.player_count, session);
+      "Creating new encounter %d ('%s') on request of session %d.",
+      m_next_encounter_id, name, session);
 
-  const std::size_t existing_index = game.session_index(session);
+  const bm::net::encounter_id encounter_id
+      = m_encounter_ids.emplace(name, m_next_encounter_id).first->second;
+  ++m_next_encounter_id;
+
+  m_game_names[encounter_id] = std::move(name);
+
+  encounter_info& encounter = m_encounters[encounter_id];
+
+  encounter.player_count = 1;
+  encounter.sessions[0] = session;
+  encounter.release_at_this_date[0] = date_for_next_release();
+  encounter.clean_up_connection = schedule_clean_up(encounter_id);
+
+  send_game_on_hold(endpoint, request.get_request_token(), session,
+                    encounter_id, encounter.player_count);
+}
+
+void bm::server::matchmaking_service::update_encounter(
+    const iscool::net::endpoint& endpoint,
+    const iscool::net::session_id session,
+    const bm::net::new_game_request& request,
+    bm::net::encounter_id encounter_id, encounter_info& encounter)
+{
+  // No update of the participants once the game has started.
+  if (encounter.channel)
+    return;
+
+  ic_causeless_log(
+      iscool::log::nature::info(), "matchmaking_service",
+      "Refreshing encounter '%d' with %d players on request of session %d.",
+      encounter_id, (int)encounter.player_count, session);
+
+  const std::size_t existing_index = encounter.session_index(session);
 
   // Update for a player on hold.
-  if (existing_index < game.sessions.size())
+  if (existing_index < encounter.sessions.size())
     {
-      game.release_at_this_date[existing_index] = date_for_next_release();
-      remove_inactive_sessions(game_id, game);
+      encounter.release_at_this_date[existing_index] = date_for_next_release();
+      remove_inactive_sessions(encounter_id, encounter);
     }
   else
     {
-      remove_inactive_sessions(game_id, game);
+      remove_inactive_sessions(encounter_id, encounter);
 
-      if (game.player_count != game.sessions.size())
+      if (encounter.player_count != encounter.sessions.size())
         {
-          const std::size_t new_index = game.player_count;
-          game.sessions[new_index] = session;
-          game.release_at_this_date[new_index] = date_for_next_release();
-          ++game.player_count;
+          const std::size_t new_index = encounter.player_count;
+          encounter.sessions[new_index] = session;
+          encounter.release_at_this_date[new_index] = date_for_next_release();
+          ++encounter.player_count;
         }
       else
         return;
     }
 
-  if (game.player_count == 0)
-    clean_up(game_id);
+  if (encounter.player_count == 0)
+    clean_up(encounter_id);
   else
     {
-      game.clean_up_connection = schedule_clean_up(game_id);
+      encounter.clean_up_connection = schedule_clean_up(encounter_id);
       send_game_on_hold(endpoint, request.get_request_token(), session,
-                        game_id, game.player_count);
+                        encounter_id, encounter.player_count);
     }
 }
 
 void bm::server::matchmaking_service::send_game_on_hold(
     const iscool::net::endpoint& endpoint, bm::net::client_token token,
-    iscool::net::session_id session, bm::net::game_id game_id,
+    iscool::net::session_id session, bm::net::encounter_id encounter_id,
     std::uint8_t player_count)
 {
   m_message_stream.send(
       endpoint,
-      bm::net::game_on_hold(token, game_id, player_count).build_message(),
+      bm::net::game_on_hold(token, encounter_id, player_count).build_message(),
       session, 0);
 }
 
@@ -191,86 +204,114 @@ void bm::server::matchmaking_service::mark_as_ready(
     const iscool::net::endpoint& endpoint, iscool::net::session_id session,
     const bm::net::accept_game& message)
 {
-  const bm::net::game_id game_id = message.get_game_id();
+  const bm::net::encounter_id encounter_id = message.get_encounter_id();
 
   ic_causeless_log(iscool::log::nature::info(), "matchmaking_service",
-                   "Player ready. Session %d, game %d.", session, game_id);
+                   "Player ready. Session %d, encounter %d.", session,
+                   encounter_id);
 
-  const game_map::iterator it = m_games.find(game_id);
+  const encounter_map::iterator it = m_encounters.find(encounter_id);
 
-  if (it == m_games.end())
+  if (it == m_encounters.end())
     {
       ic_causeless_log(iscool::log::nature::info(), "matchmaking_service",
-                       "Game %d does not exist.", game_id);
+                       "Game %d does not exist.", encounter_id);
       return;
     }
 
-  game_info& game = it->second;
-  const std::size_t existing_index = game.session_index(session);
+  encounter_info& encounter = it->second;
+  const std::size_t existing_index = encounter.session_index(session);
 
   // Update for a player on hold.
-  if (existing_index == game.sessions.size())
+  if (existing_index == encounter.sessions.size())
     {
       ic_causeless_log(iscool::log::nature::info(), "matchmaking_service",
-                       "Session %d is not part of game %d.", session, game_id);
+                       "Session %d is not part of encounter %d.", session,
+                       encounter_id);
       return;
     }
 
-  game.release_at_this_date[existing_index] = date_for_next_release();
-  game.ready[existing_index] = true;
-  game.clean_up_connection = schedule_clean_up(game_id);
+  encounter.release_at_this_date[existing_index] = date_for_next_release();
+  encounter.ready[existing_index] = true;
+  encounter.clean_up_connection = schedule_clean_up(encounter_id);
 
-  remove_inactive_sessions(game_id, game);
+  if (!encounter.channel)
+    remove_inactive_sessions(encounter_id, encounter);
 
   int ready_count = 0;
-  for (int i = 0; i != game.player_count; ++i)
-    ready_count += game.ready[i];
+  for (int i = 0; i != encounter.player_count; ++i)
+    ready_count += encounter.ready[i];
 
-  if ((ready_count == game.player_count) && (ready_count > 1))
-    m_message_stream.send(
-        endpoint,
-        bm::net::launch_game(message.get_request_token(), game.player_count, 0)
-            .build_message(),
-        session, 0);
+  if ((ready_count != encounter.player_count) || (ready_count <= 1))
+    return;
+
+  std::optional<game_info> game;
+
+  if (encounter.channel)
+    {
+      game = m_game_service.find_game(*encounter.channel);
+
+      if (!game)
+        return;
+    }
+  else
+    {
+      game = m_game_service.new_game(encounter.player_count,
+                                     encounter.sessions);
+      encounter.channel = game->channel;
+
+      ic_causeless_log(iscool::log::nature::info(), "matchmaking_service",
+                       "Channel for encounter %d is %d.", it->first,
+                       game->channel);
+    }
+
+  m_message_stream.send(endpoint,
+                        bm::net::launch_game(message.get_request_token(),
+                                             game->channel, game->player_count,
+                                             game->session_index(session))
+                            .build_message(),
+                        session, 0);
 }
 
 void bm::server::matchmaking_service::remove_inactive_sessions(
-    bm::net::game_id game_id, game_info& game)
+    bm::net::encounter_id encounter_id, encounter_info& encounter)
 {
   const std::chrono::nanoseconds now
       = iscool::time::now<std::chrono::nanoseconds>();
 
-  for (int i = 0; i != game.player_count;)
-    if (game.release_at_this_date[i] <= now)
+  for (int i = 0; i != encounter.player_count;)
+    if (encounter.release_at_this_date[i] <= now)
       {
         ic_causeless_log(iscool::log::nature::info(), "matchmaking_service",
-                         "Kicking %d from %d: timeout.", game.sessions[i],
-                         game_id);
-        game.erase(i);
+                         "Kicking %d from %d: timeout.", encounter.sessions[i],
+                         encounter_id);
+        encounter.erase(i);
       }
     else
       ++i;
 }
 
-iscool::signals::connection
-bm::server::matchmaking_service::schedule_clean_up(bm::net::game_id game_id)
+iscool::signals::connection bm::server::matchmaking_service::schedule_clean_up(
+    bm::net::encounter_id encounter_id)
 {
   return iscool::schedule::delayed_call(
-      [this, game_id]() -> void
+      [this, encounter_id]() -> void
       {
-        clean_up(game_id);
+        clean_up(encounter_id);
       },
       std::chrono::minutes(3));
 }
 
-void bm::server::matchmaking_service::clean_up(bm::net::game_id game_id)
+void bm::server::matchmaking_service::clean_up(
+    bm::net::encounter_id encounter_id)
 {
   ic_causeless_log(iscool::log::nature::info(), "matchmaking_service",
-                   "Cleaning up game %d.", game_id);
+                   "Cleaning up encounter %d.", encounter_id);
 
-  const game_id_to_name_map::iterator it = m_game_names.find(game_id);
+  const encounter_id_to_name_map::iterator it
+      = m_game_names.find(encounter_id);
 
-  m_game_ids.erase(it->second);
+  m_encounter_ids.erase(it->second);
   m_game_names.erase(it);
-  m_games.erase(game_id);
+  m_encounters.erase(encounter_id);
 }

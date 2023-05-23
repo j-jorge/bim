@@ -319,13 +319,13 @@ TEST_F(new_game_test, join_game)
           << "i=" << i;
     }
 
-  // The game id should be the same for everyone.
-  EXPECT_EQ(m_clients[0].game_on_hold_answer->get_game_id(),
-            m_clients[1].game_on_hold_answer->get_game_id());
-  EXPECT_EQ(m_clients[0].game_on_hold_answer->get_game_id(),
-            m_clients[2].game_on_hold_answer->get_game_id());
-  EXPECT_EQ(m_clients[0].game_on_hold_answer->get_game_id(),
-            m_clients[3].game_on_hold_answer->get_game_id());
+  // The encounter id should be the same for everyone.
+  EXPECT_EQ(m_clients[0].game_on_hold_answer->get_encounter_id(),
+            m_clients[1].game_on_hold_answer->get_encounter_id());
+  EXPECT_EQ(m_clients[0].game_on_hold_answer->get_encounter_id(),
+            m_clients[2].game_on_hold_answer->get_encounter_id());
+  EXPECT_EQ(m_clients[0].game_on_hold_answer->get_encounter_id(),
+            m_clients[3].game_on_hold_answer->get_encounter_id());
 }
 
 /** A non-responding player should be removed from the game. */
@@ -376,12 +376,12 @@ TEST_F(new_game_test, player_leaving_on_new_game)
 
   ASSERT_NE(0, inactive_index);
 
-  // The game id should be the same for the remaining players.
+  // The encounter id should be the same for the remaining players.
   for (int i = 0; i != 4; ++i)
     if (i != inactive_index)
       {
-        EXPECT_EQ(m_clients[0].game_on_hold_answer->get_game_id(),
-                  m_clients[i].game_on_hold_answer->get_game_id())
+        EXPECT_EQ(m_clients[0].game_on_hold_answer->get_encounter_id(),
+                  m_clients[i].game_on_hold_answer->get_encounter_id())
             << "i=" << i;
       }
 }
@@ -404,7 +404,7 @@ TEST_F(new_game_test, accept_game)
       ASSERT_TRUE(!!m_clients[i].game_on_hold_answer) << "i=" << i;
       m_clients[i].send_accept_game(bm::net::accept_game(
           new_client_token(),
-          m_clients[i].game_on_hold_answer->get_game_id()));
+          m_clients[i].game_on_hold_answer->get_encounter_id()));
     }
 
   // One iteration for each client get the launch_game.
@@ -413,7 +413,7 @@ TEST_F(new_game_test, accept_game)
       ASSERT_TRUE(!!m_clients[i].game_on_hold_answer) << "i=" << i;
       m_clients[i].send_accept_game(bm::net::accept_game(
           new_client_token(),
-          m_clients[i].game_on_hold_answer->get_game_id()));
+          m_clients[i].game_on_hold_answer->get_encounter_id()));
     }
 
   // Now we should have a launch_game for four players.
@@ -467,7 +467,7 @@ TEST_F(new_game_test, player_leaving_on_accept_game)
         if (i != inactive_index)
           m_clients[i].send_accept_game(bm::net::accept_game(
               new_client_token(),
-              m_clients[i].game_on_hold_answer->get_game_id()));
+              m_clients[i].game_on_hold_answer->get_encounter_id()));
     }
 
   // All the players that have sent updates should have received a launch_game
@@ -507,7 +507,8 @@ TEST_F(new_game_test, no_single_player_game)
   EXPECT_EQ(1, m_clients[0].game_on_hold_answer->get_player_count());
 
   m_clients[0].send_accept_game(bm::net::accept_game(
-      new_client_token(), m_clients[0].game_on_hold_answer->get_game_id()));
+      new_client_token(),
+      m_clients[0].game_on_hold_answer->get_encounter_id()));
 
   // Now we should not have a launch_game for our player.
   ASSERT_FALSE(!!m_clients[0].launch_game_answer);
@@ -528,7 +529,7 @@ TEST_F(new_game_test, late_second_player)
 
       m_clients[i].send_accept_game(bm::net::accept_game(
           new_client_token(),
-          m_clients[i].game_on_hold_answer->get_game_id()));
+          m_clients[i].game_on_hold_answer->get_encounter_id()));
     }
 
   // The first player only knows about him.
@@ -547,7 +548,8 @@ TEST_F(new_game_test, late_second_player)
   // Accept again for the first player to trigger an answer from the server.
   ASSERT_TRUE(!!m_clients[0].game_on_hold_answer);
   m_clients[0].send_accept_game(bm::net::accept_game(
-      new_client_token(), m_clients[0].game_on_hold_answer->get_game_id()));
+      new_client_token(),
+      m_clients[0].game_on_hold_answer->get_encounter_id()));
 
   // Now the first player should have received a launch_game.
   ASSERT_TRUE(!!m_clients[0].launch_game_answer);
@@ -571,13 +573,14 @@ TEST_F(new_game_test, idle_causes_new_game)
 
   // All the players are grouped in the same game by the server.
   ASSERT_TRUE(!!m_clients[0].game_on_hold_answer);
-  const bm::net::game_id game_id
-      = m_clients[0].game_on_hold_answer->get_game_id();
+  const bm::net::encounter_id encounter_id
+      = m_clients[0].game_on_hold_answer->get_encounter_id();
 
   for (int i = 1; i != 4; ++i)
     {
       ASSERT_TRUE(!!m_clients[i].game_on_hold_answer);
-      EXPECT_EQ(game_id, m_clients[i].game_on_hold_answer->get_game_id());
+      EXPECT_EQ(encounter_id,
+                m_clients[i].game_on_hold_answer->get_encounter_id());
     }
 
   // Do nothing, such that the clean-up is triggered on the server.
@@ -589,11 +592,12 @@ TEST_F(new_game_test, idle_causes_new_game)
     m_clients[i].send_new_game_request(
         bm::net::new_game_request(new_client_token(), game_name));
 
-  // The game ID should have changed.
+  // The encounter id should have changed.
   for (int i = 0; i != 4; ++i)
     {
       ASSERT_TRUE(!!m_clients[i].game_on_hold_answer);
-      EXPECT_NE(game_id, m_clients[i].game_on_hold_answer->get_game_id());
+      EXPECT_NE(encounter_id,
+                m_clients[i].game_on_hold_answer->get_encounter_id());
     }
 }
 
@@ -631,4 +635,51 @@ TEST_F(new_game_test, max_players_in_game)
   // The clients from the second batch have no game.
   for (int i = 4; i != 8; ++i)
     EXPECT_FALSE(!!m_clients[i].game_on_hold_answer) << "i=" << i;
+}
+
+/** Different games should produce different game channels. */
+TEST_F(new_game_test, different_game_different_channels)
+{
+  for (int i = 0; i != 4; ++i)
+    m_clients[i].authenticate();
+
+  const bm::net::game_name game_names[2]
+      = { { 'g', 'a', 'm', 'e', '_', '0' }, { 'g', 'a', 'm', 'e', '_', '1' } };
+
+  for (int i = 0; i != 4; ++i)
+    m_clients[i].send_new_game_request(
+        bm::net::new_game_request(new_client_token(), game_names[i % 2]));
+
+  // One iteration for each client to notify the server.
+  for (int i = 0; i != 4; ++i)
+    {
+      ASSERT_TRUE(!!m_clients[i].game_on_hold_answer) << "i=" << i;
+      m_clients[i].send_accept_game(bm::net::accept_game(
+          new_client_token(),
+          m_clients[i].game_on_hold_answer->get_encounter_id()));
+    }
+
+  // One iteration for each client get the launch_game.
+  for (int i = 0; i != 4; ++i)
+    {
+      ASSERT_TRUE(!!m_clients[i].game_on_hold_answer) << "i=" << i;
+      m_clients[i].send_accept_game(bm::net::accept_game(
+          new_client_token(),
+          m_clients[i].game_on_hold_answer->get_encounter_id()));
+    }
+
+  // Now we should have a launch_game for each pair of players.
+  for (int i = 0; i != 4; ++i)
+    {
+      ASSERT_TRUE(!!m_clients[i].launch_game_answer) << "i=" << i;
+      EXPECT_EQ(2, m_clients[i].launch_game_answer->get_player_count())
+          << "i=" << i;
+    }
+
+  EXPECT_EQ(m_clients[0].launch_game_answer->get_game_channel(),
+            m_clients[2].launch_game_answer->get_game_channel());
+  EXPECT_EQ(m_clients[1].launch_game_answer->get_game_channel(),
+            m_clients[3].launch_game_answer->get_game_channel());
+  EXPECT_NE(m_clients[0].launch_game_answer->get_game_channel(),
+            m_clients[1].launch_game_answer->get_game_channel());
 }

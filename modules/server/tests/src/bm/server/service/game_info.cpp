@@ -14,17 +14,19 @@
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#pragma once
+#include <bm/server/service/game_info.hpp>
 
-#include <bm/net/message/client_token.hpp>
-#include <bm/net/message/encounter_id.hpp>
-#include <bm/net/message/message_type.hpp>
+#include <gtest/gtest.h>
 
-#include <iscool/net/message/raw_message.h>
-
-namespace bm::net
+TEST(game_info, session_index)
 {
-  DECLARE_RAW_MESSAGE(accept_game, message_type::accept_game,
-                      ((client_token)(request_token)) //
-                      ((encounter_id)(encounter_id)));
+  const bm::server::game_info game = { .sessions = { 2, 4, 8, 6 } };
+
+  EXPECT_EQ(0, game.session_index(2));
+  EXPECT_EQ(1, game.session_index(4));
+  EXPECT_EQ(2, game.session_index(8));
+  EXPECT_EQ(3, game.session_index(6));
+
+  EXPECT_EQ(4, game.session_index(20));
+  EXPECT_EQ(4, game.session_index(0));
 }

@@ -16,15 +16,20 @@
 */
 #pragma once
 
-#include <bm/net/message/client_token.hpp>
-#include <bm/net/message/encounter_id.hpp>
-#include <bm/net/message/message_type.hpp>
+#include <iscool/net/message/channel_id.h>
+#include <iscool/net/message/session_id.h>
 
-#include <iscool/net/message/raw_message.h>
+#include <array>
+#include <cstdint>
 
-namespace bm::net
+namespace bm::server
 {
-  DECLARE_RAW_MESSAGE(accept_game, message_type::accept_game,
-                      ((client_token)(request_token)) //
-                      ((encounter_id)(encounter_id)));
+  struct game_info
+  {
+    iscool::net::channel_id channel;
+    std::uint8_t player_count;
+    std::array<iscool::net::session_id, 4> sessions;
+
+    std::size_t session_index(iscool::net::session_id session) const;
+  };
 }

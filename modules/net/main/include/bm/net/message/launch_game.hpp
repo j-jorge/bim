@@ -17,7 +17,7 @@
 #pragma once
 
 #include <bm/net/message/client_token.hpp>
-#include <bm/net/message/game_id.hpp>
+#include <bm/net/message/encounter_id.hpp>
 #include <bm/net/message/message_type.hpp>
 
 #include <iscool/net/message/raw_message.h>
@@ -25,7 +25,8 @@
 namespace bm::net
 {
   DECLARE_RAW_MESSAGE(launch_game, message_type::launch_game,
-                      ((client_token)(request_token)) //
-                      ((std::uint8_t)(player_count))  //
-                      ((iscool::net::channel_id)(game_channel)));
+                      ((client_token)(request_token))           //
+                      ((iscool::net::channel_id)(game_channel)) //
+                      ((std::uint8_t)(player_count))            //
+                      ((std::uint8_t)(player_index)));
 }
