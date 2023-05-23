@@ -63,7 +63,7 @@ void bm::net::authentication_exchange::stop()
 
 void bm::net::authentication_exchange::tick()
 {
-  iscool::schedule::delayed_call(
+  m_update_connection = iscool::schedule::delayed_call(
       std::bind(&authentication_exchange::tick, this),
       std::chrono::seconds(1));
   m_message_channel.send(m_client_message);
