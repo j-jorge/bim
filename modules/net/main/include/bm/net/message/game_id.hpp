@@ -16,16 +16,9 @@
 */
 #pragma once
 
-#include <iscool/net/message/message_type.h>
+#include <cstdint>
 
-namespace bm::net::message_type
+namespace bm::net
 {
-  constexpr iscool::net::message_type authentication = 1;
-  constexpr iscool::net::message_type authentication_ok = 2;
-  constexpr iscool::net::message_type authentication_ko = 3;
-
-  constexpr iscool::net::message_type new_game_request = 4;
-  constexpr iscool::net::message_type game_on_hold = 5;
-  constexpr iscool::net::message_type accept_game = 6;
-  constexpr iscool::net::message_type launch_game = 7;
+  using game_id = std::uint64_t;
 }

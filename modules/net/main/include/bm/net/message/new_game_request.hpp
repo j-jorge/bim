@@ -16,16 +16,16 @@
 */
 #pragma once
 
-#include <iscool/net/message/message_type.h>
+#include <bm/net/message/client_token.hpp>
+#include <bm/net/message/game_name.hpp>
+#include <bm/net/message/message_type.hpp>
 
-namespace bm::net::message_type
+#include <iscool/net/byte_array_serialization/byte_array_array_serialization.h>
+#include <iscool/net/message/raw_message.h>
+
+namespace bm::net
 {
-  constexpr iscool::net::message_type authentication = 1;
-  constexpr iscool::net::message_type authentication_ok = 2;
-  constexpr iscool::net::message_type authentication_ko = 3;
-
-  constexpr iscool::net::message_type new_game_request = 4;
-  constexpr iscool::net::message_type game_on_hold = 5;
-  constexpr iscool::net::message_type accept_game = 6;
-  constexpr iscool::net::message_type launch_game = 7;
+  DECLARE_RAW_MESSAGE(new_game_request, message_type::new_game_request,
+                      ((client_token)(request_token)) //
+                      ((game_name)(name)));
 }

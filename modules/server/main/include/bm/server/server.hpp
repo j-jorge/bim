@@ -17,6 +17,7 @@
 #pragma once
 
 #include <bm/server/service/authentication_service.hpp>
+#include <bm/server/service/matchmaking_service.hpp>
 
 #include <iscool/net/socket_stream.h>
 
@@ -34,5 +35,6 @@ namespace bm::server
   private:
     iscool::net::socket_stream m_socket;
     bm::server::authentication_service m_authentication_service;
+    bm::server::matchmaking_service m_matchmaking_service;
   };
 }

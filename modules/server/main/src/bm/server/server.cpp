@@ -22,6 +22,7 @@
 bm::server::server::server(unsigned short port)
   : m_socket(port)
   , m_authentication_service(m_socket)
+  , m_matchmaking_service(m_socket)
 {
   ic_causeless_log(iscool::log::nature::info(), "server",
                    "Server is up on port %d.", port);
@@ -32,4 +33,7 @@ bm::server::server::server(unsigned short port)
 
 void bm::server::server::dispatch(const iscool::net::endpoint& endpoint,
                                   const iscool::net::message& message)
-{}
+{
+  // The message comes from an active session, we can process it.
+  m_matchmaking_service.process(endpoint, message);
+}
