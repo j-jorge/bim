@@ -14,7 +14,7 @@
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include <bm/server/server.hpp>
+#include <bm/server/service/authentication_service.hpp>
 
 #include <bm/net/message/authentication.hpp>
 #include <bm/net/message/authentication_ko.hpp>

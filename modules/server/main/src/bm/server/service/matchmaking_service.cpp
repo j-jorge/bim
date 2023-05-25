@@ -14,7 +14,7 @@
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include <bm/server/server.hpp>
+#include <bm/server/service/matchmaking_service.hpp>
 
 #include <bm/net/message/accept_game.hpp>
 #include <bm/net/message/game_on_hold.hpp>
