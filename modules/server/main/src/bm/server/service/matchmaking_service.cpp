@@ -196,8 +196,16 @@ void bm::server::matchmaking_service::mark_as_ready(
   ic_causeless_log(iscool::log::nature::info(), "matchmaking_service",
                    "Player ready. Session %d, game %d.", session, game_id);
 
-  assert(m_games.find(game_id) != m_games.end());
-  game_info& game = m_games[game_id];
+  const game_map::iterator it = m_games.find(game_id);
+
+  if (it == m_games.end())
+    {
+      ic_causeless_log(iscool::log::nature::info(), "matchmaking_service",
+                       "Game %d does not exist.", game_id);
+      return;
+    }
+
+  game_info& game = it->second;
   const std::size_t existing_index = game.session_index(session);
 
   // Update for a player on hold.
