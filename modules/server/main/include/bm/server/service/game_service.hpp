@@ -36,9 +36,17 @@ namespace bm::server
     game_info new_game(std::uint8_t player_count,
                        const std::array<iscool::net::session_id, 4>& sessions);
 
+    void process(const iscool::net::endpoint& endpoint,
+                 const iscool::net::message& message);
+
   private:
     struct game;
     using game_map = std::unordered_map<iscool::net::channel_id, game>;
+
+  private:
+    void mark_as_ready(const iscool::net::endpoint& endpoint,
+                       iscool::net::session_id session,
+                       iscool::net::channel_id channel, game& game);
 
   private:
     iscool::net::message_stream m_message_stream;

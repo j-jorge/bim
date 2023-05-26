@@ -18,6 +18,7 @@
 
 #include <iscool/log/causeless_log.h>
 #include <iscool/log/nature/info.h>
+#include <iscool/net/message/message.h>
 
 bm::server::server::server(unsigned short port)
   : m_socket(port)
@@ -36,5 +37,9 @@ void bm::server::server::dispatch(const iscool::net::endpoint& endpoint,
                                   const iscool::net::message& message)
 {
   // The message comes from an active session, we can process it.
-  m_matchmaking_service.process(endpoint, message);
+
+  if (message.get_channel_id() == 0)
+    m_matchmaking_service.process(endpoint, message);
+  else
+    m_game_service.process(endpoint, message);
 }

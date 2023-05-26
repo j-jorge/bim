@@ -16,6 +16,7 @@
 */
 #include <bm/server/service/matchmaking_service.hpp>
 
+#include <bm/server/service/game_info.hpp>
 #include <bm/server/service/game_service.hpp>
 
 #include <bm/net/message/accept_game.hpp>
@@ -25,6 +26,7 @@
 
 #include <iscool/log/causeless_log.h>
 #include <iscool/log/nature/info.h>
+#include <iscool/schedule/delayed_call.h>
 #include <iscool/time/now.h>
 
 #include <algorithm>
@@ -136,6 +138,7 @@ void bm::server::matchmaking_service::create_encounter(
   encounter.sessions[0] = session;
   encounter.release_at_this_date[0] = date_for_next_release();
   encounter.clean_up_connection = schedule_clean_up(encounter_id);
+  encounter.ready.fill(false);
 
   send_game_on_hold(endpoint, request.get_request_token(), session,
                     encounter_id, encounter.player_count);
@@ -207,7 +210,7 @@ void bm::server::matchmaking_service::mark_as_ready(
   const bm::net::encounter_id encounter_id = message.get_encounter_id();
 
   ic_causeless_log(iscool::log::nature::info(), "matchmaking_service",
-                   "Player ready. Session %d, encounter %d.", session,
+                   "Accepted game. Session %d, encounter %d.", session,
                    encounter_id);
 
   const encounter_map::iterator it = m_encounters.find(encounter_id);
