@@ -16,9 +16,11 @@
 */
 #pragma once
 
-#include <bm/net/message/authentication_error_code.hpp>
 #include <bm/net/message/client_token.hpp>
+#include <bm/net/message/encounter_id.hpp>
+#include <bm/net/message/game_name.hpp>
 
+#include <iscool/monitoring/declare_state_monitor.h>
 #include <iscool/net/message/message.h>
 #include <iscool/net/message_channel.h>
 #include <iscool/net/message_deserializer.h>
@@ -26,35 +28,42 @@
 
 namespace bm::net
 {
-  class authentication_ok;
-  class authentication_ko;
+  class game_on_hold;
+  class launch_game;
 
-  class authentication_exchange
+  class new_game_exchange
   {
-    DECLARE_SIGNAL(void(iscool::net::session_id), authenticated,
-                   m_authenticated)
-    DECLARE_SIGNAL(void(authentication_error_code), error, m_error)
+    DECLARE_SIGNAL(void(unsigned), game_proposal, m_game_proposal)
+    DECLARE_SIGNAL(void(iscool::net::channel_id, unsigned, unsigned),
+                   launch_game, m_launch_game)
 
   public:
-    explicit authentication_exchange(iscool::net::message_stream& stream);
-    ~authentication_exchange();
+    new_game_exchange(iscool::net::message_stream& stream,
+                      iscool::net::session_id session);
+    ~new_game_exchange();
 
-    void start();
+    void start(const game_name& name);
+    void accept();
     void stop();
 
   private:
     void tick();
 
-    void check_ok(const authentication_ok& message);
-    void check_ko(const authentication_ko& message);
+    void check_on_hold(const game_on_hold& message);
+    void check_launch_game(const launch_game& message);
 
   private:
     iscool::net::message_channel m_message_channel;
     iscool::net::message_deserializer m_deserializer;
+
     iscool::signals::scoped_connection m_channel_signal_connection;
     iscool::signals::scoped_connection m_update_connection;
+    iscool::signals::scoped_connection m_deserializer_connection;
 
     client_token m_token;
     iscool::net::message m_client_message;
+    std::optional<encounter_id> m_encounter_id;
+
+    ic_declare_state_monitor(m_monitor);
   };
 }

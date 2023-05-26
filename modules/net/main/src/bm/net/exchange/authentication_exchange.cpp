@@ -27,8 +27,8 @@
 #include <iscool/signals/implement_signal.h>
 
 IMPLEMENT_SIGNAL(bm::net::authentication_exchange, authenticated,
-                 _authenticated);
-IMPLEMENT_SIGNAL(bm::net::authentication_exchange, error, _error);
+                 m_authenticated);
+IMPLEMENT_SIGNAL(bm::net::authentication_exchange, error, m_error);
 
 bm::net::authentication_exchange::authentication_exchange(
     iscool::net::message_stream& stream)
@@ -75,7 +75,7 @@ void bm::net::authentication_exchange::check_ok(
   if (message.get_request_token() == m_token)
     {
       stop();
-      _authenticated(message.get_session_id());
+      m_authenticated(message.get_session_id());
     }
 }
 
@@ -85,6 +85,6 @@ void bm::net::authentication_exchange::check_ko(
   if (message.get_request_token() == m_token)
     {
       stop();
-      _error(message.get_error_code());
+      m_error(message.get_error_code());
     }
 }
