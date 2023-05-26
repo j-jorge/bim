@@ -16,7 +16,10 @@ add_executable(server-tests
 
   tests/src/bm/server/service/game_info.cpp
   tests/src/bm/server/service/game_service.cpp
+
+  tests/src/bm/server/tests/fake_scheduler.cpp
 )
+target_include_directories(server-tests PRIVATE tests/include)
 target_link_libraries(
   server-tests
   PRIVATE

@@ -14,6 +14,8 @@
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+#include <bm/server/tests/fake_scheduler.hpp>
+
 #include <bm/server/server.hpp>
 
 #include <bm/net/exchange/authentication_exchange.hpp>
@@ -26,10 +28,7 @@
 #include <iscool/net/message_channel.h>
 #include <iscool/net/message_deserializer.h>
 #include <iscool/net/message_deserializer.impl.tpp>
-#include <iscool/schedule/manual_scheduler.h>
-#include <iscool/schedule/setup.h>
 #include <iscool/signals/scoped_connection.h>
-#include <iscool/time/setup.h>
 
 #include <optional>
 
@@ -38,24 +37,10 @@
 class new_game_test : public testing::Test
 {
 protected:
-  class fake_scheduler
-  {
-  public:
-    fake_scheduler();
-
-    void tick(std::chrono::milliseconds duration);
-
-  private:
-    std::chrono::nanoseconds m_current_date;
-    iscool::time::scoped_time_source_delegate m_time_source_initializer;
-    iscool::schedule::manual_scheduler m_scheduler;
-    iscool::schedule::scoped_scheduler_delegate m_scheduler_initializer;
-  };
-
   class client
   {
   public:
-    client(fake_scheduler& scheduler,
+    client(bm::server::tests::fake_scheduler& scheduler,
            iscool::net::message_stream& message_stream);
 
     void authenticate();
@@ -67,7 +52,7 @@ protected:
     std::optional<bm::net::launch_game> launch_game_answer;
 
   private:
-    fake_scheduler& m_scheduler;
+    bm::server::tests::fake_scheduler& m_scheduler;
 
     bm::net::authentication_exchange m_authentication;
     std::unique_ptr<iscool::net::message_channel> m_message_channel;
@@ -81,7 +66,7 @@ public:
 
 protected:
   iscool::log::scoped_initializer m_log;
-  fake_scheduler m_scheduler;
+  bm::server::tests::fake_scheduler m_scheduler;
 
   const unsigned short m_port;
   bm::server::server m_server;
@@ -94,24 +79,7 @@ private:
   bm::net::client_token m_next_token;
 };
 
-new_game_test::fake_scheduler::fake_scheduler()
-  : m_current_date{}
-  , m_time_source_initializer(
-        [this]() -> std::chrono::nanoseconds
-        {
-          return m_current_date;
-        })
-  , m_scheduler_initializer(m_scheduler.get_delayed_call_delegate())
-{}
-
-void new_game_test::fake_scheduler::tick(std::chrono::milliseconds duration)
-{
-  std::this_thread::sleep_for(std::chrono::milliseconds(1));
-  m_current_date += duration;
-  m_scheduler.update_interval(duration);
-}
-
-new_game_test::client::client(fake_scheduler& scheduler,
+new_game_test::client::client(bm::server::tests::fake_scheduler& scheduler,
                               iscool::net::message_stream& message_stream)
   : m_scheduler(scheduler)
   , m_authentication(message_stream)

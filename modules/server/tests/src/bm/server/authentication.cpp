@@ -14,6 +14,8 @@
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+#include <bm/server/tests/fake_scheduler.hpp>
+
 #include <bm/server/server.hpp>
 
 #include <bm/net/message/authentication.hpp>
@@ -41,14 +43,10 @@ public:
 
 protected:
   void test_full_exchange(const bm::net::authentication& message);
-  void tick(std::chrono::milliseconds duration);
 
 protected:
-  std::chrono::nanoseconds m_current_date;
-  iscool::time::scoped_time_source_delegate m_time_source_initializer;
   iscool::log::scoped_initializer m_log;
-  iscool::schedule::manual_scheduler m_scheduler;
-  iscool::schedule::scoped_scheduler_delegate m_scheduler_initializer;
+  bm::server::tests::fake_scheduler m_scheduler;
 
   const unsigned short m_port;
   bm::server::server m_server;
@@ -62,14 +60,7 @@ protected:
 };
 
 authentication_test::authentication_test()
-  : m_current_date{}
-  , m_time_source_initializer(
-        [this]() -> std::chrono::nanoseconds
-        {
-          return m_current_date;
-        })
-  , m_scheduler_initializer(m_scheduler.get_delayed_call_delegate())
-  , m_port(10001)
+  : m_port(10001)
   , m_server(m_port)
   , m_socket_stream("localhost:" + std::to_string(m_port),
                     iscool::net::socket_mode::client{})
@@ -112,15 +103,8 @@ void authentication_test::test_full_exchange(
   for (int i = 0; (i != 10) && !m_answer_ok && !m_answer_ko; ++i)
     {
       m_message_channel.send(message.build_message());
-      tick(std::chrono::seconds(1));
+      m_scheduler.tick(std::chrono::seconds(1));
     }
-}
-
-void authentication_test::tick(std::chrono::milliseconds duration)
-{
-  std::this_thread::sleep_for(std::chrono::milliseconds(1));
-  m_current_date += duration;
-  m_scheduler.update_interval(duration);
 }
 
 TEST_F(authentication_test, ok)
@@ -233,7 +217,7 @@ TEST_F(authentication_test, client_disconnect)
   // times in the hope that all messages are consumed in the end *and* that
   // enough time elapses with no message to trigger the disconnection.
   for (int i = 0; i != 100; ++i)
-    tick(std::chrono::minutes(1));
+    m_scheduler.tick(std::chrono::minutes(1));
 
   // Log in again with the same token.
   test_full_exchange(
