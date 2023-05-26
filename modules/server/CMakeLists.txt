@@ -12,6 +12,7 @@ target_link_libraries(bm_server PUBLIC bm_net)
 
 add_executable(server-tests
   tests/src/bm/server/authentication.cpp
+  tests/src/bm/server/game.cpp
   tests/src/bm/server/new_game.cpp
 
   tests/src/bm/server/service/game_info.cpp
