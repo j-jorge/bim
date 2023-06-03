@@ -16,21 +16,33 @@
 */
 #pragma once
 
-#include <iscool/net/message/message_type.h>
+#include <bm/net/message/message_type.hpp>
 
-namespace bm::net::message_type
+#include <bm/game/component/player_action_kind_fwd.hpp>
+
+#include <iscool/net/message/raw_message.h>
+
+namespace bm::net
 {
-  constexpr iscool::net::message_type authentication = 1;
-  constexpr iscool::net::message_type authentication_ok = 2;
-  constexpr iscool::net::message_type authentication_ko = 3;
+  class game_update_from_client
+  {
+  public:
+    static iscool::net::message_type get_type()
+    {
+      return message_type::game_update_from_client;
+    }
 
-  constexpr iscool::net::message_type new_game_request = 4;
-  constexpr iscool::net::message_type game_on_hold = 5;
-  constexpr iscool::net::message_type accept_game = 6;
-  constexpr iscool::net::message_type launch_game = 7;
+    game_update_from_client();
+    explicit game_update_from_client(
+        const iscool::net::byte_array& raw_content);
 
-  constexpr iscool::net::message_type ready = 8;
-  constexpr iscool::net::message_type start = 9;
+    iscool::net::message build_message() const;
 
-  constexpr iscool::net::message_type game_update_from_client = 10;
+    std::size_t message_size() const;
+
+  public:
+    std::uint32_t from_tick;
+    std::vector<std::uint8_t> action_count_at_tick;
+    std::vector<bm::game::player_action_kind> actions;
+  };
 }
