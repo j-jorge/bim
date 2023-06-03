@@ -14,35 +14,19 @@
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#pragma once
+#include <bm/game/tick_counter.hpp>
 
-#include <bm/game/arena.hpp>
+bm::game::tick_counter::tick_counter()
+  : m_remainder(0)
+{}
 
-#include <entt/entity/registry.hpp>
-
-#include <chrono>
-
-namespace bm::game
+int bm::game::tick_counter::add(std::chrono::nanoseconds elapsed_time,
+                                std::chrono::nanoseconds time_step)
 {
-  class contest
-  {
-  public:
-    static constexpr std::chrono::milliseconds tick_interval
-        = std::chrono::milliseconds(20);
+  m_remainder += elapsed_time;
 
-  public:
-    contest(std::uint64_t seed, std::uint8_t brick_wall_probability,
-            std::uint8_t player_count, std::uint8_t arena_width,
-            std::uint8_t arena_height);
+  const int result = (m_remainder / time_step);
+  m_remainder -= result * time_step;
 
-    void tick();
-
-    entt::registry& registry();
-    const entt::registry& registry() const;
-    const bm::game::arena& arena() const;
-
-  private:
-    entt::registry m_registry;
-    bm::game::arena m_arena;
-  };
+  return result;
 }

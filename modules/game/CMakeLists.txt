@@ -2,10 +2,12 @@ add_library(bm_game
   STATIC
   main/src/bm/game/arena.cpp
   main/src/bm/game/contest.cpp
+  main/src/bm/game/contest_runner.cpp
   main/src/bm/game/input_archive.cpp
   main/src/bm/game/level_generation.cpp
   main/src/bm/game/output_archive.cpp
   main/src/bm/game/random_generator.cpp
+  main/src/bm/game/tick_counter.cpp
 
   main/src/bm/game/component/player_action_kind.cpp
 

@@ -15,6 +15,7 @@
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include <bm/game/contest.hpp>
+#include <bm/game/contest_runner.hpp>
 
 #include <bm/game/component/bomb.hpp>
 #include <bm/game/component/brick_wall.hpp>
@@ -175,6 +176,7 @@ int main()
       });
 
   bm::game::contest contest(1234, 80, 1, 13, 11);
+  bm::game::contest_runner contest_runner(contest);
 
   // 60 updates per second.
   constexpr std::chrono::duration<std::size_t, std::ratio<1, 60>>
@@ -186,7 +188,7 @@ int main()
           = std::chrono::steady_clock::now();
 
       apply_inputs(contest.registry(), quit, input.exchange(0));
-      contest.tick(std::chrono::duration_cast<std::chrono::nanoseconds>(
+      contest_runner.run(std::chrono::duration_cast<std::chrono::nanoseconds>(
           update_interval));
 
       display(contest);

@@ -26,21 +26,18 @@
 #include <bm/game/system/update_brick_walls.hpp>
 #include <bm/game/system/update_flames.hpp>
 
-#include <bm/game/level_generation.hpp>
-
 #include <bm/game/assume.hpp>
+#include <bm/game/level_generation.hpp>
+#include <bm/game/random_generator.hpp>
+
+constexpr std::chrono::milliseconds bm::game::contest::tick_interval;
 
 bm::game::contest::contest(std::uint64_t seed,
                            std::uint8_t brick_wall_probability,
                            std::uint8_t player_count, std::uint8_t arena_width,
                            std::uint8_t arena_height)
-  : m_random(seed)
-  , m_arena(arena_width, arena_height)
-  , m_elapsed_time(0)
+  : m_arena(arena_width, arena_height)
 {
-  for (int i = 0; i != 10; ++i)
-    m_random();
-
   bm_assume(player_count > 0);
 
   const position_on_grid player_start_position[]
@@ -53,32 +50,29 @@ bm::game::contest::contest(std::uint64_t seed,
     {
       entt::entity p = m_registry.create();
       const int start_position_index = i % start_position_count;
-      m_registry.emplace<player>(p, i, player_direction::down);
+      m_registry.emplace<player>(p, i, player_direction::down, 2);
       m_registry.emplace<position_on_grid>(
           p, player_start_position[start_position_index]);
       m_registry.emplace<player_action>(p);
     }
 
   generate_basic_level_structure(m_arena);
-  insert_random_brick_walls(m_arena, m_registry, m_random,
+
+  bm::game::random_generator random(seed);
+
+  for (int i = 0; i != 10; ++i)
+    random();
+
+  insert_random_brick_walls(m_arena, m_registry, random,
                             brick_wall_probability);
 }
 
-void bm::game::contest::tick(std::chrono::nanoseconds elapsed_time)
+void bm::game::contest::tick()
 {
-  constexpr std::chrono::milliseconds tick_interval(20);
-
-  for (m_elapsed_time += elapsed_time; m_elapsed_time >= tick_interval;
-       m_elapsed_time -= tick_interval)
-    {
-      apply_player_action(m_registry, m_arena);
-      update_bombs(m_registry, m_arena, tick_interval);
-      update_flames(m_registry, m_arena, tick_interval);
-      update_brick_walls(m_registry, m_arena);
-
-      // update_player_movement(m_players, m_arena);
-      // check_player_collision(m_players, m_arena);
-    }
+  apply_player_action(m_registry, m_arena);
+  update_bombs(m_registry, m_arena, tick_interval);
+  update_flames(m_registry, m_arena, tick_interval);
+  update_brick_walls(m_registry, m_arena);
 }
 
 entt::registry& bm::game::contest::registry()

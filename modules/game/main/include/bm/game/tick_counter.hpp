@@ -16,33 +16,19 @@
 */
 #pragma once
 
-#include <bm/game/arena.hpp>
-
-#include <entt/entity/registry.hpp>
-
 #include <chrono>
 
 namespace bm::game
 {
-  class contest
+  class tick_counter
   {
   public:
-    static constexpr std::chrono::milliseconds tick_interval
-        = std::chrono::milliseconds(20);
+    tick_counter();
 
-  public:
-    contest(std::uint64_t seed, std::uint8_t brick_wall_probability,
-            std::uint8_t player_count, std::uint8_t arena_width,
-            std::uint8_t arena_height);
-
-    void tick();
-
-    entt::registry& registry();
-    const entt::registry& registry() const;
-    const bm::game::arena& arena() const;
+    int add(std::chrono::nanoseconds elapsed_time,
+            std::chrono::nanoseconds time_step);
 
   private:
-    entt::registry m_registry;
-    bm::game::arena m_arena;
+    std::chrono::nanoseconds m_remainder;
   };
 }
