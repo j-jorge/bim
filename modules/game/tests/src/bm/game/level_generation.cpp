@@ -144,7 +144,8 @@ TEST(bm_game_insert_random_brick_walls, no_walls_near_player)
   int i = 0;
   for (entt::entity e : player_entities)
     {
-      registry.emplace<bm::game::player>(e, bm::game::player_direction::down);
+      registry.emplace<bm::game::player>(e, 0,
+                                         bm::game::player_direction::down);
       registry.emplace<bm::game::position_on_grid>(e, player_positions[i].x,
                                                    player_positions[i].y);
       ++i;

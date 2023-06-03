@@ -20,6 +20,7 @@
 
 #include <bm/game/component/player.hpp>
 #include <bm/game/component/player_action.hpp>
+#include <bm/game/component/player_action_kind.hpp>
 #include <bm/game/component/player_direction.hpp>
 #include <bm/game/component/position_on_grid.hpp>
 #include <bm/game/factory/bomb.hpp>
@@ -40,27 +41,32 @@ static void drop_bomb(entt::registry& registry, bm::game::arena& arena,
 
 static void move_player(bm::game::player& player,
                         bm::game::position_on_grid& position,
-                        bm::game::player_direction direction,
+                        bm::game::player_action_kind direction,
                         const bm::game::arena& arena)
 {
-  player.current_direction = direction;
-
   int x = position.x;
   int y = position.y;
 
   switch (direction)
     {
-    case bm::game::player_direction::left:
+    case bm::game::player_action_kind::left:
+      player.current_direction = bm::game::player_direction::left;
       x -= 1;
       break;
-    case bm::game::player_direction::right:
+    case bm::game::player_action_kind::right:
+      player.current_direction = bm::game::player_direction::right;
       x += 1;
       break;
-    case bm::game::player_direction::up:
+    case bm::game::player_action_kind::up:
+      player.current_direction = bm::game::player_direction::up;
       y -= 1;
       break;
-    case bm::game::player_direction::down:
+    case bm::game::player_action_kind::down:
+      player.current_direction = bm::game::player_direction::down;
       y += 1;
+      break;
+    case bm::game::player_action_kind::drop_bomb:
+      assert(false);
       break;
     }
 
@@ -72,18 +78,27 @@ static void move_player(bm::game::player& player,
     }
 }
 
+static void apply_player_actions(entt::registry& registry,
+                                 bm::game::arena& arena,
+                                 bm::game::player& player,
+                                 bm::game::position_on_grid& position,
+                                 bm::game::player_action& action)
+{
+  for (std::uint8_t i = 0; i != action.queue_size; ++i)
+    if (action.queue[i] == bm::game::player_action_kind::drop_bomb)
+      drop_bomb(registry, arena, player, position);
+    else
+      move_player(player, position, action.queue[i], arena);
+
+  action.queue_size = 0;
+}
+
 void bm::game::apply_player_action(entt::registry& registry, arena& arena)
 {
   registry.view<player, position_on_grid, player_action>().each(
       [&registry, &arena](player& player, position_on_grid& position,
                           player_action& action) -> void
       {
-        if (action.drop_bomb)
-          drop_bomb(registry, arena, player, position);
-
-        if (action.requested_direction)
-          move_player(player, position, *action.requested_direction, arena);
-
-        action = player_action{};
+        apply_player_actions(registry, arena, player, position, action);
       });
 }

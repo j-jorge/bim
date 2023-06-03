@@ -16,7 +16,7 @@
 */
 #pragma once
 
-#include <bm/game/component/player_action.hpp>
+#include <bm/game/component/player_direction_fwd.hpp>
 
 #include <cstdint>
 
@@ -24,6 +24,7 @@ namespace bm::game
 {
   struct player
   {
+    std::uint8_t index;
     player_direction current_direction;
     std::uint8_t bomb_strength;
   };

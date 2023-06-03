@@ -18,15 +18,14 @@
 
 #include <bm/game/component/player_action_kind_fwd.hpp>
 
-#include <cstdint>
-
 namespace bm::game
 {
-  struct player_action
+  enum class player_action_kind : std::uint8_t
   {
-    static constexpr std::size_t queue_capacity = 16;
-
-    player_action_kind queue[queue_capacity];
-    std::uint8_t queue_size;
+    up,
+    down,
+    left,
+    right,
+    drop_bomb
   };
 }

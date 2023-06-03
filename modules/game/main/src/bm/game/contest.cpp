@@ -53,7 +53,7 @@ bm::game::contest::contest(std::uint64_t seed,
     {
       entt::entity p = m_registry.create();
       const int start_position_index = i % start_position_count;
-      m_registry.emplace<player>(p, player_direction::down);
+      m_registry.emplace<player>(p, i, player_direction::down);
       m_registry.emplace<position_on_grid>(
           p, player_start_position[start_position_index]);
       m_registry.emplace<player_action>(p);

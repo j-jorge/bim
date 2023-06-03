@@ -22,6 +22,7 @@
 #include <bm/game/component/flame_direction.hpp>
 #include <bm/game/component/player.hpp>
 #include <bm/game/component/player_action.hpp>
+#include <bm/game/component/player_action_kind.hpp>
 #include <bm/game/component/player_direction.hpp>
 #include <bm/game/component/position_on_grid.hpp>
 
@@ -107,6 +108,53 @@ static void display(const bm::game::contest& contest)
     }
 }
 
+static void apply_inputs(entt::registry& registry, std::atomic<bool>& quit,
+                         int input)
+{
+  if (input == 'q')
+    {
+      quit.store(true);
+      return;
+    }
+
+  // Only a single player currently.
+  const entt::entity local_player = registry.view<bm::game::player>()[0];
+  bm::game::player_action& player_action
+      = registry.get<bm::game::player_action>(local_player);
+
+  if (player_action.queue_size == bm::game::player_action::queue_capacity)
+    return;
+
+  switch (input)
+    {
+    case 'A':
+      player_action.queue[player_action.queue_size]
+          = bm::game::player_action_kind::up;
+      ++player_action.queue_size;
+      break;
+    case 'B':
+      player_action.queue[player_action.queue_size]
+          = bm::game::player_action_kind::down;
+      ++player_action.queue_size;
+      break;
+    case 'C':
+      player_action.queue[player_action.queue_size]
+          = bm::game::player_action_kind::right;
+      ++player_action.queue_size;
+      break;
+    case 'D':
+      player_action.queue[player_action.queue_size]
+          = bm::game::player_action_kind::left;
+      ++player_action.queue_size;
+      break;
+    case ' ':
+      player_action.queue[player_action.queue_size]
+          = bm::game::player_action_kind::drop_bomb;
+      ++player_action.queue_size;
+      break;
+    }
+}
+
 int main()
 {
   termios original_terminal;
@@ -115,9 +163,6 @@ int main()
   termios custom_terminal = original_terminal;
   custom_terminal.c_lflag &= ~(ICANON | ECHO);
   tcsetattr(STDIN_FILENO, TCSANOW, &custom_terminal);
-
-  bm::game::contest contest(1234, 80, 1, 13, 11);
-  entt::registry& registry = contest.registry();
 
   std::atomic<bool> quit(false);
   std::atomic<int> input(0);
@@ -129,10 +174,7 @@ int main()
           input.store(std::getchar());
       });
 
-  // Only a single player currently.
-  entt::entity local_player = registry.view<bm::game::player>()[0];
-  bm::game::player_action& player_action
-      = registry.get<bm::game::player_action>(local_player);
+  bm::game::contest contest(1234, 80, 1, 13, 11);
 
   // 60 updates per second.
   constexpr std::chrono::duration<std::size_t, std::ratio<1, 60>>
@@ -143,32 +185,10 @@ int main()
       const std::chrono::steady_clock::time_point now
           = std::chrono::steady_clock::now();
 
-      switch (input.exchange(0))
-        {
-        case 'q':
-          quit.store(true);
-          break;
-
-        case 'A':
-          player_action.requested_direction = bm::game::player_direction::up;
-          break;
-        case 'B':
-          player_action.requested_direction = bm::game::player_direction::down;
-          break;
-        case 'C':
-          player_action.requested_direction
-              = bm::game::player_direction::right;
-          break;
-        case 'D':
-          player_action.requested_direction = bm::game::player_direction::left;
-          break;
-        case ' ':
-          player_action.drop_bomb = true;
-          break;
-        }
-
+      apply_inputs(contest.registry(), quit, input.exchange(0));
       contest.tick(std::chrono::duration_cast<std::chrono::nanoseconds>(
           update_interval));
+
       display(contest);
 
       std::this_thread::sleep_until(now + update_interval);
