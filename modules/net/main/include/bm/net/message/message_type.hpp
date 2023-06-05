@@ -33,4 +33,5 @@ namespace bm::net::message_type
   constexpr iscool::net::message_type start = 9;
 
   constexpr iscool::net::message_type game_update_from_client = 10;
+  constexpr iscool::net::message_type game_update_from_server = 11;
 }
