@@ -127,6 +127,8 @@ bm::server::authentication_service::schedule_disconnection(
   return iscool::schedule::delayed_call(
       [this, session]() -> void
       {
+        ic_causeless_log(iscool::log::nature::info(), "server",
+                         "Disconnected %d.", session);
         client_map::iterator it = m_clients.find(session);
 
         m_sessions.erase(it->second.token);

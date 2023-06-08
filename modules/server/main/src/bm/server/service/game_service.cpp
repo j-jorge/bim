@@ -130,7 +130,8 @@ void bm::server::game_service::mark_as_ready(
     }
 
   ic_causeless_log(iscool::log::nature::info(), "game_service",
-                   "Channel %d all players ready.", channel);
+                   "Channel %d all players ready, session %d.", channel,
+                   session);
 
   m_message_stream.send(endpoint, bm::net::start().build_message(), session,
                         channel);
