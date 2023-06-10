@@ -22,19 +22,19 @@
 #include <bm/net/exchange/game_update_exchange.hpp>
 #include <bm/net/exchange/new_game_exchange.hpp>
 
+#include <bm/game/component/player_action_kind.hpp>
+
 #include <iscool/log/setup.h>
 #include <iscool/net/message_channel.h>
 #include <iscool/net/message_deserializer.h>
 #include <iscool/net/message_deserializer.impl.tpp>
 #include <iscool/signals/scoped_connection.h>
 
-#include <iscool/log/enable_console_log.h>
-
 #include <optional>
 
 #include <gtest/gtest.h>
 
-class game_update_test : public testing::Test
+class game_update_test : public testing::TestWithParam<int>
 {
 protected:
   class client
@@ -51,6 +51,9 @@ protected:
     std::optional<unsigned> m_player_count;
     std::optional<unsigned> m_player_index;
     std::optional<bool> m_started;
+    std::unique_ptr<bm::net::game_update_exchange> m_game_update;
+
+    bm::net::server_update m_all_updates;
 
   private:
     void launch_game(iscool::net::message_stream& stream,
@@ -64,13 +67,13 @@ protected:
     bm::net::authentication_exchange m_authentication;
     std::unique_ptr<bm::net::new_game_exchange> m_new_game;
     std::unique_ptr<iscool::net::message_channel> m_message_channel;
-    std::unique_ptr<bm::net::game_update_exchange> m_game_update;
   };
 
 public:
   game_update_test();
 
 protected:
+  void join_game(int player_count, const bm::net::game_name& game_name);
   void wait();
 
 protected:
@@ -90,6 +93,8 @@ game_update_test::client::client(bm::server::tests::fake_scheduler& scheduler,
   : m_scheduler(scheduler)
   , m_authentication(message_stream)
 {
+  m_all_updates.from_tick = 0;
+
   m_authentication.connect_to_authenticated(
       [this, &message_stream](iscool::net::session_id session) -> void
       {
@@ -154,6 +159,16 @@ void game_update_test::client::launch_game(iscool::net::message_stream& stream,
       {
         m_started.emplace(true);
       });
+  m_game_update->connect_to_updated(
+      [this](const bm::net::server_update& update) -> void
+      {
+        EXPECT_EQ(m_all_updates.from_tick + m_all_updates.actions.size(),
+                  update.from_tick);
+
+        m_all_updates.actions.insert(m_all_updates.actions.end(),
+                                     update.actions.begin(),
+                                     update.actions.end());
+      });
 
   m_game_update->start();
 }
@@ -168,8 +183,20 @@ game_update_test::game_update_test()
                client(m_scheduler, m_message_stream),
                client(m_scheduler, m_message_stream),
                client(m_scheduler, m_message_stream) }
+{}
+
+void game_update_test::join_game(int player_count,
+                                 const bm::net::game_name& game_name)
 {
-  iscool::log::enable_console_log();
+  for (int i = 0; i != player_count; ++i)
+    m_clients[i].authenticate();
+
+  for (int i = 0; i != player_count; ++i)
+    m_clients[i].new_game(game_name);
+
+  // Let the time pass such that the messages can move between the clients and
+  // the server.
+  wait();
 }
 
 void game_update_test::wait()
@@ -182,21 +209,184 @@ void game_update_test::wait()
 }
 
 /** The game should begin with a bm::net::start message. */
-TEST_F(game_update_test, start)
+TEST_P(game_update_test, start)
 {
-  for (int i = 0; i != 4; ++i)
-    m_clients[i].authenticate();
+  const int player_count = GetParam();
 
-  for (int i = 0; i != 4; ++i)
-    m_clients[i].new_game({ 'u', 'p', 'd', 'a', 't', 'e', '1' });
+  join_game(player_count, { 'u', 'p', 'd', 'a', 't', 'e', '1' });
 
-  // Let the time pass such that the messages can move between the clients and
-  // the server.
-  wait();
-
-  for (int i = 0; i != 4; ++i)
+  for (int i = 0; i != player_count; ++i)
     {
       ASSERT_TRUE(!!m_clients[i].m_started) << "i=" << i;
       EXPECT_TRUE(*m_clients[i].m_started) << "i=" << i;
     }
 }
+
+/**
+ * The server should broadcast the actions up to the highest tick reached by
+ * all players.
+ */
+TEST_P(game_update_test, game_instant)
+{
+  const int player_count = GetParam();
+
+  join_game(player_count, { 'u', 'p', 'd', 'a', 't', 'e', '2' });
+
+  const bm::game::player_action actions[] = {
+    bm::game::player_action{ .queue = { bm::game::player_action_kind::up },
+                             .queue_size = 1 },
+    bm::game::player_action{ .queue
+                             = { bm::game::player_action_kind::up,
+                                 bm::game::player_action_kind::drop_bomb },
+                             .queue_size = 2 },
+    bm::game::player_action{ .queue
+                             = { bm::game::player_action_kind::drop_bomb },
+                             .queue_size = 1 },
+    bm::game::player_action{ .queue = { bm::game::player_action_kind::down },
+                             .queue_size = 1 },
+  };
+
+  for (int i = 0; i != player_count; ++i)
+    m_clients[i].m_game_update->push(actions[i]);
+
+  wait();
+
+  // Test the state observed by each player.
+  for (int i = 0; i != player_count; ++i)
+    {
+      EXPECT_EQ(0, m_clients[i].m_all_updates.from_tick) << "i=" << i;
+      ASSERT_EQ(1, m_clients[i].m_all_updates.actions.size()) << "i=" << i;
+
+      const std::array<bm::game::player_action, 4>& server_actions
+          = m_clients[i].m_all_updates.actions[0];
+
+      // Each player sees a state for all players.
+      for (int player_index = 0; player_index != player_count; ++player_index)
+        {
+          ASSERT_EQ(actions[player_index].queue_size,
+                    server_actions[player_index].queue_size)
+              << "i=" << i << ", player_index=" << player_index;
+
+          for (int j = 0; j != actions[player_index].queue_size; ++j)
+            EXPECT_EQ(actions[player_index].queue[j],
+                      server_actions[player_index].queue[j])
+                << "i=" << i << ", player_index=" << player_index
+                << ", j=" << j;
+        }
+    }
+}
+
+/**
+ * The updates from the server must match the highest tick reached by all
+ * players. If a player is late, the highest tick is his progress point.
+ */
+TEST_P(game_update_test, player_two_is_late)
+{
+  const int player_count = GetParam();
+
+  join_game(player_count, { 'l', 'a', 't', 'e' });
+
+  const bm::game::player_action_kind actions[4][4] = {
+    { bm::game::player_action_kind::up, bm::game::player_action_kind::down,
+      bm::game::player_action_kind::left,
+      bm::game::player_action_kind::right },
+    { bm::game::player_action_kind::down, bm::game::player_action_kind::left,
+      bm::game::player_action_kind::right, bm::game::player_action_kind::up },
+    { bm::game::player_action_kind::left, bm::game::player_action_kind::right,
+      bm::game::player_action_kind::up, bm::game::player_action_kind::down },
+    { bm::game::player_action_kind::right, bm::game::player_action_kind::up,
+      bm::game::player_action_kind::down, bm::game::player_action_kind::left }
+  };
+
+  // Every player sends an action.
+  for (int client_index = 0; client_index != player_count; ++client_index)
+    m_clients[client_index].m_game_update->push(bm::game::player_action{
+        .queue = { actions[client_index][0] }, .queue_size = 1 });
+
+  wait();
+
+  const auto check_actions = [=, this](std::uint32_t expected_tick)
+  {
+    for (int client_index = 0; client_index != player_count; ++client_index)
+      {
+        EXPECT_EQ(expected_tick,
+                  m_clients[client_index].m_all_updates.from_tick)
+            << "client_index=" << client_index;
+        ASSERT_EQ(1, m_clients[client_index].m_all_updates.actions.size())
+            << "client_index=" << client_index;
+
+        const std::array<bm::game::player_action, 4>& server_actions
+            = m_clients[client_index].m_all_updates.actions[0];
+
+        // Each player sees a state for all players.
+        for (int player_index = 0; player_index != player_count;
+             ++player_index)
+          {
+            ASSERT_EQ(1, server_actions[player_index].queue_size)
+                << "client_index=" << client_index
+                << ", player_index=" << player_index;
+            EXPECT_EQ(actions[player_index][expected_tick],
+                      server_actions[player_index].queue[0])
+                << "client_index=" << client_index
+                << ", player_index=" << player_index;
+          }
+      }
+  };
+
+  // Test the state observed by each player.
+  check_actions(0);
+
+  // Every player except index=1 sends an action.
+  for (int tick = 1; tick != 4; ++tick)
+    {
+      for (int client_index = 0; client_index != player_count; ++client_index)
+        if (client_index != 1)
+          m_clients[client_index].m_game_update->push(bm::game::player_action{
+              .queue = { actions[client_index][tick] }, .queue_size = 1 });
+
+      wait();
+
+      // Should still be at frame 0
+      check_actions(0);
+    }
+
+  // Suddenly, player index=1 sends his actions.
+  for (int tick = 1; tick != 4; ++tick)
+    {
+      m_clients[1].m_game_update->push(bm::game::player_action{
+          .queue = { actions[1][tick] }, .queue_size = 1 });
+    }
+
+  wait();
+
+  // All clients should have received the three last ticks.
+  for (int client_index = 0; client_index != player_count; ++client_index)
+    {
+      ASSERT_EQ(4, m_clients[client_index].m_all_updates.actions.size())
+          << "client_index=" << client_index;
+
+      // Each player sees a state for all players.
+      for (int frame_index = 1; frame_index != 4; ++frame_index)
+        {
+          const std::array<bm::game::player_action, 4>& server_actions
+              = m_clients[client_index].m_all_updates.actions[frame_index];
+
+          for (int player_index = 0; player_index != player_count;
+               ++player_index)
+            {
+              ASSERT_EQ(1, server_actions[player_index].queue_size)
+                  << "client_index=" << client_index
+                  << ", player_index=" << player_index
+                  << ", frame_index=" << frame_index;
+              EXPECT_EQ(actions[player_index][frame_index],
+                        server_actions[player_index].queue[0])
+                  << "client_index=" << client_index
+                  << ", player_index=" << player_index
+                  << ", frame_index=" << frame_index;
+            }
+        }
+    }
+}
+
+INSTANTIATE_TEST_SUITE_P(game_update_test_instance, game_update_test,
+                         testing::Values(2, 3, 4));

@@ -21,6 +21,11 @@
 #include <optional>
 #include <unordered_map>
 
+namespace bm::net
+{
+  class game_update_from_client;
+}
+
 namespace bm::server
 {
   struct game_info;
@@ -47,6 +52,21 @@ namespace bm::server
     void mark_as_ready(const iscool::net::endpoint& endpoint,
                        iscool::net::session_id session,
                        iscool::net::channel_id channel, game& game);
+    void push_update(const iscool::net::endpoint& endpoint,
+                     iscool::net::session_id session,
+                     iscool::net::channel_id channel,
+                     const bm::net::game_update_from_client& message,
+                     game& game);
+
+    std::optional<std::size_t>
+    validate_message(const bm::net::game_update_from_client& message,
+                     std::size_t player_index, const game& game) const;
+    void queue_actions(const bm::net::game_update_from_client& message,
+                       std::size_t player_index, game& game);
+    void send_actions(const iscool::net::endpoint& endpoint,
+                      iscool::net::session_id session,
+                      iscool::net::channel_id channel,
+                      std::size_t player_index, game& game);
 
   private:
     iscool::net::message_stream m_message_stream;
