@@ -1,4 +1,6 @@
 add_library(bm_net STATIC
+  main/src/bm/net/contest_runner.cpp
+
   main/src/bm/net/exchange/authentication_exchange.cpp
   main/src/bm/net/exchange/game_update_exchange.cpp
   main/src/bm/net/exchange/new_game_exchange.cpp

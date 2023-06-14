@@ -89,3 +89,8 @@ const bm::game::arena& bm::game::contest::arena() const
 {
   return m_arena;
 }
+
+void bm::game::contest::arena(const bm::game::arena& a)
+{
+  m_arena = a;
+}

@@ -22,6 +22,8 @@
 
 #include <entt/entity/entity.hpp>
 
+bm::game::arena::arena() = default;
+
 bm::game::arena::arena(std::uint8_t width, std::uint8_t height)
   : m_width(width)
   , m_height(height)

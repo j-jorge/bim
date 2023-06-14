@@ -40,6 +40,7 @@ namespace bm::game
     entt::registry& registry();
     const entt::registry& registry() const;
     const bm::game::arena& arena() const;
+    void arena(const bm::game::arena& a);
 
   private:
     entt::registry m_registry;

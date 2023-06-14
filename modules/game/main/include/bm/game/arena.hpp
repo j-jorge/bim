@@ -26,6 +26,7 @@ namespace bm::game
   class arena
   {
   public:
+    arena();
     arena(std::uint8_t width, std::uint8_t height);
 
     std::uint8_t width() const;
