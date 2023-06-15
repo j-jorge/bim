@@ -14,192 +14,130 @@
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include <bm/game/contest.hpp>
-#include <bm/game/contest_runner.hpp>
+#include <bm/app/console/application.hpp>
+#include <bm/app/console/offline_game.hpp>
+#include <bm/app/console/online_game.hpp>
+#include <bm/app/console/scoped_terminal_setup.hpp>
 
-#include <bm/game/component/bomb.hpp>
-#include <bm/game/component/brick_wall.hpp>
-#include <bm/game/component/flame.hpp>
-#include <bm/game/component/flame_direction.hpp>
-#include <bm/game/component/player.hpp>
-#include <bm/game/component/player_action.hpp>
-#include <bm/game/component/player_action_kind.hpp>
-#include <bm/game/component/player_direction.hpp>
-#include <bm/game/component/position_on_grid.hpp>
+#include <iscool/schedule/manual_scheduler.h>
+#include <iscool/schedule/setup.h>
 
-#include <atomic>
+#include <boost/program_options.hpp>
+
 #include <chrono>
-#include <cstdio>
 #include <cstdlib>
-#include <iostream>
-#include <string>
-#include <string_view>
-#include <thread>
-#include <unordered_map>
+#include <memory>
 
-#include <termios.h>
-#include <unistd.h>
-
-static void display(const bm::game::contest& contest)
+namespace
 {
-  const entt::registry& registry = contest.registry();
-  const bm::game::arena& arena = contest.arena();
-  const std::uint8_t arena_width = arena.width();
-  const std::uint8_t arena_height = arena.height();
+  struct options
+  {
+    std::string host = "localhost:23899";
+    std::string game_name = "test";
+    bool offline = false;
+  };
+}
 
-  std::vector<std::vector<std::string>> screen_buffer(
-      arena_height, std::vector<std::string>(arena_width, " "));
+static std::optional<options> parse_program_options(int argc, char** argv)
+{
+  options result;
 
-  for (std::uint8_t y = 0; y != arena_height; ++y)
-    for (std::uint8_t x = 0; x != arena_width; ++x)
-      if (arena.is_static_wall(x, y))
-        screen_buffer[y][x] = "\033[100m \033[0;0m";
+  boost::program_options::options_description description("Options");
 
-  registry.view<bm::game::position_on_grid, bm::game::brick_wall>().each(
-      [&screen_buffer](const bm::game::position_on_grid& p) -> void
-      {
-        screen_buffer[p.y][p.x] = "\033[33m#\033[0;0m";
-      });
+  description.add_options()("help,h", "Display this message and exit.");
+  description.add_options()(
+      "host",
+      boost::program_options::value<std::string>(&result.host)
+          ->default_value(result.host)
+          ->value_name("SERVER:PORT"),
+      "The server hosting the online game.");
+  description.add_options()(
+      "game-name",
+      boost::program_options::value<std::string>(&result.game_name)
+          ->default_value(result.game_name)
+          ->value_name("STR"),
+      "The name of the online game to join.");
+  description.add_options()("offline",
+                            "Run an offline game instead of an online one.");
 
-  registry.view<bm::game::position_on_grid, bm::game::bomb>().each(
-      [&screen_buffer](const bm::game::position_on_grid& p,
-                       const bm::game::bomb& b) -> void
-      {
-        const size_t f = (b.duration_until_explosion > std::chrono::seconds(1))
-                             ? 300
-                             : 100;
+  boost::program_options::variables_map arguments;
+  boost::program_options::store(
+      boost::program_options::parse_command_line(argc, argv, description),
+      arguments);
+  boost::program_options::notify(arguments);
 
-        if (b.duration_until_explosion.count() / f % 2 == 0)
-          screen_buffer[p.y][p.x] = "\033[31mó\033[0;0m";
-        else
-          screen_buffer[p.y][p.x] = "\033[91mó\033[0;0m";
-      });
-
-  registry.view<bm::game::position_on_grid, bm::game::flame>().each(
-      [&screen_buffer](const bm::game::position_on_grid& p,
-                       const bm::game::flame& f) -> void
-      {
-        if (f.horizontal == bm::game::flame_horizontal::yes)
-          if (f.vertical == bm::game::flame_vertical::yes)
-            screen_buffer[p.y][p.x] = "\033[31m+\033[0;0m";
-          else
-            screen_buffer[p.y][p.x] = "\033[31m-\033[0;0m";
-        else
-          screen_buffer[p.y][p.x] = "\033[31m|\033[0;0m";
-      });
-
-  registry.view<bm::game::player, bm::game::position_on_grid>().each(
-      [&screen_buffer](const bm::game::player&,
-                       const bm::game::position_on_grid& p) -> void
-      {
-        screen_buffer[p.y][p.x] = "\033[32mA\033[0;0m";
-      });
-
-  constexpr std::string_view clear_screen = "\x1B[2J";
-  constexpr std::string_view move_top_left = "\x1B[H";
-
-  std::cout << clear_screen << move_top_left;
-
-  for (std::uint8_t y = 0; y != arena_height; ++y)
+  if (arguments.count("help") != 0)
     {
-      for (std::uint8_t x = 0; x != arena_width; ++x)
-        std::cout << screen_buffer[y][x];
+      std::cout << description << '\n';
+      return std::nullopt;
+    }
 
-      std::cout << '\n';
+  if (arguments.count("offline") != 0)
+    result.offline = true;
+
+  return result;
+}
+
+static void run_main_loop(const bm::app::console::application& application,
+                          iscool::schedule::manual_scheduler& scheduler)
+{
+  std::chrono::nanoseconds start
+      = std::chrono::steady_clock::now().time_since_epoch();
+
+  scheduler.update_interval(std::chrono::seconds(0));
+
+  while (!application.should_quit())
+    {
+      const std::chrono::nanoseconds update_interval
+          = application.update_interval();
+
+      std::chrono::nanoseconds end
+          = std::chrono::steady_clock::now().time_since_epoch();
+
+      if (end - start < update_interval)
+        std::this_thread::sleep_for(update_interval - (end - start));
+
+      start = std::chrono::steady_clock::now().time_since_epoch();
+      scheduler.update_interval(update_interval);
     }
 }
 
-static void apply_inputs(entt::registry& registry, std::atomic<bool>& quit,
-                         int input)
+static std::unique_ptr<bm::app::console::online_game>
+build_online_game(bm::app::console::application& application,
+                  const std::string& host, const std::string& game_name)
 {
-  if (input == 'q')
-    {
-      quit.store(true);
-      return;
-    }
+  bm::net::game_name name{};
+  std::copy(game_name.begin(), game_name.end(), name.begin());
 
-  // Only a single player currently.
-  const entt::entity local_player = registry.view<bm::game::player>()[0];
-  bm::game::player_action& player_action
-      = registry.get<bm::game::player_action>(local_player);
-
-  if (player_action.queue_size == bm::game::player_action::queue_capacity)
-    return;
-
-  switch (input)
-    {
-    case 'A':
-      player_action.queue[player_action.queue_size]
-          = bm::game::player_action_kind::up;
-      ++player_action.queue_size;
-      break;
-    case 'B':
-      player_action.queue[player_action.queue_size]
-          = bm::game::player_action_kind::down;
-      ++player_action.queue_size;
-      break;
-    case 'C':
-      player_action.queue[player_action.queue_size]
-          = bm::game::player_action_kind::right;
-      ++player_action.queue_size;
-      break;
-    case 'D':
-      player_action.queue[player_action.queue_size]
-          = bm::game::player_action_kind::left;
-      ++player_action.queue_size;
-      break;
-    case ' ':
-      player_action.queue[player_action.queue_size]
-          = bm::game::player_action_kind::drop_bomb;
-      ++player_action.queue_size;
-      break;
-    }
+  return std::make_unique<bm::app::console::online_game>(application, host,
+                                                         name);
 }
 
-int main()
+int main(int argc, char** argv)
 {
-  termios original_terminal;
-  tcgetattr(STDIN_FILENO, &original_terminal);
+  const std::optional<options> options = parse_program_options(argc, argv);
 
-  termios custom_terminal = original_terminal;
-  custom_terminal.c_lflag &= ~(ICANON | ECHO);
-  tcsetattr(STDIN_FILENO, TCSANOW, &custom_terminal);
+  if (!options)
+    return EXIT_FAILURE;
 
-  std::atomic<bool> quit(false);
-  std::atomic<int> input(0);
+  const bm::app::console::scoped_terminal_setup no_echo(~(ICANON | ECHO));
 
-  std::thread input_thread(
-      [&input, &quit]() -> void
-      {
-        while (!quit.load())
-          input.store(std::getchar());
-      });
+  iscool::schedule::manual_scheduler scheduler;
+  iscool::schedule::scoped_scheduler_delegate scheduler_initializer(
+      scheduler.get_delayed_call_delegate());
+  bm::app::console::application application;
 
-  bm::game::contest contest(1234, 80, 1, 13, 11);
-  bm::game::contest_runner contest_runner(contest);
+  std::unique_ptr<bm::app::console::offline_game> offline_game;
+  std::unique_ptr<bm::app::console::online_game> online_game;
 
-  // 60 updates per second.
-  constexpr std::chrono::duration<std::size_t, std::ratio<1, 60>>
-      update_interval(1);
+  if (options->offline)
+    offline_game
+        = std::make_unique<bm::app::console::offline_game>(application);
+  else
+    online_game
+        = build_online_game(application, options->host, options->game_name);
 
-  while (!quit.load())
-    {
-      const std::chrono::steady_clock::time_point now
-          = std::chrono::steady_clock::now();
-
-      apply_inputs(contest.registry(), quit, input.exchange(0));
-      contest_runner.run(std::chrono::duration_cast<std::chrono::nanoseconds>(
-          update_interval));
-
-      display(contest);
-
-      std::this_thread::sleep_until(now + update_interval);
-    }
-
-  if (input_thread.joinable())
-    input_thread.join();
-
-  tcsetattr(STDIN_FILENO, TCSANOW, &original_terminal);
+  run_main_loop(application, scheduler);
 
   return EXIT_SUCCESS;
 }
