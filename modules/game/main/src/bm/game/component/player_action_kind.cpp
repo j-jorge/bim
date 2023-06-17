@@ -14,13 +14,25 @@
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#pragma once
+#include <bm/game/component/player_action_kind.hpp>
 
-#include <cstdint>
+#include <bm/game/assume.hpp>
 
-namespace bm::game
+const char* bm::game::to_string(player_action_kind k)
 {
-  enum class player_action_kind : std::uint8_t;
+  switch (k)
+    {
+    case player_action_kind::up:
+      return "up";
+    case player_action_kind::down:
+      return "down";
+    case player_action_kind::left:
+      return "left";
+    case player_action_kind::right:
+      return "right";
+    case player_action_kind::drop_bomb:
+      return "drop_bomb";
+    };
 
-  const char* to_string(player_action_kind k);
+  bm_assume(false);
 }

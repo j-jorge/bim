@@ -5,6 +5,8 @@ add_library(bm_game
   main/src/bm/game/level_generation.cpp
   main/src/bm/game/random_generator.cpp
 
+  main/src/bm/game/component/player_action_kind.cpp
+
   main/src/bm/game/factory/bomb.cpp
   main/src/bm/game/factory/brick_wall.cpp
   main/src/bm/game/factory/flame.cpp
