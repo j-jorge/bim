@@ -14,7 +14,7 @@
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include <bm/server/server.hpp>
+#include <bim/server/server.hpp>
 
 #include <iscool/log/enable_console_log.h>
 #include <iscool/log/setup.h>
@@ -59,7 +59,7 @@ int main(int argc, char* argv[])
   std::cout << "Running on port " << port << '\n'
             << "Press Ctrl+C to exit." << '\n';
 
-  bm::server::server server(port);
+  bim::server::server server(port);
 
   using clock = std::chrono::steady_clock;
 

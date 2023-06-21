@@ -1,0 +1,395 @@
+/*
+  Copyright (C) 2023 Julien Jorge
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Affero General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU Affero General Public License for more details.
+
+  You should have received a copy of the GNU Affero General Public License
+  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+#include <bim/server/tests/fake_scheduler.hpp>
+
+#include <bim/server/server.hpp>
+
+#include <bim/net/exchange/authentication_exchange.hpp>
+#include <bim/net/exchange/game_update_exchange.hpp>
+#include <bim/net/exchange/new_game_exchange.hpp>
+
+#include <bim/game/component/player_action_kind.hpp>
+
+#include <iscool/log/setup.h>
+#include <iscool/net/message_channel.h>
+#include <iscool/net/message_deserializer.h>
+#include <iscool/net/message_deserializer.impl.tpp>
+#include <iscool/signals/scoped_connection.h>
+
+#include <optional>
+
+#include <gtest/gtest.h>
+
+class game_update_test : public testing::TestWithParam<int>
+{
+protected:
+  class client
+  {
+  public:
+    client(bim::server::tests::fake_scheduler& scheduler,
+           iscool::net::message_stream& message_stream);
+
+    void authenticate();
+    void new_game(const bim::net::game_name& name);
+
+  public:
+    std::optional<iscool::net::channel_id> m_channel;
+    std::optional<unsigned> m_player_count;
+    std::optional<unsigned> m_player_index;
+    std::optional<bool> m_started;
+    std::unique_ptr<bim::net::game_update_exchange> m_game_update;
+
+    bim::net::server_update m_all_updates;
+
+  private:
+    void launch_game(iscool::net::message_stream& stream,
+                     iscool::net::session_id session,
+                     iscool::net::channel_id channel, unsigned player_count,
+                     unsigned player_index);
+
+  private:
+    bim::server::tests::fake_scheduler& m_scheduler;
+
+    bim::net::authentication_exchange m_authentication;
+    std::unique_ptr<bim::net::new_game_exchange> m_new_game;
+    std::unique_ptr<iscool::net::message_channel> m_message_channel;
+  };
+
+public:
+  game_update_test();
+
+protected:
+  void join_game(int player_count, const bim::net::game_name& game_name);
+  void wait();
+
+protected:
+  iscool::log::scoped_initializer m_log;
+  bim::server::tests::fake_scheduler m_scheduler;
+
+  const unsigned short m_port;
+  bim::server::server m_server;
+  iscool::net::socket_stream m_socket_stream;
+  iscool::net::message_stream m_message_stream;
+
+  std::array<client, 4> m_clients;
+};
+
+game_update_test::client::client(bim::server::tests::fake_scheduler& scheduler,
+                                 iscool::net::message_stream& message_stream)
+  : m_scheduler(scheduler)
+  , m_authentication(message_stream)
+{
+  m_all_updates.from_tick = 0;
+
+  m_authentication.connect_to_authenticated(
+      [this, &message_stream](iscool::net::session_id session) -> void
+      {
+        m_new_game.reset(
+            new bim::net::new_game_exchange(message_stream, session));
+
+        m_new_game->connect_to_game_proposal(
+            std::bind(&bim::net::new_game_exchange::accept, m_new_game.get()));
+
+        m_new_game->connect_to_launch_game(
+            std::bind(&client::launch_game, this, std::ref(message_stream),
+                      session, std::placeholders::_1, std::placeholders::_2,
+                      std::placeholders::_3));
+      });
+
+  m_authentication.connect_to_error(
+      [this](bim::net::authentication_error_code) -> void
+      {
+        EXPECT_TRUE(false);
+      });
+}
+
+void game_update_test::client::authenticate()
+{
+  EXPECT_EQ(nullptr, m_new_game);
+
+  m_authentication.start();
+
+  for (int i = 0; (i != 10) && !m_new_game; ++i)
+    m_scheduler.tick(std::chrono::seconds(1));
+}
+
+void game_update_test::client::new_game(const bim::net::game_name& name)
+{
+  ASSERT_NE(nullptr, m_new_game);
+
+  m_new_game->start(name);
+}
+
+void game_update_test::client::launch_game(iscool::net::message_stream& stream,
+                                           iscool::net::session_id session,
+                                           iscool::net::channel_id channel,
+                                           unsigned player_count,
+                                           unsigned player_index)
+{
+  EXPECT_FALSE(!!m_channel);
+  m_channel = channel;
+
+  EXPECT_FALSE(!!m_player_count);
+  m_player_count = player_count;
+
+  EXPECT_FALSE(!!m_player_index);
+  m_player_index = player_index;
+
+  m_message_channel.reset(
+      new iscool::net::message_channel(stream, session, channel));
+  m_game_update.reset(
+      new bim::net::game_update_exchange(*m_message_channel, player_count));
+
+  m_game_update->connect_to_started(
+      [this]() -> void
+      {
+        m_started.emplace(true);
+      });
+  m_game_update->connect_to_updated(
+      [this](const bim::net::server_update& update) -> void
+      {
+        EXPECT_EQ(m_all_updates.from_tick + m_all_updates.actions.size(),
+                  update.from_tick);
+
+        m_all_updates.actions.insert(m_all_updates.actions.end(),
+                                     update.actions.begin(),
+                                     update.actions.end());
+      });
+
+  m_game_update->start();
+}
+
+game_update_test::game_update_test()
+  : m_port(10004)
+  , m_server(m_port)
+  , m_socket_stream("localhost:" + std::to_string(m_port),
+                    iscool::net::socket_mode::client{})
+  , m_message_stream(m_socket_stream)
+  , m_clients{ client(m_scheduler, m_message_stream),
+               client(m_scheduler, m_message_stream),
+               client(m_scheduler, m_message_stream),
+               client(m_scheduler, m_message_stream) }
+{}
+
+void game_update_test::join_game(int player_count,
+                                 const bim::net::game_name& game_name)
+{
+  for (int i = 0; i != player_count; ++i)
+    m_clients[i].authenticate();
+
+  for (int i = 0; i != player_count; ++i)
+    m_clients[i].new_game(game_name);
+
+  // Let the time pass such that the messages can move between the clients and
+  // the server.
+  wait();
+}
+
+void game_update_test::wait()
+{
+  for (int i = 0; i != 100; ++i)
+    {
+      std::this_thread::sleep_for(std::chrono::seconds(0));
+      m_scheduler.tick(std::chrono::seconds(1));
+    }
+}
+
+/** The game should begin with a bim::net::start message. */
+TEST_P(game_update_test, start)
+{
+  const int player_count = GetParam();
+
+  join_game(player_count, { 'u', 'p', 'd', 'a', 't', 'e', '1' });
+
+  for (int i = 0; i != player_count; ++i)
+    {
+      ASSERT_TRUE(!!m_clients[i].m_started) << "i=" << i;
+      EXPECT_TRUE(*m_clients[i].m_started) << "i=" << i;
+    }
+}
+
+/**
+ * The server should broadcast the actions up to the highest tick reached by
+ * all players.
+ */
+TEST_P(game_update_test, game_instant)
+{
+  const int player_count = GetParam();
+
+  join_game(player_count, { 'u', 'p', 'd', 'a', 't', 'e', '2' });
+
+  const bim::game::player_action actions[] = {
+    bim::game::player_action{ .queue = { bim::game::player_action_kind::up },
+                              .queue_size = 1 },
+    bim::game::player_action{ .queue
+                              = { bim::game::player_action_kind::up,
+                                  bim::game::player_action_kind::drop_bomb },
+                              .queue_size = 2 },
+    bim::game::player_action{ .queue
+                              = { bim::game::player_action_kind::drop_bomb },
+                              .queue_size = 1 },
+    bim::game::player_action{ .queue = { bim::game::player_action_kind::down },
+                              .queue_size = 1 },
+  };
+
+  for (int i = 0; i != player_count; ++i)
+    m_clients[i].m_game_update->push(actions[i]);
+
+  wait();
+
+  // Test the state observed by each player.
+  for (int i = 0; i != player_count; ++i)
+    {
+      EXPECT_EQ(0, m_clients[i].m_all_updates.from_tick) << "i=" << i;
+      ASSERT_EQ(1, m_clients[i].m_all_updates.actions.size()) << "i=" << i;
+
+      const std::array<bim::game::player_action, 4>& server_actions
+          = m_clients[i].m_all_updates.actions[0];
+
+      // Each player sees a state for all players.
+      for (int player_index = 0; player_index != player_count; ++player_index)
+        {
+          ASSERT_EQ(actions[player_index].queue_size,
+                    server_actions[player_index].queue_size)
+              << "i=" << i << ", player_index=" << player_index;
+
+          for (int j = 0; j != actions[player_index].queue_size; ++j)
+            EXPECT_EQ(actions[player_index].queue[j],
+                      server_actions[player_index].queue[j])
+                << "i=" << i << ", player_index=" << player_index
+                << ", j=" << j;
+        }
+    }
+}
+
+/**
+ * The updates from the server must match the highest tick reached by all
+ * players. If a player is late, the highest tick is his progress point.
+ */
+TEST_P(game_update_test, player_two_is_late)
+{
+  const int player_count = GetParam();
+
+  join_game(player_count, { 'l', 'a', 't', 'e' });
+
+  const bim::game::player_action_kind actions[4][4] = {
+    { bim::game::player_action_kind::up, bim::game::player_action_kind::down,
+      bim::game::player_action_kind::left,
+      bim::game::player_action_kind::right },
+    { bim::game::player_action_kind::down, bim::game::player_action_kind::left,
+      bim::game::player_action_kind::right,
+      bim::game::player_action_kind::up },
+    { bim::game::player_action_kind::left,
+      bim::game::player_action_kind::right, bim::game::player_action_kind::up,
+      bim::game::player_action_kind::down },
+    { bim::game::player_action_kind::right, bim::game::player_action_kind::up,
+      bim::game::player_action_kind::down,
+      bim::game::player_action_kind::left }
+  };
+
+  // Every player sends an action.
+  for (int client_index = 0; client_index != player_count; ++client_index)
+    m_clients[client_index].m_game_update->push(bim::game::player_action{
+        .queue = { actions[client_index][0] }, .queue_size = 1 });
+
+  wait();
+
+  const auto check_actions = [=, this](std::uint32_t expected_tick)
+  {
+    for (int client_index = 0; client_index != player_count; ++client_index)
+      {
+        EXPECT_EQ(expected_tick,
+                  m_clients[client_index].m_all_updates.from_tick)
+            << "client_index=" << client_index;
+        ASSERT_EQ(1, m_clients[client_index].m_all_updates.actions.size())
+            << "client_index=" << client_index;
+
+        const std::array<bim::game::player_action, 4>& server_actions
+            = m_clients[client_index].m_all_updates.actions[0];
+
+        // Each player sees a state for all players.
+        for (int player_index = 0; player_index != player_count;
+             ++player_index)
+          {
+            ASSERT_EQ(1, server_actions[player_index].queue_size)
+                << "client_index=" << client_index
+                << ", player_index=" << player_index;
+            EXPECT_EQ(actions[player_index][expected_tick],
+                      server_actions[player_index].queue[0])
+                << "client_index=" << client_index
+                << ", player_index=" << player_index;
+          }
+      }
+  };
+
+  // Test the state observed by each player.
+  check_actions(0);
+
+  // Every player except index=1 sends an action.
+  for (int tick = 1; tick != 4; ++tick)
+    {
+      for (int client_index = 0; client_index != player_count; ++client_index)
+        if (client_index != 1)
+          m_clients[client_index].m_game_update->push(bim::game::player_action{
+              .queue = { actions[client_index][tick] }, .queue_size = 1 });
+
+      wait();
+
+      // Should still be at frame 0
+      check_actions(0);
+    }
+
+  // Suddenly, player index=1 sends his actions.
+  for (int tick = 1; tick != 4; ++tick)
+    {
+      m_clients[1].m_game_update->push(bim::game::player_action{
+          .queue = { actions[1][tick] }, .queue_size = 1 });
+    }
+
+  wait();
+
+  // All clients should have received the three last ticks.
+  for (int client_index = 0; client_index != player_count; ++client_index)
+    {
+      ASSERT_EQ(4, m_clients[client_index].m_all_updates.actions.size())
+          << "client_index=" << client_index;
+
+      // Each player sees a state for all players.
+      for (int frame_index = 1; frame_index != 4; ++frame_index)
+        {
+          const std::array<bim::game::player_action, 4>& server_actions
+              = m_clients[client_index].m_all_updates.actions[frame_index];
+
+          for (int player_index = 0; player_index != player_count;
+               ++player_index)
+            {
+              ASSERT_EQ(1, server_actions[player_index].queue_size)
+                  << "client_index=" << client_index
+                  << ", player_index=" << player_index
+                  << ", frame_index=" << frame_index;
+              EXPECT_EQ(actions[player_index][frame_index],
+                        server_actions[player_index].queue[0])
+                  << "client_index=" << client_index
+                  << ", player_index=" << player_index
+                  << ", frame_index=" << frame_index;
+            }
+        }
+    }
+}
+
+INSTANTIATE_TEST_SUITE_P(game_update_test_instance, game_update_test,
+                         testing::Values(2, 3, 4));

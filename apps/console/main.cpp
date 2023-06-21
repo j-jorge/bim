@@ -14,10 +14,10 @@
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include <bm/app/console/application.hpp>
-#include <bm/app/console/offline_game.hpp>
-#include <bm/app/console/online_game.hpp>
-#include <bm/app/console/scoped_terminal_setup.hpp>
+#include <bim/app/console/application.hpp>
+#include <bim/app/console/offline_game.hpp>
+#include <bim/app/console/online_game.hpp>
+#include <bim/app/console/scoped_terminal_setup.hpp>
 
 #include <iscool/schedule/manual_scheduler.h>
 #include <iscool/schedule/setup.h>
@@ -78,7 +78,7 @@ static std::optional<options> parse_program_options(int argc, char** argv)
   return result;
 }
 
-static void run_main_loop(const bm::app::console::application& application,
+static void run_main_loop(const bim::app::console::application& application,
                           iscool::schedule::manual_scheduler& scheduler)
 {
   std::chrono::nanoseconds start
@@ -102,15 +102,15 @@ static void run_main_loop(const bm::app::console::application& application,
     }
 }
 
-static std::unique_ptr<bm::app::console::online_game>
-build_online_game(bm::app::console::application& application,
+static std::unique_ptr<bim::app::console::online_game>
+build_online_game(bim::app::console::application& application,
                   const std::string& host, const std::string& game_name)
 {
-  bm::net::game_name name{};
+  bim::net::game_name name{};
   std::copy(game_name.begin(), game_name.end(), name.begin());
 
-  return std::make_unique<bm::app::console::online_game>(application, host,
-                                                         name);
+  return std::make_unique<bim::app::console::online_game>(application, host,
+                                                          name);
 }
 
 int main(int argc, char** argv)
@@ -120,19 +120,19 @@ int main(int argc, char** argv)
   if (!options)
     return EXIT_FAILURE;
 
-  const bm::app::console::scoped_terminal_setup no_echo(~(ICANON | ECHO));
+  const bim::app::console::scoped_terminal_setup no_echo(~(ICANON | ECHO));
 
   iscool::schedule::manual_scheduler scheduler;
   iscool::schedule::scoped_scheduler_delegate scheduler_initializer(
       scheduler.get_delayed_call_delegate());
-  bm::app::console::application application;
+  bim::app::console::application application;
 
-  std::unique_ptr<bm::app::console::offline_game> offline_game;
-  std::unique_ptr<bm::app::console::online_game> online_game;
+  std::unique_ptr<bim::app::console::offline_game> offline_game;
+  std::unique_ptr<bim::app::console::online_game> online_game;
 
   if (options->offline)
     offline_game
-        = std::make_unique<bm::app::console::offline_game>(application);
+        = std::make_unique<bim::app::console::offline_game>(application);
   else
     online_game
         = build_online_game(application, options->host, options->game_name);

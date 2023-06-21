@@ -1,31 +1,31 @@
-add_library(bm_server
+add_library(bim_server
   STATIC
-  main/src/bm/server/server.cpp
-  main/src/bm/server/service/authentication_service.cpp
-  main/src/bm/server/service/game_info.cpp
-  main/src/bm/server/service/game_service.cpp
-  main/src/bm/server/service/matchmaking_service.cpp
+  main/src/bim/server/server.cpp
+  main/src/bim/server/service/authentication_service.cpp
+  main/src/bim/server/service/game_info.cpp
+  main/src/bim/server/service/game_service.cpp
+  main/src/bim/server/service/matchmaking_service.cpp
 )
 
-target_include_directories(bm_server PUBLIC main/include)
-target_link_libraries(bm_server PUBLIC bm_net)
+target_include_directories(bim_server PUBLIC main/include)
+target_link_libraries(bim_server PUBLIC bim_net)
 
 add_executable(server-tests
-  tests/src/bm/server/authentication.cpp
-  tests/src/bm/server/game_creation.cpp
-  tests/src/bm/server/game_update.cpp
-  tests/src/bm/server/new_game.cpp
+  tests/src/bim/server/authentication.cpp
+  tests/src/bim/server/game_creation.cpp
+  tests/src/bim/server/game_update.cpp
+  tests/src/bim/server/new_game.cpp
 
-  tests/src/bm/server/service/game_info.cpp
-  tests/src/bm/server/service/game_service.cpp
+  tests/src/bim/server/service/game_info.cpp
+  tests/src/bim/server/service/game_service.cpp
 
-  tests/src/bm/server/tests/fake_scheduler.cpp
+  tests/src/bim/server/tests/fake_scheduler.cpp
 )
 target_include_directories(server-tests PRIVATE tests/include)
 target_link_libraries(
   server-tests
   PRIVATE
-  bm_server
+  bim_server
   GTest::gtest
   GTest::gtest_main
 )

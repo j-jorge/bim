@@ -1,17 +1,17 @@
 find_package(Boost REQUIRED COMPONENTS program_options)
 
-add_executable(bombers-man-console
-  src/bm/app/console/application.cpp
-  src/bm/app/console/display.cpp
-  src/bm/app/console/inputs.cpp
-  src/bm/app/console/offline_game.cpp
-  src/bm/app/console/online_game.cpp
-  src/bm/app/console/scoped_terminal_setup.cpp
+add_executable(bim-console
+  src/bim/app/console/application.cpp
+  src/bim/app/console/display.cpp
+  src/bim/app/console/inputs.cpp
+  src/bim/app/console/offline_game.cpp
+  src/bim/app/console/online_game.cpp
+  src/bim/app/console/scoped_terminal_setup.cpp
   main.cpp
 )
-target_include_directories(bombers-man-console PRIVATE include)
-target_link_libraries(bombers-man-console
+target_include_directories(bim-console PRIVATE include)
+target_link_libraries(bim-console
   PRIVATE
-  bm_net
+  bim_net
   Boost::program_options
 )

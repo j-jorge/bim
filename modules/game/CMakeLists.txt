@@ -1,36 +1,36 @@
-add_library(bm_game
+add_library(bim_game
   STATIC
-  main/src/bm/game/arena.cpp
-  main/src/bm/game/contest.cpp
-  main/src/bm/game/contest_runner.cpp
-  main/src/bm/game/input_archive.cpp
-  main/src/bm/game/level_generation.cpp
-  main/src/bm/game/output_archive.cpp
-  main/src/bm/game/random_generator.cpp
-  main/src/bm/game/tick_counter.cpp
+  main/src/bim/game/arena.cpp
+  main/src/bim/game/contest.cpp
+  main/src/bim/game/contest_runner.cpp
+  main/src/bim/game/input_archive.cpp
+  main/src/bim/game/level_generation.cpp
+  main/src/bim/game/output_archive.cpp
+  main/src/bim/game/random_generator.cpp
+  main/src/bim/game/tick_counter.cpp
 
-  main/src/bm/game/component/player_action_kind.cpp
+  main/src/bim/game/component/player_action_kind.cpp
 
-  main/src/bm/game/factory/bomb.cpp
-  main/src/bm/game/factory/brick_wall.cpp
-  main/src/bm/game/factory/flame.cpp
+  main/src/bim/game/factory/bomb.cpp
+  main/src/bim/game/factory/brick_wall.cpp
+  main/src/bim/game/factory/flame.cpp
 
-  main/src/bm/game/system/apply_player_action.cpp
-  main/src/bm/game/system/update_bombs.cpp
-  main/src/bm/game/system/update_brick_walls.cpp
-  main/src/bm/game/system/update_flames.cpp
+  main/src/bim/game/system/apply_player_action.cpp
+  main/src/bim/game/system/update_bombs.cpp
+  main/src/bim/game/system/update_brick_walls.cpp
+  main/src/bim/game/system/update_flames.cpp
 )
-target_include_directories(bm_game PUBLIC main/include)
-target_link_libraries(bm_game PUBLIC EnTT::EnTT)
+target_include_directories(bim_game PUBLIC main/include)
+target_link_libraries(bim_game PUBLIC EnTT::EnTT)
 
 add_executable(game-tests
-  tests/src/bm/game/archive.cpp
-  tests/src/bm/game/arena.cpp
-  tests/src/bm/game/level_generation.cpp
+  tests/src/bim/game/archive.cpp
+  tests/src/bim/game/arena.cpp
+  tests/src/bim/game/level_generation.cpp
 
-  tests/src/bm/game/system/update_bombs.cpp
-  tests/src/bm/game/system/update_brick_walls.cpp
-  tests/src/bm/game/system/update_flames.cpp
+  tests/src/bim/game/system/update_bombs.cpp
+  tests/src/bim/game/system/update_brick_walls.cpp
+  tests/src/bim/game/system/update_flames.cpp
 )
-target_link_libraries(game-tests PRIVATE bm_game GTest::gtest GTest::gtest_main)
+target_link_libraries(game-tests PRIVATE bim_game GTest::gtest GTest::gtest_main)
 run_when_built(game-tests)
