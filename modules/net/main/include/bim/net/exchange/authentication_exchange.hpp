@@ -19,10 +19,10 @@
 #include <bim/net/message/authentication_error_code.hpp>
 #include <bim/net/message/client_token.hpp>
 
-#include <iscool/net/message/message.h>
-#include <iscool/net/message_channel.h>
-#include <iscool/net/message_deserializer.h>
-#include <iscool/signals/scoped_connection.h>
+#include <iscool/net/message/message.hpp>
+#include <iscool/net/message_channel.hpp>
+#include <iscool/net/message_deserializer.hpp>
+#include <iscool/signals/scoped_connection.hpp>
 
 namespace bim::net
 {

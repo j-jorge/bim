@@ -21,11 +21,11 @@
 #include <bim/net/message/authentication_ok.hpp>
 #include <bim/net/message/protocol_version.hpp>
 
-#include <iscool/log/causeless_log.h>
-#include <iscool/log/nature/info.h>
-#include <iscool/schedule/delayed_call.h>
-#include <iscool/signals/implement_signal.h>
-#include <iscool/signals/scoped_connection.h>
+#include <iscool/log/causeless_log.hpp>
+#include <iscool/log/nature/info.hpp>
+#include <iscool/schedule/delayed_call.hpp>
+#include <iscool/signals/implement_signal.hpp>
+#include <iscool/signals/scoped_connection.hpp>
 
 IMPLEMENT_SIGNAL(bim::server::authentication_service, message, _message);
 

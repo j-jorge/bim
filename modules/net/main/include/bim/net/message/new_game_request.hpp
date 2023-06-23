@@ -20,8 +20,8 @@
 #include <bim/net/message/game_name.hpp>
 #include <bim/net/message/message_type.hpp>
 
-#include <iscool/net/byte_array_serialization/byte_array_array_serialization.h>
-#include <iscool/net/message/raw_message.h>
+#include <iscool/net/byte_array_serialization/byte_array_array_serialization.hpp>
+#include <iscool/net/message/raw_message.hpp>
 
 namespace bim::net
 {

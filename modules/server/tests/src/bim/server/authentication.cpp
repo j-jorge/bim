@@ -23,14 +23,14 @@
 #include <bim/net/message/authentication_ok.hpp>
 #include <bim/net/message/protocol_version.hpp>
 
-#include <iscool/log/setup.h>
-#include <iscool/net/message_channel.h>
-#include <iscool/net/message_deserializer.h>
+#include <iscool/log/setup.hpp>
+#include <iscool/net/message_channel.hpp>
+#include <iscool/net/message_deserializer.hpp>
 #include <iscool/net/message_deserializer.impl.tpp>
-#include <iscool/schedule/manual_scheduler.h>
-#include <iscool/schedule/setup.h>
-#include <iscool/signals/scoped_connection.h>
-#include <iscool/time/setup.h>
+#include <iscool/schedule/manual_scheduler.hpp>
+#include <iscool/schedule/setup.hpp>
+#include <iscool/signals/scoped_connection.hpp>
+#include <iscool/time/setup.hpp>
 
 #include <optional>
 

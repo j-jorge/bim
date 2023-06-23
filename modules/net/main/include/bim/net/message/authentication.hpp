@@ -20,7 +20,7 @@
 #include <bim/net/message/message_type.hpp>
 #include <bim/net/message/version.hpp>
 
-#include <iscool/net/message/raw_message.h>
+#include <iscool/net/message/raw_message.hpp>
 
 namespace bim::net
 {

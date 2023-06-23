@@ -20,7 +20,7 @@
 #include <bim/app/console/display.hpp>
 #include <bim/app/console/inputs.hpp>
 
-#include <iscool/schedule/delayed_call.h>
+#include <iscool/schedule/delayed_call.hpp>
 
 #include <random>
 

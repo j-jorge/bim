@@ -16,7 +16,7 @@
 */
 #pragma once
 
-#include <iscool/net/message_stream.h>
+#include <iscool/net/message_stream.hpp>
 
 #include <optional>
 #include <unordered_map>

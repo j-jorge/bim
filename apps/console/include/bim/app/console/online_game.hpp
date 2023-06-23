@@ -20,9 +20,9 @@
 #include <bim/net/exchange/authentication_exchange.hpp>
 #include <bim/net/message/game_name.hpp>
 
-#include <iscool/net/message_stream.h>
-#include <iscool/net/socket_stream.h>
-#include <iscool/signals/scoped_connection.h>
+#include <iscool/net/message_stream.hpp>
+#include <iscool/net/socket_stream.hpp>
+#include <iscool/signals/scoped_connection.hpp>
 
 #include <atomic>
 #include <cstdint>

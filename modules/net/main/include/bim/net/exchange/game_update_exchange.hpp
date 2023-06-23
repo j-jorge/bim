@@ -23,10 +23,10 @@
 
 #include <bim/game/component/player_action.hpp>
 
-#include <iscool/monitoring/declare_state_monitor.h>
-#include <iscool/net/message/message.h>
-#include <iscool/signals/declare_signal.h>
-#include <iscool/signals/scoped_connection.h>
+#include <iscool/monitoring/declare_state_monitor.hpp>
+#include <iscool/net/message/message.hpp>
+#include <iscool/signals/declare_signal.hpp>
+#include <iscool/signals/scoped_connection.hpp>
 
 #include <array>
 

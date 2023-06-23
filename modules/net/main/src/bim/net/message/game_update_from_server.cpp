@@ -16,7 +16,7 @@
 */
 #include <bim/net/message/game_update_from_server.hpp>
 
-#include <iscool/net/byte_array_serialization/byte_array_vector_serialization.h>
+#include <iscool/net/byte_array_serialization/byte_array_vector_serialization.hpp>
 
 #include <cassert>
 #include <limits>

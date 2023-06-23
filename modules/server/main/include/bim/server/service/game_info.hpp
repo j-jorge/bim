@@ -16,8 +16,8 @@
 */
 #pragma once
 
-#include <iscool/net/message/channel_id.h>
-#include <iscool/net/message/session_id.h>
+#include <iscool/net/message/channel_id.hpp>
+#include <iscool/net/message/session_id.hpp>
 
 #include <array>
 #include <cstdint>

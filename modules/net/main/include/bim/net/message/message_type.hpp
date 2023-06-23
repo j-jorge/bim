@@ -16,7 +16,7 @@
 */
 #pragma once
 
-#include <iscool/net/message/message_type.h>
+#include <iscool/net/message/message_type.hpp>
 
 namespace bim::net::message_type
 {

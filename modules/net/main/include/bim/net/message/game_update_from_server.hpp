@@ -20,7 +20,7 @@
 
 #include <bim/game/component/player_action_kind_fwd.hpp>
 
-#include <iscool/net/message/raw_message.h>
+#include <iscool/net/message/raw_message.hpp>
 
 namespace bim::net
 {

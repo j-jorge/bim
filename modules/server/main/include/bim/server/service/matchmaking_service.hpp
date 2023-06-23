@@ -19,7 +19,7 @@
 #include <bim/net/message/client_token.hpp>
 #include <bim/net/message/encounter_id.hpp>
 
-#include <iscool/net/message_stream.h>
+#include <iscool/net/message_stream.hpp>
 
 #include <string>
 #include <unordered_map>

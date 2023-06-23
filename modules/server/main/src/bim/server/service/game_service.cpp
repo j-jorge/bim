@@ -26,8 +26,8 @@
 #include <bim/game/assume.hpp>
 #include <bim/game/component/player_action.hpp>
 
-#include <iscool/log/causeless_log.h>
-#include <iscool/log/nature/info.h>
+#include <iscool/log/causeless_log.hpp>
+#include <iscool/log/nature/info.hpp>
 
 #include <algorithm>
 #include <array>

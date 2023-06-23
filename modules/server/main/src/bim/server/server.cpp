@@ -16,9 +16,9 @@
 */
 #include <bim/server/server.hpp>
 
-#include <iscool/log/causeless_log.h>
-#include <iscool/log/nature/info.h>
-#include <iscool/net/message/message.h>
+#include <iscool/log/causeless_log.hpp>
+#include <iscool/log/nature/info.hpp>
+#include <iscool/net/message/message.hpp>
 
 bim::server::server::server(unsigned short port)
   : m_socket(port)

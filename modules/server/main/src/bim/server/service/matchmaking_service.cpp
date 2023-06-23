@@ -24,10 +24,10 @@
 #include <bim/net/message/launch_game.hpp>
 #include <bim/net/message/new_game_request.hpp>
 
-#include <iscool/log/causeless_log.h>
-#include <iscool/log/nature/info.h>
-#include <iscool/schedule/delayed_call.h>
-#include <iscool/time/now.h>
+#include <iscool/log/causeless_log.hpp>
+#include <iscool/log/nature/info.hpp>
+#include <iscool/schedule/delayed_call.hpp>
+#include <iscool/time/now.hpp>
 
 #include <algorithm>
 #include <cassert>

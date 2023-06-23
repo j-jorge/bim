@@ -18,7 +18,7 @@
 
 #include <bim/server/service/game_info.hpp>
 
-#include <iscool/net/socket_stream.h>
+#include <iscool/net/socket_stream.hpp>
 
 #include <gtest/gtest.h>
 

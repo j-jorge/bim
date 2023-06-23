@@ -22,9 +22,9 @@
 #include <bim/net/message/protocol_version.hpp>
 
 #include <iscool/net/message_deserializer.impl.tpp>
-#include <iscool/random/rand.h>
-#include <iscool/schedule/delayed_call.h>
-#include <iscool/signals/implement_signal.h>
+#include <iscool/random/rand.hpp>
+#include <iscool/schedule/delayed_call.hpp>
+#include <iscool/signals/implement_signal.hpp>
 
 IMPLEMENT_SIGNAL(bim::net::authentication_exchange, authenticated,
                  m_authenticated);

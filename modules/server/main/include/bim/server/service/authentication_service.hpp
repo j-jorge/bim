@@ -18,7 +18,7 @@
 
 #include <bim/net/message/client_token.hpp>
 
-#include <iscool/net/message_stream.h>
+#include <iscool/net/message_stream.hpp>
 
 #include <unordered_map>
 

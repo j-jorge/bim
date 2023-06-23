@@ -16,9 +16,9 @@
 */
 #pragma once
 
-#include <iscool/schedule/manual_scheduler.h>
-#include <iscool/schedule/setup.h>
-#include <iscool/time/setup.h>
+#include <iscool/schedule/manual_scheduler.hpp>
+#include <iscool/schedule/setup.hpp>
+#include <iscool/time/setup.hpp>
 
 namespace bim::server::tests
 {

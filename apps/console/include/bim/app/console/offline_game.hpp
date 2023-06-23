@@ -19,7 +19,7 @@
 #include <bim/game/contest.hpp>
 #include <bim/game/contest_runner.hpp>
 
-#include <iscool/signals/scoped_connection.h>
+#include <iscool/signals/scoped_connection.hpp>
 
 #include <atomic>
 #include <thread>

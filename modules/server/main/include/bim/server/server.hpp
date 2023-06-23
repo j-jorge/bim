@@ -20,7 +20,7 @@
 #include <bim/server/service/game_service.hpp>
 #include <bim/server/service/matchmaking_service.hpp>
 
-#include <iscool/net/socket_stream.h>
+#include <iscool/net/socket_stream.hpp>
 
 namespace bim::server
 {

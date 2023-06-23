@@ -22,10 +22,10 @@
 
 #include <bim/game/assume.hpp>
 
-#include <iscool/monitoring/implement_state_monitor.h>
-#include <iscool/net/message_channel.h>
-#include <iscool/schedule/delayed_call.h>
-#include <iscool/signals/implement_signal.h>
+#include <iscool/monitoring/implement_state_monitor.hpp>
+#include <iscool/net/message_channel.hpp>
+#include <iscool/schedule/delayed_call.hpp>
+#include <iscool/signals/implement_signal.hpp>
 
 namespace
 {

@@ -16,10 +16,10 @@
 */
 #include <bim/server/server.hpp>
 
-#include <iscool/log/enable_console_log.h>
-#include <iscool/log/setup.h>
-#include <iscool/schedule/manual_scheduler.h>
-#include <iscool/schedule/setup.h>
+#include <iscool/log/enable_console_log.hpp>
+#include <iscool/log/setup.hpp>
+#include <iscool/schedule/manual_scheduler.hpp>
+#include <iscool/schedule/setup.hpp>
 
 #include <chrono>
 #include <csignal>

@@ -20,11 +20,11 @@
 #include <bim/net/message/encounter_id.hpp>
 #include <bim/net/message/game_name.hpp>
 
-#include <iscool/monitoring/declare_state_monitor.h>
-#include <iscool/net/message/message.h>
-#include <iscool/net/message_channel.h>
-#include <iscool/net/message_deserializer.h>
-#include <iscool/signals/scoped_connection.h>
+#include <iscool/monitoring/declare_state_monitor.hpp>
+#include <iscool/net/message/message.hpp>
+#include <iscool/net/message_channel.hpp>
+#include <iscool/net/message_deserializer.hpp>
+#include <iscool/signals/scoped_connection.hpp>
 
 namespace bim::net
 {

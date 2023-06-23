@@ -21,11 +21,11 @@
 #include <bim/net/message/launch_game.hpp>
 #include <bim/net/message/new_game_request.hpp>
 
-#include <iscool/monitoring/implement_state_monitor.h>
+#include <iscool/monitoring/implement_state_monitor.hpp>
 #include <iscool/net/message_deserializer.impl.tpp>
-#include <iscool/random/rand.h>
-#include <iscool/schedule/delayed_call.h>
-#include <iscool/signals/implement_signal.h>
+#include <iscool/random/rand.hpp>
+#include <iscool/schedule/delayed_call.hpp>
+#include <iscool/signals/implement_signal.hpp>
 
 ic_implement_state_monitor(bim::net::new_game_exchange, m_monitor, idle,
                            ((idle)((start)))         //

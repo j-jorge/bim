@@ -24,11 +24,11 @@
 #include <bim/net/message/launch_game.hpp>
 #include <bim/net/message/new_game_request.hpp>
 
-#include <iscool/log/setup.h>
-#include <iscool/net/message_channel.h>
-#include <iscool/net/message_deserializer.h>
+#include <iscool/log/setup.hpp>
+#include <iscool/net/message_channel.hpp>
+#include <iscool/net/message_deserializer.hpp>
 #include <iscool/net/message_deserializer.impl.tpp>
-#include <iscool/signals/scoped_connection.h>
+#include <iscool/signals/scoped_connection.hpp>
 
 #include <optional>
 

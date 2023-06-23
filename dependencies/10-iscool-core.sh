@@ -3,7 +3,7 @@
 set -euo pipefail
 
 : "${iscool_core_repository:=https://github.com/j-jorge/iscool-core/}"
-: "${iscool_core_version:=1.8.0}"
+: "${iscool_core_version:=1.9.0}"
 package_revision=1
 version="$iscool_core_version"-"$package_revision"
 flavor="$bomb_build_type"
