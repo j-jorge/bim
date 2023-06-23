@@ -19,9 +19,6 @@
 #include <bim/app/console/online_game.hpp>
 #include <bim/app/console/scoped_terminal_setup.hpp>
 
-#include <iscool/schedule/manual_scheduler.h>
-#include <iscool/schedule/setup.h>
-
 #include <boost/program_options.hpp>
 
 #include <chrono>
@@ -78,27 +75,22 @@ static std::optional<options> parse_program_options(int argc, char** argv)
   return result;
 }
 
-static void run_main_loop(const bim::app::console::application& application,
-                          iscool::schedule::manual_scheduler& scheduler)
+static void run_main_loop(bim::app::console::application& application)
 {
-  std::chrono::nanoseconds start
-      = std::chrono::steady_clock::now().time_since_epoch();
-
-  scheduler.update_interval(std::chrono::seconds(0));
-
   while (!application.should_quit())
     {
       const std::chrono::nanoseconds update_interval
           = application.update_interval();
+      const std::chrono::nanoseconds start
+          = std::chrono::steady_clock::now().time_since_epoch();
 
-      std::chrono::nanoseconds end
+      application.tick();
+
+      const std::chrono::nanoseconds end
           = std::chrono::steady_clock::now().time_since_epoch();
 
       if (end - start < update_interval)
         std::this_thread::sleep_for(update_interval - (end - start));
-
-      start = std::chrono::steady_clock::now().time_since_epoch();
-      scheduler.update_interval(update_interval);
     }
 }
 
@@ -122,9 +114,6 @@ int main(int argc, char** argv)
 
   const bim::app::console::scoped_terminal_setup no_echo(~(ICANON | ECHO));
 
-  iscool::schedule::manual_scheduler scheduler;
-  iscool::schedule::scoped_scheduler_delegate scheduler_initializer(
-      scheduler.get_delayed_call_delegate());
   bim::app::console::application application;
 
   std::unique_ptr<bim::app::console::offline_game> offline_game;
@@ -137,7 +126,7 @@ int main(int argc, char** argv)
     online_game
         = build_online_game(application, options->host, options->game_name);
 
-  run_main_loop(application, scheduler);
+  run_main_loop(application);
 
   return EXIT_SUCCESS;
 }

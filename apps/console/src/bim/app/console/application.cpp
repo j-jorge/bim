@@ -18,7 +18,21 @@
 
 bim::app::console::application::application()
   : m_quit(false)
+  , m_game_date{}
+  , m_time_source_delegate(
+        [this]() -> std::chrono::nanoseconds
+        {
+          return m_game_date;
+        })
+  , m_scheduler_initializer(m_scheduler.get_delayed_call_delegate())
 {}
+
+void bim::app::console::application::tick()
+{
+  const std::chrono::nanoseconds t = update_interval();
+  m_game_date += t;
+  m_scheduler.update_interval(t);
+}
 
 void bim::app::console::application::quit()
 {

@@ -16,6 +16,10 @@
 */
 #pragma once
 
+#include <iscool/schedule/manual_scheduler.h>
+#include <iscool/schedule/setup.h>
+#include <iscool/time/setup.h>
+
 #include <atomic>
 #include <chrono>
 
@@ -26,6 +30,8 @@ namespace bim::app::console
   public:
     application();
 
+    void tick();
+
     void quit();
     bool should_quit() const;
 
@@ -33,5 +39,10 @@ namespace bim::app::console
 
   private:
     std::atomic<bool> m_quit;
+
+    std::chrono::nanoseconds m_game_date;
+    iscool::time::scoped_time_source_delegate m_time_source_delegate;
+    iscool::schedule::manual_scheduler m_scheduler;
+    iscool::schedule::scoped_scheduler_delegate m_scheduler_initializer;
   };
 }
