@@ -76,8 +76,8 @@ int main(int argc, char* argv[])
 
       if (slice_duration >= std::chrono::milliseconds(1))
         {
-          const std::chrono::milliseconds update_ms
-              = std::chrono::duration_cast<std::chrono::milliseconds>(
+          const std::chrono::milliseconds update_ms =
+              std::chrono::duration_cast<std::chrono::milliseconds>(
                   slice_duration);
 
           slice_duration -= update_ms;

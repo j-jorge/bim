@@ -40,13 +40,13 @@ namespace bim::server
     ~authentication_service();
 
   private:
-    using session_map
-        = std::unordered_map<bim::net::client_token, iscool::net::session_id>;
+    using session_map =
+        std::unordered_map<bim::net::client_token, iscool::net::session_id>;
 
     struct client_info;
 
-    using client_map
-        = std::unordered_map<iscool::net::session_id, client_info>;
+    using client_map =
+        std::unordered_map<iscool::net::session_id, client_info>;
 
   private:
     void check_session(const iscool::net::endpoint& endpoint,

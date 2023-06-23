@@ -60,8 +60,8 @@ bim::net::contest_runner::contest_runner(bim::game::contest& contest,
 
 void bim::net::contest_runner::run(std::chrono::nanoseconds elapsed_wall_time)
 {
-  const int tick_count = m_tick_counter.add(elapsed_wall_time,
-                                            bim::game::contest::tick_interval);
+  const int tick_count =
+      m_tick_counter.add(elapsed_wall_time, bim::game::contest::tick_interval);
   bim_assume(tick_count >= 0);
 
   if (tick_count == 0)
@@ -71,8 +71,8 @@ void bim::net::contest_runner::run(std::chrono::nanoseconds elapsed_wall_time)
 
   // Start by storing the queued actions because the restoration of the
   // state thereafter will overwrite them.
-  const bim::game::player_action player_current_action_copy
-      = find_local_player_action(registry);
+  const bim::game::player_action player_current_action_copy =
+      find_local_player_action(registry);
 
   if (!m_server_actions.empty())
     {
@@ -148,8 +148,8 @@ void bim::net::contest_runner::apply_server_actions(entt::registry& registry)
   for (int player_index = 0; player_index != m_player_count; ++player_index)
     if (player_index != m_local_player_index)
       // TODO: remove the drop bomb actions.
-      m_unconfirmed_actions[player_index].back()
-          = m_server_actions.back()[player_index];
+      m_unconfirmed_actions[player_index].back() =
+          m_server_actions.back()[player_index];
 
   m_last_confirmed_tick += m_server_actions.size();
   assert(m_last_confirmed_tick <= m_last_completed_tick);
@@ -170,8 +170,8 @@ void bim::net::contest_runner::drop_confirmed_actions()
 {
   bim_assume(m_last_completed_tick >= m_last_confirmed_tick);
   const std::size_t keep_count = m_last_completed_tick - m_last_confirmed_tick;
-  std::vector<bim::game::player_action>& actions
-      = m_unconfirmed_actions[m_local_player_index];
+  std::vector<bim::game::player_action>& actions =
+      m_unconfirmed_actions[m_local_player_index];
 
   bim_assume(keep_count <= actions.size());
   actions.erase(actions.begin(), actions.end() - keep_count);
@@ -196,14 +196,14 @@ void bim::net::contest_runner::apply_unconfirmed_actions(
       for (int player_index = 0; player_index != m_player_count;
            ++player_index)
         {
-          const std::vector<bim::game::player_action>& actions
-              = m_unconfirmed_actions[player_index];
+          const std::vector<bim::game::player_action>& actions =
+              m_unconfirmed_actions[player_index];
 
           // Local players: apply the action they did in tick i.
           // Distant players: repeat the last action received from the
           // server.
-          *player_action_pointers[player_index]
-              = actions[std::min(actions.size() - 1, i)];
+          *player_action_pointers[player_index] =
+              actions[std::min(actions.size() - 1, i)];
         }
 
       m_contest.tick();

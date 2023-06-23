@@ -78,8 +78,8 @@ void authentication_test::test_full_exchange(
 {
   const bim::net::client_token token = message.get_request_token();
 
-  const iscool::signals::scoped_connection connection_ok
-      = m_message_deserializer.connect_signal<bim::net::authentication_ok>(
+  const iscool::signals::scoped_connection connection_ok =
+      m_message_deserializer.connect_signal<bim::net::authentication_ok>(
           [this, token](const iscool::net::endpoint&,
                         bim::net::authentication_ok answer) -> void
           {
@@ -89,8 +89,8 @@ void authentication_test::test_full_exchange(
             m_answer_ok = std::move(answer);
           });
 
-  const iscool::signals::scoped_connection connection_ko
-      = m_message_deserializer.connect_signal<bim::net::authentication_ko>(
+  const iscool::signals::scoped_connection connection_ko =
+      m_message_deserializer.connect_signal<bim::net::authentication_ko>(
           [this, token](const iscool::net::endpoint&,
                         bim::net::authentication_ko answer) -> void
           {

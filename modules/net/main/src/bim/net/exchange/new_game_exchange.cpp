@@ -56,8 +56,8 @@ void bim::net::new_game_exchange::start(const game_name& name)
   m_channel_signal_connection = m_message_channel.connect_to_message(std::bind(
       &iscool::net::message_deserializer::interpret_received_message,
       &m_deserializer, std::placeholders::_1, std::placeholders::_2));
-  m_deserializer_connection
-      = m_deserializer.connect_signal<game_on_hold>(std::bind(
+  m_deserializer_connection =
+      m_deserializer.connect_signal<game_on_hold>(std::bind(
           &new_game_exchange::check_on_hold, this, std::placeholders::_2));
 
   tick();
@@ -72,8 +72,8 @@ void bim::net::new_game_exchange::accept()
 
   m_client_message = accept_game(m_token, *m_encounter_id).build_message();
 
-  m_deserializer_connection
-      = m_deserializer.connect_signal<launch_game>(std::bind(
+  m_deserializer_connection =
+      m_deserializer.connect_signal<launch_game>(std::bind(
           &new_game_exchange::check_launch_game, this, std::placeholders::_2));
 }
 

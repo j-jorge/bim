@@ -235,13 +235,13 @@ TEST_P(game_update_test, game_instant)
   const bim::game::player_action actions[] = {
     bim::game::player_action{ .queue = { bim::game::player_action_kind::up },
                               .queue_size = 1 },
-    bim::game::player_action{ .queue
-                              = { bim::game::player_action_kind::up,
-                                  bim::game::player_action_kind::drop_bomb },
-                              .queue_size = 2 },
-    bim::game::player_action{ .queue
-                              = { bim::game::player_action_kind::drop_bomb },
-                              .queue_size = 1 },
+    bim::game::player_action{
+        .queue = { bim::game::player_action_kind::up,
+                   bim::game::player_action_kind::drop_bomb },
+        .queue_size = 2 },
+    bim::game::player_action{
+        .queue = { bim::game::player_action_kind::drop_bomb },
+        .queue_size = 1 },
     bim::game::player_action{ .queue = { bim::game::player_action_kind::down },
                               .queue_size = 1 },
   };
@@ -257,8 +257,8 @@ TEST_P(game_update_test, game_instant)
       EXPECT_EQ(0, m_clients[i].m_all_updates.from_tick) << "i=" << i;
       ASSERT_EQ(1, m_clients[i].m_all_updates.actions.size()) << "i=" << i;
 
-      const std::array<bim::game::player_action, 4>& server_actions
-          = m_clients[i].m_all_updates.actions[0];
+      const std::array<bim::game::player_action, 4>& server_actions =
+          m_clients[i].m_all_updates.actions[0];
 
       // Each player sees a state for all players.
       for (int player_index = 0; player_index != player_count; ++player_index)
@@ -318,8 +318,8 @@ TEST_P(game_update_test, player_two_is_late)
         ASSERT_EQ(1, m_clients[client_index].m_all_updates.actions.size())
             << "client_index=" << client_index;
 
-        const std::array<bim::game::player_action, 4>& server_actions
-            = m_clients[client_index].m_all_updates.actions[0];
+        const std::array<bim::game::player_action, 4>& server_actions =
+            m_clients[client_index].m_all_updates.actions[0];
 
         // Each player sees a state for all players.
         for (int player_index = 0; player_index != player_count;
@@ -371,8 +371,8 @@ TEST_P(game_update_test, player_two_is_late)
       // Each player sees a state for all players.
       for (int frame_index = 1; frame_index != 4; ++frame_index)
         {
-          const std::array<bim::game::player_action, 4>& server_actions
-              = m_clients[client_index].m_all_updates.actions[frame_index];
+          const std::array<bim::game::player_action, 4>& server_actions =
+              m_clients[client_index].m_all_updates.actions[frame_index];
 
           for (int player_index = 0; player_index != player_count;
                ++player_index)

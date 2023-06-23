@@ -58,9 +58,8 @@ void bim::app::console::display(const bim::game::contest& contest)
       [&screen_buffer](const bim::game::position_on_grid& p,
                        const bim::game::bomb& b) -> void
       {
-        const size_t f = (b.duration_until_explosion > std::chrono::seconds(1))
-                             ? 300
-                             : 100;
+        const size_t f =
+            (b.duration_until_explosion > std::chrono::seconds(1)) ? 300 : 100;
 
         if (b.duration_until_explosion.count() / f % 2 == 0)
           screen_buffer[p.y][p.x] = "\033[31mó\033[0;0m";

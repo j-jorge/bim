@@ -79,15 +79,15 @@ static void run_main_loop(bim::app::console::application& application)
 {
   while (!application.should_quit())
     {
-      const std::chrono::nanoseconds update_interval
-          = application.update_interval();
-      const std::chrono::nanoseconds start
-          = std::chrono::steady_clock::now().time_since_epoch();
+      const std::chrono::nanoseconds update_interval =
+          application.update_interval();
+      const std::chrono::nanoseconds start =
+          std::chrono::steady_clock::now().time_since_epoch();
 
       application.tick();
 
-      const std::chrono::nanoseconds end
-          = std::chrono::steady_clock::now().time_since_epoch();
+      const std::chrono::nanoseconds end =
+          std::chrono::steady_clock::now().time_since_epoch();
 
       if (end - start < update_interval)
         std::this_thread::sleep_for(update_interval - (end - start));
@@ -120,11 +120,11 @@ int main(int argc, char** argv)
   std::unique_ptr<bim::app::console::online_game> online_game;
 
   if (options->offline)
-    offline_game
-        = std::make_unique<bim::app::console::offline_game>(application);
+    offline_game =
+        std::make_unique<bim::app::console::offline_game>(application);
   else
-    online_game
-        = build_online_game(application, options->host, options->game_name);
+    online_game =
+        build_online_game(application, options->host, options->game_name);
 
   run_main_loop(application);
 

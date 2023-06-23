@@ -37,8 +37,8 @@ bool bim::app::console::apply_inputs(entt::registry& registry,
   if (input == 'q')
     return false;
 
-  bim::game::player_action& player_action
-      = [&registry, player_index]() -> bim::game::player_action&
+  bim::game::player_action& player_action =
+      [&registry, player_index]() -> bim::game::player_action&
   {
     for (auto&& [entity, player, action] :
          registry.view<bim::game::player, bim::game::player_action>().each())
@@ -57,28 +57,28 @@ bool bim::app::console::apply_inputs(entt::registry& registry,
       // pressing the arrow keys on my laptop (ignoring the preceeding escape
       // character).
     case 'A':
-      player_action.queue[player_action.queue_size]
-          = bim::game::player_action_kind::up;
+      player_action.queue[player_action.queue_size] =
+          bim::game::player_action_kind::up;
       ++player_action.queue_size;
       break;
     case 'B':
-      player_action.queue[player_action.queue_size]
-          = bim::game::player_action_kind::down;
+      player_action.queue[player_action.queue_size] =
+          bim::game::player_action_kind::down;
       ++player_action.queue_size;
       break;
     case 'C':
-      player_action.queue[player_action.queue_size]
-          = bim::game::player_action_kind::right;
+      player_action.queue[player_action.queue_size] =
+          bim::game::player_action_kind::right;
       ++player_action.queue_size;
       break;
     case 'D':
-      player_action.queue[player_action.queue_size]
-          = bim::game::player_action_kind::left;
+      player_action.queue[player_action.queue_size] =
+          bim::game::player_action_kind::left;
       ++player_action.queue_size;
       break;
     case ' ':
-      player_action.queue[player_action.queue_size]
-          = bim::game::player_action_kind::drop_bomb;
+      player_action.queue[player_action.queue_size] =
+          bim::game::player_action_kind::drop_bomb;
       ++player_action.queue_size;
       break;
     }

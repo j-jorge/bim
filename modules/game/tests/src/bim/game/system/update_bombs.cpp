@@ -214,11 +214,12 @@ TEST(update_bombs, burning_walls)
 
   bim::game::bomb_factory(registry, 2, 2, 2, std::chrono::milliseconds(0));
 
-  const entt::entity walls[]
-      = { bim::game::brick_wall_factory(registry, arena, 2, 1),
-          bim::game::brick_wall_factory(registry, arena, 4, 2),
-          bim::game::brick_wall_factory(registry, arena, 5, 2),
-          bim::game::brick_wall_factory(registry, arena, 2, 5) };
+  const entt::entity walls[] = {
+    bim::game::brick_wall_factory(registry, arena, 2, 1),
+    bim::game::brick_wall_factory(registry, arena, 4, 2),
+    bim::game::brick_wall_factory(registry, arena, 5, 2),
+    bim::game::brick_wall_factory(registry, arena, 2, 5)
+  };
 
   bim::game::update_bombs(registry, arena, std::chrono::milliseconds(12));
 

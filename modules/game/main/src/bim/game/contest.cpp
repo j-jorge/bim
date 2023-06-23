@@ -41,10 +41,11 @@ bim::game::contest::contest(std::uint64_t seed,
 {
   bim_assume(player_count > 0);
 
-  const position_on_grid player_start_position[]
-      = { position_on_grid(1, 1), position_on_grid(arena_width - 2, 1),
-          position_on_grid(1, arena_height - 2),
-          position_on_grid(arena_width - 2, arena_height - 2) };
+  const position_on_grid player_start_position[] = {
+    position_on_grid(1, 1), position_on_grid(arena_width - 2, 1),
+    position_on_grid(1, arena_height - 2),
+    position_on_grid(arena_width - 2, arena_height - 2)
+  };
   const int start_position_count = std::size(player_start_position);
 
   for (std::size_t i = 0; i != player_count; ++i)

@@ -121,8 +121,8 @@ void new_game_test::client::send_new_game_request(
 
   const bim::net::client_token token = message.get_request_token();
 
-  const iscool::signals::scoped_connection connection
-      = m_message_deserializer.connect_signal<bim::net::game_on_hold>(
+  const iscool::signals::scoped_connection connection =
+      m_message_deserializer.connect_signal<bim::net::game_on_hold>(
           [this, token](const iscool::net::endpoint&,
                         bim::net::game_on_hold answer) -> void
           {
@@ -148,8 +148,8 @@ void new_game_test::client::send_accept_game(
 
   const bim::net::client_token token = message.get_request_token();
 
-  const iscool::signals::scoped_connection connection
-      = m_message_deserializer.connect_signal<bim::net::launch_game>(
+  const iscool::signals::scoped_connection connection =
+      m_message_deserializer.connect_signal<bim::net::launch_game>(
           [this, token](const iscool::net::endpoint&,
                         bim::net::launch_game answer) -> void
           {
@@ -541,8 +541,8 @@ TEST_F(new_game_test, idle_causes_new_game)
 
   // All the players are grouped in the same game by the server.
   ASSERT_TRUE(!!m_clients[0].game_on_hold_answer);
-  const bim::net::encounter_id encounter_id
-      = m_clients[0].game_on_hold_answer->get_encounter_id();
+  const bim::net::encounter_id encounter_id =
+      m_clients[0].game_on_hold_answer->get_encounter_id();
 
   for (int i = 1; i != 4; ++i)
     {
@@ -611,8 +611,9 @@ TEST_F(new_game_test, different_game_different_channels)
   for (int i = 0; i != 4; ++i)
     m_clients[i].authenticate();
 
-  const bim::net::game_name game_names[2]
-      = { { 'g', 'a', 'm', 'e', '_', '0' }, { 'g', 'a', 'm', 'e', '_', '1' } };
+  const bim::net::game_name game_names[2] = {
+    { 'g', 'a', 'm', 'e', '_', '0' }, { 'g', 'a', 'm', 'e', '_', '1' }
+  };
 
   for (int i = 0; i != 4; ++i)
     m_clients[i].send_new_game_request(

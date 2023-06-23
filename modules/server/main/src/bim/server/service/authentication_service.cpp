@@ -64,8 +64,8 @@ void bim::server::authentication_service::check_session(
 
       if (it != m_clients.end())
         {
-          it->second.timeout_signal_connection
-              = schedule_disconnection(session);
+          it->second.timeout_signal_connection =
+              schedule_disconnection(session);
           _message(endpoint, message);
         }
     }
@@ -110,8 +110,8 @@ void bim::server::authentication_service::check_authentication(
       ++m_next_session_id;
 
       client_info client{ .token = token,
-                          .timeout_signal_connection
-                          = schedule_disconnection(session) };
+                          .timeout_signal_connection =
+                              schedule_disconnection(session) };
 
       m_clients.emplace(session, std::move(client));
     }

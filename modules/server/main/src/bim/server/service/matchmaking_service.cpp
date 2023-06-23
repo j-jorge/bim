@@ -126,8 +126,8 @@ void bim::server::matchmaking_service::create_encounter(
       "Creating new encounter %d ('%s') on request of session %d.",
       m_next_encounter_id, name, session);
 
-  const bim::net::encounter_id encounter_id
-      = m_encounter_ids.emplace(name, m_next_encounter_id).first->second;
+  const bim::net::encounter_id encounter_id =
+      m_encounter_ids.emplace(name, m_next_encounter_id).first->second;
   ++m_next_encounter_id;
 
   m_game_names[encounter_id] = std::move(name);
@@ -260,8 +260,8 @@ void bim::server::matchmaking_service::mark_as_ready(
     }
   else
     {
-      game = m_game_service.new_game(encounter.player_count,
-                                     encounter.sessions);
+      game =
+          m_game_service.new_game(encounter.player_count, encounter.sessions);
       encounter.channel = game->channel;
 
       ic_causeless_log(iscool::log::nature::info(), "matchmaking_service",
@@ -280,8 +280,8 @@ void bim::server::matchmaking_service::mark_as_ready(
 void bim::server::matchmaking_service::remove_inactive_sessions(
     bim::net::encounter_id encounter_id, encounter_info& encounter)
 {
-  const std::chrono::nanoseconds now
-      = iscool::time::now<std::chrono::nanoseconds>();
+  const std::chrono::nanoseconds now =
+      iscool::time::now<std::chrono::nanoseconds>();
 
   for (int i = 0; i != encounter.player_count;)
     if (encounter.release_at_this_date[i] <= now)
@@ -313,8 +313,8 @@ void bim::server::matchmaking_service::clean_up(
   ic_causeless_log(iscool::log::nature::info(), "matchmaking_service",
                    "Cleaning up encounter %d.", encounter_id);
 
-  const encounter_id_to_name_map::iterator it
-      = m_game_names.find(encounter_id);
+  const encounter_id_to_name_map::iterator it =
+      m_game_names.find(encounter_id);
 
   m_encounter_ids.erase(it->second);
   m_game_names.erase(it);

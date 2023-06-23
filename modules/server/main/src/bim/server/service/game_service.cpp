@@ -93,9 +93,9 @@ struct bim::server::game_service::game
     for (std::uint8_t player_index = 0; player_index != player_count;
          ++player_index)
       {
-        const std::uint32_t player_offset
-            = completed_tick_count_per_player[player_index]
-              - completed_tick_count_all;
+        const std::uint32_t player_offset =
+            completed_tick_count_per_player[player_index]
+            - completed_tick_count_all;
 
         if (player_offset < offset)
           offset = player_offset;
@@ -115,8 +115,8 @@ struct bim::server::game_service::game
    */
   void align_simulation_tick()
   {
-    std::uint32_t simulation_offset
-        = std::numeric_limits<std::uint32_t>::max();
+    std::uint32_t simulation_offset =
+        std::numeric_limits<std::uint32_t>::max();
 
     bim_assume(player_count >= 2);
     bim_assume(player_count <= 4);
@@ -252,8 +252,8 @@ void bim::server::game_service::push_update(
     const bim::net::game_update_from_client& message, game& game)
 {
   const std::size_t player_index = game.session_index(session);
-  const std::optional<std::size_t> tick_count
-      = validate_message(message, player_index, game);
+  const std::optional<std::size_t> tick_count =
+      validate_message(message, player_index, game);
 
   if (!tick_count)
     return;
@@ -331,12 +331,12 @@ void bim::server::game_service::queue_actions(
   // Apply the remaining actions.
   for (; tick_index != tick_count; ++tick_index)
     {
-      const std::uint8_t action_count
-          = message.action_count_at_tick[tick_index];
+      const std::uint8_t action_count =
+          message.action_count_at_tick[tick_index];
       bim_assume(action_count <= bim::game::player_action::queue_capacity);
 
-      bim::game::player_action& action
-          = game.actions[player_index].emplace_back();
+      bim::game::player_action& action =
+          game.actions[player_index].emplace_back();
       action.queue_size = action_count;
 
       std::copy_n(message.actions.begin() + action_index, action_count,
@@ -349,16 +349,16 @@ void bim::server::game_service::send_actions(
     const iscool::net::endpoint& endpoint, iscool::net::session_id session,
     iscool::net::channel_id channel, std::size_t player_index, game& game)
 {
-  const std::uint32_t last_received_player_tick
-      = game.completed_tick_count_per_player[player_index];
+  const std::uint32_t last_received_player_tick =
+      game.completed_tick_count_per_player[player_index];
 
   bim_assume(last_received_player_tick >= game.completed_tick_count_all);
-  const std::size_t action_start_index
-      = last_received_player_tick - game.completed_tick_count_all;
+  const std::size_t action_start_index =
+      last_received_player_tick - game.completed_tick_count_all;
 
   bim_assume(game.simulation_tick >= last_received_player_tick);
-  const std::size_t action_count
-      = game.simulation_tick - last_received_player_tick;
+  const std::size_t action_count =
+      game.simulation_tick - last_received_player_tick;
 
   const std::size_t action_end_index = action_start_index + action_count;
 
@@ -378,8 +378,8 @@ void bim::server::game_service::send_actions(
           assert(action_end_index <= game.actions[player].size());
           bim_assume(action_index <= game.actions[player].size());
 
-          const bim::game::player_action& action
-              = game.actions[player][action_index];
+          const bim::game::player_action& action =
+              game.actions[player][action_index];
 
           message.action_count.emplace_back(action.queue_size);
 

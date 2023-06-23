@@ -27,8 +27,8 @@ namespace bim::game
   class contest
   {
   public:
-    static constexpr std::chrono::milliseconds tick_interval
-        = std::chrono::milliseconds(20);
+    static constexpr std::chrono::milliseconds tick_interval =
+        std::chrono::milliseconds(20);
 
   public:
     contest(std::uint64_t seed, std::uint8_t brick_wall_probability,

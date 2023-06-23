@@ -38,8 +38,8 @@ TEST(game_service, new_game)
   EXPECT_NE(44, game.channel);
   EXPECT_FALSE(!!service.find_game(44));
 
-  const std::optional<bim::server::game_info> game_opt
-      = service.find_game(game.channel);
+  const std::optional<bim::server::game_info> game_opt =
+      service.find_game(game.channel);
 
   EXPECT_TRUE(!!game_opt);
 

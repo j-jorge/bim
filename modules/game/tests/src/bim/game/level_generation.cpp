@@ -129,15 +129,17 @@ TEST(bim_game_insert_random_brick_walls, no_walls_near_player)
   entt::registry registry;
 
   // Insert one player in each corner, and one in the center.
-  const entt::entity player_entities[]
-      = { registry.create(), registry.create(), registry.create(),
-          registry.create(), registry.create() };
-  const bim::game::position_on_grid player_positions[]
-      = { { 1, 1 },
-          { width - 2, 1 },
-          { width / 2, height / 2 },
-          { 1, height - 2 },
-          { width - 2, height - 2 } };
+  const entt::entity player_entities[] = {
+    registry.create(), registry.create(), registry.create(), registry.create(),
+    registry.create()
+  };
+  const bim::game::position_on_grid player_positions[] = {
+    { 1, 1 },
+    { width - 2, 1 },
+    { width / 2, height / 2 },
+    { 1, height - 2 },
+    { width - 2, height - 2 }
+  };
 
   // Create the actual player entities that should be used by
   // insert_random_brick_walls to avoid creating walls.

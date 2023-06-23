@@ -32,12 +32,12 @@ TEST(update_brick_walls, burning)
   entt::registry registry;
   bim::game::arena arena(3, 3);
 
-  const entt::entity entity_burning
-      = bim::game::brick_wall_factory(registry, arena, 0, 0);
+  const entt::entity entity_burning =
+      bim::game::brick_wall_factory(registry, arena, 0, 0);
   registry.emplace<bim::game::burning>(entity_burning);
 
-  const entt::entity entity
-      = bim::game::brick_wall_factory(registry, arena, 0, 1);
+  const entt::entity entity =
+      bim::game::brick_wall_factory(registry, arena, 0, 1);
 
   EXPECT_TRUE(entity_burning == arena.entity_at(0, 0));
   EXPECT_TRUE(entity == arena.entity_at(0, 1));

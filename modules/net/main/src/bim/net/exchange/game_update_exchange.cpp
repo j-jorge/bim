@@ -206,15 +206,15 @@ void bim::net::game_update_exchange::store_server_frames(
                    action_index = 0, tick = 0;
        action_count_index != n;)
     {
-      std::array<bim::game::player_action, 4>& frame_actions
-          = m_server_update.actions[tick];
+      std::array<bim::game::player_action, 4>& frame_actions =
+          m_server_update.actions[tick];
       ++tick;
 
       for (std::uint8_t player_index = 0; player_index != m_player_count;
            ++player_index)
         {
-          const std::uint8_t action_count
-              = message.action_count[action_count_index];
+          const std::uint8_t action_count =
+              message.action_count[action_count_index];
           ++action_count_index;
 
           frame_actions[player_index].queue_size = action_count;

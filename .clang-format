@@ -29,6 +29,7 @@ BraceWrapping:
   SplitEmptyFunction: false
   SplitEmptyRecord: false
   SplitEmptyNamespace: false
+BreakBeforeBinaryOperators: NonAssignment
 BreakBeforeBraces: Custom
 NamespaceIndentation: All
 PointerAlignment: Left
