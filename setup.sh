@@ -4,7 +4,8 @@ set -euo pipefail
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd)"
 backroom="$script_dir/.backroom"
-build_types=(debug release asan tsan)
+build_types=(release)
+all_build_types=(debug release asan tsan)
 
 git_fetch()
 {
@@ -79,7 +80,12 @@ do
 
     case "$arg" in
         --build-type)
-            build_types=("$1")
+            if [[ "$1" = "all" ]]
+            then
+                build_types=("${all_build_types[@]}")
+            else
+                build_types=("$1")
+            fi
             shift
             ;;
         --help|-h)
