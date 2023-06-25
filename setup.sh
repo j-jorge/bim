@@ -4,6 +4,7 @@ set -euo pipefail
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd)"
 backroom="$script_dir/.backroom"
+host_prefix="$backroom"/host-prefix
 build_types=(release)
 all_build_types=(debug release asan tsan)
 
@@ -116,16 +117,11 @@ fi
 : "${paco_commit=188e7ece603c8b0c275e7f82a5bee6fdab7108b9}"
 : "${paco_repository:=https://github.com/j-jorge/cpp-package-manager}"
 
-
-launch_build()
+set_up_host_prefix()
 {
-    local bomb_build_type="$1"
-    host_prefix="$backroom"/host-prefix-"$bomb_build_type"
-    bomb_app_prefix="$backroom"/linux-prefix-"$bomb_build_type"
-
     # Shell Utils
     echo -e "\033[1;32mInstalling the shell utils scripts\033[0;0m"
-    mkdir --parents "$bomb_app_prefix" "$host_prefix"
+    mkdir --parents "$host_prefix"
 
     git_clone_repository "$shell_utils_repository" \
                          "$shell_utils_commit" \
@@ -154,6 +150,14 @@ launch_build()
           > ../../cpp-package-manager.configure.out.txt
     cmake --build . --parallel --target install \
           > ../../cpp-package-manager.build.out.txt
+}
+
+launch_build()
+{
+    local bomb_build_type="$1"
+    bomb_app_prefix="$backroom"/linux-prefix-"$bomb_build_type"
+
+    mkdir --parents "$bomb_app_prefix"
 
     # App dependencies.
     echo -e "${green_bold}Installing app dependencies${term_color}"
@@ -216,6 +220,8 @@ launch_build()
     cd "$build_dir"
     cmake --build . --parallel
 }
+
+set_up_host_prefix
 
 for build_type in "${build_types[@]}"
 do
