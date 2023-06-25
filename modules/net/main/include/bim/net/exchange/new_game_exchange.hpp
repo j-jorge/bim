@@ -23,7 +23,6 @@
 #include <iscool/monitoring/declare_state_monitor.hpp>
 #include <iscool/net/message/message.hpp>
 #include <iscool/net/message_channel.hpp>
-#include <iscool/net/message_deserializer.hpp>
 #include <iscool/signals/scoped_connection.hpp>
 
 namespace bim::net
@@ -49,16 +48,16 @@ namespace bim::net
   private:
     void tick();
 
+    void interpret_received_message(const iscool::net::message& message);
+
     void check_on_hold(const game_on_hold& message);
     void check_launch_game(const launch_game& message);
 
   private:
     iscool::net::message_channel m_message_channel;
-    iscool::net::message_deserializer m_deserializer;
 
     iscool::signals::scoped_connection m_channel_signal_connection;
     iscool::signals::scoped_connection m_update_connection;
-    iscool::signals::scoped_connection m_deserializer_connection;
 
     client_token m_token;
     iscool::net::message m_client_message;

@@ -21,7 +21,6 @@
 #include <bim/net/message/authentication_ok.hpp>
 #include <bim/net/message/protocol_version.hpp>
 
-#include <iscool/net/message_deserializer.impl.tpp>
 #include <iscool/random/rand.hpp>
 #include <iscool/schedule/delayed_call.hpp>
 #include <iscool/signals/implement_signal.hpp>
@@ -33,12 +32,7 @@ IMPLEMENT_SIGNAL(bim::net::authentication_exchange, error, m_error);
 bim::net::authentication_exchange::authentication_exchange(
     iscool::net::message_stream& stream)
   : m_message_channel(stream, 0, 0)
-{
-  m_deserializer.connect_signal<authentication_ok>(std::bind(
-      &authentication_exchange::check_ok, this, std::placeholders::_2));
-  m_deserializer.connect_signal<authentication_ko>(std::bind(
-      &authentication_exchange::check_ko, this, std::placeholders::_2));
-}
+{}
 
 bim::net::authentication_exchange::~authentication_exchange() = default;
 
@@ -48,11 +42,25 @@ void bim::net::authentication_exchange::start()
   m_token = iscool::random::rand::get_default().random();
   m_client_message = authentication(protocol_version, m_token).build_message();
 
-  m_channel_signal_connection = m_message_channel.connect_to_message(std::bind(
-      &iscool::net::message_deserializer::interpret_received_message,
-      &m_deserializer, std::placeholders::_1, std::placeholders::_2));
+  m_channel_signal_connection = m_message_channel.connect_to_message(
+      std::bind(&authentication_exchange::interpret_received_message, this,
+                std::placeholders::_2));
 
   tick();
+}
+
+void bim::net::authentication_exchange::interpret_received_message(
+    const iscool::net::message& message)
+{
+  switch (message.get_type())
+    {
+    case message_type::authentication_ok:
+      check_ok(authentication_ok(message.get_content()));
+      break;
+    case message_type::authentication_ko:
+      check_ko(authentication_ko(message.get_content()));
+      break;
+    }
 }
 
 void bim::net::authentication_exchange::stop()

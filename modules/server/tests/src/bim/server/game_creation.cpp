@@ -23,8 +23,6 @@
 
 #include <iscool/log/setup.hpp>
 #include <iscool/net/message_channel.hpp>
-#include <iscool/net/message_deserializer.hpp>
-#include <iscool/net/message_deserializer.impl.tpp>
 #include <iscool/signals/scoped_connection.hpp>
 
 #include <optional>

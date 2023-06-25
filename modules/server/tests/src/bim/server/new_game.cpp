@@ -26,8 +26,6 @@
 
 #include <iscool/log/setup.hpp>
 #include <iscool/net/message_channel.hpp>
-#include <iscool/net/message_deserializer.hpp>
-#include <iscool/net/message_deserializer.impl.tpp>
 #include <iscool/signals/scoped_connection.hpp>
 
 #include <optional>
@@ -56,7 +54,6 @@ protected:
 
     bim::net::authentication_exchange m_authentication;
     std::unique_ptr<iscool::net::message_channel> m_message_channel;
-    iscool::net::message_deserializer m_message_deserializer;
   };
 
 public:
@@ -89,11 +86,6 @@ new_game_test::client::client(bim::server::tests::fake_scheduler& scheduler,
       {
         m_message_channel.reset(
             new iscool::net::message_channel(message_stream, session, 0));
-
-        m_message_channel->connect_to_message(std::bind(
-            &iscool::net::message_deserializer::interpret_received_message,
-            &m_message_deserializer, std::placeholders::_1,
-            std::placeholders::_2));
       });
 
   m_authentication.connect_to_error(
@@ -122,10 +114,15 @@ void new_game_test::client::send_new_game_request(
   const bim::net::client_token token = message.get_request_token();
 
   const iscool::signals::scoped_connection connection =
-      m_message_deserializer.connect_signal<bim::net::game_on_hold>(
+      m_message_channel->connect_to_message(
           [this, token](const iscool::net::endpoint&,
-                        bim::net::game_on_hold answer) -> void
+                        const iscool::net::message& message) -> void
           {
+            if (message.get_type() != bim::net::message_type::game_on_hold)
+              return;
+
+            bim::net::game_on_hold answer(message.get_content());
+
             if (answer.get_request_token() != token)
               return;
 
@@ -149,10 +146,15 @@ void new_game_test::client::send_accept_game(
   const bim::net::client_token token = message.get_request_token();
 
   const iscool::signals::scoped_connection connection =
-      m_message_deserializer.connect_signal<bim::net::launch_game>(
+      m_message_channel->connect_to_message(
           [this, token](const iscool::net::endpoint&,
-                        bim::net::launch_game answer) -> void
+                        const iscool::net::message& message) -> void
           {
+            if (message.get_type() != bim::net::message_type::launch_game)
+              return;
+
+            bim::net::launch_game answer(message.get_content());
+
             if (answer.get_request_token() != token)
               return;
 

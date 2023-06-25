@@ -21,7 +21,6 @@
 
 #include <iscool/net/message/message.hpp>
 #include <iscool/net/message_channel.hpp>
-#include <iscool/net/message_deserializer.hpp>
 #include <iscool/signals/scoped_connection.hpp>
 
 namespace bim::net
@@ -45,12 +44,13 @@ namespace bim::net
   private:
     void tick();
 
+    void interpret_received_message(const iscool::net::message& message);
+
     void check_ok(const authentication_ok& message);
     void check_ko(const authentication_ko& message);
 
   private:
     iscool::net::message_channel m_message_channel;
-    iscool::net::message_deserializer m_deserializer;
     iscool::signals::scoped_connection m_channel_signal_connection;
     iscool::signals::scoped_connection m_update_connection;
 

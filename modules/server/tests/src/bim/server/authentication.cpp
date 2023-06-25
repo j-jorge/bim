@@ -25,8 +25,6 @@
 
 #include <iscool/log/setup.hpp>
 #include <iscool/net/message_channel.hpp>
-#include <iscool/net/message_deserializer.hpp>
-#include <iscool/net/message_deserializer.impl.tpp>
 #include <iscool/schedule/manual_scheduler.hpp>
 #include <iscool/schedule/setup.hpp>
 #include <iscool/signals/scoped_connection.hpp>
@@ -44,6 +42,10 @@ public:
 protected:
   void test_full_exchange(const bim::net::authentication& message);
 
+private:
+  void interpret_received_message(bim::net::client_token token,
+                                  const iscool::net::message& message);
+
 protected:
   iscool::log::scoped_initializer m_log;
   bim::server::tests::fake_scheduler m_scheduler;
@@ -53,7 +55,6 @@ protected:
   iscool::net::socket_stream m_socket_stream;
   iscool::net::message_stream m_message_stream;
   iscool::net::message_channel m_message_channel;
-  iscool::net::message_deserializer m_message_deserializer;
 
   std::optional<bim::net::authentication_ok> m_answer_ok;
   std::optional<bim::net::authentication_ko> m_answer_ko;
@@ -66,44 +67,45 @@ authentication_test::authentication_test()
                     iscool::net::socket_mode::client{})
   , m_message_stream(m_socket_stream)
   , m_message_channel(m_message_stream, 0, 0)
-{
-  m_message_channel.connect_to_message(std::bind(
-      &iscool::net::message_deserializer::interpret_received_message,
-      &m_message_deserializer, std::placeholders::_1, std::placeholders::_2));
-}
+{}
 
 /// Send a message until we get an answer.
 void authentication_test::test_full_exchange(
     const bim::net::authentication& message)
 {
-  const bim::net::client_token token = message.get_request_token();
-
-  const iscool::signals::scoped_connection connection_ok =
-      m_message_deserializer.connect_signal<bim::net::authentication_ok>(
-          [this, token](const iscool::net::endpoint&,
-                        bim::net::authentication_ok answer) -> void
-          {
-            if (answer.get_request_token() != token)
-              return;
-
-            m_answer_ok = std::move(answer);
-          });
-
-  const iscool::signals::scoped_connection connection_ko =
-      m_message_deserializer.connect_signal<bim::net::authentication_ko>(
-          [this, token](const iscool::net::endpoint&,
-                        bim::net::authentication_ko answer) -> void
-          {
-            if (answer.get_request_token() != token)
-              return;
-
-            m_answer_ko = std::move(answer);
-          });
+  const iscool::signals::scoped_connection connection =
+      m_message_channel.connect_to_message(
+          std::bind(&authentication_test::interpret_received_message, this,
+                    message.get_request_token(), std::placeholders::_2));
 
   for (int i = 0; (i != 10) && !m_answer_ok && !m_answer_ko; ++i)
     {
       m_message_channel.send(message.build_message());
       m_scheduler.tick(std::chrono::seconds(1));
+    }
+}
+
+void authentication_test::interpret_received_message(
+    bim::net::client_token token, const iscool::net::message& message)
+{
+  switch (message.get_type())
+    {
+    case bim::net::message_type::authentication_ok:
+      {
+        const bim::net::authentication_ok answer(message.get_content());
+
+        if (answer.get_request_token() == token)
+          m_answer_ok = std::move(answer);
+        break;
+      }
+    case bim::net::message_type::authentication_ko:
+      {
+        const bim::net::authentication_ko answer(message.get_content());
+
+        if (answer.get_request_token() == token)
+          m_answer_ko = std::move(answer);
+        break;
+      }
     }
 }
 
