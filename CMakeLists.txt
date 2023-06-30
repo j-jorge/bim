@@ -24,6 +24,7 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL GNU)
   endif()
 endif()
 
+find_package(axmol 1.0.0 REQUIRED)
 find_package(Boost 1.82.0 REQUIRED)
 find_package(EnTT 3.11.1 REQUIRED)
 find_package(GTest 1.13.0 REQUIRED)
