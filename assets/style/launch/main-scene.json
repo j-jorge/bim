@@ -1,0 +1,53 @@
+{
+    "style":
+    {
+        "widgets":
+        [{
+            "main": [],
+            "overlay": [],
+
+            "sprite":
+            [{
+                "instantiate": "ax::Sprite",
+                "frame": "sprites/guy.png",
+                "name": "sprite"
+            }]
+        }],
+
+        "layout":
+        [{
+            "main":
+            [{
+                "anchor.x": 0.5,
+                "anchor.y": 0.5,
+                "anchor.reference.x": 0.5,
+                "anchor.reference.y": 0.5,
+                "width": 1,
+                "height": 1,
+                "z_order": 0
+            }],
+
+            "overlay":
+            [{
+                "anchor.x": 0.5,
+                "anchor.y": 0.5,
+                "anchor.reference.x": 0.5,
+                "anchor.reference.y": 0.5,
+                "width": 1,
+                "height": 1,
+                "z_order": 10
+            }],
+
+            "sprite":
+            [{
+                "anchor.x": 0.75,
+                "anchor.y": 0.25,
+                "anchor.reference.x": 0.33,
+                "anchor.reference.y": 0.66,
+                "width": 0.1,
+                "height_ratio": 1,
+                "z_order": 20
+            }]
+        }]
+    }
+}
