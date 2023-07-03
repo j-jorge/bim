@@ -112,7 +112,7 @@ then
     . "$script_dir/.setup.conf"
 fi
 
-: "${shell_utils_commit=4384d9b582e53cee0b8448db6a4d2cc2ebfda22d}"
+: "${shell_utils_commit=1a4cdb63b13f115264635ada9778c12e47838586}"
 : "${shell_utils_repository:=https://github.com/j-jorge/shell-utils}"
 : "${paco_commit=188e7ece603c8b0c275e7f82a5bee6fdab7108b9}"
 : "${paco_repository:=https://github.com/j-jorge/cpp-package-manager}"
