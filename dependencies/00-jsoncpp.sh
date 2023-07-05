@@ -33,4 +33,6 @@ cmake "$source_dir" \
       -DJSONCPP_WITH_TESTS=OFF
 cmake --build . --target install --parallel
 
+sed 's/jsoncpp_lib_static/jsoncpp/' -i "$install_dir"/lib/cmake/jsoncpp/*
+
 package_and_install "$install_dir" jsoncpp "$version" "$build_type"
