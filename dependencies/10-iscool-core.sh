@@ -53,6 +53,7 @@ cmake "$source_dir/build-scripts/cmake" \
       -DISCOOL_CORE_WITH_APPS=ON \
       -DISCOOL_CORE_WITH_CMAKE_PACKAGE=ON \
       -DISCOOL_TEST_ENABLED=OFF \
+      -DISCOOL_DISABLE_MODULES="video;locale" \
       "${cmake_options[@]}"
 
 cmake --build . --target install --parallel
