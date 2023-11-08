@@ -152,6 +152,32 @@ set_up_host_prefix()
           > ../../cpp-package-manager.build.out.txt
 }
 
+install_dependencies()
+(
+    export backroom
+    export bomb_app_prefix="$2"
+    export bomb_build_type="$1"
+    export bomb_packages_root="$backroom"/packages
+    export -f git_clone_repository
+    export -f git_fetch
+
+    while read -r script
+    do
+        if [[ -z "${script:-}" ]]
+        then
+            continue
+        fi
+
+        if [[ -f "$script_dir"/dependencies/"$script" ]]
+        then
+            "$script_dir"/dependencies/"$script"
+        else
+            echo "Missing dependency script: '$script_dir/dependencies/$script'." \
+                 >&2
+        fi
+    done < "$3"
+)
+
 launch_build()
 {
     local bomb_build_type="$1"
@@ -159,24 +185,18 @@ launch_build()
 
     mkdir --parents "$bomb_app_prefix"
 
-    # App dependencies.
-    echo -e "${green_bold}Installing app dependencies${term_color}"
-
-    export backroom
-    export bomb_app_prefix
-    export bomb_build_type
-    export bomb_packages_root="$backroom"/packages
     export PATH="$host_prefix"/bin:"$PATH"
-    export -f git_clone_repository
-    export -f git_fetch
 
-    find "$script_dir"/dependencies -mindepth 1 -maxdepth 1 -type f \
-         -executable \
-        | sort \
-        | while read -r script
-    do
-        "$script"
-    done
+    # App dependencies.
+    echo -e "${green_bold}Installing host dependencies${term_color}"
+    install_dependencies release \
+                         "$host_prefix"\
+                         "$script_dir"/dependencies/host-dependencies.txt
+
+    echo -e "${green_bold}Installing app dependencies${term_color}"
+    install_dependencies "$bomb_build_type" \
+                         "$bomb_app_prefix" \
+                         "$script_dir"/dependencies/app-dependencies.txt
 
     # Actual build
     echo -e "${green_bold}Building${term_color}"
