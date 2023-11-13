@@ -38,7 +38,14 @@ package_and_install()
                                   --name "$d" \
                                   --prefix "$bomb_app_prefix" \
                                   | grep '^Version:' \
-                                  | cut -d: -f2)"
+                                  | cut -d: -f2 \
+                                  || true)"
+
+        if [[ -z "${dependency_version:-}" ]]
+        then
+            echo "Unknown dependency package: $d" >&2
+            exit 1
+        fi
 
         publish_args+=("--requires" "$d"="$dependency_version")
     done
