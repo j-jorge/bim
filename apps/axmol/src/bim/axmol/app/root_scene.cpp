@@ -1,6 +1,10 @@
 #include <bim/axmol/app/root_scene.hpp>
 
+#include <bim/axmol/ref_ptr.impl.hpp>
+
 #include <iscool/signals/implement_signal.hpp>
+
+template class bim::axmol::ref_ptr<bim::axmol::app::root_scene>;
 
 IMPLEMENT_SIGNAL(bim::axmol::app::root_scene, clean_up, m_clean_up)
 

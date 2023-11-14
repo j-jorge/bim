@@ -2,7 +2,9 @@ find_package(axmol 1.0.0 REQUIRED)
 
 add_library(bim_axmol_core
   STATIC
-  main/src/bim/axmol/colour_chart.cpp)
+  main/src/bim/axmol/colour_chart.cpp
+  main/src/bim/axmol/ref_ptr.cpp
+)
 
 target_include_directories(bim_axmol_core PUBLIC main/include)
 
@@ -15,6 +17,7 @@ target_link_libraries(
 
 add_executable(axmol-core-tests
   tests/src/bim/axmol/colour_chart.cpp
+  tests/src/bim/axmol/ref_ptr.cpp
 )
 target_link_libraries(
   axmol-core-tests

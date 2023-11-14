@@ -2,9 +2,6 @@
 
 #include <bim/axmol/widget/declare_controls_struct.hpp>
 
-// TODO: remove
-#include <axmol/2d/Node.h>
-
 namespace ax
 {
   class Scene;
