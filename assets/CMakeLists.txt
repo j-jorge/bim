@@ -6,3 +6,4 @@ foreach(shader ${axmol_shader_files})
 endforeach()
 
 add_subdirectory(sprites)
+add_subdirectory(style)
