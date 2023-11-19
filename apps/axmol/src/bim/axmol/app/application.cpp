@@ -283,9 +283,6 @@ bim::axmol::app::application::application(
   , m_style_cache(m_colors)
 {
   bim::axmol::widget::register_widgets(m_widget_factory);
-
-  m_context.set_widget_context(
-      bim::axmol::widget::context(m_style_cache, m_widget_factory));
 }
 
 bim::axmol::app::application::~application() = default;
@@ -297,6 +294,9 @@ bool bim::axmol::app::application::applicationDidFinishLaunching()
   m_persistent_systems.reset(new detail::persistent_systems(*this));
 
   set_up_colour_chart();
+
+  m_context.set_widget_context(
+      bim::axmol::widget::context(m_colors, m_style_cache, m_widget_factory));
 
   // TODO: in a loader.
   ax::SpriteFrameCache::getInstance()->addSpriteFramesWithFile(

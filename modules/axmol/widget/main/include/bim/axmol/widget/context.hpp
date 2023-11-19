@@ -4,6 +4,8 @@
 
 namespace bim::axmol
 {
+  class colour_chart;
+
   namespace style
   {
     class cache;
@@ -16,8 +18,9 @@ namespace bim::axmol
     class context
     {
     public:
+      const bim::axmol::colour_chart& colors;
       bim::axmol::style::cache& style_cache;
-      bim::axmol::widget::dynamic_factory& factory;
+      const bim::axmol::widget::dynamic_factory& factory;
     };
   }
 }
