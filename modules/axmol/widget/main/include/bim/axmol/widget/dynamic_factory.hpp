@@ -30,7 +30,7 @@ namespace bim::axmol::widget
 
     [[nodiscard]] bim::axmol::ref_ptr<ax::Node>
     create(std::string_view type, const context& c,
-           const iscool::style::declaration& style);
+           const iscool::style::declaration& style) const;
 
   private:
     iscool::factory::dynamic_factory<bim::axmol::ref_ptr<ax::Node>,
