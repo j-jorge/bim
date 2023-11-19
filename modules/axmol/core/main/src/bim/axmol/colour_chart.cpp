@@ -7,17 +7,17 @@
 
 #include <charconv>
 
-static ax::Color3B parse_color(std::string_view color)
+static ax::Color4B parse_color(std::string_view color)
 {
-  if ((color.size() != 7) || (color[0] != '#'))
+  if (((color.size() != 7) && (color.size() != 9)) || (color[0] != '#'))
     {
       ic_causeless_log(iscool::log::nature::error(), "colour_chart",
                        "Unknown colour '%s'. Supported format is '#rrggbb'.\n",
                        color);
-      return ax::Color3B::MAGENTA;
+      return ax::Color4B::MAGENTA;
     }
 
-  ax::Color3B result;
+  ax::Color4B result;
   constexpr int base = 16;
 
   if ((std::from_chars(color.data() + 1, color.data() + 3, result.r, base).ec
@@ -28,13 +28,27 @@ static ax::Color3B parse_color(std::string_view color)
       && (std::from_chars(color.data() + 5, color.data() + 7, result.b, base)
               .ec
           == std::errc{}))
-    return result;
+    {
+      if (color.size() == 9)
+        {
+          if (std::from_chars(color.data() + 7, color.data() + 9, result.a,
+                              base)
+                  .ec
+              == std::errc{})
+            return result;
+        }
+      else
+        {
+          result.a = 255;
+          return result;
+        }
+    }
 
   ic_causeless_log(
       iscool::log::nature::error(), "colour_chart",
       "Failed to parse color '%s'. Supported format is '#rrggbb'.\n", color);
 
-  return ax::Color3B::MAGENTA;
+  return ax::Color4B::MAGENTA;
 }
 
 bim::axmol::colour_chart::colour_chart() = default;
@@ -46,7 +60,7 @@ void bim::axmol::colour_chart::add_alias(std::string name,
   m_aliases[std::move(name)] = parse_color(color);
 }
 
-ax::Color3B bim::axmol::colour_chart::to_color_3b(std::string_view color) const
+ax::Color4B bim::axmol::colour_chart::to_color_4b(std::string_view color) const
 {
   const alias_map::const_iterator it = m_aliases.find(color);
 

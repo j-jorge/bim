@@ -187,7 +187,7 @@ bim::axmol::style::cache::get_display(const iscool::style::declaration& style)
   if (const iscool::optional<std::string> color = style.get_string("color"))
     {
       properties.flags |= bim::axmol::style::display_property_flags::color;
-      properties.color = m_colour_chart.to_color_3b(*color);
+      properties.color = ax::Color3B(m_colour_chart.to_color_4b(*color));
     }
 
   if (const iscool::optional<float> rotation = style.get_number("rotation"))

@@ -8,7 +8,7 @@
 
 namespace ax
 {
-  struct Color3B;
+  struct Color4B;
 }
 
 namespace bim::axmol
@@ -21,11 +21,11 @@ namespace bim::axmol
 
     void add_alias(std::string name, std::string_view color);
 
-    ax::Color3B to_color_3b(std::string_view color) const;
+    ax::Color4B to_color_4b(std::string_view color) const;
 
   private:
     using alias_map =
-        boost::unordered_flat_map<std::string, ax::Color3B,
+        boost::unordered_flat_map<std::string, ax::Color4B,
                                   iscool::strings::hash, std::equal_to<>>;
 
   private:
