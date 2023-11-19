@@ -6,6 +6,7 @@ add_library(bim_axmol_widget
   main/src/bim/axmol/widget/dynamic_factory.cpp
   main/src/bim/axmol/widget/register_widgets.cpp
 
+  main/src/bim/axmol/widget/factory/label.cpp
   main/src/bim/axmol/widget/factory/node.cpp
   main/src/bim/axmol/widget/factory/sprite.cpp
 )
