@@ -1,6 +1,7 @@
 find_program(style_merger style-merger REQUIRED)
 
 set(all_style_files
+  ${CMAKE_CURRENT_LIST_DIR}/font/regular.json
   ${CMAKE_CURRENT_LIST_DIR}/launch/main-scene.json
   ${CMAKE_CURRENT_LIST_DIR}/layout/fill.json
 )
