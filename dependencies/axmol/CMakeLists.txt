@@ -364,6 +364,8 @@ macro(compile_shaders)
   ax_target_compile_shaders(
     axmol
     FILES
+    ${source_root}/renderer/shaders/label_normal.frag
+    ${source_root}/renderer/shaders/label_outline.frag
     ${source_root}/renderer/shaders/positionTextureColor.frag
     ${source_root}/renderer/shaders/positionTextureColor.vert
   )
