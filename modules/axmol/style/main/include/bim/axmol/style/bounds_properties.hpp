@@ -20,11 +20,11 @@ namespace bim::axmol::style
     float percents_width;
     float percents_height;
     float ratio;
+    bool keep_ratio;
 
     // scale
-    float scale;
     bim::axmol::style::scale_mode scale_mode;
-    bool constraint_keep_ratio;
+    float scale;
     float scale_constraint_max_percents_width;
     float scale_constraint_max_percents_height;
   };

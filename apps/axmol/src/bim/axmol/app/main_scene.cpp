@@ -7,6 +7,11 @@
 #define x_widget_controls x_widget(ax::Node, overlay) x_widget(ax::Node, main)
 #include <bim/axmol/widget/implement_controls_struct.hpp>
 
+// TODO: rm
+#include <bim/axmol/style/apply_bounds.hpp>
+#include <iostream>
+#include <iscool/style/json/from_declaration.hpp>
+
 bim::axmol::app::main_scene::main_scene(
     ax::Scene& scene, const bim::axmol::widget::context& context,
     const iscool::style::declaration& style)
@@ -14,4 +19,19 @@ bim::axmol::app::main_scene::main_scene(
   , m_controls(context, *style.get_declaration("widgets"))
 {
   bim::axmol::widget::add_group_as_children(scene, m_controls->all_nodes);
+
+  // TODO: implement in axmol::widget with correct order.
+  for (const auto& e : m_controls->all_nodes)
+    {
+      std::cout << e.first << ":\n"
+                << iscool::style::json::from_declaration(
+                       *style.get_declaration("layout")->get_declaration(
+                           e.first))
+                       .toStyledString()
+                << '\n';
+      bim::axmol::style::apply_bounds(
+          context.style_cache.get_bounds(
+              *style.get_declaration("layout")->get_declaration(e.first)),
+          *e.second, *e.second->getParent());
+    }
 }

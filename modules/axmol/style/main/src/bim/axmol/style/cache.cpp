@@ -36,7 +36,7 @@ static void fill_position(bim::axmol::style::bounds_properties& properties,
     }
 
   if (const iscool::optional<float> anchor_in_reference_y =
-          style.get_number("anchor.refererence.y"))
+          style.get_number("anchor.reference.y"))
     {
       properties.flags |=
           bim::axmol::style::bounds_property_flags::anchor_in_reference_y;
@@ -63,15 +63,21 @@ static void fill_size(bim::axmol::style::bounds_properties& properties,
       properties.percents_height = *percents_height;
     }
 
-  if (const iscool::optional<float> width_ratio =
-          style.get_number("width_ratio"))
+  if (const iscool::optional<float> keep_ratio =
+          style.get_boolean("keep-ratio"))
+    {
+      properties.flags |= bim::axmol::style::bounds_property_flags::keep_ratio;
+      properties.keep_ratio = *keep_ratio;
+    }
+  else if (const iscool::optional<float> width_ratio =
+               style.get_number("width-ratio"))
     {
       properties.flags |=
           bim::axmol::style::bounds_property_flags::width_ratio;
       properties.ratio = *width_ratio;
     }
   else if (const iscool::optional<float> height_ratio =
-               style.get_number("height_ratio"))
+               style.get_number("height-ratio"))
     {
       properties.flags |=
           bim::axmol::style::bounds_property_flags::height_ratio;
@@ -82,12 +88,6 @@ static void fill_size(bim::axmol::style::bounds_properties& properties,
 static void fill_scale(bim::axmol::style::bounds_properties& properties,
                        const iscool::style::declaration& style)
 {
-  if (const iscool::optional<float> scale = style.get_number("scale"))
-    {
-      properties.flags |= bim::axmol::style::bounds_property_flags::scale;
-      properties.scale = *scale;
-    }
-
   if (const iscool::optional<const std::string&> scale_mode =
           style.get_string("scale_mode"))
     {
@@ -104,6 +104,12 @@ static void fill_scale(bim::axmol::style::bounds_properties& properties,
           properties.scale_mode = bim::axmol::style::scale_mode::fit;
         }
     }
+  else if (const iscool::optional<float> scale = style.get_number("scale"))
+    {
+      properties.flags |= bim::axmol::style::bounds_property_flags::scale;
+      properties.scale = *scale;
+      return;
+    }
 
   const iscool::optional<const iscool::style::declaration&> scale_constraints =
       style.get_declaration("scale_constraints");
@@ -111,11 +117,8 @@ static void fill_scale(bim::axmol::style::bounds_properties& properties,
   if (!scale_constraints)
     return;
 
-  properties.constraint_keep_ratio =
-      scale_constraints->get_boolean("keep_ratio", false);
-
   if (const iscool::optional<float> max_percents_width_constraint =
-          scale_constraints->get_number("max_percents_width"))
+          scale_constraints->get_number("max-percents-width"))
     {
       properties.flags |= bim::axmol::style::bounds_property_flags::
           scale_constraint_max_percents_width;
@@ -124,7 +127,7 @@ static void fill_scale(bim::axmol::style::bounds_properties& properties,
     }
 
   if (const iscool::optional<float> max_percents_height_constraint =
-          scale_constraints->get_number("max_percents_height"))
+          scale_constraints->get_number("max-percents-height"))
     {
       properties.flags |= bim::axmol::style::bounds_property_flags::
           scale_constraint_max_percents_height;
@@ -202,7 +205,7 @@ bim::axmol::style::cache::get_display(const iscool::style::declaration& style)
       properties.opacity = *opacity;
     }
 
-  if (const iscool::optional<float> z_order = style.get_number("z_order"))
+  if (const iscool::optional<float> z_order = style.get_number("z-order"))
     {
       properties.flags |= bim::axmol::style::display_property_flags::z_order;
       properties.z_order = *z_order;

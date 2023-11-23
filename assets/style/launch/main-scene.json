@@ -19,12 +19,12 @@
                 {
                     "instantiate": "ax::Label",
                     "text": "BIM!",
-                    "font.size": "32",
+                    "font.size": 32,
                     "font.color": "#f0f0f0",
                     "shadow.color": "#1f1f1f",
                     "shadow.offset.y": -10,
                     "outline.color": "#c0c0c0",
-                    "outline.size": 10
+                    "outline.size": 2
                 }
             ]
         }],
@@ -35,7 +35,7 @@
             [
                 "layout/fill",
                 {
-                    "z_order": 0
+                    "z-order": 0
                 }
             ],
 
@@ -43,7 +43,7 @@
             [
                 "layout/fill",
                 {
-                    "z_order": 10
+                    "z-order": 10
                 }
             ],
 
@@ -53,18 +53,18 @@
                 "anchor.y": 0.5,
                 "anchor.reference.x": 0.5,
                 "anchor.reference.y": 0.7,
-                "z_order": 20
+                "z-order": 20
             }],
 
             "sprite":
             [{
-                "anchor.x": 0.75,
-                "anchor.y": 0.25,
+                "anchor.x": 0.5,
+                "anchor.y": 0.5,
                 "anchor.reference.x": 0.33,
                 "anchor.reference.y": 0.66,
                 "width": 0.1,
-                "height_ratio": 1,
-                "z_order": 20
+                "height-ratio": 1,
+                "z-order": 20
             }]
         }]
     }

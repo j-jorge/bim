@@ -28,7 +28,7 @@ TEST(bim_axmol_widget_factory_node, factory)
   style.set_number("opacity", 0.4);
   style.set_boolean("cascade-opacity", true);
   style.set_boolean("visible", false);
-  style.set_number("z_order", 50);
+  style.set_number("z-order", 50);
 
   const bim::axmol::ref_ptr<ax::Node> node =
       bim::axmol::widget::factory<ax::Node>::create(context, style);
