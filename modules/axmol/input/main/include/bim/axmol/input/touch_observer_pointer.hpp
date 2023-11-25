@@ -1,0 +1,9 @@
+#pragma once
+
+#include <memory>
+
+namespace bim::axmol::input
+{
+  class touch_observer;
+  using touch_observer_pointer = std::weak_ptr<touch_observer>;
+}
