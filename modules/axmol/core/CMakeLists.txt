@@ -2,6 +2,7 @@ find_package(axmol 1.0.0 REQUIRED)
 
 add_library(bim_axmol_core
   STATIC
+  main/src/bim/axmol/bounding_box_on_screen.cpp
   main/src/bim/axmol/colour_chart.cpp
   main/src/bim/axmol/displayed.cpp
   main/src/bim/axmol/ref_ptr.cpp
