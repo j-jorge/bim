@@ -1,5 +1,6 @@
 #pragma once
 
+#include <bim/axmol/input/tree.hpp>
 #include <bim/axmol/widget/declare_controls_struct.hpp>
 
 namespace ax
@@ -29,5 +30,7 @@ namespace bim::axmol::app
     ax::Scene& m_scene;
 
     bim_declare_controls_struct(controls, m_controls, 2);
+
+    bim::axmol::input::tree m_inputs;
   };
 }

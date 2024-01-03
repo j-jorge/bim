@@ -3,6 +3,8 @@
 #include <bim/axmol/audio/mixer.hpp>
 #include <bim/axmol/colour_chart.hpp>
 #include <bim/axmol/display/main_view.hpp>
+#include <bim/axmol/input/node.hpp>
+#include <bim/axmol/input/observer/single_key_observer_handle.hpp>
 #include <bim/axmol/style/cache.hpp>
 #include <bim/axmol/widget/context.hpp>
 #include <bim/axmol/widget/dynamic_factory.hpp>
@@ -108,5 +110,8 @@ namespace bim::axmol::app
     std::unique_ptr<detail::session_systems> m_session_systems;
 
     std::unique_ptr<main_task> m_main_task;
+
+    bim::axmol::input::single_key_observer_handle m_reset_key_observer;
+    bim::axmol::input::node m_input_root;
   };
 }

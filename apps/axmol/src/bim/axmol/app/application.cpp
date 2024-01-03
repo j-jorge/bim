@@ -9,6 +9,10 @@
 #include <bim/axmol/app/scene_lock.hpp>
 
 #include <bim/axmol/audio/mixer.hpp>
+#include <bim/axmol/input/flow.hpp>
+#include <bim/axmol/input/key_observer_handle.impl.hpp>
+#include <bim/axmol/input/node.hpp>
+#include <bim/axmol/input/observer/single_key_observer.hpp>
 #include <bim/axmol/widget/register_widgets.hpp>
 
 #include <iscool/audio/default_mixer.hpp>
@@ -79,11 +83,16 @@ private:
   void start_main_scene();
   void stop_main_scene();
 
+  void start_inputs();
+  void stop_inputs();
+
   void start_lock();
   void stop_lock();
 
 private:
   application& m_application;
+
+  std::unique_ptr<bim::axmol::input::flow> m_input_flow;
 };
 
 bim::axmol::app::detail::persistent_systems::persistent_systems(
@@ -219,12 +228,14 @@ bim::axmol::app::detail::session_systems::session_systems(application& app)
 {
   start_styles();
   start_main_scene();
+  start_inputs();
   start_lock();
 }
 
 bim::axmol::app::detail::session_systems::~session_systems()
 {
   stop_lock();
+  stop_inputs();
   stop_main_scene();
   stop_styles();
 }
@@ -260,6 +271,18 @@ void bim::axmol::app::detail::session_systems::stop_main_scene()
   m_application.m_context.reset_main_scene();
 }
 
+void bim::axmol::app::detail::session_systems::start_inputs()
+{
+  m_input_flow.reset(new bim::axmol::input::flow(
+      m_application.m_persistent_systems->root_scene(),
+      m_application.m_input_root));
+}
+
+void bim::axmol::app::detail::session_systems::stop_inputs()
+{
+  m_input_flow.reset();
+}
+
 void bim::axmol::app::detail::session_systems::start_lock()
 {
   assert(!m_application.m_context.is_scene_lock_set());
@@ -281,8 +304,16 @@ bim::axmol::app::application::application(
   : m_asset_directories(std::move(asset_directories))
   , m_main_view("Bim!", ax::Size(1280, 720), 1)
   , m_style_cache(m_colors)
+  , m_reset_key_observer(ax::EventKeyboard::KeyCode::KEY_R)
+  , m_input_root(m_reset_key_observer)
 {
   bim::axmol::widget::register_widgets(m_widget_factory);
+
+  m_reset_key_observer->connect_to_released(
+      [this]()
+      {
+        reset();
+      });
 }
 
 bim::axmol::app::application::~application() = default;

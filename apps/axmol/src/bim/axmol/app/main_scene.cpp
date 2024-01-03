@@ -9,8 +9,6 @@
 
 // TODO: rm
 #include <bim/axmol/style/apply_bounds.hpp>
-#include <iostream>
-#include <iscool/style/json/from_declaration.hpp>
 
 bim::axmol::app::main_scene::main_scene(
     ax::Scene& scene, const bim::axmol::widget::context& context,
@@ -23,12 +21,6 @@ bim::axmol::app::main_scene::main_scene(
   // TODO: implement in axmol::widget with correct order.
   for (const auto& e : m_controls->all_nodes)
     {
-      std::cout << e.first << ":\n"
-                << iscool::style::json::from_declaration(
-                       *style.get_declaration("layout")->get_declaration(
-                           e.first))
-                       .toStyledString()
-                << '\n';
       bim::axmol::style::apply_bounds(
           context.style_cache.get_bounds(
               *style.get_declaration("layout")->get_declaration(e.first)),
