@@ -26,9 +26,10 @@
 #include <bim/game/system/update_brick_walls.hpp>
 #include <bim/game/system/update_flames.hpp>
 
-#include <bim/game/assume.hpp>
 #include <bim/game/level_generation.hpp>
 #include <bim/game/random_generator.hpp>
+
+#include <bim/assume.hpp>
 
 constexpr std::chrono::milliseconds bim::game::contest::tick_interval;
 

@@ -33,6 +33,7 @@ find_package(iscool-core 1.9.0 REQUIRED)
 
 include(./cmake/run-when-built.cmake)
 
+add_subdirectory(modules/bim/core)
 add_subdirectory(modules/bim/game)
 add_subdirectory(modules/bim/net)
 add_subdirectory(modules/bim/server)

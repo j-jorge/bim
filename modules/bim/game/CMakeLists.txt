@@ -21,7 +21,7 @@ add_library(bim_game
   main/src/bim/game/system/update_flames.cpp
 )
 target_include_directories(bim_game PUBLIC main/include)
-target_link_libraries(bim_game PUBLIC EnTT::EnTT)
+target_link_libraries(bim_game PUBLIC bim_core EnTT::EnTT)
 
 add_executable(game-tests
   tests/src/bim/game/archive.cpp

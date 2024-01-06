@@ -20,7 +20,7 @@
 #include <bim/net/message/ready.hpp>
 #include <bim/net/message/start.hpp>
 
-#include <bim/game/assume.hpp>
+#include <bim/assume.hpp>
 
 #include <iscool/monitoring/implement_state_monitor.hpp>
 #include <iscool/net/message_channel.hpp>

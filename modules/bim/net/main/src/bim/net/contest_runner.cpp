@@ -19,7 +19,6 @@
 #include <bim/net/exchange/game_update_exchange.hpp>
 #include <bim/net/exchange/server_update.hpp>
 
-#include <bim/game/assume.hpp>
 #include <bim/game/component/bomb.hpp>
 #include <bim/game/component/brick_wall.hpp>
 #include <bim/game/component/burning.hpp>
@@ -30,6 +29,8 @@
 #include <bim/game/contest.hpp>
 #include <bim/game/input_archive.hpp>
 #include <bim/game/output_archive.hpp>
+
+#include <bim/assume.hpp>
 
 #include <entt/entity/registry.hpp>
 #include <entt/entity/snapshot.hpp>

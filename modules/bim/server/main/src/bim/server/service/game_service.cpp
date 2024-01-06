@@ -23,8 +23,9 @@
 #include <bim/net/message/ready.hpp>
 #include <bim/net/message/start.hpp>
 
-#include <bim/game/assume.hpp>
 #include <bim/game/component/player_action.hpp>
+
+#include <bim/assume.hpp>
 
 #include <iscool/log/causeless_log.hpp>
 #include <iscool/log/nature/info.hpp>

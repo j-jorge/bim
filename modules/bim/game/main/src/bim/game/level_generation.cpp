@@ -22,8 +22,9 @@
 #include <bim/game/component/position_on_grid.hpp>
 #include <bim/game/factory/brick_wall.hpp>
 
-#include <bim/game/assume.hpp>
 #include <bim/game/random_generator.hpp>
+
+#include <bim/assume.hpp>
 
 #include <entt/entity/registry.hpp>
 

@@ -16,7 +16,7 @@
 */
 #include <bim/game/component/player_action_kind.hpp>
 
-#include <bim/game/assume.hpp>
+#include <bim/assume.hpp>
 
 const char* bim::game::to_string(player_action_kind k)
 {
