@@ -3,6 +3,7 @@ find_package(axmol 1.0.0 REQUIRED)
 add_library(bim_axmol_widget
   STATIC
   main/src/bim/axmol/widget/add_group_as_children.cpp
+  main/src/bim/axmol/widget/apply_bounds.cpp
   main/src/bim/axmol/widget/dynamic_factory.cpp
   main/src/bim/axmol/widget/register_widgets.cpp
 
@@ -18,6 +19,7 @@ target_link_libraries(
   PUBLIC
   bim_axmol_style
   bim_axmol_core
+  bim_core
 )
 
 add_executable(axmol-widget-tests
