@@ -28,6 +28,12 @@
 
 #include <string_view>
 
+// If no control is needed, we must still have the macro defined for this file
+// to work properly.
+#ifndef x_widget_controls
+  #define x_widget_controls
+#endif
+
 struct x_widget_scope x_widget_type_name
 #undef x_widget_scope
 {
