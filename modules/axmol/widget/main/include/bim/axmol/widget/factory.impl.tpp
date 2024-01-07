@@ -1,6 +1,7 @@
 #pragma once
 
 #include <bim/axmol/widget/context.hpp>
+#include <bim/axmol/widget/factory.hpp>
 
 #include <bim/axmol/style/apply_display.hpp>
 #include <bim/axmol/style/cache.hpp>

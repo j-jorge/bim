@@ -56,11 +56,11 @@ struct x_widget_scope x_widget_type_name
 #undef x_widget
 
 #define x_widget(type, name) #name,
-        const std::string_view known[] = { x_widget_controls };
+        const std::string_view known[] = { "", x_widget_controls };
 #undef x_widget
 
-    const std::string_view* const begin = std::begin(known);
-    const std::string_view* const end = std::end(known);
+    const std::string_view* const begin = known + 1;
+    const std::string_view* const end = begin + std::size(known) - 1;
 
     for (const iscool::style::declaration::declaration_map::value_type& d :
          style.get_declarations())

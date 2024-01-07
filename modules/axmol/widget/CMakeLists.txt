@@ -13,6 +13,8 @@ add_library(bim_axmol_widget
   main/src/bim/axmol/widget/factory/layer_color.cpp
   main/src/bim/axmol/widget/factory/node.cpp
   main/src/bim/axmol/widget/factory/sprite.cpp
+
+  main/src/bim/axmol/widget/ui/button.cpp
 )
 
 target_include_directories(bim_axmol_widget PUBLIC main/include)
@@ -20,6 +22,7 @@ target_include_directories(bim_axmol_widget PUBLIC main/include)
 target_link_libraries(
   bim_axmol_widget
   PUBLIC
+  bim_axmol_input
   bim_axmol_style
   bim_axmol_core
   bim_core

@@ -1,0 +1,59 @@
+{
+    "style":
+    {
+        "widgets":
+        [{
+            "background":
+            [{
+                "instantiate": "ax::LayerColor",
+                "opacity": 1
+            }],
+
+            "label":
+            [
+                "font/regular",
+                {
+                    "instantiate": "ax::Label",
+                    "font.size": 32,
+                    "font.color": "#ffffff",
+                    "shadow.color": "#1b1b1b",
+                    "shadow.offset.y": -4,
+                    "outline.color": "#1b1b1b",
+                    "outline.size": 2
+                }
+            ]
+        }],
+
+        "bounds":
+        [{
+            "background": [ "layout/fill" ],
+
+            "label":
+            [{
+                "anchor.x": 0.5,
+                "anchor.y": 0.5,
+                "anchor.reference.x": 0.5,
+                "anchor.reference.y": 0.5,
+                "z-order": 10
+            }]
+        }],
+
+        "display.pressed":
+        [{
+            "background/color": "#808080"
+        }],
+
+        "display.release":
+        [{
+            "background/color": "#c0c0c0"
+        }],
+
+        "display.disabled":
+        [{
+            "background/color": "#202020"
+        }],
+
+        "sound.click": "tick"
+    }
+}
+
