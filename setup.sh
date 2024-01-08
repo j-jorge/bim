@@ -5,6 +5,7 @@ set -euo pipefail
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd)"
 backroom="$script_dir/.backroom"
 host_prefix="$backroom"/host-prefix
+python_virtual_environment_path="$host_prefix"/python
 build_types=(release)
 all_build_types=(debug release asan tsan)
 
@@ -150,6 +151,11 @@ set_up_host_prefix()
           > ../../cpp-package-manager.configure.out.txt
     cmake --build . --parallel --target install \
           > ../../cpp-package-manager.build.out.txt
+
+    # Python
+    local python="$(command -v python3)"
+    echo -e "${green_bold}Installing Python virtual environment ($python) ${term_color}"
+    "$python" -m venv "$python_virtual_environment_path"
 }
 
 install_dependencies()
@@ -186,6 +192,8 @@ launch_build()
     mkdir --parents "$bomb_app_prefix"
 
     export PATH="$host_prefix"/bin:"$PATH"
+
+    . "$python_virtual_environment_path"/bin/activate
 
     # App dependencies.
     echo -e "${green_bold}Installing host dependencies${term_color}"

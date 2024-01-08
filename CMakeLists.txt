@@ -32,6 +32,7 @@ find_package(GTest 1.13.0 REQUIRED)
 find_package(iscool-core 1.9.0 REQUIRED)
 
 include(./cmake/run-when-built.cmake)
+include(./cmake/jsonlint.cmake)
 
 add_subdirectory(modules/bim/core)
 add_subdirectory(modules/bim/game)

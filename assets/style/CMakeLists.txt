@@ -7,6 +7,11 @@ set(all_style_files
   ${CMAKE_CURRENT_LIST_DIR}/layout/fill.json
 )
 
+foreach(file ${all_style_files})
+  jsonlint("${file}" linted_file)
+  list(APPEND linted_style_files "${linted_file}")
+endforeach()
+
 add_custom_command(
   OUTPUT
     ${generated_assets_dir}/style/launch/main-scene.json
@@ -18,7 +23,7 @@ add_custom_command(
     --search-path style/
     launch/main-scene
     > ${generated_assets_dir}/style/launch/main-scene.json
-  DEPENDS ${all_style_files}
+  DEPENDS ${linted_style_files}
 )
 
 add_custom_target(
