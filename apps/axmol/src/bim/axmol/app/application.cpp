@@ -300,9 +300,10 @@ void bim::axmol::app::detail::session_systems::stop_lock()
 }
 
 bim::axmol::app::application::application(
-    std::vector<std::string> asset_directories)
+    std::vector<std::string> asset_directories, const ax::Size& screen_size,
+    float screen_scale)
   : m_asset_directories(std::move(asset_directories))
-  , m_main_view("Bim!", ax::Size(1280, 720), 1)
+  , m_main_view("Bim!", screen_size, screen_scale)
   , m_style_cache(m_colors)
   , m_reset_key_observer(ax::EventKeyboard::KeyCode::KEY_R)
   , m_input_root(m_reset_key_observer)

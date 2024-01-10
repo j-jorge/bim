@@ -4,5 +4,6 @@ add_executable(bim main.cpp)
 target_link_libraries(bim
   PRIVATE
   bim_app
+  iscool_strings
   Boost::program_options
 )

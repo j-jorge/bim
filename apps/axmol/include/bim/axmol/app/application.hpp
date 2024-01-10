@@ -68,7 +68,8 @@ namespace bim::axmol::app
             ((iscool::system::haptic_feedback*)(haptic_feedback))));
 
   public:
-    explicit application(std::vector<std::string> asset_directories);
+    application(std::vector<std::string> asset_directories,
+                const ax::Size& screen_size, float screen_scale);
     ~application();
 
     bool applicationDidFinishLaunching() override;
