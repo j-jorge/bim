@@ -1,0 +1,37 @@
+{
+    "style":
+    {
+        "widgets":
+        [{
+            "play_button":
+            [
+                "button/flat-with-label",
+                {
+                    "widgets/label/text": "PLAY"
+                }
+            ],
+
+            "sprite":
+            [{
+                "instantiate": "ax::Sprite",
+                "frame": "sprites/guy.png",
+                "name": "sprite"
+            }],
+
+            "label":
+            [
+                "font/regular",
+                {
+                    "instantiate": "ax::Label",
+                    "text": "BIM!",
+                    "font.size": 32,
+                    "font.color": "#f0f0f0",
+                    "shadow.color": "#1f1f1f",
+                    "shadow.offset.y": -10,
+                    "outline.color": "#c0c0c0",
+                    "outline.size": 2
+                }
+            ]
+        }]
+    }
+}

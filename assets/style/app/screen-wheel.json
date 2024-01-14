@@ -1,0 +1,19 @@
+{
+    "style":
+    {
+        "widgets":
+        [{
+            "lobby": [],
+            "matchmaking": []
+        }],
+
+        "lobby": ["app/screen/lobby"],
+        "lobby-bounds": ["app/screen/lobby-bounds"],
+
+        "bounds":
+        [{
+            "lobby": ["layout/fill"],
+            "matchmaking": ["layout/fill"]
+        }]
+    }
+}

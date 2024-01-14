@@ -4,32 +4,10 @@
         "widgets":
         [{
             "main": [],
-            "overlay": [],
-
-            "sprite":
-            [{
-                "instantiate": "ax::Sprite",
-                "frame": "sprites/guy.png",
-                "name": "sprite"
-            }],
-
-            "label":
-            [
-                "font/regular",
-                {
-                    "instantiate": "ax::Label",
-                    "text": "BIM!",
-                    "font.size": 32,
-                    "font.color": "#f0f0f0",
-                    "shadow.color": "#1f1f1f",
-                    "shadow.offset.y": -10,
-                    "outline.color": "#c0c0c0",
-                    "outline.size": 2
-                }
-            ]
+            "overlay": []
         }],
 
-        "layout":
+        "bounds":
         [{
             "main":
             [
@@ -45,27 +23,7 @@
                 {
                     "z-order": 10
                 }
-            ],
-
-            "label":
-            [{
-                "anchor.x": 0.5,
-                "anchor.y": 0.5,
-                "anchor.reference.x": 0.5,
-                "anchor.reference.y": 0.7,
-                "z-order": 20
-            }],
-
-            "sprite":
-            [{
-                "anchor.x": 0.5,
-                "anchor.y": 0.5,
-                "anchor.reference.x": 0.33,
-                "anchor.reference.y": 0.66,
-                "width": 0.1,
-                "height-ratio": 1,
-                "z-order": 20
-            }]
+            ]
         }]
     }
 }

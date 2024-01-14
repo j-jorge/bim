@@ -7,10 +7,13 @@ add_library(bim_app
   src/bim/axmol/app/main_scene.cpp
   src/bim/axmol/app/root_scene.cpp
   src/bim/axmol/app/scene_lock.cpp
+  src/bim/axmol/app/screen_wheel.cpp
 
   src/bim/axmol/app/preference/audio.cpp
   src/bim/axmol/app/preference/haptic.cpp
   src/bim/axmol/app/preference/network.cpp
+
+  src/bim/axmol/app/screen/lobby.cpp
 
   src/bim/axmol/app/task/main_task.cpp
 )

@@ -26,11 +26,17 @@ namespace bim::axmol::app
     main_scene(ax::Scene& scene, const bim::axmol::widget::context& context,
                const iscool::style::declaration& style);
 
+    bim::axmol::input::node_reference input_node() const;
+
+    void add_in_main_canvas(ax::Node& node,
+                            const bim::axmol::input::node_reference& inputs);
+
   private:
     ax::Scene& m_scene;
 
     bim_declare_controls_struct(controls, m_controls, 2);
 
     bim::axmol::input::tree m_inputs;
+    bim::axmol::input::tree m_main_area_inputs;
   };
 }

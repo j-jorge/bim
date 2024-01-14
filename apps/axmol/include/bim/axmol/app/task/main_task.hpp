@@ -3,6 +3,8 @@
 #include <iscool/context.hpp>
 #include <iscool/signals/declare_signal.hpp>
 
+#include <memory>
+
 namespace iscool
 {
   namespace audio
@@ -25,6 +27,7 @@ namespace bim::axmol::app
 {
   class main_scene;
   class scene_lock;
+  class screen_wheel;
 
   class main_task
   {
@@ -47,6 +50,6 @@ namespace bim::axmol::app
     void start();
 
   private:
-    // ic_declare_state_monitor(m_monitor);
+    std::unique_ptr<screen_wheel> m_screen_wheel;
   };
 }

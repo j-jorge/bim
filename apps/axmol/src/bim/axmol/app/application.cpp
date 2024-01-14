@@ -263,10 +263,13 @@ void bim::axmol::app::detail::session_systems::start_main_scene()
                      m_application.m_context.get_widget_context(),
                      iscool::style::loader::load("launch/main-scene")));
   m_application.m_context.set_main_scene(scene);
+  m_application.m_input_root.push_back(scene->input_node());
 }
 
 void bim::axmol::app::detail::session_systems::stop_main_scene()
 {
+  m_application.m_input_root.erase(
+      m_application.m_context.get_main_scene()->input_node());
   delete m_application.m_context.get_main_scene();
   m_application.m_context.reset_main_scene();
 }
@@ -475,8 +478,11 @@ void bim::axmol::app::application::apply_local_preferences()
 
   iscool::audio::mixer& audio = *m_context.get_audio();
 
-  audio.set_music_muted(!music_enabled(preferences));
-  audio.set_effects_muted(!effects_enabled(preferences));
+  if (!music_enabled(preferences))
+    audio.set_music_muted(true);
+
+  if (!effects_enabled(preferences))
+    audio.set_effects_muted(true);
 }
 
 void bim::axmol::app::application::launch_game()

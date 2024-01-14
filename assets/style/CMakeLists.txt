@@ -1,31 +1,55 @@
 find_program(style_merger style-merger REQUIRED)
 
-set(all_style_files
-  ${CMAKE_CURRENT_LIST_DIR}/button/flat-with-label.json
-  ${CMAKE_CURRENT_LIST_DIR}/font/regular.json
-  ${CMAKE_CURRENT_LIST_DIR}/launch/main-scene.json
+set(common_style_files
   ${CMAKE_CURRENT_LIST_DIR}/layout/fill.json
 )
 
-foreach(file ${all_style_files})
-  jsonlint("${file}" linted_file)
-  list(APPEND linted_style_files "${linted_file}")
-endforeach()
+set(screen_wheel_style_files
+  ${CMAKE_CURRENT_LIST_DIR}/app/screen-wheel.json
+  ${CMAKE_CURRENT_LIST_DIR}/app/screen/lobby.json
+  ${CMAKE_CURRENT_LIST_DIR}/app/screen/lobby-bounds.json
 
-add_custom_command(
-  OUTPUT
-    ${generated_assets_dir}/style/launch/main-scene.json
-  COMMAND
-    ${CMAKE_COMMAND} -E make_directory ${generated_assets_dir}/style/launch
-  COMMAND
-    ${style_merger}
-    --root ${CMAKE_CURRENT_LIST_DIR}/../
-    --search-path style/
-    launch/main-scene
-    > ${generated_assets_dir}/style/launch/main-scene.json
-  DEPENDS ${linted_style_files}
+  ${CMAKE_CURRENT_LIST_DIR}/button/flat-with-label.json
+  ${CMAKE_CURRENT_LIST_DIR}/font/regular.json
+
+  ${common_style_files}
 )
 
-add_custom_target(
-  styles ALL DEPENDS ${generated_assets_dir}/style/launch/main-scene.json
+set(main_scene_style_files
+  ${CMAKE_CURRENT_LIST_DIR}/launch/main-scene.json
+
+  ${common_style_files}
 )
+
+add_custom_target(styles ALL)
+
+function(merge_styles main_style_id)
+  jsonlint("${main_style_id}.json" linted_file_files)
+
+  foreach(file ${ARGN})
+    jsonlint("${file}" linted_file)
+    list(APPEND linted_style_files "${linted_file}")
+  endforeach()
+
+  set(output "${generated_assets_dir}/style/${main_style_id}.json")
+  get_filename_component(output_dir "${output}" DIRECTORY)
+
+  add_custom_command(
+    OUTPUT "${output}"
+    COMMAND
+      ${CMAKE_COMMAND} -E make_directory "${output_dir}"
+    COMMAND
+      ${style_merger}
+      --root ${CMAKE_CURRENT_LIST_DIR}/../
+      --search-path style/
+      ${main_style_id}
+      > "${output}"
+    DEPENDS ${linted_style_files}
+  )
+
+  set_property(TARGET styles APPEND PROPERTY SOURCES "${output}")
+  get_property(sss TARGET styles PROPERTY SOURCES)
+endfunction()
+
+merge_styles(app/screen-wheel ${screen_wheel_style_files})
+merge_styles(launch/main-scene ${main_scene_style_files})
