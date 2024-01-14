@@ -48,7 +48,7 @@ static void fill_size(bim::axmol::style::bounds_properties& properties,
                       const iscool::style::declaration& style)
 {
   if (const iscool::optional<float> percents_width =
-          style.get_number("percents-width"))
+          style.get_number("width.percents"))
     {
       properties.flags |=
           bim::axmol::style::bounds_property_flags::percents_width;
@@ -56,7 +56,7 @@ static void fill_size(bim::axmol::style::bounds_properties& properties,
     }
 
   if (const iscool::optional<float> percents_height =
-          style.get_number("percents-height"))
+          style.get_number("height.percents"))
     {
       properties.flags |=
           bim::axmol::style::bounds_property_flags::percents_height;
@@ -89,7 +89,7 @@ static void fill_scale(bim::axmol::style::bounds_properties& properties,
                        const iscool::style::declaration& style)
 {
   if (const iscool::optional<const std::string&> scale_mode =
-          style.get_string("scale_mode"))
+          style.get_string("scale-mode"))
     {
       if (*scale_mode == "cover")
         {
@@ -112,7 +112,7 @@ static void fill_scale(bim::axmol::style::bounds_properties& properties,
     }
 
   const iscool::optional<const iscool::style::declaration&> scale_constraints =
-      style.get_declaration("scale_constraints");
+      style.get_declaration("scale-constraints");
 
   if (!scale_constraints)
     return;
