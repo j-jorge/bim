@@ -46,6 +46,6 @@ cd "$archive_basename"
      cxxflags="-std=c++20" \
      linkflags="-ldl" \
      --prefix="$install_dir" \
-     -j"$(cpu_count)"
+     -j"$(nproc)"
 
 package_and_install "$install_dir" boost "$version" "$build_type"
