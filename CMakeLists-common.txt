@@ -1,0 +1,16 @@
+# -*- cmake -*-
+
+include(compiler-settings)
+include(run-when-built)
+
+find_package(axmol 2.1.0 REQUIRED)
+find_package(Boost 1.82.0 REQUIRED)
+find_package(EnTT 3.11.1 REQUIRED)
+find_package(fmt 10.2.1 REQUIRED)
+find_package(GTest 1.13.0 REQUIRED)
+find_package(iscool-core 1.9.0 REQUIRED)
+
+add_subdirectory(modules)
+add_subdirectory(apps)
+
+add_subdirectory(assets)

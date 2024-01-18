@@ -1,57 +1,20 @@
 #!/bin/bash
 
+# Disable info message about not following sourced scripts.
+# shellcheck disable=SC1091
+
 set -euo pipefail
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd)"
 backroom="$script_dir/.backroom"
-host_prefix="$backroom"/host-prefix
+host_prefix="$backroom"/host
 python_virtual_environment_path="$host_prefix"/python
 build_types=(release)
+target_platform=linux
 all_build_types=(debug release asan tsan)
 
-git_fetch()
-{
-    if [[ "$(git rev-parse HEAD 2>/dev/null)" = "$1" ]]
-    then
-        return
-    fi
-
-    git fetch --quiet --depth 1 origin "$1"
-    git reset --quiet --hard FETCH_HEAD
-}
-
-git_clone_repository()
-{
-    local repository="$1"
-    local commit="$2"
-    local dirname="$3"
-
-    if [[ -d "$dirname" ]]
-    then
-        pushd "$dirname" > /dev/null
-
-        local remote
-        remote="$(git config --get remote.origin.url || true)"
-
-        if [[ "$remote" = "$repository" ]]
-        then
-            git_fetch "$commit"
-            return
-        fi
-
-        popd > /dev/null
-        rm --force --recursive "$dirname"
-    fi
-
-    mkdir --parents "$dirname"
-    pushd "$dirname" > /dev/null
-
-    git init --quiet
-    git remote add origin "$repository"
-    git_fetch "$commit"
-
-    popd > /dev/null
-}
+export bim_host_prefix="$host_prefix"
+export PATH="$script_dir/setup/bin/:$PATH"
 
 check_host_dependency()
 {
@@ -70,8 +33,12 @@ usage()
 Usage: build.sh OPTIONS
 
 Where OPTIONS is
-  --build-type T   Build for this configuration (debug, release, asan, tsan).
-  --help, -h       Display this message and exit.
+  --build-type T
+     Build for this configuration (debug, release, asan, tsan).
+  --help, -h
+     Display this message and exit.
+  --target-platform P
+     Build for platform P (either linux or android).
 EOF
 }
 
@@ -82,6 +49,12 @@ do
 
     case "$arg" in
         --build-type)
+            if [[ $# -eq 0 ]]
+            then
+                echo "Missing value for --build-type." >&2
+                exit 1
+            fi
+
             if [[ "$1" = "all" ]]
             then
                 build_types=("${all_build_types[@]}")
@@ -94,14 +67,35 @@ do
             usage
             exit
             ;;
+        --target-platform)
+            if [[ $# -eq 0 ]]
+            then
+                echo "Missing value for --target-platform." >&2
+                exit 1
+            fi
+
+            target_platform="$1"
+            shift
+            ;;
+        *)
+            echo "Unknown argument '$arg'." >&2
+            exit 1
+            ;;
     esac
 done
 
 missing_dependencies=0
 
+check_host_dependency ccache || missing_dependencies=1
 check_host_dependency cmake || missing_dependencies=1
 check_host_dependency git || missing_dependencies=1
 check_host_dependency ninja || missing_dependencies=1
+check_host_dependency python3 || missing_dependencies=1
+
+if [[ "$target_platform" = "android" ]]
+then
+    check_host_dependency gradle || missing_dependencies=1
+fi
 
 if ((missing_dependencies != 0))
 then
@@ -113,9 +107,9 @@ then
     . "$script_dir/.setup.conf"
 fi
 
-: "${shell_utils_commit=1a4cdb63b13f115264635ada9778c12e47838586}"
+: "${shell_utils_commit=004b72c863d93ea958eef9178d7b12324283e2a1}"
 : "${shell_utils_repository:=https://github.com/j-jorge/shell-utils}"
-: "${paco_commit=188e7ece603c8b0c275e7f82a5bee6fdab7108b9}"
+: "${paco_commit=8259765a6e3f3de004ca165854653a7581a37cbc}"
 : "${paco_repository:=https://github.com/j-jorge/cpp-package-manager}"
 
 set_up_host_prefix()
@@ -124,9 +118,9 @@ set_up_host_prefix()
     echo -e "\033[1;32mInstalling the shell utils scripts\033[0;0m"
     mkdir --parents "$host_prefix"
 
-    git_clone_repository "$shell_utils_repository" \
-                         "$shell_utils_commit" \
-                         "$backroom"/repositories/shell-utils
+    bim-git-clone-repository "$shell_utils_repository" \
+                             "$shell_utils_commit" \
+                             "$backroom"/repositories/shell-utils
 
     cd "$backroom"/repositories/shell-utils
     mkdir --parents build
@@ -139,10 +133,10 @@ set_up_host_prefix()
     . "$host_prefix"/share/iscoolentertainment/shell/colors.sh
 
     # Package manager
-    echo -e "${green_bold}Installing the package manager${term_color}"
-    git_clone_repository "$paco_repository" \
-                         "$paco_commit" \
-                         "$backroom"/repositories/cpp-package-manager
+    echo -e "${green_bold:-}Installing the package manager${term_color:-}"
+    bim-git-clone-repository "$paco_repository" \
+                             "$paco_commit" \
+                             "$backroom"/repositories/cpp-package-manager
 
     cd "$backroom"/repositories/cpp-package-manager
     mkdir --parents build
@@ -153,63 +147,72 @@ set_up_host_prefix()
           > ../../cpp-package-manager.build.out.txt
 
     # Python
-    local python="$(command -v python3)"
-    echo -e "${green_bold}Installing Python virtual environment ($python) ${term_color}"
+    local python
+    python="$(command -v python3)"
+    echo -e "${green_bold:-}Installing Python virtual environment ($python) ${term_color:-}"
     "$python" -m venv "$python_virtual_environment_path"
 }
 
 install_dependencies()
 (
     export backroom
-    export bomb_app_prefix="$2"
-    export bomb_build_type="$1"
-    export bomb_packages_root="$backroom"/packages
-    export -f git_clone_repository
-    export -f git_fetch
+    export bim_build_type="$1"
+    export bim_package_install_prefix="$2"
+    export bim_package_install_platform="$3"
+    export bim_packages_root="$backroom"/packages
+    export bim_host_prefix="$host_prefix"
+    export bim_target_platform="$target_platform"
 
-    while read -r script
+    grep --invert-match "^#" "$4" \
+        | while read -r script
     do
         if [[ -z "${script:-}" ]]
         then
             continue
         fi
 
-        if [[ -f "$script_dir"/dependencies/"$script" ]]
+        script="$script_dir"/setup/dependencies/recipes/"$script"
+
+        if [[ -f "$script" ]] && [[ -x "$script" ]]
         then
-            "$script_dir"/dependencies/"$script"
+            "$script"
         else
-            echo "Missing dependency script: '$script_dir/dependencies/$script'." \
-                 >&2
+            echo "Missing dependency script: '$script'." >&2
         fi
-    done < "$3"
+    done
 )
 
 launch_build()
 {
-    local bomb_build_type="$1"
-    bomb_app_prefix="$backroom"/linux-prefix-"$bomb_build_type"
+    local bim_build_type="$1"
+    bim_app_prefix="$backroom"/"$target_platform"-"$bim_build_type"
 
-    mkdir --parents "$bomb_app_prefix"
+    mkdir --parents "$bim_app_prefix"
 
     export PATH="$host_prefix"/bin:"$PATH"
 
     . "$python_virtual_environment_path"/bin/activate
 
-    # App dependencies.
+    # Host dependencies: install everything in $host_prefix. Those are
+    # tools to be used by the build system (e.g. tooling).
     echo -e "${green_bold}Installing host dependencies${term_color}"
     install_dependencies release \
-                         "$host_prefix"\
-                         "$script_dir"/dependencies/host-dependencies.txt
+                         "$host_prefix" \
+                         linux \
+                         "$script_dir"/setup/dependencies/host-dependencies.txt
 
+    # App dependencies: install everything in $bim_app_prefix. Those
+    # are dependencies required by the app (e.g. libraries).
     echo -e "${green_bold}Installing app dependencies${term_color}"
-    install_dependencies "$bomb_build_type" \
-                         "$bomb_app_prefix" \
-                         "$script_dir"/dependencies/app-dependencies.txt
+    install_dependencies "$bim_build_type" \
+                         "$bim_app_prefix" \
+                         "$target_platform" \
+                         "$script_dir"/setup/dependencies/app-dependencies.txt
 
     # Actual build
     echo -e "${green_bold}Building${term_color}"
 
-    build_dir="$script_dir"/build/"$bomb_build_type"
+    build_dir="$script_dir"/build/"$target_platform"/"$bim_build_type"
 
     if [[ ! -f "$build_dir"/build.ninja ]]
     then
@@ -217,10 +220,10 @@ launch_build()
         mkdir --parents "$build_dir"
 
         cmake_options=()
-        case "$bomb_build_type" in
+        case "$bim_build_type" in
             asan)
                 cmake_options=(-DCMAKE_BUILD_TYPE=RelWithDebInfo
-                               -DBOMB_ADDRESS_SANITIZER=ON)
+                               -DBIM_ADDRESS_SANITIZER=ON)
                 ;;
             debug)
                 cmake_options=(-DCMAKE_BUILD_TYPE=Debug)
@@ -230,17 +233,20 @@ launch_build()
                 ;;
             tsan)
                 cmake_options=(-DCMAKE_BUILD_TYPE=RelWithDebInfo
-                               -DBOMB_THREAD_SANITIZER=ON)
+                               -DBIM_THREAD_SANITIZER=ON)
                 ;;
         esac
 
         cd "$build_dir"
         cmake "$script_dir" -G Ninja \
-              -DCMAKE_PREFIX_PATH="$bomb_app_prefix" \
+              -DCMAKE_PREFIX_PATH="$bim_host_prefix" \
+              -DCMAKE_FIND_ROOT_PATH="$bim_host_prefix" \
               -DCMAKE_UNITY_BUILD=ON \
               -DCMAKE_UNITY_BUILD_BATCH_SIZE=65535 \
               -DCMAKE_C_COMPILER_LAUNCHER=ccache \
               -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
+              -DBIM_TARGET="$target_platform" \
+              -DBIM_TARGET_PREFIX="$bim_app_prefix" \
               "${cmake_options[@]}"
         cd - > /dev/null
     fi

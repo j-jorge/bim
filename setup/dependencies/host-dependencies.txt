@@ -1,0 +1,9 @@
+00-android-sdk.sh
+00-gradlew.sh
+00-boost.sh
+00-claw.sh
+00-glslcc.sh
+00-jsoncpp.sh
+00-mo-file-reader.sh
+10-iscool-core.sh
+10-pack-my-sprites.sh

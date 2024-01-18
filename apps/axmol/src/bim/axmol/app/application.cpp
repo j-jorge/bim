@@ -53,6 +53,9 @@ private:
   void start_log_system();
   void stop_log_system();
 
+  void start_display();
+  void stop_display();
+
   void start_haptic_feedback();
   void stop_haptic_feedback();
 
@@ -100,6 +103,7 @@ bim::axmol::app::detail::persistent_systems::persistent_systems(
   : m_application(app)
 {
   start_log_system();
+  start_display();
   start_haptic_feedback();
   start_audio();
   start_root_scene();
@@ -110,6 +114,7 @@ bim::axmol::app::detail::persistent_systems::~persistent_systems()
   stop_root_scene();
   stop_audio();
   stop_haptic_feedback();
+  stop_display();
   stop_log_system();
 }
 
@@ -148,6 +153,24 @@ void bim::axmol::app::detail::persistent_systems::stop_log_system()
                    "Stop: log system.");
 
   iscool::log::finalize();
+}
+
+void bim::axmol::app::detail::persistent_systems::start_display()
+{
+  ic_causeless_log(iscool::log::nature::info(), g_log_context,
+                   "Start: display.");
+  assert(m_application.m_main_view == nullptr);
+  m_application.m_main_view.reset(new bim::axmol::display::main_view(
+      "Bim!", m_application.m_screen_config.size,
+      m_application.m_screen_config.scale));
+}
+
+void bim::axmol::app::detail::persistent_systems::stop_display()
+{
+  ic_causeless_log(iscool::log::nature::info(), g_log_context,
+                   "Stop: display.");
+
+  m_application.m_main_view.reset();
 }
 
 void bim::axmol::app::detail::persistent_systems::start_haptic_feedback()
@@ -302,14 +325,18 @@ void bim::axmol::app::detail::session_systems::stop_lock()
   m_application.m_context.reset_scene_lock();
 }
 
+bim::axmol::app::application::application()
+  : application({}, ax::Size(1, 1), 1)
+{}
+
 bim::axmol::app::application::application(
     std::vector<std::string> asset_directories, const ax::Size& screen_size,
     float screen_scale)
   : m_asset_directories(std::move(asset_directories))
-  , m_main_view("Bim!", screen_size, screen_scale)
   , m_style_cache(m_colors)
   , m_reset_key_observer(ax::EventKeyboard::KeyCode::KEY_R)
   , m_input_root(m_reset_key_observer)
+  , m_screen_config(screen_size, screen_scale)
 {
   bim::axmol::widget::register_widgets(m_widget_factory);
 

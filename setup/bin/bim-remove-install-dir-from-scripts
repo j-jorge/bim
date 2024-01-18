@@ -1,0 +1,27 @@
+#!/bin/bash
+
+set -euo pipefail
+
+prefix="$1"
+
+find "$prefix" -name "*.cmake" \
+    | while read -r cmake_script
+do
+    cmake_script_dir="$(dirname "$cmake_script")"
+    relative_path="$(relative-path "$cmake_script_dir" "$prefix")"
+
+    # shellcheck disable=SC2016
+    sed 's:'"$prefix"':${CMAKE_CURRENT_LIST_DIR}/'"$relative_path"'/:' \
+        -i "$cmake_script"
+done
+
+find "$prefix" -name "*.pc" \
+    | while read -r pc_file
+do
+    pc_file_dir="$(dirname "$pc_file")"
+    relative_path="$(relative-path "$pc_file_dir" "$prefix")"
+
+    # shellcheck disable=SC2016
+    sed 's:'"$prefix"':${pcfiledir}/'"$relative_path"'/:' \
+        -i "$pc_file"
+done

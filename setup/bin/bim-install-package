@@ -1,0 +1,17 @@
+#!/bin/bash
+
+set -euo pipefail
+
+: "${bim_package_install_platform:-}"
+: "${bim_package_install_prefix:-}"
+
+name="$1"
+version="$2"
+flavor="$3"
+
+paco-install --disable-remote \
+             --name "$name" \
+             --version "$version" \
+             --prefix "$bim_package_install_prefix" \
+             --flavor "$flavor" \
+             --platform "$bim_package_install_platform"

@@ -1,0 +1,118 @@
+#!/bin/bash
+
+set -euo pipefail
+
+while [[ $# -ne 0 ]]
+do
+    arg="$1"
+    shift
+
+    case "$arg" in
+        --abi)
+            if [[ $# -eq 0 ]]
+            then
+                echo "Missing value for --abi." >&2
+                exit 1
+            fi
+
+            case "$1" in
+                arm64)
+                    echo arm64-v8a
+                    ;;
+                armv7)
+                    echo armeabi-v7a
+                    ;;
+                x86-64)
+                    echo x86_64
+                    ;;
+                *)
+                    echo "Unsupported arch '$1'." >&2
+                    exit 1
+                    ;;
+            esac
+            ;;
+        --arch)
+            echo arm64
+            echo armv7
+            echo x86-64
+            ;;
+        --build-tools-version)
+            path="$(find "$android_root"/sdk/build-tools/ \
+                         -mindepth 1 -maxdepth 1 -type d \
+                         | head -n 1)"
+            basename "$path"
+            ;;
+        --gradle-plugin-version)
+            echo 8.2.2
+            ;;
+        --gradle-root)
+            echo "$android_root"
+            ;;
+        --maven-root)
+            echo "$android_root"/maven
+            ;;
+        --modules-root)
+            echo "$android_root"/modules
+            ;;
+        --ndk-root)
+            find "$android_root"/sdk/ndk/ -mindepth 1 -maxdepth 1 -type d \
+                 | head -n 1
+            ;;
+        --platform)
+            path="$(find "$android_root"/sdk/platforms/ \
+                         -mindepth 1 -maxdepth 1 -type d \
+                    | sort --human-numeric-sort \
+                    | head -n 1)"
+            basename "$path"
+            ;;
+        --prefix)
+            if [[ $# -eq 0 ]]
+            then
+                echo "Missing value for --prefix." >&2
+                exit 1
+            fi
+
+            android_root="$1"/android
+            shift
+            ;;
+        --sdk-root)
+            echo "$android_root"/sdk
+            ;;
+        --stl)
+            echo c++_static
+            ;;
+        --target-sdk-version)
+            path="$(find "$android_root"/sdk/build-tools/ \
+                         -mindepth 1 -maxdepth 1 -type d \
+                         | head -n 1)"
+            basename "$path" | cut -d. -f1
+            ;;
+        --toolchain)
+            find "$android_root"/sdk -name "android.toolchain.cmake" \
+                | head -n 1
+            ;;
+        --triplet)
+            if [[ $# -eq 0 ]]
+            then
+                echo "Missing value for --triplet." >&2
+                exit 1
+            fi
+
+            case "$1" in
+                arm64)
+                    echo aarch64-linux-android
+                    ;;
+                armv7)
+                    echo arm-linux-androideabi
+                    ;;
+                x86-64)
+                    echo x86_64-linux-android
+                    ;;
+                *)
+                    echo "Unsupported arch '$1'." >&2
+                    exit 1
+                    ;;
+            esac
+            ;;
+    esac
+done

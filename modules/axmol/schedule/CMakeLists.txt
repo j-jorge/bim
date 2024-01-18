@@ -12,4 +12,5 @@ target_link_libraries(
   PUBLIC
   axmol::axmol
   iscool_schedule
+  fmt::fmt
 )

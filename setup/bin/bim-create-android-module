@@ -1,0 +1,57 @@
+#!/bin/bash
+
+set -euo pipefail
+
+iscool_root=$(iscool-shell-config --shell-include)
+
+# Disable info message about not following sourced scripts.
+# shellcheck disable=SC1091
+
+. "$iscool_root"/options.sh
+
+library_file_name=
+prefix=
+
+set_library() { library_file_name="$1" ; }
+register_option '--library=<file>' set_library \
+                "The name of the library, in the form libfoo.a."
+
+set_prefix_dir() { prefix="$1" ; }
+register_option '--prefix=<path>' set_prefix_dir \
+                "The install prefix used when the library has been installed."
+
+extract_parameters "$@"
+
+check_option_is_set "--library" "$library_file_name"
+check_option_is_set "--prefix" "$prefix"
+
+library_name="${library_file_name/.a/}"
+library_name="${library_name:3}"
+
+modules_root="$(bim-android-config --prefix "$prefix" --modules-root)"
+module_root="$modules_root"/"$library_name"
+
+mkdir --parents "$module_root"
+
+bim-android-config --arch \
+    | while read -r arch
+do
+    abi="$(bim-android-config --abi "$arch")"
+    triplet="$(bim-android-config --triplet "$arch")"
+
+    abi_dir="$module_root"/"$abi"
+    mkdir --parents "$abi_dir"
+
+    ln --force --symbolic --relative \
+       "$prefix"/lib/"$triplet"/"$library_file_name" \
+       "$abi_dir"/"$library_file_name"
+done
+
+cat > "$module_root/Android.mk" <<EOF
+LOCAL_PATH := \$(call my-dir)
+
+include \$(CLEAR_VARS)
+LOCAL_MODULE := $library_name
+LOCAL_SRC_FILES := \$(TARGET_ARCH_ABI)/$library_file_name
+include \$(PREBUILT_STATIC_LIBRARY)
+EOF

@@ -1,0 +1,17 @@
+add_subdirectory(bim/core)
+add_subdirectory(bim/game)
+add_subdirectory(bim/net)
+add_subdirectory(bim/server)
+
+add_subdirectory(axmol/core)
+add_subdirectory(axmol/audio)
+add_subdirectory(axmol/display)
+add_subdirectory(axmol/files)
+add_subdirectory(axmol/input)
+add_subdirectory(axmol/schedule)
+add_subdirectory(axmol/style)
+add_subdirectory(axmol/widget)
+
+if("${CMAKE_SYSTEM_NAME}" STREQUAL "Android")
+  add_subdirectory(axmol/jni)
+endif()

@@ -2,14 +2,18 @@
 
 #include <axmol/base/Director.h>
 
-#include <axmol/platform/GLViewImpl.h>
+#ifdef __ANDROID__
+  #include <axmol/platform/android/GLViewImpl-android.h>
+#else
+  #include <axmol/platform/GLViewImpl.h>
+#endif
 
 bim::axmol::display::main_view::main_view(std::string_view title,
                                           const ax::Size& size, float scale)
 {
   ax::Director* const director(ax::Director::getInstance());
 
-  ax::GLView* view = director->getOpenGLView();
+  ax::GLView* view = director->getGLView();
 
   if (view != nullptr)
     return;
@@ -17,7 +21,7 @@ bim::axmol::display::main_view::main_view(std::string_view title,
   const ax::Rect view_rect(0, 0, size.width * scale, size.height * scale);
   view = ax::GLViewImpl::createWithRect(title, view_rect);
 
-  director->setOpenGLView(view);
+  director->setGLView(view);
   view->setDesignResolutionSize(size.width, size.height,
                                 ResolutionPolicy::SHOW_ALL);
 

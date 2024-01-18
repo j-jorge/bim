@@ -1,0 +1,30 @@
+#!/bin/bash
+
+set -euo pipefail
+
+prefix="$1"
+
+find "$prefix"/lib -name "*.cmake" \
+    | while read -r cmake_script
+do
+    # shellcheck disable=SC2016
+    sed 's:/lib/\(.*\):/lib/${CMAKE_LIBRARY_ARCHITECTURE}/\1:g' \
+        -i "$cmake_script"
+
+    # The cmake scripts have been moved into a subdirectory for the
+    # architecture by bim-android-install-lib-in-arch, thus the prefix
+    # from the view point of the CMake script is one directory up.
+    sed 's/if(_IMPORT_PREFIX STREQUAL "\/")/get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)\n&/' \
+        -i "$cmake_script"
+done
+
+find "$prefix"/lib \
+     -name "*.a" \
+     -exec basename '{}' ';' \
+    | sort --unique \
+    | while read -r library
+do
+    bim-create-android-module \
+        --prefix "$prefix" \
+        --library "$library"
+done

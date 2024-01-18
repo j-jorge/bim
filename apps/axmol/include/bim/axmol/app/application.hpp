@@ -68,6 +68,7 @@ namespace bim::axmol::app
             ((iscool::system::haptic_feedback*)(haptic_feedback))));
 
   public:
+    application();
     application(std::vector<std::string> asset_directories,
                 const ax::Size& screen_size, float screen_scale);
     ~application();
@@ -75,6 +76,13 @@ namespace bim::axmol::app
     bool applicationDidFinishLaunching() override;
     void applicationDidEnterBackground() override;
     void applicationWillEnterForeground() override;
+
+  private:
+    struct screen_config
+    {
+      ax::Size size;
+      float scale;
+    };
 
   private:
     void complete_launch();
@@ -101,7 +109,7 @@ namespace bim::axmol::app
 
     iscool::signals::scoped_connection m_launch_connection;
 
-    bim::axmol::display::main_view m_main_view;
+    std::unique_ptr<bim::axmol::display::main_view> m_main_view;
 
     bim::axmol::colour_chart m_colors;
     bim::axmol::style::cache m_style_cache;
@@ -114,5 +122,7 @@ namespace bim::axmol::app
 
     bim::axmol::input::single_key_observer_handle m_reset_key_observer;
     bim::axmol::input::node m_input_root;
+
+    screen_config m_screen_config;
   };
 }

@@ -1,56 +1,33 @@
 cmake_minimum_required(VERSION 3.24)
 
-project(bim)
+set(CMAKE_MODULE_PATH
+  "${CMAKE_CURRENT_LIST_DIR}/cmake"
+  ${CMAKE_MODULE_PATH}
+)
+include(bim-configuration)
 
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_EXTENSIONS OFF)
+if(BIM_TARGET STREQUAL "android")
+  project(bim LANGUAGES NONE)
 
-if (CMAKE_CXX_COMPILER_ID STREQUAL GNU)
-  add_compile_options(-Wall -pedantic)
+  # This is an invocation of the current script for each Android
+  # architecture.
+  include(./CMakeLists-android.txt)
+elseif(BIM_TARGET STREQUAL "assets")
+  project(bim LANGUAGES NONE)
 
-  option(BOMB_ADDRESS_SANITIZER "Compile with AddressSanitizer enabled" OFF)
-
-  if(BOMB_ADDRESS_SANITIZER)
-    add_compile_options(
-      -fsanitize=address -fsanitize=undefined -fno-omit-frame-pointer
-    )
-    add_link_options(-fsanitize=address -fsanitize=undefined)
+  # Just generate the assets, this is needed for Android builds and it
+  # uses tools from the host.
+  add_subdirectory(assets)
+else()
+  # By default CMAKE_FIND_ROOT_PATH is configured to point to the host
+  # directory. If the host is the same than the target system, then
+  # the target prefix can be used to find the libraries too.
+  if (BIM_TARGET STREQUAL "linux")
+    list(PREPEND CMAKE_FIND_ROOT_PATH "${BIM_TARGET_PREFIX}")
   endif()
 
-  option(BOMB_THREAD_SANITIZER "Compile with ThreadSanitizer enabled" OFF)
-
-  if(BOMB_THREAD_SANITIZER)
-    add_compile_options(-fsanitize=thread -fno-omit-frame-pointer)
-    add_link_options(-fsanitize=thread)
-  endif()
+  # Everything here is executed on the environment of the target
+  # platform.
+  project(bim LANGUAGES CXX)
+  include(./CMakeLists-common.txt)
 endif()
-
-find_package(axmol 2.0.0 REQUIRED)
-find_package(Boost 1.82.0 REQUIRED)
-find_package(EnTT 3.11.1 REQUIRED)
-find_package(GTest 1.13.0 REQUIRED)
-find_package(iscool-core 1.9.0 REQUIRED)
-
-include(./cmake/run-when-built.cmake)
-include(./cmake/jsonlint.cmake)
-
-add_subdirectory(modules/bim/core)
-add_subdirectory(modules/bim/game)
-add_subdirectory(modules/bim/net)
-add_subdirectory(modules/bim/server)
-
-add_subdirectory(modules/axmol/core)
-add_subdirectory(modules/axmol/audio)
-add_subdirectory(modules/axmol/display)
-add_subdirectory(modules/axmol/files)
-add_subdirectory(modules/axmol/input)
-add_subdirectory(modules/axmol/schedule)
-add_subdirectory(modules/axmol/style)
-add_subdirectory(modules/axmol/widget)
-
-add_subdirectory(assets)
-
-add_subdirectory(apps/axmol)
-add_subdirectory(apps/linux)
-add_subdirectory(apps/console)
-add_subdirectory(apps/server)

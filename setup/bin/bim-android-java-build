@@ -1,0 +1,244 @@
+#!/bin/bash
+
+set -euo pipefail
+
+: "${bim_host_prefix:-}"
+
+iscool_root="$(iscool-shell-config --shell-include)"
+
+# shellcheck disable=SC1091
+. "$iscool_root/options.sh"
+
+# shellcheck disable=SC1091
+. "$iscool_root/temporaries.sh"
+
+artifact_group=
+artifact_id=
+artifact_version=
+build_dir=
+build_type=
+namespace=
+install_dir=
+source_dir=
+
+api_dependencies=()
+implementation_dependencies=()
+
+set_artifact_group()
+{
+    artifact_group="$1"
+}
+
+register_option '--artifact-group=<string>' set_artifact_group \
+                "The group of the Maven artifact."
+
+set_artifact_id()
+{
+    artifact_id="$1"
+}
+
+register_option '--artifact-id=<string>' set_artifact_id \
+                "The name of the Maven artifact."
+
+set_artifact_version()
+{
+    artifact_version="$1"
+}
+
+register_option '--artifact-version=<string>' set_artifact_version \
+                "The version of the Maven artifact."
+
+set_build_directory()
+{
+    build_dir="$1"
+}
+
+register_option '--build-dir=<path>' set_build_directory \
+                "The path to the directory where the build is done."
+
+set_build_type()
+{
+    build_type="$1"
+}
+
+register_option '--build-type=<type>' set_build_type \
+                "Set the type of the build (release or debug)."
+
+set_install_directory()
+{
+    install_dir="$1"
+}
+
+register_option '--install-dir=<path>' set_install_directory \
+                "The path to the directory where the installation is done."
+
+set_namespace()
+{
+    namespace="$1"
+}
+
+register_option '--namespace=<path>' set_namespace \
+                "The namespace to put in the Gradle file."
+
+set_source_dir()
+{
+    source_dir="$1"
+}
+
+register_option '--source-dir=<path>' set_source_dir \
+                "The path to the root directory of the Java project."
+
+add_api_dependency()
+{
+    api_dependencies+=("$1")
+}
+
+register_option '--api-dependency=<name>' add_api_dependency \
+                "A library to include as an api dependency."
+
+add_implementation_dependency()
+{
+    implementation_dependencies+=("$1")
+}
+
+register_option '--implementation-dependency=<name>' \
+                add_implementation_dependency \
+                "A library to include as an implementation dependency."
+
+extract_parameters "$@"
+
+check_option_is_set "--artifact-group" "$artifact_group"
+check_option_is_set "--artifact-id" "$artifact_id"
+check_option_is_set "--artifact-version" "$artifact_version"
+check_option_is_set "--build-dir" "$build_dir"
+check_option_is_set "--build-type" "$build_type"
+check_option_is_set "--install-dir" "$install_dir"
+check_option_is_set "--source-dir" "$source_dir"
+
+print_dependencies()
+{
+    if [[ ${#api_dependencies[@]} -ne 0 ]]
+    then
+        printf 'api '"'"'%s'"'"'\n' "${api_dependencies[@]}"
+    fi
+
+    if [[ ${#implementation_dependencies[@]} -ne 0 ]]
+    then
+        printf 'implementation '"'"'%s'"'"'\n' "${implementation_dependencies[@]}"
+    fi
+}
+
+write_gradle_files()
+{
+    local publishing_repository
+    publishing_repository="$(bim-android-config --prefix "$install_dir" \
+                                                 --maven-root)"
+    local build_tools_version
+    build_tools_version="$(bim-android-config --prefix "$bim_host_prefix" \
+                                              --build-tools-version)"
+    local sdk_version
+    sdk_version="$(bim-android-config --prefix "$bim_host_prefix" \
+                                      --target-sdk-version)"
+    local gradle_plugin_version
+    gradle_plugin_version="$(bim-android-config --gradle-plugin-version)"
+
+    cat > "build.gradle" <<EOF
+buildscript {
+    repositories {
+        google()
+        jcenter()
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:$gradle_plugin_version'
+    }
+}
+
+apply plugin: 'com.android.library'
+apply plugin: 'maven-publish'
+
+android {
+  namespace '$namespace'
+
+  buildToolsVersion '$build_tools_version'
+  compileSdk $sdk_version
+
+  defaultConfig {
+    targetSdk $sdk_version
+  }
+
+  repositories {
+    google()
+    jcenter()
+    mavenCentral()
+
+    maven {
+      name = 'LocalMaven'
+      url = uri('file://$publishing_repository')
+    }
+  }
+
+  buildTypes {
+    release {
+      minifyEnabled false
+    }
+  }
+
+  sourceSets {
+    main {
+      java.srcDirs = [ '$source_dir/src' ]
+      manifest.srcFile '$source_dir/AndroidManifest.xml'
+    }
+  }
+
+  dependencies {
+    implementation fileTree(dir: '$source_dir/libs', include: ['*.jar'])
+    $(print_dependencies)
+  }
+
+  publishing {
+    singleVariant '${build_type,}'
+  }
+}
+
+afterEvaluate {
+  publishing {
+    repositories {
+      maven {
+        name = 'LocalMaven'
+        url = uri('file://$publishing_repository')
+      }
+    }
+    publications {
+      ${build_type,}(MavenPublication) {
+        groupId = '$artifact_group'
+        artifactId = '$artifact_id'
+        version = '$artifact_version'
+
+        afterEvaluate {
+          from components.${build_type,}
+        }
+      }
+    }
+  }
+}
+EOF
+
+    cat > "gradle.properties" <<EOF
+android.useAndroidX=true
+android.enableJetifier=true
+EOF
+
+}
+
+mkdir --parents "$build_dir"
+cd "$build_dir"
+
+write_gradle_files
+
+ANDROID_HOME="$(bim-android-config --prefix "$bim_host_prefix" --sdk-root)"
+export ANDROID_HOME
+
+gradlew assemble"${build_type^}" \
+        publish"${build_type^}"PublicationToLocalMavenRepository

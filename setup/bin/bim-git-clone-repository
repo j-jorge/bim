@@ -1,0 +1,29 @@
+#!/bin/bash
+
+set -euo pipefail
+
+repository="$1"
+commit="$2"
+dirname="$3"
+
+if [[ -d "$dirname" ]]
+then
+    pushd "$dirname" > /dev/null
+    remote="$(git config --get remote.origin.url || true)"
+
+    if [[ "$remote" = "$repository" ]]
+    then
+        bim-git-fetch "$commit"
+        exit
+    fi
+
+    popd > /dev/null
+    rm --force --recursive "$dirname"
+fi
+
+mkdir --parents "$dirname"
+cd "$dirname"
+
+git init --quiet
+git remote add origin "$repository"
+bim-git-fetch "$commit"

@@ -1,0 +1,42 @@
+#!/bin/bash
+
+set -euo pipefail
+
+prefix="$1"
+arch="$2"
+
+triplet="$(bim-android-config --triplet "$arch")"
+
+arch_lib_dir="$prefix"/lib/"$triplet"
+mkdir --parents "$arch_lib_dir"
+
+find "$prefix"/lib \
+     -maxdepth 1 \
+     -name "*.a" \
+     -exec mv '{}' "$arch_lib_dir" ';'
+
+cd "$prefix"/lib
+
+find . -mindepth 1 -maxdepth 1 -type d \
+    | while read -r d
+do
+    # Some libraries put their CMake files in <libname>/cmake, other
+    # in cmake/<libname>, and of course we must leave the
+    # <arch>-linux-android folders as they are.
+
+    d="$(basename "$d")"
+
+    if [[ "$d" == *-linux-android* ]]
+    then
+        continue
+    fi
+
+    if [[ "$d" = cmake ]]
+    then
+        mv "$d" "$arch_lib_dir"/cmake
+    elif [[ -d "$d"/cmake ]]
+    then
+        mkdir --parents "$arch_lib_dir"/cmake
+        mv "$d"/cmake "$arch_lib_dir"/cmake/"$d"
+    fi
+done

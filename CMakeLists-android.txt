@@ -1,0 +1,214 @@
+# -*- cmake -*-
+
+find_program(bim_android_config_bin bim-android-config REQUIRED)
+find_program(gradlew_bin gradlew REQUIRED)
+find_program(paco_info_bin paco-info REQUIRED)
+
+# Where the static part of the Android project is located (e.g. the
+# Java source of the game).
+set(android_app_root_dir "${CMAKE_CURRENT_LIST_DIR}/android")
+
+# Where we generate the configured project.
+set(generated_project_root "${CMAKE_CURRENT_BINARY_DIR}/android-project")
+
+function(bim_android_config out_var)
+  execute_process(
+    COMMAND "${bim_android_config_bin}" ${ARGN}
+    OUTPUT_VARIABLE output
+  )
+  string(REGEX REPLACE "\n$" "" output "${output}")
+  set(${out_var} "${output}" PARENT_SCOPE)
+endfunction()
+
+function(paco_package_version out_var package)
+  execute_process(
+    COMMAND
+      "${paco_info_bin}"
+      --prefix "${BIM_TARGET_PREFIX}"
+      --name ${package}
+    OUTPUT_VARIABLE output
+  )
+
+  if("${output}" MATCHES "is not installed")
+    message(
+      FATAL_ERROR
+      "Could not find package '${package}' in ${BIM_TARGET_PREFIX}"
+    )
+  endif()
+
+  string(REGEX REPLACE "Version:([^\n]+)\n.+" "\\1" output "${output}")
+  set(${out_var} "${output}" PARENT_SCOPE)
+endfunction()
+
+# Collect some settings from bim-android-config. We need them in this
+# CMakeLists.txt but also to inject them in the build.gradle files.
+bim_android_config(bim_android_gradle_plugin_version --gradle-plugin-version)
+bim_android_config(
+  bim_android_local_maven
+  --prefix "${BIM_TARGET_PREFIX}" --maven-root
+)
+bim_android_config(
+  bim_android_platform --prefix "${CMAKE_PREFIX_PATH}" --platform
+)
+bim_android_config(bim_android_sdk_root
+    --prefix "${CMAKE_PREFIX_PATH}" --sdk-root
+)
+bim_android_config(bim_android_stl --stl)
+bim_android_config(
+  bim_android_target_sdk_version
+  --prefix "${CMAKE_PREFIX_PATH}" --target-sdk-version
+)
+bim_android_config(
+  bim_android_toolchain --prefix "${CMAKE_PREFIX_PATH}" --toolchain
+)
+
+bim_android_config(bim_android_archs --arch)
+string(REPLACE "\n" ";" bim_android_archs "${bim_android_archs}")
+message(STATUS "Building for Android architectures ${bim_android_archs}")
+
+# Create a target to build libbim.so for a given Android architecture,
+# by invoking the root CMakeLists.txt again but configured with the
+# Android toolchain.
+function(recursive_android_build)
+  cmake_parse_arguments(ARG
+    ""
+    "AXMOL_SHADERS;ARCH"
+    "DEPENDS"
+    ${ARGV}
+  )
+
+  bim_android_config(bim_android_abi --abi "${ARG_ARCH}")
+  set(lib_install_dir "${generated_project_root}/app/libs/${bim_android_abi}")
+  set(arch_project_dir "${CMAKE_CURRENT_BINARY_DIR}/${ARG_ARCH}")
+
+  add_custom_command(
+    OUTPUT "${arch_project_dir}/CMakeCache.txt"
+    COMMAND "${CMAKE_COMMAND}" -E make_directory "${arch_project_dir}"
+    COMMAND "${CMAKE_COMMAND}"
+      -B "${arch_project_dir}"
+      -S "${CMAKE_CURRENT_SOURCE_DIR}"
+      -DANDROID_USE_LEGACY_TOOLCHAIN_FILE=OFF
+      -DCMAKE_TOOLCHAIN_FILE="${bim_android_toolchain}"
+      -DANDROID_ABI="${bim_android_abi}"
+      -DANDROID_PLATFORM="${bim_android_platform}"
+      -DANDROID_STL="${bim_android_stl}"
+      -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
+      -DCMAKE_C_COMPILER_LAUNCHER=${CMAKE_C_COMPILER_LAUNCHER}
+      -DCMAKE_CXX_COMPILER_LAUNCHER=${CMAKE_CXX_COMPILER_LAUNCHER}
+      -DCMAKE_FIND_ROOT_PATH="${BIM_TARGET_PREFIX}"
+      -DCMAKE_INSTALL_PREFIX="${CMAKE_CURRENT_BINARY_DIR}/install-${ARG_ARCH}"
+      -DCMAKE_PREFIX_PATH="${BIM_TARGET_PREFIX}"
+      -DCMAKE_UNITY_BUILD=${CMAKE_UNITY_BUILD}
+      -DCMAKE_UNITY_BUILD_BATCH_SIZE=${CMAKE_UNITY_BUILD_BATCH_SIZE}
+      -DBIM_INSTALL_AXMOL_SHADERS=${ARG_AXMOL_SHADERS}
+      -DBIM_GENERATED_ASSETS_DIR="${BIM_GENERATED_ASSETS_DIR}"
+    )
+
+  add_custom_target("${ARG_ARCH}"
+    COMMAND
+      "${CMAKE_COMMAND}"
+      --build "${CMAKE_CURRENT_BINARY_DIR}/${ARG_ARCH}" --target libbim.so
+    COMMAND
+      "${CMAKE_COMMAND}" -E make_directory "${lib_install_dir}"
+    COMMAND
+      "${CMAKE_COMMAND}" -E copy
+      "${CMAKE_CURRENT_BINARY_DIR}/${ARG_ARCH}/apps/android/libbim.so"
+      "${lib_install_dir}"
+    DEPENDS "${arch_project_dir}/CMakeCache.txt" ${ARG_DEPENDS}
+  )
+endfunction()
+
+function(generate_native_library_targets)
+  # Create a build of the library for each architecture. Each library is
+  # declared as dependent on the previous one to avoid concurrent
+  # builds, directory creations, etc.
+  set(install_axmol_shaders TRUE)
+  set(all_archs)
+  foreach(arch ${bim_android_archs})
+    recursive_android_build(
+      ARCH "${arch}"
+      AXMOL_SHADERS ${install_axmol_shaders}
+      DEPENDS ${all_archs}
+    )
+    set(install_axmol_shaders FALSE)
+    set(all_archs ${all_archs} ${arch})
+  endforeach()
+endfunction()
+
+function(generate_assets_target)
+  set(assets_project_dir "${CMAKE_CURRENT_BINARY_DIR}/assets")
+
+  # We need to build the assets using the host's tools.
+  add_custom_command(
+    OUTPUT "${assets_project_dir}/CMakeCache.txt"
+    COMMAND
+      "${CMAKE_COMMAND}" -E make_directory "${assets_project_dir}"
+    COMMAND "${CMAKE_COMMAND}"
+      -B "${assets_project_dir}"
+      -S "${CMAKE_CURRENT_SOURCE_DIR}"
+      -DCMAKE_FIND_ROOT_PATH="${CMAKE_FIND_ROOT_PATH}"
+      -DCMAKE_PREFIX_PATH="${CMAKE_PREFIX_PATH}"
+      -DBIM_GENERATED_ASSETS_DIR="${BIM_GENERATED_ASSETS_DIR}"
+      -DBIM_TARGET=assets
+  )
+
+  add_custom_target(generated-assets
+    COMMAND "${CMAKE_COMMAND}" --build "${assets_project_dir}" --target assets
+    DEPENDS "${assets_project_dir}/CMakeCache.txt"
+  )
+endfunction()
+
+# Finally, set-up the build of the APK.
+function(configure_android_project)
+  configure_file(
+    "${android_app_root_dir}/build.gradle.in"
+    "${generated_project_root}/build.gradle" @ONLY
+  )
+
+  configure_file(
+    "${android_app_root_dir}/settings.gradle"
+    "${generated_project_root}/" COPYONLY
+  )
+
+  configure_file(
+    "${android_app_root_dir}/gradle.properties"
+    "${generated_project_root}/" COPYONLY
+  )
+
+  # Collect the dependency versions from the installed packages.
+  paco_package_version(axmol_version axmol)
+  paco_package_version(iscool_core_version iscool-core)
+
+  set(this_file_directory "${android_app_root_dir}/app")
+  configure_file(
+    "${android_app_root_dir}/app/build.gradle.in"
+    "${generated_project_root}/app/build.gradle" @ONLY
+  )
+  unset(this_file_directory)
+endfunction()
+
+generate_native_library_targets()
+generate_assets_target()
+configure_android_project()
+
+if ("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
+  set(java_build_type Release)
+else()
+  set(java_build_type Debug)
+endif()
+
+add_custom_target(apk ALL
+  COMMAND
+  ${CMAKE_COMMAND} -E env "ANDROID_HOME=${bim_android_sdk_root}"
+  ${gradlew_bin} -p "${generated_project_root}" "assemble${java_build_type}"
+  DEPENDS ${bim_android_archs} generated-assets
+  USES_TERMINAL
+)
+
+add_custom_target(apk-install
+  COMMAND
+  ${CMAKE_COMMAND} -E env "ANDROID_HOME=${bim_android_sdk_root}"
+  ${gradlew_bin} -p "${generated_project_root}" "install${java_build_type}"
+  DEPENDS apk
+  USES_TERMINAL
+)

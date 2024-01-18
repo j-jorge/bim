@@ -1,0 +1,128 @@
+#!/bin/bash
+
+set -euo pipefail
+
+: "${bim_package_install_platform:-}"
+: "${bim_package_install_prefix:-}"
+
+iscool_root=$(iscool-shell-config --shell-include)
+
+# Disable info message about not following sourced scripts.
+# shellcheck disable=SC1091
+
+. "$iscool_root"/options.sh
+
+build_dir=
+build_type=
+install_dir=
+source_dir=
+cmake_args=()
+
+set_build_dir() { build_dir="$1" ; }
+register_option '--build-dir=<path>' set_build_dir \
+                "The path to the directory where to launch the build."
+
+set_build_type() { build_type="$1" ; }
+register_option '--build-type=<str>' set_build_type \
+                "The type of the build, typically Release or Debug."
+
+add_cmake_arg() { cmake_args+=("$1") ; }
+register_option '--cmake=<str…>' add_cmake_arg \
+                "Additional options to pass to CMake."
+
+set_install_dir() { install_dir="$1" ; }
+register_option '--install-dir=<path>' set_install_dir \
+                "The directory where to install the program."
+
+set_source_dir() { source_dir="$1" ; }
+register_option '--source-dir=<path>' set_source_dir \
+                "The path to the directory containing the main CMakeLists.txt."
+
+extract_parameters "$@"
+
+check_option_is_set "--build-dir" "${build_dir:-}"
+check_option_is_set "--build-type" "${build_type:-}"
+check_option_is_set "--install-dir" "${install_dir:-}"
+check_option_is_set "--source-dir" "${source_dir:-}"
+
+build()
+{
+    local local_build_dir="$1"
+    shift
+
+    mkdir --parents "$local_build_dir"
+
+    cd "$local_build_dir"
+
+    cmake "$source_dir" \
+          -DCMAKE_C_COMPILER_LAUNCHER=ccache \
+          -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
+          -DCMAKE_PREFIX_PATH="$bim_package_install_prefix" \
+          -DCMAKE_FIND_ROOT_PATH="$bim_package_install_prefix" \
+          -DCMAKE_BUILD_TYPE="$build_type" \
+          -DCMAKE_INSTALL_PREFIX="$install_dir" \
+          "${cmake_args[@]}" \
+          "$@"
+
+    cmake --build . --target install --parallel
+}
+
+build_android_arch()
+{
+    local arch="$1"
+    local platform="$2"
+    local stl="$3"
+    local toolchain="$4"
+
+    local abi
+    abi="$(bim-android-config --abi "$arch")"
+
+    build "$build_dir"/"$arch" \
+          -DANDROID_USE_LEGACY_TOOLCHAIN_FILE=OFF \
+          -DCMAKE_TOOLCHAIN_FILE="$toolchain" \
+          -DANDROID_ABI="$abi" \
+          -DANDROID_PLATFORM="$platform" \
+          -DANDROID_STL="$stl"
+
+    bim-android-install-lib-in-arch "$install_dir" "$arch"
+}
+
+build_android()
+{
+    local platform
+    platform="$(bim-android-config --prefix "$bim_host_prefix" --platform)"
+
+    local stl
+    stl="$(bim-android-config --stl)"
+
+    local toolchain
+    toolchain="$(bim-android-config --prefix "$bim_host_prefix" --toolchain)"
+
+    bim-android-config --arch \
+        | while read -r arch
+    do
+        echo "== Building for $arch =="
+        build_android_arch "$arch" "$platform" "$stl" "$toolchain"
+    done
+
+    bim-clean-up-android-installed-libs "$install_dir"
+}
+
+rm --force --recursive "$install_dir"
+
+case "$bim_package_install_platform" in
+    android)
+        build_android
+        ;;
+    linux)
+        build "$build_dir"
+        ;;
+    *)
+        echo "Unsupported platform: '$bim_package_install_platform'." >&2
+        exit 1
+        ;;
+esac
+
+bim-remove-install-dir-from-scripts "$install_dir"
+
+find "$install_dir" -type d -empty -delete

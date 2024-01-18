@@ -31,7 +31,7 @@ function(merge_styles main_style_id)
     list(APPEND linted_style_files "${linted_file}")
   endforeach()
 
-  set(output "${generated_assets_dir}/style/${main_style_id}.json")
+  set(output "${BIM_GENERATED_ASSETS_DIR}/style/${main_style_id}.json")
   get_filename_component(output_dir "${output}" DIRECTORY)
 
   add_custom_command(
@@ -48,7 +48,6 @@ function(merge_styles main_style_id)
   )
 
   set_property(TARGET styles APPEND PROPERTY SOURCES "${output}")
-  get_property(sss TARGET styles PROPERTY SOURCES)
 endfunction()
 
 merge_styles(app/screen-wheel ${screen_wheel_style_files})

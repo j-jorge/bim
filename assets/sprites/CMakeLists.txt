@@ -18,10 +18,10 @@ find_program(auto_pack_my_sprites auto-pack-my-sprites REQUIRED)
 # sprite-sheet.png file there, we are going to have problems.
 add_custom_command(
   OUTPUT
-    ${generated_assets_dir}/sprite-sheet.png
-    ${generated_assets_dir}/sprite-sheet.plist
+    ${BIM_GENERATED_ASSETS_DIR}/sprite-sheet.png
+    ${BIM_GENERATED_ASSETS_DIR}/sprite-sheet.plist
   COMMAND
-    ${CMAKE_COMMAND} -E make_directory ${generated_assets_dir}/sprites
+    ${CMAKE_COMMAND} -E make_directory ${BIM_GENERATED_ASSETS_DIR}/sprites
   COMMAND ${auto_pack_my_sprites}
     --output sprite-sheet
     --no-crop
@@ -30,11 +30,11 @@ add_custom_command(
     --size 1024x1024
     ${sprites}
   COMMAND
-    mv sprite-sheet.* ${generated_assets_dir}
+    mv sprite-sheet.* ${BIM_GENERATED_ASSETS_DIR}
   DEPENDS ${sprites_full_path}
   WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/..
 )
 
 add_custom_target(
-  sprite-sheets ALL DEPENDS ${generated_assets_dir}/sprite-sheet.png
+  sprite-sheets ALL DEPENDS ${BIM_GENERATED_ASSETS_DIR}/sprite-sheet.png
 )

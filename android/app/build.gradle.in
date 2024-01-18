@@ -1,0 +1,79 @@
+// -*- groovy -*-
+apply plugin: 'com.android.application'
+
+android {
+    namespace 'org.axmol.hellocpp'
+    compileSdk @bim_android_target_sdk_version@
+
+    repositories {
+        maven {
+            name = 'local-maven'
+            url = uri('file://@bim_android_local_maven@')
+        }
+    }
+
+    defaultConfig {
+        applicationId 'org.axmol.hellocpp'
+        minSdkVersion 17
+        targetSdkVersion @bim_android_target_sdk_version@
+        versionCode 1
+        versionName '1.0'
+    }
+
+    sourceSets.main {
+        java.srcDirs '@this_file_directory@/src'
+        res.srcDirs '@this_file_directory@/res'
+        manifest.srcFile '@this_file_directory@/AndroidManifest.xml'
+        assets.srcDirs = [
+            '@CMAKE_SOURCE_DIR@/static-assets/',
+            '@BIM_GENERATED_ASSETS_DIR@'
+        ]
+        jniLibs.srcDirs '@generated_project_root@/app/libs'
+    }
+
+    signingConfigs {
+        release {
+            Properties properties = new Properties()
+            properties.load(
+                project.rootProject.file(
+                    '@this_file_directory@/keystore.properties'
+                ).newDataInputStream())
+
+            keyAlias properties['keyAlias']
+            keyPassword properties['keyPassword']
+            storeFile file('@this_file_directory@/release.keystore')
+            storePassword properties['storePassword']
+        }
+    }
+
+    buildTypes {
+        release {
+            debuggable false
+            jniDebuggable false
+            renderscriptDebuggable false
+            minifyEnabled true
+            shrinkResources true
+            signingConfig signingConfigs.release
+        }
+
+        debug {
+            debuggable true
+            jniDebuggable true
+            renderscriptDebuggable true
+        }
+    }
+
+    aaptOptions {
+       noCompress 'ogg','png','jpg'
+    }
+
+    buildFeatures {
+        aidl true
+    }
+
+    dependencies {
+        implementation 'axmol:axmol:@axmol_version@'
+        implementation 'iscool:system:@iscool_core_version@'
+        implementation 'iscool:jni:@iscool_core_version@'
+    }
+}
