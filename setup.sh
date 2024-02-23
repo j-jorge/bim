@@ -9,9 +9,10 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd)"
 backroom="$script_dir/.backroom"
 host_prefix="$backroom"/host
 python_virtual_environment_path="$host_prefix"/python
-build_types=(release)
+build_type=release
 target_platform=linux
-all_build_types=(debug release asan tsan)
+build_steps=()
+all_build_steps=(dependencies configure build test)
 
 export bim_host_prefix="$host_prefix"
 export PATH="$script_dir/setup/bin/:$PATH"
@@ -35,11 +36,21 @@ Usage: build.sh OPTIONS
 Where OPTIONS is
   --build-type T
      Build for this configuration (debug, release, asan, tsan).
+  --build-step G…
+     The build steps to execute (dependencies, configure, build,
+     test). The order does not matter. By default, all steps are
+     executed.
   --help, -h
      Display this message and exit.
   --target-platform P
      Build for platform P (either linux or android).
 EOF
+}
+
+build_step_is_enabled()
+{
+    (( ${#build_steps[@]} == 0 )) \
+        || ( printf '%s\n' "${build_steps[@]}" | grep --quiet "^$1\$" )
 }
 
 while (("$#" != 0))
@@ -48,19 +59,34 @@ do
     shift
 
     case "$arg" in
+        --build-steps)
+            if (( $# == 0 ))
+            then
+                echo "Missing value for --build-steps." >&2
+                exit 1
+            fi
+
+            while (( $# != 0 )) && [[ "$1" != --* ]]
+            do
+                if ! printf '%s\n' "${all_build_steps[@]}" \
+                        | grep --quiet "^$1\$"
+                then
+                    echo "Unknown build step '$1'." >&2
+                    exit 1
+                fi
+
+                build_steps+=("$1")
+                shift
+            done
+            ;;
         --build-type)
-            if [[ $# -eq 0 ]]
+            if (( $# == 0 ))
             then
                 echo "Missing value for --build-type." >&2
                 exit 1
             fi
 
-            if [[ "$1" = "all" ]]
-            then
-                build_types=("${all_build_types[@]}")
-            else
-                build_types=("$1")
-            fi
+            build_type="$1"
             shift
             ;;
         --help|-h)
@@ -68,7 +94,7 @@ do
             exit
             ;;
         --target-platform)
-            if [[ $# -eq 0 ]]
+            if (( $# == 0 ))
             then
                 echo "Missing value for --target-platform." >&2
                 exit 1
@@ -86,7 +112,6 @@ done
 
 missing_dependencies=0
 
-check_host_dependency ccache || missing_dependencies=1
 check_host_dependency cmake || missing_dependencies=1
 check_host_dependency git || missing_dependencies=1
 check_host_dependency ninja || missing_dependencies=1
@@ -133,7 +158,7 @@ set_up_host_prefix()
     . "$host_prefix"/share/iscoolentertainment/shell/colors.sh
 
     # Package manager
-    echo -e "${green_bold:-}Installing the package manager${term_color:-}"
+    echo -e "${green_bold:-}Installing the package manager.${term_color:-}"
     bim-git-clone-repository "$paco_repository" \
                              "$paco_commit" \
                              "$backroom"/repositories/cpp-package-manager
@@ -149,8 +174,11 @@ set_up_host_prefix()
     # Python
     local python
     python="$(command -v python3)"
-    echo -e "${green_bold:-}Installing Python virtual environment ($python) ${term_color:-}"
+    echo -e "${green_bold:-}Installing Python virtual environment ($python).${term_color:-}"
     "$python" -m venv "$python_virtual_environment_path"
+
+    export PATH="$host_prefix"/bin:"$PATH"
+    . "$python_virtual_environment_path"/bin/activate
 }
 
 install_dependencies()
@@ -160,7 +188,6 @@ install_dependencies()
     export bim_package_install_prefix="$2"
     export bim_package_install_platform="$3"
     export bim_packages_root="$backroom"/packages
-    export bim_host_prefix="$host_prefix"
     export bim_target_platform="$target_platform"
 
     grep --invert-match "^#" "$4" \
@@ -182,20 +209,11 @@ install_dependencies()
     done
 )
 
-launch_build()
+install_all_dependencies()
 {
-    local bim_build_type="$1"
-    bim_app_prefix="$backroom"/"$target_platform"-"$bim_build_type"
-
-    mkdir --parents "$bim_app_prefix"
-
-    export PATH="$host_prefix"/bin:"$PATH"
-
-    . "$python_virtual_environment_path"/bin/activate
-
     # Host dependencies: install everything in $host_prefix. Those are
     # tools to be used by the build system (e.g. tooling).
-    echo -e "${green_bold}Installing host dependencies${term_color}"
+    echo -e "${green_bold}Installing host dependencies.${term_color}"
     install_dependencies release \
                          "$host_prefix" \
                          linux \
@@ -203,62 +221,85 @@ launch_build()
 
     # App dependencies: install everything in $bim_app_prefix. Those
     # are dependencies required by the app (e.g. libraries).
-    echo -e "${green_bold}Installing app dependencies${term_color}"
-    install_dependencies "$bim_build_type" \
+    echo -e "${green_bold}Installing app dependencies.${term_color}"
+    install_dependencies "$build_type" \
                          "$bim_app_prefix" \
                          "$target_platform" \
                          "$script_dir"/setup/dependencies/app-dependencies.txt
+}
 
-    # Actual build
-    echo -e "${green_bold}Building${term_color}"
+configure()
+{
+    echo -e "${green_bold}Configuring '$build_type'.${term_color}"
 
-    build_dir="$script_dir"/build/"$target_platform"/"$bim_build_type"
-
-    if [[ ! -f "$build_dir"/build.ninja ]]
+    if [[ -f "$build_dir"/build.ninja ]]
     then
-        rm --force --recursive "$build_dir"
-        mkdir --parents "$build_dir"
+        return
+    fi
 
-        cmake_options=()
-        case "$bim_build_type" in
-            asan)
-                cmake_options=(-DCMAKE_BUILD_TYPE=RelWithDebInfo
-                               -DBIM_ADDRESS_SANITIZER=ON)
-                ;;
-            debug)
-                cmake_options=(-DCMAKE_BUILD_TYPE=Debug)
-                ;;
-            release)
-                cmake_options=(-DCMAKE_BUILD_TYPE=Release)
-                ;;
-            tsan)
-                cmake_options=(-DCMAKE_BUILD_TYPE=RelWithDebInfo
-                               -DBIM_THREAD_SANITIZER=ON)
-                ;;
-        esac
+    rm --force --recursive "$build_dir"
+    mkdir --parents "$build_dir"
 
-        cd "$build_dir"
-        cmake "$script_dir" -G Ninja \
-              -DCMAKE_PREFIX_PATH="$bim_host_prefix" \
-              -DCMAKE_FIND_ROOT_PATH="$bim_host_prefix" \
-              -DCMAKE_UNITY_BUILD=ON \
-              -DCMAKE_UNITY_BUILD_BATCH_SIZE=65535 \
-              -DCMAKE_C_COMPILER_LAUNCHER=ccache \
-              -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
-              -DBIM_TARGET="$target_platform" \
-              -DBIM_TARGET_PREFIX="$bim_app_prefix" \
-              "${cmake_options[@]}"
-        cd - > /dev/null
+    cmake_options=()
+    case "$build_type" in
+        asan)
+            cmake_options=(-DCMAKE_BUILD_TYPE=RelWithDebInfo
+                           -DBIM_ADDRESS_SANITIZER=ON)
+            ;;
+        debug)
+            cmake_options=(-DCMAKE_BUILD_TYPE=Debug)
+            ;;
+        release)
+            cmake_options=(-DCMAKE_BUILD_TYPE=Release)
+            ;;
+        tsan)
+            cmake_options=(-DCMAKE_BUILD_TYPE=RelWithDebInfo
+                           -DBIM_THREAD_SANITIZER=ON)
+            ;;
+    esac
+
+    if command -v ccache > /dev/null
+    then
+        cmake_options+=(
+            -DCMAKE_C_COMPILER_LAUNCHER=ccache
+            -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
+        )
+    else
+        echo "${red_bold}Not using ccache.${term_color}"
     fi
 
     cd "$build_dir"
-    cmake --build . --parallel
+    cmake "$script_dir" -G Ninja \
+          -DCMAKE_PREFIX_PATH="$bim_host_prefix" \
+          -DCMAKE_FIND_ROOT_PATH="$bim_host_prefix" \
+          -DCMAKE_UNITY_BUILD=ON \
+          -DCMAKE_UNITY_BUILD_BATCH_SIZE=65535 \
+          -DBIM_TARGET="$target_platform" \
+          -DBIM_TARGET_PREFIX="$bim_app_prefix" \
+          "${cmake_options[@]}"
+    cd - > /dev/null
+}
+
+launch_build()
+{
+    echo -e "${green_bold}Building '$build_type'.${term_color}"
+    cmake --build "$build_dir" --parallel
+}
+
+launch_tests()
+{
+    "$script_dir"/tests/run-test-programs.sh "$build_dir"
 }
 
 set_up_host_prefix
 
-for build_type in "${build_types[@]}"
-do
-    echo -e "\033[1;35m== Build type '$build_type' ==\033[0;0m"
-    launch_build "$build_type"
-done
+export bim_app_prefix="$backroom"/"$target_platform"-"$build_type"
+mkdir --parents "$bim_app_prefix"
+
+! build_step_is_enabled dependencies || install_all_dependencies
+
+build_dir="$script_dir"/build/"$target_platform"/"$build_type"
+! build_step_is_enabled configure || configure
+! build_step_is_enabled build || launch_build
+
+! build_step_is_enabled test || launch_tests

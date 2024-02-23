@@ -17,4 +17,3 @@ add_executable(net-tests
   tests/src/bim/net/message/game_update_from_server.cpp
 )
 target_link_libraries(net-tests PRIVATE bim_net GTest::gtest GTest::gtest_main)
-run_when_built(net-tests)

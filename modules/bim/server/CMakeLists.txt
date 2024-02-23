@@ -29,4 +29,3 @@ target_link_libraries(
   GTest::gtest
   GTest::gtest_main
 )
-run_when_built(server-tests)

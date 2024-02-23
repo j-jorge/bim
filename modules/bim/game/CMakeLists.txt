@@ -32,5 +32,11 @@ add_executable(game-tests
   tests/src/bim/game/system/update_brick_walls.cpp
   tests/src/bim/game/system/update_flames.cpp
 )
-target_link_libraries(game-tests PRIVATE bim_game GTest::gtest GTest::gtest_main)
-run_when_built(game-tests)
+target_link_libraries(
+  game-tests
+  PRIVATE
+  bim_game
+  GTest::gtest
+  GTest::gtest_main
+)
+

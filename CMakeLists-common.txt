@@ -1,7 +1,6 @@
 # -*- cmake -*-
 
 include(compiler-settings)
-include(run-when-built)
 
 find_package(axmol 2.1.0 REQUIRED)
 find_package(Boost 1.82.0 REQUIRED)
