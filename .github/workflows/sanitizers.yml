@@ -1,0 +1,43 @@
+---
+name: Sanitizers
+
+on:
+  push:
+    branches: ["master"]
+  pull_request:
+    branches: ["master"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: "ubuntu:23.10"
+
+    strategy:
+      # Set fail-fast to false to ensure that feedback is delivered
+      # for all matrix combinations. Consider changing this to true
+      # when your workflow is stable.
+      fail-fast: false
+
+      matrix:
+        build_type: [asan, tsan]
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set strings
+        id: strings
+        run: |
+          echo "target_platform=linux" >> "$GITHUB_OUTPUT"
+
+      - name: Install dependencies
+        run: >
+          ./ci/install-minimal-environment.sh
+          --compiler g++
+          --target-platform ${{steps.strings.outputs.target_platform}}
+          ;
+
+      - name: Launch build
+        run: >
+          ./setup.sh
+          --target-platform ${{steps.strings.outputs.target_platform}}
+          --build-type ${{matrix.build_type}}

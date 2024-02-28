@@ -1,0 +1,51 @@
+---
+name: Configure, build, test.
+
+on:
+  push:
+    branches: ["master"]
+  pull_request:
+    branches: ["master"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: ${{ matrix.container }}
+
+    strategy:
+      # Set fail-fast to false to ensure that feedback is delivered
+      # for all matrix combinations. Consider changing this to true
+      # when your workflow is stable.
+      fail-fast: false
+
+      matrix:
+        container: ["ubuntu:22.04", "ubuntu:23.10"]
+        build_type: [release, debug]
+        compiler: [g++, clang-15, clang-17]
+        maybe_incremental: [--incremental, ""]
+        exclude:
+          - container: "ubuntu:22.04"
+            compiler: clang-17
+          - container: "ubuntu:23.10"
+            compiler: clang-15
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set strings
+        id: strings
+        run: |
+          echo "target_platform=linux" >> "$GITHUB_OUTPUT"
+
+      - name: Install dependencies
+        run: >
+          ./ci/install-minimal-environment.sh
+          --compiler ${{matrix.compiler}}
+          --target-platform ${{steps.strings.outputs.target_platform}}
+          ;
+
+      - name: Launch build
+        run: >
+          ./setup.sh
+          --target-platform ${{steps.strings.outputs.target_platform}}
+          --build-type ${{matrix.build_type}} ${{matrix.maybe_incremental}}
