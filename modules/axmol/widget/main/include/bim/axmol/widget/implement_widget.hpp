@@ -2,6 +2,8 @@
 
 #include <bim/axmol/widget/factory.impl.tpp>
 
+#include <bim/axmol/ref_ptr.impl.hpp>
+
 namespace iscool::style
 {
   class declaration;
@@ -23,4 +25,5 @@ namespace iscool::style
     return result;                                                            \
   }                                                                           \
                                                                               \
-  template class bim::axmol::widget::factory<type>
+  template class bim::axmol::widget::factory<type>;                           \
+  template class bim::axmol::ref_ptr<type>

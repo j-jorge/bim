@@ -18,8 +18,9 @@
 
 #include <iscool/net/message_stream.hpp>
 
+#include <boost/unordered/unordered_map.hpp>
+
 #include <optional>
-#include <unordered_map>
 
 namespace bim::net
 {
@@ -46,7 +47,7 @@ namespace bim::server
 
   private:
     struct game;
-    using game_map = std::unordered_map<iscool::net::channel_id, game>;
+    using game_map = boost::unordered_map<iscool::net::channel_id, game>;
 
   private:
     void mark_as_ready(const iscool::net::endpoint& endpoint,

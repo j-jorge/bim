@@ -20,7 +20,7 @@
 
 #include <iscool/net/message_stream.hpp>
 
-#include <unordered_map>
+#include <boost/unordered/unordered_map.hpp>
 
 namespace bim::net
 {
@@ -41,12 +41,12 @@ namespace bim::server
 
   private:
     using session_map =
-        std::unordered_map<bim::net::client_token, iscool::net::session_id>;
+        boost::unordered_map<bim::net::client_token, iscool::net::session_id>;
 
     struct client_info;
 
     using client_map =
-        std::unordered_map<iscool::net::session_id, client_info>;
+        boost::unordered_map<iscool::net::session_id, client_info>;
 
   private:
     void check_session(const iscool::net::endpoint& endpoint,

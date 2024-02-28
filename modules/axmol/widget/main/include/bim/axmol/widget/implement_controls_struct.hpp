@@ -19,12 +19,15 @@
  */
 
 #include <bim/axmol/widget/context.hpp>
+#include <bim/axmol/widget/dynamic_factory.hpp>
 #include <bim/axmol/widget/factory.hpp>
 #include <bim/axmol/widget/named_node_group.hpp>
 
-#include <bim/axmol/ref_ptr.hpp>
+#include <bim/axmol/ref_ptr.impl.hpp>
 
 #include <iscool/style/declaration.hpp>
+
+#include <iscool/memory/pimpl.impl.tpp>
 
 #include <string_view>
 

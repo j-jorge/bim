@@ -6,6 +6,8 @@
 #include <bim/axmol/style/apply_display.hpp>
 #include <bim/axmol/style/cache.hpp>
 
+#include <bim/axmol/ref_ptr.impl.hpp>
+
 #include <iscool/log/causeless_log.hpp>
 #include <iscool/log/nature/error.hpp>
 #include <iscool/optional.impl.tpp>

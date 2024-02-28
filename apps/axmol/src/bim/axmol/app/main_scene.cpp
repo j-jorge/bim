@@ -8,6 +8,8 @@
 #define x_widget_controls x_widget(ax::Node, overlay) x_widget(ax::Node, main)
 #include <bim/axmol/widget/implement_controls_struct.hpp>
 
+#include <axmol/2d/Scene.h>
+
 bim::axmol::app::main_scene::main_scene(
     ax::Scene& scene, const bim::axmol::widget::context& context,
     const iscool::style::declaration& style)
@@ -20,6 +22,8 @@ bim::axmol::app::main_scene::main_scene(
   bim::axmol::widget::apply_bounds(context.style_cache, m_controls->all_nodes,
                                    *style.get_declaration("bounds"));
 }
+
+bim::axmol::app::main_scene::~main_scene() = default;
 
 bim::axmol::input::node_reference
 bim::axmol::app::main_scene::input_node() const

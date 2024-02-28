@@ -13,6 +13,8 @@ bim::axmol::app::main_task::main_task(context context)
   : m_context(context)
 {}
 
+bim::axmol::app::main_task::~main_task() = default;
+
 void bim::axmol::app::main_task::start()
 {
   m_context.get_audio()->play_music("menu", iscool::audio::loop_mode::forever);

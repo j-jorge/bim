@@ -23,6 +23,11 @@ namespace iscool
   }
 }
 
+namespace bim::axmol::widget
+{
+  class context;
+}
+
 namespace bim::axmol::app
 {
   class main_scene;
@@ -46,6 +51,7 @@ namespace bim::axmol::app
 
   public:
     explicit main_task(context context);
+    ~main_task();
 
     void start();
 

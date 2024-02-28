@@ -2,6 +2,8 @@
 
 namespace bim::axmol::widget
 {
+  class dynamic_factory;
+
   /**
    * Register all widgets from this library into the dynamic factory, such that
    * they can be instantiated from a style file.

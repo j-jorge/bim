@@ -10,7 +10,6 @@
 
 #include <iscool/audio/default_effect_player.hpp>
 #include <iscool/audio/loop_mode.hpp>
-#include <iscool/memory/pimpl.impl.tpp>
 #include <iscool/signals/implement_signal.hpp>
 
 #define x_widget_scope bim::axmol::widget::button::

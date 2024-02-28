@@ -15,6 +15,8 @@
 #include <bim/axmol/input/observer/single_key_observer.hpp>
 #include <bim/axmol/widget/register_widgets.hpp>
 
+#include <bim/axmol/ref_ptr.impl.hpp>
+
 #include <iscool/audio/default_mixer.hpp>
 #include <iscool/audio/mixer.hpp>
 #include <iscool/files/file_exists.hpp>
@@ -336,7 +338,7 @@ bim::axmol::app::application::application(
   , m_style_cache(m_colors)
   , m_reset_key_observer(ax::EventKeyboard::KeyCode::KEY_R)
   , m_input_root(m_reset_key_observer)
-  , m_screen_config(screen_size, screen_scale)
+  , m_screen_config{ screen_size, screen_scale }
 {
   bim::axmol::widget::register_widgets(m_widget_factory);
 
@@ -357,8 +359,8 @@ bool bim::axmol::app::application::applicationDidFinishLaunching()
 
   set_up_colour_chart();
 
-  m_context.set_widget_context(
-      bim::axmol::widget::context(m_colors, m_style_cache, m_widget_factory));
+  m_context.set_widget_context(bim::axmol::widget::context{
+      m_colors, m_style_cache, m_widget_factory });
 
   // TODO: in a loader.
   ax::SpriteFrameCache::getInstance()->addSpriteFramesWithFile(

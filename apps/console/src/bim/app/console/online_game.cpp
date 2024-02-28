@@ -24,6 +24,8 @@
 #include <bim/net/exchange/game_update_exchange.hpp>
 #include <bim/net/exchange/new_game_exchange.hpp>
 
+#include <bim/game/contest.hpp>
+
 #include <iscool/schedule/delayed_call.hpp>
 
 #include <iostream>

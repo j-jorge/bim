@@ -1,6 +1,7 @@
 #pragma once
 
 #include <bim/axmol/input/tree.hpp>
+#include <bim/axmol/widget/declare_controls_struct.hpp>
 
 #include <iscool/context.hpp>
 

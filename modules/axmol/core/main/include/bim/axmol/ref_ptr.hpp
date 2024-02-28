@@ -68,7 +68,7 @@ namespace bim::axmol
       requires std::is_base_of_v<T, U>
     friend bool operator==(const ref_ptr<T>& self, const ref_ptr<U>& that)
     {
-      return self.m_ptr == that.m_ptr;
+      return self.m_ptr == that.get();
     }
 
     template <typename U>
@@ -82,7 +82,7 @@ namespace bim::axmol
       requires std::is_base_of_v<T, U>
     friend bool operator!=(const ref_ptr<T>& self, const ref_ptr<U>& that)
     {
-      return self.m_ptr != that.m_ptr;
+      return self.m_ptr != that.get();
     }
 
     T& operator*() const;

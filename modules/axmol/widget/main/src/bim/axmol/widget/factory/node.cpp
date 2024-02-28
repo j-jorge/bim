@@ -5,6 +5,8 @@
 #include <bim/axmol/style/apply_display.hpp>
 #include <bim/axmol/style/cache.hpp>
 
+#include <axmol/2d/Node.h>
+
 bim::axmol::ref_ptr<ax::Node> bim::axmol::widget::factory<ax::Node>::create(
     const bim::axmol::widget::context& context,
     const iscool::style::declaration& style)

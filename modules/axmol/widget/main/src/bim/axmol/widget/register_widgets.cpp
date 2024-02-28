@@ -7,6 +7,9 @@
 #include <bim/axmol/widget/factory/node.hpp>
 #include <bim/axmol/widget/factory/sprite.hpp>
 
+#include <axmol/2d/Label.h>
+#include <axmol/2d/Layer.h>
+
 void bim::axmol::widget::register_widgets(dynamic_factory& factory)
 {
 #define register_type(type) factory.register_widget<type>(#type);

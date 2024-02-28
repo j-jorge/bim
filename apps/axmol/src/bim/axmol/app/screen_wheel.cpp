@@ -1,12 +1,18 @@
 #include <bim/axmol/app/screen_wheel.hpp>
 
+#include <bim/axmol/app/main_scene.hpp>
 #include <bim/axmol/app/screen/lobby.hpp>
+
+#include <bim/axmol/widget/add_group_as_children.hpp>
+#include <bim/axmol/widget/apply_bounds.hpp>
 
 #define x_widget_scope bim::axmol::app::screen_wheel::
 #define x_widget_type_name controls
 #define x_widget_controls                                                     \
   x_widget(ax::Node, lobby) x_widget(ax::Node, matchmaking)
 #include <bim/axmol/widget/implement_controls_struct.hpp>
+
+#include <axmol/2d/Node.h>
 
 bim::axmol::app::screen_wheel::screen_wheel(
     const context& context, const iscool::style::declaration& style)

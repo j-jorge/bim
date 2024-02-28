@@ -25,6 +25,8 @@
 #include <iscool/net/message_channel.hpp>
 #include <iscool/signals/scoped_connection.hpp>
 
+#include <optional>
+
 namespace bim::net
 {
   class game_on_hold;

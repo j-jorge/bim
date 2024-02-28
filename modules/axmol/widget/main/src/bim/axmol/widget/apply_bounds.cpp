@@ -9,9 +9,13 @@
 
 #include <iscool/log/causeless_log.hpp>
 #include <iscool/log/nature/error.hpp>
+#include <iscool/optional.hpp>
+#include <iscool/optional.impl.tpp>
 #include <iscool/style/declaration.hpp>
 
 #include <boost/unordered/unordered_flat_map.hpp>
+
+#include <axmol/2d/Node.h>
 
 namespace
 {

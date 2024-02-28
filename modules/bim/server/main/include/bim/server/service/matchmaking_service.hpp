@@ -21,8 +21,9 @@
 
 #include <iscool/net/message_stream.hpp>
 
+#include <boost/unordered/unordered_map.hpp>
+
 #include <string>
-#include <unordered_map>
 
 namespace bim::net
 {
@@ -47,11 +48,11 @@ namespace bim::server
   private:
     struct encounter_info;
     using encounter_map =
-        std::unordered_map<bim::net::encounter_id, encounter_info>;
+        boost::unordered_map<bim::net::encounter_id, encounter_info>;
     using name_to_encounter_id_map =
-        std::unordered_map<std::string, bim::net::encounter_id>;
+        boost::unordered_map<std::string, bim::net::encounter_id>;
     using encounter_id_to_name_map =
-        std::unordered_map<bim::net::encounter_id, std::string>;
+        boost::unordered_map<bim::net::encounter_id, std::string>;
 
   private:
     void create_or_update_encounter(const iscool::net::endpoint& endpoint,

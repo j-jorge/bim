@@ -10,9 +10,10 @@
 #include <boost/container/flat_map.hpp>
 #include <boost/program_options.hpp>
 
+#include <fmt/format.h>
+
 #include <charconv>
 #include <cstdlib>
-#include <format>
 #include <iostream>
 #include <optional>
 
@@ -77,7 +78,7 @@ static bool parse_screen_size(screen_size& size, std::string_view id)
       return true;
     }
 
-  std::cerr << std::format("Could not understand the screen size '{}'.\n", id);
+  std::cerr << fmt::format("Could not understand the screen size '{}'.\n", id);
 
   return false;
 }
@@ -87,7 +88,7 @@ static void display_known_devices()
   std::cout << "Known devices and their screen resolution in pixels:\n";
 
   for (auto& [id, size] : g_device_screens)
-    std::cout << std::format("  - {} ({}x{})\n", id, size.width, size.height);
+    std::cout << fmt::format("  - {} ({}x{})\n", id, size.width, size.height);
 }
 
 static command_line parse_command_line(int argc, char* argv[])
@@ -160,7 +161,7 @@ static command_line parse_command_line(int argc, char* argv[])
 
   if (result.screen_scale <= 0)
     {
-      std::cerr << std::format("--scale must be a positive float, not {}.\n",
+      std::cerr << fmt::format("--scale must be a positive float, not {}.\n",
                                result.screen_scale);
       return command_line{};
     }

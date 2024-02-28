@@ -1,8 +1,11 @@
 #pragma once
 
+#include <bim/axmol/widget/dynamic_factory.hpp>
 #include <bim/axmol/widget/factory.hpp>
 
 #include <bim/axmol/ref_ptr.impl.hpp>
+
+#include <iscool/factory/dynamic_factory.impl.tpp>
 
 template <typename T>
 void bim::axmol::widget::dynamic_factory::register_widget(

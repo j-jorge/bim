@@ -1,5 +1,6 @@
 #include <bim/axmol/app/screen/lobby.hpp>
 
+#include <bim/axmol/widget/named_node_group.hpp>
 #include <bim/axmol/widget/ui/button.hpp>
 
 #define x_widget_scope bim::axmol::app::lobby::

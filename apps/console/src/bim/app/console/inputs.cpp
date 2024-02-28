@@ -16,10 +16,13 @@
 */
 #include <bim/app/console/inputs.hpp>
 
+#include <bim/game/component/player.hpp>
 #include <bim/game/component/player_action.hpp>
 #include <bim/game/component/player_action_kind.hpp>
 
 #include <bim/assume.hpp>
+
+#include <entt/entity/registry.hpp>
 
 std::jthread bim::app::console::launch_input_thread(std::atomic<int>& input)
 {

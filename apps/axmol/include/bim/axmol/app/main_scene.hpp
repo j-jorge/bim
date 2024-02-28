@@ -25,6 +25,7 @@ namespace bim::axmol::app
   public:
     main_scene(ax::Scene& scene, const bim::axmol::widget::context& context,
                const iscool::style::declaration& style);
+    ~main_scene();
 
     bim::axmol::input::node_reference input_node() const;
 
