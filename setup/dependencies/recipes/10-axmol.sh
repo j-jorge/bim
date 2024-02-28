@@ -77,7 +77,6 @@ else
         "glfw"
         "GL"
         "X11"
-        "asound"
         "dl"
         "pthread"
     )
@@ -97,6 +96,23 @@ mkdir --parents "$source_dir" "$build_dir" "$install_dir"
 
 bim-git-clone-repository \
     "$axmol_repository" v"$axmol_version" "$source_dir"
+
+install_power_shell()
+{
+    local local_root="$bim_packages_root"/axmol/powershell
+    rm --force --recursive "$local_root"
+    mkdir --parents "$local_root"
+    cd "$local_root"
+
+    local archive_name=powershell-7.4.1-linux-x64.tar.gz
+    download \
+    --url="https://github.com/PowerShell/PowerShell/releases/download/v7.4.1/$archive_name" \
+    --target-file="$archive_name" \
+    --mime-type=application/gzip
+
+    tar -xf "$archive_name"
+    export PATH="$(pwd):$PATH"
+}
 
 build()
 {
@@ -226,6 +242,7 @@ endif()
 EOF
 }
 
+install_power_shell
 build
 clean_up_install
 
