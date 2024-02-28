@@ -25,7 +25,11 @@ mkdir --parents "$install_path"
 
 cd "$install_path"
 
-gradle wrapper --gradle-version="$gradlew_version"
+# Gradle thinks it is a good idea to consume stdin even though it is
+# not needed, breaking outer pipes currently processing stdin. As a
+# workaround we explicitly send nothing on the process' input.  See
+# https://github.com/gradle/gradle/issues/14961
+gradle wrapper --gradle-version="$gradlew_version" < /dev/null
 
 rm gradlew.bat
 mkdir "$install_dir"/bin

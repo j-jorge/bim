@@ -240,5 +240,10 @@ write_gradle_files
 ANDROID_HOME="$(bim-android-config --prefix "$bim_host_prefix" --sdk-root)"
 export ANDROID_HOME
 
+# Gradle thinks it is a good idea to consume stdin even though it is
+# not needed, breaking outer pipes currently processing stdin. As a
+# workaround we explicitly send nothing on the process' input.  See
+# https://github.com/gradle/gradle/issues/14961
 gradlew assemble"${build_type^}" \
-        publish"${build_type^}"PublicationToLocalMavenRepository
+        publish"${build_type^}"PublicationToLocalMavenRepository \
+        < /dev/null
