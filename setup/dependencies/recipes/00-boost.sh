@@ -2,6 +2,8 @@
 
 set -euo pipefail
 
+: "${bim_host_prefix:-}"
+
 boost_version=1.82.0
 boost_version_underscore="${boost_version//./_}"
 package_revision=3
@@ -16,6 +18,8 @@ archive_name="${archive_basename}".tar.bz2
 archive_url="https://boostorg.jfrog.io/artifactory/main/release/${boost_version}/source/${archive_name}"
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd)"
+
+# shellcheck source=SCRIPTDIR/set-package-vars.sh
 . "$script_dir"/set-package-vars.sh boost "$build_type"
 
 rm --force --recursive "$install_dir"

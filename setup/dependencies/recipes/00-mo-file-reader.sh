@@ -2,9 +2,6 @@
 
 set -euo pipefail
 
-: "${bim_packages_root:-}"
-: "${bim_target_platform:-}"
-
 : "${mo_file_reader_repository:=https://github.com/j-jorge/mofilereader/}"
 : "${mo_file_reader_version:=1.2}"
 package_revision=1
@@ -16,6 +13,8 @@ build_type=release
     || exit 0
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd)"
+
+# shellcheck source=SCRIPTDIR/set-package-vars.sh
 . "$script_dir"/set-package-vars.sh mo-file-reader "$build_type"
 
 bim-git-clone-repository \

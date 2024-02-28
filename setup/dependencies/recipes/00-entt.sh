@@ -2,9 +2,6 @@
 
 set -euo pipefail
 
-: "${bim_packages_root:-}"
-: "${bim_target_platform:-}"
-
 : "${entt_repository:=https://github.com/skypjack/entt/}"
 : "${entt_version:=3.11.1}"
 package_revision=1
@@ -15,6 +12,8 @@ build_type=release
     || exit 0
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd)"
+
+# shellcheck source=SCRIPTDIR/set-package-vars.sh
 . "$script_dir"/set-package-vars.sh entt "$build_type"
 
 bim-git-clone-repository "$entt_repository" "v$entt_version" "$source_dir"

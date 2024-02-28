@@ -84,12 +84,8 @@ fi
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd)"
 
-# shellcheck disable=SC1091
+# shellcheck source=SCRIPTDIR/set-package-vars.sh
 . "$script_dir"/set-package-vars.sh axmol "$build_type"
-
-: "${source_dir:-}"
-: "${build_dir:-}"
-: "${install_dir:-}"
 
 rm --force --recursive "$install_dir"
 mkdir --parents "$source_dir" "$build_dir" "$install_dir"
@@ -111,7 +107,8 @@ install_power_shell()
     --mime-type=application/gzip
 
     tar -xf "$archive_name"
-    export PATH="$(pwd):$PATH"
+    PATH="$(pwd):$PATH"
+    export PATH
 }
 
 build()

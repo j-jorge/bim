@@ -2,6 +2,8 @@
 
 set -euo pipefail
 
+: "${bim_build_type:-}"
+
 : "${iscool_core_repository:=https://github.com/j-jorge/iscool-core/}"
 : "${iscool_core_version:=1.9.0rc}"
 package_revision=1
@@ -37,6 +39,8 @@ esac
     || exit 0
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd)"
+
+# shellcheck source=SCRIPTDIR/set-package-vars.sh
 . "$script_dir"/set-package-vars.sh iscool-core "$flavor"
 
 bim-git-clone-repository \

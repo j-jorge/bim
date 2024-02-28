@@ -2,9 +2,6 @@
 
 set -euo pipefail
 
-: "${bim_packages_root:-}"
-: "${bim_target_platform:-}"
-
 : "${fmt_repository:=https://github.com/fmtlib/fmt.git/}"
 : "${fmt_version:=10.2.1}"
 package_revision=1
@@ -15,6 +12,8 @@ build_type=release
     || exit 0
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd)"
+
+# shellcheck source=SCRIPTDIR/set-package-vars.sh
 . "$script_dir"/set-package-vars.sh fmt "$build_type"
 
 bim-git-clone-repository "$fmt_repository" "$fmt_version" "$source_dir"

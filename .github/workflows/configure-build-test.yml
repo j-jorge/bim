@@ -7,17 +7,19 @@ on:
   pull_request:
     branches: ["master"]
 
+concurrency:
+  group: >
+    ${{github.workflow }}
+    -${{ github.event.pull_request.number || github.ref}}
+
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
     container: ${{ matrix.container }}
 
     strategy:
-      # Set fail-fast to false to ensure that feedback is delivered
-      # for all matrix combinations. Consider changing this to true
-      # when your workflow is stable.
-      fail-fast: false
-
       matrix:
         container: ["ubuntu:22.04", "ubuntu:23.10"]
         build_type: [release, debug]

@@ -12,6 +12,8 @@ build_type=release
     || exit 0
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd)"
+
+# shellcheck source=SCRIPTDIR/set-package-vars.sh
 . "$script_dir"/set-package-vars.sh jsoncpp "$build_type"
 
 bim-git-clone-repository \
