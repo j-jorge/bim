@@ -1,5 +1,5 @@
 /.backroom/
 /.setup.conf
-/build
+/build/
 /android/app/keystore.properties
 /android/app/release.keystore

@@ -39,7 +39,7 @@ android {
                     '@this_file_directory@/keystore.properties'
                 ).newDataInputStream())
 
-            keyAlias properties['keyAlias']
+            keyAlias 'bim-release'
             keyPassword properties['keyPassword']
             storeFile file('@this_file_directory@/release.keystore')
             storePassword properties['storePassword']

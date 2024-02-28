@@ -107,7 +107,7 @@ function(recursive_android_build)
   add_custom_target("${ARG_ARCH}"
     COMMAND
       "${CMAKE_COMMAND}"
-      --build "${CMAKE_CURRENT_BINARY_DIR}/${ARG_ARCH}" --target libbim.so
+      --build "${CMAKE_CURRENT_BINARY_DIR}/${ARG_ARCH}" --target bim
     COMMAND
       "${CMAKE_COMMAND}" -E make_directory "${lib_install_dir}"
     COMMAND
