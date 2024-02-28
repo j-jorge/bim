@@ -10,6 +10,7 @@ backroom="$script_dir/.backroom"
 host_prefix="$backroom"/host
 python_virtual_environment_path="$host_prefix"/python
 build_type=release
+incremental_build=0
 target_platform=linux
 build_steps=()
 all_build_steps=(dependencies configure build test)
@@ -42,6 +43,9 @@ Where OPTIONS is
      executed.
   --help, -h
      Display this message and exit.
+  --incremental
+     Do an incremental build, i.e. disable the unity build. This is
+     useful if you need your build to take longer than necessary.
   --target-platform P
      Build for platform P (either linux or android).
 EOF
@@ -93,6 +97,9 @@ do
             usage
             exit
             ;;
+        --incremental)
+            incremental_build=1
+            ;;
         --target-platform)
             if (( $# == 0 ))
             then
@@ -112,6 +119,7 @@ done
 
 missing_dependencies=0
 
+check_host_dependency ccache || missing_dependencies=1
 check_host_dependency cmake || missing_dependencies=1
 check_host_dependency git || missing_dependencies=1
 check_host_dependency ninja || missing_dependencies=1
@@ -132,9 +140,9 @@ then
     . "$script_dir/.setup.conf"
 fi
 
-: "${shell_utils_commit=004b72c863d93ea958eef9178d7b12324283e2a1}"
+: "${shell_utils_commit=6238ec6aeb0ff8dbb28f180f08e1e45eaa331eea}"
 : "${shell_utils_repository:=https://github.com/j-jorge/shell-utils}"
-: "${paco_commit=8259765a6e3f3de004ca165854653a7581a37cbc}"
+: "${paco_commit=103721bb368722ead1815a84e9ebe3949f4fffc0}"
 : "${paco_repository:=https://github.com/j-jorge/cpp-package-manager}"
 
 set_up_host_prefix()
@@ -157,6 +165,8 @@ set_up_host_prefix()
 
     . "$host_prefix"/share/iscoolentertainment/shell/colors.sh
 
+    export PATH="$host_prefix"/bin:"$PATH"
+
     # Package manager
     echo -e "${green_bold:-}Installing the package manager.${term_color:-}"
     bim-git-clone-repository "$paco_repository" \
@@ -177,7 +187,6 @@ set_up_host_prefix()
     echo -e "${green_bold:-}Installing Python virtual environment ($python).${term_color:-}"
     "$python" -m venv "$python_virtual_environment_path"
 
-    export PATH="$host_prefix"/bin:"$PATH"
     . "$python_virtual_environment_path"/bin/activate
 }
 
@@ -258,22 +267,20 @@ configure()
             ;;
     esac
 
-    if command -v ccache > /dev/null
+    if (( incremental_build == 0 ))
     then
         cmake_options+=(
-            -DCMAKE_C_COMPILER_LAUNCHER=ccache
-            -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
+          -DCMAKE_UNITY_BUILD=ON
+          -DCMAKE_UNITY_BUILD_BATCH_SIZE=65535
         )
-    else
-        echo "${red_bold}Not using ccache.${term_color}"
     fi
 
     cd "$build_dir"
     cmake "$script_dir" -G Ninja \
           -DCMAKE_PREFIX_PATH="$bim_host_prefix" \
           -DCMAKE_FIND_ROOT_PATH="$bim_host_prefix" \
-          -DCMAKE_UNITY_BUILD=ON \
-          -DCMAKE_UNITY_BUILD_BATCH_SIZE=65535 \
+          -DCMAKE_C_COMPILER_LAUNCHER=ccache \
+          -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
           -DBIM_TARGET="$target_platform" \
           -DBIM_TARGET_PREFIX="$bim_app_prefix" \
           "${cmake_options[@]}"
@@ -288,7 +295,7 @@ launch_build()
 
 launch_tests()
 {
-    "$script_dir"/tests/run-test-programs.sh "$build_dir"
+    "$script_dir"/ci/run-test-programs.sh "$build_dir"
 }
 
 set_up_host_prefix
@@ -299,6 +306,12 @@ mkdir --parents "$bim_app_prefix"
 ! build_step_is_enabled dependencies || install_all_dependencies
 
 build_dir="$script_dir"/build/"$target_platform"/"$build_type"
+
+if (( incremental_build != 0 ))
+then
+    build_dir="$build_dir"-incremental
+fi
+
 ! build_step_is_enabled configure || configure
 ! build_step_is_enabled build || launch_build
 
