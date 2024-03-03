@@ -17,11 +17,9 @@
 #pragma once
 
 #include <bim/net/contest_runner.hpp>
-#include <bim/net/exchange/authentication_exchange.hpp>
 #include <bim/net/message/game_name.hpp>
+#include <bim/net/session_handler.hpp>
 
-#include <iscool/net/message_stream.hpp>
-#include <iscool/net/socket_stream.hpp>
 #include <iscool/signals/scoped_connection.hpp>
 
 #include <atomic>
@@ -54,10 +52,8 @@ namespace bim::app::console
     ~online_game();
 
   private:
-    void request_new_game(iscool::net::session_id session,
-                          const bim::net::game_name& name);
-    void launch_game(iscool::net::session_id session,
-                     iscool::net::channel_id channel, unsigned player_count,
+    void request_new_game(const bim::net::game_name& name);
+    void launch_game(iscool::net::channel_id channel, unsigned player_count,
                      unsigned player_index);
 
     void schedule_tick();
@@ -66,10 +62,7 @@ namespace bim::app::console
   private:
     application& m_application;
 
-    iscool::net::socket_stream m_socket_stream;
-    iscool::net::message_stream m_message_stream;
-
-    bim::net::authentication_exchange m_authentication;
+    bim::net::session_handler m_session;
     std::unique_ptr<bim::net::new_game_exchange> m_new_game;
 
     std::unique_ptr<bim::game::contest> m_contest;

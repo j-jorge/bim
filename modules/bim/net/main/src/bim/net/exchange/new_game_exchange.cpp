@@ -36,7 +36,7 @@ IMPLEMENT_SIGNAL(bim::net::new_game_exchange, game_proposal, m_game_proposal);
 IMPLEMENT_SIGNAL(bim::net::new_game_exchange, launch_game, m_launch_game);
 
 bim::net::new_game_exchange::new_game_exchange(
-    iscool::net::message_stream& stream, iscool::net::session_id session)
+    const iscool::net::message_stream& stream, iscool::net::session_id session)
   : m_message_channel(stream, session, 0)
 {}
 

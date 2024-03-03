@@ -34,30 +34,28 @@ bim::app::console::online_game::online_game(application& application,
                                             const std::string& host,
                                             const bim::net::game_name& name)
   : m_application(application)
-  , m_socket_stream(host, iscool::net::socket_mode::client{})
-  , m_message_stream(m_socket_stream)
-  , m_authentication(m_message_stream)
 {
-  m_authentication.connect_to_authenticated(
-      [this, name](iscool::net::session_id session) -> void
+  m_session.connect_to_connected(
+      [this, name]() -> void
       {
-        request_new_game(session, name);
+        request_new_game(name);
       });
-  m_authentication.connect_to_error(
+  m_session.connect_to_authentication_error(
       [&](bim::net::authentication_error_code error_code) -> void
       {
         std::cerr << "Authentication failed: " << (int)error_code << '\n';
         application.quit();
       });
-  m_authentication.start();
+  m_session.connect(host);
 }
 
 bim::app::console::online_game::~online_game() = default;
 
 void bim::app::console::online_game::request_new_game(
-    iscool::net::session_id session, const bim::net::game_name& name)
+    const bim::net::game_name& name)
 {
-  m_new_game.reset(new bim::net::new_game_exchange(m_message_stream, session));
+  m_new_game.reset(new bim::net::new_game_exchange(m_session.message_stream(),
+                                                   m_session.session_id()));
 
   m_new_game->connect_to_game_proposal(
       [this](unsigned player_count) -> void
@@ -66,22 +64,22 @@ void bim::app::console::online_game::request_new_game(
       });
 
   m_new_game->connect_to_launch_game(
-      [this, session](iscool::net::channel_id channel, unsigned player_count,
-                      unsigned player_index) -> void
+      [this](iscool::net::channel_id channel, unsigned player_count,
+             unsigned player_index) -> void
       {
-        launch_game(session, channel, player_count, player_index);
+        launch_game(channel, player_count, player_index);
       });
 
   m_new_game->start(name);
 }
 
 void bim::app::console::online_game::launch_game(
-    iscool::net::session_id session, iscool::net::channel_id channel,
-    unsigned player_count, unsigned player_index)
+    iscool::net::channel_id channel, unsigned player_count,
+    unsigned player_index)
 {
   m_contest.reset(new bim::game::contest(1234, 80, player_count, 13, 11));
-  m_game_channel.reset(
-      new iscool::net::message_channel(m_message_stream, session, channel));
+  m_game_channel.reset(new iscool::net::message_channel(
+      m_session.message_stream(), m_session.session_id(), channel));
   m_update_exchange.reset(
       new bim::net::game_update_exchange(*m_game_channel, player_count));
   m_contest_runner.reset(new bim::net::contest_runner(

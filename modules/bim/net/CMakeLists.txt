@@ -1,5 +1,6 @@
 add_library(bim_net STATIC
   main/src/bim/net/contest_runner.cpp
+  main/src/bim/net/session_handler.cpp
 
   main/src/bim/net/exchange/authentication_exchange.cpp
   main/src/bim/net/exchange/game_update_exchange.cpp
