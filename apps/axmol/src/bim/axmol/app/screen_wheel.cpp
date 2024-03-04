@@ -39,6 +39,7 @@ bim::axmol::app::screen_wheel::screen_wheel(
   m_controls->matchmaking->removeFromParent();
 
   m_inputs.push_back(m_lobby->input_node());
+  m_lobby->displayed();
 }
 
 bim::axmol::app::screen_wheel::~screen_wheel() = default;

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <bim/net/session_handler.hpp>
+
 #include <iscool/context.hpp>
 #include <iscool/signals/declare_signal.hpp>
 
@@ -47,7 +49,8 @@ namespace bim::axmol::app
             ((iscool::audio::mixer*)(audio))                               //
             ((iscool::preferences::local_preferences*)(local_preferences)) //
             ((iscool::system::haptic_feedback*)(haptic_feedback))),
-        ic_context_no_properties);
+        ic_context_declare_properties(
+            ((bim::net::session_handler*)(session_handler))));
 
   public:
     explicit main_task(context context);
@@ -56,6 +59,7 @@ namespace bim::axmol::app
     void start();
 
   private:
+    bim::net::session_handler m_session_handler;
     std::unique_ptr<screen_wheel> m_screen_wheel;
   };
 }

@@ -12,6 +12,11 @@ namespace bim::axmol::widget
   class context;
 }
 
+namespace bim::net
+{
+  class session_handler;
+}
+
 namespace iscool
 {
   namespace preferences
@@ -36,7 +41,8 @@ namespace bim::axmol::app
         m_context,
         ic_context_declare_parent_properties(                      //
             ((const bim::axmol::widget::context&)(widget_context)) //
-            ((main_scene*)(main_scene))),
+            ((main_scene*)(main_scene))                            //
+            ((bim::net::session_handler*)(session_handler))),
         ic_context_no_properties);
 
   public:

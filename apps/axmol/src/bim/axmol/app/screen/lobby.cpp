@@ -28,3 +28,25 @@ bim::axmol::app::lobby::nodes() const
 {
   return m_controls->all_nodes;
 }
+
+void bim::axmol::app::lobby::displayed()
+{
+  bim::net::session_handler& session_handler =
+      *m_context.get_session_handler();
+
+  m_session_connection = session_handler.connect_to_connected(
+      std::bind(&lobby::apply_connected_state, this));
+
+  apply_connected_state();
+}
+
+void bim::axmol::app::lobby::closing()
+{
+  m_session_connection.disconnect();
+}
+
+void bim::axmol::app::lobby::apply_connected_state()
+{
+  m_controls->play_button->enable(
+      m_context.get_session_handler()->connected());
+}

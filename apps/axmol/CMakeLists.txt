@@ -27,6 +27,7 @@ target_link_libraries(bim_app
   bim_axmol_input
   bim_axmol_schedule
   bim_axmol_widget
+  bim_net
   iscool_preferences
   iscool_signals
   iscool_system

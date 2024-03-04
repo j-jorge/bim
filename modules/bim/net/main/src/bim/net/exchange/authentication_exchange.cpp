@@ -21,6 +21,9 @@
 #include <bim/net/message/authentication_ok.hpp>
 #include <bim/net/message/protocol_version.hpp>
 
+#include <iscool/log/causeless_log.hpp>
+#include <iscool/log/nature/error.hpp>
+#include <iscool/log/nature/info.hpp>
 #include <iscool/random/rand.hpp>
 #include <iscool/schedule/delayed_call.hpp>
 #include <iscool/signals/implement_signal.hpp>
@@ -83,6 +86,9 @@ void bim::net::authentication_exchange::check_ok(
   if (message.get_request_token() == m_token)
     {
       stop();
+      ic_causeless_log(iscool::log::nature::info(), "authentication_exchange",
+                       "Authentication OK, session=%d",
+                       message.get_session_id());
       m_authenticated(message.get_session_id());
     }
 }
@@ -93,6 +99,9 @@ void bim::net::authentication_exchange::check_ko(
   if (message.get_request_token() == m_token)
     {
       stop();
+      ic_causeless_log(iscool::log::nature::error(), "authentication_exchange",
+                       "Authentication KO, error_code=%d",
+                       (int)message.get_error_code());
       m_error(message.get_error_code());
     }
 }
