@@ -42,6 +42,6 @@ TEST(bim_axmol_widget_factory_node, factory)
   EXPECT_FLOAT_EQ(0.3, node->getRotation());
   EXPECT_EQ(0.4 * 255, node->getOpacity());
   EXPECT_TRUE(node->isCascadeOpacityEnabled());
-  EXPECT_TRUE(node->isVisible());
+  EXPECT_FALSE(node->isVisible());
   EXPECT_EQ(50, node->getLocalZOrder());
 }

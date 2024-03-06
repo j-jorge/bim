@@ -219,7 +219,7 @@ bim::axmol::style::cache::get_display(const iscool::style::declaration& style)
       properties.cascade_opacity = *cascade_opacity;
     }
 
-  if (const iscool::optional<bool> visible = style.get_number("visible"))
+  if (const iscool::optional<bool> visible = style.get_boolean("visible"))
     {
       properties.flags |= bim::axmol::style::display_property_flags::visible;
       properties.visible = *visible;
