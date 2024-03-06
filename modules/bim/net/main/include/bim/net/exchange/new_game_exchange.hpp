@@ -39,11 +39,10 @@ namespace bim::net
                    launch_game, m_launch_game)
 
   public:
-    new_game_exchange(const iscool::net::message_stream& stream,
-                      iscool::net::session_id session);
+    explicit new_game_exchange(const iscool::net::message_stream& stream);
     ~new_game_exchange();
 
-    void start(const game_name& name);
+    void start(iscool::net::session_id session, const game_name& name);
     void accept();
     void stop();
 

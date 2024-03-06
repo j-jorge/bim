@@ -38,13 +38,14 @@ IMPLEMENT_SIGNAL(bim::net::new_game_exchange, game_proposal, m_game_proposal);
 IMPLEMENT_SIGNAL(bim::net::new_game_exchange, launch_game, m_launch_game);
 
 bim::net::new_game_exchange::new_game_exchange(
-    const iscool::net::message_stream& stream, iscool::net::session_id session)
-  : m_message_channel(stream, session, 0)
+    const iscool::net::message_stream& stream)
+  : m_message_channel(stream)
 {}
 
 bim::net::new_game_exchange::~new_game_exchange() = default;
 
-void bim::net::new_game_exchange::start(const game_name& name)
+void bim::net::new_game_exchange::start(iscool::net::session_id session,
+                                        const game_name& name)
 {
   ic_causeless_log(iscool::log::nature::info(), "new_game_exchange",
                    "Requesting game '%s' in session %d.",
@@ -54,6 +55,8 @@ void bim::net::new_game_exchange::start(const game_name& name)
   assert(!m_encounter_id);
 
   m_monitor->set_start_state();
+
+  m_message_channel.rebind(session, 0);
 
   // TODO: random<client_token>()
   m_token = iscool::random::rand::get_default().random();

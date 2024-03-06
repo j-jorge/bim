@@ -1,0 +1,40 @@
+{
+    "style":
+    {
+        "widgets":
+        [{
+            "ready_button":
+            [
+                "button/flat-with-label",
+                {
+                    "widgets/label/text": "READY"
+                }
+            ],
+
+            "status_label":
+            [
+                "font/regular",
+                {
+                    "text": "Waiting for your opponents…",
+                    "font.size": 32,
+                    "font.color": "#f0f0f0"
+                }
+            ]
+        }],
+
+        "display.displaying":
+        [{
+            "ready_button/visible": false
+        }],
+
+        "display.new-game":
+        [{
+            "ready_button/visible": true
+        }],
+
+        "display.wait":
+        [{
+            "ready_button/visible": false
+        }]
+    }
+}

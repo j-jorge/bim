@@ -3,10 +3,16 @@
 #include <bim/axmol/widget/named_node_group.hpp>
 #include <bim/axmol/widget/ui/button.hpp>
 
+#include <bim/net/session_handler.hpp>
+
+#include <iscool/signals/implement_signal.hpp>
+
 #define x_widget_scope bim::axmol::app::lobby::
 #define x_widget_type_name controls
 #define x_widget_controls x_widget(bim::axmol::widget::button, play_button)
 #include <bim/axmol/widget/implement_controls_struct.hpp>
+
+IMPLEMENT_SIGNAL(bim::axmol::app::lobby, play, m_play);
 
 bim::axmol::app::lobby::lobby(const context& context,
                               const iscool::style::declaration& style)
@@ -14,6 +20,12 @@ bim::axmol::app::lobby::lobby(const context& context,
   , m_controls(context.get_widget_context(), *style.get_declaration("widgets"))
 {
   m_inputs.push_back(m_controls->play_button->input_node());
+
+  m_controls->play_button->connect_to_clicked(
+      [this]()
+      {
+        m_play();
+      });
 }
 
 bim::axmol::app::lobby::~lobby() = default;
@@ -35,7 +47,10 @@ void bim::axmol::app::lobby::displayed()
       *m_context.get_session_handler();
 
   m_session_connection = session_handler.connect_to_connected(
-      std::bind(&lobby::apply_connected_state, this));
+      [this]()
+      {
+        apply_connected_state();
+      });
 
   apply_connected_state();
 }

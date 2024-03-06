@@ -10,6 +10,9 @@
         "lobby": ["app/screen/lobby"],
         "lobby-bounds": ["app/screen/lobby-bounds"],
 
+        "matchmaking": ["app/screen/matchmaking"],
+        "matchmaking-bounds": ["app/screen/matchmaking-bounds"],
+
         "bounds":
         [{
             "lobby": ["layout/fill"],

@@ -1,0 +1,22 @@
+{
+    "style":
+    {
+        "ready_button":
+        [{
+            "anchor.x": 0.5,
+            "anchor.y": 0.5,
+            "anchor.reference.x": 0.5,
+            "anchor.reference.y": 0.34,
+            "width-ratio": 2,
+            "height.percents": 10
+        }],
+
+        "status_label":
+        [{
+            "anchor.x": 0.5,
+            "anchor.y": 0.5,
+            "anchor.reference.x": 0.5,
+            "anchor.reference.y": 0.45
+        }]
+    }
+}

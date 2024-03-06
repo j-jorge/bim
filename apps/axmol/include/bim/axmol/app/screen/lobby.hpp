@@ -4,6 +4,8 @@
 #include <bim/axmol/widget/declare_controls_struct.hpp>
 
 #include <iscool/context.hpp>
+#include <iscool/signals/declare_signal.hpp>
+#include <iscool/signals/scoped_connection.hpp>
 
 namespace bim::axmol::widget
 {
@@ -24,6 +26,8 @@ namespace bim::axmol::app
 {
   class lobby
   {
+    DECLARE_VOID_SIGNAL(play, m_play)
+
     ic_declare_context(
         m_context,
         ic_context_declare_parent_properties(                      //

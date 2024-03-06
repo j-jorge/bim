@@ -17,6 +17,7 @@
 #pragma once
 
 #include <bim/net/contest_runner.hpp>
+#include <bim/net/exchange/new_game_exchange.hpp>
 #include <bim/net/message/game_name.hpp>
 #include <bim/net/session_handler.hpp>
 
@@ -37,7 +38,6 @@ namespace bim::net
 {
   class contest_runner;
   class game_update_exchange;
-  class new_game_exchange;
 }
 
 namespace bim::app::console
@@ -52,7 +52,6 @@ namespace bim::app::console
     ~online_game();
 
   private:
-    void request_new_game(const bim::net::game_name& name);
     void launch_game(iscool::net::channel_id channel, unsigned player_count,
                      unsigned player_index);
 
@@ -63,7 +62,7 @@ namespace bim::app::console
     application& m_application;
 
     bim::net::session_handler m_session;
-    std::unique_ptr<bim::net::new_game_exchange> m_new_game;
+    bim::net::new_game_exchange m_new_game;
 
     std::unique_ptr<bim::game::contest> m_contest;
     std::unique_ptr<iscool::net::message_channel> m_game_channel;

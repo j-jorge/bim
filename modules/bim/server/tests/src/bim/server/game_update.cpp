@@ -55,7 +55,6 @@ protected:
 
   private:
     void launch_game(iscool::net::message_stream& stream,
-                     iscool::net::session_id session,
                      iscool::net::channel_id channel, unsigned player_count,
                      unsigned player_index);
 
@@ -63,8 +62,10 @@ protected:
     bim::server::tests::fake_scheduler& m_scheduler;
 
     bim::net::authentication_exchange m_authentication;
-    std::unique_ptr<bim::net::new_game_exchange> m_new_game;
+    bim::net::new_game_exchange m_new_game;
     std::unique_ptr<iscool::net::message_channel> m_message_channel;
+
+    std::optional<iscool::net::session_id> m_session;
   };
 
 public:
@@ -90,22 +91,14 @@ game_update_test::client::client(bim::server::tests::fake_scheduler& scheduler,
                                  iscool::net::message_stream& message_stream)
   : m_scheduler(scheduler)
   , m_authentication(message_stream)
+  , m_new_game(message_stream)
 {
   m_all_updates.from_tick = 0;
 
   m_authentication.connect_to_authenticated(
       [this, &message_stream](iscool::net::session_id session) -> void
       {
-        m_new_game.reset(
-            new bim::net::new_game_exchange(message_stream, session));
-
-        m_new_game->connect_to_game_proposal(
-            std::bind(&bim::net::new_game_exchange::accept, m_new_game.get()));
-
-        m_new_game->connect_to_launch_game(
-            std::bind(&client::launch_game, this, std::ref(message_stream),
-                      session, std::placeholders::_1, std::placeholders::_2,
-                      std::placeholders::_3));
+        m_session = session;
       });
 
   m_authentication.connect_to_error(
@@ -113,31 +106,39 @@ game_update_test::client::client(bim::server::tests::fake_scheduler& scheduler,
       {
         EXPECT_TRUE(false);
       });
+
+  m_new_game.connect_to_game_proposal(
+      std::bind(&bim::net::new_game_exchange::accept, &m_new_game));
+
+  m_new_game.connect_to_launch_game(std::bind(
+      &client::launch_game, this, std::ref(message_stream),
+      std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
 }
 
 void game_update_test::client::authenticate()
 {
-  EXPECT_EQ(nullptr, m_new_game);
+  EXPECT_FALSE(!!m_session);
 
   m_authentication.start();
 
-  for (int i = 0; (i != 10) && !m_new_game; ++i)
+  for (int i = 0; (i != 10) && !m_session; ++i)
     m_scheduler.tick(std::chrono::seconds(1));
 }
 
 void game_update_test::client::new_game(const bim::net::game_name& name)
 {
-  ASSERT_NE(nullptr, m_new_game);
+  ASSERT_TRUE(!!m_session);
 
-  m_new_game->start(name);
+  m_new_game.start(*m_session, name);
 }
 
 void game_update_test::client::launch_game(iscool::net::message_stream& stream,
-                                           iscool::net::session_id session,
                                            iscool::net::channel_id channel,
                                            unsigned player_count,
                                            unsigned player_index)
 {
+  EXPECT_TRUE(!!m_session);
+
   EXPECT_FALSE(!!m_channel);
   m_channel = channel;
 
@@ -148,7 +149,7 @@ void game_update_test::client::launch_game(iscool::net::message_stream& stream,
   m_player_index = player_index;
 
   m_message_channel.reset(
-      new iscool::net::message_channel(stream, session, channel));
+      new iscool::net::message_channel(stream, *m_session, channel));
   m_game_update.reset(
       new bim::net::game_update_exchange(*m_message_channel, player_count));
 

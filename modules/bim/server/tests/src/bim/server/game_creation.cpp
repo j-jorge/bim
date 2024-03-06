@@ -54,7 +54,9 @@ protected:
     bim::server::tests::fake_scheduler& m_scheduler;
 
     bim::net::authentication_exchange m_authentication;
-    std::unique_ptr<bim::net::new_game_exchange> m_new_game;
+    bim::net::new_game_exchange m_new_game;
+
+    std::optional<iscool::net::session_id> m_session;
   };
 
 public:
@@ -77,19 +79,12 @@ game_creation_test::client::client(
     iscool::net::message_stream& message_stream)
   : m_scheduler(scheduler)
   , m_authentication(message_stream)
+  , m_new_game(message_stream)
 {
   m_authentication.connect_to_authenticated(
       [this, &message_stream](iscool::net::session_id session) -> void
       {
-        m_new_game.reset(
-            new bim::net::new_game_exchange(message_stream, session));
-
-        m_new_game->connect_to_game_proposal(
-            std::bind(&bim::net::new_game_exchange::accept, m_new_game.get()));
-
-        m_new_game->connect_to_launch_game(
-            std::bind(&client::launch_game, this, std::placeholders::_1,
-                      std::placeholders::_2, std::placeholders::_3));
+        m_session = session;
       });
 
   m_authentication.connect_to_error(
@@ -97,23 +92,30 @@ game_creation_test::client::client(
       {
         EXPECT_TRUE(false);
       });
+
+  m_new_game.connect_to_game_proposal(
+      std::bind(&bim::net::new_game_exchange::accept, &m_new_game));
+
+  m_new_game.connect_to_launch_game(
+      std::bind(&client::launch_game, this, std::placeholders::_1,
+                std::placeholders::_2, std::placeholders::_3));
 }
 
 void game_creation_test::client::authenticate()
 {
-  EXPECT_EQ(nullptr, m_new_game);
+  ASSERT_FALSE(!!m_session);
 
   m_authentication.start();
 
-  for (int i = 0; (i != 10) && !m_new_game; ++i)
+  for (int i = 0; (i != 10) && !m_session; ++i)
     m_scheduler.tick(std::chrono::seconds(1));
 }
 
 void game_creation_test::client::new_game(const bim::net::game_name& name)
 {
-  ASSERT_NE(nullptr, m_new_game);
+  ASSERT_TRUE(!!m_session);
 
-  m_new_game->start(name);
+  m_new_game.start(*m_session, name);
 }
 
 void game_creation_test::client::launch_game(iscool::net::channel_id channel,
