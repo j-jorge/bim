@@ -21,6 +21,8 @@
 #include <bim/net/message/launch_game.hpp>
 #include <bim/net/message/new_game_request.hpp>
 
+#include <iscool/log/causeless_log.hpp>
+#include <iscool/log/nature/info.hpp>
 #include <iscool/monitoring/implement_state_monitor.hpp>
 #include <iscool/random/rand.hpp>
 #include <iscool/schedule/delayed_call.hpp>
@@ -44,6 +46,11 @@ bim::net::new_game_exchange::~new_game_exchange() = default;
 
 void bim::net::new_game_exchange::start(const game_name& name)
 {
+  ic_causeless_log(iscool::log::nature::info(), "new_game_exchange",
+                   "Requesting game '%s' in session %d.",
+                   std::string_view((const char*)name.data(), name.size()),
+                   session);
+
   assert(!m_encounter_id);
 
   m_monitor->set_start_state();
@@ -62,6 +69,10 @@ void bim::net::new_game_exchange::start(const game_name& name)
 void bim::net::new_game_exchange::accept()
 {
   assert(!!m_encounter_id);
+
+  ic_causeless_log(iscool::log::nature::info(), "new_game_exchange",
+                   "Accepting encounter %d.", *m_encounter_id);
+
   assert(m_update_connection.connected());
 
   m_monitor->set_accept_state();
@@ -121,7 +132,12 @@ void bim::net::new_game_exchange::check_on_hold(const game_on_hold& message)
   if (!m_monitor->is_start_state())
     return;
 
+  if (!m_encounter_id)
+    ic_causeless_log(iscool::log::nature::info(), "new_game_exchange",
+                     "Got game proposal %d.", message.get_encounter_id());
+
   m_encounter_id = message.get_encounter_id();
+
   m_game_proposal(message.get_player_count());
 }
 
@@ -131,6 +147,9 @@ void bim::net::new_game_exchange::check_launch_game(const launch_game& message)
 
   if (message.get_request_token() != m_token)
     return;
+
+  ic_causeless_log(iscool::log::nature::info(), "new_game_exchange",
+                   "Launch game %d.", *m_encounter_id);
 
   stop();
   m_launch_game(message.get_game_channel(), message.get_player_count(),
