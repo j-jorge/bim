@@ -37,7 +37,7 @@ Usage: build.sh OPTIONS
 Where OPTIONS is
   --build-type T
      Build for this configuration (debug, release, asan, tsan).
-  --build-step G…
+  --build-steps G…
      The build steps to execute (dependencies, configure, build,
      test). The order does not matter. By default, all steps are
      executed.
