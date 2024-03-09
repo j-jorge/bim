@@ -7,7 +7,7 @@
             [
                 "button/flat-with-label",
                 {
-                    "widgets/label/text": "READY"
+                    "widgets/label/text.i18n": "READY"
                 }
             ],
 

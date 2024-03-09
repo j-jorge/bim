@@ -95,8 +95,9 @@ void bim::axmol::app::matchmaking::update_display_with_game_proposal(
                                     m_controls->all_nodes, m_style_new_game);
 
   m_controls->status_label->setString(
-      fmt::format("Got {} player!", player_count));
-  //      ic_ngettext("Got {} player!", "Got {} players!", player_count))));
+      fmt::format(fmt::runtime(ic_ngettext("Got {} player!", "Got {} players!",
+                                           player_count)),
+                  player_count));
 }
 
 void bim::axmol::app::matchmaking::update_display_waiting()
@@ -104,7 +105,7 @@ void bim::axmol::app::matchmaking::update_display_waiting()
   bim::axmol::widget::apply_display(m_context.get_widget_context().style_cache,
                                     m_controls->all_nodes, m_style_wait);
 
-  m_controls->status_label->setString(ic_gettext("Setting up a new game…"));
+  m_controls->status_label->setString(ic_gettext("Setting up a new game..."));
 }
 
 void bim::axmol::app::matchmaking::accept_game()
@@ -113,7 +114,7 @@ void bim::axmol::app::matchmaking::accept_game()
                                     m_controls->all_nodes, m_style_wait);
 
   m_controls->status_label->setString(
-      ic_gettext("Waiting for your opponents…"));
+      ic_gettext("Waiting for your opponents..."));
 
   m_game_proposal_connection.disconnect();
   m_new_game->accept();

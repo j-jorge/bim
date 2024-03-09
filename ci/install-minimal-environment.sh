@@ -65,6 +65,7 @@ packages=(bzip2
           cmake
           curl
           file
+          gettext
           git
           ninja-build
           python3-venv

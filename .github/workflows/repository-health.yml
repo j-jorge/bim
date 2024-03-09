@@ -23,7 +23,7 @@ jobs:
       - name: Install dependencies
         run: >
           apt-get update ;
-          apt-get install --yes clang-format shellcheck yamllint ;
+          apt-get install --yes black clang-format shellcheck yamllint ;
 
       - name: Check repository state
         run: ./ci/repository-health.sh

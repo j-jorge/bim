@@ -24,5 +24,6 @@ endif()
 include(jsonlint)
 add_subdirectory(sprites)
 add_subdirectory(style)
+add_subdirectory(i18n)
 
-add_custom_target(assets ALL DEPENDS styles sprite-sheets)
+add_custom_target(assets ALL DEPENDS styles sprite-sheets translations)

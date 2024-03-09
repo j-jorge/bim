@@ -27,6 +27,7 @@ target_link_libraries(
   bim_axmol_core
   bim_core
   iscool_audio
+  iscool_i18n
 )
 
 add_executable(axmol-widget-tests

@@ -84,6 +84,13 @@ run_test "Validating C++ source code formatting." \
          -- \
          -name "*.[cht]pp"
 
+run_test "Validating Python files." \
+         black \
+         --config .black \
+         --check \
+         -- \
+         -name "*.py"
+
 run_test "Validating shell scripts." \
          shellcheck \
          -- \

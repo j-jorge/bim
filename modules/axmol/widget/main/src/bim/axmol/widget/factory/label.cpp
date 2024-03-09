@@ -8,6 +8,7 @@
 
 #include <bim/axmol/colour_chart.hpp>
 
+#include <iscool/i18n/gettext.hpp>
 #include <iscool/log/causeless_log.hpp>
 #include <iscool/log/nature/error.hpp>
 #include <iscool/optional.impl.tpp>
@@ -57,8 +58,13 @@ bim::axmol::ref_ptr<ax::Label> bim::axmol::widget::factory<ax::Label>::create(
                          *horizontal_align_string);
     }
 
-  bim::axmol::ref_ptr<ax::Label> result = ax::Label::createWithTTF(
-      ttf_config, style.get_string("text", ""), horizontal_align);
+  iscool::optional<const std::string&> localized_text =
+      style.get_string("text.i18n");
+  const std::string text = localized_text ? ic_gettext(localized_text->c_str())
+                                          : style.get_string("text", "");
+
+  bim::axmol::ref_ptr<ax::Label> result =
+      ax::Label::createWithTTF(ttf_config, text, horizontal_align);
 
   const ax::Vec2 shadow_offset(style.get_number("shadow.offset.x", 0),
                                style.get_number("shadow.offset.y", 0));
