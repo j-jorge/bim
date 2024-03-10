@@ -23,7 +23,10 @@ bim::axmol::app::main_scene::main_scene(
                                    *style.get_declaration("bounds"));
 }
 
-bim::axmol::app::main_scene::~main_scene() = default;
+bim::axmol::app::main_scene::~main_scene()
+{
+  m_scene.removeAllChildren();
+}
 
 bim::axmol::input::node_reference
 bim::axmol::app::main_scene::input_node() const

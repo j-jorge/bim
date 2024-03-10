@@ -52,8 +52,7 @@ namespace bim::app::console
     ~online_game();
 
   private:
-    void launch_game(iscool::net::channel_id channel, unsigned player_count,
-                     unsigned player_index);
+    void launch_game(const bim::net::game_launch_event& event);
 
     void schedule_tick();
     void tick();

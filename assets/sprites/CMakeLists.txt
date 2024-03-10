@@ -1,5 +1,12 @@
 set(sprites
+  "sprites/bomb.png"
+  "sprites/brick-wall.png"
   "sprites/guy.png"
+  "sprites/player-1.png"
+  "sprites/player-2.png"
+  "sprites/player-3.png"
+  "sprites/player-4.png"
+  "sprites/solid-wall.png"
 )
 
 foreach(s ${sprites})

@@ -65,10 +65,9 @@ void bim::axmol::app::matchmaking::displayed()
         update_display_with_game_proposal(player_count);
       });
   m_launch_connection = m_new_game->connect_to_launch_game(
-      [this](iscool::net::channel_id channel, unsigned player_count,
-             unsigned player_index)
+      [this](const bim::net::game_launch_event& event)
       {
-        launch_game(channel, player_count, player_index);
+        launch_game(event);
       });
 
   assert(m_context.get_session_handler()->connected());
@@ -120,10 +119,9 @@ void bim::axmol::app::matchmaking::accept_game()
   m_new_game->accept();
 }
 
-void bim::axmol::app::matchmaking::launch_game(iscool::net::channel_id channel,
-                                               unsigned player_count,
-                                               unsigned player_index)
+void bim::axmol::app::matchmaking::launch_game(
+    const bim::net::game_launch_event& event)
 {
   m_launch_connection.disconnect();
-  m_start_game();
+  m_start_game(event);
 }

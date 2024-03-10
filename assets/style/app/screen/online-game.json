@@ -1,0 +1,51 @@
+{
+    "style":
+    {
+        "widgets":
+        [{
+            "arena": [],
+
+            "ground":
+            [{
+                "instantiate": "ax::LayerColor",
+                "opacity": 1,
+                "color": "#385b59"
+            }]
+
+        }],
+
+        "arena-width-in-blocks": 13,
+
+        "player-1":
+        [{
+            "frame": "sprites/player-1.png",
+            "anchor-point.y": 0.33,
+            "z-order": 10
+        }],
+
+        "player-2":
+        [{
+            "frame": "sprites/player-2.png",
+            "anchor-point.y": 0.33,
+            "z-order": 10
+        }],
+
+        "player-3":
+        [{
+            "frame": "sprites/player-3.png",
+            "anchor-point.y": 0.33,
+            "z-order": 10
+        }],
+
+        "player-4":
+        [{
+            "frame": "sprites/player-4.png",
+            "anchor-point.y": 0.33,
+            "z-order": 10
+        }],
+
+        "bomb/frame": "sprites/bomb.png",
+        "wall/frame": "sprites/solid-wall.png",
+        "brick-wall/frame": "sprites/brick-wall.png"
+    }
+}

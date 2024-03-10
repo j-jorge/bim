@@ -103,6 +103,15 @@ void bim::server::matchmaking_service::create_or_update_encounter(
   ic_causeless_log(iscool::log::nature::info(), "matchmaking_service",
                    "New game request for session %d.", session);
 
+  // TODO: if the request is for a random match, we must:
+  //
+  // - check if the session is in an active game. The message is probably from
+  //   a previous request and we don't want to create a new encounter for it.
+  // - then add the session in the current random encounter.
+  //
+  // Thus we need a map session -> encounter_id, up to date with m_encounters,
+  // and something like m_id_for_random_encounter.
+
   char name[std::tuple_size_v<bim::net::game_name> + 1];
   std::copy(request.get_name().begin(), request.get_name().end(), name);
   name[std::size(name) - 1] = '\0';

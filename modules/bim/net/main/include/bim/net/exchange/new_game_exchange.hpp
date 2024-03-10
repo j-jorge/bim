@@ -31,12 +31,12 @@ namespace bim::net
 {
   class game_on_hold;
   class launch_game;
+  struct game_launch_event;
 
   class new_game_exchange
   {
     DECLARE_SIGNAL(void(unsigned), game_proposal, m_game_proposal)
-    DECLARE_SIGNAL(void(iscool::net::channel_id, unsigned, unsigned),
-                   launch_game, m_launch_game)
+    DECLARE_SIGNAL(void(const game_launch_event&), launch_game, m_launch_game)
 
   public:
     explicit new_game_exchange(const iscool::net::message_stream& stream);

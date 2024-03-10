@@ -17,6 +17,7 @@ namespace bim::net
 {
   class new_game_exchange;
   class session_handler;
+  struct game_launch_event;
 }
 
 namespace iscool::style
@@ -28,7 +29,8 @@ namespace bim::axmol::app
 {
   class matchmaking
   {
-    DECLARE_VOID_SIGNAL(start_game, m_start_game)
+    DECLARE_SIGNAL(void(const bim::net::game_launch_event&), start_game,
+                   m_start_game)
 
     ic_declare_context(
         m_context,
@@ -54,8 +56,7 @@ namespace bim::axmol::app
     void update_display_waiting();
 
     void accept_game();
-    void launch_game(iscool::net::channel_id channel, unsigned player_count,
-                     unsigned player_index);
+    void launch_game(const bim::net::game_launch_event& event);
 
   private:
     bim::axmol::input::tree m_inputs;

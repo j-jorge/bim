@@ -21,6 +21,7 @@
 #include <bim/app/console/inputs.hpp>
 
 #include <bim/net/contest_runner.hpp>
+#include <bim/net/exchange/game_launch_event.hpp>
 #include <bim/net/exchange/game_update_exchange.hpp>
 
 #include <bim/game/contest.hpp>
@@ -55,28 +56,27 @@ bim::app::console::online_game::online_game(application& application,
       });
 
   m_new_game.connect_to_launch_game(
-      [this](iscool::net::channel_id channel, unsigned player_count,
-             unsigned player_index) -> void
+      [this](const bim::net::game_launch_event& event) -> void
       {
-        launch_game(channel, player_count, player_index);
+        launch_game(event);
       });
 }
 
 bim::app::console::online_game::~online_game() = default;
 
 void bim::app::console::online_game::launch_game(
-    iscool::net::channel_id channel, unsigned player_count,
-    unsigned player_index)
+    const bim::net::game_launch_event& event)
 {
-  m_contest.reset(new bim::game::contest(1234, 80, player_count, 13, 11));
+  m_contest.reset(
+      new bim::game::contest(1234, 80, event.player_count, 13, 15));
   m_game_channel.reset(new iscool::net::message_channel(
-      m_session.message_stream(), m_session.session_id(), channel));
+      m_session.message_stream(), m_session.session_id(), event.channel));
   m_update_exchange.reset(
-      new bim::net::game_update_exchange(*m_game_channel, player_count));
+      new bim::net::game_update_exchange(*m_game_channel, event.player_count));
   m_contest_runner.reset(new bim::net::contest_runner(
-      *m_contest, *m_update_exchange, player_index, player_count));
+      *m_contest, *m_update_exchange, event.player_index, event.player_count));
 
-  m_player_index = player_index;
+  m_player_index = event.player_index;
 
   m_update_exchange->connect_to_started(
       [this]() -> void

@@ -23,6 +23,10 @@ bim::app::console::application::application()
         [this]() -> std::chrono::nanoseconds
         {
           return m_game_date;
+        },
+        [this]() -> std::chrono::nanoseconds
+        {
+          return m_game_date;
         })
   , m_scheduler_initializer(m_scheduler.get_delayed_call_delegate())
 {}

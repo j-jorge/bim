@@ -24,6 +24,10 @@ bim::server::tests::fake_scheduler::fake_scheduler()
         [this]() -> std::chrono::nanoseconds
         {
           return m_current_date;
+        },
+        [this]() -> std::chrono::nanoseconds
+        {
+          return m_current_date;
         })
   , m_scheduler_initializer(m_scheduler.get_delayed_call_delegate())
 {}

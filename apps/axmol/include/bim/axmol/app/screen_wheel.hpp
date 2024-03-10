@@ -16,6 +16,7 @@ namespace bim::axmol::widget
 namespace bim::net
 {
   class session_handler;
+  struct game_launch_event;
 }
 
 namespace iscool
@@ -36,6 +37,7 @@ namespace bim::axmol::app
   class scene_lock;
   class lobby;
   class matchmaking;
+  class online_game;
 
   class screen_wheel
   {
@@ -61,19 +63,21 @@ namespace bim::axmol::app
     void switch_view(ax::Node& new_view);
 
     void animate_lobby_to_matchmaking();
-    void animate_matchmaking_to_game();
+    void animate_matchmaking_to_game(const bim::net::game_launch_event& event);
 
     void lobby_displayed();
     void matchmaking_displayed();
+    void online_game_displayed();
 
   private:
     bim::axmol::ref_ptr<ax::Node> m_main_container;
     bim::axmol::input::tree m_inputs;
     ax::Node* m_active_view;
 
-    bim_declare_controls_struct(controls, m_controls, 2);
+    bim_declare_controls_struct(controls, m_controls, 3);
 
     std::unique_ptr<lobby> m_lobby;
     std::unique_ptr<matchmaking> m_matchmaking;
+    std::unique_ptr<online_game> m_online_game;
   };
 }

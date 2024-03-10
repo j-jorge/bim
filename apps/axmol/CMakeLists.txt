@@ -15,6 +15,7 @@ add_library(bim_app
 
   src/bim/axmol/app/screen/lobby.cpp
   src/bim/axmol/app/screen/matchmaking.cpp
+  src/bim/axmol/app/screen/online_game.cpp
 
   src/bim/axmol/app/task/main_task.cpp
 )

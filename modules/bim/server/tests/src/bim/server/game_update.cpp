@@ -1,24 +1,25 @@
 /*
-  Copyright (C) 2023 Julien Jorge
+   Copyright (C) 2023 Julien Jorge
 
-  This program is free software: you can redistribute it and/or modify
-  it under the terms of the GNU Affero General Public License as published by
-  the Free Software Foundation, either version 3 of the License, or
-  (at your option) any later version.
+   This program is free software: you can redistribute it and/or modify
+   it under the terms of the GNU Affero General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
 
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU Affero General Public License for more details.
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU Affero General Public License for more details.
 
-  You should have received a copy of the GNU Affero General Public License
-  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+   You should have received a copy of the GNU Affero General Public License
+   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 #include <bim/server/tests/fake_scheduler.hpp>
 
 #include <bim/server/server.hpp>
 
 #include <bim/net/exchange/authentication_exchange.hpp>
+#include <bim/net/exchange/game_launch_event.hpp>
 #include <bim/net/exchange/game_update_exchange.hpp>
 #include <bim/net/exchange/new_game_exchange.hpp>
 
@@ -45,9 +46,6 @@ protected:
     void new_game(const bim::net::game_name& name);
 
   public:
-    std::optional<iscool::net::channel_id> m_channel;
-    std::optional<unsigned> m_player_count;
-    std::optional<unsigned> m_player_index;
     std::optional<bool> m_started;
     std::unique_ptr<bim::net::game_update_exchange> m_game_update;
 
@@ -55,8 +53,7 @@ protected:
 
   private:
     void launch_game(iscool::net::message_stream& stream,
-                     iscool::net::channel_id channel, unsigned player_count,
-                     unsigned player_index);
+                     const bim::net::game_launch_event& event);
 
   private:
     bim::server::tests::fake_scheduler& m_scheduler;
@@ -110,9 +107,9 @@ game_update_test::client::client(bim::server::tests::fake_scheduler& scheduler,
   m_new_game.connect_to_game_proposal(
       std::bind(&bim::net::new_game_exchange::accept, &m_new_game));
 
-  m_new_game.connect_to_launch_game(std::bind(
-      &client::launch_game, this, std::ref(message_stream),
-      std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
+  m_new_game.connect_to_launch_game(std::bind(&client::launch_game, this,
+                                              std::ref(message_stream),
+                                              std::placeholders::_1));
 }
 
 void game_update_test::client::authenticate()
@@ -132,26 +129,16 @@ void game_update_test::client::new_game(const bim::net::game_name& name)
   m_new_game.start(*m_session, name);
 }
 
-void game_update_test::client::launch_game(iscool::net::message_stream& stream,
-                                           iscool::net::channel_id channel,
-                                           unsigned player_count,
-                                           unsigned player_index)
+void game_update_test::client::launch_game(
+    iscool::net::message_stream& stream,
+    const bim::net::game_launch_event& event)
 {
   EXPECT_TRUE(!!m_session);
 
-  EXPECT_FALSE(!!m_channel);
-  m_channel = channel;
-
-  EXPECT_FALSE(!!m_player_count);
-  m_player_count = player_count;
-
-  EXPECT_FALSE(!!m_player_index);
-  m_player_index = player_index;
-
   m_message_channel.reset(
-      new iscool::net::message_channel(stream, *m_session, channel));
-  m_game_update.reset(
-      new bim::net::game_update_exchange(*m_message_channel, player_count));
+      new iscool::net::message_channel(stream, *m_session, event.channel));
+  m_game_update.reset(new bim::net::game_update_exchange(*m_message_channel,
+                                                         event.player_count));
 
   m_game_update->connect_to_started(
       [this]() -> void

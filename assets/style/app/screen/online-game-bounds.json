@@ -1,0 +1,22 @@
+{
+    "style":
+    {
+        "arena":
+        [{
+            "anchor.x": 0.5,
+            "anchor.y": 1,
+            "anchor.reference.x": 0.5,
+            "anchor.reference.y": 0.95,
+            "width.percents": 100,
+            "height-ratio": 1.154
+        }],
+
+        "ground":
+        [
+            "layout/fill",
+            {
+                "reference": "arena"
+            }
+        ]
+    }
+}

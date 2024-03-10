@@ -3,6 +3,7 @@
 #include <bim/axmol/app/main_scene.hpp>
 #include <bim/axmol/app/screen/lobby.hpp>
 #include <bim/axmol/app/screen/matchmaking.hpp>
+#include <bim/axmol/app/screen/online_game.hpp>
 
 #include <bim/axmol/widget/add_group_as_children.hpp>
 #include <bim/axmol/widget/apply_bounds.hpp>
@@ -10,7 +11,8 @@
 #define x_widget_scope bim::axmol::app::screen_wheel::
 #define x_widget_type_name controls
 #define x_widget_controls                                                     \
-  x_widget(ax::Node, lobby) x_widget(ax::Node, matchmaking)
+  x_widget(ax::Node, lobby) x_widget(ax::Node, matchmaking)                   \
+      x_widget(ax::Node, online_game)
 #include <bim/axmol/widget/implement_controls_struct.hpp>
 
 #include <axmol/2d/Node.h>
@@ -23,6 +25,8 @@ bim::axmol::app::screen_wheel::screen_wheel(
   , m_lobby(new lobby(m_context, *style.get_declaration("lobby")))
   , m_matchmaking(
         new matchmaking(m_context, *style.get_declaration("matchmaking")))
+  , m_online_game(
+        new online_game(m_context, *style.get_declaration("online-game")))
 {
   m_context.get_main_scene()->add_in_main_canvas(*m_main_container,
                                                  m_inputs.root());
@@ -37,6 +41,10 @@ bim::axmol::app::screen_wheel::screen_wheel(
   map_nodes(*m_controls->matchmaking, m_matchmaking->nodes(), style,
             "matchmaking-bounds");
   m_controls->matchmaking->removeFromParent();
+  map_nodes(*m_controls->online_game, m_online_game->nodes(), style,
+            "online-game-bounds");
+  m_online_game->attached();
+  m_controls->online_game->removeFromParent();
 
   // Start on the lobby, In the initial state
   m_active_view = m_controls->lobby;
@@ -73,9 +81,16 @@ void bim::axmol::app::screen_wheel::animate_lobby_to_matchmaking()
   matchmaking_displayed();
 }
 
-void bim::axmol::app::screen_wheel::animate_matchmaking_to_game()
+void bim::axmol::app::screen_wheel::animate_matchmaking_to_game(
+    const bim::net::game_launch_event& event)
 {
   m_inputs.erase(m_matchmaking->input_node());
+  m_matchmaking->closing();
+
+  m_online_game->displaying(event);
+  switch_view(*m_controls->online_game);
+
+  online_game_displayed();
 }
 
 void bim::axmol::app::screen_wheel::lobby_displayed()
@@ -96,10 +111,21 @@ void bim::axmol::app::screen_wheel::matchmaking_displayed()
   m_inputs.push_back(m_matchmaking->input_node());
 
   m_matchmaking->connect_to_start_game(
-      [this]()
+      [this](const bim::net::game_launch_event& event)
       {
-        animate_matchmaking_to_game();
+        animate_matchmaking_to_game(event);
       });
 
   m_matchmaking->displayed();
+}
+
+void bim::axmol::app::screen_wheel::online_game_displayed()
+{
+  m_online_game->connect_to_game_over(
+      [this]()
+      {
+        printf("TODO: switch to end-game screen.\n");
+      });
+
+  m_online_game->displayed();
 }

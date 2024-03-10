@@ -366,7 +366,7 @@ void bim::server::game_service::send_actions(
   bim::net::game_update_from_server message;
   message.first_tick = last_received_player_tick;
   message.action_count.reserve(action_count * game.player_count);
-  // Times 2 because we expect at fewer than two action kinds per frame per
+  // Times 2 because we expect fewer than two action kinds per frame per
   // player.
   message.actions.reserve(action_count * game.player_count * 2);
 

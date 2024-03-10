@@ -16,6 +16,7 @@
 */
 #include <bim/net/exchange/new_game_exchange.hpp>
 
+#include <bim/net/exchange/game_launch_event.hpp>
 #include <bim/net/message/accept_game.hpp>
 #include <bim/net/message/game_on_hold.hpp>
 #include <bim/net/message/launch_game.hpp>
@@ -85,6 +86,9 @@ void bim::net::new_game_exchange::accept()
 
 void bim::net::new_game_exchange::stop()
 {
+  if (m_monitor->is_stop_state() || m_monitor->is_idle_state())
+    return;
+
   m_monitor->set_stop_state();
 
   m_encounter_id = std::nullopt;
@@ -155,6 +159,8 @@ void bim::net::new_game_exchange::check_launch_game(const launch_game& message)
                    "Launch game %d.", *m_encounter_id);
 
   stop();
-  m_launch_game(message.get_game_channel(), message.get_player_count(),
-                message.get_player_index());
+  m_launch_game(
+      game_launch_event{ .channel = message.get_game_channel(),
+                         .player_count = message.get_player_count(),
+                         .player_index = message.get_player_index() });
 }

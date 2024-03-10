@@ -37,8 +37,8 @@ void bim::axmol::schedule::bridge::delayed_call(
 void bim::axmol::schedule::bridge::schedule_call(
     const std::function<void()>& f, const std::chrono::nanoseconds& delay)
 {
-  static constexpr float interval = 0;
-  static constexpr unsigned int repeat = 0;
+  constexpr float interval = 0;
+  constexpr unsigned int repeat = 0;
 
   const float delay_in_seconds =
       std::chrono::duration_cast<std::chrono::duration<float>>(delay).count();

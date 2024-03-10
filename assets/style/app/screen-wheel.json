@@ -4,7 +4,8 @@
         "widgets":
         [{
             "lobby": [],
-            "matchmaking": []
+            "matchmaking": [],
+            "online_game": []
         }],
 
         "lobby": ["app/screen/lobby"],
@@ -13,10 +14,14 @@
         "matchmaking": ["app/screen/matchmaking"],
         "matchmaking-bounds": ["app/screen/matchmaking-bounds"],
 
+        "online-game": ["app/screen/online-game"],
+        "online-game-bounds": ["app/screen/online-game-bounds"],
+
         "bounds":
         [{
             "lobby": ["layout/fill"],
-            "matchmaking": ["layout/fill"]
+            "matchmaking": ["layout/fill"],
+            "online_game": ["layout/fill"]
         }]
     }
 }

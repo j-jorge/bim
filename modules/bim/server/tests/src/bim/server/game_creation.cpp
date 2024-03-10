@@ -19,6 +19,7 @@
 #include <bim/server/server.hpp>
 
 #include <bim/net/exchange/authentication_exchange.hpp>
+#include <bim/net/exchange/game_launch_event.hpp>
 #include <bim/net/exchange/new_game_exchange.hpp>
 
 #include <iscool/log/setup.hpp>
@@ -42,13 +43,10 @@ protected:
     void new_game(const bim::net::game_name& name);
 
   public:
-    std::optional<iscool::net::channel_id> m_channel;
-    std::optional<unsigned> m_player_count;
-    std::optional<unsigned> m_player_index;
+    std::optional<bim::net::game_launch_event> m_game_launch_event;
 
   private:
-    void launch_game(iscool::net::channel_id channel, unsigned player_count,
-                     unsigned player_index);
+    void launch_game(const bim::net::game_launch_event& event);
 
   private:
     bim::server::tests::fake_scheduler& m_scheduler;
@@ -97,8 +95,7 @@ game_creation_test::client::client(
       std::bind(&bim::net::new_game_exchange::accept, &m_new_game));
 
   m_new_game.connect_to_launch_game(
-      std::bind(&client::launch_game, this, std::placeholders::_1,
-                std::placeholders::_2, std::placeholders::_3));
+      std::bind(&client::launch_game, this, std::placeholders::_1));
 }
 
 void game_creation_test::client::authenticate()
@@ -118,18 +115,11 @@ void game_creation_test::client::new_game(const bim::net::game_name& name)
   m_new_game.start(*m_session, name);
 }
 
-void game_creation_test::client::launch_game(iscool::net::channel_id channel,
-                                             unsigned player_count,
-                                             unsigned player_index)
+void game_creation_test::client::launch_game(
+    const bim::net::game_launch_event& event)
 {
-  EXPECT_FALSE(!!m_channel);
-  m_channel = channel;
-
-  EXPECT_FALSE(!!m_player_count);
-  m_player_count = player_count;
-
-  EXPECT_FALSE(!!m_player_index);
-  m_player_index = player_index;
+  EXPECT_FALSE(!!m_game_launch_event);
+  m_game_launch_event = event;
 }
 
 game_creation_test::game_creation_test()
@@ -170,46 +160,55 @@ TEST_F(game_creation_test, two_games)
 
   for (int i = 0; i != 4; ++i)
     {
-      ASSERT_TRUE(!!m_clients[i].m_channel) << "i=" << i;
-
-      ASSERT_TRUE(!!m_clients[i].m_player_count) << "i=" << i;
-      EXPECT_EQ(4, *m_clients[i].m_player_count) << "i=" << i;
-
-      ASSERT_TRUE(!!m_clients[i].m_player_index) << "i=" << i;
+      ASSERT_TRUE(!!m_clients[i].m_game_launch_event) << "i=" << i;
+      EXPECT_EQ(4, m_clients[i].m_game_launch_event->player_count)
+          << "i=" << i;
     }
 
   // The player index must all be different.
-  EXPECT_NE(*m_clients[0].m_player_index, *m_clients[1].m_player_index);
-  EXPECT_NE(*m_clients[0].m_player_index, *m_clients[2].m_player_index);
-  EXPECT_NE(*m_clients[0].m_player_index, *m_clients[3].m_player_index);
-  EXPECT_NE(*m_clients[1].m_player_index, *m_clients[2].m_player_index);
-  EXPECT_NE(*m_clients[1].m_player_index, *m_clients[3].m_player_index);
-  EXPECT_NE(*m_clients[2].m_player_index, *m_clients[3].m_player_index);
+  EXPECT_NE(m_clients[0].m_game_launch_event->player_index,
+            m_clients[1].m_game_launch_event->player_index);
+  EXPECT_NE(m_clients[0].m_game_launch_event->player_index,
+            m_clients[2].m_game_launch_event->player_index);
+  EXPECT_NE(m_clients[0].m_game_launch_event->player_index,
+            m_clients[3].m_game_launch_event->player_index);
+  EXPECT_NE(m_clients[1].m_game_launch_event->player_index,
+            m_clients[2].m_game_launch_event->player_index);
+  EXPECT_NE(m_clients[1].m_game_launch_event->player_index,
+            m_clients[3].m_game_launch_event->player_index);
+  EXPECT_NE(m_clients[2].m_game_launch_event->player_index,
+            m_clients[3].m_game_launch_event->player_index);
 
   // The game channel must be the same
-  EXPECT_EQ(*m_clients[0].m_channel, *m_clients[1].m_channel);
-  EXPECT_EQ(*m_clients[0].m_channel, *m_clients[2].m_channel);
-  EXPECT_EQ(*m_clients[0].m_channel, *m_clients[3].m_channel);
+  EXPECT_EQ(m_clients[0].m_game_launch_event->channel,
+            m_clients[1].m_game_launch_event->channel);
+  EXPECT_EQ(m_clients[0].m_game_launch_event->channel,
+            m_clients[2].m_game_launch_event->channel);
+  EXPECT_EQ(m_clients[0].m_game_launch_event->channel,
+            m_clients[3].m_game_launch_event->channel);
 
   for (int i = 4; i != 7; ++i)
     {
-      ASSERT_TRUE(!!m_clients[i].m_channel) << "i=" << i;
-
-      ASSERT_TRUE(!!m_clients[i].m_player_count) << "i=" << i;
-      EXPECT_EQ(3, *m_clients[i].m_player_count) << "i=" << i;
-
-      ASSERT_TRUE(!!m_clients[i].m_player_index) << "i=" << i;
+      ASSERT_TRUE(!!m_clients[i].m_game_launch_event) << "i=" << i;
+      EXPECT_EQ(3, m_clients[i].m_game_launch_event->player_count)
+          << "i=" << i;
     }
 
   // The player index must all be different.
-  EXPECT_NE(*m_clients[4].m_player_index, *m_clients[5].m_player_index);
-  EXPECT_NE(*m_clients[4].m_player_index, *m_clients[6].m_player_index);
-  EXPECT_NE(*m_clients[5].m_player_index, *m_clients[6].m_player_index);
+  EXPECT_NE(m_clients[4].m_game_launch_event->player_index,
+            m_clients[5].m_game_launch_event->player_index);
+  EXPECT_NE(m_clients[4].m_game_launch_event->player_index,
+            m_clients[6].m_game_launch_event->player_index);
+  EXPECT_NE(m_clients[5].m_game_launch_event->player_index,
+            m_clients[6].m_game_launch_event->player_index);
 
   // The game channel must be the same
-  EXPECT_EQ(*m_clients[4].m_channel, *m_clients[5].m_channel);
-  EXPECT_EQ(*m_clients[4].m_channel, *m_clients[6].m_channel);
+  EXPECT_EQ(m_clients[4].m_game_launch_event->channel,
+            m_clients[5].m_game_launch_event->channel);
+  EXPECT_EQ(m_clients[4].m_game_launch_event->channel,
+            m_clients[6].m_game_launch_event->channel);
 
   // The game channel of each group of players must be different.
-  EXPECT_NE(*m_clients[0].m_channel, *m_clients[4].m_channel);
+  EXPECT_NE(m_clients[0].m_game_launch_event->channel,
+            m_clients[4].m_game_launch_event->channel);
 }

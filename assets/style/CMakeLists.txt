@@ -10,6 +10,8 @@ set(screen_wheel_style_files
   ${CMAKE_CURRENT_LIST_DIR}/app/screen/lobby-bounds.json
   ${CMAKE_CURRENT_LIST_DIR}/app/screen/matchmaking.json
   ${CMAKE_CURRENT_LIST_DIR}/app/screen/matchmaking-bounds.json
+  ${CMAKE_CURRENT_LIST_DIR}/app/screen/online-game.json
+  ${CMAKE_CURRENT_LIST_DIR}/app/screen/online-game-bounds.json
 
   ${CMAKE_CURRENT_LIST_DIR}/button/flat-with-label.json
   ${CMAKE_CURRENT_LIST_DIR}/font/regular.json
