@@ -20,6 +20,7 @@
 
 #include <bim/game/component/brick_wall.hpp>
 #include <bim/game/component/burning.hpp>
+#include <bim/game/component/dead.hpp>
 #include <bim/game/component/position_on_grid.hpp>
 #include <bim/game/factory/brick_wall.hpp>
 
@@ -46,4 +47,6 @@ TEST(update_brick_walls, burning)
 
   EXPECT_TRUE(entt::null == arena.entity_at(0, 0));
   EXPECT_TRUE(entity == arena.entity_at(0, 1));
+  EXPECT_TRUE(registry.storage<bim::game::dead>().contains(entity_burning));
+  EXPECT_FALSE(registry.storage<bim::game::dead>().contains(entity));
 }

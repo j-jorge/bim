@@ -22,6 +22,7 @@
 #include <bim/game/component/position_on_grid.hpp>
 
 #include <bim/game/system/apply_player_action.hpp>
+#include <bim/game/system/remove_dead_objects.hpp>
 #include <bim/game/system/update_bombs.hpp>
 #include <bim/game/system/update_brick_walls.hpp>
 #include <bim/game/system/update_flames.hpp>
@@ -72,6 +73,7 @@ bim::game::contest::contest(std::uint64_t seed,
 
 void bim::game::contest::tick()
 {
+  remove_dead_objects(m_registry);
   apply_player_action(m_registry, m_arena);
   update_bombs(m_registry, m_arena, tick_interval);
   update_flames(m_registry, m_arena, tick_interval);
