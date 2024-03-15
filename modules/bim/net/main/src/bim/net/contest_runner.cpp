@@ -81,10 +81,10 @@ void bim::net::contest_runner::run(std::chrono::nanoseconds elapsed_wall_time)
       apply_unconfirmed_actions(registry);
     }
 
-  apply_actions_for_current_tick(registry, player_current_action_copy);
-
   for (int i = 0; i != tick_count; ++i)
     {
+      apply_actions_for_current_tick(registry, player_current_action_copy);
+      // TODO: pass player_current_action_copy directly
       m_update_exchange.push(find_local_player_action(registry));
       m_contest.tick();
     }
@@ -135,9 +135,12 @@ void bim::net::contest_runner::apply_server_actions(entt::registry& registry)
        m_server_actions)
     {
       registry.view<bim::game::player, bim::game::player_action>().each(
-          [&server_action](const bim::game::player& p,
-                           bim::game::player_action& action) -> void
+          [this, &server_action](const bim::game::player& p,
+                                 bim::game::player_action& action) -> void
           {
+            if (server_action[p.index].queue_size == 0)
+              return;
+
             action = server_action[p.index];
           });
 
