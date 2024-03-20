@@ -34,7 +34,14 @@ jobs:
           ./ci/install-minimal-environment.sh
           --compiler g++
           --target-platform ${{steps.strings.outputs.target_platform}}
-          ;
+
+      # Older versions of ThreadSanitizer are not compatible with ASLR
+      # on some recent Linux distributions, thus we reduce the entropy
+      # until we can upgrade for a newer version. See
+      # https://github.com/google/sanitizers/issues/1716
+      - name: ASLR fix
+        run: >
+          sysctl vm.mmap_rnd_bits=28
 
       - name: Launch build
         run: >
