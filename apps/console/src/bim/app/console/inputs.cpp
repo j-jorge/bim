@@ -16,11 +16,10 @@
 */
 #include <bim/app/console/inputs.hpp>
 
-#include <bim/game/component/player.hpp>
+#include <bim/game/player_action.hpp>
+
 #include <bim/game/component/player_action.hpp>
 #include <bim/game/component/player_action_kind.hpp>
-
-#include <bim/assume.hpp>
 
 #include <entt/entity/registry.hpp>
 
@@ -41,18 +40,12 @@ bool bim::app::console::apply_inputs(entt::registry& registry,
   if (input == 'q')
     return false;
 
-  bim::game::player_action& player_action =
-      [&registry, player_index]() -> bim::game::player_action&
-  {
-    for (auto&& [entity, player, action] :
-         registry.view<bim::game::player, bim::game::player_action>().each())
-      if (player.index == player_index)
-        return action;
+  bim::game::player_action* player_action =
+      bim::game::find_player_action_by_index(registry, player_index);
 
-    bim_assume(false);
-  }();
-
-  if (player_action.queue_size == bim::game::player_action::queue_capacity)
+  if ((player_action == nullptr)
+      || (player_action->queue_size
+          == bim::game::player_action::queue_capacity))
     return true;
 
   switch (input)
@@ -61,29 +54,19 @@ bool bim::app::console::apply_inputs(entt::registry& registry,
       // pressing the arrow keys on my laptop (ignoring the preceeding escape
       // character).
     case 'A':
-      player_action.queue[player_action.queue_size] =
-          bim::game::player_action_kind::up;
-      ++player_action.queue_size;
+      player_action->push(bim::game::player_action_kind::up);
       break;
     case 'B':
-      player_action.queue[player_action.queue_size] =
-          bim::game::player_action_kind::down;
-      ++player_action.queue_size;
+      player_action->push(bim::game::player_action_kind::down);
       break;
     case 'C':
-      player_action.queue[player_action.queue_size] =
-          bim::game::player_action_kind::right;
-      ++player_action.queue_size;
+      player_action->push(bim::game::player_action_kind::right);
       break;
     case 'D':
-      player_action.queue[player_action.queue_size] =
-          bim::game::player_action_kind::left;
-      ++player_action.queue_size;
+      player_action->push(bim::game::player_action_kind::left);
       break;
     case ' ':
-      player_action.queue[player_action.queue_size] =
-          bim::game::player_action_kind::drop_bomb;
-      ++player_action.queue_size;
+      player_action->push(bim::game::player_action_kind::drop_bomb);
       break;
     }
 

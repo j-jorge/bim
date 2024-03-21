@@ -29,6 +29,7 @@
 #include <bim/game/contest.hpp>
 #include <bim/game/input_archive.hpp>
 #include <bim/game/output_archive.hpp>
+#include <bim/game/player_action.hpp>
 
 #include <bim/assume.hpp>
 
@@ -70,10 +71,14 @@ void bim::net::contest_runner::run(std::chrono::nanoseconds elapsed_wall_time)
 
   entt::registry& registry = m_contest.registry();
 
+  const bim::game::player_action* const player_current_action_ptr =
+      bim::game::find_player_action_by_index(registry, m_local_player_index);
+
   // Start by storing the queued actions because the restoration of the
   // state thereafter will overwrite them.
   const bim::game::player_action player_current_action_copy =
-      find_local_player_action(registry);
+      player_current_action_ptr ? *player_current_action_ptr
+                                : bim::game::player_action{};
 
   if (!m_server_actions.empty())
     {
@@ -84,8 +89,7 @@ void bim::net::contest_runner::run(std::chrono::nanoseconds elapsed_wall_time)
   for (int i = 0; i != tick_count; ++i)
     {
       apply_actions_for_current_tick(registry, player_current_action_copy);
-      // TODO: pass player_current_action_copy directly
-      m_update_exchange.push(find_local_player_action(registry));
+      m_update_exchange.push(player_current_action_copy);
       m_contest.tick();
     }
 
@@ -98,17 +102,6 @@ void bim::net::contest_runner::queue_updates(const server_update& updates)
 
   m_server_actions.insert(m_server_actions.end(), updates.actions.begin(),
                           updates.actions.end());
-}
-
-bim::game::player_action& bim::net::contest_runner::find_local_player_action(
-    entt::registry& registry) const
-{
-  for (auto&& [entity, player, action] :
-       registry.view<bim::game::player, bim::game::player_action>().each())
-    if (player.index == m_local_player_index)
-      return action;
-
-  bim_assume(false);
 }
 
 void bim::net::contest_runner::sync_with_server(entt::registry& registry)
@@ -184,7 +177,7 @@ void bim::net::contest_runner::drop_confirmed_actions()
 void bim::net::contest_runner::apply_unconfirmed_actions(
     entt::registry& registry)
 {
-  std::array<bim::game::player_action*, 4> player_action_pointers;
+  std::array<bim::game::player_action*, 4> player_action_pointers{};
 
   registry.view<bim::game::player, bim::game::player_action>().each(
       [&player_action_pointers](const bim::game::player& p,
@@ -199,16 +192,17 @@ void bim::net::contest_runner::apply_unconfirmed_actions(
     {
       for (int player_index = 0; player_index != m_player_count;
            ++player_index)
-        {
-          const std::vector<bim::game::player_action>& actions =
-              m_unconfirmed_actions[player_index];
+        if (player_action_pointers[player_index])
+          {
+            const std::vector<bim::game::player_action>& actions =
+                m_unconfirmed_actions[player_index];
 
-          // Local players: apply the action they did in tick i.
-          // Distant players: repeat the last action received from the
-          // server.
-          *player_action_pointers[player_index] =
-              actions[std::min(actions.size() - 1, i)];
-        }
+            // Local players: apply the action they did in tick i.
+            // Distant players: repeat the last action received from the
+            // server.
+            *player_action_pointers[player_index] =
+                actions[std::min(actions.size() - 1, i)];
+          }
 
       m_contest.tick();
     }

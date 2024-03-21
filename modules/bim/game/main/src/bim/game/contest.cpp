@@ -20,12 +20,13 @@
 #include <bim/game/component/player_action.hpp>
 #include <bim/game/component/player_direction.hpp>
 #include <bim/game/component/position_on_grid.hpp>
-
+#include <bim/game/factory/player.hpp>
 #include <bim/game/system/apply_player_action.hpp>
 #include <bim/game/system/remove_dead_objects.hpp>
 #include <bim/game/system/update_bombs.hpp>
 #include <bim/game/system/update_brick_walls.hpp>
 #include <bim/game/system/update_flames.hpp>
+#include <bim/game/system/update_players.hpp>
 
 #include <bim/game/level_generation.hpp>
 #include <bim/game/random_generator.hpp>
@@ -44,20 +45,18 @@ bim::game::contest::contest(std::uint64_t seed,
   bim_assume(player_count > 0);
 
   const position_on_grid player_start_position[] = {
-    position_on_grid(1, 1), position_on_grid(arena_width - 2, 1),
-    position_on_grid(1, arena_height - 2),
-    position_on_grid(arena_width - 2, arena_height - 2)
+    position_on_grid(1, 1),
+    position_on_grid(arena_width - 2, arena_height - 2),
+    position_on_grid(arena_width - 2, 1), position_on_grid(1, arena_height - 2)
   };
   const int start_position_count = std::size(player_start_position);
 
   for (std::size_t i = 0; i != player_count; ++i)
     {
-      entt::entity p = m_registry.create();
       const int start_position_index = i % start_position_count;
-      m_registry.emplace<player>(p, i, player_direction::down, 2);
-      m_registry.emplace<position_on_grid>(
-          p, player_start_position[start_position_index]);
-      m_registry.emplace<player_action>(p);
+      player_factory(m_registry, i,
+                     player_start_position[start_position_index].x,
+                     player_start_position[start_position_index].y);
     }
 
   generate_basic_level_structure(m_arena);
@@ -78,6 +77,7 @@ void bim::game::contest::tick()
   update_bombs(m_registry, m_arena, tick_interval);
   update_flames(m_registry, m_arena, tick_interval);
   update_brick_walls(m_registry, m_arena);
+  update_players(m_registry, m_arena);
 }
 
 entt::registry& bim::game::contest::registry()

@@ -50,9 +50,6 @@ namespace bim::net
   private:
     void queue_updates(const server_update& updates);
 
-    bim::game::player_action&
-    find_local_player_action(entt::registry& registry) const;
-
     void sync_with_server(entt::registry& registry);
     void restore_last_confirmed_state(entt::registry& registry);
     void apply_server_actions(entt::registry& registry);

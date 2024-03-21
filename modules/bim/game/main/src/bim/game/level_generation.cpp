@@ -69,7 +69,7 @@ void bim::game::insert_random_brick_walls(arena& arena,
   boost::random::uniform_int_distribution<std::uint8_t> random(0, 99);
 
   std::vector<position_on_grid> forbidden_positions;
-  // Typically 4 players in the arena, and 9 blocks each them.
+  // Typically 4 players in the arena, and 9 blocks for each of them.
   forbidden_positions.reserve(4 * 9);
 
   registry.view<bim::game::player, bim::game::position_on_grid>().each(

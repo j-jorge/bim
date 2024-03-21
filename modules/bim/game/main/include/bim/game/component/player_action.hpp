@@ -28,5 +28,7 @@ namespace bim::game
 
     player_action_kind queue[queue_capacity];
     std::uint8_t queue_size;
+
+    void push(player_action_kind a);
   };
 }
