@@ -19,5 +19,11 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL GNU)
     add_compile_options(-fsanitize=thread -fno-omit-frame-pointer)
     add_link_options(-fsanitize=thread)
   endif()
+
+  if (CMAKE_BUILD_TYPE STREQUAL "Release")
+    # Emit debug info in release builds too, such that we can have
+    # symbols in the debugger.
+    add_compile_options(-g)
+  endif()
 endif()
 
