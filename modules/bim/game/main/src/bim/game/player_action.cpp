@@ -1,5 +1,8 @@
 #include <bim/game/player_action.hpp>
 
+#include <bim/game/component/player.hpp>
+#include <bim/game/component/player_action.hpp>
+
 #include <entt/entity/registry.hpp>
 
 bim::game::player_action*

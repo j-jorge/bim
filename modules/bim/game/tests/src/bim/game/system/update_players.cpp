@@ -4,6 +4,7 @@
 
 #include <bim/game/component/bomb.hpp>
 #include <bim/game/component/burning.hpp>
+#include <bim/game/component/dead.hpp>
 #include <bim/game/component/flame.hpp>
 #include <bim/game/component/flame_direction.hpp>
 #include <bim/game/component/position_on_grid.hpp>

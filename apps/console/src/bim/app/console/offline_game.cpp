@@ -22,6 +22,7 @@
 
 #include <iscool/schedule/delayed_call.hpp>
 
+#include <iostream>
 #include <random>
 
 bim::app::console::offline_game::offline_game(application& application)
@@ -50,8 +51,26 @@ void bim::app::console::offline_game::tick()
     m_application.quit();
   else
     {
-      m_contest_runner.run(m_application.update_interval());
+      // TODO: merge code with online_game.
+      const bim::game::contest_result result =
+          m_contest_runner.run(m_application.update_interval());
+
       display(m_contest);
-      schedule_tick();
+
+      if (result.still_running())
+        {
+          schedule_tick();
+          return;
+        }
+
+      if (!result.has_a_winner())
+        std::cout << "Draw game!\n";
+      else if (result.winning_player() == 0)
+        std::cout << "You won!\n";
+      else
+        std::cout << "Player " << char('A' + result.winning_player())
+                  << " won.\n";
+
+      m_application.quit();
     }
 }

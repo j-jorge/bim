@@ -2,6 +2,7 @@
 
 #include <bim/game/component/player.hpp>
 #include <bim/game/component/player_action.hpp>
+#include <bim/game/component/player_direction.hpp>
 #include <bim/game/component/position_on_grid.hpp>
 
 #include <entt/entity/registry.hpp>

@@ -3,6 +3,7 @@
 #include <bim/game/arena.hpp>
 
 #include <bim/game/component/dead.hpp>
+#include <bim/game/component/flame.hpp>
 #include <bim/game/component/player.hpp>
 #include <bim/game/component/position_on_grid.hpp>
 

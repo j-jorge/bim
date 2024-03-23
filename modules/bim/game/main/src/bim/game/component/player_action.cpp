@@ -1,5 +1,7 @@
 #include <bim/game/component/player_action.hpp>
 
+#include <cassert>
+
 void bim::game::player_action::push(player_action_kind a)
 {
   assert(queue_size < queue_capacity);

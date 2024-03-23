@@ -16,16 +16,28 @@
 */
 #include <bim/game/contest_runner.hpp>
 
+#include <bim/game/check_game_over.hpp>
+
 #include <bim/game/contest.hpp>
 
 bim::game::contest_runner::contest_runner(contest& contest)
   : m_contest(contest)
 {}
 
-void bim::game::contest_runner::run(std::chrono::nanoseconds elapsed_wall_time)
+bim::game::contest_result
+bim::game::contest_runner::run(std::chrono::nanoseconds elapsed_wall_time)
 {
   for (int i = 0, n = m_tick_counter.add(elapsed_wall_time,
                                          bim::game::contest::tick_interval);
        i != n; ++i)
-    m_contest.tick();
+    {
+      m_contest.tick();
+
+      const contest_result result = check_game_over(m_contest.registry());
+
+      if (!result.still_running())
+        return result;
+    }
+
+  return contest_result::create_still_running();
 }

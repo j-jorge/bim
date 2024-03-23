@@ -6,6 +6,8 @@ set(common_style_files
 
 set(screen_wheel_style_files
   ${CMAKE_CURRENT_LIST_DIR}/app/screen-wheel.json
+  ${CMAKE_CURRENT_LIST_DIR}/app/screen/end-game.json
+  ${CMAKE_CURRENT_LIST_DIR}/app/screen/end-game-bounds.json
   ${CMAKE_CURRENT_LIST_DIR}/app/screen/lobby.json
   ${CMAKE_CURRENT_LIST_DIR}/app/screen/lobby-bounds.json
   ${CMAKE_CURRENT_LIST_DIR}/app/screen/matchmaking.json

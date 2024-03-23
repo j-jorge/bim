@@ -8,15 +8,23 @@
 #include <memory>
 #include <string>
 
-namespace bim::axmol::widget
+namespace bim
 {
-  class context;
-}
+  namespace axmol::widget
+  {
+    class context;
+  }
 
-namespace bim::net
-{
-  class session_handler;
-  struct game_launch_event;
+  namespace net
+  {
+    class session_handler;
+    struct game_launch_event;
+  }
+
+  namespace game
+  {
+    class contest_result;
+  }
 }
 
 namespace iscool
@@ -33,11 +41,12 @@ namespace iscool
 
 namespace bim::axmol::app
 {
-  class main_scene;
-  class scene_lock;
+  class end_game;
   class lobby;
+  class main_scene;
   class matchmaking;
   class online_game;
+  class scene_lock;
 
   class screen_wheel
   {
@@ -64,20 +73,24 @@ namespace bim::axmol::app
 
     void animate_lobby_to_matchmaking();
     void animate_matchmaking_to_game(const bim::net::game_launch_event& event);
+    void animate_game_to_end_game(const bim::game::contest_result& result);
+    void animate_end_game_to_lobby();
 
     void lobby_displayed();
     void matchmaking_displayed();
     void online_game_displayed();
+    void end_game_displayed();
 
   private:
     bim::axmol::ref_ptr<ax::Node> m_main_container;
     bim::axmol::input::tree m_inputs;
     ax::Node* m_active_view;
 
-    bim_declare_controls_struct(controls, m_controls, 3);
+    bim_declare_controls_struct(controls, m_controls, 4);
 
     std::unique_ptr<lobby> m_lobby;
     std::unique_ptr<matchmaking> m_matchmaking;
     std::unique_ptr<online_game> m_online_game;
+    std::unique_ptr<end_game> m_end_game;
   };
 }

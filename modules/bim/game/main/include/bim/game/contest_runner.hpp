@@ -16,6 +16,7 @@
 */
 #pragma once
 
+#include <bim/game/contest_result.hpp>
 #include <bim/game/tick_counter.hpp>
 
 namespace bim::game
@@ -27,7 +28,7 @@ namespace bim::game
   public:
     explicit contest_runner(contest& contest);
 
-    void run(std::chrono::nanoseconds elapsed_wall_time);
+    contest_result run(std::chrono::nanoseconds elapsed_wall_time);
 
   private:
     contest& m_contest;

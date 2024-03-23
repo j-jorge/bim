@@ -189,11 +189,19 @@ void bim::axmol::app::online_game::tick()
 {
   const std::chrono::duration now =
       iscool::time::monotonic_now<std::chrono::nanoseconds>();
-  m_contest_runner->run(now - m_last_tick_date);
+  const bim::game::contest_result result =
+      m_contest_runner->run(now - m_last_tick_date);
   m_last_tick_date = now;
 
   refresh_display();
-  schedule_tick();
+
+  if (result.still_running())
+    schedule_tick();
+  else
+    {
+      stop();
+      m_game_over(result);
+    }
 }
 
 template <typename T>
@@ -306,4 +314,12 @@ ax::Vec2 bim::axmol::app::online_game::grid_position_to_displayed_block_center(
       m_arena_view_size.y - m_block_size / 2 - y * m_block_size;
 
   return ax::Vec2(center_x, center_y);
+}
+
+void bim::axmol::app::online_game::stop()
+{
+  m_contest_runner.reset();
+  m_update_exchange.reset();
+  m_game_channel.reset();
+  m_contest.reset();
 }

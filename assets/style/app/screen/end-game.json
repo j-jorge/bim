@@ -1,0 +1,29 @@
+{
+    "style":
+    {
+        "widgets":
+        [{
+            "quit_button":
+            [
+                "button/flat-with-label",
+                {
+                    "widgets/label/text.i18n": "QUIT"
+                }
+            ],
+
+            "message":
+            [
+                "font/regular",
+                {
+                    "text": "Game over message.",
+                    "font.size": 32,
+                    "font.color": "#f0f0f0",
+                    "shadow.color": "#1f1f1f",
+                    "shadow.offset.y": -10,
+                    "outline.color": "#c0c0c0",
+                    "outline.size": 2
+                }
+            ]
+        }]
+    }
+}

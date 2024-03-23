@@ -1,7 +1,9 @@
 add_library(bim_game
   STATIC
   main/src/bim/game/arena.cpp
+  main/src/bim/game/check_game_over.cpp
   main/src/bim/game/contest.cpp
+  main/src/bim/game/contest_result.cpp
   main/src/bim/game/contest_runner.cpp
   main/src/bim/game/input_archive.cpp
   main/src/bim/game/level_generation.cpp

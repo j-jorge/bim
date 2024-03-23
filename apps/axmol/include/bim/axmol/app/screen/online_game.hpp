@@ -24,6 +24,7 @@ namespace bim::axmol::widget
 namespace bim::game
 {
   class contest;
+  class contest_result;
 }
 
 namespace bim::net
@@ -53,7 +54,8 @@ namespace bim::axmol::app
 {
   class online_game
   {
-    DECLARE_VOID_SIGNAL(game_over, m_game_over)
+    DECLARE_SIGNAL(void(const bim::game::contest_result&), game_over,
+                   m_game_over)
 
     ic_declare_context(
         m_context,
@@ -91,6 +93,8 @@ namespace bim::axmol::app
     void display_bombs() const;
 
     ax::Vec2 grid_position_to_displayed_block_center(float x, float y) const;
+
+    void stop();
 
   private:
     bim::axmol::input::tree m_inputs;

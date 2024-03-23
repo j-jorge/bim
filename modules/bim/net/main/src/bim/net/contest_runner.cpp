@@ -19,6 +19,7 @@
 #include <bim/net/exchange/game_update_exchange.hpp>
 #include <bim/net/exchange/server_update.hpp>
 
+#include <bim/game/check_game_over.hpp>
 #include <bim/game/component/bomb.hpp>
 #include <bim/game/component/brick_wall.hpp>
 #include <bim/game/component/burning.hpp>
@@ -60,14 +61,15 @@ bim::net::contest_runner::contest_runner(bim::game::contest& contest,
       std::bind(&contest_runner::queue_updates, this, std::placeholders::_1));
 }
 
-void bim::net::contest_runner::run(std::chrono::nanoseconds elapsed_wall_time)
+bim::game::contest_result
+bim::net::contest_runner::run(std::chrono::nanoseconds elapsed_wall_time)
 {
   const int tick_count =
       m_tick_counter.add(elapsed_wall_time, bim::game::contest::tick_interval);
   bim_assume(tick_count >= 0);
 
   if (tick_count == 0)
-    return;
+    return bim::game::contest_result::create_still_running();
 
   entt::registry& registry = m_contest.registry();
 
@@ -83,6 +85,13 @@ void bim::net::contest_runner::run(std::chrono::nanoseconds elapsed_wall_time)
   if (!m_server_actions.empty())
     {
       sync_with_server(registry);
+
+      const bim::game::contest_result result =
+          bim::game::check_game_over(registry);
+
+      if (!result.still_running())
+        return result;
+
       apply_unconfirmed_actions(registry);
     }
 
@@ -94,6 +103,8 @@ void bim::net::contest_runner::run(std::chrono::nanoseconds elapsed_wall_time)
     }
 
   m_last_completed_tick += tick_count;
+
+  return bim::game::contest_result::create_still_running();
 }
 
 void bim::net::contest_runner::queue_updates(const server_update& updates)

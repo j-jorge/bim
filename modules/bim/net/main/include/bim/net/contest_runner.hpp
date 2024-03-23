@@ -18,6 +18,7 @@
 
 #include <bim/game/archive_storage.hpp>
 #include <bim/game/arena.hpp>
+#include <bim/game/contest_result.hpp>
 #include <bim/game/tick_counter.hpp>
 
 #include <entt/entity/fwd.hpp>
@@ -42,7 +43,7 @@ namespace bim::net
                    game_update_exchange& update_exchange,
                    std::uint8_t local_player_index, std::uint8_t player_count);
 
-    void run(std::chrono::nanoseconds elapsed_wall_time);
+    bim::game::contest_result run(std::chrono::nanoseconds elapsed_wall_time);
 
   private:
     struct history_entry;
