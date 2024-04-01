@@ -43,10 +43,13 @@ namespace bim::net
     ~new_game_exchange();
 
     void start(iscool::net::session_id session, const game_name& name);
+    void start(iscool::net::session_id session);
     void accept();
     void stop();
 
   private:
+    void internal_start(iscool::net::session_id session);
+
     void tick();
 
     void interpret_received_message(const iscool::net::message& message);

@@ -42,40 +42,28 @@ namespace bim::server
                         game_service& game_service);
     ~matchmaking_service();
 
-    void process(const iscool::net::endpoint& endpoint,
-                 const iscool::net::message& message);
+    bim::net::encounter_id new_encounter(const iscool::net::endpoint& endpoint,
+                                         iscool::net::session_id session,
+                                         bim::net::client_token request_token);
+    bool refresh_encounter(bim::net::encounter_id encounter_id,
+                           const iscool::net::endpoint& endpoint,
+                           iscool::net::session_id session,
+                           bim::net::client_token request_token);
+    void mark_as_ready(const iscool::net::endpoint& endpoint,
+                       iscool::net::session_id session,
+                       const bim::net::accept_game& message);
 
   private:
     struct encounter_info;
     using encounter_map =
         boost::unordered_map<bim::net::encounter_id, encounter_info>;
-    using name_to_encounter_id_map =
-        boost::unordered_map<std::string, bim::net::encounter_id>;
-    using encounter_id_to_name_map =
-        boost::unordered_map<bim::net::encounter_id, std::string>;
 
   private:
-    void create_or_update_encounter(const iscool::net::endpoint& endpoint,
-                                    iscool::net::session_id session,
-                                    const bim::net::new_game_request& request);
-    void create_encounter(const iscool::net::endpoint& endpoint,
-                          const iscool::net::session_id session,
-                          const bim::net::new_game_request& request,
-                          std::string name);
-    void update_encounter(const iscool::net::endpoint& endpoint,
-                          const iscool::net::session_id session,
-                          const bim::net::new_game_request& request,
-                          bim::net::encounter_id encounter_id,
-                          encounter_info& encounter);
     void send_game_on_hold(const iscool::net::endpoint& endpoint,
                            bim::net::client_token token,
                            iscool::net::session_id session,
                            bim::net::encounter_id encounter_id,
                            std::uint8_t player_count);
-
-    void mark_as_ready(const iscool::net::endpoint& endpoint,
-                       iscool::net::session_id session,
-                       const bim::net::accept_game& message);
 
     void remove_inactive_sessions(bim::net::encounter_id encounter_id,
                                   encounter_info& encounter);
@@ -89,8 +77,6 @@ namespace bim::server
     iscool::net::message_stream m_message_stream;
     game_service& m_game_service;
 
-    name_to_encounter_id_map m_encounter_ids;
-    encounter_id_to_name_map m_game_names;
     encounter_map m_encounters;
     bim::net::encounter_id m_next_encounter_id;
   };

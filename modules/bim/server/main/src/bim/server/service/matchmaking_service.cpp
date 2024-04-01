@@ -22,7 +22,6 @@
 #include <bim/net/message/accept_game.hpp>
 #include <bim/net/message/game_on_hold.hpp>
 #include <bim/net/message/launch_game.hpp>
-#include <bim/net/message/new_game_request.hpp>
 
 #include <iscool/log/causeless_log.hpp>
 #include <iscool/log/nature/info.hpp>
@@ -78,69 +77,18 @@ bim::server::matchmaking_service::matchmaking_service(
 
 bim::server::matchmaking_service::~matchmaking_service() = default;
 
-void bim::server::matchmaking_service::process(
-    const iscool::net::endpoint& endpoint, const iscool::net::message& message)
-{
-  assert(message.get_session_id() != 0);
-
-  if (message.get_channel_id() != 0)
-    return;
-
-  if (message.get_type() == bim::net::message_type::new_game_request)
-    create_or_update_encounter(
-        endpoint, message.get_session_id(),
-        bim::net::new_game_request(message.get_content()));
-  else if (message.get_type() == bim::net::message_type::accept_game)
-    mark_as_ready(endpoint, message.get_session_id(),
-                  bim::net::accept_game(message.get_content()));
-}
-
-void bim::server::matchmaking_service::create_or_update_encounter(
-    const iscool::net::endpoint& endpoint,
-    const iscool::net::session_id session,
-    const bim::net::new_game_request& request)
+bim::net::encounter_id bim::server::matchmaking_service::new_encounter(
+    const iscool::net::endpoint& endpoint, iscool::net::session_id session,
+    bim::net::client_token request_token)
 {
   ic_causeless_log(iscool::log::nature::info(), "matchmaking_service",
-                   "New game request for session %d.", session);
+                   "Creating new encounter %d on request of session %d.",
+                   m_next_encounter_id, session);
 
-  // TODO: if the request is for a random match, we must:
-  //
-  // - check if the session is in an active game. The message is probably from
-  //   a previous request and we don't want to create a new encounter for it.
-  // - then add the session in the current random encounter.
-  //
-  // Thus we need a map session -> encounter_id, up to date with m_encounters,
-  // and something like m_id_for_random_encounter.
-
-  char name[std::tuple_size_v<bim::net::game_name> + 1];
-  std::copy(request.get_name().begin(), request.get_name().end(), name);
-  name[std::size(name) - 1] = '\0';
-
-  const name_to_encounter_id_map::iterator it = m_encounter_ids.find(name);
-
-  if (it == m_encounter_ids.end())
-    create_encounter(endpoint, session, request, name);
-  else
-    update_encounter(endpoint, session, request, it->second,
-                     m_encounters[it->second]);
-}
-
-void bim::server::matchmaking_service::create_encounter(
-    const iscool::net::endpoint& endpoint,
-    const iscool::net::session_id session,
-    const bim::net::new_game_request& request, std::string name)
-{
-  ic_causeless_log(
-      iscool::log::nature::info(), "matchmaking_service",
-      "Creating new encounter %d ('%s') on request of session %d.",
-      m_next_encounter_id, name, session);
-
-  const bim::net::encounter_id encounter_id =
-      m_encounter_ids.emplace(name, m_next_encounter_id).first->second;
+  const bim::net::encounter_id encounter_id = m_next_encounter_id;
   ++m_next_encounter_id;
 
-  m_game_names[encounter_id] = std::move(name);
-
+  assert(m_encounters.find(encounter_id) == m_encounters.end());
   encounter_info& encounter = m_encounters[encounter_id];
 
   encounter.player_count = 1;
@@ -149,26 +97,33 @@ void bim::server::matchmaking_service::create_encounter(
   encounter.clean_up_connection = schedule_clean_up(encounter_id);
   encounter.ready.fill(false);
 
-  send_game_on_hold(endpoint, request.get_request_token(), session,
-                    encounter_id, encounter.player_count);
+  send_game_on_hold(endpoint, request_token, session, encounter_id,
+                    encounter.player_count);
+
+  return encounter_id;
 }
 
-void bim::server::matchmaking_service::update_encounter(
-    const iscool::net::endpoint& endpoint,
-    const iscool::net::session_id session,
-    const bim::net::new_game_request& request,
-    bim::net::encounter_id encounter_id, encounter_info& encounter)
+bool bim::server::matchmaking_service::refresh_encounter(
+    bim::net::encounter_id encounter_id, const iscool::net::endpoint& endpoint,
+    iscool::net::session_id session, bim::net::client_token request_token)
 {
+  const encounter_map::iterator it = m_encounters.find(encounter_id);
+
+  if (it == m_encounters.end())
+    return false;
+
+  encounter_info& encounter = it->second;
+
+  const std::size_t existing_index = encounter.session_index(session);
+
   // No update of the participants once the game has started.
   if (encounter.channel)
-    return;
+    return existing_index != encounter.sessions.size();
 
   ic_causeless_log(
       iscool::log::nature::info(), "matchmaking_service",
       "Refreshing encounter '%d' with %d players on request of session %d.",
       encounter_id, (int)encounter.player_count, session);
-
-  const std::size_t existing_index = encounter.session_index(session);
 
   // Update for a player on hold.
   if (existing_index < encounter.sessions.size())
@@ -188,7 +143,7 @@ void bim::server::matchmaking_service::update_encounter(
           ++encounter.player_count;
         }
       else
-        return;
+        return false;
     }
 
   if (encounter.player_count == 0)
@@ -196,21 +151,11 @@ void bim::server::matchmaking_service::update_encounter(
   else
     {
       encounter.clean_up_connection = schedule_clean_up(encounter_id);
-      send_game_on_hold(endpoint, request.get_request_token(), session,
-                        encounter_id, encounter.player_count);
+      send_game_on_hold(endpoint, request_token, session, encounter_id,
+                        encounter.player_count);
     }
-}
 
-void bim::server::matchmaking_service::send_game_on_hold(
-    const iscool::net::endpoint& endpoint, bim::net::client_token token,
-    iscool::net::session_id session, bim::net::encounter_id encounter_id,
-    std::uint8_t player_count)
-{
-  m_message_stream.send(
-      endpoint,
-      bim::net::game_on_hold(token, encounter_id, player_count)
-          .build_message(),
-      session, 0);
+  return true;
 }
 
 void bim::server::matchmaking_service::mark_as_ready(
@@ -286,6 +231,18 @@ void bim::server::matchmaking_service::mark_as_ready(
       session, 0);
 }
 
+void bim::server::matchmaking_service::send_game_on_hold(
+    const iscool::net::endpoint& endpoint, bim::net::client_token token,
+    iscool::net::session_id session, bim::net::encounter_id encounter_id,
+    std::uint8_t player_count)
+{
+  m_message_stream.send(
+      endpoint,
+      bim::net::game_on_hold(token, encounter_id, player_count)
+          .build_message(),
+      session, 0);
+}
+
 void bim::server::matchmaking_service::remove_inactive_sessions(
     bim::net::encounter_id encounter_id, encounter_info& encounter)
 {
@@ -322,10 +279,5 @@ void bim::server::matchmaking_service::clean_up(
   ic_causeless_log(iscool::log::nature::info(), "matchmaking_service",
                    "Cleaning up encounter %d.", encounter_id);
 
-  const encounter_id_to_name_map::iterator it =
-      m_game_names.find(encounter_id);
-
-  m_encounter_ids.erase(it->second);
-  m_game_names.erase(it);
   m_encounters.erase(encounter_id);
 }

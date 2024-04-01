@@ -41,6 +41,7 @@ protected:
 
     void authenticate();
     void new_game(const bim::net::game_name& name);
+    void new_game();
 
   public:
     std::optional<bim::net::game_launch_event> m_game_launch_event;
@@ -115,6 +116,13 @@ void game_creation_test::client::new_game(const bim::net::game_name& name)
   m_new_game.start(*m_session, name);
 }
 
+void game_creation_test::client::new_game()
+{
+  ASSERT_TRUE(!!m_session);
+
+  m_new_game.start(*m_session);
+}
+
 void game_creation_test::client::launch_game(
     const bim::net::game_launch_event& event)
 {
@@ -138,7 +146,7 @@ game_creation_test::game_creation_test()
 {}
 
 /** Ensure that the new_game_exchange creates and joins the game. */
-TEST_F(game_creation_test, two_games)
+TEST_F(game_creation_test, two_named_games)
 {
   for (int i = 0; i != 7; ++i)
     m_clients[i].authenticate();
@@ -153,6 +161,163 @@ TEST_F(game_creation_test, two_games)
 
   for (int i = 4; i != 7; ++i)
     m_clients[i].new_game({ 'g', 'a', 'm', 'e', '2' });
+
+  // Time passes again…
+  for (int i = 0; i != 10; ++i)
+    m_scheduler.tick(std::chrono::seconds(1));
+
+  for (int i = 0; i != 4; ++i)
+    {
+      ASSERT_TRUE(!!m_clients[i].m_game_launch_event) << "i=" << i;
+      EXPECT_EQ(4, m_clients[i].m_game_launch_event->player_count)
+          << "i=" << i;
+    }
+
+  // The player index must all be different.
+  EXPECT_NE(m_clients[0].m_game_launch_event->player_index,
+            m_clients[1].m_game_launch_event->player_index);
+  EXPECT_NE(m_clients[0].m_game_launch_event->player_index,
+            m_clients[2].m_game_launch_event->player_index);
+  EXPECT_NE(m_clients[0].m_game_launch_event->player_index,
+            m_clients[3].m_game_launch_event->player_index);
+  EXPECT_NE(m_clients[1].m_game_launch_event->player_index,
+            m_clients[2].m_game_launch_event->player_index);
+  EXPECT_NE(m_clients[1].m_game_launch_event->player_index,
+            m_clients[3].m_game_launch_event->player_index);
+  EXPECT_NE(m_clients[2].m_game_launch_event->player_index,
+            m_clients[3].m_game_launch_event->player_index);
+
+  // The game channel must be the same
+  EXPECT_EQ(m_clients[0].m_game_launch_event->channel,
+            m_clients[1].m_game_launch_event->channel);
+  EXPECT_EQ(m_clients[0].m_game_launch_event->channel,
+            m_clients[2].m_game_launch_event->channel);
+  EXPECT_EQ(m_clients[0].m_game_launch_event->channel,
+            m_clients[3].m_game_launch_event->channel);
+
+  for (int i = 4; i != 7; ++i)
+    {
+      ASSERT_TRUE(!!m_clients[i].m_game_launch_event) << "i=" << i;
+      EXPECT_EQ(3, m_clients[i].m_game_launch_event->player_count)
+          << "i=" << i;
+    }
+
+  // The player index must all be different.
+  EXPECT_NE(m_clients[4].m_game_launch_event->player_index,
+            m_clients[5].m_game_launch_event->player_index);
+  EXPECT_NE(m_clients[4].m_game_launch_event->player_index,
+            m_clients[6].m_game_launch_event->player_index);
+  EXPECT_NE(m_clients[5].m_game_launch_event->player_index,
+            m_clients[6].m_game_launch_event->player_index);
+
+  // The game channel must be the same
+  EXPECT_EQ(m_clients[4].m_game_launch_event->channel,
+            m_clients[5].m_game_launch_event->channel);
+  EXPECT_EQ(m_clients[4].m_game_launch_event->channel,
+            m_clients[6].m_game_launch_event->channel);
+
+  // The game channel of each group of players must be different.
+  EXPECT_NE(m_clients[0].m_game_launch_event->channel,
+            m_clients[4].m_game_launch_event->channel);
+}
+
+/** Two groups of players ask for a random game, two games must be created. */
+TEST_F(game_creation_test, two_random_games)
+{
+  for (int i = 0; i != 7; ++i)
+    m_clients[i].authenticate();
+
+  for (int i = 0; i != 4; ++i)
+    m_clients[i].new_game();
+
+  // Let the time pass such that the messages can move between the clients and
+  // the server.
+  for (int i = 0; i != 10; ++i)
+    m_scheduler.tick(std::chrono::seconds(1));
+
+  // The first four players must be in the same game.
+  for (int i = 0; i != 4; ++i)
+    {
+      ASSERT_TRUE(!!m_clients[i].m_game_launch_event) << "i=" << i;
+      EXPECT_EQ(4, m_clients[i].m_game_launch_event->player_count)
+          << "i=" << i;
+    }
+
+  // The player index must all be different.
+  EXPECT_NE(m_clients[0].m_game_launch_event->player_index,
+            m_clients[1].m_game_launch_event->player_index);
+  EXPECT_NE(m_clients[0].m_game_launch_event->player_index,
+            m_clients[2].m_game_launch_event->player_index);
+  EXPECT_NE(m_clients[0].m_game_launch_event->player_index,
+            m_clients[3].m_game_launch_event->player_index);
+  EXPECT_NE(m_clients[1].m_game_launch_event->player_index,
+            m_clients[2].m_game_launch_event->player_index);
+  EXPECT_NE(m_clients[1].m_game_launch_event->player_index,
+            m_clients[3].m_game_launch_event->player_index);
+  EXPECT_NE(m_clients[2].m_game_launch_event->player_index,
+            m_clients[3].m_game_launch_event->player_index);
+
+  // The game channel must be the same
+  EXPECT_EQ(m_clients[0].m_game_launch_event->channel,
+            m_clients[1].m_game_launch_event->channel);
+  EXPECT_EQ(m_clients[0].m_game_launch_event->channel,
+            m_clients[2].m_game_launch_event->channel);
+  EXPECT_EQ(m_clients[0].m_game_launch_event->channel,
+            m_clients[3].m_game_launch_event->channel);
+
+  // Second group as for a random game
+  for (int i = 4; i != 7; ++i)
+    m_clients[i].new_game();
+
+  // Time passes again…
+  for (int i = 0; i != 10; ++i)
+    m_scheduler.tick(std::chrono::seconds(1));
+
+  for (int i = 4; i != 7; ++i)
+    {
+      ASSERT_TRUE(!!m_clients[i].m_game_launch_event) << "i=" << i;
+      EXPECT_EQ(3, m_clients[i].m_game_launch_event->player_count)
+          << "i=" << i;
+    }
+
+  // The player index must all be different.
+  EXPECT_NE(m_clients[4].m_game_launch_event->player_index,
+            m_clients[5].m_game_launch_event->player_index);
+  EXPECT_NE(m_clients[4].m_game_launch_event->player_index,
+            m_clients[6].m_game_launch_event->player_index);
+  EXPECT_NE(m_clients[5].m_game_launch_event->player_index,
+            m_clients[6].m_game_launch_event->player_index);
+
+  // The game channel must be the same
+  EXPECT_EQ(m_clients[4].m_game_launch_event->channel,
+            m_clients[5].m_game_launch_event->channel);
+  EXPECT_EQ(m_clients[4].m_game_launch_event->channel,
+            m_clients[6].m_game_launch_event->channel);
+
+  // The game channel of each group of players must be different.
+  EXPECT_NE(m_clients[0].m_game_launch_event->channel,
+            m_clients[4].m_game_launch_event->channel);
+}
+
+/**
+ * Players asking for a named game are put together, those asking for a random
+ * game are put in another group.
+ */
+TEST_F(game_creation_test, mix_random_and_named_games)
+{
+  for (int i = 0; i != 7; ++i)
+    m_clients[i].authenticate();
+
+  for (int i = 0; i != 4; ++i)
+    m_clients[i].new_game();
+
+  for (int i = 4; i != 7; ++i)
+    m_clients[i].new_game({ 'g', 'a', 'm', 'e' });
+
+  // Let the time pass such that the messages can move between the clients and
+  // the server.
+  for (int i = 0; i != 10; ++i)
+    m_scheduler.tick(std::chrono::seconds(1));
 
   // Time passes again…
   for (int i = 0; i != 10; ++i)

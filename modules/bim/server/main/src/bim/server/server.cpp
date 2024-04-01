@@ -24,7 +24,7 @@ bim::server::server::server(unsigned short port)
   : m_socket(port)
   , m_authentication_service(m_socket)
   , m_game_service(m_socket)
-  , m_matchmaking_service(m_socket, m_game_service)
+  , m_lobby_service(m_socket, m_game_service)
 {
   ic_causeless_log(iscool::log::nature::info(), "server",
                    "Server is up on port %d.", port);
@@ -38,8 +38,19 @@ void bim::server::server::dispatch(const iscool::net::endpoint& endpoint,
 {
   // The message comes from an active session, we can process it.
 
+  // broadcast
+  //   switch
+  //     triage
+
+  // machin_service_game_encounter_hall
+  //   named_game_encounter_service
+  //     matchmaking_service
+  //       game_service
+  //   random_game_encounter_service
+  //     matchmaking_service
+  //       game_service
   if (message.get_channel_id() == 0)
-    m_matchmaking_service.process(endpoint, message);
+    m_lobby_service.process(endpoint, message);
   else
     m_game_service.process(endpoint, message);
 }

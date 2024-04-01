@@ -4,7 +4,10 @@ add_library(bim_server
   main/src/bim/server/service/authentication_service.cpp
   main/src/bim/server/service/game_info.cpp
   main/src/bim/server/service/game_service.cpp
+  main/src/bim/server/service/lobby_service.cpp
   main/src/bim/server/service/matchmaking_service.cpp
+  main/src/bim/server/service/named_game_encounter_service.cpp
+  main/src/bim/server/service/random_game_encounter_service.cpp
 )
 
 target_include_directories(bim_server PUBLIC main/include)
