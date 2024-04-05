@@ -19,6 +19,7 @@
 #include <bim/net/message/game_update_from_server.hpp>
 #include <bim/net/message/ready.hpp>
 #include <bim/net/message/start.hpp>
+#include <bim/net/message/try_deserialize_message.hpp>
 
 #include <bim/assume.hpp>
 
@@ -82,7 +83,7 @@ void bim::net::game_update_exchange::deserialize(
       break;
     case message_type::game_update_from_server:
       if (m_monitor->is_play_state())
-        confirm_game_tick(game_update_from_server(message.get_content()));
+        confirm_game_tick(message);
       break;
     }
 }
@@ -138,16 +139,22 @@ void bim::net::game_update_exchange::send()
  *   - remove our actions covered by the server's message.
  */
 void bim::net::game_update_exchange::confirm_game_tick(
-    const game_update_from_server& message)
+    const iscool::net::message& m)
 {
-  const std::uint32_t tick_count = validate_message(message);
+  const std::optional<game_update_from_server> message =
+      try_deserialize_message<game_update_from_server>(m);
+
+  if (!message)
+    return;
+
+  const std::uint32_t tick_count = validate_message(*message);
 
   if (tick_count == 0)
     return;
 
   bim_assume(tick_count <= m_action_queue.size());
 
-  store_server_frames(message, tick_count);
+  store_server_frames(*message, tick_count);
   remove_server_confirmed_actions(tick_count);
 
   m_updated(m_server_update);

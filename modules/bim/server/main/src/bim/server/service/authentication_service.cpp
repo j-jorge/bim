@@ -20,6 +20,7 @@
 #include <bim/net/message/authentication_ko.hpp>
 #include <bim/net/message/authentication_ok.hpp>
 #include <bim/net/message/protocol_version.hpp>
+#include <bim/net/message/try_deserialize_message.hpp>
 
 #include <iscool/log/causeless_log.hpp>
 #include <iscool/log/nature/info.hpp>
@@ -55,8 +56,7 @@ void bim::server::authentication_service::check_session(
   if (session == 0)
     {
       if (message.get_type() == bim::net::message_type::authentication)
-        check_authentication(endpoint,
-                             bim::net::authentication(message.get_content()));
+        check_authentication(endpoint, message);
     }
   else
     {
@@ -72,20 +72,22 @@ void bim::server::authentication_service::check_session(
 }
 
 void bim::server::authentication_service::check_authentication(
-    const iscool::net::endpoint& endpoint,
-    const bim::net::authentication& message)
+    const iscool::net::endpoint& endpoint, const iscool::net::message& m)
 {
-  const bim::net::client_token token = message.get_request_token();
+  const std::optional<bim::net::authentication> message =
+      bim::net::try_deserialize_message<bim::net::authentication>(m);
+
+  const bim::net::client_token token = message->get_request_token();
 
   ic_causeless_log(iscool::log::nature::info(), "authentication_service",
                    "Received authentication request from token %d.", token);
 
-  if (message.get_protocol_version() != bim::net::protocol_version)
+  if (message->get_protocol_version() != bim::net::protocol_version)
     {
       ic_causeless_log(
           iscool::log::nature::info(), "server",
           "Authentication request from token %d: bad protocol %d.", token,
-          message.get_protocol_version());
+          message->get_protocol_version());
 
       m_message_stream.send(
           endpoint,

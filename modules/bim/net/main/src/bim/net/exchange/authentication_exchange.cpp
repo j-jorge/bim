@@ -20,6 +20,7 @@
 #include <bim/net/message/authentication_ko.hpp>
 #include <bim/net/message/authentication_ok.hpp>
 #include <bim/net/message/protocol_version.hpp>
+#include <bim/net/message/try_deserialize_message.hpp>
 
 #include <iscool/log/causeless_log.hpp>
 #include <iscool/log/nature/error.hpp>
@@ -58,10 +59,10 @@ void bim::net::authentication_exchange::interpret_received_message(
   switch (message.get_type())
     {
     case message_type::authentication_ok:
-      check_ok(authentication_ok(message.get_content()));
+      check_ok(message);
       break;
     case message_type::authentication_ko:
-      check_ko(authentication_ko(message.get_content()));
+      check_ko(message);
       break;
     }
 }
@@ -80,28 +81,38 @@ void bim::net::authentication_exchange::tick()
   m_message_channel.send(m_client_message);
 }
 
-void bim::net::authentication_exchange::check_ok(
-    const authentication_ok& message)
+void bim::net::authentication_exchange::check_ok(const iscool::net::message& m)
 {
-  if (message.get_request_token() == m_token)
+  const std::optional<authentication_ok> message =
+      try_deserialize_message<authentication_ok>(m);
+
+  if (!message)
+    return;
+
+  if (message->get_request_token() == m_token)
     {
       stop();
       ic_causeless_log(iscool::log::nature::info(), "authentication_exchange",
                        "Authentication OK, session=%d",
-                       message.get_session_id());
-      m_authenticated(message.get_session_id());
+                       message->get_session_id());
+      m_authenticated(message->get_session_id());
     }
 }
 
-void bim::net::authentication_exchange::check_ko(
-    const authentication_ko& message)
+void bim::net::authentication_exchange::check_ko(const iscool::net::message& m)
 {
-  if (message.get_request_token() == m_token)
+  const std::optional<authentication_ko> message =
+      try_deserialize_message<authentication_ko>(m);
+
+  if (!message)
+    return;
+
+  if (message->get_request_token() == m_token)
     {
       stop();
       ic_causeless_log(iscool::log::nature::error(), "authentication_exchange",
                        "Authentication KO, error_code=%d",
-                       (int)message.get_error_code());
-      m_error(message.get_error_code());
+                       (int)message->get_error_code());
+      m_error(message->get_error_code());
     }
 }

@@ -22,6 +22,7 @@
 #include <bim/net/message/game_update_from_server.hpp>
 #include <bim/net/message/ready.hpp>
 #include <bim/net/message/start.hpp>
+#include <bim/net/message/try_deserialize_message.hpp>
 
 #include <bim/game/component/player_action.hpp>
 
@@ -204,9 +205,7 @@ void bim::server::game_service::process(const iscool::net::endpoint& endpoint,
       mark_as_ready(endpoint, message.get_session_id(), channel, it->second);
       break;
     case bim::net::message_type::game_update_from_client:
-      push_update(endpoint, message.get_session_id(), channel,
-                  bim::net::game_update_from_client(message.get_content()),
-                  it->second);
+      push_update(endpoint, channel, message, it->second);
       break;
     }
 }
@@ -248,19 +247,26 @@ void bim::server::game_service::mark_as_ready(
 }
 
 void bim::server::game_service::push_update(
-    const iscool::net::endpoint& endpoint, iscool::net::session_id session,
-    iscool::net::channel_id channel,
-    const bim::net::game_update_from_client& message, game& game)
+    const iscool::net::endpoint& endpoint, iscool::net::channel_id channel,
+    const iscool::net::message& message, game& game)
 {
+  const std::optional<bim::net::game_update_from_client> update =
+      bim::net::try_deserialize_message<bim::net::game_update_from_client>(
+          message);
+
+  if (!update)
+    return;
+
+  const iscool::net::session_id session = message.get_session_id();
   const std::size_t player_index = game.session_index(session);
   const std::optional<std::size_t> tick_count =
-      validate_message(message, player_index, game);
+      validate_message(*update, player_index, game);
 
   if (!tick_count)
     return;
 
   if (*tick_count != 0)
-    queue_actions(message, player_index, game);
+    queue_actions(*update, player_index, game);
 
   send_actions(endpoint, session, channel, player_index, game);
   game.drop_old_actions();

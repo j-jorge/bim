@@ -22,6 +22,7 @@
 #include <bim/net/message/authentication_ko.hpp>
 #include <bim/net/message/authentication_ok.hpp>
 #include <bim/net/message/protocol_version.hpp>
+#include <bim/net/message/try_deserialize_message.hpp>
 
 #include <iscool/log/setup.hpp>
 #include <iscool/net/message_channel.hpp>
@@ -92,18 +93,22 @@ void authentication_test::interpret_received_message(
     {
     case bim::net::message_type::authentication_ok:
       {
-        const bim::net::authentication_ok answer(message.get_content());
+        std::optional<bim::net::authentication_ok> answer =
+            bim::net::try_deserialize_message<bim::net::authentication_ok>(
+                message);
 
-        if (answer.get_request_token() == token)
-          m_answer_ok = std::move(answer);
+        if (answer && (answer->get_request_token() == token))
+          m_answer_ok = std::move(*answer);
         break;
       }
     case bim::net::message_type::authentication_ko:
       {
-        const bim::net::authentication_ko answer(message.get_content());
+        std::optional<bim::net::authentication_ko> answer =
+            bim::net::try_deserialize_message<bim::net::authentication_ko>(
+                message);
 
-        if (answer.get_request_token() == token)
-          m_answer_ko = std::move(answer);
+        if (answer && (answer->get_request_token() == token))
+          m_answer_ko = std::move(*answer);
         break;
       }
     }

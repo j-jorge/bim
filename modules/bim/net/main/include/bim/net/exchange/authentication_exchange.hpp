@@ -25,9 +25,6 @@
 
 namespace bim::net
 {
-  class authentication_ok;
-  class authentication_ko;
-
   class authentication_exchange
   {
     DECLARE_SIGNAL(void(iscool::net::session_id), authenticated,
@@ -46,8 +43,8 @@ namespace bim::net
 
     void interpret_received_message(const iscool::net::message& message);
 
-    void check_ok(const authentication_ok& message);
-    void check_ko(const authentication_ko& message);
+    void check_ok(const iscool::net::message& m);
+    void check_ko(const iscool::net::message& m);
 
   private:
     iscool::net::message_channel m_message_channel;

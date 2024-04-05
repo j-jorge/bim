@@ -22,6 +22,7 @@
 #include <bim/net/message/launch_game.hpp>
 #include <bim/net/message/new_game_request.hpp>
 #include <bim/net/message/new_random_game_request.hpp>
+#include <bim/net/message/try_deserialize_message.hpp>
 
 #include <iscool/log/causeless_log.hpp>
 #include <iscool/log/nature/info.hpp>
@@ -131,46 +132,50 @@ void bim::net::new_game_exchange::interpret_received_message(
   switch (message.get_type())
     {
     case message_type::game_on_hold:
-      {
-        if (!m_monitor->is_start_state())
-          return;
-
-        check_on_hold(game_on_hold(message.get_content()));
-        break;
-      }
+      check_on_hold(message);
+      break;
     case message_type::launch_game:
-      {
-        if (!m_monitor->is_accept_state())
-          return;
-
-        check_launch_game(launch_game(message.get_content()));
-        break;
-      }
+      check_launch_game(message);
+      break;
     }
 }
 
-void bim::net::new_game_exchange::check_on_hold(const game_on_hold& message)
+void bim::net::new_game_exchange::check_on_hold(const iscool::net::message& m)
 {
-  if (message.get_request_token() != m_token)
+  if (!m_monitor->is_start_state())
     return;
 
-  if (!m_monitor->is_start_state())
+  const std::optional<game_on_hold> message =
+      try_deserialize_message<game_on_hold>(m);
+
+  if (!message)
+    return;
+
+  if (message->get_request_token() != m_token)
     return;
 
   if (!m_encounter_id)
     ic_causeless_log(iscool::log::nature::info(), "new_game_exchange",
-                     "Got game proposal %d.", message.get_encounter_id());
+                     "Got game proposal %d.", message->get_encounter_id());
 
-  m_encounter_id = message.get_encounter_id();
+  m_encounter_id = message->get_encounter_id();
 
-  m_game_proposal(message.get_player_count());
+  m_game_proposal(message->get_player_count());
 }
 
-void bim::net::new_game_exchange::check_launch_game(const launch_game& message)
+void bim::net::new_game_exchange::check_launch_game(
+    const iscool::net::message& m)
 {
-  assert(m_monitor->is_accept_state());
+  if (!m_monitor->is_accept_state())
+    return;
 
-  if (message.get_request_token() != m_token)
+  const std::optional<launch_game> message =
+      try_deserialize_message<launch_game>(m);
+
+  if (!message)
+    return;
+
+  if (message->get_request_token() != m_token)
     return;
 
   ic_causeless_log(iscool::log::nature::info(), "new_game_exchange",
@@ -178,7 +183,7 @@ void bim::net::new_game_exchange::check_launch_game(const launch_game& message)
 
   stop();
   m_launch_game(
-      game_launch_event{ .channel = message.get_game_channel(),
-                         .player_count = message.get_player_count(),
-                         .player_index = message.get_player_index() });
+      game_launch_event{ .channel = message->get_game_channel(),
+                         .player_count = message->get_player_count(),
+                         .player_index = message->get_player_index() });
 }

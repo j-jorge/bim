@@ -60,7 +60,7 @@ namespace bim::net
     bool append_to_current_update(const bim::game::player_action& action);
     void send();
 
-    void confirm_game_tick(const game_update_from_server& message);
+    void confirm_game_tick(const iscool::net::message& m);
 
     std::uint32_t
     validate_message(const game_update_from_server& message) const;

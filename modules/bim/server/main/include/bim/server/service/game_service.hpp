@@ -54,10 +54,8 @@ namespace bim::server
                        iscool::net::session_id session,
                        iscool::net::channel_id channel, game& game);
     void push_update(const iscool::net::endpoint& endpoint,
-                     iscool::net::session_id session,
                      iscool::net::channel_id channel,
-                     const bim::net::game_update_from_client& message,
-                     game& game);
+                     const iscool::net::message& message, game& game);
 
     std::optional<std::size_t>
     validate_message(const bim::net::game_update_from_client& message,

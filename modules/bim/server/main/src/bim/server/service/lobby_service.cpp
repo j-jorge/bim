@@ -3,6 +3,7 @@
 #include <bim/net/message/accept_game.hpp>
 #include <bim/net/message/new_game_request.hpp>
 #include <bim/net/message/new_random_game_request.hpp>
+#include <bim/net/message/try_deserialize_message.hpp>
 
 bim::server::lobby_service::lobby_service(iscool::net::socket_stream& socket,
                                           game_service& game_service)
@@ -24,19 +25,47 @@ void bim::server::lobby_service::process(const iscool::net::endpoint& endpoint,
   switch (message.get_type())
     {
     case bim::net::message_type::new_game_request:
-      m_named_game_encounter.process(
-          endpoint, message.get_session_id(),
-          bim::net::new_game_request(message.get_content()));
+      handle_new_game_request(endpoint, message);
       break;
     case bim::net::message_type::new_random_game_request:
-      m_random_game_encounter.process(
-          endpoint, message.get_session_id(),
-          bim::net::new_random_game_request(message.get_content()));
+      handle_new_random_game_request(endpoint, message);
       break;
     case bim::net::message_type::accept_game:
-      m_matchmaking_service.mark_as_ready(
-          endpoint, message.get_session_id(),
-          bim::net::accept_game(message.get_content()));
+      handle_accept_game(endpoint, message);
       break;
     }
+}
+
+void bim::server::lobby_service::handle_new_game_request(
+    const iscool::net::endpoint& endpoint, const iscool::net::message& m)
+
+{
+  const std::optional<bim::net::new_game_request> message =
+      bim::net::try_deserialize_message<bim::net::new_game_request>(m);
+
+  if (message)
+    m_named_game_encounter.process(endpoint, m.get_session_id(), *message);
+}
+
+void bim::server::lobby_service::handle_new_random_game_request(
+    const iscool::net::endpoint& endpoint, const iscool::net::message& m)
+
+{
+  const std::optional<bim::net::new_random_game_request> message =
+      bim::net::try_deserialize_message<bim::net::new_random_game_request>(m);
+
+  if (message)
+    m_random_game_encounter.process(endpoint, m.get_session_id(), *message);
+}
+
+void bim::server::lobby_service::handle_accept_game(
+    const iscool::net::endpoint& endpoint, const iscool::net::message& m)
+
+{
+  const std::optional<bim::net::accept_game> message =
+      bim::net::try_deserialize_message<bim::net::accept_game>(m);
+
+  if (message)
+    m_matchmaking_service.mark_as_ready(endpoint, m.get_session_id(),
+                                        *message);
 }

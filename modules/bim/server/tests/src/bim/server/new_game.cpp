@@ -23,6 +23,7 @@
 #include <bim/net/message/game_on_hold.hpp>
 #include <bim/net/message/launch_game.hpp>
 #include <bim/net/message/new_game_request.hpp>
+#include <bim/net/message/try_deserialize_message.hpp>
 
 #include <iscool/log/setup.hpp>
 #include <iscool/net/message_channel.hpp>
@@ -121,12 +122,14 @@ void new_game_test::client::send_new_game_request(
             if (message.get_type() != bim::net::message_type::game_on_hold)
               return;
 
-            bim::net::game_on_hold answer(message.get_content());
+            std::optional<bim::net::game_on_hold> answer =
+                bim::net::try_deserialize_message<bim::net::game_on_hold>(
+                    message);
 
-            if (answer.get_request_token() != token)
+            if (answer->get_request_token() != token)
               return;
 
-            game_on_hold_answer = std::move(answer);
+            game_on_hold_answer = std::move(*answer);
           });
 
   ASSERT_NE(nullptr, m_message_channel);
@@ -153,12 +156,14 @@ void new_game_test::client::send_accept_game(
             if (message.get_type() != bim::net::message_type::launch_game)
               return;
 
-            bim::net::launch_game answer(message.get_content());
+            std::optional<bim::net::launch_game> answer =
+                bim::net::try_deserialize_message<bim::net::launch_game>(
+                    message);
 
-            if (answer.get_request_token() != token)
+            if (answer->get_request_token() != token)
               return;
 
-            launch_game_answer = std::move(answer);
+            launch_game_answer = std::move(*answer);
           });
 
   ASSERT_NE(nullptr, m_message_channel);

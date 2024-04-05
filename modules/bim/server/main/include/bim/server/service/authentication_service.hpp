@@ -53,7 +53,7 @@ namespace bim::server
                        const iscool::net::message& message);
 
     void check_authentication(const iscool::net::endpoint& endpoint,
-                              const bim::net::authentication& message);
+                              const iscool::net::message& m);
 
     iscool::signals::connection
     schedule_disconnection(iscool::net::session_id session);

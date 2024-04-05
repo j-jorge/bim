@@ -29,8 +29,6 @@
 
 namespace bim::net
 {
-  class game_on_hold;
-  class launch_game;
   struct game_launch_event;
 
   class new_game_exchange
@@ -54,8 +52,8 @@ namespace bim::net
 
     void interpret_received_message(const iscool::net::message& message);
 
-    void check_on_hold(const game_on_hold& message);
-    void check_launch_game(const launch_game& message);
+    void check_on_hold(const iscool::net::message& m);
+    void check_launch_game(const iscool::net::message& m);
 
   private:
     iscool::net::message_channel m_message_channel;

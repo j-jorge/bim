@@ -31,6 +31,14 @@ namespace bim::server
                  const iscool::net::message& message);
 
   private:
+    void handle_new_game_request(const iscool::net::endpoint& endpoint,
+                                 const iscool::net::message& m);
+    void handle_new_random_game_request(const iscool::net::endpoint& endpoint,
+                                        const iscool::net::message& m);
+    void handle_accept_game(const iscool::net::endpoint& endpoint,
+                            const iscool::net::message& m);
+
+  private:
     matchmaking_service m_matchmaking_service;
 
     named_game_encounter_service m_named_game_encounter;
