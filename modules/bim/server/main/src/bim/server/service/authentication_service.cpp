@@ -86,7 +86,8 @@ void bim::server::authentication_service::check_authentication(
     {
       ic_causeless_log(
           iscool::log::nature::info(), "server",
-          "Authentication request from token %d: bad protocol %d.", token,
+          "Authentication request from token %d, ip=%s: bad protocol %d.",
+          token, endpoint.address().to_v4().to_string(),
           message->get_protocol_version());
 
       m_message_stream.send(
@@ -105,7 +106,8 @@ void bim::server::authentication_service::check_authentication(
   std::tie(it, inserted) = m_sessions.emplace(token, session);
 
   ic_causeless_log(iscool::log::nature::info(), "server",
-                   "Attach session %d to token %d.", it->second, token);
+                   "Attach session %d to token %d from ip=%s.", it->second,
+                   token, endpoint.address().to_v4().to_string());
 
   if (inserted)
     {

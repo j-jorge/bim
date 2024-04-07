@@ -71,7 +71,7 @@ void bim::axmol::app::matchmaking::displayed()
       });
 
   assert(m_context.get_session_handler()->connected());
-  m_new_game->start(m_context.get_session_handler()->session_id(), {});
+  m_new_game->start(m_context.get_session_handler()->session_id());
 }
 
 void bim::axmol::app::matchmaking::closing()
