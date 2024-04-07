@@ -31,16 +31,37 @@
 #include <iostream>
 
 bim::app::console::online_game::online_game(application& application,
+                                            const std::string& host)
+  : online_game(application, host, nullptr)
+{}
+
+bim::app::console::online_game::online_game(application& application,
                                             const std::string& host,
                                             const bim::net::game_name& name)
+  : online_game(application, host, &name)
+{}
+
+bim::app::console::online_game::~online_game() = default;
+
+bim::app::console::online_game::online_game(application& application,
+                                            const std::string& host,
+                                            const bim::net::game_name* name)
   : m_application(application)
   , m_new_game(m_session.message_stream())
 {
-  m_session.connect_to_connected(
-      [this, name]() -> void
-      {
-        m_new_game.start(m_session.session_id(), name);
-      });
+  if (name)
+    m_session.connect_to_connected(
+        [this, name = *name]() -> void
+        {
+          m_new_game.start(m_session.session_id(), name);
+        });
+  else
+    m_session.connect_to_connected(
+        [this]() -> void
+        {
+          m_new_game.start(m_session.session_id());
+        });
+
   m_session.connect_to_authentication_error(
       [&](bim::net::authentication_error_code error_code) -> void
       {
@@ -61,8 +82,6 @@ bim::app::console::online_game::online_game(application& application,
         launch_game(event);
       });
 }
-
-bim::app::console::online_game::~online_game() = default;
 
 void bim::app::console::online_game::launch_game(
     const bim::net::game_launch_event& event)

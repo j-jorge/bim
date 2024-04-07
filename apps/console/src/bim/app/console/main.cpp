@@ -32,7 +32,7 @@ namespace
   struct options
   {
     std::string host = "localhost:23899";
-    std::string game_name = "test";
+    std::optional<std::string> game_name;
     bool offline = false;
   };
 }
@@ -50,12 +50,11 @@ static std::optional<options> parse_program_options(int argc, char** argv)
           ->default_value(result.host)
           ->value_name("SERVER:PORT"),
       "The server hosting the online game.");
+
   description.add_options()(
       "game-name",
-      boost::program_options::value<std::string>(&result.game_name)
-          ->default_value(result.game_name)
-          ->value_name("STR"),
-      "The name of the online game to join.");
+      boost::program_options::value<std::string>()->value_name("STR"),
+      "The name of the online game to join. If not set, join a random game.");
   description.add_options()("offline",
                             "Run an offline game instead of an online one.");
 
@@ -70,6 +69,11 @@ static std::optional<options> parse_program_options(int argc, char** argv)
       std::cout << description << '\n';
       return std::nullopt;
     }
+
+  if (const boost::program_options::variables_map::const_iterator it =
+          arguments.find("help");
+      it != arguments.end())
+    result.game_name = it->second.as<std::string>();
 
   if (arguments.count("offline") != 0)
     result.offline = true;
@@ -98,13 +102,19 @@ static void run_main_loop(bim::app::console::application& application)
 
 static std::unique_ptr<bim::app::console::online_game>
 build_online_game(bim::app::console::application& application,
-                  const std::string& host, const std::string& game_name)
+                  const std::string& host,
+                  const std::optional<std::string>& game_name)
 {
-  bim::net::game_name name{};
-  std::copy(game_name.begin(), game_name.end(), name.begin());
+  if (game_name)
+    {
+      bim::net::game_name name{};
+      std::copy(game_name->begin(), game_name->end(), name.begin());
 
-  return std::make_unique<bim::app::console::online_game>(application, host,
-                                                          name);
+      return std::make_unique<bim::app::console::online_game>(application,
+                                                              host, name);
+    }
+  else
+    return std::make_unique<bim::app::console::online_game>(application, host);
 }
 
 int main(int argc, char** argv)

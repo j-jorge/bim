@@ -47,11 +47,15 @@ namespace bim::app::console
   class online_game
   {
   public:
+    online_game(application& application, const std::string& host);
     online_game(application& application, const std::string& host,
                 const bim::net::game_name& name);
     ~online_game();
 
   private:
+    online_game(application& application, const std::string& host,
+                const bim::net::game_name* name);
+
     void launch_game(const bim::net::game_launch_event& event);
 
     void schedule_tick();
