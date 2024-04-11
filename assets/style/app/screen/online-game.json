@@ -46,6 +46,11 @@
 
         "bomb/frame": "sprites/bomb.png",
         "wall/frame": "sprites/solid-wall.png",
-        "brick-wall/frame": "sprites/brick-wall.png"
+        "brick-wall/frame": "sprites/brick-wall.png",
+
+        "flame/frame": "sprites/flame-center.png",
+        "flame-center-asset-name": "sprites/flame-center.png",
+        "flame-arm-asset-name": "sprites/flame-arm.png",
+        "flame-end-asset-name": "sprites/flame-end.png"
     }
 }

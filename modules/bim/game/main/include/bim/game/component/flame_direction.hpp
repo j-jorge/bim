@@ -20,21 +20,18 @@
 
 namespace bim::game
 {
-  enum class flame_horizontal : bool
+  enum class flame_direction : std::uint8_t
   {
-    yes,
-    no
+    right,
+    down,
+    left,
+    up
   };
 
-  enum class flame_vertical : bool
+  enum class flame_segment : std::uint8_t
   {
-    yes,
-    no
-  };
-
-  enum class flame_end : bool
-  {
-    yes,
-    no
+    tip,
+    arm,
+    origin
   };
 }

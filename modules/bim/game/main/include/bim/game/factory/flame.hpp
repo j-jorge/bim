@@ -26,10 +26,10 @@
 namespace bim::game
 {
   entt::entity flame_factory(entt::registry& registry, std::uint8_t x,
-                             std::uint8_t y, flame_horizontal horizontal,
-                             flame_vertical vertical, flame_end end);
+                             std::uint8_t y, flame_direction direction,
+                             flame_segment segment);
   entt::entity flame_factory(entt::registry& registry, std::uint8_t x,
-                             std::uint8_t y, flame_horizontal horizontal,
-                             flame_vertical vertical, flame_end end,
+                             std::uint8_t y, flame_direction direction,
+                             flame_segment segment,
                              std::chrono::milliseconds time_to_live);
 }

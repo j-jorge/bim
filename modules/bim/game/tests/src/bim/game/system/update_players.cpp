@@ -24,9 +24,8 @@ TEST(bim_game_update_players, death_on_flame_collision)
   {
     arena.put_entity(x, y,
                      bim::game::flame_factory(registry, x, y,
-                                              bim::game::flame_horizontal::no,
-                                              bim::game::flame_vertical::no,
-                                              bim::game::flame_end::no));
+                                              bim::game::flame_direction::up,
+                                              bim::game::flame_segment::tip));
   };
 
   insert_flame(1, 0);

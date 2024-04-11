@@ -91,6 +91,7 @@ namespace bim::axmol::app
     void display_brick_walls() const;
     void display_players() const;
     void display_bombs() const;
+    void display_flames() const;
 
     ax::Vec2 grid_position_to_displayed_block_center(float x, float y) const;
 
@@ -111,7 +112,12 @@ namespace bim::axmol::app
     std::vector<ax::Sprite*> m_players;
     std::vector<ax::Sprite*> m_walls;
     std::vector<ax::Sprite*> m_brick_walls;
+    std::vector<ax::Sprite*> m_flames;
     std::vector<ax::Sprite*> m_bombs;
+
+    const std::string m_flame_center_asset_name;
+    const std::string m_flame_arm_asset_name;
+    const std::string m_flame_end_asset_name;
 
     const float m_arena_width_in_blocks;
 

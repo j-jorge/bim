@@ -24,9 +24,8 @@ namespace bim::game
 {
   struct flame
   {
-    flame_horizontal horizontal;
-    flame_vertical vertical;
-    flame_end end;
+    flame_direction direction;
+    flame_segment segment;
     std::chrono::milliseconds time_to_live;
   };
 }

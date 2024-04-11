@@ -8,8 +8,13 @@ set(sprites
   "sprites/player-4.png"
   "sprites/solid-wall.png"
 )
+set(sprites_bleeding
+  "sprites/flame-arm.png"
+  "sprites/flame-center.png"
+  "sprites/flame-end.png"
+)
 
-foreach(s ${sprites})
+foreach(s ${sprites} ${sprites_bleeding})
   set(sprites_full_path ${sprites_full_path} ${CMAKE_CURRENT_LIST_DIR}/../${s})
 endforeach()
 
@@ -36,6 +41,8 @@ add_custom_command(
     --format plist
     --size 1024x1024
     ${sprites}
+    --bleeding
+    ${sprites_bleeding}
   COMMAND
     mv sprite-sheet.* ${BIM_GENERATED_ASSETS_DIR}
   DEPENDS ${sprites_full_path}

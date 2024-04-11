@@ -43,9 +43,8 @@ TEST(bim_game_archive, pod_components)
                                       bim::game::player_direction::up, 4);
 
   registry.emplace<bim::game::flame>(
-      entities[3], bim::game::flame_horizontal::yes,
-      bim::game::flame_vertical::no, bim::game::flame_end::yes,
-      std::chrono::milliseconds(40));
+      entities[3], bim::game::flame_direction::left,
+      bim::game::flame_segment::tip, std::chrono::milliseconds(40));
 
   bim::game::archive_storage bytes;
   bim::game::output_archive out(bytes);
@@ -87,12 +86,10 @@ TEST(bim_game_archive, pod_components)
   EXPECT_EQ(4, registry.get<bim::game::player>(entities[1]).bomb_strength);
 
   ASSERT_TRUE(registry.storage<bim::game::flame>().contains(entities[3]));
-  EXPECT_EQ(bim::game::flame_horizontal::yes,
-            registry.get<bim::game::flame>(entities[3]).horizontal);
-  EXPECT_EQ(bim::game::flame_vertical::no,
-            registry.get<bim::game::flame>(entities[3]).vertical);
-  EXPECT_EQ(bim::game::flame_end::yes,
-            registry.get<bim::game::flame>(entities[3]).end);
+  EXPECT_EQ(bim::game::flame_direction::left,
+            registry.get<bim::game::flame>(entities[3]).direction);
+  EXPECT_EQ(bim::game::flame_segment::tip,
+            registry.get<bim::game::flame>(entities[3]).segment);
   EXPECT_EQ(std::chrono::milliseconds(40),
             registry.get<bim::game::flame>(entities[3]).time_to_live);
 }
@@ -111,9 +108,8 @@ TEST(bim_game_archive, pod_components_multiple_steps)
                                       bim::game::player_direction::up, 4);
 
   registry.emplace<bim::game::flame>(
-      entities[3], bim::game::flame_horizontal::yes,
-      bim::game::flame_vertical::no, bim::game::flame_end::yes,
-      std::chrono::milliseconds(40));
+      entities[3], bim::game::flame_direction::left,
+      bim::game::flame_segment::tip, std::chrono::milliseconds(40));
 
   bim::game::archive_storage bytes;
   bim::game::output_archive out(bytes);
@@ -160,12 +156,10 @@ TEST(bim_game_archive, pod_components_multiple_steps)
   EXPECT_EQ(4, registry.get<bim::game::player>(entities[1]).bomb_strength);
 
   ASSERT_TRUE(registry.storage<bim::game::flame>().contains(entities[3]));
-  EXPECT_EQ(bim::game::flame_horizontal::yes,
-            registry.get<bim::game::flame>(entities[3]).horizontal);
-  EXPECT_EQ(bim::game::flame_vertical::no,
-            registry.get<bim::game::flame>(entities[3]).vertical);
-  EXPECT_EQ(bim::game::flame_end::yes,
-            registry.get<bim::game::flame>(entities[3]).end);
+  EXPECT_EQ(bim::game::flame_direction::left,
+            registry.get<bim::game::flame>(entities[3]).direction);
+  EXPECT_EQ(bim::game::flame_segment::tip,
+            registry.get<bim::game::flame>(entities[3]).segment);
   EXPECT_EQ(std::chrono::milliseconds(40),
             registry.get<bim::game::flame>(entities[3]).time_to_live);
 }

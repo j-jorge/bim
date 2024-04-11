@@ -11,6 +11,8 @@
 #include <bim/game/component/bomb.hpp>
 #include <bim/game/component/brick_wall.hpp>
 #include <bim/game/component/dead.hpp>
+#include <bim/game/component/flame.hpp>
+#include <bim/game/component/flame_direction.hpp>
 #include <bim/game/component/player.hpp>
 #include <bim/game/component/position_on_grid.hpp>
 #include <bim/game/contest.hpp>
@@ -37,6 +39,9 @@ bim::axmol::app::online_game::online_game(
     const context& context, const iscool::style::declaration& style)
   : m_context(context)
   , m_controls(context.get_widget_context(), *style.get_declaration("widgets"))
+  , m_flame_center_asset_name(*style.get_string("flame-center-asset-name"))
+  , m_flame_arm_asset_name(*style.get_string("flame-arm-asset-name"))
+  , m_flame_end_asset_name(*style.get_string("flame-end-asset-name"))
   , m_arena_width_in_blocks(*style.get_number("arena-width-in-blocks"))
 {
   const bim::axmol::widget::context& widget_context =
@@ -67,6 +72,9 @@ bim::axmol::app::online_game::online_game(
   alloc_assets(m_brick_walls, widget_context,
                (default_width - 2) * (default_height - 2),
                *style.get_declaration("brick-wall"));
+  alloc_assets(m_flames, widget_context,
+               (default_width - 2) * (default_height - 2),
+               *style.get_declaration("flame"));
   alloc_assets(m_bombs, widget_context, max_players * max_bombs_per_player,
                *style.get_declaration("bomb"));
 }
@@ -106,6 +114,7 @@ void bim::axmol::app::online_game::attached()
   resize_to_block_width(m_players);
   resize_to_block_width(m_walls);
   resize_to_block_width(m_brick_walls);
+  resize_to_block_width(m_flames);
   resize_to_block_width(m_bombs);
 }
 
@@ -228,6 +237,7 @@ void bim::axmol::app::online_game::refresh_display() const
   display_brick_walls();
   display_players();
   display_bombs();
+  display_flames();
 }
 
 void bim::axmol::app::online_game::display_brick_walls() const
@@ -298,12 +308,75 @@ void bim::axmol::app::online_game::display_bombs() const
       });
 
   for (std::size_t n = m_bombs.size(); asset_index != n; ++asset_index)
-    {
-      if (m_bombs[asset_index]->isVisible())
-        m_bombs[asset_index]->setVisible(false);
-      else
-        break;
-    }
+    if (m_bombs[asset_index]->isVisible())
+      m_bombs[asset_index]->setVisible(false);
+    else
+      break;
+}
+
+void bim::axmol::app::online_game::display_flames() const
+{
+  const entt::registry& registry = m_contest->registry();
+  std::size_t asset_index = 0;
+
+  registry.view<bim::game::position_on_grid, bim::game::flame>().each(
+      [this, &asset_index](const bim::game::position_on_grid& p,
+                           const bim::game::flame& f) -> void
+      {
+        ax::Sprite& s = *m_flames[asset_index];
+        // Changing the sprite frame changes the sprite size, thus we must
+        // restore it ourselves.
+        ax::Vec2 size = s.getContentSize();
+
+        s.setVisible(true);
+        s.setPosition(grid_position_to_displayed_block_center(p.x, p.y));
+
+        switch (f.segment)
+          {
+          case bim::game::flame_segment::origin:
+            s.setSpriteFrame(m_flame_center_asset_name);
+            s.setRotation(0);
+            break;
+          case bim::game::flame_segment::arm:
+            {
+              s.setSpriteFrame(m_flame_arm_asset_name);
+
+              if (bim::game::is_vertical(f.direction))
+                s.setRotation(90);
+              else
+                s.setRotation(0);
+              break;
+            }
+          case bim::game::flame_segment::tip:
+            {
+              s.setSpriteFrame(m_flame_end_asset_name);
+              switch (f.direction)
+                {
+                case bim::game::flame_direction::right:
+                  s.setRotation(0);
+                  break;
+                case bim::game::flame_direction::down:
+                  s.setRotation(90);
+                  break;
+                case bim::game::flame_direction::left:
+                  s.setRotation(180);
+                  break;
+                case bim::game::flame_direction::up:
+                  s.setRotation(270);
+                  break;
+                }
+            }
+          }
+
+        s.setContentSize(size);
+        ++asset_index;
+      });
+
+  for (std::size_t n = m_flames.size(); asset_index != n; ++asset_index)
+    if (m_flames[asset_index]->isVisible())
+      m_flames[asset_index]->setVisible(false);
+    else
+      break;
 }
 
 ax::Vec2 bim::axmol::app::online_game::grid_position_to_displayed_block_center(

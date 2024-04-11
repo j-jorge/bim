@@ -32,9 +32,8 @@ TEST(update_flames, time_to_live)
   bim::game::arena arena(3, 3);
 
   const entt::entity entity = bim::game::flame_factory(
-      registry, 0, 0, bim::game::flame_horizontal::yes,
-      bim::game::flame_vertical::yes, bim::game::flame_end::no,
-      std::chrono::milliseconds(24));
+      registry, 0, 0, bim::game::flame_direction::up,
+      bim::game::flame_segment::origin, std::chrono::milliseconds(24));
   bim::game::flame& flame = registry.get<bim::game::flame>(entity);
 
   EXPECT_EQ(std::chrono::milliseconds(24), flame.time_to_live);

@@ -71,13 +71,45 @@ void bim::app::console::display(const bim::game::contest& contest)
       [&screen_buffer](const bim::game::position_on_grid& p,
                        const bim::game::flame& f) -> void
       {
-        if (f.horizontal == bim::game::flame_horizontal::yes)
-          if (f.vertical == bim::game::flame_vertical::yes)
-            screen_buffer[p.y][p.x] = "\033[31m+\033[0;0m";
-          else
-            screen_buffer[p.y][p.x] = "\033[31m-\033[0;0m";
-        else
-          screen_buffer[p.y][p.x] = "\033[31m|\033[0;0m";
+        char flame_char = '.';
+
+        switch (f.segment)
+          {
+          case bim::game::flame_segment::origin:
+            flame_char = '+';
+            break;
+          case bim::game::flame_segment::arm:
+            {
+              if (bim::game::is_vertical(f.direction))
+                flame_char = '|';
+              else
+                flame_char = '-';
+              break;
+            }
+          case bim::game::flame_segment::tip:
+            {
+              switch (f.direction)
+                {
+                case bim::game::flame_direction::right:
+                  flame_char = '>';
+                  break;
+                case bim::game::flame_direction::down:
+                  flame_char = 'v';
+                  break;
+                case bim::game::flame_direction::left:
+                  flame_char = '<';
+                  break;
+                case bim::game::flame_direction::up:
+                  flame_char = '^';
+                  break;
+                }
+            }
+          }
+
+        std::string& out = screen_buffer[p.y][p.x];
+        out = "\033[31m";
+        out += flame_char;
+        out += "\033[0;0m";
       });
 
   registry.view<bim::game::player, bim::game::position_on_grid>().each(

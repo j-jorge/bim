@@ -46,17 +46,16 @@ static std::vector<std::string> flames_map(const bim::game::arena& arena,
         EXPECT_TRUE(arena.entity_at(p.x, p.y) == e);
         EXPECT_EQ(' ', result[p.y][p.x]);
 
-        EXPECT_TRUE((f.horizontal == bim::game::flame_horizontal::yes)
-                    || (f.vertical == bim::game::flame_vertical::yes));
-
-        if (f.horizontal == bim::game::flame_horizontal::yes)
-          if (f.vertical == bim::game::flame_vertical::yes)
-            result[p.y][p.x] = 'B';
-          else if (f.end == bim::game::flame_end::yes)
-            result[p.y][p.x] = 'h';
-          else
-            result[p.y][p.x] = 'H';
-        else if (f.end == bim::game::flame_end::yes)
+        if (f.segment == bim::game::flame_segment::origin)
+          result[p.y][p.x] = 'B';
+        else if (bim::game::is_horizontal(f.direction))
+          {
+            if (f.segment == bim::game::flame_segment::tip)
+              result[p.y][p.x] = 'h';
+            else
+              result[p.y][p.x] = 'H';
+          }
+        else if (f.segment == bim::game::flame_segment::tip)
           result[p.y][p.x] = 'v';
         else
           result[p.y][p.x] = 'V';

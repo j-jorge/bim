@@ -28,8 +28,8 @@
 
 static bool burn(entt::registry& registry, bim::game::arena& arena,
                  std::uint8_t x, std::uint8_t y,
-                 bim::game::flame_horizontal horizontal,
-                 bim::game::flame_vertical vertical, bim::game::flame_end end)
+                 bim::game::flame_direction direction,
+                 bim::game::flame_segment segment)
 {
   if (arena.is_static_wall(x, y))
     return false;
@@ -45,8 +45,7 @@ static bool burn(entt::registry& registry, bim::game::arena& arena,
     }
   else
     arena.put_entity(
-        x, y,
-        bim::game::flame_factory(registry, x, y, horizontal, vertical, end));
+        x, y, bim::game::flame_factory(registry, x, y, direction, segment));
 
   return true;
 }
@@ -58,10 +57,9 @@ static void create_flames(entt::registry& registry, bim::game::arena& arena,
   for (std::uint8_t offset = 1; offset <= strength; ++offset)
     if ((p.x < offset)
         || !burn(registry, arena, p.x - offset, p.y,
-                 bim::game::flame_horizontal::yes,
-                 bim::game::flame_vertical::no,
-                 (offset == strength) ? bim::game::flame_end::yes
-                                      : bim::game::flame_end::no))
+                 bim::game::flame_direction::left,
+                 (offset == strength) ? bim::game::flame_segment::tip
+                                      : bim::game::flame_segment::arm))
       break;
 
   // On the right.
@@ -69,20 +67,18 @@ static void create_flames(entt::registry& registry, bim::game::arena& arena,
        ++offset)
     if ((p.x + offset == width)
         || !burn(registry, arena, p.x + offset, p.y,
-                 bim::game::flame_horizontal::yes,
-                 bim::game::flame_vertical::no,
-                 (offset == strength) ? bim::game::flame_end::yes
-                                      : bim::game::flame_end::no))
+                 bim::game::flame_direction::right,
+                 (offset == strength) ? bim::game::flame_segment::tip
+                                      : bim::game::flame_segment::arm))
       break;
 
   // Above.
   for (std::uint8_t offset = 1; offset <= strength; ++offset)
     if ((p.y < offset)
         || !burn(registry, arena, p.x, p.y - offset,
-                 bim::game::flame_horizontal::no,
-                 bim::game::flame_vertical::yes,
-                 (offset == strength) ? bim::game::flame_end::yes
-                                      : bim::game::flame_end::no))
+                 bim::game::flame_direction::up,
+                 (offset == strength) ? bim::game::flame_segment::tip
+                                      : bim::game::flame_segment::arm))
       break;
 
   // Below.
@@ -90,17 +86,16 @@ static void create_flames(entt::registry& registry, bim::game::arena& arena,
        ++offset)
     if ((p.y + offset == height)
         || !burn(registry, arena, p.x, p.y + offset,
-                 bim::game::flame_horizontal::no,
-                 bim::game::flame_vertical::yes,
-                 (offset == strength) ? bim::game::flame_end::yes
-                                      : bim::game::flame_end::no))
+                 bim::game::flame_direction::down,
+                 (offset == strength) ? bim::game::flame_segment::tip
+                                      : bim::game::flame_segment::arm))
       break;
 
+  // Starting point, the direction does not matter.
   arena.put_entity(p.x, p.y,
                    bim::game::flame_factory(registry, p.x, p.y,
-                                            bim::game::flame_horizontal::yes,
-                                            bim::game::flame_vertical::yes,
-                                            bim::game::flame_end::no));
+                                            bim::game::flame_direction::up,
+                                            bim::game::flame_segment::origin));
 }
 
 void bim::game::update_bombs(entt::registry& registry, arena& arena,
