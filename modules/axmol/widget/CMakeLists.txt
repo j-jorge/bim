@@ -15,6 +15,7 @@ add_library(bim_axmol_widget
   main/src/bim/axmol/widget/factory/sprite.cpp
 
   main/src/bim/axmol/widget/ui/button.cpp
+  main/src/bim/axmol/widget/ui/soft_stick.cpp
 )
 
 target_include_directories(bim_axmol_widget PUBLIC main/include)

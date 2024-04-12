@@ -152,6 +152,8 @@ void bim::axmol::app::screen_wheel::matchmaking_displayed()
 
 void bim::axmol::app::screen_wheel::online_game_displayed()
 {
+  m_inputs.push_back(m_online_game->input_node());
+
   m_online_game->connect_to_game_over(
       [this](const bim::game::contest_result& result)
       {

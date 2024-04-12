@@ -27,7 +27,7 @@ namespace bim::axmol::input
     void do_released(const touch_event_view& touches) override;
     void do_cancelled(const touch_event_view& touches) override;
 
-  private:
+  protected:
     const ax::Node& m_node;
   };
 }

@@ -14,7 +14,7 @@
 
 namespace bim::axmol::widget
 {
-  class button : public ax::Node
+  class button final : public ax::Node
   {
     DECLARE_VOID_SIGNAL(clicked, m_clicked)
 

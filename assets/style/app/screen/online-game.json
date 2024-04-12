@@ -10,8 +10,36 @@
                 "instantiate": "ax::LayerColor",
                 "opacity": 1,
                 "color": "#385b59"
-            }]
+            }],
 
+            "stick":
+            [{
+                "widgets":
+                [{
+                    "stick":
+                    [{
+                        "frame": "sprites/joystick-stick.png"
+                    }],
+
+                    "background":
+                    [{
+                        "instantiate": "ax::Sprite",
+                        "frame": "sprites/joystick-background.png"
+                    }]
+                }],
+
+                "bounds":
+                [{
+                    "stick":
+                    [{
+                        "width.percents": 50,
+                        "height.percents": 50,
+                        "z-order": 10
+                    }],
+
+                    "background": [ "layout/fill" ]
+                }]
+            }]
         }],
 
         "arena-width-in-blocks": 13,

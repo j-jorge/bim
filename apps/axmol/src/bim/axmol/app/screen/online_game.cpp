@@ -2,6 +2,7 @@
 
 #include <bim/axmol/widget/factory/sprite.hpp>
 #include <bim/axmol/widget/named_node_group.hpp>
+#include <bim/axmol/widget/ui/soft_stick.hpp>
 
 #include <bim/net/contest_runner.hpp>
 #include <bim/net/exchange/game_launch_event.hpp>
@@ -23,7 +24,8 @@
 
 #define x_widget_scope bim::axmol::app::online_game::
 #define x_widget_type_name controls
-#define x_widget_controls x_widget(ax::Node, arena)
+#define x_widget_controls                                                     \
+  x_widget(ax::Node, arena) x_widget(bim::axmol::widget::soft_stick, stick)
 #include <bim/axmol/widget/implement_controls_struct.hpp>
 
 #include <axmol/2d/Sprite.h>
@@ -44,6 +46,8 @@ bim::axmol::app::online_game::online_game(
   , m_flame_end_asset_name(*style.get_string("flame-end-asset-name"))
   , m_arena_width_in_blocks(*style.get_number("arena-width-in-blocks"))
 {
+  m_inputs.push_back(m_controls->stick->input_node());
+
   const bim::axmol::widget::context& widget_context =
       m_context.get_widget_context();
 

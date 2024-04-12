@@ -13,6 +13,7 @@ add_library(bim_axmol_input
   main/src/bim/axmol/input/observer/single_key_observer.cpp
   main/src/bim/axmol/input/observer/tap_observer.cpp
   main/src/bim/axmol/input/observer/touch_sink.cpp
+  main/src/bim/axmol/input/observer/soft_stick.cpp
 )
 
 target_include_directories(bim_axmol_input PUBLIC main/include)
