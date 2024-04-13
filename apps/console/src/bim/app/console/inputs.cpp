@@ -43,9 +43,7 @@ bool bim::app::console::apply_inputs(entt::registry& registry,
   bim::game::player_action* player_action =
       bim::game::find_player_action_by_index(registry, player_index);
 
-  if ((player_action == nullptr)
-      || (player_action->queue_size
-          == bim::game::player_action::queue_capacity))
+  if ((player_action == nullptr) || player_action->full())
     return true;
 
   switch (input)

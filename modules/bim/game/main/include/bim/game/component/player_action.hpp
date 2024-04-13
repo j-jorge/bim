@@ -30,5 +30,6 @@ namespace bim::game
     std::uint8_t queue_size;
 
     void push(player_action_kind a);
+    bool full() const;
   };
 }

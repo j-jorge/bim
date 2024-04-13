@@ -15,8 +15,10 @@
 #include <bim/game/component/flame.hpp>
 #include <bim/game/component/flame_direction.hpp>
 #include <bim/game/component/player.hpp>
+#include <bim/game/component/player_action_kind.hpp>
 #include <bim/game/component/position_on_grid.hpp>
 #include <bim/game/contest.hpp>
+#include <bim/game/player_action.hpp>
 
 #include <iscool/schedule/delayed_call.hpp>
 #include <iscool/signals/implement_signal.hpp>
@@ -135,6 +137,8 @@ void bim::axmol::app::online_game::displaying(
   m_contest_runner.reset(new bim::net::contest_runner(
       *m_contest, *m_update_exchange, event.player_index, event.player_count));
 
+  m_local_player_index = event.player_index;
+
   // Display as many assets as needed.
   const bim::game::arena& arena = m_contest->arena();
   const int arena_width = arena.width();
@@ -206,6 +210,7 @@ void bim::axmol::app::online_game::tick()
       m_contest_runner->run(now - m_last_tick_date);
   m_last_tick_date = now;
 
+  apply_inputs();
   refresh_display();
 
   if (result.still_running())
@@ -234,6 +239,33 @@ void bim::axmol::app::online_game::alloc_assets(
       p->setVisible(false);
       arena.addChild(p);
     }
+}
+
+void bim::axmol::app::online_game::apply_inputs() const
+{
+  bim::game::player_action* player_action =
+      bim::game::find_player_action_by_index(m_contest->registry(),
+                                             m_local_player_index);
+
+  if ((player_action == nullptr) || player_action->full())
+    return;
+
+  const ax::Vec2& drag = m_controls->stick->drag();
+
+  constexpr float move_threshold = 0.1;
+
+  if (drag.x >= move_threshold)
+    player_action->push(bim::game::player_action_kind::right);
+  else if (drag.x <= -move_threshold)
+    player_action->push(bim::game::player_action_kind::left);
+
+  if (player_action->full())
+    return;
+
+  if (drag.y >= move_threshold)
+    player_action->push(bim::game::player_action_kind::up);
+  else if (drag.y <= -move_threshold)
+    player_action->push(bim::game::player_action_kind::down);
 }
 
 void bim::axmol::app::online_game::refresh_display() const
