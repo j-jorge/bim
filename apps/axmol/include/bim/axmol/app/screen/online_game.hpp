@@ -95,7 +95,9 @@ namespace bim::axmol::app
     void display_bombs() const;
     void display_flames() const;
 
-    ax::Vec2 grid_position_to_displayed_block_center(float x, float y) const;
+    ax::Vec2 grid_position_to_displayed_block_center(std::uint8_t x,
+                                                     std::uint8_t y) const;
+    ax::Vec2 grid_position_to_display(float x, float y) const;
 
     void stop();
 

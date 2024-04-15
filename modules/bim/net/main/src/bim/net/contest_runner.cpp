@@ -24,6 +24,7 @@
 #include <bim/game/component/brick_wall.hpp>
 #include <bim/game/component/burning.hpp>
 #include <bim/game/component/flame.hpp>
+#include <bim/game/component/fractional_position_on_grid.hpp>
 #include <bim/game/component/player.hpp>
 #include <bim/game/component/player_action.hpp>
 #include <bim/game/component/position_on_grid.hpp>
@@ -240,6 +241,7 @@ void bim::net::contest_runner::archive_io(Snapshot&& snapshot,
   snapshot.entities(archive)
       .template component<bim::game::bomb, bim::game::brick_wall,
                           bim::game::burning, bim::game::flame,
+                          bim::game::fractional_position_on_grid,
                           bim::game::player_action, bim::game::player,
                           bim::game::position_on_grid>(archive);
 }

@@ -18,6 +18,7 @@
 
 #include <bim/game/arena.hpp>
 
+#include <bim/game/component/fractional_position_on_grid.hpp>
 #include <bim/game/component/player.hpp>
 #include <bim/game/component/position_on_grid.hpp>
 #include <bim/game/factory/brick_wall.hpp>
@@ -72,14 +73,28 @@ void bim::game::insert_random_brick_walls(arena& arena,
   // Typically 4 players in the arena, and 9 blocks for each of them.
   forbidden_positions.reserve(4 * 9);
 
-  registry.view<bim::game::player, bim::game::position_on_grid>().each(
-      [&forbidden_positions](const bim::game::player&,
-                             const bim::game::position_on_grid& p) -> void
-      {
-        for (int y : { -1, 0, 1 })
-          for (int x : { -1, 0, 1 })
-            forbidden_positions.push_back(position_on_grid(p.x + x, p.y + y));
-      });
+  registry.view<bim::game::player, bim::game::fractional_position_on_grid>()
+      .each(
+          [&forbidden_positions](
+              const bim::game::player&,
+              const bim::game::fractional_position_on_grid& p) -> void
+          {
+            const std::uint8_t player_x = p.grid_aligned_x();
+            const std::uint8_t player_y = p.grid_aligned_y();
+
+            bim_assume(player_x > 0);
+            bim_assume(player_y > 0);
+
+            for (int y : { -1, 0, 1 })
+              for (int x : { -1, 0, 1 })
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstringop-overflow="
+                // This warning is emitted by GCC 13.2.0 on this line, yet
+                // I see no issue in this code.
+                forbidden_positions.push_back(
+                    position_on_grid(player_x + x, player_y + y));
+#pragma GCC diagnostic pop
+          });
 
   for (int y = 0; y != height; ++y)
     for (int x = 0; x != width; ++x)

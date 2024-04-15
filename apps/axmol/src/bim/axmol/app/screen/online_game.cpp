@@ -14,6 +14,7 @@
 #include <bim/game/component/dead.hpp>
 #include <bim/game/component/flame.hpp>
 #include <bim/game/component/flame_direction.hpp>
+#include <bim/game/component/fractional_position_on_grid.hpp>
 #include <bim/game/component/player.hpp>
 #include <bim/game/component/player_action_kind.hpp>
 #include <bim/game/component/position_on_grid.hpp>
@@ -307,15 +308,16 @@ void bim::axmol::app::online_game::display_players() const
   for (ax::Sprite* s : m_players)
     s->setVisible(false);
 
-  registry.view<bim::game::player, bim::game::position_on_grid>().each(
-      [this](const bim::game::player& player,
-             const bim::game::position_on_grid& p) -> void
-      {
-        ax::Sprite& s = *m_players[player.index];
+  registry.view<bim::game::player, bim::game::fractional_position_on_grid>()
+      .each(
+          [this](const bim::game::player& player,
+                 const bim::game::fractional_position_on_grid& p) -> void
+          {
+            ax::Sprite& s = *m_players[player.index];
 
-        s.setVisible(true);
-        s.setPosition(grid_position_to_displayed_block_center(p.x, p.y));
-      });
+            s.setVisible(true);
+            s.setPosition(grid_position_to_display(p.x_float(), p.y_float()));
+          });
 }
 
 void bim::axmol::app::online_game::display_bombs() const
@@ -416,13 +418,22 @@ void bim::axmol::app::online_game::display_flames() const
 }
 
 ax::Vec2 bim::axmol::app::online_game::grid_position_to_displayed_block_center(
-    float x, float y) const
+    std::uint8_t x, std::uint8_t y) const
 {
-  const float center_x = x * m_block_size + m_block_size / 2;
+  const float center_x = (float)x * m_block_size + m_block_size / 2;
   const float center_y =
-      m_arena_view_size.y - m_block_size / 2 - y * m_block_size;
+      m_arena_view_size.y - m_block_size / 2 - (float)y * m_block_size;
 
   return ax::Vec2(center_x, center_y);
+}
+
+ax::Vec2 bim::axmol::app::online_game::grid_position_to_display(float x,
+                                                                float y) const
+{
+  const float view_x = x * m_block_size;
+  const float view_y = m_arena_view_size.y - y * m_block_size;
+
+  return ax::Vec2(view_x, view_y);
 }
 
 void bim::axmol::app::online_game::stop()

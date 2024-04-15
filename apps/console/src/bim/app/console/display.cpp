@@ -21,6 +21,7 @@
 #include <bim/game/component/brick_wall.hpp>
 #include <bim/game/component/flame.hpp>
 #include <bim/game/component/flame_direction.hpp>
+#include <bim/game/component/fractional_position_on_grid.hpp>
 #include <bim/game/component/player.hpp>
 #include <bim/game/component/position_on_grid.hpp>
 #include <bim/game/contest.hpp>
@@ -112,15 +113,20 @@ void bim::app::console::display(const bim::game::contest& contest)
         out += "\033[0;0m";
       });
 
-  registry.view<bim::game::player, bim::game::position_on_grid>().each(
-      [&screen_buffer](const bim::game::player& player,
-                       const bim::game::position_on_grid& p) -> void
-      {
-        static constexpr char player_character[] = { 'A', 'B', 'C', 'D' };
-        screen_buffer[p.y][p.x] = "\033[32m";
-        screen_buffer[p.y][p.x] += player_character[player.index];
-        screen_buffer[p.y][p.x] += "\033[0;0m";
-      });
+  registry.view<bim::game::player, bim::game::fractional_position_on_grid>()
+      .each(
+          [&screen_buffer](
+              const bim::game::player& player,
+              const bim::game::fractional_position_on_grid& p) -> void
+          {
+            static constexpr char player_character[] = { 'A', 'B', 'C', 'D' };
+            const std::uint8_t x = p.grid_aligned_x();
+            const std::uint8_t y = p.grid_aligned_y();
+
+            screen_buffer[y][x] = "\033[32m";
+            screen_buffer[y][x] += player_character[player.index];
+            screen_buffer[y][x] += "\033[0;0m";
+          });
 
   constexpr std::string_view clear_screen = "\x1B[2J";
   constexpr std::string_view move_top_left = "\x1B[H";

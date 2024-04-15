@@ -18,71 +18,114 @@
 
 #include <bim/game/arena.hpp>
 
+#include <bim/game/component/fractional_position_on_grid.hpp>
 #include <bim/game/component/player.hpp>
 #include <bim/game/component/player_action.hpp>
 #include <bim/game/component/player_action_kind.hpp>
 #include <bim/game/component/player_direction.hpp>
-#include <bim/game/component/position_on_grid.hpp>
 #include <bim/game/factory/bomb.hpp>
+
+#include <bim/assume.hpp>
 
 #include <entt/entity/registry.hpp>
 
+#include <fpm/math.hpp>
+
 static void drop_bomb(entt::registry& registry, bim::game::arena& arena,
                       const bim::game::player& player,
-                      const bim::game::position_on_grid& position)
+                      const bim::game::fractional_position_on_grid& position)
 {
-  if (arena.entity_at(position.x, position.y) != entt::null)
+  const std::uint8_t arena_x = position.grid_aligned_x();
+  const std::uint8_t arena_y = position.grid_aligned_y();
+
+  if (arena.entity_at(arena_x, arena_y) != entt::null)
     return;
 
-  arena.put_entity(position.x, position.y,
-                   bim::game::bomb_factory(registry, position.x, position.y,
+  arena.put_entity(arena_x, arena_y,
+                   bim::game::bomb_factory(registry, arena_x, arena_y,
                                            player.bomb_strength));
 }
 
 static void move_player(bim::game::player& player,
-                        bim::game::position_on_grid& position,
+                        bim::game::fractional_position_on_grid& position,
                         bim::game::player_action_kind direction,
                         const bim::game::arena& arena)
 {
-  int x = position.x;
-  int y = position.y;
+  bim_assume(direction != bim::game::player_action_kind::drop_bomb);
+
+  using position_t = bim::game::fractional_position_on_grid::value_type;
+
+  constexpr position_t offset = position_t(1) / 8;
+  constexpr position_t half = position_t(1) / 2;
+
+  position_t x = position.x;
+  position_t y = position.y;
+
+  const position_t x_floor = fpm::floor(position.x);
+  const position_t y_floor = fpm::floor(position.y);
+
+  const position_t x_decimal = position.x - x_floor;
+  const position_t y_decimal = position.y - y_floor;
+
+  const std::uint8_t x_int = (std::uint8_t)x;
+  const std::uint8_t y_int = (std::uint8_t)y;
+
+  const auto cell_is_free = [&](int x, int y)
+  {
+    return !arena.is_static_wall(x, y)
+           && (arena.entity_at(x, y) == entt::null);
+  };
 
   switch (direction)
     {
     case bim::game::player_action_kind::left:
       player.current_direction = bim::game::player_direction::left;
-      x -= 1;
+
+      if ((x_decimal <= half + offset)
+          && ((x_int == 0) || !cell_is_free(x_int - 1, y_int)))
+        position.x = x_floor + half;
+      else
+        position.x -= offset;
       break;
     case bim::game::player_action_kind::right:
       player.current_direction = bim::game::player_direction::right;
-      x += 1;
+
+      if ((x_decimal + offset >= half)
+          && ((x_int + 1 == arena.width()) || !cell_is_free(x_int + 1, y_int)))
+        position.x = x_floor + half;
+      else
+        position.x += offset;
       break;
     case bim::game::player_action_kind::up:
       player.current_direction = bim::game::player_direction::up;
-      y -= 1;
+
+      if ((y_decimal <= half + offset)
+          && ((y_int == 0) || !cell_is_free(x_int, y_int - 1)))
+        position.y = y_floor + half;
+      else
+        position.y -= offset;
       break;
     case bim::game::player_action_kind::down:
       player.current_direction = bim::game::player_direction::down;
-      y += 1;
+
+      if ((y_decimal + offset >= half)
+          && ((y_int + 1 == arena.height())
+              || !cell_is_free(x_int, y_int + 1)))
+        position.y = y_floor + half;
+      else
+        position.y += offset;
       break;
     case bim::game::player_action_kind::drop_bomb:
-      assert(false);
+      bim_assume(false);
       break;
-    }
-
-  if ((x >= 0) && (y >= 0) && (x < arena.width()) && (y < arena.height())
-      && !arena.is_static_wall(x, y) && (arena.entity_at(x, y) == entt::null))
-    {
-      position.x = x;
-      position.y = y;
     }
 }
 
-static void apply_player_actions(entt::registry& registry,
-                                 bim::game::arena& arena,
-                                 bim::game::player& player,
-                                 bim::game::position_on_grid& position,
-                                 bim::game::player_action& action)
+static void
+apply_player_actions(entt::registry& registry, bim::game::arena& arena,
+                     bim::game::player& player,
+                     bim::game::fractional_position_on_grid& position,
+                     bim::game::player_action& action)
 {
   for (std::uint8_t i = 0; i != action.queue_size; ++i)
     if (action.queue[i] == bim::game::player_action_kind::drop_bomb)
@@ -95,8 +138,9 @@ static void apply_player_actions(entt::registry& registry,
 
 void bim::game::apply_player_action(entt::registry& registry, arena& arena)
 {
-  registry.view<player, position_on_grid, player_action>().each(
-      [&registry, &arena](player& player, position_on_grid& position,
+  registry.view<player, fractional_position_on_grid, player_action>().each(
+      [&registry, &arena](player& player,
+                          fractional_position_on_grid& position,
                           player_action& action) -> void
       {
         apply_player_actions(registry, arena, player, position, action);

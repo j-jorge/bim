@@ -13,6 +13,7 @@ add_library(bim_game
   main/src/bim/game/tick_counter.cpp
 
   main/src/bim/game/component/flame_direction.cpp
+  main/src/bim/game/component/fractional_position_on_grid.cpp
   main/src/bim/game/component/player_action_kind.cpp
   main/src/bim/game/component/player_action.cpp
 

@@ -23,6 +23,8 @@
 #include <bim/game/component/player_direction.hpp>
 #include <bim/game/component/position_on_grid.hpp>
 
+#include <bim/game/factory/player.hpp>
+
 #include <bim/game/random_generator.hpp>
 
 #include <entt/entity/entity.hpp>
@@ -129,10 +131,6 @@ TEST(bim_game_insert_random_brick_walls, no_walls_near_player)
   entt::registry registry;
 
   // Insert one player in each corner, and one in the center.
-  const entt::entity player_entities[] = {
-    registry.create(), registry.create(), registry.create(), registry.create(),
-    registry.create()
-  };
   const bim::game::position_on_grid player_positions[] = {
     { 1, 1 },
     { width - 2, 1 },
@@ -144,12 +142,9 @@ TEST(bim_game_insert_random_brick_walls, no_walls_near_player)
   // Create the actual player entities that should be used by
   // insert_random_brick_walls to avoid creating walls.
   int i = 0;
-  for (entt::entity e : player_entities)
+  for (bim::game::position_on_grid p : player_positions)
     {
-      registry.emplace<bim::game::player>(e, 0,
-                                          bim::game::player_direction::down);
-      registry.emplace<bim::game::position_on_grid>(e, player_positions[i].x,
-                                                    player_positions[i].y);
+      bim::game::player_factory(registry, i, p.x, p.y);
       ++i;
     }
 
