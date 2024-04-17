@@ -2,6 +2,7 @@
 
 #include <bim/axmol/widget/factory/sprite.hpp>
 #include <bim/axmol/widget/named_node_group.hpp>
+#include <bim/axmol/widget/ui/button.hpp>
 #include <bim/axmol/widget/ui/soft_stick.hpp>
 
 #include <bim/net/contest_runner.hpp>
@@ -28,7 +29,9 @@
 #define x_widget_scope bim::axmol::app::online_game::
 #define x_widget_type_name controls
 #define x_widget_controls                                                     \
-  x_widget(ax::Node, arena) x_widget(bim::axmol::widget::soft_stick, stick)
+  x_widget(ax::Node, arena) x_widget(bim::axmol::widget::soft_stick, stick)   \
+      x_widget(bim::axmol::widget::button, bomb_button_left)                  \
+          x_widget(bim::axmol::widget::button, bomb_button_right)
 #include <bim/axmol/widget/implement_controls_struct.hpp>
 
 #include <axmol/2d/Sprite.h>
@@ -49,6 +52,16 @@ bim::axmol::app::online_game::online_game(
   , m_flame_end_asset_name(*style.get_string("flame-end-asset-name"))
   , m_arena_width_in_blocks(*style.get_number("arena-width-in-blocks"))
 {
+  const auto request_drop_bomb = [this]()
+  {
+    m_bomb_drop_requested = true;
+  };
+
+  m_controls->bomb_button_left->connect_to_clicked(request_drop_bomb);
+  m_controls->bomb_button_right->connect_to_clicked(request_drop_bomb);
+
+  m_inputs.push_back(m_controls->bomb_button_left->input_node());
+  m_inputs.push_back(m_controls->bomb_button_right->input_node());
   m_inputs.push_back(m_controls->stick->input_node());
 
   const bim::axmol::widget::context& widget_context =
@@ -102,6 +115,8 @@ bim::axmol::app::online_game::nodes() const
 
 void bim::axmol::app::online_game::attached()
 {
+  m_bomb_drop_requested = false;
+
   m_arena_view_size = m_controls->arena->getContentSize();
   m_block_size = m_arena_view_size.x / m_arena_width_in_blocks;
 
@@ -242,7 +257,7 @@ void bim::axmol::app::online_game::alloc_assets(
     }
 }
 
-void bim::axmol::app::online_game::apply_inputs() const
+void bim::axmol::app::online_game::apply_inputs()
 {
   bim::game::player_action* player_action =
       bim::game::find_player_action_by_index(m_contest->registry(),
@@ -267,6 +282,15 @@ void bim::axmol::app::online_game::apply_inputs() const
     player_action->push(bim::game::player_action_kind::up);
   else if (drag.y <= -move_threshold)
     player_action->push(bim::game::player_action_kind::down);
+
+  if (player_action->full())
+    return;
+
+  if (m_bomb_drop_requested)
+    {
+      player_action->push(bim::game::player_action_kind::drop_bomb);
+      m_bomb_drop_requested = false;
+    }
 }
 
 void bim::axmol::app::online_game::refresh_display() const

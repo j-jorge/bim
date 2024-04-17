@@ -12,6 +12,22 @@
                 "color": "#385b59"
             }],
 
+            "bomb_button_left":
+            [
+                "button/sprite",
+                {
+                    "widgets/sprite/frame": "sprites/bomb.png"
+                }
+            ],
+
+            "bomb_button_right":
+            [
+                "button/sprite",
+                {
+                    "widgets/sprite/frame": "sprites/bomb.png"
+                }
+            ],
+
             "stick":
             [{
                 "widgets":

@@ -19,6 +19,26 @@
             }
         ],
 
+        "bomb_button_left":
+        [{
+            "anchor.x": 0.5,
+            "anchor.y": 0.5,
+            "anchor.reference.x": 0.2,
+            "anchor.reference.y": 0.3,
+            "width.percents": 20,
+            "height-ratio": 1
+        }],
+
+        "bomb_button_right":
+        [{
+            "anchor.x": 0.5,
+            "anchor.y": 0.5,
+            "anchor.reference.x": 0.8,
+            "anchor.reference.y": 0.3,
+            "width.percents": 20,
+            "height-ratio": 1
+        }],
+
         "stick":
         [{
             "anchor.x": 0.5,

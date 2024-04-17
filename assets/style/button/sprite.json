@@ -1,0 +1,58 @@
+{
+    "style":
+    {
+        "widgets":
+        [{
+            "background":
+            [{
+                "instantiate": "ax::LayerColor",
+                "opacity": 1
+            }],
+
+            "sprite":
+            [{
+                "instantiate": "ax::Sprite",
+                "anchor-point.x": 0.5,
+                "anchor-point.y": 0.5,
+                "name": "sprite",
+                "z-order": 10
+            }]
+        }],
+
+        "bounds":
+        [{
+            "background": [ "layout/fill" ],
+
+            "sprite":
+            [{
+                "anchor.x": 0.5,
+                "anchor.y": 0.5,
+                "anchor.reference.x": 0.5,
+                "anchor.reference.y": 0.5,
+                "scale-constraints":
+                [{
+                    "max-percents-width": 80,
+                    "max-percents-height": 80
+                }]
+            }]
+        }],
+
+        "display.pressed":
+        [{
+            "background/color": "#808080"
+        }],
+
+        "display.release":
+        [{
+            "background/color": "#c0c0c0"
+        }],
+
+        "display.disabled":
+        [{
+            "background/color": "#202020"
+        }],
+
+        "sound.click": "tick"
+    }
+}
+

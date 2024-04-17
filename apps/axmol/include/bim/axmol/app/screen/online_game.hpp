@@ -87,7 +87,7 @@ namespace bim::axmol::app
                       std::size_t count,
                       const iscool::style::declaration& style) const;
 
-    void apply_inputs() const;
+    void apply_inputs();
 
     void refresh_display() const;
     void display_brick_walls() const;
@@ -103,7 +103,7 @@ namespace bim::axmol::app
 
   private:
     bim::axmol::input::tree m_inputs;
-    bim_declare_controls_struct(controls, m_controls, 2);
+    bim_declare_controls_struct(controls, m_controls, 4);
 
     iscool::signals::scoped_connection m_tick_connection;
 
@@ -131,5 +131,7 @@ namespace bim::axmol::app
     /// The size of the node containing the arena.
     ax::Vec2 m_arena_view_size;
     std::uint8_t m_local_player_index;
+
+    bool m_bomb_drop_requested;
   };
 }
