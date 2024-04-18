@@ -16,6 +16,8 @@ static bool apply_height(float& height, const ax::Node& reference,
                          const bim::axmol::style::bounds_properties& bounds);
 static void apply_scale(ax::Node& node, const ax::Node& reference,
                         const bim::axmol::style::bounds_properties& bounds);
+static void apply_position(ax::Node& node, const ax::Node& reference,
+                           const bim::axmol::style::bounds_properties& bounds);
 static void set_bottom_left(ax::Node& node,
                             const bim::axmol::style::bounds_properties& bounds,
                             const ax::Vec2& reference_bottom_left,
@@ -29,16 +31,7 @@ void bim::axmol::style::apply_bounds(const bounds_properties& bounds,
 
   apply_size(node, reference, bounds);
   apply_scale(node, reference, bounds);
-
-  // todo: apply_position(node, bounds, reference).
-  if (&reference == node.getParent())
-    set_bottom_left(node, bounds, ax::Vec2::ZERO, reference.getContentSize());
-  else
-    set_bottom_left(node, bounds,
-                    reference.getPosition()
-                        - reference.getContentSize()
-                              * reference.getAnchorPoint(),
-                    reference.getContentSize() * reference.getScale());
+  apply_position(node, reference, bounds);
 }
 
 void apply_size(ax::Node& node, const ax::Node& reference,
@@ -172,6 +165,19 @@ void apply_scale(ax::Node& node, const ax::Node& reference,
   node.setScale(min_scale);
 }
 
+void apply_position(ax::Node& node, const ax::Node& reference,
+                    const bim::axmol::style::bounds_properties& bounds)
+{
+  if (&reference == node.getParent())
+    set_bottom_left(node, bounds, ax::Vec2::ZERO, reference.getContentSize());
+  else
+    set_bottom_left(node, bounds,
+                    reference.getPosition()
+                        - reference.getContentSize()
+                              * reference.getAnchorPoint(),
+                    reference.getContentSize() * reference.getScale());
+}
+
 void set_bottom_left(ax::Node& node,
                      const bim::axmol::style::bounds_properties& bounds,
                      const ax::Vec2& reference_bottom_left,
@@ -197,6 +203,7 @@ void set_bottom_left(ax::Node& node,
   const ax::Vec2 size = node.getContentSize();
   const ax::Vec2 scaled_size = size * node.getScale();
 
-  node.setPosition(reference_bottom_left + reference_size * reference_anchor
-                   - scaled_size * node_anchor + size * node.getAnchorPoint());
+  node.setPosition(reference_bottom_left + reference_anchor * reference_size
+                   - node_anchor * scaled_size
+                   + node.getAnchorPoint() * scaled_size);
 }
