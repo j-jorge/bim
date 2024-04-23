@@ -62,6 +62,16 @@ bim::net::contest_runner::contest_runner(bim::game::contest& contest,
       std::bind(&contest_runner::queue_updates, this, std::placeholders::_1));
 }
 
+std::uint32_t bim::net::contest_runner::local_tick() const
+{
+  return m_last_completed_tick;
+}
+
+std::uint32_t bim::net::contest_runner::confirmed_tick() const
+{
+  return m_last_confirmed_tick;
+}
+
 bim::game::contest_result
 bim::net::contest_runner::run(std::chrono::nanoseconds elapsed_wall_time)
 {

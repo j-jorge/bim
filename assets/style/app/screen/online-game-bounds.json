@@ -47,6 +47,15 @@
             "anchor.reference.y": 0.2,
             "width.percents": 40,
             "height-ratio": 1
+        }],
+
+        "debug_delta_ticks":
+        [{
+            "reference": "arena",
+            "anchor.x": 0,
+            "anchor.y": 1,
+            "anchor.reference.x": 0,
+            "anchor.reference.y": 0
         }]
     }
 }

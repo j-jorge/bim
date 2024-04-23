@@ -55,7 +55,18 @@
 
                     "background": [ "layout/fill" ]
                 }]
-            }]
+            }],
+
+            "debug_delta_ticks":
+            [
+                "font/regular",
+                {
+                    "anchor-point.x": 0,
+                    "anchor-point.y": 1,
+                    "font.size": 32,
+                    "font.color": "#f0f0f0"
+                }
+            ]
         }],
 
         "arena-width-in-blocks": 13,

@@ -31,7 +31,8 @@
 #define x_widget_controls                                                     \
   x_widget(ax::Node, arena) x_widget(bim::axmol::widget::soft_stick, stick)   \
       x_widget(bim::axmol::widget::button, bomb_button_left)                  \
-          x_widget(bim::axmol::widget::button, bomb_button_right)
+          x_widget(bim::axmol::widget::button, bomb_button_right)             \
+              x_widget(ax::Label, debug_delta_ticks)
 #include <bim/axmol/widget/implement_controls_struct.hpp>
 
 #include <axmol/2d/Sprite.h>
@@ -295,6 +296,14 @@ void bim::axmol::app::online_game::apply_inputs()
 
 void bim::axmol::app::online_game::refresh_display() const
 {
+  const int local_tick = m_contest_runner->local_tick();
+  const int server_tick = m_contest_runner->confirmed_tick();
+
+  m_controls->debug_delta_ticks->setString(
+      fmt::format("Player {}, Ticks: local={}, server={}, delta={}\n",
+                  m_local_player_index, local_tick, server_tick,
+                  local_tick - server_tick));
+
   display_brick_walls();
   display_players();
   display_bombs();

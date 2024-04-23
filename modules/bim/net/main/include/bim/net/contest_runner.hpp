@@ -43,6 +43,9 @@ namespace bim::net
                    game_update_exchange& update_exchange,
                    std::uint8_t local_player_index, std::uint8_t player_count);
 
+    std::uint32_t local_tick() const;
+    std::uint32_t confirmed_tick() const;
+
     bim::game::contest_result run(std::chrono::nanoseconds elapsed_wall_time);
 
   private:
