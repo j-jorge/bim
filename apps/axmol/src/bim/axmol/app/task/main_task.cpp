@@ -27,7 +27,7 @@ void bim::axmol::app::main_task::start()
 {
   m_context.get_audio()->play_music("menu", iscool::audio::loop_mode::forever);
 
-  m_session_handler.connect("localhost:23899");
+  m_session_handler.connect("bim.jorge.st:23899");
 
   const std::string language_code = iscool::system::get_language_code();
   std::string translations_file = "i18n/" + language_code + ".mo";
