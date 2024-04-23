@@ -66,9 +66,28 @@ struct bim::server::game_service::game
     (i.e. the index of the tick at which must be applied the first action in
     each of the vectors in actions below) in completed_tick_count_all.
   */
+
+  /**
+   * The tick reached by every player. At this point, the clients may not know
+   * the state of every other player, but every client as simulated up to this
+   * point. This is the minimum of (completed_tick_count_per_player[i] +
+   * actions[i].size()).
+   */
   std::uint32_t simulation_tick;
+
+  /**
+   * The tick confirmed by every client, i.e. each client knows the actions of
+   * every player up to this point.
+   */
   std::uint32_t completed_tick_count_all;
+
+  /// The tick of the simulation for every player.
   std::array<std::uint32_t, 4> completed_tick_count_per_player;
+
+  /**
+   * The actions to apply starting from completed_tick_count_per_player, for
+   * each player. One player_action per tick.
+   */
   std::array<std::vector<bim::game::player_action>, 4> actions;
 
   std::size_t session_index(iscool::net::session_id session) const
@@ -253,14 +272,20 @@ void bim::server::game_service::push_update(
   const std::optional<bim::net::game_update_from_client> update =
       bim::net::try_deserialize_message<bim::net::game_update_from_client>(
           message);
+  const iscool::net::session_id session = message.get_session_id();
 
   if (!update)
-    return;
+    {
+      ic_causeless_log(
+          iscool::log::nature::info(), "game_service",
+          "Could not deserialize message game update from session=%d.",
+          session);
+      return;
+    }
 
-  const iscool::net::session_id session = message.get_session_id();
   const std::size_t player_index = game.session_index(session);
   const std::optional<std::size_t> tick_count =
-      validate_message(*update, player_index, game);
+      validate_message(*update, session, player_index, game);
 
   if (!tick_count)
     return;
@@ -275,7 +300,8 @@ void bim::server::game_service::push_update(
 
 /// Validate the integrity of the message.
 std::optional<std::size_t> bim::server::game_service::validate_message(
-    const bim::net::game_update_from_client& message, std::size_t player_index,
+    const bim::net::game_update_from_client& message,
+    iscool::net::session_id session, std::size_t player_index,
     const game& game) const
 {
   if (player_index >= game.player_count)
@@ -284,24 +310,56 @@ std::optional<std::size_t> bim::server::game_service::validate_message(
   // A message from the player's past, maybe it took a longer path on the
   // network.
   if (message.from_tick < game.completed_tick_count_per_player[player_index])
-    return std::nullopt;
+    {
+      ic_causeless_log(iscool::log::nature::info(), "game_service",
+                       "Message from the past from session=%d, player=%d, got "
+                       "%d, expected %d.",
+                       session, (int)player_index, message.from_tick,
+                       game.completed_tick_count_per_player[player_index]);
+      return std::nullopt;
+    }
 
   // A message from our future? Should not happen.
   if (message.from_tick > game.simulation_tick)
-    return std::nullopt;
-
+    {
+      ic_causeless_log(iscool::log::nature::info(), "game_service",
+                       "Message from the future from session=%d, player=%d, "
+                       "got %d, expected %d.",
+                       session, (int)player_index, message.from_tick,
+                       game.simulation_tick);
+      return std::nullopt;
+    }
   const std::size_t tick_count = message.action_count_at_tick.size();
 
   // A range of actions that happened before the current simulation step, maybe
   // it was lost on the network, or the player has not received our update.
   if (message.from_tick + tick_count <= game.simulation_tick)
-    return 0;
+    {
+      ic_causeless_log(iscool::log::nature::info(), "game_service",
+                       "Out-of-date message for session=%d, player=%d, got"
+                       " %d+%d=%d, expected %d.",
+                       session, (int)player_index, message.from_tick,
+                       tick_count, message.from_tick + tick_count,
+                       game.simulation_tick);
+      return 0;
+    }
 
   if (message.action_count_at_tick.size() > 255)
-    return std::nullopt;
+    {
+      ic_causeless_log(
+          iscool::log::nature::info(), "game_service",
+          "Too many action count/ticks %d for session=%d, player=%d.",
+          message.action_count_at_tick.size(), session, (int)player_index);
+      return std::nullopt;
+    }
 
   if (message.actions.size() > bim::game::player_action::queue_capacity * 255)
-    return std::nullopt;
+    {
+      ic_causeless_log(iscool::log::nature::info(), "game_service",
+                       "Too many actions %d for session=%d, player=%d.",
+                       message.actions.size(), session, (int)player_index);
+      return std::nullopt;
+    }
 
   std::size_t action_count = 0;
 
@@ -309,7 +367,14 @@ std::optional<std::size_t> bim::server::game_service::validate_message(
     action_count += c;
 
   if (action_count != message.actions.size())
-    return std::nullopt;
+    {
+      ic_causeless_log(iscool::log::nature::info(), "game_service",
+                       "Inconsistent action count for session=%d, player=%d, "
+                       "got %d, expected %d.",
+                       session, (int)player_index, action_count,
+                       message.actions.size());
+      return std::nullopt;
+    }
 
   return tick_count;
 }

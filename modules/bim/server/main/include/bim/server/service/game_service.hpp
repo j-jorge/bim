@@ -59,7 +59,8 @@ namespace bim::server
 
     std::optional<std::size_t>
     validate_message(const bim::net::game_update_from_client& message,
-                     std::size_t player_index, const game& game) const;
+                     iscool::net::session_id session, std::size_t player_index,
+                     const game& game) const;
     void queue_actions(const bim::net::game_update_from_client& message,
                        std::size_t player_index, game& game);
     void send_actions(const iscool::net::endpoint& endpoint,

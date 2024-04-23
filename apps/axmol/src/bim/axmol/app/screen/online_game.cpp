@@ -26,6 +26,8 @@
 #include <iscool/signals/implement_signal.hpp>
 #include <iscool/time/monotonic_now.hpp>
 
+#include <axmol/2d/Label.h>
+
 #define x_widget_scope bim::axmol::app::online_game::
 #define x_widget_type_name controls
 #define x_widget_controls                                                     \
@@ -39,6 +41,8 @@
 #include <axmol/base/Director.h>
 
 #include <entt/entity/registry.hpp>
+
+#include <fmt/format.h>
 
 #include <cassert>
 
