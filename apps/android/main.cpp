@@ -3,6 +3,8 @@
 
 #include <bim/axmol/jni/bridge.hpp>
 
+#include <iscool/log/enable_console_log.hpp>
+
 #include <jni.h>
 
 namespace
@@ -19,5 +21,6 @@ static std::unique_ptr<application> g_application;
 
 void cocos_android_app_init(JNIEnv* env)
 {
+  iscool::log::enable_console_log();
   g_application.reset(new application());
 }
