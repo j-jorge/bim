@@ -28,6 +28,9 @@
 #include <iscool/schedule/delayed_call.hpp>
 #include <iscool/signals/implement_signal.hpp>
 
+#include <iscool/log/causeless_log.hpp>
+#include <iscool/log/nature/info.hpp>
+
 namespace
 {
   static constexpr int g_max_update_message_size_in_bytes = 480;
@@ -145,7 +148,11 @@ void bim::net::game_update_exchange::confirm_game_tick(
       try_deserialize_message<game_update_from_server>(m);
 
   if (!message)
-    return;
+    {
+      ic_causeless_log(iscool::log::nature::info(), "game_update_exchange",
+                       "Could not deserialize message.");
+      return;
+    }
 
   const std::uint32_t tick_count = validate_message(*message);
 
@@ -166,7 +173,12 @@ std::uint32_t bim::net::game_update_exchange::validate_message(
 {
   // The message should start from the last known server state.
   if (message.first_tick != m_current_update.from_tick)
-    return 0;
+    {
+      ic_causeless_log(iscool::log::nature::info(), "game_update_exchange",
+                       "Out of sync message, got %d, expected %d.",
+                       message.first_tick, m_current_update.from_tick);
+      return 0;
+    }
 
   // No action, we are in sync with the server.
   if (message.action_count.empty())
@@ -176,26 +188,44 @@ std::uint32_t bim::net::game_update_exchange::validate_message(
   bim_assume(m_player_count <= 4);
 
   if (message.action_count.size() % m_player_count != 0)
-    return 0;
+    {
+      ic_causeless_log(iscool::log::nature::info(), "game_update_exchange",
+                       "Inconsistent action count %d for %d players.",
+                       message.action_count.size(), (int)m_player_count);
+      return 0;
+    }
 
   const std::size_t tick_count = message.action_count.size() / m_player_count;
 
   // Suspiciously large message.
   if (tick_count > 255)
-    return 0;
+    {
+      ic_causeless_log(iscool::log::nature::info(), "game_update_exchange",
+                       "Too many ticks: %d", tick_count);
+      return 0;
+    }
 
   std::size_t action_count = 0;
 
   for (std::uint8_t c : message.action_count)
     {
-      if (action_count > bim::game::player_action::queue_capacity)
-        return 0;
+      if (c > bim::game::player_action::queue_capacity)
+        {
+          ic_causeless_log(iscool::log::nature::info(), "game_update_exchange",
+                           "Too many action count: %d", (int)c);
+          return 0;
+        }
 
       action_count += c;
     }
 
   if (action_count != message.actions.size())
-    return 0;
+    {
+      ic_causeless_log(iscool::log::nature::info(), "game_update_exchange",
+                       "Inconsistent action count, got %d, expected %d.",
+                       message.actions.size(), action_count);
+      return 0;
+    }
 
   return tick_count;
 }
