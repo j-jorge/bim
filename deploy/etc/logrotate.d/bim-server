@@ -1,0 +1,8 @@
+/opt/bim/log/*.txt {
+    size 1M
+    create 644 root root
+    copytruncate
+    maxage 365
+    rotate 12
+    dateext
+}

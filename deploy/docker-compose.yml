@@ -1,0 +1,16 @@
+version: "3.8"
+services:
+  gs:
+    image: ubuntu:23.10
+    ports:
+      - 23899:23899/udp
+    volumes:
+      - ./bin:/opt/bim/bin:ro
+      - ./etc:/opt/bim/etc:ro
+      - ./log:/opt/bim/log
+    deploy:
+      restart_policy:
+        condition: on-failure
+    command: >
+        bash -c "cp /opt/bim/etc/logrotate.d/* /etc/logrotate.d/
+        && /opt/bim/bin/bim-server &> /opt/bim/log/bim-server.txt"
