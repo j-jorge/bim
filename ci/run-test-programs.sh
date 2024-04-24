@@ -19,7 +19,7 @@ do
 
     echo "Running '$bin'"
 
-    if "$bin"
+    if "$bin" --gtest_brief=1
     then
         pass_count=$((pass_count + 1))
     fi
