@@ -55,20 +55,32 @@ static void move_player(bim::game::player& player,
 
   using position_t = bim::game::fractional_position_on_grid::value_type;
 
-  constexpr position_t offset = position_t(1) / 8;
+  constexpr position_t offset =
+      position_t(1) / bim::game::g_player_steps_per_cell;
   constexpr position_t half = position_t(1) / 2;
 
-  position_t x = position.x;
-  position_t y = position.y;
+  const position_t x = position.x;
+  const position_t y = position.y;
 
-  const position_t x_floor = fpm::floor(position.x);
-  const position_t y_floor = fpm::floor(position.y);
+  const position_t x_floor = fpm::floor(x);
+  const position_t y_floor = fpm::floor(y);
 
+  // Fractional position in the player's cell tells us if the player is on the
+  // left or the right part of the cell. Same for the up/down parts.
   const position_t x_decimal = position.x - x_floor;
   const position_t y_decimal = position.y - y_floor;
 
+  // Same as x_floor and y_floor but with a different type, for when we need
+  // integers (e.g. cell coordinates in the arena).
   const std::uint8_t x_int = (std::uint8_t)x;
   const std::uint8_t y_int = (std::uint8_t)y;
+
+  // If the player has moved, these variables are set to tell if we must check
+  // for an obstacle at the given x or y. Only one is set since the player
+  // moves in only one direction. E.g. move to the right -> check obstacles in
+  // x_int + 1.
+  std::uint8_t check_obstacle_x = 0;
+  std::uint8_t check_obstacle_y = 0;
 
   const auto cell_is_free = [&](int x, int y)
   {
@@ -76,6 +88,7 @@ static void move_player(bim::game::player& player,
            && (arena.entity_at(x, y) == entt::null);
   };
 
+  // Move the player.
   switch (direction)
     {
     case bim::game::player_action_kind::left:
@@ -85,7 +98,10 @@ static void move_player(bim::game::player& player,
           && ((x_int == 0) || !cell_is_free(x_int - 1, y_int)))
         position.x = x_floor + half;
       else
-        position.x -= offset;
+        {
+          check_obstacle_x = x_int - 1;
+          position.x -= offset;
+        }
       break;
     case bim::game::player_action_kind::right:
       player.current_direction = bim::game::player_direction::right;
@@ -94,7 +110,10 @@ static void move_player(bim::game::player& player,
           && ((x_int + 1 == arena.width()) || !cell_is_free(x_int + 1, y_int)))
         position.x = x_floor + half;
       else
-        position.x += offset;
+        {
+          check_obstacle_x = x_int + 1;
+          position.x += offset;
+        }
       break;
     case bim::game::player_action_kind::up:
       player.current_direction = bim::game::player_direction::up;
@@ -103,7 +122,10 @@ static void move_player(bim::game::player& player,
           && ((y_int == 0) || !cell_is_free(x_int, y_int - 1)))
         position.y = y_floor + half;
       else
-        position.y -= offset;
+        {
+          check_obstacle_y = y_int - 1;
+          position.y -= offset;
+        }
       break;
     case bim::game::player_action_kind::down:
       player.current_direction = bim::game::player_direction::down;
@@ -113,11 +135,43 @@ static void move_player(bim::game::player& player,
               || !cell_is_free(x_int, y_int + 1)))
         position.y = y_floor + half;
       else
-        position.y += offset;
+        {
+          check_obstacle_y = y_int + 1;
+          position.y += offset;
+        }
       break;
     case bim::game::player_action_kind::drop_bomb:
       bim_assume(false);
       break;
+    }
+
+  // Adjust the position on the other axis than the movement to avoid
+  // obstacles.
+  if (check_obstacle_x != 0)
+    {
+      if (y_decimal > half)
+        {
+          if (!cell_is_free(check_obstacle_x, y_int + 1))
+            position.y -= std::min(offset, y_decimal - half);
+        }
+      else if (y_decimal < half)
+        {
+          if (!cell_is_free(check_obstacle_x, y_int - 1))
+            position.y += std::min(offset, half - y_decimal);
+        }
+    }
+  else if (check_obstacle_y != 0)
+    {
+      if (x_decimal > half)
+        {
+          if (!cell_is_free(x_int + 1, check_obstacle_y))
+            position.x -= std::min(offset, x_decimal - half);
+        }
+      else if (x_decimal < half)
+        {
+          if (!cell_is_free(x_int - 1, check_obstacle_y))
+            position.x += std::min(offset, half - x_decimal);
+        }
     }
 }
 

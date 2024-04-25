@@ -41,6 +41,7 @@ add_executable(game-tests
   tests/src/bim/game/component/flame_direction.cpp
   tests/src/bim/game/component/player_action.cpp
 
+  tests/src/bim/game/system/apply_player_action.cpp
   tests/src/bim/game/system/update_bombs.cpp
   tests/src/bim/game/system/update_brick_walls.cpp
   tests/src/bim/game/system/update_flames.cpp
