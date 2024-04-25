@@ -272,21 +272,28 @@ void bim::axmol::app::online_game::apply_inputs()
     return;
 
   const ax::Vec2& drag = m_controls->stick->drag();
-
+  const float abs_x = std::abs(drag.x);
+  const float abs_y = std::abs(drag.y);
   constexpr float move_threshold = 0.1;
+  const float dx = (abs_x >= move_threshold) ? drag.x : 0;
+  const float dy = (abs_y >= move_threshold) ? drag.y : 0;
 
-  if (drag.x >= move_threshold)
-    player_action->push(bim::game::player_action_kind::right);
-  else if (drag.x <= -move_threshold)
-    player_action->push(bim::game::player_action_kind::left);
-
-  if (player_action->full())
-    return;
-
-  if (drag.y >= move_threshold)
-    player_action->push(bim::game::player_action_kind::up);
-  else if (drag.y <= -move_threshold)
-    player_action->push(bim::game::player_action_kind::down);
+  // Move either horizontally or vertically, but not both, as it tend to
+  // produce unexpected turns on the grid layout of the game.
+  if ((dx != 0) && (abs_x >= abs_y))
+    {
+      if (dx >= 0)
+        player_action->push(bim::game::player_action_kind::right);
+      else
+        player_action->push(bim::game::player_action_kind::left);
+    }
+  else if (dy != 0)
+    {
+      if (dy >= 0)
+        player_action->push(bim::game::player_action_kind::up);
+      else if (dy <= 0)
+        player_action->push(bim::game::player_action_kind::down);
+    }
 
   if (player_action->full())
     return;
