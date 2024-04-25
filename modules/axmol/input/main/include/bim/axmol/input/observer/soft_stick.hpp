@@ -36,10 +36,11 @@ namespace bim::axmol::input
 
     bool should_ignore_touches() const;
 
-    void update_drag(ax::Vec2 touch_location);
+    void constraint_drag(ax::Vec2 touch_location, ax::Vec2 scale);
 
   private:
     std::optional<int> m_touch_id;
+    ax::Vec2 m_origin;
     ax::Vec2 m_drag;
     bool m_enabled;
   };
