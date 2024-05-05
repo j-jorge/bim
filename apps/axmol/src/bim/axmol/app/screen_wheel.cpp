@@ -54,6 +54,8 @@ bim::axmol::app::screen_wheel::screen_wheel(
             "end-game-bounds");
   m_controls->end_game->removeFromParent();
 
+  wire_permanent_connections();
+
   // Start on the lobby, In the initial state
   m_active_view = m_controls->lobby;
   lobby_displayed();
@@ -70,6 +72,33 @@ void bim::axmol::app::screen_wheel::map_nodes(
   bim::axmol::widget::apply_bounds(m_context.get_widget_context().style_cache,
                                    nodes,
                                    *style.get_declaration(bounds_style_name));
+}
+
+void bim::axmol::app::screen_wheel::wire_permanent_connections()
+{
+  m_lobby->connect_to_play(
+      [this]()
+      {
+        animate_lobby_to_matchmaking();
+      });
+
+  m_matchmaking->connect_to_start_game(
+      [this](const bim::net::game_launch_event& event)
+      {
+        animate_matchmaking_to_game(event);
+      });
+
+  m_online_game->connect_to_game_over(
+      [this](const bim::game::contest_result& result)
+      {
+        animate_game_to_end_game(result);
+      });
+
+  m_end_game->connect_to_quit(
+      [this]()
+      {
+        animate_end_game_to_lobby();
+      });
 }
 
 void bim::axmol::app::screen_wheel::switch_view(ax::Node& new_view)
@@ -127,51 +156,23 @@ void bim::axmol::app::screen_wheel::animate_end_game_to_lobby()
 void bim::axmol::app::screen_wheel::lobby_displayed()
 {
   m_inputs.push_back(m_lobby->input_node());
-
-  m_lobby->connect_to_play(
-      [this]()
-      {
-        animate_lobby_to_matchmaking();
-      });
-
   m_lobby->displayed();
 }
 
 void bim::axmol::app::screen_wheel::matchmaking_displayed()
 {
   m_inputs.push_back(m_matchmaking->input_node());
-
-  m_matchmaking->connect_to_start_game(
-      [this](const bim::net::game_launch_event& event)
-      {
-        animate_matchmaking_to_game(event);
-      });
-
   m_matchmaking->displayed();
 }
 
 void bim::axmol::app::screen_wheel::online_game_displayed()
 {
   m_inputs.push_back(m_online_game->input_node());
-
-  m_online_game->connect_to_game_over(
-      [this](const bim::game::contest_result& result)
-      {
-        animate_game_to_end_game(result);
-      });
-
   m_online_game->displayed();
 }
 
 void bim::axmol::app::screen_wheel::end_game_displayed()
 {
   m_inputs.push_back(m_end_game->input_node());
-
-  m_end_game->connect_to_quit(
-      [this]()
-      {
-        animate_end_game_to_lobby();
-      });
-
   m_end_game->displayed();
 }

@@ -69,6 +69,8 @@ namespace bim::axmol::app
                    const iscool::style::declaration& style,
                    const std::string& bounds_style_name) const;
 
+    void wire_permanent_connections();
+
     void switch_view(ax::Node& new_view);
 
     void animate_lobby_to_matchmaking();
