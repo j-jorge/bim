@@ -10,7 +10,7 @@ target_include_directories(bim_axmol_schedule PUBLIC main/include)
 target_link_libraries(
   bim_axmol_schedule
   PUBLIC
-  axmol::axmol
+  bim_axmol_core
   iscool_schedule
   fmt::fmt
 )
