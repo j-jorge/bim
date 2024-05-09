@@ -24,7 +24,7 @@
 entt::entity bim::game::bomb_factory(entt::registry& registry, std::uint8_t x,
                                      std::uint8_t y, std::uint8_t strength)
 {
-  return bomb_factory(registry, x, y, 2, std::chrono::seconds(2));
+  return bomb_factory(registry, x, y, strength, std::chrono::seconds(2));
 }
 
 entt::entity

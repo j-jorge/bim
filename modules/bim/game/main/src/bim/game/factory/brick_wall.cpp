@@ -33,6 +33,7 @@ entt::entity bim::game::brick_wall_factory(entt::registry& registry,
   registry.emplace<position_on_grid>(entity, x, y);
 
   arena.put_entity(x, y, entity);
+  arena.set_solid(x, y);
 
   return entity;
 }

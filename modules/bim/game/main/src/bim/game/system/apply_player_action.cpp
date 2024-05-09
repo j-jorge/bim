@@ -82,12 +82,6 @@ static void move_player(bim::game::player& player,
   std::uint8_t check_obstacle_x = 0;
   std::uint8_t check_obstacle_y = 0;
 
-  const auto cell_is_free = [&](int x, int y)
-  {
-    return !arena.is_static_wall(x, y)
-           && (arena.entity_at(x, y) == entt::null);
-  };
-
   // Move the player.
   switch (direction)
     {
@@ -95,7 +89,7 @@ static void move_player(bim::game::player& player,
       player.current_direction = bim::game::player_direction::left;
 
       if ((x_decimal <= half + offset)
-          && ((x_int == 0) || !cell_is_free(x_int - 1, y_int)))
+          && ((x_int == 0) || arena.is_solid(x_int - 1, y_int)))
         position.x = x_floor + half;
       else
         {
@@ -107,7 +101,8 @@ static void move_player(bim::game::player& player,
       player.current_direction = bim::game::player_direction::right;
 
       if ((x_decimal + offset >= half)
-          && ((x_int + 1 == arena.width()) || !cell_is_free(x_int + 1, y_int)))
+          && ((x_int + 1 == arena.width())
+              || arena.is_solid(x_int + 1, y_int)))
         position.x = x_floor + half;
       else
         {
@@ -119,7 +114,7 @@ static void move_player(bim::game::player& player,
       player.current_direction = bim::game::player_direction::up;
 
       if ((y_decimal <= half + offset)
-          && ((y_int == 0) || !cell_is_free(x_int, y_int - 1)))
+          && ((y_int == 0) || arena.is_solid(x_int, y_int - 1)))
         position.y = y_floor + half;
       else
         {
@@ -132,7 +127,7 @@ static void move_player(bim::game::player& player,
 
       if ((y_decimal + offset >= half)
           && ((y_int + 1 == arena.height())
-              || !cell_is_free(x_int, y_int + 1)))
+              || arena.is_solid(x_int, y_int + 1)))
         position.y = y_floor + half;
       else
         {
@@ -151,12 +146,12 @@ static void move_player(bim::game::player& player,
     {
       if (y_decimal > half)
         {
-          if (!cell_is_free(check_obstacle_x, y_int + 1))
+          if (arena.is_solid(check_obstacle_x, y_int + 1))
             position.y -= std::min(offset, y_decimal - half);
         }
       else if (y_decimal < half)
         {
-          if (!cell_is_free(check_obstacle_x, y_int - 1))
+          if (arena.is_solid(check_obstacle_x, y_int - 1))
             position.y += std::min(offset, half - y_decimal);
         }
     }
@@ -164,12 +159,12 @@ static void move_player(bim::game::player& player,
     {
       if (x_decimal > half)
         {
-          if (!cell_is_free(x_int + 1, check_obstacle_y))
+          if (arena.is_solid(x_int + 1, check_obstacle_y))
             position.x -= std::min(offset, x_decimal - half);
         }
       else if (x_decimal < half)
         {
-          if (!cell_is_free(x_int - 1, check_obstacle_y))
+          if (arena.is_solid(x_int - 1, check_obstacle_y))
             position.x += std::min(offset, half - x_decimal);
         }
     }

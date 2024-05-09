@@ -23,7 +23,10 @@
 #include <bim/game/component/bomb.hpp>
 #include <bim/game/component/brick_wall.hpp>
 #include <bim/game/component/burning.hpp>
+#include <bim/game/component/dead.hpp>
 #include <bim/game/component/flame.hpp>
+#include <bim/game/component/flame_power_up.hpp>
+#include <bim/game/component/flame_power_up_spawner.hpp>
 #include <bim/game/component/fractional_position_on_grid.hpp>
 #include <bim/game/component/player.hpp>
 #include <bim/game/component/player_action.hpp>
@@ -249,9 +252,10 @@ void bim::net::contest_runner::archive_io(Snapshot&& snapshot,
                                           Archive&& archive) const
 {
   snapshot.entities(archive)
-      .template component<bim::game::bomb, bim::game::brick_wall,
-                          bim::game::burning, bim::game::flame,
-                          bim::game::fractional_position_on_grid,
-                          bim::game::player_action, bim::game::player,
-                          bim::game::position_on_grid>(archive);
+      .template component<
+          bim::game::bomb, bim::game::brick_wall, bim::game::burning,
+          bim::game::dead, bim::game::flame, bim::game::flame_power_up,
+          bim::game::flame_power_up_spawner,
+          bim::game::fractional_position_on_grid, bim::game::player_action,
+          bim::game::player, bim::game::position_on_grid>(archive);
 }

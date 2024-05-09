@@ -36,6 +36,9 @@ namespace bim::game
     void put_entity(std::uint8_t x, std::uint8_t y, entt::entity e);
     void erase_entity(std::uint8_t x, std::uint8_t y);
 
+    bool is_solid(std::uint8_t x, std::uint8_t y) const;
+    void set_solid(std::uint8_t x, std::uint8_t y);
+
     bool is_static_wall(std::uint8_t x, std::uint8_t y) const;
     void set_static_wall(std::uint8_t x, std::uint8_t y);
 
@@ -45,5 +48,6 @@ namespace bim::game
 
     std::vector<entt::entity> m_entities;
     std::vector<bool> m_walls;
+    std::vector<bool> m_solids;
   };
 }

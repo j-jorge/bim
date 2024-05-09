@@ -25,6 +25,8 @@
 #include <bim/game/system/remove_dead_objects.hpp>
 #include <bim/game/system/update_bombs.hpp>
 #include <bim/game/system/update_brick_walls.hpp>
+#include <bim/game/system/update_flame_power_up_spawners.hpp>
+#include <bim/game/system/update_flame_power_ups.hpp>
 #include <bim/game/system/update_flames.hpp>
 #include <bim/game/system/update_players.hpp>
 
@@ -77,6 +79,8 @@ void bim::game::contest::tick()
   update_bombs(m_registry, m_arena, tick_interval);
   update_flames(m_registry, m_arena, tick_interval);
   update_brick_walls(m_registry, m_arena);
+  update_flame_power_up_spawners(m_registry, m_arena);
+  update_flame_power_ups(m_registry, m_arena);
   update_players(m_registry, m_arena);
 }
 

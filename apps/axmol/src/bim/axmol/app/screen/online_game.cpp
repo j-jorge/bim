@@ -15,11 +15,13 @@
 #include <bim/game/component/dead.hpp>
 #include <bim/game/component/flame.hpp>
 #include <bim/game/component/flame_direction.hpp>
+#include <bim/game/component/flame_power_up.hpp>
 #include <bim/game/component/fractional_position_on_grid.hpp>
 #include <bim/game/component/player.hpp>
 #include <bim/game/component/player_action_kind.hpp>
 #include <bim/game/component/position_on_grid.hpp>
 #include <bim/game/contest.hpp>
+#include <bim/game/level_generation.hpp>
 #include <bim/game/player_action.hpp>
 
 #include <iscool/schedule/delayed_call.hpp>
@@ -102,6 +104,9 @@ bim::axmol::app::online_game::online_game(
                *style.get_declaration("flame"));
   alloc_assets(m_bombs, widget_context, max_players * max_bombs_per_player,
                *style.get_declaration("bomb"));
+  alloc_assets(m_flame_power_ups, widget_context,
+               bim::game::g_flame_power_up_count,
+               *style.get_declaration("power-up-flame"));
 }
 
 bim::axmol::app::online_game::~online_game() = default;
@@ -143,6 +148,7 @@ void bim::axmol::app::online_game::attached()
   resize_to_block_width(m_brick_walls);
   resize_to_block_width(m_flames);
   resize_to_block_width(m_bombs);
+  resize_to_block_width(m_flame_power_ups);
 }
 
 void bim::axmol::app::online_game::displaying(
@@ -319,6 +325,7 @@ void bim::axmol::app::online_game::refresh_display() const
   display_players();
   display_bombs();
   display_flames();
+  display_flame_power_ups();
 }
 
 void bim::axmol::app::online_game::display_brick_walls() const
@@ -457,6 +464,29 @@ void bim::axmol::app::online_game::display_flames() const
   for (std::size_t n = m_flames.size(); asset_index != n; ++asset_index)
     if (m_flames[asset_index]->isVisible())
       m_flames[asset_index]->setVisible(false);
+    else
+      break;
+}
+
+void bim::axmol::app::online_game::display_flame_power_ups() const
+{
+  const entt::registry& registry = m_contest->registry();
+  std::size_t asset_index = 0;
+
+  registry.view<bim::game::position_on_grid, bim::game::flame_power_up>().each(
+      [this, &asset_index](const bim::game::position_on_grid& p) -> void
+      {
+        ax::Sprite& s = *m_flame_power_ups[asset_index];
+
+        s.setVisible(true);
+        s.setPosition(grid_position_to_displayed_block_center(p.x, p.y));
+        ++asset_index;
+      });
+
+  for (std::size_t n = m_flame_power_ups.size(); asset_index != n;
+       ++asset_index)
+    if (m_flame_power_ups[asset_index]->isVisible())
+      m_flame_power_ups[asset_index]->setVisible(false);
     else
       break;
 }

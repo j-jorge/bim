@@ -29,6 +29,7 @@ bim::game::arena::arena(std::uint8_t width, std::uint8_t height)
   , m_height(height)
   , m_entities(width * height, (entt::entity)entt::null)
   , m_walls(width * height, false)
+  , m_solids(width * height, false)
 {}
 
 std::uint8_t bim::game::arena::width() const
@@ -56,6 +57,17 @@ void bim::game::arena::put_entity(std::uint8_t x, std::uint8_t y,
 void bim::game::arena::erase_entity(std::uint8_t x, std::uint8_t y)
 {
   m_entities[y * m_width + x] = entt::null;
+  m_solids[y * m_width + x] = false;
+}
+
+bool bim::game::arena::is_solid(std::uint8_t x, std::uint8_t y) const
+{
+  return m_solids[y * m_width + x];
+}
+
+void bim::game::arena::set_solid(std::uint8_t x, std::uint8_t y)
+{
+  m_solids[y * m_width + x] = true;
 }
 
 bool bim::game::arena::is_static_wall(std::uint8_t x, std::uint8_t y) const
@@ -66,4 +78,5 @@ bool bim::game::arena::is_static_wall(std::uint8_t x, std::uint8_t y) const
 void bim::game::arena::set_static_wall(std::uint8_t x, std::uint8_t y)
 {
   m_walls[y * m_width + x] = true;
+  m_solids[y * m_width + x] = true;
 }
