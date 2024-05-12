@@ -26,6 +26,8 @@ namespace bim::game
   {
     std::uint8_t index;
     player_direction current_direction;
+    std::uint8_t bomb_capacity;
+    std::uint8_t bomb_available;
     std::uint8_t bomb_strength;
   };
 }

@@ -39,8 +39,8 @@ TEST(bim_game_archive, pod_components)
                                     18);
 
   registry.emplace<bim::game::position_on_grid>(entities[1], 11, 22);
-  registry.emplace<bim::game::player>(entities[1], 32,
-                                      bim::game::player_direction::up, 4);
+  registry.emplace<bim::game::player>(
+      entities[1], 32, bim::game::player_direction::up, 0, 0, 4);
 
   registry.emplace<bim::game::flame>(
       entities[3], bim::game::flame_direction::left,
@@ -104,8 +104,8 @@ TEST(bim_game_archive, pod_components_multiple_steps)
                                     18);
 
   registry.emplace<bim::game::position_on_grid>(entities[1], 11, 22);
-  registry.emplace<bim::game::player>(entities[1], 24,
-                                      bim::game::player_direction::up, 4);
+  registry.emplace<bim::game::player>(
+      entities[1], 24, bim::game::player_direction::up, 0, 0, 4);
 
   registry.emplace<bim::game::flame>(
       entities[3], bim::game::flame_direction::left,

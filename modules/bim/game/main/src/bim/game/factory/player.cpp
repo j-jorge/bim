@@ -13,7 +13,7 @@ entt::entity bim::game::player_factory(entt::registry& registry,
 {
   const entt::entity entity = registry.create();
 
-  registry.emplace<player>(entity, index, player_direction::down, 1);
+  registry.emplace<player>(entity, index, player_direction::down, 1, 1, 1);
 
   constexpr fractional_position_on_grid::value_type half =
       fractional_position_on_grid::value_type(1) / 2;

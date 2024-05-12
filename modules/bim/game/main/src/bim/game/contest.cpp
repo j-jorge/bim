@@ -22,7 +22,10 @@
 #include <bim/game/component/position_on_grid.hpp>
 #include <bim/game/factory/player.hpp>
 #include <bim/game/system/apply_player_action.hpp>
+#include <bim/game/system/refresh_bomb_inventory.hpp>
 #include <bim/game/system/remove_dead_objects.hpp>
+#include <bim/game/system/update_bomb_power_up_spawners.hpp>
+#include <bim/game/system/update_bomb_power_ups.hpp>
 #include <bim/game/system/update_bombs.hpp>
 #include <bim/game/system/update_brick_walls.hpp>
 #include <bim/game/system/update_flame_power_up_spawners.hpp>
@@ -75,10 +78,13 @@ bim::game::contest::contest(std::uint64_t seed,
 void bim::game::contest::tick()
 {
   remove_dead_objects(m_registry);
+  refresh_bomb_inventory(m_registry);
   apply_player_action(m_registry, m_arena);
   update_bombs(m_registry, m_arena, tick_interval);
   update_flames(m_registry, m_arena, tick_interval);
   update_brick_walls(m_registry, m_arena);
+  update_bomb_power_up_spawners(m_registry, m_arena);
+  update_bomb_power_ups(m_registry, m_arena);
   update_flame_power_up_spawners(m_registry, m_arena);
   update_flame_power_ups(m_registry, m_arena);
   update_players(m_registry, m_arena);

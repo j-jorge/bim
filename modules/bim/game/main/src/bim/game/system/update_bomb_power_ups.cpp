@@ -1,17 +1,17 @@
-#include <bim/game/system/update_flame_power_ups.hpp>
+#include <bim/game/system/update_bomb_power_ups.hpp>
 
 #include <bim/game/arena.hpp>
 
+#include <bim/game/component/bomb_power_up.hpp>
 #include <bim/game/component/burning.hpp>
 #include <bim/game/component/dead.hpp>
-#include <bim/game/component/flame_power_up.hpp>
 #include <bim/game/component/fractional_position_on_grid.hpp>
 #include <bim/game/component/player.hpp>
 #include <bim/game/component/position_on_grid.hpp>
 
 #include <entt/entity/registry.hpp>
 
-static void check_flame_power_up_player_collision(
+static void check_bomb_power_up_player_collision(
     entt::registry& registry, bim::game::arena& arena, bim::game::player& p,
     bim::game::fractional_position_on_grid position)
 {
@@ -26,17 +26,24 @@ static void check_flame_power_up_player_collision(
   if (registry.storage<bim::game::dead>().contains(colliding_entity))
     return;
 
-  if (registry.storage<bim::game::flame_power_up>().contains(colliding_entity))
+  if (registry.storage<bim::game::bomb_power_up>().contains(colliding_entity))
     {
-      p.bomb_strength = std::min(p.bomb_strength + 1, 5);
+      constexpr int max_bomb_count_per_player = 6;
+
+      if (p.bomb_capacity != max_bomb_count_per_player)
+        {
+          ++p.bomb_capacity;
+          ++p.bomb_available;
+        }
+
       arena.erase_entity(x, y);
       registry.emplace<bim::game::dead>(colliding_entity);
     }
 }
 
-void bim::game::update_flame_power_ups(entt::registry& registry, arena& arena)
+void bim::game::update_bomb_power_ups(entt::registry& registry, arena& arena)
 {
-  registry.view<flame_power_up, burning, position_on_grid>().each(
+  registry.view<bomb_power_up, burning, position_on_grid>().each(
       [&](entt::entity e, position_on_grid position) -> void
       {
         registry.emplace<dead>(e);
@@ -47,6 +54,6 @@ void bim::game::update_flame_power_ups(entt::registry& registry, arena& arena)
       [&](entt::entity, player& p,
           fractional_position_on_grid position) -> void
       {
-        check_flame_power_up_player_collision(registry, arena, p, position);
+        check_bomb_power_up_player_collision(registry, arena, p, position);
       });
 }

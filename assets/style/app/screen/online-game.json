@@ -108,6 +108,7 @@
         "flame-arm-asset-name": "sprites/flame-arm.png",
         "flame-end-asset-name": "sprites/flame-end.png",
 
+        "power-up-bomb/frame": "sprites/power-up-bomb.png",
         "power-up-flame/frame": "sprites/power-up-flame.png"
     }
 }

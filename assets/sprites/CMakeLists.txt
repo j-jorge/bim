@@ -8,6 +8,7 @@ set(sprites
   "sprites/player-2.png"
   "sprites/player-3.png"
   "sprites/player-4.png"
+  "sprites/power-up-bomb.png"
   "sprites/power-up-flame.png"
   "sprites/solid-wall.png"
 )

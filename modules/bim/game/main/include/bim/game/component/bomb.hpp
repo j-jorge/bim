@@ -25,5 +25,6 @@ namespace bim::game
   {
     std::chrono::milliseconds duration_until_explosion;
     std::uint8_t strength;
+    std::uint8_t player_index;
   };
 }

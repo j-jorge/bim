@@ -18,6 +18,7 @@
 
 #include <bim/game/arena.hpp>
 
+#include <bim/game/component/bomb_power_up_spawner.hpp>
 #include <bim/game/component/flame_power_up_spawner.hpp>
 #include <bim/game/component/fractional_position_on_grid.hpp>
 #include <bim/game/component/player.hpp>
@@ -109,18 +110,29 @@ void bim::game::insert_random_brick_walls(arena& arena,
         brick_walls.emplace_back(brick_wall_factory(registry, arena, x, y));
 
   // Select the walls that will spawn power-ups.
-  for (std::size_t i = 0, n = std::min<std::size_t>(brick_walls.size(),
-                                                    g_flame_power_up_count);
-       i != n; ++i)
+  const std::size_t brick_wall_count = brick_walls.size();
+  const std::size_t power_up_count =
+      std::min<std::size_t>({ brick_wall_count, g_bomb_power_up_count_in_level,
+                              g_flame_power_up_count_in_level });
+
+  for (std::size_t i = 0, n = power_up_count; i != n; ++i)
     {
       const std::size_t j =
-          i + random(random_generator) % (brick_walls.size() - i);
+          i + random(random_generator) % (brick_wall_count - i);
       std::swap(brick_walls[i], brick_walls[j]);
     }
 
+  std::size_t i = 0;
+
+  // The bomb power-ups.
+  for (std::size_t j = 0;
+       (j != g_bomb_power_up_count_in_level) && (i != brick_wall_count);
+       ++i, ++j)
+    registry.emplace<bomb_power_up_spawner>(brick_walls[i]);
+
   // The flame power-ups.
-  for (std::size_t i = 0;
-       i != std::min<std::size_t>(brick_walls.size(), g_flame_power_up_count);
-       ++i)
+  for (std::size_t j = 0;
+       (j != g_flame_power_up_count_in_level) && (i != brick_wall_count);
+       ++i, ++j)
     registry.emplace<flame_power_up_spawner>(brick_walls[i]);
 }

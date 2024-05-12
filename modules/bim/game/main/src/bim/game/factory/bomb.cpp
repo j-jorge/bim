@@ -22,19 +22,23 @@
 #include <entt/entity/registry.hpp>
 
 entt::entity bim::game::bomb_factory(entt::registry& registry, std::uint8_t x,
-                                     std::uint8_t y, std::uint8_t strength)
+                                     std::uint8_t y, std::uint8_t strength,
+                                     std::uint8_t player_index)
 {
-  return bomb_factory(registry, x, y, strength, std::chrono::seconds(2));
+  return bomb_factory(registry, x, y, strength, player_index,
+                      std::chrono::seconds(2));
 }
 
 entt::entity
 bim::game::bomb_factory(entt::registry& registry, std::uint8_t x,
                         std::uint8_t y, std::uint8_t strength,
+                        std::uint8_t player_index,
                         std::chrono::milliseconds duration_until_explosion)
 {
   const entt::entity entity = registry.create();
 
-  registry.emplace<bomb>(entity, duration_until_explosion, strength);
+  registry.emplace<bomb>(entity, duration_until_explosion, strength,
+                         player_index);
   registry.emplace<position_on_grid>(entity, x, y);
 
   return entity;

@@ -11,6 +11,7 @@
 #include <bim/net/session_handler.hpp>
 
 #include <bim/game/component/bomb.hpp>
+#include <bim/game/component/bomb_power_up.hpp>
 #include <bim/game/component/brick_wall.hpp>
 #include <bim/game/component/dead.hpp>
 #include <bim/game/component/flame.hpp>
@@ -99,13 +100,16 @@ bim::axmol::app::online_game::online_game(
   alloc_assets(m_brick_walls, widget_context,
                (default_width - 2) * (default_height - 2),
                *style.get_declaration("brick-wall"));
+  alloc_assets(m_bombs, widget_context, max_players * max_bombs_per_player,
+               *style.get_declaration("bomb"));
   alloc_assets(m_flames, widget_context,
                (default_width - 2) * (default_height - 2),
                *style.get_declaration("flame"));
-  alloc_assets(m_bombs, widget_context, max_players * max_bombs_per_player,
-               *style.get_declaration("bomb"));
+  alloc_assets(m_bomb_power_ups, widget_context,
+               bim::game::g_bomb_power_up_count_in_level,
+               *style.get_declaration("power-up-bomb"));
   alloc_assets(m_flame_power_ups, widget_context,
-               bim::game::g_flame_power_up_count,
+               bim::game::g_flame_power_up_count_in_level,
                *style.get_declaration("power-up-flame"));
 }
 
@@ -148,6 +152,7 @@ void bim::axmol::app::online_game::attached()
   resize_to_block_width(m_brick_walls);
   resize_to_block_width(m_flames);
   resize_to_block_width(m_bombs);
+  resize_to_block_width(m_bomb_power_ups);
   resize_to_block_width(m_flame_power_ups);
 }
 
@@ -219,8 +224,6 @@ void bim::axmol::app::online_game::schedule_tick()
               ax::Director::getInstance()->getAnimationInterval()));
 
   m_last_tick_date = iscool::time::monotonic_now<std::chrono::nanoseconds>();
-  // TODO: The actual delay between this call and the actual call to tick is
-  // twice the update_interval. Why?
   m_tick_connection = iscool::schedule::delayed_call(
       [this]() -> void
       {
@@ -325,6 +328,7 @@ void bim::axmol::app::online_game::refresh_display() const
   display_players();
   display_bombs();
   display_flames();
+  display_bomb_power_ups();
   display_flame_power_ups();
 }
 
@@ -464,6 +468,29 @@ void bim::axmol::app::online_game::display_flames() const
   for (std::size_t n = m_flames.size(); asset_index != n; ++asset_index)
     if (m_flames[asset_index]->isVisible())
       m_flames[asset_index]->setVisible(false);
+    else
+      break;
+}
+
+void bim::axmol::app::online_game::display_bomb_power_ups() const
+{
+  const entt::registry& registry = m_contest->registry();
+  std::size_t asset_index = 0;
+
+  registry.view<bim::game::position_on_grid, bim::game::bomb_power_up>().each(
+      [this, &asset_index](const bim::game::position_on_grid& p) -> void
+      {
+        ax::Sprite& s = *m_bomb_power_ups[asset_index];
+
+        s.setVisible(true);
+        s.setPosition(grid_position_to_displayed_block_center(p.x, p.y));
+        ++asset_index;
+      });
+
+  for (std::size_t n = m_bomb_power_ups.size(); asset_index != n;
+       ++asset_index)
+    if (m_bomb_power_ups[asset_index]->isVisible())
+      m_bomb_power_ups[asset_index]->setVisible(false);
     else
       break;
 }

@@ -68,9 +68,13 @@ TEST(update_bombs, delay)
 {
   entt::registry registry;
   bim::game::arena arena(3, 3);
+  constexpr std::uint8_t x = 0;
+  constexpr std::uint8_t y = 0;
+  constexpr std::uint8_t strength = 0;
+  constexpr std::uint8_t player_index = 0;
 
   const entt::entity entity = bim::game::bomb_factory(
-      registry, 0, 0, 0, std::chrono::milliseconds(24));
+      registry, x, y, strength, player_index, std::chrono::milliseconds(24));
   bim::game::bomb& bomb = registry.get<bim::game::bomb>(entity);
 
   EXPECT_EQ(std::chrono::milliseconds(24), bomb.duration_until_explosion);
@@ -86,9 +90,11 @@ TEST(update_bombs, explode_strength_2)
   const std::uint8_t bomb_x = arena.width() / 2;
   const std::uint8_t bomb_y = arena.height() / 2;
   const std::uint8_t strength = 2;
+  constexpr std::uint8_t player_index = 0;
 
-  const entt::entity entity = bim::game::bomb_factory(
-      registry, bomb_x, bomb_y, strength, std::chrono::milliseconds(24));
+  const entt::entity entity =
+      bim::game::bomb_factory(registry, bomb_x, bomb_y, strength, player_index,
+                              std::chrono::milliseconds(24));
 
   bim::game::update_bombs(registry, arena, std::chrono::milliseconds(12));
   EXPECT_TRUE(registry.storage<bim::game::bomb>().contains(entity));
@@ -109,8 +115,9 @@ TEST(update_bombs, explode_strength_5)
   const std::uint8_t bomb_x = arena.width() / 2;
   const std::uint8_t bomb_y = arena.height() / 2;
   const std::uint8_t strength = 5;
+  constexpr std::uint8_t player_index = 0;
 
-  bim::game::bomb_factory(registry, bomb_x, bomb_y, strength,
+  bim::game::bomb_factory(registry, bomb_x, bomb_y, strength, player_index,
                           std::chrono::milliseconds(0));
 
   bim::game::update_bombs(registry, arena, std::chrono::milliseconds(24));
@@ -133,7 +140,8 @@ TEST(update_bombs, chain_reaction)
 {
   entt::registry registry;
   bim::game::arena arena(8, 7);
-  const std::uint8_t strength = 2;
+  constexpr std::uint8_t strength = 2;
+  constexpr std::uint8_t player_index = 0;
 
   /*
     Bombs:
@@ -147,18 +155,23 @@ TEST(update_bombs, chain_reaction)
   */
   arena.put_entity(3, 3,
                    bim::game::bomb_factory(registry, 3, 3, strength,
+                                           player_index,
                                            std::chrono::milliseconds(10)));
   arena.put_entity(4, 3,
                    bim::game::bomb_factory(registry, 4, 3, strength,
+                                           player_index,
                                            std::chrono::milliseconds(200)));
   arena.put_entity(6, 3,
                    bim::game::bomb_factory(registry, 6, 3, strength,
+                                           player_index,
                                            std::chrono::milliseconds(200)));
   arena.put_entity(4, 5,
                    bim::game::bomb_factory(registry, 4, 5, strength,
+                                           player_index,
                                            std::chrono::milliseconds(200)));
   arena.put_entity(6, 5,
                    bim::game::bomb_factory(registry, 6, 5, strength,
+                                           player_index,
                                            std::chrono::milliseconds(200)));
 
   bim::game::update_bombs(registry, arena, std::chrono::milliseconds(10));
@@ -210,8 +223,13 @@ TEST(update_bombs, burning_walls)
 {
   entt::registry registry;
   bim::game::arena arena(6, 6);
+  constexpr std::uint8_t x = 2;
+  constexpr std::uint8_t y = 2;
+  constexpr std::uint8_t strength = 2;
+  constexpr std::uint8_t player_index = 0;
 
-  bim::game::bomb_factory(registry, 2, 2, 2, std::chrono::milliseconds(0));
+  bim::game::bomb_factory(registry, x, y, strength, player_index,
+                          std::chrono::milliseconds(0));
 
   const entt::entity walls[] = {
     bim::game::brick_wall_factory(registry, arena, 2, 1),

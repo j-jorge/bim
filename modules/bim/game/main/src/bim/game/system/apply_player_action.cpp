@@ -32,7 +32,7 @@
 #include <fpm/math.hpp>
 
 static void drop_bomb(entt::registry& registry, bim::game::arena& arena,
-                      const bim::game::player& player,
+                      bim::game::player& player,
                       const bim::game::fractional_position_on_grid& position)
 {
   const std::uint8_t arena_x = position.grid_aligned_x();
@@ -41,9 +41,14 @@ static void drop_bomb(entt::registry& registry, bim::game::arena& arena,
   if (arena.entity_at(arena_x, arena_y) != entt::null)
     return;
 
+  if (player.bomb_available == 0)
+    return;
+
+  --player.bomb_available;
   arena.put_entity(arena_x, arena_y,
                    bim::game::bomb_factory(registry, arena_x, arena_y,
-                                           player.bomb_strength));
+                                           player.bomb_strength,
+                                           player.index));
 }
 
 static void move_player(bim::game::player& player,
