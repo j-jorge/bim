@@ -85,8 +85,12 @@ build_android_lib()
 
 if [[ "$bim_package_install_platform" = "android" ]]
 then
-    build_android_lib system
-    build_android_lib log
+    build_android_lib \
+        system \
+        --api-dependency "androidx.annotation:annotation:1.8.0"
+    build_android_lib \
+        log \
+        --api-dependency "androidx.annotation:annotation:1.8.0"
     build_android_lib jni --implementation-dependency "iscool:log:$version"
 fi
 
