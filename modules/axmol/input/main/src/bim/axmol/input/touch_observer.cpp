@@ -5,12 +5,6 @@
 bim::axmol::input::touch_observer::touch_observer() = default;
 bim::axmol::input::touch_observer::~touch_observer() = default;
 
-bool bim::axmol::input::touch_observer::is_relevant_to_pressed(
-    const touch_event_view& touches) const
-{
-  return do_is_relevant_to_pressed(touches);
-}
-
 void bim::axmol::input::touch_observer::pressed(
     const touch_event_view& touches)
 {
@@ -32,10 +26,4 @@ void bim::axmol::input::touch_observer::cancelled(
     const touch_event_view& touches)
 {
   do_cancelled(touches);
-}
-
-bool bim::axmol::input::touch_observer::do_is_relevant_to_pressed(
-    const touch_event_view& touches) const
-{
-  return true;
 }

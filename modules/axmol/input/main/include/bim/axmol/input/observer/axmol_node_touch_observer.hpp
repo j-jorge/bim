@@ -19,9 +19,6 @@ namespace bim::axmol::input
     bool contains_touch(const touch_event& touch) const;
 
   private:
-    bool
-    do_is_relevant_to_pressed(const touch_event_view& touches) const override;
-
     void do_pressed(const touch_event_view& touches) override;
     void do_moved(const touch_event_view& touches) override;
     void do_released(const touch_event_view& touches) override;

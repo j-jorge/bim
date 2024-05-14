@@ -55,13 +55,17 @@ namespace bim::axmol::input
 
   private:
     node& m_root;
-    // TODO: not needed, mono touch is enough.
     std::unordered_set<int> m_pressed_ids;
 
     bim::axmol::ref_ptr<ax::EventListenerKeyboard> m_key_listener;
     std::vector<key_event> m_key_event_storage;
 
     bim::axmol::ref_ptr<ax::EventListenerTouchAllAtOnce> m_touch_listener;
+
+    /**
+     * Storage of the touch events for the duration of the dispatch. It is
+     * reset on each event.
+     */
     std::vector<touch_event> m_touch_event_storage;
   };
 }

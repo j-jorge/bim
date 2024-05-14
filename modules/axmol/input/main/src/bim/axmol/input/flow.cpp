@@ -76,16 +76,12 @@ void bim::axmol::input::flow::touches_began(
 {
   event->stopPropagation();
 
-  if (!m_pressed_ids.empty())
-    return;
-
   new_pressed_touches(touches);
 
   if (m_touch_event_storage.empty())
     return;
 
   bim::axmol::input::touch_event_view events(m_touch_event_storage);
-  assert(events.size() == 1);
   m_root.touch_pressed(events);
 }
 
@@ -100,7 +96,6 @@ void bim::axmol::input::flow::touches_moved(
     return;
 
   bim::axmol::input::touch_event_view events(m_touch_event_storage);
-  assert(events.size() == 1);
   m_root.touch_moved(events);
 }
 
@@ -115,7 +110,6 @@ void bim::axmol::input::flow::touches_ended(
     return;
 
   bim::axmol::input::touch_event_view events(m_touch_event_storage);
-  assert(events.size() == 1);
   m_root.touch_released(events);
 }
 
@@ -130,23 +124,17 @@ void bim::axmol::input::flow::touches_cancelled(
     return;
 
   bim::axmol::input::touch_event_view events(m_touch_event_storage);
-  assert(events.size() == 1);
   m_root.touch_cancelled(events);
 }
 
 void bim::axmol::input::flow::new_pressed_touches(
     const std::vector<ax::Touch*>& touches)
 {
-  assert(m_pressed_ids.empty());
-
   m_touch_event_storage.clear();
 
   for (ax::Touch* const touch : touches)
     if (m_pressed_ids.insert(touch->getID()).second)
       m_touch_event_storage.emplace_back(touch);
-
-  assert(m_pressed_ids.size() <= 1);
-  assert(m_touch_event_storage.size() == m_pressed_ids.size());
 }
 
 void bim::axmol::input::flow::known_moving_touches(

@@ -27,9 +27,6 @@ namespace
     touch_observer_mockup(std::string name, call_tracker& calls);
 
   private:
-    bool do_is_relevant_to_pressed(
-        const bim::axmol::input::touch_event_view& touches) const override;
-
     void
     do_pressed(const bim::axmol::input::touch_event_view& touches) override;
     void do_moved(const bim::axmol::input::touch_event_view& touches) override;
@@ -40,7 +37,6 @@ namespace
 
   public:
     std::size_t m_pressed_call_count;
-    bool m_is_relevant_to_pressed_result;
 
   private:
     const std::string m_name;
@@ -59,16 +55,9 @@ void call_tracker::clear()
 touch_observer_mockup::touch_observer_mockup(std::string name,
                                              call_tracker& calls)
   : m_pressed_call_count(0)
-  , m_is_relevant_to_pressed_result(true)
   , m_name(std::move(name))
   , m_calls(calls)
 {}
-
-bool touch_observer_mockup::do_is_relevant_to_pressed(
-    const bim::axmol::input::touch_event_view& touches) const
-{
-  return m_is_relevant_to_pressed_result;
-}
 
 void touch_observer_mockup::do_pressed(
     const bim::axmol::input::touch_event_view& touches)
@@ -107,14 +96,6 @@ static void invoke_pressed(bim::axmol::input::node& node)
   bim::axmol::input::touch_event event(&touch);
   bim::axmol::input::touch_event_view touches(std::span(&event, 1));
   node.touch_pressed(touches);
-}
-
-static void invoke_moved(bim::axmol::input::node& node)
-{
-  ax::Touch touch;
-  bim::axmol::input::touch_event event(&touch);
-  bim::axmol::input::touch_event_view touches(std::span(&event, 1));
-  node.touch_moved(touches);
 }
 
 TEST_F(node_touch_observer_test, invoke_self)
@@ -232,67 +213,4 @@ TEST_F(node_touch_observer_test, uniqueness)
 
   root.attach(observer_2);
   EXPECT_FALSE(root.check_no_duplicates());
-}
-
-TEST_F(node_touch_observer_test, is_relevant_to_pressed)
-{
-  /*
-    root
-    |- 1
-    |- 2
-    |  |- 2a
-    |  |- 2b
-    |- 3
-  */
-  std::shared_ptr<touch_observer_mockup> observer_root(
-      std::make_shared<touch_observer_mockup>("root", m_calls));
-  bim::axmol::input::node root(observer_root);
-
-  std::shared_ptr<touch_observer_mockup> observer_1(
-      std::make_shared<touch_observer_mockup>("child 1", m_calls));
-  root.push_back(observer_1);
-
-  std::shared_ptr<touch_observer_mockup> observer_2(
-      std::make_shared<touch_observer_mockup>("child 2", m_calls));
-  bim::axmol::input::node_pointer child_2(
-      new bim::axmol::input::node(observer_2));
-  root.push_back(child_2);
-
-  std::shared_ptr<touch_observer_mockup> observer_2a(
-      std::make_shared<touch_observer_mockup>("grandchild 2a", m_calls));
-  child_2->push_back(observer_2a);
-
-  std::shared_ptr<touch_observer_mockup> observer_2b(
-      std::make_shared<touch_observer_mockup>("grandchild 2b", m_calls));
-  child_2->push_back(observer_2b);
-
-  std::shared_ptr<touch_observer_mockup> observer_3(
-      std::make_shared<touch_observer_mockup>("child 3", m_calls));
-  root.push_back(observer_3);
-
-  observer_2->m_is_relevant_to_pressed_result = false;
-
-  invoke_pressed(root);
-
-  ASSERT_EQ(3, m_calls.pressed.size());
-  EXPECT_TRUE(m_calls.moved.empty());
-  EXPECT_TRUE(m_calls.released.empty());
-  EXPECT_TRUE(m_calls.cancelled.empty());
-
-  EXPECT_EQ("child 1", m_calls.pressed[0]);
-  EXPECT_EQ("child 3", m_calls.pressed[1]);
-  EXPECT_EQ("root", m_calls.pressed[2]);
-
-  m_calls.clear();
-
-  invoke_moved(root);
-
-  EXPECT_TRUE(m_calls.pressed.empty());
-  ASSERT_EQ(3, m_calls.moved.size());
-  EXPECT_TRUE(m_calls.released.empty());
-  EXPECT_TRUE(m_calls.cancelled.empty());
-
-  EXPECT_EQ("child 1", m_calls.moved[0]);
-  EXPECT_EQ("child 3", m_calls.moved[1]);
-  EXPECT_EQ("root", m_calls.moved[2]);
 }

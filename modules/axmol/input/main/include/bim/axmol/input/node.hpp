@@ -65,11 +65,10 @@ namespace bim::axmol::input
 
     void to_string(std::ostream& stream, std::size_t indentation) const;
 
-    template <typename Enter, typename Visit>
-    void depth_first_scan(Enter&& enter, Visit&& visit);
+    template <typename Visit>
+    void depth_first_scan(Visit&& visit);
 
-    template <typename Enter>
-    static children_vector depth_first_select(const node& root, Enter&& enter);
+    static children_vector depth_first_select(const node& root);
 
     template <typename Visit>
     static void visit_selected(const children_vector& selected, Visit&& visit);
@@ -82,7 +81,6 @@ namespace bim::axmol::input
     touch_observer_pointer m_touch_observer;
     key_observer_pointer m_key_observer;
 
-    bool m_pressed_dispatched;
     bool m_selected_in_scan;
   };
 }

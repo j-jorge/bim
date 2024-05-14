@@ -17,7 +17,6 @@ bim::axmol::input::node::node(touch_observer_pointer touch,
   : m_id(g_next_node_id++)
   , m_touch_observer(std::move(touch))
   , m_key_observer(std::move(key))
-  , m_pressed_dispatched(false)
   , m_selected_in_scan(false)
 {}
 
@@ -97,7 +96,6 @@ void bim::axmol::input::node::erase(const key_observer_pointer& observer)
 
 void bim::axmol::input::node::clear()
 {
-  m_pressed_dispatched = false;
   m_selected_in_scan = false;
 
   m_touch_observer.reset();
@@ -107,23 +105,9 @@ void bim::axmol::input::node::clear()
 
 void bim::axmol::input::node::touch_pressed(const touch_event_view& touches)
 {
-  auto enter(
-      [&touches](node& n) -> bool
-      {
-        const std::shared_ptr<touch_observer> observer(
-            n.m_touch_observer.lock());
-
-        const bool result((observer == nullptr)
-                          || observer->is_relevant_to_pressed(touches));
-
-        return result;
-      });
-
   auto visit(
       [&touches](node& n) -> void
       {
-        n.m_pressed_dispatched = true;
-
         const std::shared_ptr<touch_observer> observer(
             n.m_touch_observer.lock());
 
@@ -131,22 +115,14 @@ void bim::axmol::input::node::touch_pressed(const touch_event_view& touches)
           observer->pressed(touches);
       });
 
-  depth_first_scan(enter, visit);
+  depth_first_scan(visit);
 }
 
 void bim::axmol::input::node::touch_moved(const touch_event_view& touches)
 {
-  auto enter(
-      [](const node& n) -> bool
-      {
-        return n.m_pressed_dispatched;
-      });
-
   auto visit(
       [&touches](const node& n) -> void
       {
-        assert(n.m_pressed_dispatched);
-
         const std::shared_ptr<touch_observer> observer(
             n.m_touch_observer.lock());
 
@@ -154,67 +130,41 @@ void bim::axmol::input::node::touch_moved(const touch_event_view& touches)
           observer->moved(touches);
       });
 
-  depth_first_scan(enter, visit);
+  depth_first_scan(visit);
 }
 
 void bim::axmol::input::node::touch_released(const touch_event_view& touches)
 {
-  auto enter(
-      [](const node& n) -> bool
-      {
-        return n.m_pressed_dispatched;
-      });
-
   auto visit(
       [&touches](node& n) -> void
       {
-        assert(n.m_pressed_dispatched);
-
         const std::shared_ptr<touch_observer> observer(
             n.m_touch_observer.lock());
 
         if (observer != nullptr)
           observer->released(touches);
-
-        n.m_pressed_dispatched = false;
       });
 
-  depth_first_scan(enter, visit);
+  depth_first_scan(visit);
 }
 
 void bim::axmol::input::node::touch_cancelled(const touch_event_view& touches)
 {
-  auto enter(
-      [](const node& n) -> bool
-      {
-        return n.m_pressed_dispatched;
-      });
-
   auto visit(
       [&touches](node& n) -> void
       {
-        assert(n.m_pressed_dispatched);
-
         const std::shared_ptr<touch_observer> observer(
             n.m_touch_observer.lock());
 
         if (observer != nullptr)
           observer->cancelled(touches);
-
-        n.m_pressed_dispatched = false;
       });
 
-  depth_first_scan(enter, visit);
+  depth_first_scan(visit);
 }
 
 void bim::axmol::input::node::key_pressed(const key_event_view& keys)
 {
-  auto enter(
-      [](const node& n) -> bool
-      {
-        return true;
-      });
-
   auto visit(
       [&keys](node& n) -> void
       {
@@ -224,17 +174,11 @@ void bim::axmol::input::node::key_pressed(const key_event_view& keys)
           observer->pressed(keys);
       });
 
-  depth_first_scan(enter, visit);
+  depth_first_scan(visit);
 }
 
 void bim::axmol::input::node::key_released(const key_event_view& keys)
 {
-  auto enter(
-      [](const node& n) -> bool
-      {
-        return true;
-      });
-
   auto visit(
       [&keys](node& n) -> void
       {
@@ -244,7 +188,7 @@ void bim::axmol::input::node::key_released(const key_event_view& keys)
           observer->released(keys);
       });
 
-  depth_first_scan(enter, visit);
+  depth_first_scan(visit);
 }
 
 bool bim::axmol::input::node::check_no_duplicates() const
@@ -329,16 +273,13 @@ void bim::axmol::input::node::to_string(std::ostream& stream,
     child->to_string(stream, indentation + 1);
 }
 
-template <typename Enter, typename Visit>
-void bim::axmol::input::node::depth_first_scan(Enter&& enter, Visit&& visit)
+template <typename Visit>
+void bim::axmol::input::node::depth_first_scan(Visit&& visit)
 {
-  if (!enter(*this))
-    return;
-
   assert(!m_selected_in_scan);
   m_selected_in_scan = true;
 
-  visit_selected(depth_first_select(*this, std::forward<Enter>(enter)), visit);
+  visit_selected(depth_first_select(*this), visit);
 
   if (!m_selected_in_scan)
     return;
@@ -347,9 +288,8 @@ void bim::axmol::input::node::depth_first_scan(Enter&& enter, Visit&& visit)
   m_selected_in_scan = false;
 }
 
-template <typename Enter>
-typename bim::axmol::input::node::children_vector
-bim::axmol::input::node::depth_first_select(const node& root, Enter&& enter)
+bim::axmol::input::node::children_vector
+bim::axmol::input::node::depth_first_select(const node& root)
 {
   static constexpr std::size_t queue_capacity(2048);
 
@@ -366,15 +306,12 @@ bim::axmol::input::node::depth_first_select(const node& root, Enter&& enter)
       const typename children_vector::value_type child(pending.back());
       pending.pop_back();
 
-      if (enter(*child))
-        {
-          assert(!child->m_selected_in_scan);
-          child->m_selected_in_scan = true;
+      assert(!child->m_selected_in_scan);
+      child->m_selected_in_scan = true;
 
-          selected.push_back(child);
-          pending.insert(pending.end(), child->m_children.begin(),
-                         child->m_children.end());
-        }
+      selected.push_back(child);
+      pending.insert(pending.end(), child->m_children.begin(),
+                     child->m_children.end());
     }
 
   return selected;
