@@ -1,4 +1,4 @@
-package org.axmol.cpp;
+package bim.app;
 
 import iscool.jni.JniService;
 
