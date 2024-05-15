@@ -51,7 +51,7 @@ void bim::axmol::input::soft_stick::do_pressed(const touch_event_view& touches)
 
   touch_event& touch = *std::begin(touches);
 
-  if (!touch.is_available())
+  if (!touch.is_available() || !contains_touch(touch))
     return;
 
   touch.consume();
