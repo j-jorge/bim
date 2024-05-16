@@ -17,7 +17,7 @@
 #include <bim/game/random_generator.hpp>
 
 bim::game::random_generator::random_generator(std::uint64_t seed)
-  : m_state{ seed, 0, 0, 0 }
+  : m_state{ (seed == 0) ? 1 : seed, 0, 0, 0 }
 {}
 
 bim::game::random_generator::result_type
