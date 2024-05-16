@@ -111,9 +111,9 @@ void bim::game::insert_random_brick_walls(arena& arena,
 
   // Select the walls that will spawn power-ups.
   const std::size_t brick_wall_count = brick_walls.size();
-  const std::size_t power_up_count =
-      std::min<std::size_t>({ brick_wall_count, g_bomb_power_up_count_in_level,
-                              g_flame_power_up_count_in_level });
+  const std::size_t power_up_count = std::min<std::size_t>(
+      brick_wall_count,
+      g_bomb_power_up_count_in_level + g_flame_power_up_count_in_level);
 
   for (std::size_t i = 0, n = power_up_count; i != n; ++i)
     {
