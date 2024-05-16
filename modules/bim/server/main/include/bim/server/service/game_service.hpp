@@ -21,6 +21,7 @@
 #include <boost/unordered/unordered_map.hpp>
 
 #include <optional>
+#include <random>
 
 namespace bim::net
 {
@@ -72,5 +73,6 @@ namespace bim::server
     iscool::net::message_stream m_message_stream;
     iscool::net::channel_id m_next_game_channel;
     game_map m_games;
+    std::mt19937_64 m_random;
   };
 }

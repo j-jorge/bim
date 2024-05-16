@@ -183,7 +183,8 @@ void bim::net::new_game_exchange::check_launch_game(
 
   stop();
   m_launch_game(
-      game_launch_event{ .channel = message->get_game_channel(),
+      game_launch_event{ .seed = message->get_seed(),
+                         .channel = message->get_game_channel(),
                          .player_count = message->get_player_count(),
                          .player_index = message->get_player_index() });
 }

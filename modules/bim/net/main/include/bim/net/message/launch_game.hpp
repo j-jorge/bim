@@ -26,6 +26,7 @@ namespace bim::net
 {
   DECLARE_RAW_MESSAGE(launch_game, message_type::launch_game,
                       ((client_token)(request_token))           //
+                      ((std::uint64_t)(seed))                   //
                       ((iscool::net::channel_id)(game_channel)) //
                       ((std::uint8_t)(player_count))            //
                       ((std::uint8_t)(player_index)));

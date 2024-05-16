@@ -219,16 +219,17 @@ void bim::server::matchmaking_service::mark_as_ready(
       encounter.channel = game->channel;
 
       ic_causeless_log(iscool::log::nature::info(), "matchmaking_service",
-                       "Channel for encounter %d is %d.", it->first,
-                       game->channel);
+                       "Channel for encounter %d is %d, seed %d.", it->first,
+                       game->channel, game->seed);
     }
 
-  m_message_stream.send(
-      endpoint,
-      bim::net::launch_game(message.get_request_token(), game->channel,
-                            game->player_count, game->session_index(session))
-          .build_message(),
-      session, 0);
+  m_message_stream.send(endpoint,
+                        bim::net::launch_game(message.get_request_token(),
+                                              game->seed, game->channel,
+                                              game->player_count,
+                                              game->session_index(session))
+                            .build_message(),
+                        session, 0);
 }
 
 void bim::server::matchmaking_service::send_game_on_hold(

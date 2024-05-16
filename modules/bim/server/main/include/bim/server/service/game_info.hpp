@@ -26,6 +26,7 @@ namespace bim::server
 {
   struct game_info
   {
+    std::uint64_t seed;
     iscool::net::channel_id channel;
     std::uint8_t player_count;
     std::array<iscool::net::session_id, 4> sessions;

@@ -37,6 +37,7 @@
 
 struct bim::server::game_service::game
 {
+  std::uint64_t seed;
   std::uint8_t player_count;
   std::array<iscool::net::session_id, 4> sessions;
   std::array<bool, 4> ready;
@@ -158,6 +159,7 @@ struct bim::server::game_service::game
 bim::server::game_service::game_service(iscool::net::socket_stream& socket)
   : m_message_stream(socket)
   , m_next_game_channel(1)
+  , m_random(std::random_device()())
 {}
 
 bim::server::game_service::~game_service() = default;
@@ -170,7 +172,8 @@ bim::server::game_service::find_game(iscool::net::channel_id channel) const
   if (it == m_games.end())
     return std::nullopt;
 
-  return game_info{ .channel = channel,
+  return game_info{ .seed = it->second.seed,
+                    .channel = channel,
                     .player_count = it->second.player_count,
                     .sessions = it->second.sessions };
 }
@@ -188,6 +191,7 @@ bim::server::game_info bim::server::game_service::new_game(
 
   game& game = m_games[channel];
 
+  game.seed = m_random();
   game.player_count = player_count;
   game.sessions = sessions;
   game.ready.fill(false);
@@ -198,7 +202,8 @@ bim::server::game_info bim::server::game_service::new_game(
   for (std::vector<bim::game::player_action>& v : game.actions)
     v.reserve(32);
 
-  return game_info{ .channel = channel,
+  return game_info{ .seed = game.seed,
+                    .channel = channel,
                     .player_count = game.player_count,
                     .sessions = game.sessions };
 }
