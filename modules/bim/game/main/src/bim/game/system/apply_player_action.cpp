@@ -93,9 +93,26 @@ static void move_player(bim::game::player& player,
     case bim::game::player_action_kind::left:
       player.current_direction = bim::game::player_direction::left;
 
-      if ((x_decimal <= half + offset)
-          && ((x_int == 0) || arena.is_solid(x_int - 1, y_int)))
-        position.x = x_floor + half;
+      if ((x_decimal <= half + offset) && arena.is_solid(x_int - 1, y_int))
+        {
+          position.x = x_floor + half;
+
+          // turn around the solid block.
+          if (y_decimal < half)
+            {
+              // There is a path above: move up.
+              if (!arena.is_solid(x_int, y_int - 1)
+                  && !arena.is_solid(x_int - 1, y_int - 1))
+                position.y -= offset;
+            }
+          else if (y_decimal > half)
+            {
+              // There is a path below: move down.
+              if (!arena.is_solid(x_int, y_int + 1)
+                  && !arena.is_solid(x_int - 1, y_int + 1))
+                position.y += offset;
+            }
+        }
       else
         {
           check_obstacle_x = x_int - 1;
@@ -105,10 +122,26 @@ static void move_player(bim::game::player& player,
     case bim::game::player_action_kind::right:
       player.current_direction = bim::game::player_direction::right;
 
-      if ((x_decimal + offset >= half)
-          && ((x_int + 1 == arena.width())
-              || arena.is_solid(x_int + 1, y_int)))
-        position.x = x_floor + half;
+      if ((x_decimal + offset >= half) && arena.is_solid(x_int + 1, y_int))
+        {
+          position.x = x_floor + half;
+
+          // turn around the solid block.
+          if (y_decimal < half)
+            {
+              // There is a path above: move up.
+              if (!arena.is_solid(x_int, y_int - 1)
+                  && !arena.is_solid(x_int + 1, y_int - 1))
+                position.y -= offset;
+            }
+          else if (y_decimal > half)
+            {
+              // There is a path below: move down.
+              if (!arena.is_solid(x_int, y_int + 1)
+                  && !arena.is_solid(x_int + 1, y_int + 1))
+                position.y += offset;
+            }
+        }
       else
         {
           check_obstacle_x = x_int + 1;
@@ -118,9 +151,26 @@ static void move_player(bim::game::player& player,
     case bim::game::player_action_kind::up:
       player.current_direction = bim::game::player_direction::up;
 
-      if ((y_decimal <= half + offset)
-          && ((y_int == 0) || arena.is_solid(x_int, y_int - 1)))
-        position.y = y_floor + half;
+      if ((y_decimal <= half + offset) && arena.is_solid(x_int, y_int - 1))
+        {
+          position.y = y_floor + half;
+
+          // turn around the solid block.
+          if (x_decimal < half)
+            {
+              // There is a path on the left: move left.
+              if (!arena.is_solid(x_int - 1, y_int)
+                  && !arena.is_solid(x_int - 1, y_int - 1))
+                position.x -= offset;
+            }
+          else if (x_decimal > half)
+            {
+              // There is a path on the right: move right.
+              if (!arena.is_solid(x_int + 1, y_int)
+                  && !arena.is_solid(x_int + 1, y_int - 1))
+                position.x += offset;
+            }
+        }
       else
         {
           check_obstacle_y = y_int - 1;
@@ -130,10 +180,26 @@ static void move_player(bim::game::player& player,
     case bim::game::player_action_kind::down:
       player.current_direction = bim::game::player_direction::down;
 
-      if ((y_decimal + offset >= half)
-          && ((y_int + 1 == arena.height())
-              || arena.is_solid(x_int, y_int + 1)))
-        position.y = y_floor + half;
+      if ((y_decimal + offset >= half) && arena.is_solid(x_int, y_int + 1))
+        {
+          position.y = y_floor + half;
+
+          // turn around the solid block.
+          if (x_decimal < half)
+            {
+              // There is a path on the left: move left.
+              if (!arena.is_solid(x_int - 1, y_int)
+                  && !arena.is_solid(x_int - 1, y_int + 1))
+                position.x -= offset;
+            }
+          else if (x_decimal > half)
+            {
+              // There is a path on the right: move right.
+              if (!arena.is_solid(x_int + 1, y_int)
+                  && !arena.is_solid(x_int + 1, y_int + 1))
+                position.x += offset;
+            }
+        }
       else
         {
           check_obstacle_y = y_int + 1;
