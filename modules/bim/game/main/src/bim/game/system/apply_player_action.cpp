@@ -49,6 +49,7 @@ static void drop_bomb(entt::registry& registry, bim::game::arena& arena,
                    bim::game::bomb_factory(registry, arena_x, arena_y,
                                            player.bomb_strength,
                                            player.index));
+  arena.set_solid(arena_x, arena_y);
 }
 
 static void move_player(bim::game::player& player,
