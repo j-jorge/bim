@@ -33,9 +33,15 @@ namespace iscool
   {
     class local_preferences;
   }
+
   namespace style
   {
     class declaration;
+  }
+
+  namespace system
+  {
+    class haptic_feedback;
   }
 }
 
@@ -55,7 +61,8 @@ namespace bim::axmol::app
         ic_context_declare_parent_properties(                      //
             ((const bim::axmol::widget::context&)(widget_context)) //
             ((main_scene*)(main_scene))                            //
-            ((bim::net::session_handler*)(session_handler))),
+            ((bim::net::session_handler*)(session_handler))        //
+            ((iscool::system::haptic_feedback*)(haptic_feedback))),
         ic_context_no_properties);
 
   public:

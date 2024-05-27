@@ -3,7 +3,7 @@
 #include <bim/axmol/widget/factory/sprite.hpp>
 #include <bim/axmol/widget/named_node_group.hpp>
 #include <bim/axmol/widget/ui/button.hpp>
-#include <bim/axmol/widget/ui/soft_stick.hpp>
+#include <bim/axmol/widget/ui/soft_pad.hpp>
 
 #include <bim/net/contest_runner.hpp>
 #include <bim/net/exchange/game_launch_event.hpp>
@@ -27,6 +27,7 @@
 
 #include <iscool/schedule/delayed_call.hpp>
 #include <iscool/signals/implement_signal.hpp>
+#include <iscool/system/haptic_feedback.hpp>
 #include <iscool/time/monotonic_now.hpp>
 
 #include <axmol/2d/Label.h>
@@ -34,10 +35,11 @@
 #define x_widget_scope bim::axmol::app::online_game::
 #define x_widget_type_name controls
 #define x_widget_controls                                                     \
-  x_widget(ax::Node, arena) x_widget(bim::axmol::widget::soft_stick, stick)   \
-      x_widget(bim::axmol::widget::button, bomb_button_left)                  \
-          x_widget(bim::axmol::widget::button, bomb_button_right)             \
-              x_widget(ax::Label, debug_delta_ticks)
+  x_widget(ax::Node, arena)                                                   \
+      x_widget(bim::axmol::widget::soft_pad, directional_pad)                 \
+          x_widget(bim::axmol::widget::button, bomb_button_left)              \
+              x_widget(bim::axmol::widget::button, bomb_button_right)         \
+                  x_widget(ax::Label, debug_delta_ticks)
 #include <bim/axmol/widget/implement_controls_struct.hpp>
 
 #include <axmol/2d/Sprite.h>
@@ -70,7 +72,13 @@ bim::axmol::app::online_game::online_game(
 
   m_inputs.push_back(m_controls->bomb_button_left->input_node());
   m_inputs.push_back(m_controls->bomb_button_right->input_node());
-  m_inputs.push_back(m_controls->stick->input_node());
+  m_inputs.push_back(m_controls->directional_pad->input_node());
+
+  m_controls->directional_pad->connect_to_pressed(
+      [haptic = context.get_haptic_feedback()]() -> void
+      {
+        haptic->click();
+      });
 
   const bim::axmol::widget::context& widget_context =
       m_context.get_widget_context();
@@ -280,9 +288,10 @@ void bim::axmol::app::online_game::apply_inputs()
   if ((player_action == nullptr) || player_action->full())
     return;
 
-  const ax::Vec2& drag = m_controls->stick->drag();
+  const ax::Vec2& drag = m_controls->directional_pad->direction();
   const float abs_x = std::abs(drag.x);
   const float abs_y = std::abs(drag.y);
+  // TODO: remove the threshold, the drag for the pad is -1, 0, or 1.
   constexpr float move_threshold = 0.1;
   const float dx = (abs_x >= move_threshold) ? drag.x : 0;
   const float dy = (abs_y >= move_threshold) ? drag.y : 0;

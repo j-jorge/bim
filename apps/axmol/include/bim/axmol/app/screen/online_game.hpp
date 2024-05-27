@@ -35,6 +35,11 @@ namespace bim::net
   class session_handler;
 }
 
+namespace iscool::system
+{
+  class haptic_feedback;
+}
+
 namespace ax
 {
   class Sprite;
@@ -61,7 +66,8 @@ namespace bim::axmol::app
         m_context,
         ic_context_declare_parent_properties(                      //
             ((const bim::axmol::widget::context&)(widget_context)) //
-            ((bim::net::session_handler*)(session_handler))),
+            ((bim::net::session_handler*)(session_handler))        //
+            ((iscool::system::haptic_feedback*)(haptic_feedback))),
         ic_context_no_properties);
 
   public:

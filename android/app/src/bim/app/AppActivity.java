@@ -1,6 +1,7 @@
 package bim.app;
 
 import iscool.jni.JniService;
+import iscool.system.SystemService;
 
 import android.os.Bundle;
 import org.axmol.lib.AxmolActivity;
@@ -15,6 +16,7 @@ public class AppActivity extends AxmolActivity {
         super.onCreate(savedInstanceState);
 
         JniService.init(this);
+        SystemService.init(this);
 
         // Workaround in
         // https://stackoverflow.com/questions/16283079/re-launch-of-activity-on-home-button-but-only-the-first-time/16447508

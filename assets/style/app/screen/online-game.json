@@ -24,38 +24,12 @@
             [
                 "button/sprite",
                 {
-                    "widgets/sprite/frame": "sprites/bomb.png"
+                    "widgets/sprite/frame": "sprites/bomb.png",
+                    "visible": false
                 }
             ],
 
-            "stick":
-            [{
-                "widgets":
-                [{
-                    "stick":
-                    [{
-                        "frame": "sprites/joystick-stick.png"
-                    }],
-
-                    "background":
-                    [{
-                        "instantiate": "ax::Sprite",
-                        "frame": "sprites/joystick-background.png"
-                    }]
-                }],
-
-                "bounds":
-                [{
-                    "stick":
-                    [{
-                        "width.percents": 50,
-                        "height.percents": 50,
-                        "z-order": 10
-                    }],
-
-                    "background": [ "layout/fill" ]
-                }]
-            }],
+            "directional_pad": [ "app/screen/directional-pad" ],
 
             "debug_delta_ticks":
             [

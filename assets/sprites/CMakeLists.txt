@@ -11,6 +11,15 @@ set(sprites
   "sprites/power-up-bomb.png"
   "sprites/power-up-flame.png"
   "sprites/solid-wall.png"
+
+  "sprites/ui/directional-pad-left.png"
+  "sprites/ui/directional-pad-right.png"
+  "sprites/ui/directional-pad-left-on.png"
+  "sprites/ui/directional-pad-right-on.png"
+  "sprites/ui/directional-pad-up.png"
+  "sprites/ui/directional-pad-up-on.png"
+  "sprites/ui/directional-pad-down-on.png"
+  "sprites/ui/directional-pad-down.png"
 )
 set(sprites_bleeding
   "sprites/flame-arm.png"

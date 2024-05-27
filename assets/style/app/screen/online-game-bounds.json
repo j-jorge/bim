@@ -39,11 +39,11 @@
             "height-ratio": 1
         }],
 
-        "stick":
+        "directional_pad":
         [{
             "anchor.x": 0.5,
             "anchor.y": 0.5,
-            "anchor.reference.x": 0.5,
+            "anchor.reference.x": 0.66,
             "anchor.reference.y": 0.2,
             "width.percents": 40,
             "height-ratio": 1
