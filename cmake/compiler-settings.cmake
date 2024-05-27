@@ -10,14 +10,19 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL GNU)
     add_compile_options(
       -fsanitize=address -fsanitize=undefined -fno-omit-frame-pointer
     )
-    add_link_options(-fsanitize=address -fsanitize=undefined)
+    add_link_options(
+      -fsanitize=address
+      -fsanitize=undefined
+      -static-libasan
+      -static-libubsan
+    )
   endif()
 
   option(BIM_THREAD_SANITIZER "Compile with ThreadSanitizer enabled" OFF)
 
   if(BIM_THREAD_SANITIZER)
     add_compile_options(-fsanitize=thread -fno-omit-frame-pointer)
-    add_link_options(-fsanitize=thread)
+    add_link_options(-fsanitize=thread -static-libtsan)
   endif()
 
   if (CMAKE_BUILD_TYPE STREQUAL "Release")
