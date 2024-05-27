@@ -13,4 +13,4 @@ services:
         condition: on-failure
     command: >
         bash -c "cp /opt/bim/etc/logrotate.d/* /etc/logrotate.d/
-        && /opt/bim/bin/bim-server &> /opt/bim/log/bim-server.txt"
+        && /opt/bim/bin/bim-server &>> /opt/bim/log/bim-server.txt"
