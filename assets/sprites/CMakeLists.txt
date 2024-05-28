@@ -2,8 +2,6 @@ set(sprites
   "sprites/bomb.png"
   "sprites/brick-wall.png"
   "sprites/guy.png"
-  "sprites/joystick-background.png"
-  "sprites/joystick-stick.png"
   "sprites/player-1.png"
   "sprites/player-2.png"
   "sprites/player-3.png"
