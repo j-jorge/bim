@@ -8,6 +8,7 @@ add_library(bim_net STATIC
 
   main/src/bim/net/message/game_update_from_client.cpp
   main/src/bim/net/message/game_update_from_server.cpp
+  main/src/bim/net/message/player_action_serialization.cpp
 )
 
 target_include_directories(bim_net PUBLIC main/include)

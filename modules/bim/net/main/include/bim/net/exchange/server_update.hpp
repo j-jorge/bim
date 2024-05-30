@@ -27,6 +27,6 @@ namespace bim::net
   struct server_update
   {
     std::uint32_t from_tick;
-    std::vector<std::array<bim::game::player_action, 4>> actions;
+    std::array<std::vector<bim::game::player_action>, 4> actions;
   };
 }

@@ -33,7 +33,7 @@
 
 namespace
 {
-  static constexpr int g_max_update_message_size_in_bytes = 480;
+  static constexpr int g_max_ticks_in_update_message = 64;
 }
 
 ic_implement_state_monitor(bim::net::game_update_exchange, m_monitor, idle,
@@ -97,11 +97,8 @@ void bim::net::game_update_exchange::dispatch_start()
 
   m_current_update.from_tick = 0;
 
-  m_current_update.action_count_at_tick.clear();
-  m_current_update.action_count_at_tick.reserve(64);
-
   m_current_update.actions.clear();
-  m_current_update.actions.reserve(64);
+  m_current_update.actions.reserve(32);
 
   m_send_connection.disconnect();
 
@@ -114,13 +111,10 @@ bool bim::net::game_update_exchange::append_to_current_update(
   // If the message would become too large when adding the provided action,
   // then keep it for later. We need the server to confirm the previous actions
   // first.
-  if (m_current_update.message_size() >= g_max_update_message_size_in_bytes)
+  if (m_current_update.actions.size() >= g_max_ticks_in_update_message)
     return false;
 
-  m_current_update.action_count_at_tick.emplace_back(action.queue_size);
-  m_current_update.actions.insert(m_current_update.actions.end(), action.queue,
-                                  action.queue + action.queue_size);
-
+  m_current_update.actions.push_back(action);
   return true;
 }
 
@@ -172,58 +166,41 @@ std::uint32_t bim::net::game_update_exchange::validate_message(
     const game_update_from_server& message) const
 {
   // The message should start from the last known server state.
-  if (message.first_tick != m_current_update.from_tick)
+  if (message.from_tick != m_current_update.from_tick)
     {
       ic_causeless_log(iscool::log::nature::info(), "game_update_exchange",
                        "Out of sync message, got %d, expected %d.",
-                       message.first_tick, m_current_update.from_tick);
+                       message.from_tick, m_current_update.from_tick);
       return 0;
     }
 
-  // No action, we are in sync with the server.
-  if (message.action_count.empty())
+  if (message.actions.size() != m_player_count)
     return 0;
 
   bim_assume(m_player_count >= 2);
   bim_assume(m_player_count <= 4);
 
-  if (message.action_count.size() % m_player_count != 0)
-    {
-      ic_causeless_log(iscool::log::nature::info(), "game_update_exchange",
-                       "Inconsistent action count %d for %d players.",
-                       message.action_count.size(), (int)m_player_count);
-      return 0;
-    }
+  const std::size_t tick_count = message.actions[0].size();
 
-  const std::size_t tick_count = message.action_count.size() / m_player_count;
+  // No action, we are in sync with the server.
+  if (tick_count == 0)
+    return 0;
+
+  for (std::size_t i = 1, n = m_player_count; i != n; ++i)
+    if (message.actions[i].size() != tick_count)
+      {
+        ic_causeless_log(
+            iscool::log::nature::info(), "game_update_exchange",
+            "Inconsistent tick count %d for player %d (expected %d).",
+            message.actions[i].size(), i, tick_count);
+        return 0;
+      }
 
   // Suspiciously large message.
   if (tick_count > 255)
     {
       ic_causeless_log(iscool::log::nature::info(), "game_update_exchange",
                        "Too many ticks: %d", tick_count);
-      return 0;
-    }
-
-  std::size_t action_count = 0;
-
-  for (std::uint8_t c : message.action_count)
-    {
-      if (c > bim::game::player_action::queue_capacity)
-        {
-          ic_causeless_log(iscool::log::nature::info(), "game_update_exchange",
-                           "Too many action count: %d", (int)c);
-          return 0;
-        }
-
-      action_count += c;
-    }
-
-  if (action_count != message.actions.size())
-    {
-      ic_causeless_log(iscool::log::nature::info(), "game_update_exchange",
-                       "Inconsistent action count, got %d, expected %d.",
-                       message.actions.size(), action_count);
       return 0;
     }
 
@@ -236,29 +213,13 @@ void bim::net::game_update_exchange::store_server_frames(
   bim_assume(m_player_count >= 2);
   bim_assume(m_player_count <= 4);
 
-  m_server_update.from_tick = message.first_tick;
-  m_server_update.actions.resize(tick_count);
+  m_server_update.from_tick = message.from_tick;
 
-  for (std::size_t action_count_index = 0, n = message.action_count.size(),
-                   action_index = 0, tick = 0;
-       action_count_index != n;)
+  for (int player_index = 0; player_index != m_player_count; ++player_index)
     {
-      std::array<bim::game::player_action, 4>& frame_actions =
-          m_server_update.actions[tick];
-      ++tick;
-
-      for (std::uint8_t player_index = 0; player_index != m_player_count;
-           ++player_index)
-        {
-          const std::uint8_t action_count =
-              message.action_count[action_count_index];
-          ++action_count_index;
-
-          frame_actions[player_index].queue_size = action_count;
-          std::copy_n(message.actions.begin() + action_index, action_count,
-                      frame_actions[player_index].queue);
-          action_index += action_count;
-        }
+      m_server_update.actions[player_index].resize(tick_count);
+      std::copy_n(message.actions[player_index].begin(), tick_count,
+                  m_server_update.actions[player_index].begin());
     }
 }
 
@@ -266,17 +227,16 @@ void bim::net::game_update_exchange::remove_server_confirmed_actions(
     std::uint32_t tick_count)
 {
   m_current_update.from_tick += tick_count;
-  m_current_update.action_count_at_tick.clear();
   m_current_update.actions.clear();
 
   bim_assume(tick_count <= m_action_queue.size());
 
-  for (std::size_t i = tick_count, n = m_action_queue.size(); i != n; ++i)
-    if (!append_to_current_update(m_action_queue[i]))
-      break;
-
   m_action_queue.erase(m_action_queue.begin(),
                        m_action_queue.begin() + tick_count);
+
+  for (const bim::game::player_action& action : m_action_queue)
+    if (!append_to_current_update(action))
+      break;
 
   m_client_out_message = m_current_update.build_message();
 }

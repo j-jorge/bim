@@ -32,6 +32,7 @@
 #include <bim/game/component/fractional_position_on_grid.hpp>
 #include <bim/game/component/player.hpp>
 #include <bim/game/component/player_action.hpp>
+#include <bim/game/component/player_action_queue.hpp>
 #include <bim/game/component/position_on_grid.hpp>
 #include <bim/game/contest.hpp>
 #include <bim/game/input_archive.hpp>
@@ -54,14 +55,15 @@ bim::net::contest_runner::contest_runner(bim::game::contest& contest,
   , m_last_confirmed_tick(0)
   , m_last_completed_tick(0)
 {
-  m_server_actions.reserve(64);
+  for (std::vector<bim::game::player_action>& server_actions :
+       m_server_actions)
+    server_actions.reserve(64);
 
   save_contest_state(contest.registry());
 
   for (int player_index = 0; player_index != player_count; ++player_index)
     if (player_index != local_player_index)
-      m_unconfirmed_actions[player_index].emplace_back(
-          bim::game::player_action{});
+      m_unconfirmed_actions[player_index].emplace_back();
 
   update_exchange.connect_to_updated(
       std::bind(&contest_runner::queue_updates, this, std::placeholders::_1));
@@ -98,7 +100,7 @@ bim::net::contest_runner::run(std::chrono::nanoseconds elapsed_wall_time)
       player_current_action_ptr ? *player_current_action_ptr
                                 : bim::game::player_action{};
 
-  if (!m_server_actions.empty())
+  if (!m_server_actions[0].empty())
     {
       sync_with_server(registry);
 
@@ -125,10 +127,13 @@ bim::net::contest_runner::run(std::chrono::nanoseconds elapsed_wall_time)
 
 void bim::net::contest_runner::queue_updates(const server_update& updates)
 {
-  assert(updates.from_tick == m_last_confirmed_tick + m_server_actions.size());
+  assert(updates.from_tick
+         == m_last_confirmed_tick + m_server_actions[0].size());
 
-  m_server_actions.insert(m_server_actions.end(), updates.actions.begin(),
-                          updates.actions.end());
+  for (int i = 0; i != m_player_count; ++i)
+    m_server_actions[i].insert(m_server_actions[i].end(),
+                               updates.actions[i].begin(),
+                               updates.actions[i].end());
 }
 
 void bim::net::contest_runner::sync_with_server(entt::registry& registry)
@@ -151,34 +156,36 @@ void bim::net::contest_runner::restore_last_confirmed_state(
 
 void bim::net::contest_runner::apply_server_actions(entt::registry& registry)
 {
-  for (const std::array<bim::game::player_action, 4>& server_action :
-       m_server_actions)
+  const std::size_t tick_count = m_server_actions[0].size();
+
+  for (std::size_t tick = 0; tick != tick_count; ++tick)
     {
       registry.view<bim::game::player, bim::game::player_action>().each(
-          [this, &server_action](const bim::game::player& p,
-                                 bim::game::player_action& action) -> void
+          [this, tick](const bim::game::player& p,
+                       bim::game::player_action& action) -> void
           {
-            if (server_action[p.index].queue_size == 0)
-              return;
-
-            action = server_action[p.index];
+            action = m_server_actions[p.index][tick];
           });
 
       m_contest.tick();
     }
 
   // Keep the last confirmed actions of the other player such that we can
-  // re-apply it in the non-confirmed ticks.
+  // re-apply the movement in the non-confirmed ticks.
   for (int player_index = 0; player_index != m_player_count; ++player_index)
     if (player_index != m_local_player_index)
-      // TODO: remove the drop bomb actions.
-      m_unconfirmed_actions[player_index].back() =
-          m_server_actions.back()[player_index];
+      {
+        bim::game::player_action& action =
+            m_unconfirmed_actions[player_index].back();
+        action = m_server_actions[player_index].back();
+        action.drop_bomb = false;
+      }
 
-  m_last_confirmed_tick += m_server_actions.size();
+  m_last_confirmed_tick += tick_count;
   assert(m_last_confirmed_tick <= m_last_completed_tick);
 
-  m_server_actions.clear();
+  for (int player_index = 0; player_index != m_player_count; ++player_index)
+    m_server_actions[player_index].clear();
 }
 
 void bim::net::contest_runner::save_contest_state(entt::registry& registry)
@@ -260,5 +267,6 @@ void bim::net::contest_runner::archive_io(Snapshot&& snapshot,
           bim::game::burning, bim::game::dead, bim::game::flame,
           bim::game::flame_power_up, bim::game::flame_power_up_spawner,
           bim::game::fractional_position_on_grid, bim::game::player_action,
-          bim::game::player, bim::game::position_on_grid>(archive);
+          bim::game::player_action_queue, bim::game::player,
+          bim::game::position_on_grid>(archive);
 }

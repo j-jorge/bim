@@ -16,10 +16,10 @@
 */
 #include <bim/net/message/game_update_from_server.hpp>
 
-#include <iscool/net/byte_array_serialization/byte_array_vector_serialization.hpp>
+#include <bim/net/message/player_action_serialization.hpp>
 
-#include <cassert>
-#include <limits>
+#include <iscool/net/byte_array_bit_inserter.hpp>
+#include <iscool/net/byte_array_bit_reader.hpp>
 
 bim::net::game_update_from_server::game_update_from_server() = default;
 
@@ -27,22 +27,46 @@ bim::net::game_update_from_server::game_update_from_server(
     const iscool::net::byte_array& raw_content)
 {
   iscool::net::byte_array_reader reader(raw_content);
-  reader >> first_tick >> action_count >> actions;
+  std::uint8_t player_count;
+  std::uint8_t size;
+
+  reader >> from_tick >> player_count >> size;
+
+  actions.resize(player_count);
+
+  iscool::net::byte_array_bit_reader bits(reader);
+
+  for (std::vector<bim::game::player_action>& v : actions)
+    {
+      v.resize(size);
+
+      for (bim::game::player_action& action : v)
+        read(action, bits);
+    }
 }
 
 iscool::net::message bim::net::game_update_from_server::build_message() const
 {
   iscool::net::byte_array content;
-  content << first_tick << action_count << actions;
+
+  const std::uint8_t player_count = actions.size();
+  assert(player_count > 0);
+
+  const std::uint8_t size = actions[0].size();
+
+  content << from_tick << player_count << size;
+
+  iscool::net::byte_array_bit_inserter bits(content);
+
+  for (const std::vector<bim::game::player_action>& v : actions)
+    {
+      assert(v.size() == size);
+
+      for (const bim::game::player_action& action : v)
+        write(bits, action);
+    }
+
+  bits.flush();
+
   return iscool::net::message(get_type(), std::move(content));
-}
-
-std::size_t bim::net::game_update_from_server::message_size() const
-{
-  // For both player_index.size() and player_tick_count.size().
-  static constexpr std::size_t size_of_vector_size = sizeof(std::size_t);
-
-  return sizeof(first_tick) + size_of_vector_size
-         + action_count.size() * sizeof(action_count[0]) + size_of_vector_size
-         + actions.size() * sizeof(actions[0]);
 }

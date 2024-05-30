@@ -16,7 +16,7 @@
 */
 #pragma once
 
-#include <bim/game/component/player_action_kind_fwd.hpp>
+#include <bim/game/component/player_movement_fwd.hpp>
 
 #include <cstdint>
 
@@ -24,12 +24,7 @@ namespace bim::game
 {
   struct player_action
   {
-    static constexpr std::size_t queue_capacity = 16;
-
-    player_action_kind queue[queue_capacity];
-    std::uint8_t queue_size;
-
-    void push(player_action_kind a);
-    bool full() const;
+    player_movement movement;
+    bool drop_bomb;
   };
 }

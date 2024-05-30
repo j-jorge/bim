@@ -76,7 +76,7 @@ namespace bim::net
 
     bim::game::tick_counter m_tick_counter;
 
-    std::vector<std::array<bim::game::player_action, 4>> m_server_actions;
+    std::array<std::vector<bim::game::player_action>, 4> m_server_actions;
     std::uint32_t m_last_confirmed_tick;
     std::uint32_t m_last_completed_tick;
 

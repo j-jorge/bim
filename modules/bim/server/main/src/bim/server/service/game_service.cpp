@@ -334,7 +334,7 @@ std::optional<std::size_t> bim::server::game_service::validate_message(
                        game.simulation_tick);
       return std::nullopt;
     }
-  const std::size_t tick_count = message.action_count_at_tick.size();
+  const std::size_t tick_count = message.actions.size();
 
   // A range of actions that happened before the current simulation step, maybe
   // it was lost on the network, or the player has not received our update.
@@ -349,35 +349,12 @@ std::optional<std::size_t> bim::server::game_service::validate_message(
       return 0;
     }
 
-  if (message.action_count_at_tick.size() > 255)
+  if (tick_count > 255)
     {
       ic_causeless_log(
           iscool::log::nature::info(), "game_service",
           "Too many action count/ticks %d for session=%d, player=%d.",
-          message.action_count_at_tick.size(), session, (int)player_index);
-      return std::nullopt;
-    }
-
-  if (message.actions.size() > bim::game::player_action::queue_capacity * 255)
-    {
-      ic_causeless_log(iscool::log::nature::info(), "game_service",
-                       "Too many actions %d for session=%d, player=%d.",
-                       message.actions.size(), session, (int)player_index);
-      return std::nullopt;
-    }
-
-  std::size_t action_count = 0;
-
-  for (std::uint8_t c : message.action_count_at_tick)
-    action_count += c;
-
-  if (action_count != message.actions.size())
-    {
-      ic_causeless_log(iscool::log::nature::info(), "game_service",
-                       "Inconsistent action count for session=%d, player=%d, "
-                       "got %d, expected %d.",
-                       session, (int)player_index, action_count,
-                       message.actions.size());
+          tick_count, session, (int)player_index);
       return std::nullopt;
     }
 
@@ -388,38 +365,21 @@ void bim::server::game_service::queue_actions(
     const bim::net::game_update_from_client& message, std::size_t player_index,
     game& game)
 {
-  std::size_t tick_index = game.completed_tick_count_all
-                           + game.actions[player_index].size()
-                           - message.from_tick;
-  bim_assume(tick_index <= message.action_count_at_tick.size());
+  std::vector<bim::game::player_action>& local_actions =
+      game.actions[player_index];
 
-  std::size_t action_index = 0;
+  const std::size_t tick_count = message.actions.size();
 
-  // Skip the actions we have already seen.
-  for (std::size_t i = 0; i != tick_index; ++i)
-    action_index += message.action_count_at_tick[i];
-
-  const std::size_t tick_count = message.action_count_at_tick.size();
+  std::size_t tick_index =
+      game.completed_tick_count_all + local_actions.size() - message.from_tick;
+  bim_assume(tick_index <= tick_count);
 
   game.completed_tick_count_per_player[player_index] = message.from_tick;
-  game.actions[player_index].reserve(game.actions[player_index].size()
-                                     + tick_count - tick_index);
 
   // Apply the remaining actions.
-  for (; tick_index != tick_count; ++tick_index)
-    {
-      const std::uint8_t action_count =
-          message.action_count_at_tick[tick_index];
-      bim_assume(action_count <= bim::game::player_action::queue_capacity);
-
-      bim::game::player_action& action =
-          game.actions[player_index].emplace_back();
-      action.queue_size = action_count;
-
-      std::copy_n(message.actions.begin() + action_index, action_count,
-                  action.queue);
-      action_index += action_count;
-    }
+  local_actions.insert(local_actions.end(),
+                       message.actions.begin() + tick_index,
+                       message.actions.end());
 }
 
 void bim::server::game_service::send_actions(
@@ -430,42 +390,23 @@ void bim::server::game_service::send_actions(
       game.completed_tick_count_per_player[player_index];
 
   bim_assume(last_received_player_tick >= game.completed_tick_count_all);
-  const std::size_t action_start_index =
+  const std::size_t tick_start_index =
       last_received_player_tick - game.completed_tick_count_all;
 
   bim_assume(game.simulation_tick >= last_received_player_tick);
-  const std::size_t action_count =
-      game.simulation_tick - last_received_player_tick;
-
-  const std::size_t action_end_index = action_start_index + action_count;
+  const std::size_t tick_count = std::min<std::size_t>(
+      255, game.simulation_tick - last_received_player_tick);
 
   bim::net::game_update_from_server message;
-  message.first_tick = last_received_player_tick;
-  message.action_count.reserve(action_count * game.player_count);
-  // Times 2 because we expect fewer than two action kinds per frame per
-  // player.
-  message.actions.reserve(action_count * game.player_count * 2);
+  message.from_tick = last_received_player_tick;
+  message.actions.resize(game.player_count);
 
-  for (std::size_t action_index = action_start_index;
-       action_index != action_end_index; ++action_index)
+  for (std::uint8_t player = 0; player != game.player_count; ++player)
     {
-      for (std::uint8_t player = 0; player != game.player_count; ++player)
-        {
-          assert(action_start_index <= game.actions[player].size());
-          assert(action_end_index <= game.actions[player].size());
-          bim_assume(action_index <= game.actions[player].size());
-
-          const bim::game::player_action& action =
-              game.actions[player][action_index];
-
-          message.action_count.emplace_back(action.queue_size);
-
-          for (int i = 0; i != action.queue_size; ++i)
-            message.actions.emplace_back(action.queue[i]);
-        }
-
-      if (message.message_size() >= 480)
-        break;
+      const std::vector<bim::game::player_action>::const_iterator begin =
+          game.actions[player].begin() + tick_start_index;
+      message.actions[player].insert(message.actions[player].end(), begin,
+                                     begin + tick_count);
     }
 
   m_message_stream.send(endpoint, message.build_message(), session, channel);

@@ -23,7 +23,7 @@
 #include <bim/net/exchange/game_update_exchange.hpp>
 #include <bim/net/exchange/new_game_exchange.hpp>
 
-#include <bim/game/component/player_action_kind.hpp>
+#include <bim/game/component/player_movement.hpp>
 
 #include <iscool/log/setup.hpp>
 #include <iscool/net/message_channel.hpp>
@@ -146,14 +146,27 @@ void game_update_test::client::launch_game(
         m_started.emplace(true);
       });
   m_game_update->connect_to_updated(
-      [this](const bim::net::server_update& update) -> void
+      [this, player_count = event.player_count](
+          const bim::net::server_update& update) -> void
       {
-        EXPECT_EQ(m_all_updates.from_tick + m_all_updates.actions.size(),
-                  update.from_tick);
+        for (std::size_t i = 0; i != player_count; ++i)
+          {
+            EXPECT_EQ(m_all_updates.from_tick
+                          + m_all_updates.actions[i].size(),
+                      update.from_tick)
+                << "i=" << i
+                << ", m_all_updates.from_tick=" << m_all_updates.from_tick
+                << ", m_all_updates.actions[i].size()="
+                << m_all_updates.actions[i].size();
 
-        m_all_updates.actions.insert(m_all_updates.actions.end(),
-                                     update.actions.begin(),
-                                     update.actions.end());
+            m_all_updates.actions[i].insert(m_all_updates.actions[i].end(),
+                                            update.actions[i].begin(),
+                                            update.actions[i].end());
+          }
+
+        for (std::size_t i = player_count; i != m_all_updates.actions.size();
+             ++i)
+          EXPECT_TRUE(m_all_updates.actions[i].empty()) << "i=" << i;
       });
 
   m_game_update->start();
@@ -219,17 +232,14 @@ TEST_P(game_update_test, game_instant)
   join_game(player_count, { 'u', 'p', 'd', 'a', 't', 'e', '2' });
 
   const bim::game::player_action actions[] = {
-    bim::game::player_action{ .queue = { bim::game::player_action_kind::up },
-                              .queue_size = 1 },
-    bim::game::player_action{
-        .queue = { bim::game::player_action_kind::up,
-                   bim::game::player_action_kind::drop_bomb },
-        .queue_size = 2 },
-    bim::game::player_action{
-        .queue = { bim::game::player_action_kind::drop_bomb },
-        .queue_size = 1 },
-    bim::game::player_action{ .queue = { bim::game::player_action_kind::down },
-                              .queue_size = 1 },
+    bim::game::player_action{ .movement = bim::game::player_movement::up,
+                              .drop_bomb = false },
+    bim::game::player_action{ .movement = bim::game::player_movement::up,
+                              .drop_bomb = true },
+    bim::game::player_action{ .movement = bim::game::player_movement::idle,
+                              .drop_bomb = true },
+    bim::game::player_action{ .movement = bim::game::player_movement::down,
+                              .drop_bomb = false }
   };
 
   for (int i = 0; i != player_count; ++i)
@@ -241,23 +251,21 @@ TEST_P(game_update_test, game_instant)
   for (int i = 0; i != player_count; ++i)
     {
       EXPECT_EQ(0, m_clients[i].m_all_updates.from_tick) << "i=" << i;
-      ASSERT_EQ(1, m_clients[i].m_all_updates.actions.size()) << "i=" << i;
-
-      const std::array<bim::game::player_action, 4>& server_actions =
-          m_clients[i].m_all_updates.actions[0];
 
       // Each player sees a state for all players.
       for (int player_index = 0; player_index != player_count; ++player_index)
         {
-          ASSERT_EQ(actions[player_index].queue_size,
-                    server_actions[player_index].queue_size)
+          const std::vector<bim::game::player_action>& server_actions =
+              m_clients[i].m_all_updates.actions[player_index];
+
+          ASSERT_EQ(1, server_actions.size())
               << "i=" << i << ", player_index=" << player_index;
 
-          for (int j = 0; j != actions[player_index].queue_size; ++j)
-            EXPECT_EQ(actions[player_index].queue[j],
-                      server_actions[player_index].queue[j])
-                << "i=" << i << ", player_index=" << player_index
-                << ", j=" << j;
+          EXPECT_EQ(actions[player_index].movement, server_actions[0].movement)
+              << "i=" << i << ", player_index=" << player_index;
+          EXPECT_EQ(actions[player_index].drop_bomb,
+                    server_actions[0].drop_bomb)
+              << "i=" << i << ", player_index=" << player_index;
         }
     }
 }
@@ -272,25 +280,30 @@ TEST_P(game_update_test, player_two_is_late)
 
   join_game(player_count, { 'l', 'a', 't', 'e' });
 
-  const bim::game::player_action_kind actions[4][4] = {
-    { bim::game::player_action_kind::up, bim::game::player_action_kind::down,
-      bim::game::player_action_kind::left,
-      bim::game::player_action_kind::right },
-    { bim::game::player_action_kind::down, bim::game::player_action_kind::left,
-      bim::game::player_action_kind::right,
-      bim::game::player_action_kind::up },
-    { bim::game::player_action_kind::left,
-      bim::game::player_action_kind::right, bim::game::player_action_kind::up,
-      bim::game::player_action_kind::down },
-    { bim::game::player_action_kind::right, bim::game::player_action_kind::up,
-      bim::game::player_action_kind::down,
-      bim::game::player_action_kind::left }
+  constexpr int tick_count = 5;
+  const bim::game::player_movement movements[4][tick_count] = {
+    {
+        bim::game::player_movement::up,
+        bim::game::player_movement::down,
+        bim::game::player_movement::left,
+        bim::game::player_movement::right,
+        bim::game::player_movement::up,
+    },
+    { bim::game::player_movement::down, bim::game::player_movement::left,
+      bim::game::player_movement::right, bim::game::player_movement::up,
+      bim::game::player_movement::down },
+    { bim::game::player_movement::left, bim::game::player_movement::right,
+      bim::game::player_movement::up, bim::game::player_movement::down,
+      bim::game::player_movement::left },
+    { bim::game::player_movement::right, bim::game::player_movement::up,
+      bim::game::player_movement::down, bim::game::player_movement::left,
+      bim::game::player_movement::right }
   };
 
   // Every player sends an action.
   for (int client_index = 0; client_index != player_count; ++client_index)
     m_clients[client_index].m_game_update->push(bim::game::player_action{
-        .queue = { actions[client_index][0] }, .queue_size = 1 });
+        .movement = movements[client_index][0], .drop_bomb = false });
 
   wait();
 
@@ -301,21 +314,24 @@ TEST_P(game_update_test, player_two_is_late)
         EXPECT_EQ(expected_tick,
                   m_clients[client_index].m_all_updates.from_tick)
             << "client_index=" << client_index;
-        ASSERT_EQ(1, m_clients[client_index].m_all_updates.actions.size())
+        ASSERT_EQ(4, m_clients[client_index].m_all_updates.actions.size())
             << "client_index=" << client_index;
-
-        const std::array<bim::game::player_action, 4>& server_actions =
-            m_clients[client_index].m_all_updates.actions[0];
 
         // Each player sees a state for all players.
         for (int player_index = 0; player_index != player_count;
              ++player_index)
           {
-            ASSERT_EQ(1, server_actions[player_index].queue_size)
+            const std::vector<bim::game::player_action>& server_actions =
+                m_clients[client_index].m_all_updates.actions[player_index];
+
+            ASSERT_EQ(expected_tick + 1, server_actions.size())
                 << "client_index=" << client_index
                 << ", player_index=" << player_index;
-            EXPECT_EQ(actions[player_index][expected_tick],
-                      server_actions[player_index].queue[0])
+            EXPECT_EQ(movements[player_index][expected_tick],
+                      server_actions[expected_tick].movement)
+                << "client_index=" << client_index
+                << ", player_index=" << player_index;
+            EXPECT_FALSE(server_actions[expected_tick].drop_bomb)
                 << "client_index=" << client_index
                 << ", player_index=" << player_index;
           }
@@ -326,12 +342,12 @@ TEST_P(game_update_test, player_two_is_late)
   check_actions(0);
 
   // Every player except index=1 sends an action.
-  for (int tick = 1; tick != 4; ++tick)
+  for (int tick = 1; tick != tick_count; ++tick)
     {
       for (int client_index = 0; client_index != player_count; ++client_index)
         if (client_index != 1)
           m_clients[client_index].m_game_update->push(bim::game::player_action{
-              .queue = { actions[client_index][tick] }, .queue_size = 1 });
+              .movement = movements[client_index][tick], .drop_bomb = false });
 
       wait();
 
@@ -340,11 +356,9 @@ TEST_P(game_update_test, player_two_is_late)
     }
 
   // Suddenly, player index=1 sends his actions.
-  for (int tick = 1; tick != 4; ++tick)
-    {
-      m_clients[1].m_game_update->push(bim::game::player_action{
-          .queue = { actions[1][tick] }, .queue_size = 1 });
-    }
+  for (int tick = 1; tick != tick_count; ++tick)
+    m_clients[1].m_game_update->push(bim::game::player_action{
+        .movement = movements[1][tick], .drop_bomb = false });
 
   wait();
 
@@ -354,21 +368,24 @@ TEST_P(game_update_test, player_two_is_late)
       ASSERT_EQ(4, m_clients[client_index].m_all_updates.actions.size())
           << "client_index=" << client_index;
 
-      // Each player sees a state for all players.
-      for (int frame_index = 1; frame_index != 4; ++frame_index)
+      for (int player_index = 0; player_index != player_count; ++player_index)
         {
-          const std::array<bim::game::player_action, 4>& server_actions =
-              m_clients[client_index].m_all_updates.actions[frame_index];
+          const std::vector<bim::game::player_action>& server_actions =
+              m_clients[client_index].m_all_updates.actions[player_index];
 
-          for (int player_index = 0; player_index != player_count;
-               ++player_index)
+          ASSERT_EQ(tick_count, server_actions.size())
+              << "client_index=" << client_index
+              << ", player_index=" << player_index;
+
+          // Each player sees a state for all players.
+          for (int frame_index = 1; frame_index != tick_count; ++frame_index)
             {
-              ASSERT_EQ(1, server_actions[player_index].queue_size)
+              EXPECT_EQ(movements[player_index][frame_index],
+                        server_actions[frame_index].movement)
                   << "client_index=" << client_index
                   << ", player_index=" << player_index
                   << ", frame_index=" << frame_index;
-              EXPECT_EQ(actions[player_index][frame_index],
-                        server_actions[player_index].queue[0])
+              EXPECT_FALSE(server_actions[frame_index].drop_bomb)
                   << "client_index=" << client_index
                   << ", player_index=" << player_index
                   << ", frame_index=" << frame_index;

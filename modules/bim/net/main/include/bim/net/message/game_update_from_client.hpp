@@ -18,7 +18,7 @@
 
 #include <bim/net/message/message_type.hpp>
 
-#include <bim/game/component/player_action_kind_fwd.hpp>
+#include <bim/game/component/player_action.hpp>
 
 #include <iscool/net/message/raw_message.hpp>
 
@@ -38,11 +38,8 @@ namespace bim::net
 
     iscool::net::message build_message() const;
 
-    std::size_t message_size() const;
-
   public:
     std::uint32_t from_tick;
-    std::vector<std::uint8_t> action_count_at_tick;
-    std::vector<bim::game::player_action_kind> actions;
+    std::vector<bim::game::player_action> actions;
   };
 }

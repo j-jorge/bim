@@ -19,7 +19,7 @@
 #include <bim/game/component/flame_power_up.hpp>
 #include <bim/game/component/fractional_position_on_grid.hpp>
 #include <bim/game/component/player.hpp>
-#include <bim/game/component/player_action_kind.hpp>
+#include <bim/game/component/player_movement.hpp>
 #include <bim/game/component/position_on_grid.hpp>
 #include <bim/game/contest.hpp>
 #include <bim/game/level_generation.hpp>
@@ -285,7 +285,7 @@ void bim::axmol::app::online_game::apply_inputs()
       bim::game::find_player_action_by_index(m_contest->registry(),
                                              m_local_player_index);
 
-  if ((player_action == nullptr) || player_action->full())
+  if (player_action == nullptr)
     return;
 
   const ax::Vec2& drag = m_controls->directional_pad->direction();
@@ -301,24 +301,21 @@ void bim::axmol::app::online_game::apply_inputs()
   if ((dx != 0) && (abs_x >= abs_y))
     {
       if (dx >= 0)
-        player_action->push(bim::game::player_action_kind::right);
+        player_action->movement = bim::game::player_movement::right;
       else
-        player_action->push(bim::game::player_action_kind::left);
+        player_action->movement = bim::game::player_movement::left;
     }
   else if (dy != 0)
     {
       if (dy >= 0)
-        player_action->push(bim::game::player_action_kind::up);
+        player_action->movement = bim::game::player_movement::up;
       else if (dy <= 0)
-        player_action->push(bim::game::player_action_kind::down);
+        player_action->movement = bim::game::player_movement::down;
     }
-
-  if (player_action->full())
-    return;
 
   if (m_bomb_drop_requested)
     {
-      player_action->push(bim::game::player_action_kind::drop_bomb);
+      player_action->drop_bomb = true;
       m_bomb_drop_requested = false;
     }
 }

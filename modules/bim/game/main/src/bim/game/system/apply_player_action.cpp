@@ -20,9 +20,9 @@
 
 #include <bim/game/component/fractional_position_on_grid.hpp>
 #include <bim/game/component/player.hpp>
-#include <bim/game/component/player_action.hpp>
-#include <bim/game/component/player_action_kind.hpp>
+#include <bim/game/component/player_action_queue.hpp>
 #include <bim/game/component/player_direction.hpp>
+#include <bim/game/component/player_movement.hpp>
 #include <bim/game/factory/bomb.hpp>
 
 #include <bim/assume.hpp>
@@ -54,10 +54,11 @@ static void drop_bomb(entt::registry& registry, bim::game::arena& arena,
 
 static void move_player(bim::game::player& player,
                         bim::game::fractional_position_on_grid& position,
-                        bim::game::player_action_kind direction,
+                        bim::game::player_movement movement,
                         const bim::game::arena& arena)
 {
-  bim_assume(direction != bim::game::player_action_kind::drop_bomb);
+  if (movement == bim::game::player_movement::idle)
+    return;
 
   using position_t = bim::game::fractional_position_on_grid::value_type;
 
@@ -89,9 +90,9 @@ static void move_player(bim::game::player& player,
   std::uint8_t check_obstacle_y = 0;
 
   // Move the player.
-  switch (direction)
+  switch (movement)
     {
-    case bim::game::player_action_kind::left:
+    case bim::game::player_movement::left:
       player.current_direction = bim::game::player_direction::left;
 
       if ((x_decimal <= half + offset) && arena.is_solid(x_int - 1, y_int))
@@ -120,7 +121,7 @@ static void move_player(bim::game::player& player,
           position.x -= offset;
         }
       break;
-    case bim::game::player_action_kind::right:
+    case bim::game::player_movement::right:
       player.current_direction = bim::game::player_direction::right;
 
       if ((x_decimal + offset >= half) && arena.is_solid(x_int + 1, y_int))
@@ -149,7 +150,7 @@ static void move_player(bim::game::player& player,
           position.x += offset;
         }
       break;
-    case bim::game::player_action_kind::up:
+    case bim::game::player_movement::up:
       player.current_direction = bim::game::player_direction::up;
 
       if ((y_decimal <= half + offset) && arena.is_solid(x_int, y_int - 1))
@@ -178,7 +179,7 @@ static void move_player(bim::game::player& player,
           position.y -= offset;
         }
       break;
-    case bim::game::player_action_kind::down:
+    case bim::game::player_movement::down:
       player.current_direction = bim::game::player_direction::down;
 
       if ((y_decimal + offset >= half) && arena.is_solid(x_int, y_int + 1))
@@ -207,7 +208,7 @@ static void move_player(bim::game::player& player,
           position.y += offset;
         }
       break;
-    case bim::game::player_action_kind::drop_bomb:
+    case bim::game::player_movement::idle:
       bim_assume(false);
       break;
     }
@@ -246,24 +247,28 @@ static void
 apply_player_actions(entt::registry& registry, bim::game::arena& arena,
                      bim::game::player& player,
                      bim::game::fractional_position_on_grid& position,
-                     bim::game::player_action& action)
+                     const bim::game::player_action& action)
 {
-  for (std::uint8_t i = 0; i != action.queue_size; ++i)
-    if (action.queue[i] == bim::game::player_action_kind::drop_bomb)
-      drop_bomb(registry, arena, player, position);
-    else
-      move_player(player, position, action.queue[i], arena);
+  move_player(player, position, action.movement, arena);
 
-  action.queue_size = 0;
+  if (action.drop_bomb)
+    drop_bomb(registry, arena, player, position);
 }
 
 void bim::game::apply_player_action(entt::registry& registry, arena& arena)
 {
-  registry.view<player, fractional_position_on_grid, player_action>().each(
-      [&registry, &arena](player& player,
-                          fractional_position_on_grid& position,
-                          player_action& action) -> void
-      {
-        apply_player_actions(registry, arena, player, position, action);
-      });
+  registry
+      .view<player, fractional_position_on_grid, player_action,
+            player_action_queue>()
+      .each(
+          [&registry, &arena](player& player,
+                              fractional_position_on_grid& position,
+                              player_action& scheduled_action,
+                              player_action_queue& action_queue) -> void
+          {
+            const player_action action =
+                action_queue.enqueue(scheduled_action);
+            scheduled_action = {};
+            apply_player_actions(registry, arena, player, position, action);
+          });
 }

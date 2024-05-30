@@ -14,8 +14,7 @@ add_library(bim_game
 
   main/src/bim/game/component/flame_direction.cpp
   main/src/bim/game/component/fractional_position_on_grid.cpp
-  main/src/bim/game/component/player_action_kind.cpp
-  main/src/bim/game/component/player_action.cpp
+  main/src/bim/game/component/player_action_queue.cpp
 
   main/src/bim/game/factory/bomb.cpp
   main/src/bim/game/factory/bomb_power_up.cpp
@@ -46,7 +45,7 @@ add_executable(game-tests
   tests/src/bim/game/player_action.cpp
 
   tests/src/bim/game/component/flame_direction.cpp
-  tests/src/bim/game/component/player_action.cpp
+  tests/src/bim/game/component/player_action_queue.cpp
 
   tests/src/bim/game/system/apply_player_action.cpp
   tests/src/bim/game/system/update_bomb_power_up_spawners.cpp
