@@ -9,7 +9,8 @@
             [{
                 "instantiate": "ax::LayerColor",
                 "opacity": 1,
-                "color": "#385b59"
+                "color": "#385b59",
+                "z-order": -10
             }],
 
             "bomb_button_left":
