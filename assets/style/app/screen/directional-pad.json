@@ -59,9 +59,9 @@
                 "anchor.x": 0.5,
                 "anchor.y": 1,
                 "anchor.reference.x": 0.5,
-                "anchor.reference.y": 1,
-                "width.percents": 65,
-                "height.percents": 28
+                "anchor.reference.y": 0.9,
+                "width.percents": 52,
+                "height.percents": 22
             }],
 
             "up.off":
@@ -77,9 +77,9 @@
                 "anchor.x": 0.5,
                 "anchor.y": 0,
                 "anchor.reference.x": 0.5,
-                "anchor.reference.y": 0,
-                "width.percents": 65,
-                "height.percents": 28
+                "anchor.reference.y": 0.1,
+                "width.percents": 52,
+                "height.percents": 22
             }],
 
             "down.off":
@@ -94,10 +94,10 @@
             [{
                 "anchor.x": 0,
                 "anchor.y": 0.5,
-                "anchor.reference.x": 0,
+                "anchor.reference.x": 0.1,
                 "anchor.reference.y": 0.5,
-                "width.percents": 28,
-                "height.percents": 65
+                "width.percents": 22,
+                "height.percents": 52
             }],
 
             "left.off":
@@ -112,10 +112,10 @@
             [{
                 "anchor.x": 1,
                 "anchor.y": 0.5,
-                "anchor.reference.x": 1,
+                "anchor.reference.x": 0.9,
                 "anchor.reference.y": 0.5,
-                "width.percents": 28,
-                "height.percents": 65
+                "width.percents": 22,
+                "height.percents": 52
             }],
 
             "right.off":
