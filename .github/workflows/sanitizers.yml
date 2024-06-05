@@ -15,7 +15,7 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    container: "ubuntu:23.10"
+    container: "ubuntu:24.04"
 
     strategy:
       matrix:
