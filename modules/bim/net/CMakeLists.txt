@@ -12,7 +12,14 @@ add_library(bim_net STATIC
 )
 
 target_include_directories(bim_net PUBLIC main/include)
-target_link_libraries(bim_net PUBLIC bim_game iscool_net iscool_random)
+target_link_libraries(
+  bim_net
+  PUBLIC
+  bim_game
+  iscool_http
+  iscool_net
+  iscool_random
+)
 
 add_executable(net-tests
   tests/src/bim/net/message/game_update_from_client.cpp
