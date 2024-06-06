@@ -27,6 +27,7 @@ target_link_libraries(bim_app
   bim_axmol_audio
   bim_axmol_display
   bim_axmol_files
+  bim_axmol_http
   bim_axmol_input
   bim_axmol_schedule
   bim_axmol_widget

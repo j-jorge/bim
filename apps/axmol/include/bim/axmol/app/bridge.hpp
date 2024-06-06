@@ -17,6 +17,7 @@
 #pragma once
 
 #include <bim/axmol/files/bridge.hpp>
+#include <bim/axmol/http/bridge.hpp>
 #include <bim/axmol/schedule/bridge.hpp>
 
 namespace bim::axmol::app
@@ -33,6 +34,7 @@ namespace bim::axmol::app
 
   private:
     bim::axmol::files::bridge m_files;
+    bim::axmol::http::bridge m_http;
     bim::axmol::schedule::bridge m_schedule;
   };
 }
