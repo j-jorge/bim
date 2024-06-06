@@ -38,6 +38,9 @@ namespace bim::server
     explicit game_service(iscool::net::socket_stream& socket);
     ~game_service();
 
+    bool is_in_active_game(iscool::net::session_id session) const;
+    bool is_playing(iscool::net::channel_id channel) const;
+
     std::optional<game_info> find_game(iscool::net::channel_id channel) const;
 
     game_info new_game(std::uint8_t player_count,
@@ -49,6 +52,8 @@ namespace bim::server
   private:
     struct game;
     using game_map = boost::unordered_map<iscool::net::channel_id, game>;
+    using session_to_channel_map =
+        boost::unordered_map<iscool::net::session_id, iscool::net::channel_id>;
 
   private:
     void mark_as_ready(const iscool::net::endpoint& endpoint,
@@ -73,6 +78,7 @@ namespace bim::server
     iscool::net::message_stream m_message_stream;
     iscool::net::channel_id m_next_game_channel;
     game_map m_games;
+    session_to_channel_map m_session_to_channel;
     std::mt19937_64 m_random;
   };
 }

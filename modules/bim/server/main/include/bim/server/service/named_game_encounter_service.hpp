@@ -22,12 +22,14 @@ namespace bim::net
 
 namespace bim::server
 {
+  class game_service;
   class matchmaking_service;
 
   class named_game_encounter_service
   {
   public:
     named_game_encounter_service(iscool::net::socket_stream& socket,
+                                 const game_service& game_service,
                                  matchmaking_service& matchmaking_service);
     ~named_game_encounter_service();
 
@@ -58,6 +60,7 @@ namespace bim::server
     void clean_up(bim::net::encounter_id encounter_id);
 
   private:
+    const game_service& m_game_service;
     matchmaking_service& m_matchmaking_service;
 
     name_to_encounter_id_map m_encounter_ids;

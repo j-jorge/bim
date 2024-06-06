@@ -16,10 +16,12 @@
 */
 #include <bim/game/contest.hpp>
 
+#include <bim/game/check_game_over.hpp>
 #include <bim/game/component/player.hpp>
 #include <bim/game/component/player_action.hpp>
 #include <bim/game/component/player_direction.hpp>
 #include <bim/game/component/position_on_grid.hpp>
+#include <bim/game/contest_result.hpp>
 #include <bim/game/factory/player.hpp>
 #include <bim/game/system/apply_player_action.hpp>
 #include <bim/game/system/refresh_bomb_inventory.hpp>
@@ -75,9 +77,14 @@ bim::game::contest::contest(std::uint64_t seed,
                             brick_wall_probability);
 }
 
-void bim::game::contest::tick()
+bim::game::contest_result bim::game::contest::tick()
 {
   remove_dead_objects(m_registry);
+  const contest_result result = check_game_over(m_registry);
+
+  if (!result.still_running())
+    return result;
+
   refresh_bomb_inventory(m_registry);
   apply_player_action(m_registry, m_arena);
   update_bombs(m_registry, m_arena, tick_interval);
@@ -88,6 +95,8 @@ void bim::game::contest::tick()
   update_flame_power_up_spawners(m_registry, m_arena);
   update_flame_power_ups(m_registry, m_arena);
   update_players(m_registry, m_arena);
+
+  return result;
 }
 
 entt::registry& bim::game::contest::registry()

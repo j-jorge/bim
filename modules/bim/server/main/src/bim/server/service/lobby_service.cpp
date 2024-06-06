@@ -8,8 +8,8 @@
 bim::server::lobby_service::lobby_service(iscool::net::socket_stream& socket,
                                           game_service& game_service)
   : m_matchmaking_service(socket, game_service)
-  , m_named_game_encounter(socket, m_matchmaking_service)
-  , m_random_game_encounter(socket, m_matchmaking_service)
+  , m_named_game_encounter(socket, game_service, m_matchmaking_service)
+  , m_random_game_encounter(socket, game_service, m_matchmaking_service)
 {}
 
 bim::server::lobby_service::~lobby_service() = default;

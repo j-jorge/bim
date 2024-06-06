@@ -1,5 +1,6 @@
 #include <bim/server/service/named_game_encounter_service.hpp>
 
+#include <bim/server/service/game_service.hpp>
 #include <bim/server/service/matchmaking_service.hpp>
 
 #include <bim/net/message/new_game_request.hpp>
@@ -16,9 +17,10 @@ struct bim::server::named_game_encounter_service::encounter_info
 };
 
 bim::server::named_game_encounter_service::named_game_encounter_service(
-    iscool::net::socket_stream& socket,
+    iscool::net::socket_stream& socket, const game_service& game_service,
     matchmaking_service& matchmaking_service)
-  : m_matchmaking_service(matchmaking_service)
+  : m_game_service(game_service)
+  , m_matchmaking_service(matchmaking_service)
 {}
 
 bim::server::named_game_encounter_service::~named_game_encounter_service() =
@@ -28,6 +30,9 @@ void bim::server::named_game_encounter_service::process(
     const iscool::net::endpoint& endpoint, iscool::net::session_id session,
     const bim::net::new_game_request& request)
 {
+  if (m_game_service.is_in_active_game(session))
+    return;
+
   ic_causeless_log(iscool::log::nature::info(), "named_game_encounter_service",
                    "New game request for session %d.", session);
 

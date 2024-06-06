@@ -24,6 +24,8 @@
 
 namespace bim::game
 {
+  class contest_result;
+
   class contest
   {
   public:
@@ -35,7 +37,7 @@ namespace bim::game
             std::uint8_t player_count, std::uint8_t arena_width,
             std::uint8_t arena_height);
 
-    void tick();
+    contest_result tick();
 
     entt::registry& registry();
     const entt::registry& registry() const;

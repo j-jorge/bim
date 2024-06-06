@@ -24,7 +24,10 @@
 #include <bim/net/message/start.hpp>
 #include <bim/net/message/try_deserialize_message.hpp>
 
+#include <bim/game/component/player.hpp>
 #include <bim/game/component/player_action.hpp>
+#include <bim/game/contest.hpp>
+#include <bim/game/contest_result.hpp>
 
 #include <bim/assume.hpp>
 
@@ -37,11 +40,6 @@
 
 struct bim::server::game_service::game
 {
-  std::uint64_t seed;
-  std::uint8_t player_count;
-  std::array<iscool::net::session_id, 4> sessions;
-  std::array<bool, 4> ready;
-
   /*
     In short, the communication works as follows:
     - The clients send their actions,
@@ -68,28 +66,31 @@ struct bim::server::game_service::game
     each of the vectors in actions below) in completed_tick_count_all.
   */
 
-  /**
-   * The tick reached by every player. At this point, the clients may not know
-   * the state of every other player, but every client as simulated up to this
-   * point. This is the minimum of (completed_tick_count_per_player[i] +
-   * actions[i].size()).
-   */
-  std::uint32_t simulation_tick;
+public:
+  game(std::uint8_t player_count, std::uint64_t seed,
+       const std::array<iscool::net::session_id, 4>& sessions)
+    : seed(seed)
+    , player_count(player_count)
+    , sessions(sessions)
+    , simulation_tick(0)
+    , completed_tick_count_all(0)
+    , m_contest(seed, 80, player_count, 11, 13)
+  {
+    ready.fill(false);
+    completed_tick_count_per_player.fill(0);
 
-  /**
-   * The tick confirmed by every client, i.e. each client knows the actions of
-   * every player up to this point.
-   */
-  std::uint32_t completed_tick_count_all;
+    for (int i = 0; i != player_count; ++i)
+      actions[i].reserve(32);
 
-  /// The tick of the simulation for every player.
-  std::array<std::uint32_t, 4> completed_tick_count_per_player;
-
-  /**
-   * The actions to apply starting from completed_tick_count_per_player, for
-   * each player. One player_action per tick.
-   */
-  std::array<std::vector<bim::game::player_action>, 4> actions;
+    m_contest.registry()
+        .view<bim::game::player, bim::game::player_action>()
+        .each(
+            [this](const bim::game::player& player,
+                   bim::game::player_action& action)
+            {
+              m_player_actions[player.index] = &action;
+            });
+  }
 
   std::size_t session_index(iscool::net::session_id session) const
   {
@@ -123,6 +124,12 @@ struct bim::server::game_service::game
           offset = player_offset;
       }
 
+    if (offset == 0)
+      return;
+
+    // Play the ticks reached by all players.
+    seal_player_actions(offset);
+
     // Actually remove the actions.
     for (std::uint8_t player_index = 0; player_index != player_count;
          ++player_index)
@@ -154,6 +161,57 @@ struct bim::server::game_service::game
 
     simulation_tick = completed_tick_count_all + simulation_offset;
   }
+
+private:
+  void seal_player_actions(int count)
+  {
+    bim::game::contest_result result;
+
+    for (int i = 0; i != count; ++i)
+      {
+        for (int p = 0; p != player_count; ++p)
+          *m_player_actions[p] = actions[p][i];
+
+        result = m_contest.tick();
+      }
+
+    game_over = !result.still_running();
+  }
+
+public:
+  std::uint64_t seed;
+  std::uint8_t player_count;
+  std::array<iscool::net::session_id, 4> sessions;
+  std::array<bool, 4> ready;
+
+  /**
+   * The tick reached by every player. At this point, the clients may not know
+   * the state of every other player, but every client as simulated up to this
+   * point. This is the minimum of (completed_tick_count_per_player[i] +
+   * actions[i].size()).
+   */
+  std::uint32_t simulation_tick;
+
+  /**
+   * The tick confirmed by every client, i.e. each client knows the actions of
+   * every player up to this point.
+   */
+  std::uint32_t completed_tick_count_all;
+
+  /// The tick of the simulation for every player.
+  std::array<std::uint32_t, 4> completed_tick_count_per_player;
+
+  /**
+   * The actions to apply starting from completed_tick_count_per_player, for
+   * each player. One player_action per tick.
+   */
+  std::array<std::vector<bim::game::player_action>, 4> actions;
+
+  bool game_over;
+
+private:
+  bim::game::contest m_contest;
+  std::array<bim::game::player_action*, 4> m_player_actions;
 };
 
 bim::server::game_service::game_service(iscool::net::socket_stream& socket)
@@ -163,6 +221,23 @@ bim::server::game_service::game_service(iscool::net::socket_stream& socket)
 {}
 
 bim::server::game_service::~game_service() = default;
+
+bool bim::server::game_service::is_in_active_game(
+    iscool::net::session_id session) const
+{
+  const session_to_channel_map::const_iterator it =
+      m_session_to_channel.find(session);
+
+  return (it != m_session_to_channel.end()) && is_playing(it->second);
+}
+
+bool bim::server::game_service::is_playing(
+    iscool::net::channel_id channel) const
+{
+  const game_map::const_iterator it = m_games.find(channel);
+
+  return (it != m_games.end()) && !it->second.game_over;
+}
 
 std::optional<bim::server::game_info>
 bim::server::game_service::find_game(iscool::net::channel_id channel) const
@@ -189,18 +264,11 @@ bim::server::game_info bim::server::game_service::new_game(
                    "Creating new game %d for %d players.", channel,
                    (int)player_count);
 
-  game& game = m_games[channel];
-
-  game.seed = m_random();
-  game.player_count = player_count;
-  game.sessions = sessions;
-  game.ready.fill(false);
-  game.simulation_tick = 0;
-  game.completed_tick_count_all = 0;
-  game.completed_tick_count_per_player.fill(0);
-
-  for (std::vector<bim::game::player_action>& v : game.actions)
-    v.reserve(32);
+  game& game =
+      m_games
+          .emplace(std::piecewise_construct, std::forward_as_tuple(channel),
+                   std::forward_as_tuple(player_count, m_random(), sessions))
+          .first->second;
 
   return game_info{ .seed = game.seed,
                     .channel = channel,
@@ -345,7 +413,7 @@ std::optional<std::size_t> bim::server::game_service::validate_message(
                        " %d+%d=%d, expected %d.",
                        session, (int)player_index, message.from_tick,
                        tick_count, message.from_tick + tick_count,
-                       game.simulation_tick);
+                       game.simulation_tick + 1);
       return 0;
     }
 

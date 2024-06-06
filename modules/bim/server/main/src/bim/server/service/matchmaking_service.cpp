@@ -103,6 +103,7 @@ bim::net::encounter_id bim::server::matchmaking_service::new_encounter(
   return encounter_id;
 }
 
+/// Return true if the session has been included in the given encounter.
 bool bim::server::matchmaking_service::refresh_encounter(
     bim::net::encounter_id encounter_id, const iscool::net::endpoint& endpoint,
     iscool::net::session_id session, bim::net::client_token request_token)
@@ -118,7 +119,8 @@ bool bim::server::matchmaking_service::refresh_encounter(
 
   // No update of the participants once the game has started.
   if (encounter.channel)
-    return existing_index != encounter.sessions.size();
+    return (existing_index != encounter.sessions.size())
+           && m_game_service.is_playing(*encounter.channel);
 
   ic_causeless_log(
       iscool::log::nature::info(), "matchmaking_service",

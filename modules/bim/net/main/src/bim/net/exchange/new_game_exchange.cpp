@@ -113,8 +113,6 @@ void bim::net::new_game_exchange::internal_start(
   m_channel_signal_connection = m_message_channel.connect_to_message(
       std::bind(&new_game_exchange::interpret_received_message, this,
                 std::placeholders::_2));
-
-  tick();
 }
 
 void bim::net::new_game_exchange::tick()
