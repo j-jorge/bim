@@ -73,6 +73,7 @@ macro(include_third_parties)
   include(third-party/concurrentqueue.cmake)
   include(third-party/glad.cmake)
   include(third-party/jpeg.cmake)
+  include(third-party/llhttp.cmake)
   include(third-party/openssl.cmake)
   include(third-party/poly2tri.cmake)
   include(third-party/robin-map.cmake)
@@ -234,6 +235,7 @@ macro(assign_common_sources)
     ${source_root}/math/Vec2.cpp
     ${source_root}/math/Vec3.cpp
     ${source_root}/math/Vec4.cpp
+    ${source_root}/network/HttpClient.cpp
     ${source_root}/network/HttpCookie.cpp
     ${source_root}/network/Uri.cpp
     ${source_root}/platform/FileStream.cpp
@@ -310,7 +312,6 @@ macro(assign_platform_sources)
   if(target_linux)
     set(
       platform_sources
-      ${source_root}/network/HttpClient.cpp
       ${source_root}/platform/GLViewImpl.cpp
       ${source_root}/platform/linux/Application-linux.cpp
       ${source_root}/platform/linux/Common-linux.cpp
