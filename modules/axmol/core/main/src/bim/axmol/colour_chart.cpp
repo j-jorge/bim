@@ -1,6 +1,6 @@
 #include <bim/axmol/colour_chart.hpp>
 
-#include <iscool/log/causeless_log.hpp>
+#include <iscool/log/log.hpp>
 #include <iscool/log/nature/error.hpp>
 
 #include <axmol/base/Types.h>
@@ -11,9 +11,8 @@ static ax::Color4B parse_color(std::string_view color)
 {
   if (((color.size() != 7) && (color.size() != 9)) || (color[0] != '#'))
     {
-      ic_causeless_log(iscool::log::nature::error(), "colour_chart",
-                       "Unknown colour '%s'. Supported format is '#rrggbb'.\n",
-                       color);
+      ic_log(iscool::log::nature::error(), "colour_chart",
+             "Unknown colour '%s'. Supported format is '#rrggbb'.\n", color);
       return ax::Color4B::MAGENTA;
     }
 
@@ -44,9 +43,9 @@ static ax::Color4B parse_color(std::string_view color)
         }
     }
 
-  ic_causeless_log(
-      iscool::log::nature::error(), "colour_chart",
-      "Failed to parse color '%s'. Supported format is '#rrggbb'.\n", color);
+  ic_log(iscool::log::nature::error(), "colour_chart",
+         "Failed to parse color '%s'. Supported format is '#rrggbb'.\n",
+         color);
 
   return ax::Color4B::MAGENTA;
 }

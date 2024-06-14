@@ -5,7 +5,7 @@
 
 #include <bim/net/message/new_random_game_request.hpp>
 
-#include <iscool/log/causeless_log.hpp>
+#include <iscool/log/log.hpp>
 #include <iscool/log/nature/info.hpp>
 
 bim::server::random_game_encounter_service::random_game_encounter_service(
@@ -31,9 +31,8 @@ void bim::server::random_game_encounter_service::process(
       || !m_matchmaking_service.refresh_encounter(*m_encounter_id, endpoint,
                                                   session, request_token))
     {
-      ic_causeless_log(iscool::log::nature::info(),
-                       "random_game_encounter_service",
-                       "New encounter for session %d.", session);
+      ic_log(iscool::log::nature::info(), "random_game_encounter_service",
+             "New encounter for session %d.", session);
 
       m_encounter_id = m_matchmaking_service.new_encounter(endpoint, session,
                                                            request_token);

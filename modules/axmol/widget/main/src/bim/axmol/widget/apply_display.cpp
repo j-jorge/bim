@@ -7,7 +7,7 @@
 
 #include <bim/unreachable.hpp>
 
-#include <iscool/log/causeless_log.hpp>
+#include <iscool/log/log.hpp>
 #include <iscool/log/nature/error.hpp>
 #include <iscool/style/declaration.hpp>
 
@@ -29,9 +29,9 @@ void bim::axmol::widget::apply_display(bim::axmol::style::cache& style_cache,
       if (node == nodes_end)
         {
           bim_unreachable_in_release;
-          ic_causeless_log(iscool::log::nature::error(),
-                           bim::axmol::widget::g_log_context,
-                           "No node named '{}'.", node_name);
+          ic_log(iscool::log::nature::error(),
+                 bim::axmol::widget::g_log_context, "No node named '{}'.",
+                 node_name);
           continue;
         }
 

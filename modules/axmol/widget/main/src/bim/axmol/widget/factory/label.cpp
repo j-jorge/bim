@@ -9,7 +9,7 @@
 #include <bim/axmol/colour_chart.hpp>
 
 #include <iscool/i18n/gettext.hpp>
-#include <iscool/log/causeless_log.hpp>
+#include <iscool/log/log.hpp>
 #include <iscool/log/nature/error.hpp>
 #include <iscool/optional.impl.tpp>
 #include <iscool/style/declaration.hpp>
@@ -25,8 +25,7 @@ bim::axmol::ref_ptr<ax::Label> bim::axmol::widget::factory<ax::Label>::create(
 
   if (!font_path)
     {
-      ic_causeless_log(iscool::log::nature::error(), g_log_context,
-                       "Missing font.");
+      ic_log(iscool::log::nature::error(), g_log_context, "Missing font.");
       return ax::Label::create();
     }
 
@@ -53,9 +52,8 @@ bim::axmol::ref_ptr<ax::Label> bim::axmol::widget::factory<ax::Label>::create(
       else if (*horizontal_align_string == "right")
         horizontal_align = ax::TextHAlignment::RIGHT;
       else if (*horizontal_align_string != "left")
-        ic_causeless_log(iscool::log::nature::error(), g_log_context,
-                         "Unknown text alignment: '%s'.",
-                         *horizontal_align_string);
+        ic_log(iscool::log::nature::error(), g_log_context,
+               "Unknown text alignment: '%s'.", *horizontal_align_string);
     }
 
   iscool::optional<const std::string&> localized_text =

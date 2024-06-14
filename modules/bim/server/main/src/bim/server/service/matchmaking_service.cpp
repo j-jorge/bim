@@ -23,7 +23,7 @@
 #include <bim/net/message/game_on_hold.hpp>
 #include <bim/net/message/launch_game.hpp>
 
-#include <iscool/log/causeless_log.hpp>
+#include <iscool/log/log.hpp>
 #include <iscool/log/nature/info.hpp>
 #include <iscool/schedule/delayed_call.hpp>
 #include <iscool/time/now.hpp>
@@ -81,9 +81,9 @@ bim::net::encounter_id bim::server::matchmaking_service::new_encounter(
     const iscool::net::endpoint& endpoint, iscool::net::session_id session,
     bim::net::client_token request_token)
 {
-  ic_causeless_log(iscool::log::nature::info(), "matchmaking_service",
-                   "Creating new encounter %d on request of session %d.",
-                   m_next_encounter_id, session);
+  ic_log(iscool::log::nature::info(), "matchmaking_service",
+         "Creating new encounter %d on request of session %d.",
+         m_next_encounter_id, session);
 
   const bim::net::encounter_id encounter_id = m_next_encounter_id;
   ++m_next_encounter_id;
@@ -122,10 +122,9 @@ bool bim::server::matchmaking_service::refresh_encounter(
     return (existing_index != encounter.sessions.size())
            && m_game_service.is_playing(*encounter.channel);
 
-  ic_causeless_log(
-      iscool::log::nature::info(), "matchmaking_service",
-      "Refreshing encounter '%d' with %d players on request of session %d.",
-      encounter_id, (int)encounter.player_count, session);
+  ic_log(iscool::log::nature::info(), "matchmaking_service",
+         "Refreshing encounter '%d' with %d players on request of session %d.",
+         encounter_id, (int)encounter.player_count, session);
 
   // Update for a player on hold.
   if (existing_index < encounter.sessions.size())
@@ -166,16 +165,15 @@ void bim::server::matchmaking_service::mark_as_ready(
 {
   const bim::net::encounter_id encounter_id = message.get_encounter_id();
 
-  ic_causeless_log(iscool::log::nature::info(), "matchmaking_service",
-                   "Accepted game. Session %d, encounter %d.", session,
-                   encounter_id);
+  ic_log(iscool::log::nature::info(), "matchmaking_service",
+         "Accepted game. Session %d, encounter %d.", session, encounter_id);
 
   const encounter_map::iterator it = m_encounters.find(encounter_id);
 
   if (it == m_encounters.end())
     {
-      ic_causeless_log(iscool::log::nature::info(), "matchmaking_service",
-                       "Game %d does not exist.", encounter_id);
+      ic_log(iscool::log::nature::info(), "matchmaking_service",
+             "Game %d does not exist.", encounter_id);
       return;
     }
 
@@ -185,9 +183,8 @@ void bim::server::matchmaking_service::mark_as_ready(
   // Update for a player on hold.
   if (existing_index == encounter.sessions.size())
     {
-      ic_causeless_log(iscool::log::nature::info(), "matchmaking_service",
-                       "Session %d is not part of encounter %d.", session,
-                       encounter_id);
+      ic_log(iscool::log::nature::info(), "matchmaking_service",
+             "Session %d is not part of encounter %d.", session, encounter_id);
       return;
     }
 
@@ -220,9 +217,9 @@ void bim::server::matchmaking_service::mark_as_ready(
           m_game_service.new_game(encounter.player_count, encounter.sessions);
       encounter.channel = game->channel;
 
-      ic_causeless_log(iscool::log::nature::info(), "matchmaking_service",
-                       "Channel for encounter %d is %d, seed %d.", it->first,
-                       game->channel, game->seed);
+      ic_log(iscool::log::nature::info(), "matchmaking_service",
+             "Channel for encounter %d is %d, seed %d.", it->first,
+             game->channel, game->seed);
     }
 
   m_message_stream.send(endpoint,
@@ -255,9 +252,9 @@ void bim::server::matchmaking_service::remove_inactive_sessions(
   for (int i = 0; i != encounter.player_count;)
     if (encounter.release_at_this_date[i] <= now)
       {
-        ic_causeless_log(iscool::log::nature::info(), "matchmaking_service",
-                         "Kicking %d from %d: timeout.", encounter.sessions[i],
-                         encounter_id);
+        ic_log(iscool::log::nature::info(), "matchmaking_service",
+               "Kicking %d from %d: timeout.", encounter.sessions[i],
+               encounter_id);
         encounter.erase(i);
       }
     else
@@ -279,8 +276,8 @@ bim::server::matchmaking_service::schedule_clean_up(
 void bim::server::matchmaking_service::clean_up(
     bim::net::encounter_id encounter_id)
 {
-  ic_causeless_log(iscool::log::nature::info(), "matchmaking_service",
-                   "Cleaning up encounter %d.", encounter_id);
+  ic_log(iscool::log::nature::info(), "matchmaking_service",
+         "Cleaning up encounter %d.", encounter_id);
 
   m_encounters.erase(encounter_id);
 }

@@ -28,7 +28,7 @@
 #include <iscool/schedule/delayed_call.hpp>
 #include <iscool/signals/implement_signal.hpp>
 
-#include <iscool/log/causeless_log.hpp>
+#include <iscool/log/log.hpp>
 #include <iscool/log/nature/info.hpp>
 
 namespace
@@ -143,8 +143,8 @@ void bim::net::game_update_exchange::confirm_game_tick(
 
   if (!message)
     {
-      ic_causeless_log(iscool::log::nature::info(), "game_update_exchange",
-                       "Could not deserialize message.");
+      ic_log(iscool::log::nature::info(), "game_update_exchange",
+             "Could not deserialize message.");
       return;
     }
 
@@ -168,9 +168,9 @@ std::uint32_t bim::net::game_update_exchange::validate_message(
   // The message should start from the last known server state.
   if (message.from_tick != m_current_update.from_tick)
     {
-      ic_causeless_log(iscool::log::nature::info(), "game_update_exchange",
-                       "Out of sync message, got %d, expected %d.",
-                       message.from_tick, m_current_update.from_tick);
+      ic_log(iscool::log::nature::info(), "game_update_exchange",
+             "Out of sync message, got %d, expected %d.", message.from_tick,
+             m_current_update.from_tick);
       return 0;
     }
 
@@ -189,18 +189,17 @@ std::uint32_t bim::net::game_update_exchange::validate_message(
   for (std::size_t i = 1, n = m_player_count; i != n; ++i)
     if (message.actions[i].size() != tick_count)
       {
-        ic_causeless_log(
-            iscool::log::nature::info(), "game_update_exchange",
-            "Inconsistent tick count %d for player %d (expected %d).",
-            message.actions[i].size(), i, tick_count);
+        ic_log(iscool::log::nature::info(), "game_update_exchange",
+               "Inconsistent tick count %d for player %d (expected %d).",
+               message.actions[i].size(), i, tick_count);
         return 0;
       }
 
   // Suspiciously large message.
   if (tick_count > 255)
     {
-      ic_causeless_log(iscool::log::nature::info(), "game_update_exchange",
-                       "Too many ticks: %d", tick_count);
+      ic_log(iscool::log::nature::info(), "game_update_exchange",
+             "Too many ticks: %d", tick_count);
       return 0;
     }
 

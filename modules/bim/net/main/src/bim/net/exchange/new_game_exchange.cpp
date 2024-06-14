@@ -24,7 +24,7 @@
 #include <bim/net/message/new_random_game_request.hpp>
 #include <bim/net/message/try_deserialize_message.hpp>
 
-#include <iscool/log/causeless_log.hpp>
+#include <iscool/log/log.hpp>
 #include <iscool/log/nature/info.hpp>
 #include <iscool/monitoring/implement_state_monitor.hpp>
 #include <iscool/random/rand.hpp>
@@ -50,10 +50,9 @@ bim::net::new_game_exchange::~new_game_exchange() = default;
 void bim::net::new_game_exchange::start(iscool::net::session_id session,
                                         const game_name& name)
 {
-  ic_causeless_log(iscool::log::nature::info(), "new_game_exchange",
-                   "Requesting game '%s' in session %d.",
-                   std::string_view((const char*)name.data(), name.size()),
-                   session);
+  ic_log(iscool::log::nature::info(), "new_game_exchange",
+         "Requesting game '%s' in session %d.",
+         std::string_view((const char*)name.data(), name.size()), session);
 
   internal_start(session);
   m_client_message = new_game_request(m_token, name).build_message();
@@ -62,8 +61,8 @@ void bim::net::new_game_exchange::start(iscool::net::session_id session,
 
 void bim::net::new_game_exchange::start(iscool::net::session_id session)
 {
-  ic_causeless_log(iscool::log::nature::info(), "new_game_exchange",
-                   "Requesting random game in session %d.", session);
+  ic_log(iscool::log::nature::info(), "new_game_exchange",
+         "Requesting random game in session %d.", session);
 
   internal_start(session);
   m_client_message = new_random_game_request(m_token).build_message();
@@ -74,8 +73,8 @@ void bim::net::new_game_exchange::accept()
 {
   assert(!!m_encounter_id);
 
-  ic_causeless_log(iscool::log::nature::info(), "new_game_exchange",
-                   "Accepting encounter %d.", *m_encounter_id);
+  ic_log(iscool::log::nature::info(), "new_game_exchange",
+         "Accepting encounter %d.", *m_encounter_id);
 
   assert(m_update_connection.connected());
 
@@ -153,8 +152,8 @@ void bim::net::new_game_exchange::check_on_hold(const iscool::net::message& m)
     return;
 
   if (!m_encounter_id)
-    ic_causeless_log(iscool::log::nature::info(), "new_game_exchange",
-                     "Got game proposal %d.", message->get_encounter_id());
+    ic_log(iscool::log::nature::info(), "new_game_exchange",
+           "Got game proposal %d.", message->get_encounter_id());
 
   m_encounter_id = message->get_encounter_id();
 
@@ -176,8 +175,8 @@ void bim::net::new_game_exchange::check_launch_game(
   if (message->get_request_token() != m_token)
     return;
 
-  ic_causeless_log(iscool::log::nature::info(), "new_game_exchange",
-                   "Launch game %d.", *m_encounter_id);
+  ic_log(iscool::log::nature::info(), "new_game_exchange", "Launch game %d.",
+         *m_encounter_id);
 
   stop();
   m_launch_game(

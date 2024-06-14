@@ -24,7 +24,7 @@
 #include <iscool/json/cast_string.hpp>
 #include <iscool/json/from_file.hpp>
 #include <iscool/log/add_file_sink.hpp>
-#include <iscool/log/causeless_log.hpp>
+#include <iscool/log/log.hpp>
 #include <iscool/log/nature/info.hpp>
 #include <iscool/log/setup.hpp>
 #include <iscool/preferences/local_preferences.hpp>
@@ -135,32 +135,28 @@ void bim::axmol::app::detail::persistent_systems::start_log_system()
 
   iscool::log::add_file_sink(log_file_path);
 
-  ic_causeless_log(iscool::log::nature::info(), g_log_context,
-                   "Log system initialized");
+  ic_log(iscool::log::nature::info(), g_log_context, "Log system initialized");
 
   std::tm now(iscool::system::device_date());
   char now_str[32];
 
   if (std::strftime(now_str, sizeof(now_str), "%FT%T%z", &now) == 0)
-    ic_causeless_log(iscool::log::nature::info(), "StartUp",
-                     "Failed to get the date.");
+    ic_log(iscool::log::nature::info(), "StartUp", "Failed to get the date.");
   else
-    ic_causeless_log(iscool::log::nature::info(), g_log_context, "%1%",
-                     static_cast<const char*>(now_str));
+    ic_log(iscool::log::nature::info(), g_log_context, "%1%",
+           static_cast<const char*>(now_str));
 }
 
 void bim::axmol::app::detail::persistent_systems::stop_log_system()
 {
-  ic_causeless_log(iscool::log::nature::info(), g_log_context,
-                   "Stop: log system.");
+  ic_log(iscool::log::nature::info(), g_log_context, "Stop: log system.");
 
   iscool::log::finalize();
 }
 
 void bim::axmol::app::detail::persistent_systems::start_display()
 {
-  ic_causeless_log(iscool::log::nature::info(), g_log_context,
-                   "Start: display.");
+  ic_log(iscool::log::nature::info(), g_log_context, "Start: display.");
   assert(m_application.m_main_view == nullptr);
   m_application.m_main_view.reset(new bim::axmol::display::main_view(
       "Bim!", m_application.m_screen_config.size,
@@ -169,16 +165,15 @@ void bim::axmol::app::detail::persistent_systems::start_display()
 
 void bim::axmol::app::detail::persistent_systems::stop_display()
 {
-  ic_causeless_log(iscool::log::nature::info(), g_log_context,
-                   "Stop: display.");
+  ic_log(iscool::log::nature::info(), g_log_context, "Stop: display.");
 
   m_application.m_main_view.reset();
 }
 
 void bim::axmol::app::detail::persistent_systems::start_haptic_feedback()
 {
-  ic_causeless_log(iscool::log::nature::info(), g_log_context,
-                   "Start: haptic feedback.");
+  ic_log(iscool::log::nature::info(), g_log_context,
+         "Start: haptic feedback.");
 
   assert(!m_application.m_context.is_haptic_feedback_set());
 
@@ -190,8 +185,7 @@ void bim::axmol::app::detail::persistent_systems::start_haptic_feedback()
 
 void bim::axmol::app::detail::persistent_systems::stop_haptic_feedback()
 {
-  ic_causeless_log(iscool::log::nature::info(), g_log_context,
-                   "Stop: haptic feedback.");
+  ic_log(iscool::log::nature::info(), g_log_context, "Stop: haptic feedback.");
 
   delete m_application.m_context.get_haptic_feedback();
   m_application.m_context.reset_haptic_feedback();
@@ -199,8 +193,7 @@ void bim::axmol::app::detail::persistent_systems::stop_haptic_feedback()
 
 void bim::axmol::app::detail::persistent_systems::start_audio()
 {
-  ic_causeless_log(iscool::log::nature::info(), g_log_context,
-                   "Start: audio.");
+  ic_log(iscool::log::nature::info(), g_log_context, "Start: audio.");
 
   iscool::audio::mixer* const mixer(new iscool::audio::mixer(
       iscool::resources::resolver("audio/", ".ogg"), 5, m_audio));
@@ -211,7 +204,7 @@ void bim::axmol::app::detail::persistent_systems::start_audio()
 
 void bim::axmol::app::detail::persistent_systems::stop_audio()
 {
-  ic_causeless_log(iscool::log::nature::info(), g_log_context, "Stop: audio.");
+  ic_log(iscool::log::nature::info(), g_log_context, "Stop: audio.");
 
   iscool::audio::clear_default_mixer();
   delete m_application.m_context.get_audio();
@@ -220,8 +213,7 @@ void bim::axmol::app::detail::persistent_systems::stop_audio()
 
 void bim::axmol::app::detail::persistent_systems::start_root_scene()
 {
-  ic_causeless_log(iscool::log::nature::info(), g_log_context,
-                   "Start: root scene.");
+  ic_log(iscool::log::nature::info(), g_log_context, "Start: root scene.");
 
   assert(m_root_scene == nullptr);
 
@@ -242,8 +234,7 @@ void bim::axmol::app::detail::persistent_systems::start_root_scene()
 
 void bim::axmol::app::detail::persistent_systems::stop_root_scene()
 {
-  ic_causeless_log(iscool::log::nature::info(), g_log_context,
-                   "Stop: root scene.");
+  ic_log(iscool::log::nature::info(), g_log_context, "Stop: root scene.");
 
   m_root_scene = nullptr;
 }
@@ -267,16 +258,14 @@ bim::axmol::app::detail::session_systems::~session_systems()
 
 void bim::axmol::app::detail::session_systems::start_styles()
 {
-  ic_causeless_log(iscool::log::nature::info(), g_log_context,
-                   "Start: styles.");
+  ic_log(iscool::log::nature::info(), g_log_context, "Start: styles.");
 
   iscool::style::initialize({ "style/" });
 }
 
 void bim::axmol::app::detail::session_systems::stop_styles()
 {
-  ic_causeless_log(iscool::log::nature::info(), g_log_context,
-                   "Stop: styles.");
+  ic_log(iscool::log::nature::info(), g_log_context, "Stop: styles.");
 
   iscool::style::finalize();
 }
@@ -398,8 +387,7 @@ void bim::axmol::app::application::complete_launch()
 
 void bim::axmol::app::application::clean_up()
 {
-  ic_causeless_log(iscool::log::nature::info(), g_log_context,
-                   "Quit requested.");
+  ic_log(iscool::log::nature::info(), g_log_context, "Quit requested.");
 
   stop_game();
 
@@ -428,8 +416,7 @@ void bim::axmol::app::application::reset()
 
 void bim::axmol::app::application::set_up_file_utils()
 {
-  ic_causeless_log(iscool::log::nature::info(), g_log_context,
-                   "Start: file system.");
+  ic_log(iscool::log::nature::info(), g_log_context, "Start: file system.");
 
   ax::FileUtils& file_utils = *ax::FileUtils::getInstance();
 
@@ -439,15 +426,14 @@ void bim::axmol::app::application::set_up_file_utils()
 
 void bim::axmol::app::application::set_up_colour_chart()
 {
-  ic_causeless_log(iscool::log::nature::info(), g_log_context,
-                   "Start: colour chart.");
+  ic_log(iscool::log::nature::info(), g_log_context, "Start: colour chart.");
 
   const char* const color_file = "colors.json";
 
   if (!iscool::files::file_exists(color_file))
     {
-      ic_causeless_log(iscool::log::nature::info(), g_log_context,
-                       "Could not find color file '%s'.", color_file);
+      ic_log(iscool::log::nature::info(), g_log_context,
+             "Could not find color file '%s'.", color_file);
       return;
     }
 
@@ -462,8 +448,8 @@ void bim::axmol::app::application::set_up_colour_chart()
 
 void bim::axmol::app::application::set_up_local_preferences()
 {
-  ic_causeless_log(iscool::log::nature::info(), g_log_context,
-                   "Start: local preferences.");
+  ic_log(iscool::log::nature::info(), g_log_context,
+         "Start: local preferences.");
 
   assert(!m_context.is_local_preferences_set());
 
@@ -482,8 +468,8 @@ void bim::axmol::app::application::set_up_local_preferences()
 
 void bim::axmol::app::application::tear_down_local_preferences()
 {
-  ic_causeless_log(iscool::log::nature::info(), g_log_context,
-                   "Stop: local preferences.");
+  ic_log(iscool::log::nature::info(), g_log_context,
+         "Stop: local preferences.");
 
   flush_local_preferences();
   delete m_context.get_local_preferences();
@@ -516,15 +502,14 @@ void bim::axmol::app::application::apply_local_preferences()
 
 void bim::axmol::app::application::launch_game()
 {
-  ic_causeless_log(iscool::log::nature::info(), g_log_context,
-                   "Launching the game.");
+  ic_log(iscool::log::nature::info(), g_log_context, "Launching the game.");
 
   m_main_task.reset(new main_task(m_context));
   m_main_task->connect_to_end(
       [this]() -> void
       {
-        ic_causeless_log(iscool::log::nature::info(), g_log_context,
-                         "Stopping the game.");
+        ic_log(iscool::log::nature::info(), g_log_context,
+               "Stopping the game.");
         stop_game();
         m_session_systems = nullptr;
         m_persistent_systems = nullptr;
@@ -536,8 +521,7 @@ void bim::axmol::app::application::launch_game()
 
 void bim::axmol::app::application::stop_game()
 {
-  ic_causeless_log(iscool::log::nature::info(), g_log_context,
-                   "Stopping game.");
+  ic_log(iscool::log::nature::info(), g_log_context, "Stopping game.");
 
   flush_local_preferences();
   m_main_task = nullptr;

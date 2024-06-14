@@ -7,7 +7,7 @@
 
 #include <bim/unreachable.hpp>
 
-#include <iscool/log/causeless_log.hpp>
+#include <iscool/log/log.hpp>
 #include <iscool/log/nature/error.hpp>
 #include <iscool/optional.hpp>
 #include <iscool/optional.impl.tpp>
@@ -67,9 +67,9 @@ build_styling_queue(const bim::axmol::widget::named_node_group& nodes,
       if (node == nodes_end)
         {
           bim_unreachable_in_release;
-          ic_causeless_log(iscool::log::nature::error(),
-                           bim::axmol::widget::g_log_context,
-                           "No node named '{}'.", node_name);
+          ic_log(iscool::log::nature::error(),
+                 bim::axmol::widget::g_log_context, "No node named '{}'.",
+                 node_name);
           continue;
         }
 
@@ -85,10 +85,9 @@ build_styling_queue(const bim::axmol::widget::named_node_group& nodes,
           if (r == nodes_end)
             {
               bim_unreachable_in_release;
-              ic_causeless_log(iscool::log::nature::error(),
-                               bim::axmol::widget::g_log_context,
-                               "No reference node named '{}'.",
-                               *reference_name);
+              ic_log(iscool::log::nature::error(),
+                     bim::axmol::widget::g_log_context,
+                     "No reference node named '{}'.", *reference_name);
               continue;
             }
 

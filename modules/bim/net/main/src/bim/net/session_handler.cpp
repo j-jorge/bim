@@ -4,7 +4,7 @@
 #include <iscool/json/cast_string.hpp>
 #include <iscool/json/is_of_type_string.hpp>
 #include <iscool/json/parse_string.hpp>
-#include <iscool/log/causeless_log.hpp>
+#include <iscool/log/log.hpp>
 #include <iscool/log/nature/error.hpp>
 #include <iscool/signals/implement_signal.hpp>
 
@@ -99,8 +99,8 @@ void bim::net::session_handler::dispatch_error(
 {
   const std::string_view text(response.begin(), response.end());
 
-  ic_causeless_log(iscool::log::nature::error(), "session_handler",
-                   "Failed to fetch the game server config: %s", text);
+  ic_log(iscool::log::nature::error(), "session_handler",
+         "Failed to fetch the game server config: %s", text);
 
   m_config_error();
 }

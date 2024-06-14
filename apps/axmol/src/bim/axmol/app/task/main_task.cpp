@@ -7,7 +7,7 @@
 #include <iscool/files/file_exists.hpp>
 #include <iscool/files/read_file.hpp>
 #include <iscool/i18n/load_translations.hpp>
-#include <iscool/log/causeless_log.hpp>
+#include <iscool/log/log.hpp>
 #include <iscool/log/nature/warning.hpp>
 #include <iscool/signals/implement_signal.hpp>
 #include <iscool/style/loader.hpp>
@@ -39,9 +39,8 @@ void bim::axmol::app::main_task::start()
       iscool::files::read_file(translations_file);
 
   if (!iscool::i18n::load_translations(language_code, *mo_file))
-    ic_causeless_log(iscool::log::nature::warning(), "main_task",
-                     "Could not read translations from %s.\n",
-                     translations_file);
+    ic_log(iscool::log::nature::warning(), "main_task",
+           "Could not read translations from %s.\n", translations_file);
 
   // TODO: in order:
   // - parallel

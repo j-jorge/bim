@@ -5,7 +5,7 @@
 
 #include <bim/net/message/new_game_request.hpp>
 
-#include <iscool/log/causeless_log.hpp>
+#include <iscool/log/log.hpp>
 #include <iscool/log/nature/info.hpp>
 #include <iscool/schedule/delayed_call.hpp>
 #include <iscool/time/now.hpp>
@@ -33,8 +33,8 @@ void bim::server::named_game_encounter_service::process(
   if (m_game_service.is_in_active_game(session))
     return;
 
-  ic_causeless_log(iscool::log::nature::info(), "named_game_encounter_service",
-                   "New game request for session %d.", session);
+  ic_log(iscool::log::nature::info(), "named_game_encounter_service",
+         "New game request for session %d.", session);
 
   char name[std::tuple_size_v<bim::net::game_name> + 1];
   std::copy(request.get_name().begin(), request.get_name().end(), name);
@@ -52,10 +52,9 @@ void bim::server::named_game_encounter_service::create_encounter(
     const iscool::net::endpoint& endpoint, iscool::net::session_id session,
     const bim::net::new_game_request& request, std::string name)
 {
-  ic_causeless_log(
-      iscool::log::nature::info(), "named_game_encounter_service",
-      "Creating new encounter for game '%s' on request of session %d.", name,
-      session);
+  ic_log(iscool::log::nature::info(), "named_game_encounter_service",
+         "Creating new encounter for game '%s' on request of session %d.",
+         name, session);
 
   const bim::net::encounter_id encounter_id =
       m_matchmaking_service.new_encounter(endpoint, session,
@@ -96,8 +95,8 @@ bim::server::named_game_encounter_service::schedule_clean_up(
 void bim::server::named_game_encounter_service::clean_up(
     bim::net::encounter_id encounter_id)
 {
-  ic_causeless_log(iscool::log::nature::info(), "named_game_encounter_service",
-                   "Cleaning up encounter %d.", encounter_id);
+  ic_log(iscool::log::nature::info(), "named_game_encounter_service",
+         "Cleaning up encounter %d.", encounter_id);
 
   const encounter_map::iterator it = m_encounters.find(encounter_id);
 

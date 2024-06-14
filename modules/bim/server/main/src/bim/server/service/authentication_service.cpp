@@ -22,7 +22,7 @@
 #include <bim/net/message/protocol_version.hpp>
 #include <bim/net/message/try_deserialize_message.hpp>
 
-#include <iscool/log/causeless_log.hpp>
+#include <iscool/log/log.hpp>
 #include <iscool/log/nature/info.hpp>
 #include <iscool/schedule/delayed_call.hpp>
 #include <iscool/signals/implement_signal.hpp>
@@ -79,16 +79,15 @@ void bim::server::authentication_service::check_authentication(
 
   const bim::net::client_token token = message->get_request_token();
 
-  ic_causeless_log(iscool::log::nature::info(), "authentication_service",
-                   "Received authentication request from token %d.", token);
+  ic_log(iscool::log::nature::info(), "authentication_service",
+         "Received authentication request from token %d.", token);
 
   if (message->get_protocol_version() != bim::net::protocol_version)
     {
-      ic_causeless_log(
-          iscool::log::nature::info(), "server",
-          "Authentication request from token %d, ip=%s: bad protocol %d.",
-          token, endpoint.address().to_v4().to_string(),
-          message->get_protocol_version());
+      ic_log(iscool::log::nature::info(), "server",
+             "Authentication request from token %d, ip=%s: bad protocol %d.",
+             token, endpoint.address().to_v4().to_string(),
+             message->get_protocol_version());
 
       m_message_stream.send(
           endpoint,
@@ -105,9 +104,9 @@ void bim::server::authentication_service::check_authentication(
 
   std::tie(it, inserted) = m_sessions.emplace(token, session);
 
-  ic_causeless_log(iscool::log::nature::info(), "server",
-                   "Attach session %d to token %d from ip=%s.", it->second,
-                   token, endpoint.address().to_v4().to_string());
+  ic_log(iscool::log::nature::info(), "server",
+         "Attach session %d to token %d from ip=%s.", it->second, token,
+         endpoint.address().to_v4().to_string());
 
   if (inserted)
     {
@@ -132,8 +131,8 @@ bim::server::authentication_service::schedule_disconnection(
   return iscool::schedule::delayed_call(
       [this, session]() -> void
       {
-        ic_causeless_log(iscool::log::nature::info(), "server",
-                         "Disconnected %d.", session);
+        ic_log(iscool::log::nature::info(), "server", "Disconnected %d.",
+               session);
         client_map::iterator it = m_clients.find(session);
 
         m_sessions.erase(it->second.token);

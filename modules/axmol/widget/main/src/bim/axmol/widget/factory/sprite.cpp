@@ -8,7 +8,7 @@
 
 #include <bim/axmol/ref_ptr.impl.hpp>
 
-#include <iscool/log/causeless_log.hpp>
+#include <iscool/log/log.hpp>
 #include <iscool/log/nature/error.hpp>
 #include <iscool/optional.impl.tpp>
 #include <iscool/style/declaration.hpp>
@@ -25,8 +25,8 @@ bim::axmol::widget::factory<ax::Sprite>::create(
   const iscool::optional<std::string> frame_name = style.get_string("frame");
 
   if (!frame_name)
-    ic_causeless_log(iscool::log::nature::error(), g_log_context,
-                     "No frame provided for sprite.");
+    ic_log(iscool::log::nature::error(), g_log_context,
+           "No frame provided for sprite.");
   else
     {
       ax::SpriteFrame* const frame =
@@ -40,8 +40,8 @@ bim::axmol::widget::factory<ax::Sprite>::create(
         result = ax::Sprite::createWithSpriteFrame(frame);
 
       if (result == nullptr)
-        ic_causeless_log(iscool::log::nature::error(), g_log_context,
-                         "Cannot load sprite '%s'.", *frame_name);
+        ic_log(iscool::log::nature::error(), g_log_context,
+               "Cannot load sprite '%s'.", *frame_name);
     }
 
   if (result == nullptr)

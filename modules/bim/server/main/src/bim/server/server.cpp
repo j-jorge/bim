@@ -16,7 +16,7 @@
 */
 #include <bim/server/server.hpp>
 
-#include <iscool/log/causeless_log.hpp>
+#include <iscool/log/log.hpp>
 #include <iscool/log/nature/info.hpp>
 #include <iscool/net/message/message.hpp>
 
@@ -26,8 +26,8 @@ bim::server::server::server(unsigned short port)
   , m_game_service(m_socket)
   , m_lobby_service(m_socket, m_game_service)
 {
-  ic_causeless_log(iscool::log::nature::info(), "server",
-                   "Server is up on port %d.", port);
+  ic_log(iscool::log::nature::info(), "server", "Server is up on port %d.",
+         port);
 
   m_authentication_service.connect_to_message(std::bind(
       &server::dispatch, this, std::placeholders::_1, std::placeholders::_2));

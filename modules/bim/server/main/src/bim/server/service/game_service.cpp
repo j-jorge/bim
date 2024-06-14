@@ -31,7 +31,7 @@
 
 #include <bim/assume.hpp>
 
-#include <iscool/log/causeless_log.hpp>
+#include <iscool/log/log.hpp>
 #include <iscool/log/nature/info.hpp>
 
 #include <algorithm>
@@ -260,9 +260,8 @@ bim::server::game_info bim::server::game_service::new_game(
   const iscool::net::channel_id channel = m_next_game_channel;
   ++m_next_game_channel;
 
-  ic_causeless_log(iscool::log::nature::info(), "game_service",
-                   "Creating new game %d for %d players.", channel,
-                   (int)player_count);
+  ic_log(iscool::log::nature::info(), "game_service",
+         "Creating new game %d for %d players.", channel, (int)player_count);
 
   game& game =
       m_games
@@ -286,8 +285,8 @@ void bim::server::game_service::process(const iscool::net::endpoint& endpoint,
 
   if (it == m_games.end())
     {
-      ic_causeless_log(iscool::log::nature::info(), "game_service",
-                       "Game with channel %d does not exist.", channel);
+      ic_log(iscool::log::nature::info(), "game_service",
+             "Game with channel %d does not exist.", channel);
       return;
     }
 
@@ -311,8 +310,8 @@ void bim::server::game_service::mark_as_ready(
   // Update for a player on hold.
   if (existing_index == game.sessions.size())
     {
-      ic_causeless_log(iscool::log::nature::info(), "game_service",
-                       "Session %d is not part of game %d.", session, channel);
+      ic_log(iscool::log::nature::info(), "game_service",
+             "Session %d is not part of game %d.", session, channel);
       return;
     }
 
@@ -324,15 +323,14 @@ void bim::server::game_service::mark_as_ready(
 
   if (ready_count != game.player_count)
     {
-      ic_causeless_log(iscool::log::nature::info(), "game_service",
-                       "Session %d ready %d/%d.", session, ready_count,
-                       (int)game.player_count);
+      ic_log(iscool::log::nature::info(), "game_service",
+             "Session %d ready %d/%d.", session, ready_count,
+             (int)game.player_count);
       return;
     }
 
-  ic_causeless_log(iscool::log::nature::info(), "game_service",
-                   "Channel %d all players ready, session %d.", channel,
-                   session);
+  ic_log(iscool::log::nature::info(), "game_service",
+         "Channel %d all players ready, session %d.", channel, session);
 
   m_message_stream.send(endpoint, bim::net::start().build_message(), session,
                         channel);
@@ -349,10 +347,9 @@ void bim::server::game_service::push_update(
 
   if (!update)
     {
-      ic_causeless_log(
-          iscool::log::nature::info(), "game_service",
-          "Could not deserialize message game update from session=%d.",
-          session);
+      ic_log(iscool::log::nature::info(), "game_service",
+             "Could not deserialize message game update from session=%d.",
+             session);
       return;
     }
 
@@ -384,22 +381,22 @@ std::optional<std::size_t> bim::server::game_service::validate_message(
   // network.
   if (message.from_tick < game.completed_tick_count_per_player[player_index])
     {
-      ic_causeless_log(iscool::log::nature::info(), "game_service",
-                       "Message from the past from session=%d, player=%d, got "
-                       "%d, expected %d.",
-                       session, (int)player_index, message.from_tick,
-                       game.completed_tick_count_per_player[player_index]);
+      ic_log(iscool::log::nature::info(), "game_service",
+             "Message from the past from session=%d, player=%d, got "
+             "%d, expected %d.",
+             session, (int)player_index, message.from_tick,
+             game.completed_tick_count_per_player[player_index]);
       return std::nullopt;
     }
 
   // A message from our future? Should not happen.
   if (message.from_tick > game.simulation_tick)
     {
-      ic_causeless_log(iscool::log::nature::info(), "game_service",
-                       "Message from the future from session=%d, player=%d, "
-                       "got %d, expected %d.",
-                       session, (int)player_index, message.from_tick,
-                       game.simulation_tick);
+      ic_log(iscool::log::nature::info(), "game_service",
+             "Message from the future from session=%d, player=%d, "
+             "got %d, expected %d.",
+             session, (int)player_index, message.from_tick,
+             game.simulation_tick);
       return std::nullopt;
     }
   const std::size_t tick_count = message.actions.size();
@@ -408,21 +405,19 @@ std::optional<std::size_t> bim::server::game_service::validate_message(
   // it was lost on the network, or the player has not received our update.
   if (message.from_tick + tick_count <= game.simulation_tick)
     {
-      ic_causeless_log(iscool::log::nature::info(), "game_service",
-                       "Out-of-date message for session=%d, player=%d, got"
-                       " %d+%d=%d, expected %d.",
-                       session, (int)player_index, message.from_tick,
-                       tick_count, message.from_tick + tick_count,
-                       game.simulation_tick + 1);
+      ic_log(iscool::log::nature::info(), "game_service",
+             "Out-of-date message for session=%d, player=%d, got"
+             " %d+%d=%d, expected %d.",
+             session, (int)player_index, message.from_tick, tick_count,
+             message.from_tick + tick_count, game.simulation_tick + 1);
       return 0;
     }
 
   if (tick_count > 255)
     {
-      ic_causeless_log(
-          iscool::log::nature::info(), "game_service",
-          "Too many action count/ticks %d for session=%d, player=%d.",
-          tick_count, session, (int)player_index);
+      ic_log(iscool::log::nature::info(), "game_service",
+             "Too many action count/ticks %d for session=%d, player=%d.",
+             tick_count, session, (int)player_index);
       return std::nullopt;
     }
 
