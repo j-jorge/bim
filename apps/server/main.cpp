@@ -16,17 +16,38 @@
 */
 #include <bim/server/server.hpp>
 
+#include <iscool/log/add_file_sink.hpp>
 #include <iscool/log/enable_console_log.hpp>
+#include <iscool/log/log.hpp>
+#include <iscool/log/nature/info.hpp>
 #include <iscool/log/setup.hpp>
 #include <iscool/schedule/manual_scheduler.hpp>
 #include <iscool/schedule/setup.hpp>
+
+#include <boost/program_options.hpp>
 
 #include <chrono>
 #include <csignal>
 #include <iostream>
 #include <thread>
 
-bool g_keep_running = true;
+static bool g_keep_running = true;
+
+namespace
+{
+  struct options
+  {
+    unsigned short port;
+    std::string log_to_file;
+    bool console_log;
+  };
+
+  struct command_line
+  {
+    std::optional<::options> options;
+    bool valid;
+  };
+}
 
 static void interrupt_handler(int)
 {
@@ -44,22 +65,74 @@ static void install_signal_handlers()
   sigaction(SIGINT, &action, nullptr);
 }
 
+static command_line parse_command_line(int argc, char* argv[])
+{
+  boost::program_options::options_description options("Options");
+  options.add_options()("console-log", "Display logs in the terminal.");
+  options.add_options()("help,h", "Display this information.");
+  options.add_options()("log-file",
+                        boost::program_options::value<std::string>(),
+                        "The file into which to append the logs.");
+  options.add_options()(
+      "port",
+      boost::program_options::value<unsigned short>()->default_value(23899),
+      "The port to listen on.");
+
+  boost::program_options::variables_map variables;
+  boost::program_options::store(
+      boost::program_options::command_line_parser(argc, argv)
+          .options(options)
+          .run(),
+      variables);
+
+  boost::program_options::notify(variables);
+
+  if (variables.count("help") != 0)
+    {
+      std::cout << "Usage: " << argv[0] << " OPTIONS\n\n" << options;
+      return command_line{ .options = std::nullopt, .valid = true };
+    }
+
+  ::options result;
+  result.console_log = (variables.count("console-log") != 0);
+  result.port = variables["port"].as<unsigned short>();
+
+  if (variables.count("log-file") != 0)
+    result.log_to_file = variables["log-file"].as<std::string>();
+
+  return command_line{ .options = std::move(result), .valid = true };
+}
+
 int main(int argc, char* argv[])
 {
+  const command_line command_line = parse_command_line(argc, argv);
+
+  if (!command_line.valid)
+    return EXIT_FAILURE;
+
+  if (!command_line.options)
+    return EXIT_SUCCESS;
+
   install_signal_handlers();
 
   iscool::log::scoped_initializer log;
-  iscool::log::enable_console_log();
+
+  if (command_line.options->console_log)
+    iscool::log::enable_console_log();
+
+  if (!command_line.options->log_to_file.empty())
+    iscool::log::add_file_sink(command_line.options->log_to_file,
+                               std::ios_base::app);
 
   iscool::schedule::manual_scheduler scheduler;
   iscool::schedule::initialize(scheduler.get_delayed_call_delegate());
 
   constexpr unsigned short port = 23899;
 
-  std::cout << "Running on port " << port << '\n'
-            << "Press Ctrl+C to exit." << '\n';
+  std::cout << "Press Ctrl+C to exit.\n";
+  ic_log(iscool::log::nature::info(), "server", "Running on port %d.", port);
 
-  bim::server::server server(port);
+  bim::server::server server(command_line.options->port);
 
   using clock = std::chrono::steady_clock;
 
@@ -90,7 +163,7 @@ int main(int argc, char* argv[])
         std::this_thread::sleep_for(tick_interval - (end - start));
     }
 
-  std::cout << "Quit.\n";
+  ic_log(iscool::log::nature::info(), "server", "Quit.");
 
   iscool::schedule::finalize();
 
