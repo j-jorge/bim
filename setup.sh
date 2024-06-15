@@ -278,7 +278,7 @@ configure()
     cd "$build_dir"
     cmake "$script_dir" -G Ninja \
           -DCMAKE_PREFIX_PATH="$bim_host_prefix" \
-          -DCMAKE_FIND_ROOT_PATH="$bim_host_prefix" \
+          -DCMAKE_FIND_ROOT_PATH="$bim_app_prefix;$bim_host_prefix" \
           -DCMAKE_C_COMPILER_LAUNCHER=ccache \
           -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
           -DBIM_TARGET="$target_platform" \
