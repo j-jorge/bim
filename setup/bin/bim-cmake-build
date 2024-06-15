@@ -110,6 +110,23 @@ build_android()
 
 rm --force --recursive "$install_dir"
 
+
+if [[ "${build_type,,}" = "release" ]]
+then
+    # We don't use CMAKE_INTERPROCEDURAL_OPTIMIZATION for the
+    # dependencies because it forces the thin LTO objects. This
+    # prevents the libraries built this way to be linked in an
+    # application compiled without LTO.
+    #
+    # See https://gitlab.kitware.com/cmake/cmake/-/issues/23136
+    #
+    # This is a problem because we mix release dependencies and
+    # debug binaries.
+    export CFLAGS="-flto -ffat-lto-objects ${CFLAGS:-}"
+    export CXXFLAGS="-flto -ffat-lto-objects ${CXXFLAGS:-}"
+    export LDFLAGS="-flto -ffat-lto-objects ${LDFLAGS:-}"
+fi
+
 case "$bim_package_install_platform" in
     android)
         build_android

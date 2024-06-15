@@ -4,7 +4,7 @@ set -euo pipefail
 
 : "${pack_my_sprites_repository:=https://github.com/j-jorge/pack-my-sprites/}"
 : "${pack_my_sprites_version:=1.3.0}"
-package_revision=1
+package_revision=2
 version="$pack_my_sprites_version"-"$package_revision"
 build_type=release
 
@@ -21,7 +21,7 @@ bim-git-clone-repository \
 
 bim-cmake-build \
     --build-dir "$build_dir" \
-    --build-type "$build_type" \
+    --build-type "${build_type^}" \
     --install-dir "$install_dir" \
     --source-dir "$source_dir" \
     --cmake -DPMS_BUILD_MAN_PAGES=OFF

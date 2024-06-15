@@ -6,7 +6,7 @@ set -euo pipefail
 
 : "${iscool_core_repository:=https://github.com/j-jorge/iscool-core/}"
 : "${iscool_core_version:=1.13.0}"
-package_revision=1
+package_revision=2
 version="$iscool_core_version"-"$package_revision"
 flavor="$bim_build_type"
 build_type=
@@ -53,7 +53,7 @@ fi
 
 bim-cmake-build \
     --build-dir "$build_dir" \
-    --build-type "$build_type" \
+    --build-type "${build_type^}" \
     --install-dir "$install_dir" \
     --source-dir "$source_dir"/build-scripts/cmake \
     --cmake -DUSE_DEFAULT_BOOST=ON \
