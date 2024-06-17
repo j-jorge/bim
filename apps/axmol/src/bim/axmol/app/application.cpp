@@ -367,12 +367,17 @@ bool bim::axmol::app::application::applicationDidFinishLaunching()
 void bim::axmol::app::application::applicationDidEnterBackground()
 {
   flush_local_preferences();
+
+  m_context.get_audio()->pause();
+
   ax::Director::getInstance()->stopAnimation();
 }
 
 void bim::axmol::app::application::applicationWillEnterForeground()
 {
   ax::Director::getInstance()->startAnimation();
+
+  m_context.get_audio()->resume();
 }
 
 void bim::axmol::app::application::complete_launch()

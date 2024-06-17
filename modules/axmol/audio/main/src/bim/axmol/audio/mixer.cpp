@@ -17,6 +17,16 @@ bim::axmol::audio::mixer::mixer()
   ax::AudioEngine::lazyInit();
 }
 
+void bim::axmol::audio::mixer::pause()
+{
+  ax::AudioEngine::pauseAll();
+}
+
+void bim::axmol::audio::mixer::resume()
+{
+  ax::AudioEngine::resumeAll();
+}
+
 void bim::axmol::audio::mixer::preload_effect(const std::string& file_path)
 {
   ax::AudioEngine::preload(file_path);

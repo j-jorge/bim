@@ -10,6 +10,10 @@ namespace bim::axmol::audio
     mixer();
 
     void preload_effect(const std::string& file_path) override;
+
+    void pause() override;
+    void resume() override;
+
     iscool::audio::track_id
     play_effect(const std::string& file_path,
                 iscool::audio::loop_mode loop) override;
