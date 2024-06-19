@@ -33,10 +33,18 @@
 
 #include <iscool/log/log.hpp>
 #include <iscool/log/nature/info.hpp>
+#include <iscool/schedule/delayed_call.hpp>
+#include <iscool/time/now.hpp>
 
 #include <algorithm>
 #include <array>
 #include <limits>
+
+static std::chrono::nanoseconds date_for_next_game_release()
+{
+  return iscool::time::now<std::chrono::nanoseconds>()
+         + std::chrono::minutes(1);
+}
 
 struct bim::server::game_service::game
 {
@@ -207,6 +215,9 @@ public:
    */
   std::array<std::vector<bim::game::player_action>, 4> actions;
 
+  iscool::signals::connection clean_up_connection;
+  std::chrono::nanoseconds release_at_this_date;
+
   bool game_over;
 
 private:
@@ -269,6 +280,12 @@ bim::server::game_info bim::server::game_service::new_game(
                    std::forward_as_tuple(player_count, m_random(), sessions))
           .first->second;
 
+  for (int i = 0; i != player_count; ++i)
+    m_session_to_channel[sessions[i]] = channel;
+
+  game.release_at_this_date = date_for_next_game_release();
+  game.clean_up_connection = schedule_clean_up(channel);
+
   return game_info{ .seed = game.seed,
                     .channel = channel,
                     .player_count = game.player_count,
@@ -289,6 +306,8 @@ void bim::server::game_service::process(const iscool::net::endpoint& endpoint,
              "Game with channel %d does not exist.", channel);
       return;
     }
+
+  it->second.release_at_this_date = date_for_next_game_release();
 
   switch (message.get_type())
     {
@@ -473,4 +492,41 @@ void bim::server::game_service::send_actions(
     }
 
   m_message_stream.send(endpoint, message.build_message(), session, channel);
+}
+
+iscool::signals::connection
+bim::server::game_service::schedule_clean_up(iscool::net::channel_id channel)
+{
+  return iscool::schedule::delayed_call(
+      [this, channel]() -> void
+      {
+        clean_up(channel);
+      },
+      std::chrono::minutes(3));
+}
+
+void bim::server::game_service::clean_up(iscool::net::channel_id channel)
+{
+  ic_log(iscool::log::nature::info(), "game_service", "Cleaning up game %d.",
+         channel);
+
+  const game_map::iterator it = m_games.find(channel);
+
+  assert(it != m_games.end());
+
+  const game& g = it->second;
+
+  for (int i = 0; i != g.player_count; ++i)
+    {
+      // The sessions may have been assigned to another game between the end of
+      // the game and the clean-up, for example if the player has asked for
+      // another match. Consequently we must check the channel assigned to the
+      // session before removing it from the map.
+      const session_to_channel_map::iterator stc =
+          m_session_to_channel.find(g.sessions[i]);
+      if (stc->second == channel)
+        m_session_to_channel.erase(stc);
+    }
+
+  m_games.erase(it);
 }

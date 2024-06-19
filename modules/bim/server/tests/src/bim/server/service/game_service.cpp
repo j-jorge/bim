@@ -14,6 +14,8 @@
   You should have received a copy of the GNU Affero General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+#include <bim/server/tests/fake_scheduler.hpp>
+
 #include <bim/server/service/game_service.hpp>
 
 #include <bim/server/service/game_info.hpp>
@@ -24,6 +26,8 @@
 
 TEST(game_service, new_game)
 {
+  bim::server::tests::fake_scheduler scheduler;
+
   iscool::net::socket_stream socket_stream(12345);
   bim::server::game_service service(socket_stream);
 
@@ -38,7 +42,7 @@ TEST(game_service, new_game)
   EXPECT_NE(44, game.channel);
   EXPECT_FALSE(!!service.find_game(44));
 
-  const std::optional<bim::server::game_info> game_opt =
+  std::optional<bim::server::game_info> game_opt =
       service.find_game(game.channel);
 
   EXPECT_TRUE(!!game_opt);
@@ -48,4 +52,11 @@ TEST(game_service, new_game)
   EXPECT_EQ(22, game_opt->sessions[1]);
   EXPECT_EQ(33, game_opt->sessions[2]);
   EXPECT_EQ(44, game_opt->sessions[3]);
+
+  std::this_thread::sleep_for(std::chrono::seconds(0));
+  scheduler.tick(std::chrono::minutes(10));
+
+  game_opt = service.find_game(game.channel);
+
+  EXPECT_FALSE(!!game_opt);
 }

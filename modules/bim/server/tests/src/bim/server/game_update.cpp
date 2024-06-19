@@ -71,6 +71,7 @@ public:
 protected:
   void join_game(int player_count, const bim::net::game_name& game_name);
   void wait();
+  void wait(const std::function<bool()>& ready);
 
 protected:
   iscool::log::scoped_initializer m_log;
@@ -195,15 +196,35 @@ void game_update_test::join_game(int player_count,
 
   // Let the time pass such that the messages can move between the clients and
   // the server.
-  wait();
+  wait(
+      [this, player_count]() -> bool
+      {
+        for (int i = 0; i != player_count; ++i)
+          if (!m_clients[i].m_started)
+            return false;
+
+        return true;
+      });
 }
 
 void game_update_test::wait()
 {
-  for (int i = 0; i != 100; ++i)
+  wait(
+      []() -> bool
+      {
+        return false;
+      });
+}
+
+void game_update_test::wait(const std::function<bool()>& ready)
+{
+  for (int i = 0; i != 500; ++i)
     {
       std::this_thread::sleep_for(std::chrono::seconds(0));
-      m_scheduler.tick(std::chrono::seconds(1));
+      m_scheduler.tick(std::chrono::milliseconds(20));
+
+      if (ready())
+        break;
     }
 }
 
@@ -230,6 +251,9 @@ TEST_P(game_update_test, game_instant)
   const int player_count = GetParam();
 
   join_game(player_count, { 'u', 'p', 'd', 'a', 't', 'e', '2' });
+
+  for (int i = 0; i != player_count; ++i)
+    ASSERT_TRUE(!!m_clients[i].m_started) << "i=" << i;
 
   const bim::game::player_action actions[] = {
     bim::game::player_action{ .movement = bim::game::player_movement::up,
