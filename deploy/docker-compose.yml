@@ -15,4 +15,6 @@ services:
         bash -c "cp /opt/bim/etc/logrotate.d/* /etc/logrotate.d/
         && /opt/bim/bin/bim-server
         --port 23899
-        --log-file /opt/bim/log/bim-server.txt"
+        --log-file /opt/bim/log/bim-server.txt
+        > /opt/bim/log/bim-server.stdout.txt
+        2> /opt/bim/log/bim-server.stderr.txt"
