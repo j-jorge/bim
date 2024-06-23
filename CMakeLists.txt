@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.22)
 
+set(project_version 1)
+
 set(CMAKE_MODULE_PATH
   "${CMAKE_CURRENT_LIST_DIR}/cmake"
   ${CMAKE_MODULE_PATH}
@@ -7,7 +9,10 @@ set(CMAKE_MODULE_PATH
 include(bim-configuration)
 
 if(BIM_TARGET STREQUAL "android")
-  project(bim LANGUAGES NONE)
+  project(bim
+    VERSION ${project_version}
+    LANGUAGES NONE
+  )
 
   # This is an invocation of the current script for each Android
   # architecture.

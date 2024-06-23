@@ -16,8 +16,8 @@ android {
         applicationId 'bim.app'
         minSdkVersion 17
         targetSdkVersion @bim_android_target_sdk_version@
-        versionCode 1
-        versionName '1.0'
+        versionCode @CMAKE_PROJECT_VERSION@
+        versionName '@CMAKE_PROJECT_VERSION@'
     }
 
     sourceSets.main {
