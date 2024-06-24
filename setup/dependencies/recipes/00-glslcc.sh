@@ -4,7 +4,7 @@ set -euo pipefail
 
 : "${bim_packages_root:-}"
 
-glslcc_version=1.9.3
+glslcc_version=1.9.5
 package_revision=1
 version="$glslcc_version"-"$package_revision"
 build_type=release

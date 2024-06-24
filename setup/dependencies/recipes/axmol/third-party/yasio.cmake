@@ -1,6 +1,4 @@
-set(yasio_include_dirs ${third_party_root}/)
-
 install(
-  DIRECTORY ${yasio_include_dirs}/yasio
+  DIRECTORY ${third_party_root}/yasio/yasio
   DESTINATION ${header_install_dir}
 )

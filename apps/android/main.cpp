@@ -19,7 +19,7 @@ namespace
 
 static std::unique_ptr<application> g_application;
 
-void cocos_android_app_init(JNIEnv* env)
+void axmol_android_app_init(JNIEnv* env)
 {
   iscool::log::enable_console_log();
   g_application.reset(new application());

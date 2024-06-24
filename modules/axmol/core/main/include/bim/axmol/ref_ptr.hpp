@@ -6,7 +6,7 @@ namespace bim::axmol
 {
   /**
    * Smart pointer to automatically handle the retain/release calls on a an
-   * ax::Ref.
+   * ax::Object.
    *
    * We don't use ax::RefPtr because it cannot be declared with a
    * forward-declared type as the template argument, and because it does not

@@ -23,8 +23,6 @@ set(CMAKE_MODULE_PATH
 
 include(unity-build)
 include(GNUInstallDirs)
-include(${axmol_root}/cmake/Modules/AXGLSLCC.cmake)
-include(${axmol_root}/1k/platform.cmake)
 
 macro(assign_platform_variables)
   if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
@@ -42,13 +40,30 @@ macro(assign_path_variables)
   set(resource_install_dir "${CMAKE_INSTALL_DATAROOTDIR}")
 
   set(source_root ${axmol_root}/core/)
-  set(third_party_root ${axmol_root}/thirdparty/)
+  set(third_party_root ${axmol_root}/3rdparty/)
   set(third_party_binary_dir "${CMAKE_CURRENT_BINARY_DIR}/third-party-bin")
   set(extensions_root ${axmol_root}/extensions/)
 
   # To match Axmol's CMakeLists.txt
   set(_AX_ROOT ${axmol_root})
   set(_AX_CXX_STD 20)
+  set(_AX_ANDROID_PROJECT_DIR ".")
+endmacro()
+
+macro(include_axmol)
+  set(AX_ENABLE_EXT_LUA OFF CACHE BOOL "" FORCE)
+  set(AX_ENABLE_3D OFF CACHE BOOL "" FORCE)
+  set(AX_ENABLE_PHYSICS3D OFF CACHE BOOL "" FORCE)
+  set(AX_ENABLE_NAVMESH OFF CACHE BOOL "" FORCE)
+  set(AX_ENABLE_MEDIA OFF CACHE BOOL "" FORCE)
+  set(AX_ENABLE_AUDIO ON CACHE BOOL "" FORCE)
+
+  # Axmol forces this path for Android builds. We use it for all
+  # builds to simplify the later commands.
+  set(GLSLCC_OUT_DIR ${CMAKE_CURRENT_BINARY_DIR}/build/runtime/axslc)
+
+  include(${axmol_root}/cmake/Modules/AXLinkHelpers.cmake)
+  include(${axmol_root}/cmake/Modules/AXBuildSet.cmake)
 endmacro()
 
 macro(include_platform_modules)
@@ -181,7 +196,6 @@ macro(assign_common_sources)
     ${source_root}/audio/AudioEngine.cpp
     ${source_root}/audio/AudioEngineImpl.cpp
     ${source_root}/audio/AudioPlayer.cpp
-    ${source_root}/base/astc.cpp
     ${source_root}/base/AsyncTaskPool.cpp
     ${source_root}/base/atitc.cpp
     ${source_root}/base/AutoreleasePool.cpp
@@ -209,11 +223,14 @@ macro(assign_common_sources)
     ${source_root}/base/EventTouch.cpp
     ${source_root}/base/FPSImages.cpp
     ${source_root}/base/IMEDispatcher.cpp
+#    ${source_root}/base/JobSystem.cpp
+    ${source_root}/base/Logging.cpp
     ${source_root}/base/NinePatchImageParser.cpp
     ${source_root}/base/NS.cpp
+    ${source_root}/base/Object.cpp
+#    ${source_root}/base/Ref.cpp
     ${source_root}/base/ObjectFactory.cpp
     ${source_root}/base/pvr.cpp
-    ${source_root}/base/Ref.cpp
     ${source_root}/base/s3tc.cpp
     ${source_root}/base/Scheduler.cpp
     ${source_root}/base/ScriptSupport.cpp
@@ -227,6 +244,7 @@ macro(assign_common_sources)
     ${source_root}/base/Value.cpp
     ${source_root}/base/ZipUtils.cpp
     ${source_root}/math/AffineTransform.cpp
+    ${source_root}/math/Color.cpp
     ${source_root}/math/Mat4.cpp
     ${source_root}/math/MathUtil.cpp
     ${source_root}/math/Quaternion.cpp
@@ -238,6 +256,7 @@ macro(assign_common_sources)
     ${source_root}/network/HttpClient.cpp
     ${source_root}/network/HttpCookie.cpp
     ${source_root}/network/Uri.cpp
+    ${source_root}/platform/ApplicationBase.cpp
     ${source_root}/platform/FileStream.cpp
     ${source_root}/platform/FileUtils.cpp
     ${source_root}/platform/GLView.cpp
@@ -305,6 +324,7 @@ macro(assign_common_sources)
     axmol_individual_sources
     ${source_root}/audio/AudioDecoderManager.cpp
     ${source_root}/audio/AudioDecoderOgg.cpp
+    ${source_root}/base/astc.cpp
    )
 endmacro()
 
@@ -364,9 +384,8 @@ macro(set_include_directories)
     ${source_root}
     ${source_root}/platform
 
-    ${yasio_include_dirs}
-
     ${platform_include_dirs}
+    ${third_party_root}
   )
 endmacro()
 
@@ -374,7 +393,7 @@ macro(set_link_libraries)
   target_link_libraries(
     axmol
     PRIVATE
-    thirdparty
+    3rdparty
   )
 endmacro()
 
@@ -453,7 +472,7 @@ endfunction()
 
 function(install_shaders root target)
   install(
-    DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/runtime/axslc/
+    DIRECTORY ${GLSLCC_OUT_DIR}/
     DESTINATION ${resource_install_dir}/axmol/shaders/
   )
 endfunction()
@@ -477,12 +496,14 @@ macro(install_products)
     simdjson
     unzip
     xxhash
+    yasio
     DESTINATION ${library_install_dir}
   )
 endmacro()
 
 assign_platform_variables()
 assign_path_variables()
+include_axmol()
 include_platform_modules()
 
 configure()

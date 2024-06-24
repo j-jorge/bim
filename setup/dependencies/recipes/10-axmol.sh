@@ -7,8 +7,8 @@ set -euo pipefail
 : "${bim_packages_root:-}"
 
 : "${axmol_repository:=https://github.com/j-jorge/axmol/}"
-: "${axmol_version:=2.1.0-j}"
-package_revision=3
+: "${axmol_version:=2.1.3}"
+package_revision=1
 version="$axmol_version"-"$package_revision"
 
 if [[ "$bim_build_type" = "release" ]]
@@ -38,6 +38,7 @@ axmol_link_libraries=(
     "astcenc"
     "clipper2"
     "ConvertUTF"
+    "fmt::fmt"
     "freetype"
     "glad"
     "jpeg"
@@ -48,6 +49,7 @@ axmol_link_libraries=(
     "pugixml"
     "simdjson"
     "unzip"
+    "yasio"
     "xxhash"
     "z"
     "ssl"
@@ -192,7 +194,16 @@ $(printf "  %s\n" "${axmol_definitions[@]}")
 
 function(link_axmol_library name)
   unset(axmol_dependency CACHE)
-  find_library(axmol_dependency NAMES "\${name}" REQUIRED)
+  string(FIND "\${name}" "::" colon_colon)
+
+  if(\${colon_colon} EQUAL -1)
+    find_library(axmol_dependency NAMES "\${name}" REQUIRED)
+  else()
+    string(SUBSTRING "\${name}" 0 \${colon_colon} package_name)
+    find_package("\${package_name}" REQUIRED)
+    set(axmol_dependency "\${name}")
+  endif()
+
   set(axmol_libraries "\${axmol_libraries}" "\${axmol_dependency}" PARENT_SCOPE)
 endfunction()
 

@@ -22,7 +22,7 @@ namespace bim::axmol::input
 {
   class node;
 
-  class flow : public ax::Ref
+  class flow : public ax::Object
   {
   public:
     flow(ax::Scene& scene, node& root);

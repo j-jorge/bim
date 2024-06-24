@@ -2,20 +2,23 @@
 
 #include <bim/axmol/ref_ptr.hpp>
 
-#include <axmol/base/RefPtr.h>
+#include <axmol/base/Object.h>
+
+#include <cassert>
+#include <utility>
 
 template <typename T>
 bim::axmol::ref_ptr<T>::ref_ptr() noexcept
   : m_ptr(nullptr)
 {
-  static_assert(std::is_base_of_v<ax::Ref, T>);
+  static_assert(std::is_base_of_v<ax::Object, T>);
 }
 
 template <typename T>
 bim::axmol::ref_ptr<T>::ref_ptr(std::nullptr_t) noexcept
   : m_ptr(nullptr)
 {
-  static_assert(std::is_base_of_v<ax::Ref, T>);
+  static_assert(std::is_base_of_v<ax::Object, T>);
 }
 
 template <typename T>
@@ -45,7 +48,7 @@ template <typename U>
 bim::axmol::ref_ptr<T>::ref_ptr(U* p) noexcept
   : m_ptr(p)
 {
-  static_assert(std::is_base_of_v<ax::Ref, T>);
+  static_assert(std::is_base_of_v<ax::Object, T>);
 
   if (m_ptr)
     m_ptr->retain();
@@ -57,7 +60,7 @@ template <typename U>
 bim::axmol::ref_ptr<T>::ref_ptr(const ref_ptr<U>& p) noexcept
   : m_ptr(p.get())
 {
-  static_assert(std::is_base_of_v<ax::Ref, T>);
+  static_assert(std::is_base_of_v<ax::Object, T>);
 
   if (m_ptr)
     m_ptr->retain();
@@ -69,7 +72,7 @@ template <typename U>
 bim::axmol::ref_ptr<T>::ref_ptr(ref_ptr<U>&& p) noexcept
   : m_ptr(std::exchange(p.m_ptr, nullptr))
 {
-  static_assert(std::is_base_of_v<ax::Ref, T>);
+  static_assert(std::is_base_of_v<ax::Object, T>);
 }
 
 template <typename T>
