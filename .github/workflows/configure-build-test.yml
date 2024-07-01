@@ -19,7 +19,8 @@ jobs:
 
     strategy:
       matrix:
-        container: ["ubuntu:22.04", "ubuntu:24.04"]
+        # Last LTS and last non-LTS.
+        container: ["ubuntu:23.10", "ubuntu:24.04"]
         build_type: [release, debug]
         compiler: [g++, clang-15, clang-17]
         maybe_incremental: [--incremental, ""]
