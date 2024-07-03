@@ -212,3 +212,48 @@ TEST_F(bim_game_apply_player_action_test, move_up_right_around_wall)
   run_dodge_move_test(3, 3, bim::game::player_movement::left,
                       bim::game::player_movement::up, 3.5, 2.5);
 }
+
+TEST_F(bim_game_apply_player_action_test, cannot_go_through_bombs)
+{
+  constexpr int player_count = 2;
+  constexpr int start_x[player_count] = { 1, 1 };
+  constexpr int start_y[player_count] = { 1, 3 };
+  const entt::entity players[player_count] = {
+    bim::game::player_factory(m_registry, 0, start_x[0], start_y[0]),
+    bim::game::player_factory(m_registry, 1, start_x[1], start_y[1])
+  };
+
+  bim::game::player_action* const action[player_count] = {
+    &m_registry.storage<bim::game::player_action>().get(players[0]),
+    &m_registry.storage<bim::game::player_action>().get(players[1])
+  };
+
+  action[1]->drop_bomb = true;
+
+  for (int i = 0; i != 2 * bim::game::g_player_steps_per_cell; ++i)
+    {
+      action[0]->movement = bim::game::player_movement::down;
+      action[1]->movement = bim::game::player_movement::right;
+      bim::game::apply_player_action(m_registry, m_arena);
+    }
+
+  // Flush the queue.
+  for (int i = 0; i != bim::game::player_action_queue::queue_size; ++i)
+    bim::game::apply_player_action(m_registry, m_arena);
+
+  const bim::game::fractional_position_on_grid positions[player_count] = {
+    m_registry.storage<bim::game::fractional_position_on_grid>().get(
+        players[0]),
+    m_registry.storage<bim::game::fractional_position_on_grid>().get(
+        players[1])
+  };
+
+  EXPECT_FLOAT_EQ(start_x[0] + 0.5f, positions[0].x_float());
+  EXPECT_FLOAT_EQ(start_y[0] + 1.5f, positions[0].y_float());
+
+  EXPECT_EQ(start_x[0], positions[0].grid_aligned_x());
+  EXPECT_EQ(start_y[0] + 1, positions[0].grid_aligned_y());
+
+  EXPECT_EQ(start_x[1] + 2, positions[1].grid_aligned_x());
+  EXPECT_EQ(start_y[1], positions[1].grid_aligned_y());
+}
