@@ -33,3 +33,30 @@ TEST(update_flame_power_ups, player_collision)
   EXPECT_EQ(bomb_strength + 1, player.bomb_strength);
   EXPECT_TRUE(registry.storage<bim::game::dead>().contains(power_up_entity));
 }
+
+TEST(update_flame_power_ups, two_players_only_one_get_the_power_up)
+{
+  entt::registry registry;
+  bim::game::arena arena(3, 3);
+  const int x = 1;
+  const int y = 1;
+
+  flame_power_up_factory(registry, arena, x, y);
+
+  const entt::entity player_entity[2] = {
+    bim::game::player_factory(registry, 0, x, y),
+    bim::game::player_factory(registry, 1, x, y)
+  };
+
+  bim::game::player* players[2] = {
+    &registry.get<bim::game::player>(player_entity[0]),
+    &registry.get<bim::game::player>(player_entity[1])
+  };
+
+  EXPECT_EQ(players[0]->bomb_strength, players[1]->bomb_strength);
+
+  bim::game::update_flame_power_ups(registry, arena);
+
+  EXPECT_EQ(1,
+            std::abs(players[0]->bomb_strength - players[1]->bomb_strength));
+}
