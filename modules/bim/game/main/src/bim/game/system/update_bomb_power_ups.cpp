@@ -8,6 +8,7 @@
 #include <bim/game/component/fractional_position_on_grid.hpp>
 #include <bim/game/component/player.hpp>
 #include <bim/game/component/position_on_grid.hpp>
+#include <bim/game/constant/max_bomb_count_per_player.hpp>
 
 #include <entt/entity/registry.hpp>
 
@@ -28,9 +29,7 @@ static void check_bomb_power_up_player_collision(
 
   if (registry.storage<bim::game::bomb_power_up>().contains(colliding_entity))
     {
-      constexpr int max_bomb_count_per_player = 6;
-
-      if (p.bomb_capacity != max_bomb_count_per_player)
+      if (p.bomb_capacity != bim::game::g_max_bomb_count_per_player)
         {
           ++p.bomb_capacity;
           ++p.bomb_available;
