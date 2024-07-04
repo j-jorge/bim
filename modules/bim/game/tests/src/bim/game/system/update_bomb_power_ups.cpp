@@ -35,3 +35,33 @@ TEST(update_bomb_power_ups, increment_player_capacity_and_available)
   EXPECT_EQ(bomb_available + 1, player.bomb_available);
   EXPECT_TRUE(registry.storage<bim::game::dead>().contains(power_up_entity));
 }
+
+TEST(update_bomb_power_ups, two_players_only_one_get_the_power_up)
+{
+  entt::registry registry;
+  bim::game::arena arena(3, 3);
+  const int x = 1;
+  const int y = 1;
+
+  bomb_power_up_factory(registry, arena, x, y);
+
+  const entt::entity player_entity[2] = {
+    bim::game::player_factory(registry, 0, x, y),
+    bim::game::player_factory(registry, 1, x, y)
+  };
+
+  bim::game::player* players[2] = {
+    &registry.get<bim::game::player>(player_entity[0]),
+    &registry.get<bim::game::player>(player_entity[1])
+  };
+
+  EXPECT_EQ(players[0]->bomb_capacity, players[1]->bomb_capacity);
+  EXPECT_EQ(players[0]->bomb_available, players[1]->bomb_available);
+
+  bim::game::update_bomb_power_ups(registry, arena);
+
+  EXPECT_EQ(1,
+            std::abs(players[0]->bomb_capacity - players[1]->bomb_capacity));
+  EXPECT_EQ(1,
+            std::abs(players[0]->bomb_available - players[1]->bomb_available));
+}
