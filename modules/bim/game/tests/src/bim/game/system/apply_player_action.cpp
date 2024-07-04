@@ -2,10 +2,14 @@
 
 #include <bim/game/arena.hpp>
 
+#include <bim/game/component/bomb.hpp>
 #include <bim/game/component/fractional_position_on_grid.hpp>
+#include <bim/game/component/player.hpp>
 #include <bim/game/component/player_action_queue.hpp>
 #include <bim/game/component/player_movement.hpp>
 #include <bim/game/factory/player.hpp>
+#include <bim/game/system/refresh_bomb_inventory.hpp>
+#include <bim/game/system/update_bombs.hpp>
 
 #include <entt/entity/registry.hpp>
 
@@ -82,7 +86,7 @@ void bim_game_apply_player_action_test::run_forward_move_test(
 
   // Flush the queue.
   action = {};
-  for (int i = 0; i != bim::game::player_action_queue::queue_size; ++i)
+  for (int i = 0; i != bim::game::player_action_queue::queue_size + 1; ++i)
     bim::game::apply_player_action(m_registry, m_arena);
 
   EXPECT_FLOAT_EQ(end_x, position.x_float());
@@ -118,7 +122,7 @@ void bim_game_apply_player_action_test::run_dodge_move_test(
 
   // Flush the queue.
   action = {};
-  for (int i = 0; i != bim::game::player_action_queue::queue_size; ++i)
+  for (int i = 0; i != bim::game::player_action_queue::queue_size + 1; ++i)
     bim::game::apply_player_action(m_registry, m_arena);
 
   EXPECT_FLOAT_EQ(end_x, position.x_float());
@@ -238,7 +242,7 @@ TEST_F(bim_game_apply_player_action_test, cannot_go_through_bombs)
     }
 
   // Flush the queue.
-  for (int i = 0; i != bim::game::player_action_queue::queue_size; ++i)
+  for (int i = 0; i != bim::game::player_action_queue::queue_size + 1; ++i)
     bim::game::apply_player_action(m_registry, m_arena);
 
   const bim::game::fractional_position_on_grid positions[player_count] = {
@@ -256,4 +260,70 @@ TEST_F(bim_game_apply_player_action_test, cannot_go_through_bombs)
 
   EXPECT_EQ(start_x[1] + 2, positions[1].grid_aligned_x());
   EXPECT_EQ(start_y[1], positions[1].grid_aligned_y());
+}
+
+TEST_F(bim_game_apply_player_action_test, drop_bomb_decrease_inventory)
+{
+  constexpr int player_index = 3;
+  constexpr int start_x = 1;
+  constexpr int start_y = 1;
+  const entt::entity player_entity =
+      bim::game::player_factory(m_registry, player_index, start_x, start_y);
+
+  bim::game::player& player =
+      m_registry.storage<bim::game::player>().get(player_entity);
+  bim::game::fractional_position_on_grid& position =
+      m_registry.storage<bim::game::fractional_position_on_grid>().get(
+          player_entity);
+
+  player.bomb_capacity = 2;
+  player.bomb_available = player.bomb_capacity;
+
+  bim::game::player_action& action =
+      m_registry.storage<bim::game::player_action>().get(player_entity);
+
+  // One bomb
+  action.drop_bomb = true;
+
+  // Flush the queue.
+  for (int i = 0; i != bim::game::player_action_queue::queue_size + 1; ++i)
+    bim::game::apply_player_action(m_registry, m_arena);
+
+  EXPECT_EQ(1, player.bomb_available);
+
+  bim::game::bomb bomb = m_registry.storage<bim::game::bomb>().get(
+      m_arena.entity_at(position.grid_aligned_x(), position.grid_aligned_y()));
+  EXPECT_EQ(player_index, bomb.player_index);
+  position.y += 1;
+
+  // Second bomb
+  action.drop_bomb = true;
+
+  for (int i = 0; i != bim::game::player_action_queue::queue_size + 1; ++i)
+    bim::game::apply_player_action(m_registry, m_arena);
+
+  EXPECT_EQ(0, player.bomb_available);
+
+  bomb = m_registry.storage<bim::game::bomb>().get(
+      m_arena.entity_at(position.grid_aligned_x(), position.grid_aligned_y()));
+  EXPECT_EQ(player_index, bomb.player_index);
+
+  position.y += 1;
+
+  // Third bomb, not dropped as the player has no bomb left.
+  action.drop_bomb = true;
+
+  for (int i = 0; i != bim::game::player_action_queue::queue_size; ++i)
+    bim::game::apply_player_action(m_registry, m_arena);
+
+  EXPECT_EQ(0, player.bomb_available);
+
+  EXPECT_TRUE(entt::null
+              == m_arena.entity_at(position.grid_aligned_x(),
+                                   position.grid_aligned_y()));
+
+  // Explode the bombs. The player should get his inventory back.
+  bim::game::update_bombs(m_registry, m_arena, bomb.duration_until_explosion);
+  bim::game::refresh_bomb_inventory(m_registry);
+  EXPECT_EQ(2, player.bomb_available);
 }
