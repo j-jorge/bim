@@ -327,3 +327,70 @@ TEST_F(bim_game_apply_player_action_test, drop_bomb_decrease_inventory)
   bim::game::refresh_bomb_inventory(m_registry);
   EXPECT_EQ(2, player.bomb_available);
 }
+
+TEST_F(bim_game_apply_player_action_test, drop_bomb_where_the_player_was)
+{
+  constexpr int player_index = 0;
+  constexpr int start_x = 1;
+  constexpr int start_y = 1;
+  const entt::entity player_entity =
+      bim::game::player_factory(m_registry, player_index, start_x, start_y);
+
+  bim::game::player& player =
+      m_registry.storage<bim::game::player>().get(player_entity);
+
+  bim::game::fractional_position_on_grid& position =
+      m_registry.storage<bim::game::fractional_position_on_grid>().get(
+          player_entity);
+
+  // Move the player down, at the limit where it is still located in the
+  // initial cell.
+  using coordinate_type = bim::game::fractional_position_on_grid::value_type;
+  for (coordinate_type e(1); e != coordinate_type(0); e /= 2)
+    {
+      bim::game::fractional_position_on_grid p = position;
+      p.y += e;
+
+      if (p.grid_aligned_y() == position.grid_aligned_y())
+        position = p;
+    }
+
+  EXPECT_EQ(start_x, position.grid_aligned_x());
+  EXPECT_EQ(start_y, position.grid_aligned_y());
+
+  bim::game::player_action& action =
+      m_registry.storage<bim::game::player_action>().get(player_entity);
+
+  player.bomb_capacity = 1;
+  player.bomb_available = player.bomb_capacity;
+
+  // Fill the queue with downward movements.
+  for (int i = 0; i != bim::game::player_action_queue::queue_size; ++i)
+    {
+      action.movement = bim::game::player_movement::down;
+      bim::game::apply_player_action(m_registry, m_arena);
+    }
+
+  // The player has not moved, this is where the bomb should be dropped.
+  EXPECT_EQ(start_x, position.grid_aligned_x());
+  EXPECT_EQ(start_y, position.grid_aligned_y());
+
+  // Queue the dropping.
+  action.drop_bomb = true;
+  action.movement = bim::game::player_movement::idle;
+  bim::game::apply_player_action(m_registry, m_arena);
+
+  action.drop_bomb = false;
+
+  // Then flush the queue.
+  for (int i = 0; i != bim::game::player_action_queue::queue_size; ++i)
+    bim::game::apply_player_action(m_registry, m_arena);
+
+  // The bomb has been dropped.
+  EXPECT_EQ(0, player.bomb_available);
+
+  const entt::entity bomb_entity = m_arena.entity_at(start_x, start_y);
+  ASSERT_TRUE(bomb_entity != entt::null);
+
+  EXPECT_TRUE(m_registry.storage<bim::game::bomb>().contains(bomb_entity));
+}

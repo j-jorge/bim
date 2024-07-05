@@ -32,12 +32,9 @@
 #include <fpm/math.hpp>
 
 static void drop_bomb(entt::registry& registry, bim::game::arena& arena,
-                      bim::game::player& player,
-                      const bim::game::fractional_position_on_grid& position)
+                      bim::game::player& player, std::uint8_t arena_x,
+                      std::uint8_t arena_y)
 {
-  const std::uint8_t arena_x = position.grid_aligned_x();
-  const std::uint8_t arena_y = position.grid_aligned_y();
-
   if (arena.entity_at(arena_x, arena_y) != entt::null)
     return;
 
@@ -247,12 +244,13 @@ static void
 apply_player_actions(entt::registry& registry, bim::game::arena& arena,
                      bim::game::player& player,
                      bim::game::fractional_position_on_grid& position,
-                     const bim::game::player_action& action)
+                     const bim::game::queued_action& queued_action)
 {
-  move_player(player, position, action.movement, arena);
+  move_player(player, position, queued_action.action.movement, arena);
 
-  if (action.drop_bomb)
-    drop_bomb(registry, arena, player, position);
+  if (queued_action.action.drop_bomb)
+    drop_bomb(registry, arena, player, queued_action.arena_x,
+              queued_action.arena_y);
 }
 
 void bim::game::apply_player_action(entt::registry& registry, arena& arena)
@@ -266,8 +264,10 @@ void bim::game::apply_player_action(entt::registry& registry, arena& arena)
                               player_action& scheduled_action,
                               player_action_queue& action_queue) -> void
           {
-            const player_action action =
-                action_queue.enqueue(scheduled_action);
+            const queued_action action = action_queue.enqueue(
+                scheduled_action, position.grid_aligned_x(),
+                position.grid_aligned_y());
+
             scheduled_action = {};
             apply_player_actions(registry, arena, player, position, action);
           });
