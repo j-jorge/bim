@@ -394,3 +394,52 @@ TEST_F(bim_game_apply_player_action_test, drop_bomb_where_the_player_was)
 
   EXPECT_TRUE(m_registry.storage<bim::game::bomb>().contains(bomb_entity));
 }
+
+TEST_F(bim_game_apply_player_action_test, drop_bomb_flood)
+{
+  constexpr int player_index = 0;
+  constexpr int start_x = 1;
+  constexpr int start_y = 1;
+  const entt::entity player_entity =
+      bim::game::player_factory(m_registry, player_index, start_x, start_y);
+
+  bim::game::player& player =
+      m_registry.storage<bim::game::player>().get(player_entity);
+
+  player.bomb_capacity = 1;
+  player.bomb_available = player.bomb_capacity;
+
+  bim::game::player_action& action =
+      m_registry.storage<bim::game::player_action>().get(player_entity);
+
+  // Keep dropping bombs at each iteration while moving down.
+  for (bim::game::fractional_position_on_grid& position =
+           m_registry.storage<bim::game::fractional_position_on_grid>().get(
+               player_entity);
+       position.grid_aligned_y() != start_y + 2;)
+    {
+      action.drop_bomb = true;
+      action.movement = bim::game::player_movement::down;
+      bim::game::apply_player_action(m_registry, m_arena);
+    }
+
+  // Drop a bomb in the last cell too.
+  action.drop_bomb = true;
+  action.movement = bim::game::player_movement::down;
+  bim::game::apply_player_action(m_registry, m_arena);
+
+  // Flush the queue.
+  for (int i = 0; i != bim::game::player_action_queue::queue_size + 1; ++i)
+    bim::game::apply_player_action(m_registry, m_arena);
+
+  EXPECT_EQ(0, player.bomb_available);
+
+  // There should be a bomb in the first cell and none in the others.
+  const entt::entity bomb_entity = m_arena.entity_at(start_x, start_y);
+  ASSERT_TRUE(bomb_entity != entt::null);
+
+  EXPECT_TRUE(m_registry.storage<bim::game::bomb>().contains(bomb_entity));
+
+  EXPECT_TRUE(m_arena.entity_at(start_x, start_y + 1) == entt::null);
+  EXPECT_TRUE(m_arena.entity_at(start_x, start_y + 2) == entt::null);
+}
