@@ -1,6 +1,6 @@
 #include <bim/axmol/widget/register_widgets.hpp>
 
-#include <bim/axmol/widget/dynamic_factory.impl.tpp>
+#include <bim/axmol/widget/dynamic_factory.impl.hpp>
 #include <bim/axmol/widget/factory/label.hpp>
 #include <bim/axmol/widget/factory/layer.hpp>
 #include <bim/axmol/widget/factory/layer_color.hpp>

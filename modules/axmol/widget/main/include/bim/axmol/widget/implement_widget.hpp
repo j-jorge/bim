@@ -1,6 +1,6 @@
 #pragma once
 
-#include <bim/axmol/widget/factory.impl.tpp>
+#include <bim/axmol/widget/factory.impl.hpp>
 
 #include <bim/axmol/ref_ptr.impl.hpp>
 
