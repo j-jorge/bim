@@ -4,6 +4,7 @@
 
 #include <bim/game/component/dead.hpp>
 #include <bim/game/component/player.hpp>
+#include <bim/game/constant/max_bomb_strength.hpp>
 #include <bim/game/factory/flame_power_up.hpp>
 #include <bim/game/factory/player.hpp>
 
@@ -59,4 +60,36 @@ TEST(update_flame_power_ups, two_players_only_one_get_the_power_up)
 
   EXPECT_EQ(1,
             std::abs(players[0]->bomb_strength - players[1]->bomb_strength));
+}
+
+TEST(update_flame_power_ups, max_capacity)
+{
+  entt::registry registry;
+  bim::game::arena arena(3, 3);
+  const int x = 1;
+  const int y = 1;
+
+  const entt::entity player_entity =
+      bim::game::player_factory(registry, 0, x, y);
+  bim::game::player& player = registry.get<bim::game::player>(player_entity);
+  player.bomb_strength = 0;
+
+  for (int i = 0; i != bim::game::g_max_bomb_strength; ++i)
+    {
+      flame_power_up_factory(registry, arena, x, y);
+      bim::game::update_flame_power_ups(registry, arena);
+    }
+
+  EXPECT_EQ(bim::game::g_max_bomb_strength, player.bomb_strength);
+
+  // Keep increasing the bomb strength for player, he should consume the
+  // power-ups but not increase in strength.
+  for (int i = 0; i != bim::game::g_max_bomb_strength; ++i)
+    {
+      flame_power_up_factory(registry, arena, x, y);
+      bim::game::update_flame_power_ups(registry, arena);
+
+      EXPECT_TRUE(entt::null == arena.entity_at(x, y));
+      EXPECT_EQ(bim::game::g_max_bomb_strength, player.bomb_strength);
+    }
 }

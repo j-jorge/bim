@@ -8,6 +8,7 @@
 #include <bim/game/component/fractional_position_on_grid.hpp>
 #include <bim/game/component/player.hpp>
 #include <bim/game/component/position_on_grid.hpp>
+#include <bim/game/constant/max_bomb_strength.hpp>
 
 #include <entt/entity/registry.hpp>
 
@@ -28,7 +29,8 @@ static void check_flame_power_up_player_collision(
 
   if (registry.storage<bim::game::flame_power_up>().contains(colliding_entity))
     {
-      p.bomb_strength = std::min(p.bomb_strength + 1, 5);
+      p.bomb_strength =
+          std::min(p.bomb_strength + 1, bim::game::g_max_bomb_strength);
       arena.erase_entity(x, y);
       registry.emplace<bim::game::dead>(colliding_entity);
     }
