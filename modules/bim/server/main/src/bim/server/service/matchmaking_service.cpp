@@ -23,6 +23,8 @@
 #include <bim/net/message/game_on_hold.hpp>
 #include <bim/net/message/launch_game.hpp>
 
+#include <bim/game/constant/max_player_count.hpp>
+
 #include <iscool/log/log.hpp>
 #include <iscool/log/nature/info.hpp>
 #include <iscool/schedule/delayed_call.hpp>
@@ -41,9 +43,10 @@ static std::chrono::nanoseconds date_for_next_release()
 struct bim::server::matchmaking_service::encounter_info
 {
   std::uint8_t player_count;
-  std::array<iscool::net::session_id, 4> sessions;
-  std::array<std::chrono::nanoseconds, 4> release_at_this_date;
-  std::array<bool, 4> ready;
+  std::array<iscool::net::session_id, bim::game::g_max_player_count> sessions;
+  std::array<std::chrono::nanoseconds, bim::game::g_max_player_count>
+      release_at_this_date;
+  std::array<bool, bim::game::g_max_player_count> ready;
   iscool::signals::scoped_connection clean_up_connection;
   std::optional<iscool::net::channel_id> channel;
 

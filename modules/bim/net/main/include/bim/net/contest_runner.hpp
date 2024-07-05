@@ -18,6 +18,7 @@
 
 #include <bim/game/archive_storage.hpp>
 #include <bim/game/arena.hpp>
+#include <bim/game/constant/max_player_count.hpp>
 #include <bim/game/contest_result.hpp>
 #include <bim/game/tick_counter.hpp>
 
@@ -76,11 +77,15 @@ namespace bim::net
 
     bim::game::tick_counter m_tick_counter;
 
-    std::array<std::vector<bim::game::player_action>, 4> m_server_actions;
+    std::array<std::vector<bim::game::player_action>,
+               bim::game::g_max_player_count>
+        m_server_actions;
     std::uint32_t m_last_confirmed_tick;
     std::uint32_t m_last_completed_tick;
 
-    std::array<std::vector<bim::game::player_action>, 4> m_unconfirmed_actions;
+    std::array<std::vector<bim::game::player_action>,
+               bim::game::g_max_player_count>
+        m_unconfirmed_actions;
 
     bim::game::archive_storage m_last_confirmed_archive;
     bim::game::arena m_last_confirmed_arena;

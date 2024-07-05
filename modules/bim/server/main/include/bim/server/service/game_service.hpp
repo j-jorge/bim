@@ -16,6 +16,8 @@
 */
 #pragma once
 
+#include <bim/game/constant/max_player_count.hpp>
+
 #include <iscool/net/message_stream.hpp>
 
 #include <iscool/signals/connection.hpp>
@@ -45,8 +47,10 @@ namespace bim::server
 
     std::optional<game_info> find_game(iscool::net::channel_id channel) const;
 
-    game_info new_game(std::uint8_t player_count,
-                       const std::array<iscool::net::session_id, 4>& sessions);
+    game_info
+    new_game(std::uint8_t player_count,
+             const std::array<iscool::net::session_id,
+                              bim::game::g_max_player_count>& sessions);
 
     void process(const iscool::net::endpoint& endpoint,
                  const iscool::net::message& message);

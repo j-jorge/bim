@@ -34,6 +34,7 @@
 #include <bim/game/component/player_action.hpp>
 #include <bim/game/component/player_action_queue.hpp>
 #include <bim/game/component/position_on_grid.hpp>
+#include <bim/game/constant/max_player_count.hpp>
 #include <bim/game/contest.hpp>
 #include <bim/game/input_archive.hpp>
 #include <bim/game/output_archive.hpp>
@@ -216,7 +217,8 @@ void bim::net::contest_runner::drop_confirmed_actions()
 void bim::net::contest_runner::apply_unconfirmed_actions(
     entt::registry& registry)
 {
-  std::array<bim::game::player_action*, 4> player_action_pointers{};
+  std::array<bim::game::player_action*, bim::game::g_max_player_count>
+      player_action_pointers{};
 
   registry.view<bim::game::player, bim::game::player_action>().each(
       [&player_action_pointers](const bim::game::player& p,

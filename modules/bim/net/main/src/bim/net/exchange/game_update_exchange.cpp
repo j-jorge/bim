@@ -21,6 +21,8 @@
 #include <bim/net/message/start.hpp>
 #include <bim/net/message/try_deserialize_message.hpp>
 
+#include <bim/game/constant/max_player_count.hpp>
+
 #include <bim/assume.hpp>
 
 #include <iscool/monitoring/implement_state_monitor.hpp>
@@ -178,7 +180,7 @@ std::uint32_t bim::net::game_update_exchange::validate_message(
     return 0;
 
   bim_assume(m_player_count >= 2);
-  bim_assume(m_player_count <= 4);
+  bim_assume(m_player_count <= bim::game::g_max_player_count);
 
   const std::size_t tick_count = message.actions[0].size();
 
@@ -210,7 +212,7 @@ void bim::net::game_update_exchange::store_server_frames(
     const game_update_from_server& message, std::uint32_t tick_count)
 {
   bim_assume(m_player_count >= 2);
-  bim_assume(m_player_count <= 4);
+  bim_assume(m_player_count <= bim::game::g_max_player_count);
 
   m_server_update.from_tick = message.from_tick;
 

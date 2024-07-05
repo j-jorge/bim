@@ -26,6 +26,7 @@
 
 #include <bim/game/component/player.hpp>
 #include <bim/game/component/player_action.hpp>
+#include <bim/game/constant/max_player_count.hpp>
 #include <bim/game/contest.hpp>
 #include <bim/game/contest_result.hpp>
 
@@ -76,7 +77,8 @@ struct bim::server::game_service::game
 
 public:
   game(std::uint8_t player_count, std::uint64_t seed,
-       const std::array<iscool::net::session_id, 4>& sessions)
+       const std::array<iscool::net::session_id,
+                        bim::game::g_max_player_count>& sessions)
     : seed(seed)
     , player_count(player_count)
     , sessions(sessions)
@@ -117,7 +119,7 @@ public:
     std::uint32_t offset = std::numeric_limits<std::uint32_t>::max();
 
     bim_assume(player_count >= 2);
-    bim_assume(player_count <= 4);
+    bim_assume(player_count <= bim::game::g_max_player_count);
 
     // Compute the number of actions to remove: largest common interval to all
     // players.
@@ -156,7 +158,7 @@ public:
         std::numeric_limits<std::uint32_t>::max();
 
     bim_assume(player_count >= 2);
-    bim_assume(player_count <= 4);
+    bim_assume(player_count <= bim::game::g_max_player_count);
 
     for (std::uint8_t player_index = 0; player_index != player_count;
          ++player_index)
@@ -189,8 +191,8 @@ private:
 public:
   std::uint64_t seed;
   std::uint8_t player_count;
-  std::array<iscool::net::session_id, 4> sessions;
-  std::array<bool, 4> ready;
+  std::array<iscool::net::session_id, bim::game::g_max_player_count> sessions;
+  std::array<bool, bim::game::g_max_player_count> ready;
 
   /**
    * The tick reached by every player. At this point, the clients may not know
@@ -207,13 +209,16 @@ public:
   std::uint32_t completed_tick_count_all;
 
   /// The tick of the simulation for every player.
-  std::array<std::uint32_t, 4> completed_tick_count_per_player;
+  std::array<std::uint32_t, bim::game::g_max_player_count>
+      completed_tick_count_per_player;
 
   /**
    * The actions to apply starting from completed_tick_count_per_player, for
    * each player. One player_action per tick.
    */
-  std::array<std::vector<bim::game::player_action>, 4> actions;
+  std::array<std::vector<bim::game::player_action>,
+             bim::game::g_max_player_count>
+      actions;
 
   iscool::signals::connection clean_up_connection;
   std::chrono::nanoseconds release_at_this_date;
@@ -222,7 +227,8 @@ public:
 
 private:
   bim::game::contest m_contest;
-  std::array<bim::game::player_action*, 4> m_player_actions;
+  std::array<bim::game::player_action*, bim::game::g_max_player_count>
+      m_player_actions;
 };
 
 bim::server::game_service::game_service(iscool::net::socket_stream& socket)
@@ -266,7 +272,8 @@ bim::server::game_service::find_game(iscool::net::channel_id channel) const
 
 bim::server::game_info bim::server::game_service::new_game(
     std::uint8_t player_count,
-    const std::array<iscool::net::session_id, 4>& sessions)
+    const std::array<iscool::net::session_id, bim::game::g_max_player_count>&
+        sessions)
 {
   const iscool::net::channel_id channel = m_next_game_channel;
   ++m_next_game_channel;

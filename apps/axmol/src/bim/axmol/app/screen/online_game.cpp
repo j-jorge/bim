@@ -21,6 +21,8 @@
 #include <bim/game/component/player.hpp>
 #include <bim/game/component/player_movement.hpp>
 #include <bim/game/component/position_on_grid.hpp>
+#include <bim/game/constant/max_bomb_count_per_player.hpp>
+#include <bim/game/constant/max_player_count.hpp>
 #include <bim/game/contest.hpp>
 #include <bim/game/level_generation.hpp>
 #include <bim/game/player_action.hpp>
@@ -85,12 +87,10 @@ bim::axmol::app::online_game::online_game(
 
   constexpr int default_width = 13;
   constexpr int default_height = 15;
-  constexpr int max_players = 4;
-  constexpr int max_bombs_per_player = 8;
 
-  m_players.resize(max_players);
+  m_players.resize(bim::game::g_max_player_count);
 
-  for (int i = 0; i != max_players; ++i)
+  for (int i = 0; i != bim::game::g_max_player_count; ++i)
     {
       const iscool::style::declaration& player_style =
           *style.get_declaration("player-" + std::to_string(i + 1));
@@ -108,7 +108,9 @@ bim::axmol::app::online_game::online_game(
   alloc_assets(m_brick_walls, widget_context,
                (default_width - 2) * (default_height - 2),
                *style.get_declaration("brick-wall"));
-  alloc_assets(m_bombs, widget_context, max_players * max_bombs_per_player,
+  alloc_assets(m_bombs, widget_context,
+               bim::game::g_max_player_count
+                   * bim::game::g_max_bomb_count_per_player,
                *style.get_declaration("bomb"));
   alloc_assets(m_flames, widget_context,
                (default_width - 2) * (default_height - 2),

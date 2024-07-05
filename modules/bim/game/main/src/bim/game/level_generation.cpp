@@ -23,6 +23,7 @@
 #include <bim/game/component/fractional_position_on_grid.hpp>
 #include <bim/game/component/player.hpp>
 #include <bim/game/component/position_on_grid.hpp>
+#include <bim/game/constant/max_player_count.hpp>
 #include <bim/game/factory/brick_wall.hpp>
 
 #include <bim/game/random_generator.hpp>
@@ -72,8 +73,9 @@ void bim::game::insert_random_brick_walls(arena& arena,
   boost::random::uniform_int_distribution<std::uint8_t> random(0, 99);
 
   std::vector<position_on_grid> forbidden_positions;
-  // Typically 4 players in the arena, and 9 blocks for each of them.
-  forbidden_positions.reserve(4 * 9);
+  // Typically 9 blocks for each player: their position and the cells around
+  // them..
+  forbidden_positions.reserve(g_max_player_count * 9);
 
   registry.view<bim::game::player, bim::game::fractional_position_on_grid>()
       .each(
