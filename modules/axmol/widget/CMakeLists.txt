@@ -13,8 +13,10 @@ add_library(bim_axmol_widget
   main/src/bim/axmol/widget/factory/layer_color.cpp
   main/src/bim/axmol/widget/factory/node.cpp
   main/src/bim/axmol/widget/factory/sprite.cpp
+  main/src/bim/axmol/widget/factory/scale_nine_sprite.cpp
 
   main/src/bim/axmol/widget/ui/button.cpp
+  main/src/bim/axmol/widget/ui/nine_slices.cpp
   main/src/bim/axmol/widget/ui/soft_pad.cpp
   main/src/bim/axmol/widget/ui/soft_stick.cpp
 )
