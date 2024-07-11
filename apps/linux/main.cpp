@@ -44,7 +44,8 @@ namespace
 }
 
 static device_screen_map g_device_screens = { { "iphone15", { 1179, 2556 } },
-                                              { "pixel3a", { 1080, 2220 } } };
+                                              { "pixel3a", { 1080, 2220 } },
+                                              { "nexus4", { 768, 1280 } } };
 
 static bool parse_screen_size(screen_size& size, std::string_view id)
 {
