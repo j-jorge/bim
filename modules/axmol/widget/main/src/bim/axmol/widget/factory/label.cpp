@@ -34,7 +34,8 @@ bim::axmol::ref_ptr<ax::Label> bim::axmol::widget::factory<ax::Label>::create(
   ax::TTFConfig ttf_config;
 
   ttf_config.fontFilePath = *font_path;
-  ttf_config.fontSize = style.get_number("font.size", 12);
+  ttf_config.fontSize =
+      style.get_number("font.size", 12) * context.device_scale;
   ttf_config.outlineSize = outline_size;
   ttf_config.italics = style.get_boolean("font.italics", false);
   ttf_config.bold = style.get_boolean("font.bold", false);
@@ -77,7 +78,7 @@ bim::axmol::ref_ptr<ax::Label> bim::axmol::widget::factory<ax::Label>::create(
               ? context.colors.to_color_4b(*shadow_color_string)
               : ax::Color4B::BLACK;
 
-      result->enableShadow(shadow_color, shadow_offset);
+      result->enableShadow(shadow_color, shadow_offset * context.device_scale);
     }
 
   if (outline_size != 0)
@@ -90,7 +91,8 @@ bim::axmol::ref_ptr<ax::Label> bim::axmol::widget::factory<ax::Label>::create(
               ? context.colors.to_color_4b(*outline_color_string)
               : ax::Color4B::BLACK;
 
-      result->enableOutline(outline_color, outline_size);
+      result->enableOutline(outline_color,
+                            outline_size * context.device_scale);
     }
 
   bim::axmol::style::apply_display(context.style_cache.get_display(style),
