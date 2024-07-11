@@ -2,6 +2,8 @@ find_package(axmol 1.0.0 REQUIRED)
 
 add_library(bim_axmol_display
   STATIC
+  main/src/bim/axmol/display/device_scale.cpp
+  main/src/bim/axmol/display/device_size.cpp
   main/src/bim/axmol/display/main_view.cpp
 )
 
