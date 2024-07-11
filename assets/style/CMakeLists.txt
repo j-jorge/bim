@@ -18,6 +18,7 @@ set(screen_wheel_style_files
 
   ${CMAKE_CURRENT_LIST_DIR}/button/flat-with-label.json
   ${CMAKE_CURRENT_LIST_DIR}/button/sprite.json
+  ${CMAKE_CURRENT_LIST_DIR}/button/yellow-with-label.json
   ${CMAKE_CURRENT_LIST_DIR}/font/regular.json
 
   ${common_style_files}

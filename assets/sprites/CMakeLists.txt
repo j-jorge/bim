@@ -10,6 +10,8 @@ set(sprites
   "sprites/power-up-flame.png"
   "sprites/solid-wall.png"
 
+  "sprites/menu/yellow-button.png"
+
   "sprites/ui/directional-pad-left.png"
   "sprites/ui/directional-pad-right.png"
   "sprites/ui/directional-pad-left-on.png"

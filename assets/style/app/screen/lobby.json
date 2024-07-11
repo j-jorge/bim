@@ -5,7 +5,7 @@
         [{
             "play_button":
             [
-                "button/flat-with-label",
+                "button/yellow-with-label",
                 {
                     "widgets/label/text.i18n": "PLAY"
                 }
