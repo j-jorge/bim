@@ -1,6 +1,7 @@
 #include <bim/axmol/app/screen/matchmaking.hpp>
 
 #include <bim/axmol/widget/apply_display.hpp>
+#include <bim/axmol/widget/context.hpp>
 #include <bim/axmol/widget/ui/button.hpp>
 
 #include <bim/net/exchange/new_game_exchange.hpp>

@@ -8,6 +8,7 @@
 
 #include <bim/axmol/widget/add_group_as_children.hpp>
 #include <bim/axmol/widget/apply_bounds.hpp>
+#include <bim/axmol/widget/context.hpp>
 
 #define x_widget_scope bim::axmol::app::screen_wheel::
 #define x_widget_type_name controls
