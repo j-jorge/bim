@@ -18,10 +18,10 @@
  *     each widget of type `type` and name `name`.
  */
 
-#include <bim/axmol/widget/context.hpp>
 #include <bim/axmol/widget/dynamic_factory.hpp>
 #include <bim/axmol/widget/factory.hpp>
-#include <bim/axmol/widget/named_node_group.hpp>
+#include <bim/axmol/widget/instantiate_widgets.hpp>
+#include <bim/axmol/widget/set_node_parents.hpp>
 
 #include <bim/axmol/ref_ptr.impl.hpp>
 
@@ -62,20 +62,11 @@ struct x_widget_scope x_widget_type_name
         const std::string_view known[] = { "", x_widget_controls };
 #undef x_widget
 
-    const std::string_view* const begin = known + 1;
-    const std::string_view* const end = begin + std::size(known) - 1;
+    bim::axmol::widget::instantiate_widgets(
+        all_nodes, std::span(std::begin(known) + 1, std::end(known)), context,
+        style);
 
-    for (const iscool::style::declaration::declaration_map::value_type& d :
-         style.get_declarations())
-      if (std::find(begin, end, d.first) == end)
-        {
-          const iscool::optional<const std::string&> type =
-              d.second->get_string("instantiate");
-
-          if (type)
-            all_nodes.emplace(
-                d.first, context.factory.create(*type, context, *d.second));
-        }
+    bim::axmol::widget::set_node_parents(all_nodes, style);
   }
 
   bim::axmol::widget::named_node_group all_nodes;

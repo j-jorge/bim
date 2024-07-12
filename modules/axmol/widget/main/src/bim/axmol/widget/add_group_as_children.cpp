@@ -8,6 +8,7 @@ void bim::axmol::widget::add_group_as_children(ax::Node& parent,
   for (const auto& [_, node_pointer] : group)
     {
       assert(node_pointer != nullptr);
-      parent.addChild(node_pointer.get());
+      if (node_pointer->getParent() == nullptr)
+        parent.addChild(node_pointer.get());
     }
 }

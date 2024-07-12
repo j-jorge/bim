@@ -17,6 +17,8 @@
 
 #include <axmol/2d/Node.h>
 
+#include <cassert>
+
 namespace
 {
   struct styling
@@ -40,12 +42,15 @@ static void apply_styling(bim::axmol::style::cache& style_cache,
   if (s.reference)
     {
       styling_queue::iterator r = queue.find(s.reference);
-      apply_styling(style_cache, queue, *r->first, r->second);
+
+      if (r == queue.end())
+        assert(s.reference == node.getParent());
+      else
+        apply_styling(style_cache, queue, *r->first, r->second);
     }
 
-  bim::axmol::style::apply_bounds(
-      style_cache.get_bounds(*s.style), node,
-      (s.reference ? *s.reference : *node.getParent()));
+  bim::axmol::style::apply_bounds(style_cache.get_bounds(*s.style), node,
+                                  *s.reference);
 }
 
 static styling_queue
@@ -73,8 +78,9 @@ build_styling_queue(const bim::axmol::widget::named_node_group& nodes,
           continue;
         }
 
-      const iscool::optional<const std::string&> reference_name =
+      iscool::optional<const std::string&> reference_name =
           substyle.get_string("reference");
+
       ax::Node* reference = nullptr;
 
       if (reference_name)
@@ -93,6 +99,8 @@ build_styling_queue(const bim::axmol::widget::named_node_group& nodes,
 
           reference = r->second.get();
         }
+      else
+        reference = node->second->getParent();
 
       queue[node->second.get()] =
           styling{ .reference = reference, .style = &substyle };
