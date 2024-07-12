@@ -7,7 +7,8 @@
             [
                 "button/yellow-with-label",
                 {
-                    "widgets/label/text.i18n": "PLAY"
+                    "widgets/label/text.i18n": "PLAY",
+                    "z-order": 20
                 }
             ],
 
@@ -15,7 +16,8 @@
             [{
                 "instantiate": "ax::Sprite",
                 "frame": "sprites/guy.png",
-                "name": "sprite"
+                "name": "sprite",
+                "z-order": 10
             }],
 
             "label":
@@ -29,7 +31,8 @@
                     "shadow.color": "#1f1f1f",
                     "shadow.offset.y": -10,
                     "outline.color": "#c0c0c0",
-                    "outline.size": 2
+                    "outline.size": 2,
+                    "z-order": 10
                 }
             ]
         }]

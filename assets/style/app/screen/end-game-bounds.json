@@ -8,8 +8,7 @@
             "anchor.reference.x": 0.5,
             "anchor.reference.y": 0.34,
             "width-ratio": 3,
-            "height.percents": 10,
-            "z-order": 20
+            "height.percents": 10
         }],
 
         "message":
@@ -17,8 +16,7 @@
             "anchor.x": 0.5,
             "anchor.y": 0.5,
             "anchor.reference.x": 0.5,
-            "anchor.reference.y": 0.7,
-            "z-order": 20
+            "anchor.reference.y": 0.7
         }]
     }
 }
