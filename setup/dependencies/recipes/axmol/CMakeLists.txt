@@ -426,8 +426,11 @@ macro(compile_shaders)
     FILES
     ${source_root}/renderer/shaders/label_normal.frag
     ${source_root}/renderer/shaders/label_outline.frag
+    ${source_root}/renderer/shaders/positionColor.frag
     ${source_root}/renderer/shaders/positionTextureColor.frag
     ${source_root}/renderer/shaders/positionTextureColor.vert
+    ${source_root}/renderer/shaders/positionTextureColorAlphaTest.frag
+    ${source_root}/renderer/shaders/positionUColor.vert
   )
 endmacro()
 

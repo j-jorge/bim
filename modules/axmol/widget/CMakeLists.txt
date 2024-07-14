@@ -10,6 +10,7 @@ add_library(bim_axmol_widget
   main/src/bim/axmol/widget/register_widgets.cpp
   main/src/bim/axmol/widget/set_node_parents.cpp
 
+  main/src/bim/axmol/widget/factory/clipping_node.cpp
   main/src/bim/axmol/widget/factory/label.cpp
   main/src/bim/axmol/widget/factory/layer.cpp
   main/src/bim/axmol/widget/factory/layer_color.cpp
@@ -18,6 +19,7 @@ add_library(bim_axmol_widget
   main/src/bim/axmol/widget/factory/scale_nine_sprite.cpp
 
   main/src/bim/axmol/widget/ui/button.cpp
+  main/src/bim/axmol/widget/ui/clipping_node.cpp
   main/src/bim/axmol/widget/ui/nine_slices.cpp
   main/src/bim/axmol/widget/ui/soft_pad.cpp
   main/src/bim/axmol/widget/ui/soft_stick.cpp
