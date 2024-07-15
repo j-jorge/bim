@@ -5,6 +5,8 @@
 
 #include <iscool/style/declaration.hpp>
 
+#include <axmol/2d/Node.h>
+
 #include <algorithm>
 
 void bim::axmol::widget::instantiate_widgets(
@@ -15,13 +17,20 @@ void bim::axmol::widget::instantiate_widgets(
 
   for (const iscool::style::declaration::declaration_map::value_type& d :
        style.get_declarations())
-    if (std::find(excluded.begin(), excluded.end(), d.first) == excluded.end())
-      {
-        const iscool::optional<const std::string&> type =
-            d.second->get_string("instantiate");
+    {
+      if (std::find(excluded.begin(), excluded.end(), d.first)
+          != excluded.end())
+        continue;
 
-        if (type)
-          nodes.emplace(d.first,
-                        context.factory.create(*type, context, *d.second));
-      }
+      const iscool::optional<const std::string&> type =
+          d.second->get_string("instantiate");
+
+      if (!type)
+        continue;
+
+      ref_ptr<ax::Node> node =
+          context.factory.create(*type, context, *d.second);
+      node->setName(d.first);
+      nodes.emplace(d.first, std::move(node));
+    }
 }

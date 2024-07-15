@@ -29,6 +29,8 @@
 
 #include <iscool/memory/pimpl.impl.tpp>
 
+#include <axmol/2d/Node.h>
+
 #include <string_view>
 
 // If no control is needed, we must still have the macro defined for this file
@@ -52,6 +54,7 @@ struct x_widget_scope x_widget_type_name
         bim::axmol::widget::factory<type>::create(                            \
             context, *style.get_declaration(#name));                          \
     name = node.get();                                                        \
+    name->setName(#name);                                                     \
     all_nodes[#name] = std::move(node);                                       \
   }
 
