@@ -16,6 +16,48 @@
                 }]
             }],
 
+            "decorum":
+            [{
+                "instantiate": "clipping_node",
+                "z-order": 5,
+                "widgets":
+                [{
+                    "clipping_node": [],
+
+                    "stencil":
+                    [{
+                        "instantiate": "nine_slices",
+                        "anchor-point.x": 0,
+                        "anchor-point.y": 0,
+                        "widgets/sprite":
+                        [{
+                            "frame": "sprites/menu/thick-button-mask.png",
+                            "insets.left": 20,
+                            "insets.top": 20,
+                            "insets.width": 30,
+                            "insets.height": 30
+                        }]
+                    }],
+
+                    "stars":
+                    [{
+                        "instantiate": "texture",
+                        "parent": "clipping_node",
+                        "widgets/sprite/frame": "texture/stars.png",
+                        "scroll-per-second.x": 20,
+                        "scroll-per-second.y": 10,
+                        "rotation": -2
+                    }]
+                }],
+
+                "bounds":
+                [{
+                    "clipping_node": [ "layout/fill" ],
+                    "stencil": [ "layout/fill" ],
+                    "stars": [ "layout/fill" ]
+                }]
+            }],
+
             "label":
             [
                 "font/regular",
@@ -35,6 +77,7 @@
         "bounds":
         [{
             "background": [ "layout/fill" ],
+            "decorum": [ "layout/fill" ],
 
             "label":
             [{

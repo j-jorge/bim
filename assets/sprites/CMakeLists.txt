@@ -11,6 +11,7 @@ set(sprites
   "sprites/solid-wall.png"
 
   "sprites/menu/yellow-button.png"
+  "sprites/menu/thick-button-mask.png"
 
   "sprites/ui/directional-pad-left.png"
   "sprites/ui/directional-pad-right.png"
