@@ -43,7 +43,7 @@ bim::axmol::ref_ptr<ax::Label> bim::axmol::widget::factory<ax::Label>::create(
   ttf_config.strikethrough = style.get_boolean("font.strikethrough", false);
 
   const iscool::optional<const std::string&> horizontal_align_string =
-      style.get_string("horizontal_align");
+      style.get_string("align.horizontal");
   ax::TextHAlignment horizontal_align = ax::TextHAlignment::LEFT;
 
   if (horizontal_align_string)
