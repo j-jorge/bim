@@ -47,6 +47,9 @@ bim::axmol::widget::factory<ax::Sprite>::create(
   if (result == nullptr)
     result = ax::Sprite::create();
 
+  result->setFlippedX(style.get_boolean("flip.x", false));
+  result->setFlippedY(style.get_boolean("flip.y", false));
+
   bim::axmol::style::apply_display(context.style_cache.get_display(style),
                                    *result);
 
