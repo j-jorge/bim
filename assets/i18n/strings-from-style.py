@@ -1,4 +1,5 @@
 #!/bin/env python3
+import ast
 import json
 import typing
 import sys
@@ -11,7 +12,8 @@ def collect_strings(output: typing.TextIO, document):
     elif isinstance(document, dict):
         for k, v in document.items():
             if k.endswith(".i18n") and isinstance(v, str):
-                output.write(f'ic_gettext("{v}");\n')
+                s = repr(v)[1:-1]
+                output.write(f'ic_gettext("{s}");\n')
             else:
                 collect_strings(output, v)
 
