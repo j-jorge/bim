@@ -67,6 +67,7 @@ packages=(bzip2
           file
           gettext
           git
+          imagemagick
           ninja-build
           python3-venv
           "$compiler")

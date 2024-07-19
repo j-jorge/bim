@@ -123,6 +123,7 @@ missing_dependencies=0
 
 check_host_dependency ccache || missing_dependencies=1
 check_host_dependency cmake || missing_dependencies=1
+check_host_dependency convert || missing_dependencies=1
 check_host_dependency git || missing_dependencies=1
 check_host_dependency ninja || missing_dependencies=1
 check_host_dependency python3 || missing_dependencies=1

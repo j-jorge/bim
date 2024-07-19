@@ -22,8 +22,14 @@ if (NOT BIM_TARGET)
 endif()
 
 include(jsonlint)
+
 add_subdirectory(sprites)
 add_subdirectory(style)
+add_subdirectory(texture)
+
+# The styles must be processed before i18n.
 add_subdirectory(i18n)
 
-add_custom_target(assets ALL DEPENDS styles sprite-sheets translations)
+add_custom_target(
+  assets ALL DEPENDS styles sprite-sheets textures translations
+)

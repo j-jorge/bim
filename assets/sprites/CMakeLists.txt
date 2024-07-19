@@ -1,7 +1,6 @@
 set(sprites
   "sprites/bomb.png"
   "sprites/brick-wall.png"
-  "sprites/guy.png"
   "sprites/player-1.png"
   "sprites/player-2.png"
   "sprites/player-3.png"
@@ -10,8 +9,8 @@ set(sprites
   "sprites/power-up-flame.png"
   "sprites/solid-wall.png"
 
-  "sprites/menu/yellow-button.png"
-  "sprites/menu/thick-button-mask.png"
+  "sprites/menu/rounded-button-border-54-66.png"
+  "sprites/menu/rounded-button-fill-54-66.png"
 
   "sprites/ui/directional-pad-left.png"
   "sprites/ui/directional-pad-right.png"
@@ -26,6 +25,10 @@ set(sprites_bleeding
   "sprites/flame-arm.png"
   "sprites/flame-center.png"
   "sprites/flame-end.png"
+
+  "sprites/menu/horizontal-gradient.png"
+  "sprites/menu/vertical-gradient.png"
+  "sprites/menu/vertical-yellow-gradient.png"
 )
 
 foreach(s ${sprites} ${sprites_bleeding})

@@ -3,17 +3,18 @@
     {
         "widgets":
         [{
-            "background":
+            "border":
             [{
                 "instantiate": "nine_slices",
                 "widgets/sprite":
                 [{
-                    "frame": "sprites/menu/yellow-button.png",
-                    "insets.left": 20,
-                    "insets.top": 20,
-                    "insets.width": 30,
-                    "insets.height": 30
-                }]
+                    "frame": "sprites/menu/rounded-button-border-54-66.png",
+                    "insets.left": 54,
+                    "insets.top": 66,
+                    "insets.width": 1,
+                    "insets.height": 1
+                }],
+                "z-order": 20
             }],
 
             "decorum":
@@ -31,12 +32,20 @@
                         "anchor-point.y": 0,
                         "widgets/sprite":
                         [{
-                            "frame": "sprites/menu/thick-button-mask.png",
-                            "insets.left": 20,
-                            "insets.top": 20,
-                            "insets.width": 30,
-                            "insets.height": 30
+                            "frame": "sprites/menu/rounded-button-fill-54-66.png",
+                            "insets.left": 54,
+                            "insets.top": 66,
+                            "insets.width": 1,
+                            "insets.height": 1
                         }]
+                    }],
+
+                    "fill":
+                    [{
+                        "instantiate": "ax::Sprite",
+                        "parent": "clipping_node",
+                        "frame": "sprites/menu/vertical-yellow-gradient.png",
+                        "z-order": 0
                     }],
 
                     "stars":
@@ -46,7 +55,9 @@
                         "widgets/sprite/frame": "texture/stars.png",
                         "scroll-per-second.x": 20,
                         "scroll-per-second.y": 10,
-                        "rotation": -2
+                        "rotation": -2,
+                        "color": "dandelion",
+                        "z-order": 10
                     }]
                 }],
 
@@ -54,21 +65,23 @@
                 [{
                     "clipping_node": [ "layout/fill" ],
                     "stencil": [ "layout/fill" ],
+                    "fill": [ "layout/fill" ],
                     "stars": [ "layout/fill" ]
                 }]
             }],
 
             "label":
             [
-                "font/regular",
+                "font/fancy-regular",
                 {
                     "instantiate": "ax::Label",
-                    "font.size": 32,
-                    "font.color": "#ffffff",
-                    "shadow.color": "#1b1b1b",
-                    "shadow.offset.y": -4,
-                    "outline.color": "#1b1b1b",
-                    "outline.size": 2,
+                    "font.size": 106,
+                    "font.color": "white",
+                    "shadow.color": "cod-gray",
+                    "shadow.offset.y": -8,
+                    "outline.color": "cod-gray",
+                    "outline.size": 5,
+                    "align.horizontal": "center",
                     "z-order": 10
                 }
             ]
@@ -76,7 +89,7 @@
 
         "bounds":
         [{
-            "background": [ "layout/fill" ],
+            "border": [ "layout/fill" ],
             "decorum": [ "layout/fill" ],
 
             "label":
@@ -88,20 +101,9 @@
             }]
         }],
 
-        "display.pressed":
-        [{
-            "background/color": "#ffffff"
-        }],
-
-        "display.release":
-        [{
-            "background/color": "#ffffff"
-        }],
-
-        "display.disabled":
-        [{
-            "background/color": "#ffffff"
-        }],
+        "display.pressed": [],
+        "display.release": [],
+        "display.disabled": [],
 
         "sound.click": "tick"
     }
