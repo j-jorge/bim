@@ -40,6 +40,7 @@
 #include <axmol/base/Director.h>
 #include <axmol/base/EventDispatcher.h>
 #include <axmol/platform/FileUtils.h>
+#include <axmol/platform/Image.h>
 
 static const char* const g_log_context = "StartUp";
 
@@ -330,6 +331,8 @@ bim::axmol::app::application::application(
   , m_input_root(m_reset_key_observer)
   , m_screen_config{ screen_size, screen_scale }
 {
+  ax::Image::setPNGPremultipliedAlphaEnabled(false);
+
   bim::axmol::widget::register_widgets(m_widget_factory);
 
   m_reset_key_observer->connect_to_released(
