@@ -46,8 +46,6 @@ add_custom_command(
   OUTPUT
     ${BIM_GENERATED_ASSETS_DIR}/sprite-sheet.png
     ${BIM_GENERATED_ASSETS_DIR}/sprite-sheet.plist
-  COMMAND
-    ${CMAKE_COMMAND} -E make_directory ${BIM_GENERATED_ASSETS_DIR}/sprites
   COMMAND ${auto_pack_my_sprites}
     --output sprite-sheet
     --no-crop
