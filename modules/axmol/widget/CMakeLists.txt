@@ -31,6 +31,7 @@ target_include_directories(bim_axmol_widget PUBLIC main/include)
 target_link_libraries(
   bim_axmol_widget
   PUBLIC
+  bim_axmol_action
   bim_axmol_input
   bim_axmol_style
   bim_axmol_core

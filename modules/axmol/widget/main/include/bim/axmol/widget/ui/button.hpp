@@ -58,6 +58,9 @@ namespace bim::axmol::widget
     const iscool::style::declaration& m_style_released;
     const iscool::style::declaration& m_style_disabled;
 
+    const bim::axmol::ref_ptr<ax::Action> m_action_pressed;
+    const bim::axmol::ref_ptr<ax::Action> m_action_released;
+
     const std::string m_sound;
 
     bool m_bounds_dirty;

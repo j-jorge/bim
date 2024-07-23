@@ -1,5 +1,6 @@
 #pragma once
 
+#include <bim/axmol/action/dynamic_factory.hpp>
 #include <bim/axmol/audio/mixer.hpp>
 #include <bim/axmol/colour_chart.hpp>
 #include <bim/axmol/display/main_view.hpp>
@@ -113,6 +114,7 @@ namespace bim::axmol::app
 
     bim::axmol::colour_chart m_colors;
     bim::axmol::style::cache m_style_cache;
+    bim::axmol::action::dynamic_factory m_action_factory;
     bim::axmol::widget::dynamic_factory m_widget_factory;
 
     std::unique_ptr<detail::persistent_systems> m_persistent_systems;

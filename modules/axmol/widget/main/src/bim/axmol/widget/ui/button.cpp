@@ -5,6 +5,8 @@
 #include <bim/axmol/widget/apply_display.hpp>
 #include <bim/axmol/widget/implement_widget.hpp>
 
+#include <bim/axmol/action/dynamic_factory.hpp>
+
 #include <bim/axmol/input/observer/tap_observer.hpp>
 #include <bim/axmol/input/touch_observer_handle.impl.hpp>
 
@@ -15,6 +17,8 @@
 #define x_widget_scope bim::axmol::widget::button::
 #define x_widget_type_name controls
 #include <bim/axmol/widget/implement_controls_struct.hpp>
+
+#include <axmol/2d/Action.h>
 
 IMPLEMENT_SIGNAL(bim::axmol::widget::button, clicked, m_clicked);
 
@@ -30,6 +34,10 @@ bim::axmol::widget::button::button(const bim::axmol::widget::context& context,
   , m_style_pressed(style.get_declaration_or_empty("display.pressed"))
   , m_style_released(style.get_declaration_or_empty("display.release"))
   , m_style_disabled(style.get_declaration_or_empty("display.disabled"))
+  , m_action_pressed(context.action_factory.create(
+        context.colors, style.get_declaration_or_empty("action.pressed")))
+  , m_action_released(context.action_factory.create(
+        context.colors, style.get_declaration_or_empty("action.released")))
   , m_sound(style.get_string("sound.click", ""))
   , m_bounds_dirty(true)
   , m_display_dirty(true)
@@ -117,12 +125,18 @@ void bim::axmol::widget::button::input_press()
 {
   m_is_pressed = true;
   update_display();
+
+  m_container->stopAllActions();
+  m_container->runAction(m_action_pressed.get());
 }
 
 void bim::axmol::widget::button::input_release()
 {
   m_is_pressed = false;
   update_display();
+
+  m_container->stopAllActions();
+  m_container->runAction(m_action_released.get());
 }
 
 void bim::axmol::widget::button::click()

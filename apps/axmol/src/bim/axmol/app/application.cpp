@@ -8,6 +8,7 @@
 #include <bim/axmol/app/root_scene.hpp>
 #include <bim/axmol/app/scene_lock.hpp>
 
+#include <bim/axmol/action/register_actions.hpp>
 #include <bim/axmol/audio/mixer.hpp>
 #include <bim/axmol/display/device_scale.hpp>
 #include <bim/axmol/input/flow.hpp>
@@ -333,6 +334,7 @@ bim::axmol::app::application::application(
 {
   ax::Image::setPNGPremultipliedAlphaEnabled(false);
 
+  bim::axmol::action::register_actions(m_action_factory);
   bim::axmol::widget::register_widgets(m_widget_factory);
 
   m_reset_key_observer->connect_to_released(
@@ -353,7 +355,7 @@ bool bim::axmol::app::application::applicationDidFinishLaunching()
   set_up_colour_chart();
 
   m_context.set_widget_context(bim::axmol::widget::context{
-      m_colors, m_style_cache, m_widget_factory,
+      m_colors, m_style_cache, m_widget_factory, m_action_factory,
       bim::axmol::display::device_scale(1080, 2220) });
 
   // TODO: in a loader.

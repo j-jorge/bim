@@ -6,6 +6,11 @@ namespace bim::axmol
 {
   class colour_chart;
 
+  namespace action
+  {
+    class dynamic_factory;
+  }
+
   namespace style
   {
     class cache;
@@ -21,6 +26,7 @@ namespace bim::axmol
       const bim::axmol::colour_chart& colors;
       bim::axmol::style::cache& style_cache;
       const bim::axmol::widget::dynamic_factory& factory;
+      const bim::axmol::action::dynamic_factory& action_factory;
 
       /**
        * Scale factor to apply to the widgets to stretch them from the design

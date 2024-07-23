@@ -20,10 +20,14 @@
             "decorum":
             [{
                 "instantiate": "clipping_node",
+                "cascade-color": true,
                 "z-order": 5,
                 "widgets":
                 [{
-                    "clipping_node": [],
+                    "clipping_node":
+                    [{
+                        "cascade-color": true
+                    }],
 
                     "stencil":
                     [{
@@ -104,6 +108,45 @@
         "display.pressed": [],
         "display.release": [],
         "display.disabled": [],
+
+        "action.pressed":
+        [{
+            "instantiate": "spawn",
+            "ease": "sine-out",
+
+            "scale":
+            [{
+                "instantiate": "scale",
+                "to": 0.9,
+                "duration": 0.3
+            }],
+
+            "tint":
+            [{
+                "instantiate": "tint",
+                "to": "#c0c0c0",
+                "duration": 0.3
+            }]
+        }],
+
+        "action.released":
+        [{
+            "instantiate": "spawn",
+
+            "scale":
+            [{
+                "instantiate": "scale",
+                "to": 1,
+                "duration": 0.2
+            }],
+
+            "tint":
+            [{
+                "instantiate": "tint",
+                "to": "white",
+                "duration": 0.3
+            }]
+        }],
 
         "sound.click": "tick"
     }
