@@ -4,7 +4,7 @@
 
 namespace bim::axmol::style
 {
-  enum class display_property_flags : std::uint8_t
+  enum class display_property_flags : std::uint16_t
   {
     anchor_point_x = (1 << 0),
     anchor_point_y = (1 << 1),
@@ -13,7 +13,8 @@ namespace bim::axmol::style
 
     z_order = (1 << 4),
     cascade_opacity = (1 << 5),
-    visible = (1 << 6),
-    color = (1 << 7),
+    cascade_color = (1 << 6),
+    visible = (1 << 7),
+    color = (1 << 8),
   };
 }

@@ -219,6 +219,14 @@ bim::axmol::style::cache::get_display(const iscool::style::declaration& style)
       properties.cascade_opacity = *cascade_opacity;
     }
 
+  if (const iscool::optional<bool> cascade_color =
+          style.get_boolean("cascade-color"))
+    {
+      properties.flags |=
+          bim::axmol::style::display_property_flags::cascade_color;
+      properties.cascade_color = *cascade_color;
+    }
+
   if (const iscool::optional<bool> visible = style.get_boolean("visible"))
     {
       properties.flags |= bim::axmol::style::display_property_flags::visible;

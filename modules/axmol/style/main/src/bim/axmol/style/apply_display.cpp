@@ -37,6 +37,9 @@ void bim::axmol::style::apply_display(const display_properties& display,
   if (bool(display.flags & display_property_flags::cascade_opacity))
     node.setCascadeOpacityEnabled(display.cascade_opacity);
 
+  if (bool(display.flags & display_property_flags::cascade_color))
+    node.setCascadeColorEnabled(display.cascade_color);
+
   if (bool(display.flags & display_property_flags::visible))
     node.setVisible(display.visible);
 }

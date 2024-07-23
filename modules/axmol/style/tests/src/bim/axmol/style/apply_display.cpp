@@ -20,6 +20,7 @@ TEST(bim_axmol_style_apply_display, none)
   display.opacity = 0.2;
   display.z_order = 30;
   display.cascade_opacity = false;
+  display.cascade_color = false;
   display.visible = false;
 
   const bim::axmol::ref_ptr<ax::Node> node(ax::Node::create());
@@ -30,6 +31,7 @@ TEST(bim_axmol_style_apply_display, none)
   node->setOpacity(92);
   node->setLocalZOrder(11);
   node->setCascadeOpacityEnabled(true);
+  node->setCascadeColorEnabled(true);
   node->setVisible(true);
 
   bim::axmol::style::apply_display(display, *node);
@@ -41,6 +43,7 @@ TEST(bim_axmol_style_apply_display, none)
   EXPECT_EQ(92, node->getOpacity());
   EXPECT_EQ(11, node->getLocalZOrder());
   EXPECT_TRUE(node->isCascadeOpacityEnabled());
+  EXPECT_TRUE(node->isCascadeColorEnabled());
   EXPECT_TRUE(node->isVisible());
 }
 
@@ -55,6 +58,7 @@ TEST(bim_axmol_style_apply_display, all)
                   | bim::axmol::style::display_property_flags::opacity
                   | bim::axmol::style::display_property_flags::z_order
                   | bim::axmol::style::display_property_flags::cascade_opacity
+                  | bim::axmol::style::display_property_flags::cascade_color
                   | bim::axmol::style::display_property_flags::visible;
 
   display.color = ax::Color3B::MAGENTA;
@@ -64,6 +68,7 @@ TEST(bim_axmol_style_apply_display, all)
   display.opacity = 0.2;
   display.z_order = 30;
   display.cascade_opacity = false;
+  display.cascade_color = false;
   display.visible = false;
 
   const bim::axmol::ref_ptr<ax::Node> node(ax::Node::create());
@@ -85,5 +90,6 @@ TEST(bim_axmol_style_apply_display, all)
   EXPECT_EQ(0.2 * 255, node->getOpacity());
   EXPECT_EQ(30, node->getLocalZOrder());
   EXPECT_FALSE(node->isCascadeOpacityEnabled());
+  EXPECT_FALSE(node->isCascadeColorEnabled());
   EXPECT_FALSE(node->isVisible());
 }

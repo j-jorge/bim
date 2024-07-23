@@ -20,6 +20,7 @@ namespace bim::axmol::style
 
     short z_order;
     bool cascade_opacity;
+    bool cascade_color;
     bool visible;
   };
 }
