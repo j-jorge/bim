@@ -4,6 +4,7 @@ add_subdirectory(bim/net)
 add_subdirectory(bim/server)
 
 add_subdirectory(axmol/core)
+add_subdirectory(axmol/action)
 add_subdirectory(axmol/audio)
 add_subdirectory(axmol/display)
 add_subdirectory(axmol/files)
