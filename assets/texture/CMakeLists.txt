@@ -1,5 +1,6 @@
 set(textures
   "menu-background-pattern.png"
+  "search-background-pattern.png"
   "stars.png"
 )
 

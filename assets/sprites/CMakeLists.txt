@@ -9,8 +9,15 @@ set(sprites
   "sprites/power-up-flame.png"
   "sprites/solid-wall.png"
 
+  "sprites/menu/glow.png"
+  "sprites/menu/rays.png"
   "sprites/menu/rounded-button-border-54-66.png"
   "sprites/menu/rounded-button-fill-54-66.png"
+  "sprites/menu/silhouette-1.png"
+  "sprites/menu/silhouette-2.png"
+  "sprites/menu/silhouette-3.png"
+  "sprites/menu/silhouette-4.png"
+  "sprites/menu/stripe-1-79-1-258.png"
 
   "sprites/ui/directional-pad-left.png"
   "sprites/ui/directional-pad-right.png"

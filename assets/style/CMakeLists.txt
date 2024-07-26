@@ -20,6 +20,7 @@ set(screen_wheel_style_files
   ${CMAKE_CURRENT_LIST_DIR}/button/sprite.json
   ${CMAKE_CURRENT_LIST_DIR}/button/yellow-with-label.json
   ${CMAKE_CURRENT_LIST_DIR}/font/bold.json
+  ${CMAKE_CURRENT_LIST_DIR}/font/bold-center-normal-size-with-outline.json
   ${CMAKE_CURRENT_LIST_DIR}/font/regular.json
   ${CMAKE_CURRENT_LIST_DIR}/font/fancy-regular.json
 

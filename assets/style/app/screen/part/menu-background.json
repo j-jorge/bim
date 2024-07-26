@@ -1,0 +1,65 @@
+{
+    "style":
+    {
+        "background":
+        [{
+            "instantiate": "ax::LayerColor",
+            "color": "science-blue",
+            "z-order": -100,
+            "opacity": 1
+        }],
+
+        "pattern":
+        [{
+            "instantiate": "texture",
+            "widgets/sprite":
+            [{
+                "frame": "texture/menu-background-pattern.png",
+                "color": "danube",
+                "opacity": 0.35
+            }],
+            "rotation": -5,
+            "scroll-per-second.x": 10,
+            "scroll-per-second.y": 20,
+            "z-order": -75
+        }],
+
+        "top-shadow":
+        [{
+            "instantiate": "ax::Sprite",
+            "frame": "sprites/menu/vertical-gradient.png",
+            "color": "sail",
+            "opacity": 0.3,
+            "z-order": -25
+        }],
+
+        "left-shadow":
+        [{
+            "instantiate": "ax::Sprite",
+            "frame": "sprites/menu/horizontal-gradient.png",
+            "color": "blue-zodiac",
+            "opacity": 0.5,
+            "z-order": -50
+        }],
+
+        "right-shadow":
+        [{
+            "instantiate": "ax::Sprite",
+            "frame": "sprites/menu/horizontal-gradient.png",
+            "color": "blue-zodiac",
+            "opacity": 0.5,
+            "flip.x": true,
+            "z-order": -50
+        }],
+
+        "bottom-shadow":
+        [{
+            "instantiate": "ax::Sprite",
+            "frame": "sprites/menu/vertical-gradient.png",
+            "color": "golf-blue",
+            "opacity": 0.4,
+            "flip.y": true,
+            "z-order": -25
+        }]
+    }
+}

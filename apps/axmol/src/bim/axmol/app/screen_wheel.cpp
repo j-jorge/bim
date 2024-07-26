@@ -163,6 +163,7 @@ void bim::axmol::app::screen_wheel::lobby_displayed()
 void bim::axmol::app::screen_wheel::matchmaking_displayed()
 {
   m_inputs.push_back(m_matchmaking->input_node());
+  m_matchmaking->displaying();
   m_matchmaking->displayed();
 }
 

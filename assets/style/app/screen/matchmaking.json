@@ -2,39 +2,225 @@
     "style":
     {
         "widgets":
-        [{
-            "ready_button":
-            [
-                "button/flat-with-label",
-                {
-                    "widgets/label/text.i18n": "READY"
-                }
-            ],
+        [
+            "app/screen/part/menu-background",
+            {
+                "stripe":
+                [{
+                    "instantiate": "ax::Node",
+                    "rotation": -10
+                }],
 
-            "status_label":
-            [
-                "font/regular",
-                {
-                    "text": "Waiting for your opponents…",
-                    "font.size": 32,
-                    "font.color": "#f0f0f0"
-                }
-            ]
-        }],
+                "stripe_background":
+                [{
+                    "instantiate": "nine_slices",
+                    "parent": "stripe",
+                    "widgets/sprite":
+                    [{
+                        "frame": "sprites/menu/stripe-1-79-1-258.png",
+                        "insets.left": 1,
+                        "insets.top": 79,
+                        "insets.width": 1,
+                        "insets.height": 258
+                    }],
+                    "z-order": -10
+                }],
+
+                "stripe_message":
+                [
+                    "font/bold",
+                    {
+                        "instantiate": "ax::Label",
+                        "parent": "stripe",
+                        "text.i18n": "Waiting for your opponents…\nTell your friends to join!",
+                        "font.size": 52,
+                        "font.italics": true,
+                        "font.color": "white",
+                        "align.horizontal": "center",
+                        "z-order": 30
+                    }
+                ],
+
+                "stripe_title":
+                [
+                    "font/fancy-regular",
+                    {
+                        "instantiate": "ax::Label",
+                        "parent": "stripe",
+                        "text.i18n": "Online Game",
+                        "font.size": 100,
+                        "font.italics": true,
+                        "font.color": "amber",
+                        "outline.color": "cod-gray",
+                        "outline.size": 5,
+                        "z-order": 30
+                    }
+                ],
+
+                "pattern":
+                [{
+                    "widgets/sprite/frame":
+                      "texture/search-background-pattern.png",
+                    "scroll-per-second.x": -10,
+                    "scale": 0.75
+                }],
+
+                "rays":
+                [{
+                    "instantiate": "ax::Sprite",
+                    "frame": "sprites/menu/rays.png",
+                    "z-order": 0,
+                    "opacity": 0.1
+                }],
+
+                "glow":
+                [{
+                    "instantiate": "ax::Sprite",
+                    "frame": "sprites/menu/glow.png",
+                    "color": "danube",
+                    "z-order": 1
+                }],
+
+                "player-1":
+                [{
+                    "instantiate": "ax::Sprite",
+                    "frame": "sprites/menu/silhouette-1.png",
+                    "color": "black",
+                    "z-order": 2
+                }],
+
+                "player-2":
+                [{
+                    "instantiate": "ax::Sprite",
+                    "frame": "sprites/menu/silhouette-2.png",
+                    "color": "black",
+                    "z-order": 2
+                }],
+
+                "player-3":
+                [{
+                    "instantiate": "ax::Sprite",
+                    "frame": "sprites/menu/silhouette-3.png",
+                    "color": "black",
+                    "z-order": 2
+                }],
+
+                "player-4":
+                [{
+                    "instantiate": "ax::Sprite",
+                    "frame": "sprites/menu/silhouette-4.png",
+                    "color": "black",
+                    "z-order": 2
+                }],
+
+                "label-2":
+                [
+                    "font/bold-center-normal-size-with-outline",
+                    {
+                        "instantiate": "ax::Label",
+                        "text.i18n": "You can start a two-players game\nnow or wait for more players!",
+                        "z-order": 5
+                    }
+                ],
+
+                "label-3":
+                [
+                    "font/bold-center-normal-size-with-outline",
+                    {
+                        "instantiate": "ax::Label",
+                        "text.i18n": "You can start a three-players game\nnow or wait for more players!",
+                        "z-order": 5
+                    }
+                ],
+
+                "label-4":
+                [
+                    "font/bold-center-normal-size-with-outline",
+                    {
+                        "instantiate": "ax::Label",
+                        "text.i18n": "Start the game now!",
+                        "z-order": 5
+                    }
+                ],
+
+                "ready_button":
+                [
+                    "button/yellow-with-label",
+                    {
+                        "widgets/label/text.i18n": "FIGHT!",
+                        "z-order": 20
+                    }
+                ]
+            }
+        ],
 
         "display.displaying":
         [{
-            "ready_button/visible": false
+            "player-2": [{ "visible": false }],
+            "player-3": [{ "visible": false }],
+            "player-4": [{ "visible": false }],
+            "label-2": [{ "visible": false }],
+            "label-3": [{ "visible": false }],
+            "label-4": [{ "visible": false }]
         }],
 
-        "display.new-game":
+        "actions.displaying":
         [{
-            "ready_button/visible": true
+            "rays":
+            [{
+                "instantiate": "repeat",
+                "forever": true,
+                "action":
+                [{
+                    "instantiate": "rotate",
+                    "by": -360,
+                    "duration": 30
+                }]
+            }]
         }],
 
-        "display.wait":
+        "actions.wait":
         [{
-            "ready_button/visible": false
+            "ready_button": [{ "instantiate": "hide" }],
+            "player-2": [{ "instantiate": "hide" }],
+            "player-3": [{ "instantiate": "hide" }],
+            "player-4": [{ "instantiate": "hide" }],
+            "label-2": [{ "instantiate": "hide" }],
+            "label-3": [{ "instantiate": "hide" }],
+            "label-4": [{ "instantiate": "hide" }]
+        }],
+
+        "actions.2-players":
+        [{
+            "ready_button": [{ "instantiate": "show" }],
+            "player-2": [{ "instantiate": "show" }],
+            "player-3": [{ "instantiate": "hide" }],
+            "player-4": [{ "instantiate": "hide" }],
+            "label-2": [{ "instantiate": "show" }],
+            "label-3": [{ "instantiate": "hide" }],
+            "label-4": [{ "instantiate": "hide" }]
+        }],
+
+        "actions.3-players":
+        [{
+            "ready_button": [{ "instantiate": "show" }],
+            "player-2": [{ "instantiate": "show" }],
+            "player-3": [{ "instantiate": "show" }],
+            "player-4": [{ "instantiate": "hide" }],
+            "label-2": [{ "instantiate": "hide" }],
+            "label-3": [{ "instantiate": "show" }],
+            "label-4": [{ "instantiate": "hide" }]
+        }],
+
+        "actions.4-players":
+        [{
+            "ready_button": [{ "instantiate": "show" }],
+            "player-2": [{ "instantiate": "show" }],
+            "player-3": [{ "instantiate": "show" }],
+            "player-4": [{ "instantiate": "show" }],
+            "label-2": [{ "instantiate": "hide" }],
+            "label-3": [{ "instantiate": "hide" }],
+            "label-4": [{ "instantiate": "show" }]
         }]
     }
 }

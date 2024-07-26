@@ -1,9 +1,11 @@
 #pragma once
 
+#include <bim/axmol/action/runner.hpp>
 #include <bim/axmol/input/tree.hpp>
 #include <bim/axmol/widget/declare_controls_struct.hpp>
 
 #include <iscool/context.hpp>
+#include <iscool/monitoring/declare_state_monitor.hpp>
 #include <iscool/net/message/channel_id.hpp>
 #include <iscool/signals/declare_signal.hpp>
 #include <iscool/signals/scoped_connection.hpp>
@@ -48,19 +50,23 @@ namespace bim::axmol::app
     // TODO: rename display_nodes
     const bim::axmol::widget::named_node_group& nodes() const;
 
+    void displaying();
     void displayed();
     void closing();
 
   private:
     void update_display_with_game_proposal(unsigned player_count);
-    void update_display_waiting();
+    void run_actions(bim::axmol::action::runner& runner,
+                     const iscool::style::declaration& style) const;
 
     void accept_game();
     void launch_game(const bim::net::game_launch_event& event);
 
   private:
+    ic_declare_state_monitor(m_monitor);
+
     bim::axmol::input::tree m_inputs;
-    bim_declare_controls_struct(controls, m_controls, 2);
+    bim_declare_controls_struct(controls, m_controls, 1);
 
     std::unique_ptr<bim::net::new_game_exchange> m_new_game;
 
@@ -68,7 +74,13 @@ namespace bim::axmol::app
     iscool::signals::scoped_connection m_launch_connection;
 
     const iscool::style::declaration& m_style_displaying;
-    const iscool::style::declaration& m_style_new_game;
-    const iscool::style::declaration& m_style_wait;
+    const iscool::style::declaration& m_action_displaying;
+    const iscool::style::declaration& m_action_wait;
+    const iscool::style::declaration& m_action_2_players;
+    const iscool::style::declaration& m_action_3_players;
+    const iscool::style::declaration& m_action_4_players;
+
+    bim::axmol::action::runner m_main_actions;
+    bim::axmol::action::runner m_state_actions;
   };
 }
