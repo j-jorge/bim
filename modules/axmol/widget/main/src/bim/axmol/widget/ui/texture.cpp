@@ -19,6 +19,7 @@ bim::axmol::widget::texture::texture(
     const iscool::style::declaration& style)
   : m_controls(context, style.get_declaration_or_empty("widgets"))
   , m_device_scale(context.device_scale)
+  , m_scale(style.get_number("scale", 1))
 {
   ax::Sprite& s = *m_controls->sprite;
 
@@ -55,10 +56,11 @@ void bim::axmol::widget::texture::setContentSize(const ax::Size& size)
   ax::Node::setContentSize(size);
 
   ax::Sprite& s = *m_controls->sprite;
+  const float final_scale = m_device_scale * m_scale;
 
-  s.setTextureRect(ax::Rect(0, 0, size.width / m_device_scale,
-                            size.height / m_device_scale));
-  s.setScale(m_device_scale);
+  s.setTextureRect(
+      ax::Rect(0, 0, size.width / final_scale, size.height / final_scale));
+  s.setScale(final_scale);
 }
 
 bool bim::axmol::widget::texture::init()

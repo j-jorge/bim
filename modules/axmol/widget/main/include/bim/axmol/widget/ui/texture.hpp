@@ -27,5 +27,6 @@ namespace bim::axmol::widget
   private:
     bim_declare_controls_struct(controls, m_controls, 1);
     const float m_device_scale;
+    const float m_scale;
   };
 }
