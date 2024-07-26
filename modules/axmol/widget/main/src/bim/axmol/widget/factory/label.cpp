@@ -65,6 +65,10 @@ bim::axmol::ref_ptr<ax::Label> bim::axmol::widget::factory<ax::Label>::create(
   bim::axmol::ref_ptr<ax::Label> result =
       ax::Label::createWithTTF(ttf_config, text, horizontal_align);
 
+  iscool::optional<const std::string&> color = style.get_string("font.color");
+  result->setTextColor(color ? context.colors.to_color_4b(*color)
+                             : ax::Color4B::WHITE);
+
   const ax::Vec2 shadow_offset(style.get_number("shadow.offset.x", 0),
                                style.get_number("shadow.offset.y", 0));
 
