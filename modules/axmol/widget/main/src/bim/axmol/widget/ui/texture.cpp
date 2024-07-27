@@ -14,12 +14,17 @@
 
 bim_implement_widget(bim::axmol::widget::texture);
 
+static constexpr std::string_view g_texture_scroll_tag = "scroll";
+
 bim::axmol::widget::texture::texture(
     const bim::axmol::widget::context& context,
     const iscool::style::declaration& style)
   : m_controls(context, style.get_declaration_or_empty("widgets"))
   , m_device_scale(context.device_scale)
   , m_scale(style.get_number("scale", 1))
+  , m_scroll(ax::Vec2(-style.get_number("scroll-per-second.x", 0),
+                      style.get_number("scroll-per-second.y", 0))
+             * m_device_scale)
 {
   ax::Sprite& s = *m_controls->sprite;
 
@@ -29,21 +34,6 @@ bim::axmol::widget::texture::texture(
       { ax::backend::SamplerFilter::LINEAR, ax::backend::SamplerFilter::LINEAR,
         ax::backend::SamplerAddressMode::REPEAT,
         ax::backend::SamplerAddressMode::REPEAT });
-
-  const ax::Vec2 scroll = ax::Vec2(-style.get_number("scroll-per-second.x", 0),
-                                   style.get_number("scroll-per-second.y", 0))
-                          * m_device_scale;
-
-  if ((scroll.x != 0) || (scroll.y != 0))
-    schedule(
-        [=, &s](float dt)
-        {
-          ax::Rect r = s.getTextureRect();
-          r.origin += dt * scroll;
-
-          s.setTextureRect(r);
-        },
-        {});
 }
 
 bim::axmol::widget::texture::~texture() = default;
@@ -75,4 +65,31 @@ bool bim::axmol::widget::texture::init()
   add_group_as_children(*this, m_controls->all_nodes);
 
   return true;
+}
+
+void bim::axmol::widget::texture::onEnter()
+{
+  ax::Node::onEnter();
+
+  if ((m_scroll.x == 0) && (m_scroll.y == 0))
+    return;
+
+  schedule(
+      [=, this](float dt)
+      {
+        ax::Sprite& s = *m_controls->sprite;
+
+        ax::Rect r = s.getTextureRect();
+        r.origin += dt * m_scroll;
+
+        s.setTextureRect(r);
+      },
+      g_texture_scroll_tag);
+}
+
+void bim::axmol::widget::texture::onExit()
+{
+  unschedule(g_texture_scroll_tag);
+
+  ax::Node::onExit();
 }

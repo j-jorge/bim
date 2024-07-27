@@ -23,10 +23,13 @@ namespace bim::axmol::widget
 
   private:
     bool init() override;
+    void onEnter() override;
+    void onExit() override;
 
   private:
     bim_declare_controls_struct(controls, m_controls, 1);
     const float m_device_scale;
     const float m_scale;
+    const ax::Vec2 m_scroll;
   };
 }
