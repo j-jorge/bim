@@ -3,6 +3,7 @@ find_package(axmol 1.0.0 REQUIRED)
 add_library(bim_axmol_widget
   STATIC
   main/src/bim/axmol/widget/add_group_as_children.cpp
+  main/src/bim/axmol/widget/apply_actions.cpp
   main/src/bim/axmol/widget/apply_bounds.cpp
   main/src/bim/axmol/widget/apply_display.cpp
   main/src/bim/axmol/widget/dynamic_factory.cpp
