@@ -73,7 +73,7 @@ build_styling_queue(const bim::axmol::widget::named_node_group& nodes,
         {
           bim_unreachable_in_release;
           ic_log(iscool::log::nature::error(),
-                 bim::axmol::widget::g_log_context, "No node named '{}'.",
+                 bim::axmol::widget::g_log_context, "No node named '%s'.",
                  node_name);
           continue;
         }
@@ -93,7 +93,7 @@ build_styling_queue(const bim::axmol::widget::named_node_group& nodes,
               bim_unreachable_in_release;
               ic_log(iscool::log::nature::error(),
                      bim::axmol::widget::g_log_context,
-                     "No reference node named '{}'.", *reference_name);
+                     "No reference node named '%s'.", *reference_name);
               continue;
             }
 
