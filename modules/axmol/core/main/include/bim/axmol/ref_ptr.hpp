@@ -42,6 +42,11 @@ namespace bim::axmol
 
     ref_ptr& operator=(std::nullptr_t) noexcept;
 
+    explicit operator bool() const
+    {
+      return m_ptr != nullptr;
+    }
+
     template <typename U>
       requires std::is_base_of_v<T, U>
     ref_ptr& operator=(U* p) noexcept;
