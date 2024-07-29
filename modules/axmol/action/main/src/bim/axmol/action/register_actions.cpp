@@ -9,6 +9,7 @@
 #include <bim/axmol/action/factory/spawn.hpp>
 #include <bim/axmol/action/factory/tint.hpp>
 
+#include <axmol/2d/ActionInstant.h>
 #include <axmol/2d/ActionInterval.h>
 
 void bim::axmol::action::register_actions(dynamic_factory& factory)
@@ -42,6 +43,20 @@ void bim::axmol::action::register_actions(dynamic_factory& factory)
   register_action_1(scale);
   register_action_3(spawn);
   register_action_2(tint);
+
+  factory.register_action(
+      "hide",
+      [](const colour_chart&, const iscool::style::declaration&)
+      {
+        return ax::Hide::create();
+      });
+
+  factory.register_action(
+      "show",
+      [](const colour_chart&, const iscool::style::declaration&)
+      {
+        return ax::Show::create();
+      });
 
 #undef register_action_3
 #undef register_action_2
