@@ -10,7 +10,6 @@
 #include <iscool/optional.hpp>
 #include <iscool/optional.impl.tpp>
 
-#include <axmol/2d/ActionEase.h>
 #include <axmol/2d/ActionInterval.h>
 
 bim::axmol::ref_ptr<ax::ActionInterval>
@@ -44,10 +43,7 @@ bim::axmol::action::tint_from_style(const bim::axmol::colour_chart& colors,
     tint =
         ax::Spawn::create(ax::FadeTo::create(duration, to.a), tint, nullptr);
 
-  const iscool::optional<const std::string&> ease = style.get_string("ease");
-
-  if (ease)
-    tint = wrap_in_easing_function(*tint, *ease);
+  tint = maybe_wrap_in_easing_function(*tint, style);
 
   actions.pushBack(tint);
 

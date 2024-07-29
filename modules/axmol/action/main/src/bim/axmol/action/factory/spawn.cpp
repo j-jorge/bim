@@ -7,10 +7,6 @@
 
 #include <iscool/style/declaration.hpp>
 
-#include <iscool/optional.hpp>
-#include <iscool/optional.impl.tpp>
-
-#include <axmol/2d/ActionEase.h>
 #include <axmol/2d/ActionInterval.h>
 
 bim::axmol::ref_ptr<ax::ActionInterval>
@@ -27,11 +23,7 @@ bim::axmol::action::spawn_from_style(const dynamic_factory& factory,
         factory.create(colors, entry.second).get()));
 
   ax::ActionInterval* spawn = ax::Spawn::create(actions);
-
-  const iscool::optional<const std::string&> ease = style.get_string("ease");
-
-  if (ease)
-    spawn = wrap_in_easing_function(*spawn, *ease);
+  spawn = maybe_wrap_in_easing_function(*spawn, style);
 
   return spawn;
 }

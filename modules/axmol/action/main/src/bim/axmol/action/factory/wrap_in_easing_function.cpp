@@ -2,7 +2,13 @@
 
 #include <bim/assume.hpp>
 
+#include <iscool/style/declaration.hpp>
+
+#include <iscool/optional.hpp>
+#include <iscool/optional.impl.tpp>
+
 #include <axmol/2d/ActionEase.h>
+#include <axmol/2d/ActionInterval.h>
 
 [[nodiscard]] ax::ActionEase*
 bim::axmol::action::wrap_in_easing_function(ax::ActionInterval& action,
@@ -28,4 +34,16 @@ bim::axmol::action::wrap_in_easing_function(ax::ActionInterval& action,
 
   bim_assume(false);
   return nullptr;
+}
+
+[[nodiscard]] ax::ActionInterval*
+bim::axmol::action::maybe_wrap_in_easing_function(
+    ax::ActionInterval& action, const iscool::style::declaration& style)
+{
+  const iscool::optional<const std::string&> ease = style.get_string("ease");
+
+  if (ease)
+    return wrap_in_easing_function(action, *ease);
+
+  return &action;
 }

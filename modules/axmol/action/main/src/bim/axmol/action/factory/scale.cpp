@@ -6,10 +6,6 @@
 
 #include <iscool/style/declaration.hpp>
 
-#include <iscool/optional.hpp>
-#include <iscool/optional.impl.tpp>
-
-#include <axmol/2d/ActionEase.h>
 #include <axmol/2d/ActionInterval.h>
 
 bim::axmol::ref_ptr<ax::ActionInterval>
@@ -17,11 +13,7 @@ bim::axmol::action::scale_from_style(const iscool::style::declaration& style)
 {
   ax::ActionInterval* scale = ax::ScaleTo::create(
       *style.get_number("duration"), *style.get_number("to"));
-
-  const iscool::optional<const std::string&> ease = style.get_string("ease");
-
-  if (ease)
-    scale = wrap_in_easing_function(*scale, *ease);
+  scale = maybe_wrap_in_easing_function(*scale, style);
 
   const iscool::optional<float> from = style.get_number("from");
 

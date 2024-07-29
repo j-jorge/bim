@@ -2,6 +2,11 @@
 
 #include <string_view>
 
+namespace iscool::style
+{
+  class declaration;
+}
+
 namespace ax
 {
   class ActionEase;
@@ -13,4 +18,8 @@ namespace bim::axmol::action
   [[nodiscard]] ax::ActionEase*
   wrap_in_easing_function(ax::ActionInterval& action,
                           std::string_view function_name);
+
+  [[nodiscard]] ax::ActionInterval*
+  maybe_wrap_in_easing_function(ax::ActionInterval& action,
+                                const iscool::style::declaration& style);
 }
