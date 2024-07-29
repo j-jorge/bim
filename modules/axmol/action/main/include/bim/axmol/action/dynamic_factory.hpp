@@ -6,7 +6,7 @@
 
 namespace ax
 {
-  class Action;
+  class FiniteTimeAction;
 }
 
 namespace iscool::style
@@ -22,7 +22,7 @@ namespace bim::axmol
   {
     /**
      * This class provides a way to create an instance of a class derived from
-     * ax::Action given its type name.
+     * ax::FiniteTimeAction given its type name.
      */
     class dynamic_factory
     {
@@ -30,14 +30,14 @@ namespace bim::axmol
       template <typename F>
       void register_action(const std::string& name, F&& f);
 
-      [[nodiscard]] bim::axmol::ref_ptr<ax::Action>
+      [[nodiscard]] bim::axmol::ref_ptr<ax::FiniteTimeAction>
       create(const bim::axmol::colour_chart& colors,
              const iscool::style::declaration& style) const;
 
     private:
-      iscool::factory::dynamic_factory<bim::axmol::ref_ptr<ax::Action>,
-                                       const bim::axmol::colour_chart&,
-                                       const iscool::style::declaration&>
+      iscool::factory::dynamic_factory<
+          bim::axmol::ref_ptr<ax::FiniteTimeAction>,
+          const bim::axmol::colour_chart&, const iscool::style::declaration&>
           m_factory;
     };
   }

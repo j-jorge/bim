@@ -4,6 +4,7 @@ add_library(bim_axmol_action
   main/src/bim/axmol/action/register_actions.cpp
   main/src/bim/axmol/action/runner.cpp
 
+  main/src/bim/axmol/action/factory/fade.cpp
   main/src/bim/axmol/action/factory/scale.cpp
   main/src/bim/axmol/action/factory/spawn.cpp
   main/src/bim/axmol/action/factory/tint.cpp
