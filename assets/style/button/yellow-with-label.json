@@ -17,7 +17,52 @@
                 "z-order": 20
             }],
 
-            "decorum":
+            "decorum-off":
+            [{
+                "instantiate": "clipping_node",
+                "cascade-color": true,
+                "z-order": 5,
+                "widgets":
+                [{
+                    "clipping_node":
+                    [{
+                        "cascade-color": true
+                    }],
+
+                    "stencil":
+                    [{
+                        "instantiate": "nine_slices",
+                        "anchor-point.x": 0,
+                        "anchor-point.y": 0,
+                        "widgets/sprite":
+                        [{
+                            "frame": "sprites/menu/rounded-button-fill-54-66.png",
+                            "insets.left": 54,
+                            "insets.top": 66,
+                            "insets.width": 1,
+                            "insets.height": 1
+                        }]
+                    }],
+
+                    "fill":
+                    [{
+                        "instantiate": "ax::Sprite",
+                        "parent": "clipping_node",
+                        "frame": "sprites/menu/vertical-gray-gradient.png",
+                        "z-order": 0
+                    }]
+                }],
+
+                "bounds":
+                [{
+                    "clipping_node": [ "layout/fill" ],
+                    "stencil": [ "layout/fill" ],
+                    "fill": [ "layout/fill" ]
+                }]
+            }],
+
+
+            "decorum-on":
             [{
                 "instantiate": "clipping_node",
                 "cascade-color": true,
@@ -94,7 +139,8 @@
         "bounds":
         [{
             "border": [ "layout/fill" ],
-            "decorum": [ "layout/fill" ],
+            "decorum-on": [ "layout/fill" ],
+            "decorum-off": [ "layout/fill" ],
 
             "label":
             [{
@@ -106,8 +152,18 @@
         }],
 
         "display.pressed": [],
-        "display.release": [],
-        "display.disabled": [],
+
+        "display.release":
+        [{
+            "decorum-on/visible": true,
+            "decorum-off/visible": false
+        }],
+
+        "display.disabled":
+        [{
+            "decorum-on/visible": false,
+            "decorum-off/visible": true
+        }],
 
         "action.pressed":
         [{
