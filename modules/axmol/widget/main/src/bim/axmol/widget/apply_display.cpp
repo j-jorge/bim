@@ -30,7 +30,7 @@ void bim::axmol::widget::apply_display(bim::axmol::style::cache& style_cache,
         {
           bim_unreachable_in_release;
           ic_log(iscool::log::nature::error(),
-                 bim::axmol::widget::g_log_context, "No node named '{}'.",
+                 bim::axmol::widget::g_log_context, "No node named '%s'.",
                  node_name);
           continue;
         }
