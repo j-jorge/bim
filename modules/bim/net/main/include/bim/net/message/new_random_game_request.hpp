@@ -6,9 +6,12 @@
 #include <iscool/net/byte_array_serialization/byte_array_array_serialization.hpp>
 #include <iscool/net/message/raw_message.hpp>
 
+#include <cstdint>
+
 namespace bim::net
 {
   DECLARE_RAW_MESSAGE(new_random_game_request,
                       message_type::new_random_game_request,
-                      ((client_token)(request_token)));
+                      ((client_token)(request_token)) //
+                      ((std::uint32_t)(feature_mask)));
 }

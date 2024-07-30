@@ -169,8 +169,9 @@ void bim::axmol::app::online_game::attached()
 void bim::axmol::app::online_game::displaying(
     const bim::net::game_launch_event& event)
 {
-  m_contest.reset(
-      new bim::game::contest(event.seed, 80, event.player_count, 13, 15));
+  m_contest.reset(new bim::game::contest(
+      event.seed, event.brick_wall_probability, event.player_count,
+      event.arena_width, event.arena_height));
   m_game_channel.reset(new iscool::net::message_channel(
       m_context.get_session_handler()->message_stream(),
       m_context.get_session_handler()->session_id(), event.channel));

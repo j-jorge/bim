@@ -12,5 +12,9 @@ namespace bim::net
     iscool::net::channel_id channel;
     unsigned player_count;
     unsigned player_index;
+    std::uint32_t feature_mask;
+    std::uint8_t brick_wall_probability;
+    std::uint8_t arena_width;
+    std::uint8_t arena_height;
   };
 }

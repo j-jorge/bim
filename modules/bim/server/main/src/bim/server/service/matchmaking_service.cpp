@@ -225,13 +225,19 @@ void bim::server::matchmaking_service::mark_as_ready(
              game->channel, game->seed);
     }
 
-  m_message_stream.send(endpoint,
-                        bim::net::launch_game(message.get_request_token(),
-                                              game->seed, game->channel,
-                                              game->player_count,
-                                              game->session_index(session))
-                            .build_message(),
-                        session, 0);
+  constexpr std::uint32_t feature_mask = 0;
+  constexpr std::uint8_t brick_wall_probability = 80;
+  constexpr std::uint8_t arena_width = 13;
+  constexpr std::uint8_t arena_height = 15;
+
+  m_message_stream.send(
+      endpoint,
+      bim::net::launch_game(message.get_request_token(), game->seed,
+                            game->channel, feature_mask, game->player_count,
+                            game->session_index(session),
+                            brick_wall_probability, arena_width, arena_height)
+          .build_message(),
+      session, 0);
 }
 
 void bim::server::matchmaking_service::send_game_on_hold(
