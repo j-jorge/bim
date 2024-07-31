@@ -109,8 +109,6 @@ void bim::axmol::app::matchmaking::update_display_with_game_proposal(
 {
   const iscool::style::declaration* action;
 
-  printf("%d players\n", player_count);
-
   switch (player_count)
     {
     case 1:
