@@ -3,7 +3,7 @@
 set -euo pipefail
 
 : "${libclaw_repository:=https://github.com/j-jorge/libclaw/}"
-: "${libclaw_version:=1.8.2}"
+: "${libclaw_version:=1.9.0}"
 package_revision=1
 version="$libclaw_version"-"$package_revision"
 build_type=release
