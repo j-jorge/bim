@@ -8,25 +8,27 @@ find_package(EnTT 3.11.1 REQUIRED)
 find_package(fmt 10.2.1 REQUIRED)
 find_package(GTest 1.13.0 REQUIRED)
 
+set(iscool_components
+  audio
+  http
+  i18n
+  net
+  preferences
+  random
+  style
+  system
+  wish
+)
+
+if(BIM_BUILDING_FOR_ANDROID)
+  set(iscool_components ${iscool_components} jni)
+endif()
+
 find_package(
   iscool-core 1.9.1
   REQUIRED
   COMPONENTS
-  audio
-  files
-  http
-  i18n
-  jni
-  log
-  net
-  preferences
-  random
-  schedule
-  signals
-  strings
-  style
-  system
-  wish
+  ${iscool_components}
 )
 
 add_subdirectory(modules)

@@ -1,6 +1,6 @@
 add_subdirectory(axmol)
 
-if("${CMAKE_SYSTEM_NAME}" STREQUAL "Android")
+if(BIM_BUILDING_FOR_ANDROID)
   add_subdirectory(android)
 else()
   add_subdirectory(linux)

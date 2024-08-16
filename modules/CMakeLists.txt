@@ -14,6 +14,6 @@ add_subdirectory(axmol/schedule)
 add_subdirectory(axmol/style)
 add_subdirectory(axmol/widget)
 
-if("${CMAKE_SYSTEM_NAME}" STREQUAL "Android")
+if(BIM_BUILDING_FOR_ANDROID)
   add_subdirectory(axmol/jni)
 endif()

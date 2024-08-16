@@ -4,3 +4,13 @@ set(BIM_GENERATED_ASSETS_DIR
   PATH
   "Path to the directory where the generated assets will be produced."
 )
+
+if(NOT DEFINED BIM_BUILDING_FOR_ANDROID)
+  # When the Android build is configured this variable is set by the
+  # calling CMake script. This enables us to include the correct
+  # modules for this platform. Note that we cannot check
+  # CMAKE_SYSTEM_NAME for equality with "Android" because this test is
+  # also true when building the Linux or console apps from an Android
+  # host.
+  set(BIM_BUILDING_FOR_ANDROID FALSE)
+endif()
