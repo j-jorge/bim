@@ -7,7 +7,27 @@ find_package(Boost 1.82.0 REQUIRED)
 find_package(EnTT 3.11.1 REQUIRED)
 find_package(fmt 10.2.1 REQUIRED)
 find_package(GTest 1.13.0 REQUIRED)
-find_package(iscool-core 1.9.0 REQUIRED)
+
+find_package(
+  iscool-core 1.9.1
+  REQUIRED
+  COMPONENTS
+  audio
+  files
+  http
+  i18n
+  jni
+  log
+  net
+  preferences
+  random
+  schedule
+  signals
+  strings
+  style
+  system
+  wish
+)
 
 add_subdirectory(modules)
 add_subdirectory(apps)
