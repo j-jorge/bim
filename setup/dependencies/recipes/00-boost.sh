@@ -6,7 +6,7 @@ set -euo pipefail
 
 boost_version=1.82.0
 boost_version_underscore="${boost_version//./_}"
-package_revision=3
+package_revision=4
 version="$boost_version"-"$package_revision"
 build_type=release
 
@@ -106,7 +106,7 @@ cd "$archive_basename"
 
 case "$bim_package_install_platform" in
     linux)
-        configure "locale,program_options,system"
+        configure "program_options,system"
         build --prefix="$install_dir"
         ;;
     android)
