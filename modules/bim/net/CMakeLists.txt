@@ -23,6 +23,7 @@ target_link_libraries(
 )
 
 add_executable(net-tests
+  tests/src/bim/net/message/fuzzing.cpp
   tests/src/bim/net/message/game_update_from_client.cpp
   tests/src/bim/net/message/game_update_from_server.cpp
   tests/src/bim/net/message/launch_game.cpp
