@@ -37,7 +37,7 @@
 static std::chrono::nanoseconds date_for_next_release()
 {
   return iscool::time::now<std::chrono::nanoseconds>()
-         + std::chrono::minutes(1);
+         + std::chrono::seconds(5);
 }
 
 struct bim::server::matchmaking_service::encounter_info

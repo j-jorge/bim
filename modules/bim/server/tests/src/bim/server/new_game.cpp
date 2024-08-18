@@ -137,7 +137,7 @@ void new_game_test::client::send_new_game_request(
   for (int i = 0; (i != 10) && !game_on_hold_answer; ++i)
     {
       m_message_channel->send(message.build_message());
-      m_scheduler.tick(std::chrono::seconds(1));
+      m_scheduler.tick(std::chrono::milliseconds(50));
     }
 }
 
@@ -171,7 +171,7 @@ void new_game_test::client::send_accept_game(
   for (int i = 0; (i != 10) && !launch_game_answer; ++i)
     {
       m_message_channel->send(message.build_message());
-      m_scheduler.tick(std::chrono::seconds(1));
+      m_scheduler.tick(std::chrono::milliseconds(50));
     }
 }
 
@@ -334,7 +334,7 @@ TEST_F(new_game_test, player_leaving_on_new_game)
   // Let the time pass to trigger the kicking of the inactive players.
   for (int t = 0; t != 3; ++t)
     {
-      m_scheduler.tick(std::chrono::seconds(30));
+      m_scheduler.tick(std::chrono::seconds(2));
 
       // Update everyone but one player.
       for (int i = 0; i != 4; ++i)
@@ -440,7 +440,7 @@ TEST_F(new_game_test, player_leaving_on_accept_game)
   // Let the time pass to trigger the kicking of the inactive players.
   for (int t = 0; t != 3; ++t)
     {
-      m_scheduler.tick(std::chrono::seconds(30));
+      m_scheduler.tick(std::chrono::seconds(2));
 
       // Update everyone but one player.
       for (int i = 0; i != 4; ++i)
