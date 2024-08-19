@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/axmol/widget/set_node_parents.hpp>
 
 #include <bim/axmol/widget/log_context.hpp>

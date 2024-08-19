@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/axmol/input/key_observer.hpp>
 
 bim::axmol::input::key_observer::key_observer() = default;

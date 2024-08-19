@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/net/session_handler.hpp>
 
 #include <iscool/http/send.hpp>

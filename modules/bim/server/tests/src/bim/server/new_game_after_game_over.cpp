@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/server/tests/fake_scheduler.hpp>
 
 #include <bim/server/server.hpp>

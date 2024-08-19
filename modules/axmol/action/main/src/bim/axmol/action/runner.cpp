@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/axmol/action/runner.hpp>
 
 #include <axmol/2d/ActionManager.h>

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/axmol/jni/bridge.hpp>
 
 #include <iscool/jni/setup.hpp>

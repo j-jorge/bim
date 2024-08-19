@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/game/player_action.hpp>
 
 #include <bim/game/component/player_action.hpp>

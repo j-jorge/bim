@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/axmol/app/task/main_task.hpp>
 
 #include <bim/axmol/app/screen_wheel.hpp>

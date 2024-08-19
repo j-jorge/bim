@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/axmol/input/observer/soft_stick.hpp>
 
 #include <bim/axmol/input/touch_event_view.hpp>

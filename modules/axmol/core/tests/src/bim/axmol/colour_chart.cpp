@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/axmol/colour_chart.hpp>
 
 #include <axmol/base/Types.h>

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/axmol/widget/factory/scale_nine_sprite.hpp>
 
 #include <bim/axmol/widget/context.hpp>

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 #pragma once
 
 #include <bim/axmol/input/observer/axmol_node_touch_observer.hpp>

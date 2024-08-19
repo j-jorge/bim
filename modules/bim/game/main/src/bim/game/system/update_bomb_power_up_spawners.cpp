@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/game/system/update_bomb_power_up_spawners.hpp>
 
 #include <bim/game/component/bomb.hpp>

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/axmol/app/scene_lock.hpp>
 
 #include <iscool/monitoring/implement_state_monitor.hpp>

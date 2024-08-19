@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/axmol/audio/mixer.hpp>
 
 #include <iscool/audio/loop_mode.hpp>

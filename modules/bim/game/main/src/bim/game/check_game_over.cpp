@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/game/check_game_over.hpp>
 
 #include <bim/game/component/dead.hpp>

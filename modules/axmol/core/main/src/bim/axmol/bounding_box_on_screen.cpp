@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/axmol/bounding_box_on_screen.hpp>
 
 #include <axmol/2d/Node.h>

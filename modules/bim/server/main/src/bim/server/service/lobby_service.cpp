@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/server/service/lobby_service.hpp>
 
 #include <bim/net/message/accept_game.hpp>

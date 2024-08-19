@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/game/system/refresh_bomb_inventory.hpp>
 
 #include <bim/game/component/bomb.hpp>

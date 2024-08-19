@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/axmol/input/flow.hpp>
 
 #include <bim/axmol/input/key_event_view.hpp>

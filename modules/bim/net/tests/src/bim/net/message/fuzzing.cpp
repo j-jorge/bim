@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/net/message/accept_game.hpp>
 #include <bim/net/message/authentication.hpp>
 #include <bim/net/message/authentication_ko.hpp>

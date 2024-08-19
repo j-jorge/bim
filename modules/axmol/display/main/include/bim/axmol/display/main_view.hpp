@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 #include <axmol/math/Vec2.h>
 
 #include <string_view>

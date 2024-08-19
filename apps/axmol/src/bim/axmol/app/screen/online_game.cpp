@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/axmol/app/screen/online_game.hpp>
 
 #include <bim/axmol/widget/factory/sprite.hpp>

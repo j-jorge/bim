@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/axmol/action/register_actions.hpp>
 
 #include <bim/axmol/action/dynamic_factory.impl.hpp>

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/axmol/input/observer/single_key_observer.hpp>
 
 #include <iscool/signals/implement_signal.hpp>

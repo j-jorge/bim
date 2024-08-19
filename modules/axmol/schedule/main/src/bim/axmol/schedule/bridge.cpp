@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/axmol/schedule/bridge.hpp>
 
 #include <iscool/schedule/setup.hpp>

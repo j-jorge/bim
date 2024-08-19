@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/game/factory/flame_power_up.hpp>
 
 #include <bim/game/arena.hpp>

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/axmol/app/screen/lobby.hpp>
 
 #include <bim/axmol/widget/named_node_group.hpp>

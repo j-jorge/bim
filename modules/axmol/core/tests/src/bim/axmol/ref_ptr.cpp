@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/axmol/ref_ptr.hpp>
 
 #include <bim/axmol/ref_ptr.impl.hpp>

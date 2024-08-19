@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/game/system/remove_dead_objects.hpp>
 
 #include <bim/game/component/dead.hpp>

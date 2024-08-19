@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/game/factory/player.hpp>
 
 #include <bim/game/component/fractional_position_on_grid.hpp>

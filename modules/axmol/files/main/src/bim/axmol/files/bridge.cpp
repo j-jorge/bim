@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/axmol/files/bridge.hpp>
 
 #include <iscool/files/file_system_delegates.hpp>

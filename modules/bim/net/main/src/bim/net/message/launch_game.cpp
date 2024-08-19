@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/net/message/launch_game.hpp>
 
 #include <iscool/net/byte_array_bit_inserter.hpp>

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/axmol/widget/ui/button.hpp>
 
 #include <bim/axmol/widget/add_group_as_children.hpp>

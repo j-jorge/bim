@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 /**
  * \file
  * This file use the X-macro idiom to implement a class with a given list of

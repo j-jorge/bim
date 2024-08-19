@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/game/component/player_action_queue.hpp>
 
 bim::game::queued_action

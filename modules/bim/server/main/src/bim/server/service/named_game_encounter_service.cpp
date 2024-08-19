@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/server/service/named_game_encounter_service.hpp>
 
 #include <bim/server/service/game_service.hpp>

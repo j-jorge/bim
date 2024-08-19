@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/axmol/display/main_view.hpp>
 
 #include <axmol/base/Director.h>

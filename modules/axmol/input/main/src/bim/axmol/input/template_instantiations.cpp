@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/axmol/input/backend_event.hpp>
 #include <bim/axmol/input/backend_event.impl.hpp>
 #include <bim/axmol/input/backend_event_view.hpp>

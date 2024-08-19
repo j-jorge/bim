@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/axmol/display/device_size.hpp>
 
 #include <axmol/base/Director.h>

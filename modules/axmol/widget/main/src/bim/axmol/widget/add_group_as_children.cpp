@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/axmol/widget/add_group_as_children.hpp>
 
 #include <axmol/2d/Node.h>

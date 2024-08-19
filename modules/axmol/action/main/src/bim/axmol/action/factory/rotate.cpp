@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/axmol/action/factory/rotate.hpp>
 
 #include <bim/axmol/action/factory/wrap_in_easing_function.hpp>
