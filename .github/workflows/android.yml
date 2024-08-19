@@ -22,7 +22,8 @@ jobs:
         build_type: [debug, release]
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
       - name: Set strings
         id: strings
@@ -60,3 +61,9 @@ jobs:
           ./setup.sh
           --target-platform ${{steps.strings.outputs.target_platform}}
           --build-type ${{matrix.build_type}}
+
+      - name: Archive artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-${{matrix.build_type}}-packages
+          path: build/android/**/*.apk

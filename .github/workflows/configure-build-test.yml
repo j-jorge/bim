@@ -31,7 +31,8 @@ jobs:
             compiler: clang-17
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
       - name: Set strings
         id: strings
@@ -50,3 +51,12 @@ jobs:
           ./setup.sh
           --target-platform ${{steps.strings.outputs.target_platform}}
           --build-type ${{matrix.build_type}} ${{matrix.maybe_incremental}}
+
+      - name: Archive artifacts
+        if: |
+          (matrix.maybe_incremental == '')
+          && (matrix.container == 'ubuntu:24.04')
+        uses: actions/upload-artifact@v4
+        with:
+          name: server-${{matrix.build_type}}-${{matrix.compiler}}
+          path: build/linux/*/apps/server/bim-server
