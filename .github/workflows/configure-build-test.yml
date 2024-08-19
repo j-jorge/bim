@@ -22,13 +22,13 @@ jobs:
         # Last LTS and last non-LTS.
         container: ["ubuntu:23.10", "ubuntu:24.04"]
         build_type: [release, debug]
-        compiler: [g++, clang-15, clang-17]
+        compiler: [g++, clang-17, clang-18]
         maybe_incremental: [--incremental, ""]
         exclude:
-          - container: "ubuntu:22.04"
-            compiler: clang-17
+          - container: "ubuntu:23.10"
+            compiler: clang-18
           - container: "ubuntu:24.04"
-            compiler: clang-15
+            compiler: clang-17
 
     steps:
       - uses: actions/checkout@v3
