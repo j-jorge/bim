@@ -21,4 +21,6 @@ namespace bim::net::message_type
 
   constexpr iscool::net::message_type game_update_from_client = 25;
   constexpr iscool::net::message_type game_update_from_server = 26;
+
+  constexpr iscool::net::message_type game_over = 27;
 }

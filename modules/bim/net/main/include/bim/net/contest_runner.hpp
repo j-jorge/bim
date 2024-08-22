@@ -10,6 +10,7 @@
 #include <entt/entity/fwd.hpp>
 
 #include <cstdint>
+#include <optional>
 
 namespace bim::game
 {
@@ -40,9 +41,9 @@ namespace bim::net
   private:
     void queue_updates(const server_update& updates);
 
-    bim::game::contest_result sync_with_server(entt::registry& registry);
+    void sync_with_server(entt::registry& registry);
     void restore_last_confirmed_state(entt::registry& registry);
-    bim::game::contest_result apply_server_actions(entt::registry& registry);
+    void apply_server_actions(entt::registry& registry);
     void save_contest_state(entt::registry& registry);
     void drop_confirmed_actions();
     void apply_unconfirmed_actions(entt::registry& registry);
@@ -74,5 +75,7 @@ namespace bim::net
 
     bim::game::archive_storage m_last_confirmed_archive;
     bim::game::arena m_last_confirmed_arena;
+
+    std::optional<bim::game::contest_result> m_contest_result;
   };
 }

@@ -3,6 +3,7 @@
 
 #include <bim/server/service/game_info.hpp>
 
+#include <bim/net/message/game_over.hpp>
 #include <bim/net/message/game_update_from_client.hpp>
 #include <bim/net/message/game_update_from_server.hpp>
 #include <bim/net/message/ready.hpp>
@@ -69,6 +70,7 @@ public:
     , sessions(sessions)
     , simulation_tick(0)
     , completed_tick_count_all(0)
+    , contest_result(bim::game::contest_result::create_still_running())
     , m_contest(seed, 80, player_count, 11, 13)
   {
     ready.fill(false);
@@ -160,17 +162,19 @@ public:
 private:
   void seal_player_actions(int count)
   {
-    bim::game::contest_result result;
-
     for (int i = 0; i != count; ++i)
       {
         for (int p = 0; p != player_count; ++p)
           *m_player_actions[p] = actions[p][i];
 
-        result = m_contest.tick();
-      }
+        const bim::game::contest_result tick_result = m_contest.tick();
 
-    game_over = !result.still_running();
+        if (contest_result.still_running() && !tick_result.still_running())
+          {
+            contest_result = tick_result;
+            game_over_tick = completed_tick_count_all + i;
+          }
+      }
   }
 
 public:
@@ -189,11 +193,15 @@ public:
 
   /**
    * The tick confirmed by every client, i.e. each client knows the actions of
-   * every player up to this point.
+   * every player up to this point. This is the minimum of
+   * completed_tick_count_per_player[i].
    */
   std::uint32_t completed_tick_count_all;
 
-  /// The tick of the simulation for every player.
+  /**
+   * The tick of the simulation for every player. The player has applied the
+   * actions from all players up to this point.
+   */
   std::array<std::uint32_t, bim::game::g_max_player_count>
       completed_tick_count_per_player;
 
@@ -208,7 +216,8 @@ public:
   iscool::signals::connection clean_up_connection;
   std::chrono::nanoseconds release_at_this_date;
 
-  bool game_over;
+  std::uint32_t game_over_tick;
+  bim::game::contest_result contest_result;
 
 private:
   bim::game::contest m_contest;
@@ -238,7 +247,7 @@ bool bim::server::game_service::is_playing(
 {
   const game_map::const_iterator it = m_games.find(channel);
 
-  return (it != m_games.end()) && !it->second.game_over;
+  return (it != m_games.end()) && it->second.contest_result.still_running();
 }
 
 std::optional<bim::server::game_info>
@@ -374,9 +383,15 @@ void bim::server::game_service::push_update(
   if (*tick_count != 0)
     queue_actions(*update, player_index, game);
 
-  send_actions(endpoint, session, channel, player_index, game);
   game.drop_old_actions();
   game.align_simulation_tick();
+
+  if (!game.contest_result.still_running()
+      && (game.game_over_tick
+          <= game.completed_tick_count_per_player[player_index]))
+    send_game_over(endpoint, session, channel, game);
+  else
+    send_actions(endpoint, session, channel, player_index, game);
 }
 
 /// Validate the integrity of the message.
@@ -458,21 +473,30 @@ void bim::server::game_service::queue_actions(
 
 void bim::server::game_service::send_actions(
     const iscool::net::endpoint& endpoint, iscool::net::session_id session,
-    iscool::net::channel_id channel, std::size_t player_index, game& game)
+    iscool::net::channel_id channel, std::size_t player_index,
+    const game& game) const
 {
-  const std::uint32_t last_received_player_tick =
+  // All we need to send to a player P is the sequence of actions from the
+  // other players that happened between the last synchronized tick of P and
+  // the smallest predicted tick reached by all the players.
+
+  const std::uint32_t completed_tick_count_for_player =
       game.completed_tick_count_per_player[player_index];
 
-  bim_assume(last_received_player_tick >= game.completed_tick_count_all);
+  // The player may be farther than the point confirmed by all players (e.g.
+  // some players are late in the synchronization).
+  bim_assume(completed_tick_count_for_player >= game.completed_tick_count_all);
   const std::size_t tick_start_index =
-      last_received_player_tick - game.completed_tick_count_all;
+      completed_tick_count_for_player - game.completed_tick_count_all;
 
-  bim_assume(game.simulation_tick >= last_received_player_tick);
+  // The number of ticks that have been predicted by all players and that are
+  // after the synchronized tick of this player.
+  bim_assume(game.simulation_tick >= completed_tick_count_for_player);
   const std::size_t tick_count = std::min<std::size_t>(
-      255, game.simulation_tick - last_received_player_tick);
+      255, game.simulation_tick - completed_tick_count_for_player);
 
   bim::net::game_update_from_server message;
-  message.from_tick = last_received_player_tick;
+  message.from_tick = completed_tick_count_for_player;
   message.actions.resize(game.player_count);
 
   for (std::uint8_t player = 0; player != game.player_count; ++player)
@@ -482,6 +506,25 @@ void bim::server::game_service::send_actions(
       message.actions[player].insert(message.actions[player].end(), begin,
                                      begin + tick_count);
     }
+
+  m_message_stream.send(endpoint, message.build_message(), session, channel);
+}
+
+void bim::server::game_service::send_game_over(
+    const iscool::net::endpoint& endpoint, iscool::net::session_id session,
+    iscool::net::channel_id channel, const game& game) const
+{
+  assert(!game.contest_result.still_running());
+
+  const int winner_index = game.contest_result.has_a_winner()
+                               ? game.contest_result.winning_player()
+                               : bim::game::g_max_player_count;
+
+  ic_log(iscool::log::nature::info(), "game_service",
+         "Sending game over, session=%d, game_id=%d, winner=%d.", session,
+         channel, winner_index);
+
+  const bim::net::game_over message(winner_index);
 
   m_message_stream.send(endpoint, message.build_message(), session, channel);
 }

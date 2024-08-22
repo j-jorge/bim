@@ -63,7 +63,11 @@ namespace bim::server
     void send_actions(const iscool::net::endpoint& endpoint,
                       iscool::net::session_id session,
                       iscool::net::channel_id channel,
-                      std::size_t player_index, game& game);
+                      std::size_t player_index, const game& game) const;
+    void send_game_over(const iscool::net::endpoint& endpoint,
+                        iscool::net::session_id session,
+                        iscool::net::channel_id channel,
+                        const game& game) const;
 
     iscool::signals::connection
     schedule_clean_up(iscool::net::channel_id channel);
