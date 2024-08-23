@@ -206,7 +206,10 @@ TEST_F(game_creation_test, two_named_games)
             m_clients[4].m_game_launch_event->channel);
 }
 
-/** Two groups of players ask for a random game, two games must be created. */
+/**
+ * Two groups of players ask for a random game, one group after the other, two
+ * games must be created.
+ */
 TEST_F(game_creation_test, two_random_games)
 {
   for (int i = 0; i != 7; ++i)
@@ -282,6 +285,44 @@ TEST_F(game_creation_test, two_random_games)
   // The game channel of each group of players must be different.
   EXPECT_NE(m_clients[0].m_game_launch_event->channel,
             m_clients[4].m_game_launch_event->channel);
+}
+
+/**
+ * Two groups of players simultaneously ask for a random game, two games must
+ * be created.
+ */
+TEST_F(game_creation_test, two_random_games_simultaneously)
+{
+  for (int i = 0; i != 7; ++i)
+    m_clients[i].authenticate();
+
+  for (int i = 0; i != 7; ++i)
+    m_clients[i].new_game();
+
+  // Let the time pass such that the messages can move between the clients and
+  // the server.
+  for (int i = 0; i != 10; ++i)
+    m_scheduler.tick(std::chrono::seconds(1));
+
+  std::unordered_map<iscool::net::channel_id, int> player_count_per_channel;
+
+  // All players must be in a game.
+  for (int i = 0; i != 7; ++i)
+    {
+      ASSERT_TRUE(!!m_clients[i].m_game_launch_event) << "i=" << i;
+      ++player_count_per_channel[m_clients[i].m_game_launch_event->channel];
+    }
+
+  // There must be two games, of four players each.
+  ASSERT_EQ(2, player_count_per_channel.size());
+
+  if (player_count_per_channel.begin()->second == 4)
+    EXPECT_EQ(3, std::next(player_count_per_channel.begin())->second);
+  else
+    {
+      EXPECT_EQ(3, player_count_per_channel.begin()->second);
+      EXPECT_EQ(4, std::next(player_count_per_channel.begin())->second);
+    }
 }
 
 /**

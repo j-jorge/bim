@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-#include <bim/net/message/accept_game.hpp>
+#include <bim/net/message/accept_named_game.hpp>
+#include <bim/net/message/accept_random_game.hpp>
 #include <bim/net/message/authentication.hpp>
 #include <bim/net/message/authentication_ko.hpp>
 #include <bim/net/message/authentication_ok.hpp>
@@ -8,7 +9,7 @@
 #include <bim/net/message/game_update_from_client.hpp>
 #include <bim/net/message/game_update_from_server.hpp>
 #include <bim/net/message/launch_game.hpp>
-#include <bim/net/message/new_game_request.hpp>
+#include <bim/net/message/new_named_game_request.hpp>
 #include <bim/net/message/new_random_game_request.hpp>
 #include <bim/net/message/player_action_serialization.hpp>
 #include <bim/net/message/ready.hpp>
@@ -49,11 +50,11 @@ protected:
 };
 
 using all_message_types = testing::Types<
-    bim::net::accept_game, bim::net::authentication,
-    bim::net::authentication_ko, bim::net::authentication_ok,
-    bim::net::game_on_hold, bim::net::game_over,
+    bim::net::accept_named_game, bim::net::accept_random_game,
+    bim::net::authentication, bim::net::authentication_ko,
+    bim::net::authentication_ok, bim::net::game_on_hold, bim::net::game_over,
     bim::net::game_update_from_client, bim::net::game_update_from_server,
-    bim::net::launch_game, bim::net::new_game_request,
+    bim::net::launch_game, bim::net::new_named_game_request,
     bim::net::new_random_game_request, bim::net::ready, bim::net::start>;
 
 TYPED_TEST_SUITE(fuzzed_message_deserialization_test, all_message_types);

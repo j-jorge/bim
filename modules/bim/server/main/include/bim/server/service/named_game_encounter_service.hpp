@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #pragma once
 
+#include <bim/server/service/matchmaking_service.hpp>
+
 #include <bim/net/message/encounter_id.hpp>
 
 #include <iscool/net/endpoint.hpp>
@@ -18,25 +20,28 @@ namespace iscool::net
 
 namespace bim::net
 {
-  class new_game_request;
+  class accept_named_game;
+  class new_named_game_request;
 }
 
 namespace bim::server
 {
   class game_service;
-  class matchmaking_service;
 
   class named_game_encounter_service
   {
   public:
     named_game_encounter_service(iscool::net::socket_stream& socket,
-                                 const game_service& game_service,
-                                 matchmaking_service& matchmaking_service);
+                                 game_service& game_service);
     ~named_game_encounter_service();
 
     void process(const iscool::net::endpoint& endpoint,
                  iscool::net::session_id session,
-                 const bim::net::new_game_request& request);
+                 const bim::net::new_named_game_request& request);
+
+    void mark_as_ready(const iscool::net::endpoint& endpoint,
+                       iscool::net::session_id session,
+                       const bim::net::accept_named_game& message);
 
   private:
     struct encounter_info;
@@ -48,21 +53,18 @@ namespace bim::server
   private:
     void create_encounter(const iscool::net::endpoint& endpoint,
                           iscool::net::session_id session,
-                          const bim::net::new_game_request& request,
+                          const bim::net::new_named_game_request& request,
                           std::string name);
     void update_encounter(const iscool::net::endpoint& endpoint,
                           iscool::net::session_id session,
-                          const bim::net::new_game_request& request,
+                          const bim::net::new_named_game_request& request,
                           bim::net::encounter_id encounter_id);
 
-    iscool::signals::connection
-    schedule_clean_up(bim::net::encounter_id encounter_id);
-
-    void clean_up(bim::net::encounter_id encounter_id);
+    void clean_up();
 
   private:
     const game_service& m_game_service;
-    matchmaking_service& m_matchmaking_service;
+    matchmaking_service m_matchmaking_service;
 
     name_to_encounter_id_map m_encounter_ids;
     encounter_map m_encounters;

@@ -8,13 +8,10 @@
 
 #include <boost/unordered/unordered_map.hpp>
 
+#include <optional>
+#include <span>
 #include <string>
-
-namespace bim::net
-{
-  class accept_game;
-  class new_game_request;
-}
+#include <vector>
 
 namespace bim::server
 {
@@ -22,6 +19,13 @@ namespace bim::server
 
   class matchmaking_service
   {
+  public:
+    struct kick_session_event
+    {
+      iscool::net::session_id session;
+      bim::net::encounter_id encounter_id;
+    };
+
   public:
     matchmaking_service(iscool::net::socket_stream& socket,
                         game_service& game_service);
@@ -34,9 +38,20 @@ namespace bim::server
                            const iscool::net::endpoint& endpoint,
                            iscool::net::session_id session,
                            bim::net::client_token request_token);
+    std::optional<bim::net::encounter_id>
+    add_in_any_encounter(const iscool::net::endpoint& endpoint,
+                         iscool::net::session_id session,
+                         bim::net::client_token request_token);
+
     void mark_as_ready(const iscool::net::endpoint& endpoint,
                        iscool::net::session_id session,
-                       const bim::net::accept_game& message);
+                       bim::net::encounter_id encounter_id,
+                       bim::net::client_token request_token);
+
+    std::span<const bim::net::encounter_id> garbage_encounters() const;
+    std::span<const kick_session_event> garbage_sessions() const;
+
+    void drop_garbage();
 
   private:
     struct encounter_info;
@@ -44,6 +59,13 @@ namespace bim::server
         boost::unordered_map<bim::net::encounter_id, encounter_info>;
 
   private:
+    void refresh_encounter(bim::net::encounter_id encounter_id,
+                           encounter_info& encounter,
+                           const iscool::net::endpoint& endpoint,
+                           iscool::net::session_id session,
+                           bim::net::client_token request_token,
+                           std::size_t session_index);
+
     void send_game_on_hold(const iscool::net::endpoint& endpoint,
                            bim::net::client_token token,
                            iscool::net::session_id session,
@@ -64,5 +86,8 @@ namespace bim::server
 
     encounter_map m_encounters;
     bim::net::encounter_id m_next_encounter_id;
+
+    std::vector<kick_session_event> m_done_sessions;
+    std::vector<bim::net::encounter_id> m_done_encounters;
   };
 }

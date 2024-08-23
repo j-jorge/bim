@@ -17,7 +17,7 @@ add_executable(server-tests
   tests/src/bim/server/authentication.cpp
   tests/src/bim/server/game_creation.cpp
   tests/src/bim/server/game_update.cpp
-  tests/src/bim/server/new_game.cpp
+  tests/src/bim/server/new_named_game.cpp
   tests/src/bim/server/new_game_after_game_over.cpp
 
   tests/src/bim/server/service/game_info.cpp

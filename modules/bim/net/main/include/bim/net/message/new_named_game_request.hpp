@@ -12,7 +12,8 @@
 
 namespace bim::net
 {
-  DECLARE_RAW_MESSAGE(new_game_request, message_type::new_game_request,
+  DECLARE_RAW_MESSAGE(new_named_game_request,
+                      message_type::new_named_game_request,
                       ((client_token)(request_token)) //
                       ((std::uint32_t)(feature_mask)) //
                       ((game_name)(name)));

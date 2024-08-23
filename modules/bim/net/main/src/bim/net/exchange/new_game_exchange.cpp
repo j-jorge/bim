@@ -2,10 +2,11 @@
 #include <bim/net/exchange/new_game_exchange.hpp>
 
 #include <bim/net/exchange/game_launch_event.hpp>
-#include <bim/net/message/accept_game.hpp>
+#include <bim/net/message/accept_named_game.hpp>
+#include <bim/net/message/accept_random_game.hpp>
 #include <bim/net/message/game_on_hold.hpp>
 #include <bim/net/message/launch_game.hpp>
-#include <bim/net/message/new_game_request.hpp>
+#include <bim/net/message/new_named_game_request.hpp>
 #include <bim/net/message/new_random_game_request.hpp>
 #include <bim/net/message/try_deserialize_message.hpp>
 
@@ -17,9 +18,11 @@
 #include <iscool/signals/implement_signal.hpp>
 
 ic_implement_state_monitor(bim::net::new_game_exchange, m_monitor, idle,
-                           ((idle)((start)))         //
-                           ((start)((accept)(stop))) //
-                           ((accept)((stop)))        //
+                           ((idle)((start_named)(start_random)))   //
+                           ((start_named)((accept_named)(stop)))   //
+                           ((start_random)((accept_random)(stop))) //
+                           ((accept_named)((stop)))                //
+                           ((accept_random)((stop)))               //
                            ((stop)((idle))));
 
 IMPLEMENT_SIGNAL(bim::net::new_game_exchange, game_proposal, m_game_proposal);
@@ -39,11 +42,13 @@ void bim::net::new_game_exchange::start(iscool::net::session_id session,
          "Requesting game '%s' in session %d.",
          std::string_view((const char*)name.data(), name.size()), session);
 
+  m_monitor->set_start_named_state();
+
   internal_start(session);
 
   constexpr std::uint32_t feature_mask = 0;
   m_client_message =
-      new_game_request(m_token, feature_mask, name).build_message();
+      new_named_game_request(m_token, feature_mask, name).build_message();
 
   tick();
 }
@@ -52,6 +57,8 @@ void bim::net::new_game_exchange::start(iscool::net::session_id session)
 {
   ic_log(iscool::log::nature::info(), "new_game_exchange",
          "Requesting random game in session %d.", session);
+
+  m_monitor->set_start_random_state();
 
   internal_start(session);
 
@@ -70,9 +77,18 @@ void bim::net::new_game_exchange::accept()
 
   assert(m_update_connection.connected());
 
-  m_monitor->set_accept_state();
-
-  m_client_message = accept_game(m_token, *m_encounter_id).build_message();
+  if (m_monitor->is_start_named_state())
+    {
+      m_monitor->set_accept_named_state();
+      m_client_message =
+          accept_named_game(m_token, *m_encounter_id).build_message();
+    }
+  else
+    {
+      m_monitor->set_accept_random_state();
+      m_client_message =
+          accept_random_game(m_token, *m_encounter_id).build_message();
+    }
 }
 
 void bim::net::new_game_exchange::stop()
@@ -93,8 +109,6 @@ void bim::net::new_game_exchange::internal_start(
     iscool::net::session_id session)
 {
   assert(!m_encounter_id);
-
-  m_monitor->set_start_state();
 
   m_message_channel.rebind(session, 0);
 
@@ -131,7 +145,8 @@ void bim::net::new_game_exchange::interpret_received_message(
 
 void bim::net::new_game_exchange::check_on_hold(const iscool::net::message& m)
 {
-  if (!m_monitor->is_start_state())
+  if (!m_monitor->is_start_named_state()
+      && !m_monitor->is_start_random_state())
     return;
 
   const std::optional<game_on_hold> message =
@@ -155,7 +170,8 @@ void bim::net::new_game_exchange::check_on_hold(const iscool::net::message& m)
 void bim::net::new_game_exchange::check_launch_game(
     const iscool::net::message& m)
 {
-  if (!m_monitor->is_accept_state())
+  if (!m_monitor->is_accept_named_state()
+      && !m_monitor->is_accept_random_state())
     return;
 
   const std::optional<launch_game> message =

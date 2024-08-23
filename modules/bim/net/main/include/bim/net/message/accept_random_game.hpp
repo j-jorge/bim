@@ -9,7 +9,7 @@
 
 namespace bim::net
 {
-  DECLARE_RAW_MESSAGE(accept_game, message_type::accept_game,
+  DECLARE_RAW_MESSAGE(accept_random_game, message_type::accept_random_game,
                       ((client_token)(request_token)) //
                       ((encounter_id)(encounter_id)));
 }
