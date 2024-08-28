@@ -217,7 +217,6 @@ public:
              bim::game::g_max_player_count>
       actions;
 
-  iscool::signals::connection clean_up_connection;
   std::chrono::nanoseconds release_at_this_date;
 
   std::uint32_t game_over_tick;
@@ -234,7 +233,9 @@ bim::server::game_service::game_service(iscool::net::socket_stream& socket)
   : m_message_stream(socket)
   , m_next_game_channel(1)
   , m_random(std::random_device()())
-{}
+{
+  schedule_clean_up();
+}
 
 bim::server::game_service::~game_service() = default;
 
@@ -293,7 +294,6 @@ bim::server::game_info bim::server::game_service::new_game(
     m_session_to_channel[sessions[i]] = channel;
 
   game.release_at_this_date = date_for_next_game_release();
-  game.clean_up_connection = schedule_clean_up(channel);
 
   return game_info{ .seed = game.seed,
                     .channel = channel,
@@ -540,27 +540,38 @@ void bim::server::game_service::send_game_over(
   m_message_stream.send(endpoint, message.build_message(), session, channel);
 }
 
-iscool::signals::connection
-bim::server::game_service::schedule_clean_up(iscool::net::channel_id channel)
+void bim::server::game_service::schedule_clean_up()
 {
-  return iscool::schedule::delayed_call(
-      [this, channel]() -> void
+  m_clean_up_connection = iscool::schedule::delayed_call(
+      [this]() -> void
       {
-        clean_up(channel);
+        clean_up();
       },
       std::chrono::minutes(3));
 }
 
-void bim::server::game_service::clean_up(iscool::net::channel_id channel)
+void bim::server::game_service::clean_up()
+{
+  const std::chrono::nanoseconds now =
+      iscool::time::now<std::chrono::nanoseconds>();
+
+  for (game_map::iterator it = m_games.begin(); it != m_games.end();)
+    if (it->second.release_at_this_date <= now)
+      {
+        clean_up(it->first, it->second);
+        it = m_games.erase(it);
+      }
+    else
+      ++it;
+
+  schedule_clean_up();
+}
+
+void bim::server::game_service::clean_up(iscool::net::channel_id channel,
+                                         const game& g)
 {
   ic_log(iscool::log::nature::info(), "game_service", "Cleaning up game %d.",
          channel);
-
-  const game_map::iterator it = m_games.find(channel);
-
-  assert(it != m_games.end());
-
-  const game& g = it->second;
 
   for (int i = 0; i != g.player_count; ++i)
     {
@@ -573,6 +584,4 @@ void bim::server::game_service::clean_up(iscool::net::channel_id channel)
       if (stc->second == channel)
         m_session_to_channel.erase(stc);
     }
-
-  m_games.erase(it);
 }

@@ -5,7 +5,7 @@
 
 #include <iscool/net/message_stream.hpp>
 
-#include <iscool/signals/connection.hpp>
+#include <iscool/signals/scoped_connection.hpp>
 
 #include <boost/unordered/unordered_map.hpp>
 
@@ -69,9 +69,9 @@ namespace bim::server
                         iscool::net::channel_id channel,
                         const game& game) const;
 
-    iscool::signals::connection
-    schedule_clean_up(iscool::net::channel_id channel);
-    void clean_up(iscool::net::channel_id channel);
+    void schedule_clean_up();
+    void clean_up();
+    void clean_up(iscool::net::channel_id channel, const game& g);
 
   private:
     iscool::net::message_stream m_message_stream;
@@ -79,5 +79,6 @@ namespace bim::server
     game_map m_games;
     session_to_channel_map m_session_to_channel;
     std::mt19937_64 m_random;
+    iscool::signals::scoped_connection m_clean_up_connection;
   };
 }
