@@ -16,6 +16,10 @@ namespace bim::server
     std::uint64_t seed;
     iscool::net::channel_id channel;
     std::uint8_t player_count;
+    std::uint8_t brick_wall_probability;
+    std::uint8_t arena_width;
+    std::uint8_t arena_height;
+
     std::array<iscool::net::session_id, bim::game::g_max_player_count>
         sessions;
 

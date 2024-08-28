@@ -27,6 +27,10 @@
 #include <array>
 #include <limits>
 
+static constexpr std::uint8_t g_brick_wall_probability = 80;
+static constexpr std::uint8_t g_arena_width = 13;
+static constexpr std::uint8_t g_arena_height = 15;
+
 static std::chrono::nanoseconds date_for_next_game_release()
 {
   return iscool::time::now<std::chrono::nanoseconds>()
@@ -71,7 +75,7 @@ public:
     , simulation_tick(0)
     , completed_tick_count_all(0)
     , contest_result(bim::game::contest_result::create_still_running())
-    , m_contest(seed, 80, player_count, 11, 13)
+    , contest(seed, g_brick_wall_probability, player_count, 13, 15)
   {
     ready.fill(false);
     completed_tick_count_per_player.fill(0);
@@ -79,7 +83,7 @@ public:
     for (int i = 0; i != player_count; ++i)
       actions[i].reserve(32);
 
-    m_contest.registry()
+    contest.registry()
         .view<bim::game::player, bim::game::player_action>()
         .each(
             [this](const bim::game::player& player,
@@ -167,7 +171,7 @@ private:
         for (int p = 0; p != player_count; ++p)
           *m_player_actions[p] = actions[p][i];
 
-        const bim::game::contest_result tick_result = m_contest.tick();
+        const bim::game::contest_result tick_result = contest.tick();
 
         if (contest_result.still_running() && !tick_result.still_running())
           {
@@ -219,8 +223,9 @@ public:
   std::uint32_t game_over_tick;
   bim::game::contest_result contest_result;
 
+  bim::game::contest contest;
+
 private:
-  bim::game::contest m_contest;
   std::array<bim::game::player_action*, bim::game::g_max_player_count>
       m_player_actions;
 };
@@ -261,6 +266,9 @@ bim::server::game_service::find_game(iscool::net::channel_id channel) const
   return game_info{ .seed = it->second.seed,
                     .channel = channel,
                     .player_count = it->second.player_count,
+                    .brick_wall_probability = g_brick_wall_probability,
+                    .arena_width = it->second.contest.arena().width(),
+                    .arena_height = it->second.contest.arena().height(),
                     .sessions = it->second.sessions };
 }
 
@@ -290,6 +298,9 @@ bim::server::game_info bim::server::game_service::new_game(
   return game_info{ .seed = game.seed,
                     .channel = channel,
                     .player_count = game.player_count,
+                    .brick_wall_probability = g_brick_wall_probability,
+                    .arena_width = game.contest.arena().width(),
+                    .arena_height = game.contest.arena().height(),
                     .sessions = game.sessions };
 }
 

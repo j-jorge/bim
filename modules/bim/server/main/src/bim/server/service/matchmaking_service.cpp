@@ -179,7 +179,7 @@ void bim::server::matchmaking_service::mark_as_ready(
   if ((ready_count != encounter.player_count) || (ready_count <= 1))
     return;
 
-  // All players are ready, send thz game configuration to the client.
+  // All players are ready, send the game configuration to the client.
   std::optional<game_info> game;
 
   if (encounter.channel)
@@ -201,16 +201,13 @@ void bim::server::matchmaking_service::mark_as_ready(
     }
 
   constexpr std::uint32_t feature_mask = 0;
-  constexpr std::uint8_t brick_wall_probability = 80;
-  constexpr std::uint8_t arena_width = 13;
-  constexpr std::uint8_t arena_height = 15;
 
   m_message_stream.send(
       endpoint,
-      bim::net::launch_game(request_token, game->seed, game->channel,
-                            feature_mask, game->player_count,
-                            game->session_index(session),
-                            brick_wall_probability, arena_width, arena_height)
+      bim::net::launch_game(
+          request_token, game->seed, game->channel, feature_mask,
+          game->player_count, game->session_index(session),
+          game->brick_wall_probability, game->arena_width, game->arena_height)
           .build_message(),
       session, 0);
 }
