@@ -16,6 +16,8 @@ add_library(bim_game
   main/src/bim/game/component/fractional_position_on_grid.cpp
   main/src/bim/game/component/player_action_queue.cpp
 
+  main/src/bim/game/debug/dump_arena.cpp
+
   main/src/bim/game/factory/bomb.cpp
   main/src/bim/game/factory/bomb_power_up.cpp
   main/src/bim/game/factory/brick_wall.cpp
