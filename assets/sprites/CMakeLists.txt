@@ -36,6 +36,8 @@ set(sprites_bleeding
   "sprites/menu/horizontal-gradient.png"
   "sprites/menu/vertical-gradient.png"
   "sprites/menu/vertical-gray-gradient.png"
+  "sprites/menu/vertical-green-gradient.png"
+  "sprites/menu/vertical-red-gradient.png"
   "sprites/menu/vertical-yellow-gradient.png"
 )
 

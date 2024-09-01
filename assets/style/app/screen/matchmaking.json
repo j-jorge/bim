@@ -4,58 +4,10 @@
         "widgets":
         [
             "app/screen/part/menu-background",
+            "app/screen/part/menu-stripe",
             {
-                "stripe":
-                [{
-                    "instantiate": "ax::Node",
-                    "rotation": -10
-                }],
-
-                "stripe_background":
-                [{
-                    "instantiate": "nine_slices",
-                    "parent": "stripe",
-                    "widgets/sprite":
-                    [{
-                        "frame": "sprites/menu/stripe-1-79-1-258.png",
-                        "insets.left": 1,
-                        "insets.top": 79,
-                        "insets.width": 1,
-                        "insets.height": 258
-                    }],
-                    "z-order": -10
-                }],
-
-                "stripe_message":
-                [
-                    "font/bold",
-                    {
-                        "instantiate": "ax::Label",
-                        "parent": "stripe",
-                        "text.i18n": "Waiting for your opponents…\nTell your friends to join!",
-                        "font.size": 52,
-                        "font.italics": true,
-                        "font.color": "white",
-                        "align.horizontal": "center",
-                        "z-order": 30
-                    }
-                ],
-
-                "stripe_title":
-                [
-                    "font/fancy-regular",
-                    {
-                        "instantiate": "ax::Label",
-                        "parent": "stripe",
-                        "text.i18n": "Online Game",
-                        "font.size": 100,
-                        "font.italics": true,
-                        "font.color": "amber",
-                        "outline.color": "cod-gray",
-                        "outline.size": 5,
-                        "z-order": 30
-                    }
-                ],
+                "stripe_title/text.i18n": "Online Game",
+                "stripe_message/text.i18n": "Waiting for your opponents…\nTell your friends to join!",
 
                 "pattern":
                 [{
@@ -69,7 +21,7 @@
                 [{
                     "instantiate": "ax::Sprite",
                     "frame": "sprites/menu/rays.png",
-                    "z-order": 0,
+                    "z-order": -20,
                     "opacity": 0.1
                 }],
 
@@ -78,7 +30,7 @@
                     "instantiate": "ax::Sprite",
                     "frame": "sprites/menu/glow.png",
                     "color": "danube",
-                    "z-order": 1
+                    "z-order": -19
                 }],
 
                 "player-1":

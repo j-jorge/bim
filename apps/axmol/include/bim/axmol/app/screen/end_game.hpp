@@ -35,6 +35,7 @@ namespace bim::axmol::app
   class end_game
   {
     DECLARE_VOID_SIGNAL(quit, m_quit)
+    DECLARE_VOID_SIGNAL(revenge, m_revenge)
 
     ic_declare_context(
         m_context,
@@ -60,6 +61,10 @@ namespace bim::axmol::app
   private:
     bim::axmol::input::tree m_inputs;
     bim_declare_controls_struct(controls, m_controls, 2);
+
+    const iscool::style::declaration& m_style_draw;
+    const iscool::style::declaration& m_style_win;
+    const iscool::style::declaration& m_style_lose;
 
     std::uint8_t m_player_index;
   };

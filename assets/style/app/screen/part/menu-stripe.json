@@ -1,0 +1,47 @@
+{
+    "style":
+    {
+        "stripe":
+        [{
+            "instantiate": "ax::Node",
+            "anchor-point.x": 0.5,
+            "anchor-point.y": 0.5,
+            "rotation": -10
+        }],
+
+        "stripe_background":
+        [{
+            "instantiate": "nine_slices",
+            "parent": "stripe",
+            "widgets/sprite":
+            [{
+                "frame": "sprites/menu/stripe-1-79-1-258.png",
+                "insets.left": 1,
+                "insets.top": 79,
+                "insets.width": 1,
+                "insets.height": 258
+            }],
+            "z-order": -10
+        }],
+
+        "stripe_title":
+        [
+            "app/screen/font/stripe-title",
+            {
+                "instantiate": "ax::Label",
+                "parent": "stripe",
+                "z-order": 30
+            }
+        ],
+
+        "stripe_message":
+        [
+            "app/screen/font/stripe-message",
+            {
+                "instantiate": "ax::Label",
+                "parent": "stripe",
+                "z-order": 30
+            }
+        ]
+    }
+}

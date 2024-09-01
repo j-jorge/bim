@@ -1,0 +1,15 @@
+{
+    "meta":
+    {
+        "overrides": [ "font/fancy-regular" ]
+    },
+
+    "style":
+    {
+        "font.size": 100,
+        "font.italics": true,
+        "font.color": "amber",
+        "outline.color": "cod-gray",
+        "outline.size": 5
+    }
+}

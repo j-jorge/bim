@@ -101,6 +101,12 @@ void bim::axmol::app::screen_wheel::wire_permanent_connections()
       {
         animate_end_game_to_lobby();
       });
+
+  m_end_game->connect_to_revenge(
+      [this]()
+      {
+        animate_end_game_to_matchmaking();
+      });
 }
 
 void bim::axmol::app::screen_wheel::switch_view(ax::Node& new_view)
@@ -115,6 +121,7 @@ void bim::axmol::app::screen_wheel::animate_lobby_to_matchmaking()
   m_inputs.erase(m_lobby->input_node());
 
   m_lobby->closing();
+  m_matchmaking->displaying();
   switch_view(*m_controls->matchmaking);
 
   matchmaking_displayed();
@@ -155,6 +162,17 @@ void bim::axmol::app::screen_wheel::animate_end_game_to_lobby()
   lobby_displayed();
 }
 
+void bim::axmol::app::screen_wheel::animate_end_game_to_matchmaking()
+{
+  m_inputs.erase(m_online_game->input_node());
+  m_online_game->closing();
+
+  m_matchmaking->displaying();
+  switch_view(*m_controls->matchmaking);
+
+  matchmaking_displayed();
+}
+
 void bim::axmol::app::screen_wheel::lobby_displayed()
 {
   m_inputs.push_back(m_lobby->input_node());
@@ -164,7 +182,6 @@ void bim::axmol::app::screen_wheel::lobby_displayed()
 void bim::axmol::app::screen_wheel::matchmaking_displayed()
 {
   m_inputs.push_back(m_matchmaking->input_node());
-  m_matchmaking->displaying();
   m_matchmaking->displayed();
 }
 

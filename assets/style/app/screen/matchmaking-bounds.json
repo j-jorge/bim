@@ -1,39 +1,15 @@
 {
     "meta":
     {
-        "overrides": [ "app/screen/part/menu-background-bounds" ]
+        "overrides":
+        [
+            "app/screen/part/menu-background-bounds",
+            "app/screen/part/menu-stripe-bounds"
+        ]
     },
 
     "style":
     {
-        "stripe":
-        [{
-            "anchor.x": 0.5,
-            "anchor.y": 0.5,
-            "anchor.reference.x": 0.5,
-            "anchor.reference.y": 0.78,
-            "width.percents": 120,
-            "height.percents": 20
-        }],
-
-        "stripe_background": [ "layout/fill" ],
-
-        "stripe_message":
-        [{
-            "anchor.x": 0.5,
-            "anchor.y": 0.5,
-            "anchor.reference.x": 0.5,
-            "anchor.reference.y": 0.5
-        }],
-
-        "stripe_title":
-        [{
-            "anchor.x": 0,
-            "anchor.y": 0.5,
-            "anchor.reference.x": 0.15,
-            "anchor.reference.y": 0.83
-        }],
-
         "rays":
         [{
             "anchor.x": 0.5,

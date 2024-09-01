@@ -2,28 +2,116 @@
     "style":
     {
         "widgets":
-        [{
-            "quit_button":
-            [
-                "button/flat-with-label",
-                {
-                    "widgets/label/text.i18n": "QUIT"
-                }
-            ],
+        [
+            "app/screen/part/menu-background",
+            "app/screen/part/menu-stripe",
+            {
+                "pattern":
+                [{
+                    "widgets/sprite":
+                    [{
+                        "frame": "texture/defeat-background-pattern.png"
+                    }],
+                    "scroll-per-second.x": -5,
+                    "scroll-per-second.y": 20
+                }],
 
-            "message":
-            [
-                "font/regular",
-                {
-                    "text": "Game over message.",
-                    "font.size": 32,
-                    "font.color": "#f0f0f0",
-                    "shadow.color": "#1f1f1f",
-                    "shadow.offset.y": -10,
-                    "outline.color": "#c0c0c0",
-                    "outline.size": 2
-                }
-            ]
+                "stripe_title/text.i18n": "Draw game!",
+                "stripe_message/text.i18n": "Start a new game\nand get your revenge!",
+
+                "stripe_title_win":
+                [
+                    "app/screen/font/stripe-title",
+                    {
+                        "instantiate": "ax::Label",
+                        "text.i18n": "You won!",
+                        "parent": "stripe",
+                        "z-order": 30
+                    }
+                ],
+
+                "stripe_message_win":
+                [
+                    "app/screen/font/stripe-message",
+                    {
+                        "instantiate": "ax::Label",
+                        "parent": "stripe",
+                        "text.i18n": "Was it pure luck?\nConfirm your skills in a new game!",
+                        "z-order": 30
+                    }
+                ],
+
+                "stripe_title_lose":
+                [
+                    "app/screen/font/stripe-title",
+                    {
+                        "instantiate": "ax::Label",
+                        "parent": "stripe",
+                        "text.i18n": "You lost!",
+                        "z-order": 30
+                    }
+                ],
+
+                "stripe_message_lose":
+                [
+                    "app/screen/font/stripe-message",
+                    {
+                        "instantiate": "ax::Label",
+                        "parent": "stripe",
+                        "text.i18n": "Start a new game\nand get your revenge!",
+                        "z-order": 30
+                    }
+                ],
+
+                "revenge_button":
+                [
+                    "button/green-with-label",
+                    {
+                        "widgets/label/text.i18n": "NEW\nGAME"
+                    }
+                ],
+
+                "quit_button":
+                [
+                    "button/red-with-label",
+                    {
+                        "widgets/label/text.i18n": "BACK"
+                    }
+                ]
+            }
+        ],
+
+        "display.draw":
+        [{
+            "stripe_title/visible": true,
+            "stripe_title_win/visible": false,
+            "stripe_title_lose/visible": false,
+
+            "stripe_message/visible": true,
+            "stripe_message_win/visible": false,
+            "stripe_message_lose/visible": false
+        }],
+
+        "display.win":
+        [{
+            "stripe_title/visible": false,
+            "stripe_title_win/visible": true,
+            "stripe_title_lose/visible": false,
+
+            "stripe_message/visible": false,
+            "stripe_message_win/visible": true,
+            "stripe_message_lose/visible": false
+        }],
+
+        "display.lose":
+        [{
+            "stripe_title/visible": false,
+            "stripe_title_win/visible": false,
+            "stripe_title_lose/visible": true,
+
+            "stripe_message/visible": false,
+            "stripe_message_win/visible": false,
+            "stripe_message_lose/visible": true
         }]
     }
 }

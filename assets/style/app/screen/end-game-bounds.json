@@ -1,22 +1,65 @@
 {
+    "meta":
+    {
+        "overrides":
+        [
+            "app/screen/part/menu-background-bounds",
+            "app/screen/part/menu-stripe-bounds"
+        ]
+    },
+
     "style":
     {
+        "stripe_title_win":
+        [{
+            "anchor.x": 0,
+            "anchor.y": 0.5,
+            "anchor.reference.x": 0.12,
+            "anchor.reference.y": 0.83
+        }],
+
+        "stripe_message_win":
+        [{
+            "anchor.x": 0.5,
+            "anchor.y": 0.5,
+            "anchor.reference.x": 0.5,
+            "anchor.reference.y": 0.5
+        }],
+
+        "stripe_title_lose":
+        [{
+            "anchor.x": 0,
+            "anchor.y": 0.5,
+            "anchor.reference.x": 0.12,
+            "anchor.reference.y": 0.83
+        }],
+
+        "stripe_message_lose":
+        [{
+            "anchor.x": 0.5,
+            "anchor.y": 0.5,
+            "anchor.reference.x": 0.5,
+            "anchor.reference.y": 0.5
+        }],
+
+        "revenge_button":
+        [{
+            "anchor.x": 0.5,
+            "anchor.y": 0.5,
+            "anchor.reference.x": 0.5,
+            "anchor.reference.y": 0.25,
+            "width.percents": 50,
+            "height.percents": 15
+        }],
+
         "quit_button":
         [{
             "anchor.x": 0.5,
             "anchor.y": 0.5,
             "anchor.reference.x": 0.5,
-            "anchor.reference.y": 0.34,
-            "width-ratio": 3,
-            "height.percents": 10
-        }],
-
-        "message":
-        [{
-            "anchor.x": 0.5,
-            "anchor.y": 0.5,
-            "anchor.reference.x": 0.5,
-            "anchor.reference.y": 0.7
+            "anchor.reference.y": 0.12,
+            "width.percents": 50,
+            "height.percents": 8
         }]
     }
 }

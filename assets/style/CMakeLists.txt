@@ -16,9 +16,20 @@ set(screen_wheel_style_files
   ${CMAKE_CURRENT_LIST_DIR}/app/screen/online-game.json
   ${CMAKE_CURRENT_LIST_DIR}/app/screen/online-game-bounds.json
 
+  ${CMAKE_CURRENT_LIST_DIR}/app/screen/part/menu-background.json
+  ${CMAKE_CURRENT_LIST_DIR}/app/screen/part/menu-background-bounds.json
+  ${CMAKE_CURRENT_LIST_DIR}/app/screen/part/menu-stripe.json
+  ${CMAKE_CURRENT_LIST_DIR}/app/screen/part/menu-stripe-bounds.json
+
+  ${CMAKE_CURRENT_LIST_DIR}/app/screen/font/stripe-message.json
+  ${CMAKE_CURRENT_LIST_DIR}/app/screen/font/stripe-title.json
+
   ${CMAKE_CURRENT_LIST_DIR}/button/flat-with-label.json
+  ${CMAKE_CURRENT_LIST_DIR}/button/green-with-label.json
+  ${CMAKE_CURRENT_LIST_DIR}/button/red-with-label.json
   ${CMAKE_CURRENT_LIST_DIR}/button/sprite.json
   ${CMAKE_CURRENT_LIST_DIR}/button/yellow-with-label.json
+
   ${CMAKE_CURRENT_LIST_DIR}/font/bold.json
   ${CMAKE_CURRENT_LIST_DIR}/font/bold-center-normal-size-with-outline.json
   ${CMAKE_CURRENT_LIST_DIR}/font/regular.json

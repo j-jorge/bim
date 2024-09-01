@@ -1,0 +1,196 @@
+{
+    "style":
+    {
+        "widgets":
+        [{
+            "border":
+            [{
+                "instantiate": "nine_slices",
+                "widgets/sprite":
+                [{
+                    "frame": "sprites/menu/rounded-button-border-54-66.png",
+                    "insets.left": 54,
+                    "insets.top": 66,
+                    "insets.width": 1,
+                    "insets.height": 1
+                }],
+                "z-order": 20
+            }],
+
+            "decorum-off":
+            [{
+                "instantiate": "clipping_node",
+                "cascade-color": true,
+                "z-order": 5,
+                "widgets":
+                [{
+                    "clipping_node":
+                    [{
+                        "cascade-color": true
+                    }],
+
+                    "stencil":
+                    [{
+                        "instantiate": "nine_slices",
+                        "anchor-point.x": 0,
+                        "anchor-point.y": 0,
+                        "widgets/sprite":
+                        [{
+                            "frame": "sprites/menu/rounded-button-fill-54-66.png",
+                            "insets.left": 54,
+                            "insets.top": 66,
+                            "insets.width": 1,
+                            "insets.height": 1
+                        }]
+                    }],
+
+                    "fill":
+                    [{
+                        "instantiate": "ax::Sprite",
+                        "parent": "clipping_node",
+                        "frame": "sprites/menu/vertical-gray-gradient.png",
+                        "z-order": 0
+                    }]
+                }],
+
+                "bounds":
+                [{
+                    "clipping_node": [ "layout/fill" ],
+                    "stencil": [ "layout/fill" ],
+                    "fill": [ "layout/fill" ]
+                }]
+            }],
+
+            "decorum-on":
+            [{
+                "instantiate": "clipping_node",
+                "cascade-color": true,
+                "z-order": 5,
+                "widgets":
+                [{
+                    "clipping_node":
+                    [{
+                        "cascade-color": true
+                    }],
+
+                    "stencil":
+                    [{
+                        "instantiate": "nine_slices",
+                        "anchor-point.x": 0,
+                        "anchor-point.y": 0,
+                        "widgets/sprite":
+                        [{
+                            "frame": "sprites/menu/rounded-button-fill-54-66.png",
+                            "insets.left": 54,
+                            "insets.top": 66,
+                            "insets.width": 1,
+                            "insets.height": 1
+                        }]
+                    }],
+
+                    "fill":
+                    [{
+                        "instantiate": "ax::Sprite",
+                        "parent": "clipping_node",
+                        "frame": "sprites/menu/vertical-green-gradient.png",
+                        "z-order": 0
+                    }]
+                }],
+
+                "bounds":
+                [{
+                    "clipping_node": [ "layout/fill" ],
+                    "stencil": [ "layout/fill" ],
+                    "fill": [ "layout/fill" ]
+                }]
+            }],
+
+            "label":
+            [
+                "font/fancy-regular",
+                {
+                    "instantiate": "ax::Label",
+                    "font.size": 106,
+                    "font.color": "white",
+                    "shadow.color": "cod-gray",
+                    "shadow.offset.y": -8,
+                    "outline.color": "cod-gray",
+                    "outline.size": 5,
+                    "align.horizontal": "center",
+                    "z-order": 10
+                }
+            ]
+        }],
+
+        "bounds":
+        [{
+            "border": [ "layout/fill" ],
+            "decorum-on": [ "layout/fill" ],
+            "decorum-off": [ "layout/fill" ],
+
+            "label":
+            [{
+                "anchor.x": 0.5,
+                "anchor.y": 0.5,
+                "anchor.reference.x": 0.5,
+                "anchor.reference.y": 0.5
+            }]
+        }],
+
+        "display.pressed": [],
+
+        "display.release":
+        [{
+            "decorum-on/visible": true,
+            "decorum-off/visible": false
+        }],
+
+        "display.disabled":
+        [{
+            "decorum-on/visible": false,
+            "decorum-off/visible": true
+        }],
+
+        "action.pressed":
+        [{
+            "instantiate": "spawn",
+            "ease": "sine-out",
+
+            "scale":
+            [{
+                "instantiate": "scale",
+                "to": 0.9,
+                "duration": 0.3
+            }],
+
+            "tint":
+            [{
+                "instantiate": "tint",
+                "to": "#c0c0c0",
+                "duration": 0.3
+            }]
+        }],
+
+        "action.released":
+        [{
+            "instantiate": "spawn",
+
+            "scale":
+            [{
+                "instantiate": "scale",
+                "to": 1,
+                "duration": 0.2
+            }],
+
+            "tint":
+            [{
+                "instantiate": "tint",
+                "to": "white",
+                "duration": 0.3
+            }]
+        }],
+
+        "sound.click": "tick"
+    }
+}
+
