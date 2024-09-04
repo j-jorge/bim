@@ -1,9 +1,13 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/net/session_handler.hpp>
 
+#include <bim/net/message/protocol_version.hpp>
+
 #include <iscool/http/send.hpp>
 #include <iscool/json/cast_string.hpp>
+#include <iscool/json/cast_uint.hpp>
 #include <iscool/json/is_of_type_string.hpp>
+#include <iscool/json/is_of_type_uint.hpp>
 #include <iscool/json/parse_string.hpp>
 #include <iscool/log/log.hpp>
 #include <iscool/log/nature/error.hpp>
@@ -14,6 +18,7 @@
 IMPLEMENT_SIGNAL(bim::net::session_handler, connected, m_connected);
 IMPLEMENT_SIGNAL(bim::net::session_handler, authentication_error,
                  m_authentication_error);
+IMPLEMENT_SIGNAL(bim::net::session_handler, config_error, m_config_error);
 
 bim::net::session_handler::session_handler()
   : m_message_stream(m_socket_stream)
@@ -83,16 +88,28 @@ void bim::net::session_handler::connect_to_game_server(
       return;
     }
 
-  const Json::Value& host = config["host"];
+  const Json::Value& servers = config["servers"];
 
-  if (!iscool::json::is_of_type<std::string>(host))
+  for (const Json::Value& server : servers)
     {
-      m_config_error();
-      return;
+      if (!server.isObject())
+        continue;
+
+      const Json::Value& protocol = server["protocol"];
+      const Json::Value& host = server["host"];
+
+      if (!iscool::json::is_of_type<std::string>(host)
+          || !iscool::json::is_of_type<bim::net::version>(protocol)
+          || (iscool::json::cast<bim::net::version>(protocol)
+              != bim::net::protocol_version))
+        continue;
+
+      m_socket_stream.connect(iscool::json::cast<std::string>(host));
+      m_authentication.start();
+      break;
     }
 
-  m_socket_stream.connect(iscool::json::cast<std::string>(host));
-  m_authentication.start();
+  m_config_error();
 }
 
 void bim::net::session_handler::dispatch_error(
