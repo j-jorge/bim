@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/server/server.hpp>
 
+#include <bim/net/message/protocol_version.hpp>
+
 #include <iscool/log/log.hpp>
 #include <iscool/log/nature/info.hpp>
 #include <iscool/net/message/message.hpp>
@@ -13,6 +15,8 @@ bim::server::server::server(unsigned short port)
 {
   ic_log(iscool::log::nature::info(), "server", "Server is up on port %d.",
          port);
+  ic_log(iscool::log::nature::info(), "server", "Protocol version is %d.",
+         bim::net::protocol_version);
 
   m_authentication_service.connect_to_message(std::bind(
       &server::dispatch, this, std::placeholders::_1, std::placeholders::_2));
@@ -22,18 +26,6 @@ void bim::server::server::dispatch(const iscool::net::endpoint& endpoint,
                                    const iscool::net::message& message)
 {
   // The message comes from an active session, we can process it.
-
-  // broadcast
-  //   switch
-  //     triage
-
-  // machin_service_game_encounter_hall
-  //   named_game_encounter_service
-  //     matchmaking_service
-  //       game_service
-  //   random_game_encounter_service
-  //     matchmaking_service
-  //       game_service
   if (message.get_channel_id() == 0)
     m_lobby_service.process(endpoint, message);
   else
