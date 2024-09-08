@@ -4,7 +4,9 @@ set(common_style_files
   ${CMAKE_CURRENT_LIST_DIR}/layout/fill.json
 )
 
-set(screen_wheel_style_files
+set(main_task_style_files
+  ${CMAKE_CURRENT_LIST_DIR}/main-task.json
+
   ${CMAKE_CURRENT_LIST_DIR}/app/screen-wheel.json
   ${CMAKE_CURRENT_LIST_DIR}/app/screen/directional-pad.json
   ${CMAKE_CURRENT_LIST_DIR}/app/screen/end-game.json
@@ -34,6 +36,8 @@ set(screen_wheel_style_files
   ${CMAKE_CURRENT_LIST_DIR}/font/bold-center-normal-size-with-outline.json
   ${CMAKE_CURRENT_LIST_DIR}/font/regular.json
   ${CMAKE_CURRENT_LIST_DIR}/font/fancy-regular.json
+
+  ${CMAKE_CURRENT_LIST_DIR}/popup/message.json
 
   ${common_style_files}
 )
@@ -73,5 +77,5 @@ function(merge_styles main_style_id)
   set_property(TARGET styles APPEND PROPERTY SOURCES "${output}")
 endfunction()
 
-merge_styles(app/screen-wheel ${screen_wheel_style_files})
+merge_styles(main-task ${main_task_style_files})
 merge_styles(launch/main-scene ${main_scene_style_files})

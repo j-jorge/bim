@@ -2,14 +2,14 @@
     "black": "#000000",
     "white": "#ffffff",
 
-    "mineshaft": "#242424",
-
-    "astronaut": "#23356e",
     "science-blue": "#076ed5",
     "blue-zodiac": "#12204a",
     "golf-blue": "#031c56",
     "sail": "#b4dffb",
     "danube": "#6ea5d5",
+
+    "gable-green": "#193135",
+    "plantation": "#274347",
 
     "amber": "#febd00",
     "west-side": "#fc9711",

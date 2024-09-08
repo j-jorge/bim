@@ -19,6 +19,9 @@ set(sprites
   "sprites/menu/silhouette-4.png"
   "sprites/menu/stripe-1-79-1-258.png"
 
+  "sprites/popup/popup-border-146-146.png"
+  "sprites/popup/popup-fill-146-146.png"
+
   "sprites/ui/directional-pad-left.png"
   "sprites/ui/directional-pad-right.png"
   "sprites/ui/directional-pad-left-on.png"
