@@ -5,6 +5,8 @@
 
 #include <iscool/context.hpp>
 #include <iscool/signals/declare_signal.hpp>
+#include <iscool/signals/scoped_connection.hpp>
+#include <iscool/style/declaration.hpp>
 
 #include <memory>
 
@@ -34,6 +36,7 @@ namespace bim::axmol::widget
 namespace bim::axmol::app
 {
   class main_scene;
+  class message_popup;
   class scene_lock;
   class screen_wheel;
 
@@ -60,7 +63,17 @@ namespace bim::axmol::app
     void start();
 
   private:
+    void read_translations();
+    void connect_to_game_server();
+
+  private:
+    iscool::style::declaration m_style;
     bim::net::session_handler m_session_handler;
+    std::unique_ptr<message_popup> m_message_popup;
     std::unique_ptr<screen_wheel> m_screen_wheel;
+
+    iscool::signals::scoped_connection m_session_config_error_connection;
+    iscool::signals::scoped_connection
+        m_session_authentication_error_connection;
   };
 }
