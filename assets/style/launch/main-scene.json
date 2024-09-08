@@ -3,27 +3,14 @@
     {
         "widgets":
         [{
-            "main": [],
-            "overlay": []
+            "main/z-order": 0,
+            "overlay/z-order": 10
         }],
 
         "bounds":
         [{
-            "main":
-            [
-                "layout/fill",
-                {
-                    "z-order": 0
-                }
-            ],
-
-            "overlay":
-            [
-                "layout/fill",
-                {
-                    "z-order": 10
-                }
-            ]
+            "main": [ "layout/fill" ],
+            "overlay": [ "layout/fill" ]
         }]
     }
 }
