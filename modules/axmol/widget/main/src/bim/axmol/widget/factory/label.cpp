@@ -55,7 +55,24 @@ bim::axmol::ref_ptr<ax::Label> bim::axmol::widget::factory<ax::Label>::create(
         horizontal_align = ax::TextHAlignment::RIGHT;
       else if (*horizontal_align_string != "left")
         ic_log(iscool::log::nature::error(), g_log_context,
-               "Unknown text alignment: '%s'.", *horizontal_align_string);
+               "Unknown horizontal text alignment: '%s'.",
+               *horizontal_align_string);
+    }
+
+  const iscool::optional<const std::string&> vertical_align_string =
+      style.get_string("align.vertical");
+  ax::TextVAlignment vertical_align = ax::TextVAlignment::CENTER;
+
+  if (vertical_align_string)
+    {
+      if (*vertical_align_string == "top")
+        vertical_align = ax::TextVAlignment::TOP;
+      else if (*vertical_align_string == "bottom")
+        vertical_align = ax::TextVAlignment::BOTTOM;
+      else if (*vertical_align_string != "center")
+        ic_log(iscool::log::nature::error(), g_log_context,
+               "Unknown vertical text alignment: '%s'.",
+               *vertical_align_string);
     }
 
   iscool::optional<const std::string&> localized_text =
@@ -65,6 +82,24 @@ bim::axmol::ref_ptr<ax::Label> bim::axmol::widget::factory<ax::Label>::create(
 
   bim::axmol::ref_ptr<ax::Label> result =
       ax::Label::createWithTTF(ttf_config, text, horizontal_align);
+  result->setVerticalAlignment(vertical_align);
+
+  result->enableWrap(style.get_boolean("wrap", false));
+
+  iscool::optional<const std::string&> overflow_string =
+      style.get_string("overflow");
+
+  if (overflow_string)
+    {
+      if (*overflow_string == "none")
+        result->setOverflow(ax::Label::Overflow::NONE);
+      else if (*overflow_string == "clamp")
+        result->setOverflow(ax::Label::Overflow::CLAMP);
+      else if (*overflow_string == "shrink")
+        result->setOverflow(ax::Label::Overflow::SHRINK);
+      else if (*overflow_string == "resize-height")
+        result->setOverflow(ax::Label::Overflow::RESIZE_HEIGHT);
+    }
 
   iscool::optional<const std::string&> color = style.get_string("font.color");
   result->setTextColor(color ? context.colors.to_color_4b(*color)
