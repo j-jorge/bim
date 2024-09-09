@@ -106,7 +106,7 @@ void bim::net::session_handler::connect_to_game_server(
 
       m_socket_stream.connect(iscool::json::cast<std::string>(host));
       m_authentication.start();
-      break;
+      return;
     }
 
   m_config_error();
