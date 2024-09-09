@@ -5,6 +5,7 @@
 #include <bim/axmol/style/bounds_property_flags.hpp>
 #include <bim/axmol/style/scale_mode.hpp>
 
+#include <axmol/2d/Label.h>
 #include <axmol/2d/Node.h>
 
 #include <cassert>
@@ -71,6 +72,11 @@ void apply_size(ax::Node& node, const ax::Node& reference,
     size.y = 0;
 
   node.setContentSize(size);
+
+  ax::Label* const label = dynamic_cast<ax::Label*>(&node);
+
+  if (label)
+    label->setMaxLineWidth(size.x);
 }
 
 bool apply_width(float& width, const ax::Node& reference,
