@@ -16,10 +16,27 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+msgid "BACK"
+msgstr ""
+
+msgid "Could not get the config from the server."
+msgstr ""
+
 msgid "Draw game!"
 msgstr ""
 
 msgid "FIGHT!"
+msgstr ""
+
+msgid "Failed to authenticate with the game server. Error code {}."
+msgstr ""
+
+msgid ""
+"NEW\n"
+"GAME"
+msgstr ""
+
+msgid "OK"
 msgstr ""
 
 msgid "Online Game"
@@ -30,7 +47,9 @@ msgid ""
 "ONLINE"
 msgstr ""
 
-msgid "QUIT"
+msgid ""
+"Start a new game\n"
+"and get your revenge!"
 msgstr ""
 
 msgid "Start the game now!"
@@ -39,6 +58,11 @@ msgstr ""
 msgid ""
 "Waiting for your opponents…\n"
 "Tell your friends to join!"
+msgstr ""
+
+msgid ""
+"Was it pure luck?\n"
+"Confirm your skills in a new game!"
 msgstr ""
 
 msgid ""

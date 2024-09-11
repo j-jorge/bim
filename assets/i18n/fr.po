@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-03-09 22:26+0100\n"
-"PO-Revision-Date: 2024-07-30 23:55+0200\n"
+"PO-Revision-Date: 2024-09-11 22:19+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -18,11 +18,31 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 3.4.2\n"
 
+msgid "BACK"
+msgstr ""
+
+msgid "Could not get the config from the server."
+msgstr ""
+"Impossible d'obtenir la configuration depuis le serveur. Tu peux essayer ceci :\n"
+" - vérifier la connexion à Internet ;\n"
+" - mettre l'application à jour."
+
 msgid "Draw game!"
 msgstr "Match nul !"
 
 msgid "FIGHT!"
 msgstr "GO!"
+
+msgid "Failed to authenticate with the game server. Error code {}."
+msgstr ""
+
+msgid ""
+"NEW\n"
+"GAME"
+msgstr ""
+
+msgid "OK"
+msgstr ""
 
 msgid "Online Game"
 msgstr "Jeu en ligne"
@@ -34,8 +54,10 @@ msgstr ""
 "JOUER\n"
 "EN LIGNE"
 
-msgid "QUIT"
-msgstr "QUITTER"
+msgid ""
+"Start a new game\n"
+"and get your revenge!"
+msgstr ""
 
 msgid "Start the game now!"
 msgstr "Lance le jeu maintenant !"
@@ -46,6 +68,11 @@ msgid ""
 msgstr ""
 "En attente des adversaires…\n"
 "Invite tes amis !"
+
+msgid ""
+"Was it pure luck?\n"
+"Confirm your skills in a new game!"
+msgstr ""
 
 msgid ""
 "You can start a three-players game\n"
@@ -66,6 +93,9 @@ msgstr "Perdu !"
 
 msgid "You won!"
 msgstr "Victoire !"
+
+#~ msgid "QUIT"
+#~ msgstr "QUITTER"
 
 #~ msgid "Setting up a new game..."
 #~ msgstr "Préparation d'une nouvelle partie…"
