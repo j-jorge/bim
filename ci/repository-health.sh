@@ -2,7 +2,8 @@
 
 set -euo pipefail
 
-repository_root="$(cd "$(dirname "${BASH_SOURCE[0]}")"/..; pwd)"
+script_dir="$(dirname "${BASH_SOURCE[0]}")"
+repository_root="$(cd "$script_dir"/..; pwd)"
 cd "$repository_root"
 
 pass_count=0
@@ -78,6 +79,26 @@ run_test()
     echo
 }
 
+custom_command_test()
+{
+    local title="$1"
+    shift
+
+    echo "== $title =="
+    test_count=$((test_count + 1))
+
+
+    if "$@"
+    then
+        echo "OK"
+        pass_count=$((pass_count + 1))
+    else
+        echo "FAIL"
+    fi
+
+    echo
+}
+
 run_test "Validating C++ source code formatting." \
          clang-format \
          --dry-run \
@@ -101,6 +122,9 @@ run_test "Validating YAML files." \
          --no-warnings \
          -- \
          -name "*.yml"
+
+custom_command_test "Validating assets attributions." \
+                    "$script_dir"/check-authors.sh
 
 echo "Passes: $pass_count/$test_count"
 

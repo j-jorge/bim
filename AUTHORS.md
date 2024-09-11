@@ -1,20 +1,71 @@
-All assets CC-BY-SA 4.0 Julien Jorge, unless specified below.
+static-assets/font/LuckiestGuy-Regular.ttf
+Astigmatic, adjusted by Julien Jorge.
+Apache 2.0
+
+static-assets/font/OpenSans-ExtraBold.ttf
+static-assets/font/OpenSans-Regular.ttf
+Steve Matteson
+Open Font License 1.1
 
 assets/sprites/flame-arm.png
 assets/sprites/flame-center.png
 assets/sprites/flame-end.png
-CC-BY 3.0
 Matt Hackett of Lost Decade Games, expanded by Cem Kalyoncu
+CC-BY 3.0
 
-assets/sprites/menu/silhouete-1.png
-assets/sprites/menu/silhouete-3.png
+assets/sprites/menu/silhouette-1.png
+assets/sprites/menu/silhouette-3.png
 From https://commons.wikimedia.org/wiki/File:Silhouette_of_Woman_with_Short_Hair_and_Jeans.svg
 CC0 1.0
 
-assets/sprites/menu/silhouete-2.png
+assets/sprites/menu/silhouette-2.png
 From https://commons.wikimedia.org/wiki/File:Rejon_Person_Outline_1.svg
 CC0 1.0
 
-assets/sprites/menu/silhouete-4.png
+assets/sprites/menu/silhouette-4.png
 From https://commons.wikimedia.org/wiki/File:Silhouette_of_Woman_with_Short_Pigtails_and_Rolled_Jeans.svg
 CC0 1.0
+
+static-assets/audio/menu.ogg
+shiru8bit
+From https://opengameart.org/content/8-bit-chiptune-spring-came
+CC-BY 3.0
+
+assets/sprites/bomb.png
+assets/sprites/brick-wall.png
+assets/sprites/player-1.png
+assets/sprites/player-2.png
+assets/sprites/player-3.png
+assets/sprites/player-4.png
+assets/sprites/power-up-bomb.png
+assets/sprites/power-up-flame.png
+assets/sprites/solid-wall.png
+assets/sprites/menu/glow.png
+assets/sprites/menu/horizontal-gradient.png
+assets/sprites/menu/rays.png
+assets/sprites/menu/rounded-button-border-54-66.png
+assets/sprites/menu/rounded-button-fill-54-66.png
+assets/sprites/menu/stripe-1-79-1-258.png
+assets/sprites/menu/vertical-gradient.png
+assets/sprites/menu/vertical-gray-gradient.png
+assets/sprites/menu/vertical-green-gradient.png
+assets/sprites/menu/vertical-red-gradient.png
+assets/sprites/menu/vertical-yellow-gradient.png
+assets/sprites/popup/popup-border-146-146.png
+assets/sprites/popup/popup-fill-146-146.png
+assets/sprites/ui/directional-pad-down-on.png
+assets/sprites/ui/directional-pad-down.png
+assets/sprites/ui/directional-pad-left-on.png
+assets/sprites/ui/directional-pad-left.png
+assets/sprites/ui/directional-pad-right-on.png
+assets/sprites/ui/directional-pad-right.png
+assets/sprites/ui/directional-pad-up-on.png
+assets/sprites/ui/directional-pad-up.png
+assets/texture/defeat-background-pattern.png
+assets/texture/menu-background-pattern.png
+assets/texture/popup-background-pattern.png
+assets/texture/search-background-pattern.png
+assets/texture/stars.png
+static-assets/audio/tick.ogg
+Julien Jorge
+CC-BY-SA 4.0
