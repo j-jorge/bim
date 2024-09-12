@@ -20,6 +20,7 @@
 #include <bim/game/component/flame_power_up.hpp>
 #include <bim/game/component/fractional_position_on_grid.hpp>
 #include <bim/game/component/player.hpp>
+#include <bim/game/component/player_action_queue.hpp>
 #include <bim/game/component/player_movement.hpp>
 #include <bim/game/component/position_on_grid.hpp>
 #include <bim/game/constant/max_bomb_count_per_player.hpp>
@@ -408,6 +409,23 @@ void bim::axmol::app::online_game::display_bombs() const
           s.setScale(1);
 
         ++asset_index;
+      });
+
+  registry.view<bim::game::player_action_queue>().each(
+      [this, &asset_index](const bim::game::player_action_queue& q) -> void
+      {
+        for (const bim::game::queued_action& a : q.m_queue)
+          if (a.action.drop_bomb)
+            {
+              ax::Sprite& s = *m_bombs[asset_index];
+
+              s.setVisible(true);
+              s.setScale(1);
+              s.setPosition(grid_position_to_displayed_block_center(
+                  a.arena_x, a.arena_y));
+
+              ++asset_index;
+            }
       });
 
   for (std::size_t n = m_bombs.size(); asset_index != n; ++asset_index)
