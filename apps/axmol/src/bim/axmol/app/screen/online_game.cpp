@@ -54,6 +54,12 @@
 
 #include <cassert>
 
+static void hide_all(std::span<ax::Sprite* const> sprites)
+{
+  for (ax::Sprite* const s : sprites)
+    s->setVisible(false);
+}
+
 IMPLEMENT_SIGNAL(bim::axmol::app::online_game, game_over, m_game_over);
 
 bim::axmol::app::online_game::online_game(
@@ -183,24 +189,23 @@ void bim::axmol::app::online_game::displaying(
 
   m_local_player_index = event.player_index;
 
-  // Display as many assets as needed.
+  // Hide all assets
+  hide_all(m_players);
+  hide_all(m_brick_walls);
+  hide_all(m_bombs);
+  hide_all(m_flames);
+  hide_all(m_bomb_power_ups);
+  hide_all(m_flame_power_ups);
+
+  // Display the static walls once and for all.
   const bim::game::arena& arena = m_contest->arena();
   const int arena_width = arena.width();
   const int arena_height = arena.height();
-  std::size_t asset_index;
-
-  // Players.
-  for (asset_index = 0; asset_index != event.player_count; ++asset_index)
-    m_players[asset_index]->setVisible(true);
-
-  for (; asset_index != m_players.size(); ++asset_index)
-    m_players[asset_index]->setVisible(false);
-
-  // Static walls.
-  asset_index = 0;
+  std::size_t asset_index = 0;
+  const std::size_t wall_count = m_walls.size();
 
   for (int y = 0; y != arena_height; ++y)
-    for (int x = 0; (x != arena_width) && (asset_index != m_walls.size()); ++x)
+    for (int x = 0; (x != arena_width) && (asset_index != wall_count); ++x)
       if (arena.is_static_wall(x, y))
         {
           ax::Sprite& s = *m_walls[asset_index];
@@ -209,10 +214,11 @@ void bim::axmol::app::online_game::displaying(
           ++asset_index;
         }
 
-  for (; asset_index != m_walls.size(); ++asset_index)
+  for (; asset_index != wall_count; ++asset_index)
     m_walls[asset_index]->setVisible(false);
 
   display_brick_walls();
+  display_players();
 }
 
 void bim::axmol::app::online_game::displayed()
