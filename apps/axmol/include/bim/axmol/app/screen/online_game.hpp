@@ -15,6 +15,7 @@
 #include <boost/unordered/unordered_map.hpp>
 
 #include <chrono>
+#include <thread>
 #include <vector>
 
 namespace bim::axmol::widget
@@ -85,6 +86,11 @@ namespace bim::axmol::app
     void closing();
 
   private:
+    enum class game_update_thread_state;
+    struct shared_game_update;
+    struct game_update_thread;
+
+  private:
     void schedule_tick();
     void tick();
 
@@ -116,11 +122,13 @@ namespace bim::axmol::app
 
     iscool::signals::scoped_connection m_tick_connection;
 
-    std::chrono::nanoseconds m_last_tick_date;
     std::unique_ptr<bim::game::contest> m_contest;
     std::unique_ptr<iscool::net::message_channel> m_game_channel;
     std::unique_ptr<bim::net::game_update_exchange> m_update_exchange;
     std::unique_ptr<bim::net::contest_runner> m_contest_runner;
+
+    std::unique_ptr<shared_game_update> m_shared_game_update;
+    std::thread m_game_update;
 
     std::vector<ax::Sprite*> m_players;
     std::vector<ax::Sprite*> m_walls;

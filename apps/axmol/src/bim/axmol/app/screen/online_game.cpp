@@ -54,6 +54,8 @@
 #include <fmt/format.h>
 
 #include <cassert>
+#include <condition_variable>
+#include <mutex>
 
 static void hide_all(std::span<ax::Sprite* const> sprites)
 {
@@ -61,12 +63,97 @@ static void hide_all(std::span<ax::Sprite* const> sprites)
     s->setVisible(false);
 }
 
+enum class bim::axmol::app::online_game::game_update_thread_state
+{
+  stopped,
+  initializing,
+  running,
+  stopping,
+  quitting
+};
+
+struct bim::axmol::app::online_game::shared_game_update
+{
+  std::mutex mutex;
+  bim::net::contest_runner* contest_runner;
+  bim::game::contest_result result;
+  game_update_thread_state thread_state = game_update_thread_state::stopped;
+  std::condition_variable thread_state_updated;
+};
+
+struct bim::axmol::app::online_game::game_update_thread
+{
+  shared_game_update& m_shared;
+  game_update_thread(shared_game_update& shared)
+    : m_shared(shared)
+  {}
+
+  void operator()()
+  {
+    std::chrono::nanoseconds last_tick_date{};
+
+    while (true)
+      {
+        int ticks_ahead = bim::game::player_action_queue::queue_size;
+        const std::chrono::nanoseconds tick_start =
+            iscool::time::monotonic_now<std::chrono::nanoseconds>();
+
+        {
+          const std::scoped_lock lock(m_shared.mutex);
+
+          switch (m_shared.thread_state)
+            {
+            case game_update_thread_state::quitting:
+              return;
+            case game_update_thread_state::initializing:
+              last_tick_date = tick_start;
+              m_shared.thread_state = game_update_thread_state::running;
+              break;
+            case game_update_thread_state::running:
+              m_shared.result =
+                  m_shared.contest_runner->run(tick_start - last_tick_date);
+              last_tick_date = tick_start;
+
+              if (!m_shared.result.still_running())
+                m_shared.thread_state = game_update_thread_state::stopped;
+
+              ticks_ahead = std::max<int>(
+                  bim::game::player_action_queue::queue_size,
+                  m_shared.contest_runner->local_tick()
+                      - m_shared.contest_runner->confirmed_tick());
+              break;
+            case game_update_thread_state::stopping:
+              m_shared.thread_state = game_update_thread_state::stopped;
+              m_shared.thread_state_updated.notify_one();
+              break;
+            case game_update_thread_state::stopped:
+              break;
+            }
+        }
+
+        const std::chrono::duration tick_end =
+            iscool::time::monotonic_now<std::chrono::nanoseconds>();
+        const std::chrono::duration next_tick =
+            tick_start
+            + (bim::game::contest::tick_interval * ticks_ahead)
+                  / bim::game::player_action_queue::queue_size;
+
+        std::this_thread::sleep_for(
+            std::max(std::chrono::milliseconds::zero(),
+                     std::chrono::duration_cast<std::chrono::milliseconds>(
+                         next_tick - tick_end)));
+      }
+  }
+};
+
 IMPLEMENT_SIGNAL(bim::axmol::app::online_game, game_over, m_game_over);
 
 bim::axmol::app::online_game::online_game(
     const context& context, const iscool::style::declaration& style)
   : m_context(context)
   , m_controls(context.get_widget_context(), *style.get_declaration("widgets"))
+  , m_shared_game_update(new shared_game_update)
+  , m_game_update(game_update_thread(*m_shared_game_update))
   , m_flame_center_asset_name(*style.get_string("flame-center-asset-name"))
   , m_flame_arm_asset_name(*style.get_string("flame-arm-asset-name"))
   , m_flame_end_asset_name(*style.get_string("flame-end-asset-name"))
@@ -131,7 +218,16 @@ bim::axmol::app::online_game::online_game(
                *style.get_declaration("power-up-flame"));
 }
 
-bim::axmol::app::online_game::~online_game() = default;
+bim::axmol::app::online_game::~online_game()
+{
+  {
+    const std::scoped_lock lock(m_shared_game_update->mutex);
+    m_shared_game_update->thread_state = game_update_thread_state::quitting;
+  }
+
+  if (m_game_update.joinable())
+    m_game_update.join();
+}
 
 bim::axmol::input::node_reference
 bim::axmol::app::online_game::input_node() const
@@ -224,6 +320,13 @@ void bim::axmol::app::online_game::displaying(
 
 void bim::axmol::app::online_game::displayed()
 {
+  const std::scoped_lock lock(m_shared_game_update->mutex);
+
+  m_shared_game_update->contest_runner = m_contest_runner.get();
+  m_shared_game_update->result =
+      bim::game::contest_result::create_still_running();
+  m_shared_game_update->thread_state = game_update_thread_state::initializing;
+
   m_update_exchange->connect_to_started(
       [this]() -> void
       {
@@ -242,7 +345,6 @@ void bim::axmol::app::online_game::schedule_tick()
           std::chrono::duration<float>(
               ax::Director::getInstance()->getAnimationInterval()));
 
-  m_last_tick_date = iscool::time::monotonic_now<std::chrono::nanoseconds>();
   m_tick_connection = iscool::schedule::delayed_call(
       [this]() -> void
       {
@@ -253,21 +355,22 @@ void bim::axmol::app::online_game::schedule_tick()
 
 void bim::axmol::app::online_game::tick()
 {
-  const std::chrono::duration now =
-      iscool::time::monotonic_now<std::chrono::nanoseconds>();
-  const bim::game::contest_result result =
-      m_contest_runner->run(now - m_last_tick_date);
-  m_last_tick_date = now;
+  bim::game::contest_result contest_result;
 
-  apply_inputs();
-  refresh_display();
+  {
+    std::scoped_lock lock(m_shared_game_update->mutex);
 
-  if (result.still_running())
+    apply_inputs();
+    refresh_display();
+    contest_result = m_shared_game_update->result;
+  }
+
+  if (contest_result.still_running())
     schedule_tick();
   else
     {
       stop();
-      m_game_over(result);
+      m_game_over(contest_result);
     }
 }
 
@@ -573,6 +676,19 @@ ax::Vec2 bim::axmol::app::online_game::grid_position_to_display(float x,
 
 void bim::axmol::app::online_game::stop()
 {
+  {
+    std::unique_lock lock(m_shared_game_update->mutex);
+    m_shared_game_update->thread_state = game_update_thread_state::stopping;
+
+    m_shared_game_update->thread_state_updated.wait(
+        lock,
+        [this]()
+        {
+          return m_shared_game_update->thread_state
+                 == game_update_thread_state::stopped;
+        });
+  }
+
   m_contest_runner.reset();
   m_update_exchange.reset();
   m_game_channel.reset();
