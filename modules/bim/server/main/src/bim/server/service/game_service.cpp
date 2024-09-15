@@ -446,11 +446,7 @@ std::optional<std::size_t> bim::server::game_service::validate_message(
   // update.
   if (message.from_tick + tick_count <= player_tick)
     {
-      ic_log(iscool::log::nature::info(), "game_service",
-             "Out-of-date message for session=%d, player=%d, got"
-             " %d+%d=%d, expected %d.",
-             session, (int)player_index, message.from_tick, tick_count,
-             message.from_tick + tick_count, game.simulation_tick + 1);
+      // This happens quite frequently, so no log for it.
       return 0;
     }
 

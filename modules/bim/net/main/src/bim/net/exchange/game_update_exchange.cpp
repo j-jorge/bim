@@ -160,9 +160,7 @@ std::uint32_t bim::net::game_update_exchange::validate_message(
   // The message should start from the last known server state.
   if (message.from_tick != m_current_update.from_tick)
     {
-      ic_log(iscool::log::nature::info(), "game_update_exchange",
-             "Out of sync message, got %d, expected %d.", message.from_tick,
-             m_current_update.from_tick);
+      // This happens quite frequently, so no log for it.
       return 0;
     }
 
