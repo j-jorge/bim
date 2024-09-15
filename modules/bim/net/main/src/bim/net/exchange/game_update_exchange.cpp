@@ -116,7 +116,7 @@ void bim::net::game_update_exchange::send()
 
   m_send_connection = iscool::schedule::delayed_call(
       std::bind(&game_update_exchange::send, this),
-      std::chrono::milliseconds(100));
+      std::chrono::milliseconds(15));
 }
 
 /**
