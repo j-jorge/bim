@@ -436,17 +436,31 @@ std::optional<std::size_t> bim::server::game_service::validate_message(
              game.simulation_tick);
       return std::nullopt;
     }
-  const std::size_t tick_count = message.actions.size();
 
-  // A range of actions that happened before the current simulation step, maybe
-  // it was lost on the network, or the player has not received our update.
-  if (message.from_tick + tick_count <= game.simulation_tick)
+  const std::size_t tick_count = message.actions.size();
+  const std::size_t player_tick =
+      game.completed_tick_count_all + game.actions[player_index].size();
+
+  // A range of actions that happened before the player's current simulation
+  // step, maybe it was lost on the network, or the player has not received our
+  // update.
+  if (message.from_tick + tick_count <= player_tick)
     {
       ic_log(iscool::log::nature::info(), "game_service",
              "Out-of-date message for session=%d, player=%d, got"
              " %d+%d=%d, expected %d.",
              session, (int)player_index, message.from_tick, tick_count,
              message.from_tick + tick_count, game.simulation_tick + 1);
+      return 0;
+    }
+
+  if (message.from_tick > player_tick)
+    {
+      ic_log(iscool::log::nature::info(), "game_service",
+             "Gap in player message for session=%d, player=%d, (received) %d "
+             "> %d (bound).",
+             session, (int)player_index, message.from_tick, tick_count,
+             player_tick);
       return 0;
     }
 
