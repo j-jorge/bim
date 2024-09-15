@@ -20,6 +20,7 @@
 #include <bim/game/component/flame_power_up.hpp>
 #include <bim/game/component/fractional_position_on_grid.hpp>
 #include <bim/game/component/player.hpp>
+#include <bim/game/component/player_action_queue.hpp>
 #include <bim/game/component/player_movement.hpp>
 #include <bim/game/component/position_on_grid.hpp>
 #include <bim/game/constant/max_bomb_count_per_player.hpp>
@@ -252,10 +253,33 @@ void bim::axmol::app::online_game::schedule_tick()
 
 void bim::axmol::app::online_game::tick()
 {
-  const std::chrono::duration now =
+  const std::chrono::nanoseconds now =
       iscool::time::monotonic_now<std::chrono::nanoseconds>();
-  const bim::game::contest_result result =
-      m_contest_runner->run(now - m_last_tick_date);
+  const std::chrono::nanoseconds runner_step = now - m_last_tick_date;
+
+  std::chrono::nanoseconds final_step;
+
+  const int ticks_ahead =
+      m_contest_runner->local_tick() - m_contest_runner->confirmed_tick();
+  const int max_ticks_ahead = bim::game::player_action_queue::queue_size;
+
+  if (ticks_ahead <= max_ticks_ahead)
+    final_step = runner_step;
+  else
+    {
+      // Slow the game if the player is far ahead the shared state.
+      const int delta_tick = ticks_ahead - max_ticks_ahead;
+      const std::chrono::nanoseconds adjusted_step =
+          runner_step
+          - runner_step * delta_tick * delta_tick
+                / (max_ticks_ahead * max_ticks_ahead);
+
+      final_step =
+          std::max(runner_step / 2, std::min(adjusted_step, runner_step));
+    }
+
+  const bim::game::contest_result result = m_contest_runner->run(final_step);
+
   m_last_tick_date = now;
 
   apply_inputs();
