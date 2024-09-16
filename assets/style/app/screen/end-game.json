@@ -16,6 +16,36 @@
                     "scroll-per-second.y": 20
                 }],
 
+                "pattern_win":
+                [{
+                    "instantiate": "texture",
+                    "widgets/sprite":
+                    [{
+                        "frame": "texture/victory-background-pattern.png",
+                        "color": "danube",
+                        "opacity": 0.35
+                    }],
+                    "rotation": 5,
+                    "scroll-per-second.x": 5,
+                    "scroll-per-second.y": 20,
+                    "z-order": -75
+                }],
+
+                "pattern_lose":
+                [{
+                    "instantiate": "texture",
+                    "widgets/sprite":
+                    [{
+                        "frame": "texture/defeat-background-pattern.png",
+                        "color": "danube",
+                        "opacity": 0.35
+                    }],
+                    "rotation": -5,
+                    "scroll-per-second.x": -5,
+                    "scroll-per-second.y": 20,
+                    "z-order": -75
+                }],
+
                 "stripe_title/text.i18n": "Draw game!",
                 "stripe_message/text.i18n": "Start a new game\nand get your revenge!",
 
@@ -83,6 +113,10 @@
 
         "display.draw":
         [{
+            "pattern/visible": true,
+            "pattern_win/visible": false,
+            "pattern_lose/visible": false,
+
             "stripe_title/visible": true,
             "stripe_title_win/visible": false,
             "stripe_title_lose/visible": false,
@@ -94,6 +128,10 @@
 
         "display.win":
         [{
+            "pattern/visible": false,
+            "pattern_win/visible": true,
+            "pattern_lose/visible": false,
+
             "stripe_title/visible": false,
             "stripe_title_win/visible": true,
             "stripe_title_lose/visible": false,
@@ -105,6 +143,10 @@
 
         "display.lose":
         [{
+            "pattern/visible": false,
+            "pattern_win/visible": false,
+            "pattern_lose/visible": true,
+
             "stripe_title/visible": false,
             "stripe_title_win/visible": false,
             "stripe_title_lose/visible": true,

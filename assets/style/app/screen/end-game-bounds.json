@@ -10,6 +10,24 @@
 
     "style":
     {
+        "pattern_win":
+        [
+            "layout/fill",
+            {
+                "width.percents": 150,
+                "height.percents": 150
+            }
+        ],
+
+        "pattern_lose":
+        [
+            "layout/fill",
+            {
+                "width.percents": 150,
+                "height.percents": 150
+            }
+        ],
+
         "stripe_title_win":
         [{
             "anchor.x": 0,

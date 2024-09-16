@@ -4,6 +4,7 @@ set(textures
   "popup-background-pattern.png"
   "search-background-pattern.png"
   "stars.png"
+  "victory-background-pattern.png"
 )
 
 find_program(convert convert REQUIRED)

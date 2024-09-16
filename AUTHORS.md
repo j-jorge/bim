@@ -65,6 +65,7 @@ assets/texture/defeat-background-pattern.png
 assets/texture/menu-background-pattern.png
 assets/texture/popup-background-pattern.png
 assets/texture/search-background-pattern.png
+assets/texture/victory-background-pattern.png
 assets/texture/stars.png
 static-assets/audio/tick.ogg
 Julien Jorge
