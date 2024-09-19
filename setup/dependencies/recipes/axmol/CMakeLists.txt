@@ -223,12 +223,11 @@ macro(assign_common_sources)
     ${source_root}/base/EventTouch.cpp
     ${source_root}/base/FPSImages.cpp
     ${source_root}/base/IMEDispatcher.cpp
-#    ${source_root}/base/JobSystem.cpp
+    ${source_root}/base/JobSystem.cpp
     ${source_root}/base/Logging.cpp
     ${source_root}/base/NinePatchImageParser.cpp
     ${source_root}/base/NS.cpp
     ${source_root}/base/Object.cpp
-#    ${source_root}/base/Ref.cpp
     ${source_root}/base/ObjectFactory.cpp
     ${source_root}/base/pvr.cpp
     ${source_root}/base/s3tc.cpp
