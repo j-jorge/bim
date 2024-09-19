@@ -245,15 +245,17 @@ void bim::net::game_update_exchange::dispatch_game_over(
 
   const std::uint8_t winner = message->get_winner_index();
 
-  if (winner >= m_player_count)
-    {
-      ic_log(iscool::log::nature::info(), "game_update_exchange",
-             "Winner is out of range.");
-      return;
-    }
-
   if (winner == bim::game::g_max_player_count)
     m_game_over(bim::game::contest_result::create_draw());
   else
-    m_game_over(bim::game::contest_result::create_game_over(winner));
+    {
+      if (winner >= m_player_count)
+        {
+          ic_log(iscool::log::nature::info(), "game_update_exchange",
+                 "Winner is out of range.");
+          return;
+        }
+
+      m_game_over(bim::game::contest_result::create_game_over(winner));
+    }
 }
