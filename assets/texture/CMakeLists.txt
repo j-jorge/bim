@@ -1,5 +1,6 @@
 set(textures
   "defeat-background-pattern.png"
+  "draw-background-pattern.png"
   "menu-background-pattern.png"
   "popup-background-pattern.png"
   "search-background-pattern.png"

@@ -10,10 +10,11 @@
                 [{
                     "widgets/sprite":
                     [{
-                        "frame": "texture/defeat-background-pattern.png"
+                        "frame": "texture/draw-background-pattern.png"
                     }],
-                    "scroll-per-second.x": -5,
-                    "scroll-per-second.y": 20
+                    "rotation": 0,
+                    "scroll-per-second.x": 0,
+                    "scroll-per-second.y": -20
                 }],
 
                 "pattern_win":
