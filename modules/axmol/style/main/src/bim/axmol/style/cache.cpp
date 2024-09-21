@@ -76,6 +76,14 @@ static void fill_size(bim::axmol::style::bounds_properties& properties,
       properties.flags |=
           bim::axmol::style::bounds_property_flags::width_ratio;
       properties.ratio = *width_ratio;
+
+      if (const iscool::optional<float> max_percents_size =
+              style.get_number("width.max-percents"))
+        {
+          properties.flags |=
+              bim::axmol::style::bounds_property_flags::max_percents_size;
+          properties.max_percents_size = *max_percents_size;
+        }
     }
   else if (const iscool::optional<float> height_ratio =
                style.get_number("height-ratio"))
@@ -83,6 +91,14 @@ static void fill_size(bim::axmol::style::bounds_properties& properties,
       properties.flags |=
           bim::axmol::style::bounds_property_flags::height_ratio;
       properties.ratio = *height_ratio;
+
+      if (const iscool::optional<float> max_percents_size =
+              style.get_number("height.max-percents"))
+        {
+          properties.flags |=
+              bim::axmol::style::bounds_property_flags::max_percents_size;
+          properties.max_percents_size = *max_percents_size;
+        }
     }
 }
 

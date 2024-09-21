@@ -44,14 +44,34 @@ void apply_size(ax::Node& node, const ax::Node& reference,
   if (bool(bounds.flags
            & bim::axmol::style::bounds_property_flags::width_ratio))
     {
+      const ax::Vec2 reference_size = reference.getContentSize();
+
       apply_height(size.y, reference, bounds);
       size.x = size.y * bounds.ratio;
+
+      if (bool(bounds.flags
+               & bim::axmol::style::bounds_property_flags::max_percents_size)
+          && (100 * size.x / reference_size.x > bounds.max_percents_size))
+        {
+          size.x = reference.getContentSize().x;
+          size.y = size.x / bounds.ratio;
+        }
     }
   else if (bool(bounds.flags
                 & bim::axmol::style::bounds_property_flags::height_ratio))
     {
       apply_width(size.x, reference, bounds);
       size.y = size.x * bounds.ratio;
+
+      const ax::Vec2 reference_size = reference.getContentSize();
+
+      if (bool(bounds.flags
+               & bim::axmol::style::bounds_property_flags::max_percents_size)
+          && (100 * size.y / reference_size.y > bounds.max_percents_size))
+        {
+          size.y = reference.getContentSize().y;
+          size.x = size.x / bounds.ratio;
+        }
     }
   else
     {

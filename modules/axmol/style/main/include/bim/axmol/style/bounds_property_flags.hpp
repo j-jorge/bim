@@ -16,11 +16,12 @@ namespace bim::axmol::style
     percents_height = (1 << 5),
     width_ratio = (1 << 6),
     height_ratio = (1 << 7),
-    keep_ratio = (1 << 8),
+    max_percents_size = (1 << 8),
+    keep_ratio = (1 << 9),
 
-    scale_mode = (1 << 9),
-    scale = (1 << 10),
-    scale_constraint_max_percents_width = (1 << 11),
-    scale_constraint_max_percents_height = (1 << 12),
+    scale_mode = (1 << 10),
+    scale = (1 << 11),
+    scale_constraint_max_percents_width = (1 << 12),
+    scale_constraint_max_percents_height = (1 << 13),
   };
 }

@@ -21,6 +21,7 @@ namespace bim::axmol::style
     float percents_width;
     float percents_height;
     float ratio;
+    float max_percents_size;
     bool keep_ratio;
 
     // scale
