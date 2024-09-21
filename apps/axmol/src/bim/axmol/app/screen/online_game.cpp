@@ -42,8 +42,7 @@
   x_widget(ax::Node, arena)                                                   \
       x_widget(bim::axmol::widget::soft_pad, directional_pad)                 \
           x_widget(bim::axmol::widget::button, bomb_button_left)              \
-              x_widget(bim::axmol::widget::button, bomb_button_right)         \
-                  x_widget(ax::Label, debug_delta_ticks)
+              x_widget(ax::Label, debug_delta_ticks)
 #include <bim/axmol/widget/implement_controls_struct.hpp>
 
 #include <axmol/2d/Sprite.h>
@@ -78,10 +77,8 @@ bim::axmol::app::online_game::online_game(
   };
 
   m_controls->bomb_button_left->connect_to_clicked(request_drop_bomb);
-  m_controls->bomb_button_right->connect_to_clicked(request_drop_bomb);
 
   m_inputs.push_back(m_controls->bomb_button_left->input_node());
-  m_inputs.push_back(m_controls->bomb_button_right->input_node());
   m_inputs.push_back(m_controls->directional_pad->input_node());
 
   m_controls->directional_pad->connect_to_pressed(

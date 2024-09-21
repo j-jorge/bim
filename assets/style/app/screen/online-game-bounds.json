@@ -6,9 +6,21 @@
             "anchor.x": 0.5,
             "anchor.y": 1,
             "anchor.reference.x": 0.5,
-            "anchor.reference.y": 0.95,
-            "width.percents": 100,
-            "height-ratio": 1.154
+            "anchor.reference.y": 1,
+            "height.percents": 69,
+            "width-ratio": 0.866,
+            "width.max-percents": 100
+        }],
+
+        "controls-area":
+        [{
+            "reference": "arena",
+            "anchor.x": 0.5,
+            "anchor.y": 1,
+            "anchor.reference.x": 0.5,
+            "anchor.reference.y": 0,
+            "height.percents": 45,
+            "width.percents": 100
         }],
 
         "ground":
@@ -21,30 +33,22 @@
 
         "bomb_button_left":
         [{
+            "reference": "controls-area",
             "anchor.x": 0.5,
             "anchor.y": 0.5,
             "anchor.reference.x": 0.2,
-            "anchor.reference.y": 0.3,
-            "width.percents": 20,
-            "height-ratio": 1
-        }],
-
-        "bomb_button_right":
-        [{
-            "anchor.x": 0.5,
-            "anchor.y": 0.5,
-            "anchor.reference.x": 0.8,
-            "anchor.reference.y": 0.3,
+            "anchor.reference.y": 0.6,
             "width.percents": 20,
             "height-ratio": 1
         }],
 
         "directional_pad":
         [{
+            "reference": "controls-area",
             "anchor.x": 0.5,
             "anchor.y": 0.5,
             "anchor.reference.x": 0.66,
-            "anchor.reference.y": 0.2,
+            "anchor.reference.y": 0.5,
             "width.percents": 50,
             "height-ratio": 1
         }],
