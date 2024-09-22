@@ -164,8 +164,8 @@ void bim::axmol::app::screen_wheel::animate_end_game_to_lobby()
 
 void bim::axmol::app::screen_wheel::animate_end_game_to_matchmaking()
 {
-  m_inputs.erase(m_online_game->input_node());
-  m_online_game->closing();
+  m_inputs.erase(m_end_game->input_node());
+  m_end_game->closing();
 
   m_matchmaking->displaying();
   switch_view(*m_controls->matchmaking);
