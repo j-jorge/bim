@@ -6,6 +6,8 @@
 
 #include <axmol/2d/Node.h>
 
+#include <cstdint>
+
 namespace bim::axmol::widget
 {
   class nine_slices final : public ax::Node
@@ -29,5 +31,7 @@ namespace bim::axmol::widget
     bim_declare_controls_struct(controls, m_controls, 1);
     ax::Vec2 m_minimum_size;
     const float m_device_scale;
+    const bool m_stretch_vertically;
+    const bool m_stretch_horizontically;
   };
 }

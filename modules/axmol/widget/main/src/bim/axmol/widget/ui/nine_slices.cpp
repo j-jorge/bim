@@ -19,6 +19,9 @@ bim::axmol::widget::nine_slices::nine_slices(
     const iscool::style::declaration& style)
   : m_controls(context, style.get_declaration_or_empty("widgets"))
   , m_device_scale(context.device_scale)
+  , m_stretch_vertically(style.get_boolean("stretch-direction.vertical", true))
+  , m_stretch_horizontically(
+        style.get_boolean("stretch-direction.horizontal", true))
 {
   const ax::Vec2 sprite_size = m_controls->sprite->getPreferredSize();
   const ax::Vec2 center_size = m_controls->sprite->getCapInsets().size;
@@ -42,27 +45,27 @@ void bim::axmol::widget::nine_slices::setContentSize(const ax::Size& size)
   ax::Size sprite_size = size / m_device_scale;
   ax::Size this_size;
 
-  if (sprite_size.x < m_minimum_size.x)
+  if (m_stretch_horizontically && (sprite_size.x >= m_minimum_size.x))
+    this_size.x = size.x;
+  else
     {
       sprite_size.x = m_minimum_size.x;
       this_size.x = m_minimum_size.x * m_device_scale;
     }
-  else
-    this_size.x = size.x;
 
-  if (sprite_size.y < m_minimum_size.y)
+  if (m_stretch_vertically && (sprite_size.y >= m_minimum_size.y))
+    this_size.y = size.y;
+  else
     {
       sprite_size.y = m_minimum_size.y;
       this_size.y = m_minimum_size.y * m_device_scale;
     }
-  else
-    this_size.y = size.y;
-
-  ax::Node::setContentSize(this_size);
 
   m_controls->sprite->setContentSize(sprite_size);
   m_controls->sprite->setPosition(this_size / 2);
   m_controls->sprite->setScale(m_device_scale);
+
+  ax::Node::setContentSize(this_size);
 }
 
 bool bim::axmol::widget::nine_slices::init()
