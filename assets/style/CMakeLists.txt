@@ -1,6 +1,7 @@
 find_program(style_merger style-merger REQUIRED)
 
 set(common_style_files
+  ${CMAKE_CURRENT_LIST_DIR}/layout/center.json
   ${CMAKE_CURRENT_LIST_DIR}/layout/fill.json
 )
 
@@ -38,6 +39,8 @@ set(main_task_style_files
   ${CMAKE_CURRENT_LIST_DIR}/font/fancy-regular.json
 
   ${CMAKE_CURRENT_LIST_DIR}/popup/message.json
+
+  ${CMAKE_CURRENT_LIST_DIR}/toggle/flat.json
 
   ${common_style_files}
 )

@@ -25,6 +25,7 @@ add_library(bim_axmol_widget
   main/src/bim/axmol/widget/ui/soft_pad.cpp
   main/src/bim/axmol/widget/ui/soft_stick.cpp
   main/src/bim/axmol/widget/ui/texture.cpp
+  main/src/bim/axmol/widget/ui/toggle.cpp
 )
 
 target_include_directories(bim_axmol_widget PUBLIC main/include)

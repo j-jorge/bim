@@ -9,6 +9,7 @@ set(sprites
   "sprites/power-up-flame.png"
   "sprites/solid-wall.png"
 
+  "sprites/menu/dot-100.png"
   "sprites/menu/glow.png"
   "sprites/menu/rays.png"
   "sprites/menu/rounded-button-border-54-66.png"

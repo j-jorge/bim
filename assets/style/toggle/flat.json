@@ -1,0 +1,122 @@
+{
+    "style":
+    {
+        "widgets":
+        [{
+            "background":
+            [{
+                "instantiate": "nine_slices",
+                "widgets/sprite":
+                [{
+                    "frame": "sprites/menu/dot-100.png",
+                    "insets.left": 49,
+                    "insets.top": 49,
+                    "insets.width": 1,
+                    "insets.height": 1
+                }],
+                "stretch-direction.vertical": false,
+                "color": "desert-storm"
+            }],
+
+            "label-off":
+            [
+                "font/bold",
+                {
+                    "instantiate": "ax::Label",
+                    "font.size": 52,
+                    "font.color": "cod-gray",
+                    "align.horizontal": "center",
+                    "text.i18n": "Off",
+                    "z-order": 10
+                }
+            ],
+
+            "label-on":
+            [
+                "font/bold",
+                {
+                    "instantiate": "ax::Label",
+                    "font.size": 52,
+                    "font.color": "cod-gray",
+                    "align.horizontal": "center",
+                    "text.i18n": "On",
+                    "z-order": 10
+                }
+            ]
+        }],
+
+        "bounds":
+        [{
+            "background": [ "layout/fill" ],
+
+            "label-off":
+            [
+                "layout/center",
+                {
+                    "reference": "background"
+                }
+            ],
+
+            "label-on":
+            [
+                "layout/center",
+                {
+                    "reference": "background"
+                }
+            ]
+        }],
+
+        "display.off":
+        [{
+            "label-off/visible": true,
+            "label-on/visible": false
+        }],
+
+        "display.on":
+        [{
+            "label-off/visible": false,
+            "label-on/visible": true
+        }],
+
+        "action.pressed":
+        [{
+            "instantiate": "spawn",
+            "ease": "sine-out",
+
+            "scale":
+            [{
+                "instantiate": "scale",
+                "to": 0.9,
+                "duration": 0.3
+            }],
+
+            "tint":
+            [{
+                "instantiate": "tint",
+                "to": "#c0c0c0",
+                "duration": 0.3
+            }]
+        }],
+
+        "action.released":
+        [{
+            "instantiate": "spawn",
+
+            "scale":
+            [{
+                "instantiate": "scale",
+                "to": 1,
+                "duration": 0.2
+            }],
+
+            "tint":
+            [{
+                "instantiate": "tint",
+                "to": "white",
+                "duration": 0.3
+            }]
+        }],
+
+        "sound.click": "tick"
+    }
+}
