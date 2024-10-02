@@ -38,7 +38,9 @@ set(main_task_style_files
   ${CMAKE_CURRENT_LIST_DIR}/font/regular.json
   ${CMAKE_CURRENT_LIST_DIR}/font/fancy-regular.json
 
+  ${CMAKE_CURRENT_LIST_DIR}/popup/full-screen.json
   ${CMAKE_CURRENT_LIST_DIR}/popup/message.json
+  ${CMAKE_CURRENT_LIST_DIR}/popup/small.json
 
   ${CMAKE_CURRENT_LIST_DIR}/toggle/flat.json
 

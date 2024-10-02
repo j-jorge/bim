@@ -4,6 +4,7 @@ set(textures
   "menu-background-pattern.png"
   "popup-background-pattern.png"
   "search-background-pattern.png"
+  "squares.png"
   "stars.png"
   "victory-background-pattern.png"
 )

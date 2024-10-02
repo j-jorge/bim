@@ -37,6 +37,8 @@ namespace bim::axmol::input
     void push_back(key_observer_pointer observer);
     void push_back(const node_reference& child);
 
+    void pop_back();
+
     void erase(const node_reference& child);
     void erase(const touch_observer_pointer& observer);
     void erase(const key_observer_pointer& observer);

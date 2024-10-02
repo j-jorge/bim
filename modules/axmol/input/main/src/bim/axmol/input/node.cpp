@@ -52,6 +52,11 @@ void bim::axmol::input::node::push_back(const node_reference& child)
   assert(check_no_duplicates());
 }
 
+void bim::axmol::input::node::pop_back()
+{
+  m_children.pop_back();
+}
+
 void bim::axmol::input::node::erase(const node_reference& child)
 {
   const children_vector::iterator it(

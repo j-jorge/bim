@@ -32,6 +32,11 @@ void bim::axmol::input::tree::push_back(const node_reference& child)
   m_root->push_back(child);
 }
 
+void bim::axmol::input::tree::pop_back()
+{
+  m_root->pop_back();
+}
+
 void bim::axmol::input::tree::erase(const node_reference& child)
 {
   m_root->erase(child);

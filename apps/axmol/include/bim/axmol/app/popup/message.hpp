@@ -3,12 +3,9 @@
 
 #include <bim/axmol/widget/declare_controls_struct.hpp>
 
-#include <bim/axmol/input/observer/key_sink_handle.hpp>
-#include <bim/axmol/input/observer/touch_sink_handle.hpp>
-#include <bim/axmol/input/tree.hpp>
-
 #include <iscool/context.hpp>
 
+#include <memory>
 #include <string_view>
 
 namespace iscool::style
@@ -24,6 +21,7 @@ namespace bim::axmol::widget
 namespace bim::axmol::app
 {
   class main_scene;
+  class popup;
 
   class message_popup
   {
@@ -42,16 +40,9 @@ namespace bim::axmol::app
     void show(std::string_view message);
 
   private:
-    void hide();
-
-  private:
     bim_declare_controls_struct(controls, m_controls, 2);
     const iscool::style::declaration& m_style_bounds;
 
-    ax::Node& m_container;
-
-    bim::axmol::input::touch_sink_handle m_touch_sink;
-    bim::axmol::input::key_sink_handle m_key_sink;
-    bim::axmol::input::tree m_inputs;
+    std::unique_ptr<popup> m_popup;
   };
 }

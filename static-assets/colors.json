@@ -2,12 +2,15 @@
     "black": "#000000",
     "white": "#ffffff",
 
+    "desert-storm": "#f2f3f1",
+
     "science-blue": "#076ed5",
     "blue-zodiac": "#12204a",
     "golf-blue": "#031c56",
     "sail": "#b4dffb",
     "danube": "#6ea5d5",
 
+    "bunker": "#142224",
     "gable-green": "#193135",
     "plantation": "#274347",
 

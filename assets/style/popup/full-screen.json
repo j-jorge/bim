@@ -1,0 +1,157 @@
+{
+    "style":
+    {
+        "widgets":
+        [{
+            "container": [],
+            "client_container/parent": "container",
+
+            "background":
+            [{
+                "instantiate": "ax::LayerColor",
+                "parent": "container",
+                "color": "gable-green",
+                "opacity": 1,
+                "z-order": -2000
+            }],
+
+            "pattern":
+            [{
+                "instantiate": "texture",
+                "parent": "container",
+                "widgets/sprite/frame": "texture/popup-background-pattern.png",
+                "scroll-per-second.x": 20,
+                "scroll-per-second.y": 10,
+                "rotation": -2,
+                "color": "plantation",
+                "z-order": -1990
+            }],
+
+            "title-background":
+            [{
+                "instantiate": "ax::LayerColor",
+                "parent": "container",
+                "color": "bunker",
+                "opacity": 1,
+                "z-order": -1500
+            }],
+
+            "title-background-pattern":
+            [{
+                "instantiate": "clipping_node",
+                "parent": "container",
+                "z-order": -1495,
+                "widgets":
+                [{
+                    "clipping_node":
+                    [{
+                        "cascade-color": true
+                    }],
+
+                    "stencil":
+                    [{
+                        "instantiate": "ax::LayerColor",
+                        "color": "white",
+                        "opacity": 1
+                    }],
+
+                    "pattern":
+                    [{
+                        "instantiate": "texture",
+                        "parent": "clipping_node",
+                        "widgets/sprite/frame": "texture/squares.png",
+                        "scroll-per-second.x": 20,
+                        "scroll-per-second.y": 10,
+                        "rotation": -2,
+                        "color": "plantation"
+                    }]
+                }],
+
+                "bounds":
+                [{
+                    "clipping_node": [ "layout/fill" ],
+                    "stencil": [ "layout/fill" ],
+                    "pattern":
+                    [
+                        "layout/fill",
+                        {
+                            "width.percents": 150,
+                            "height.percents": 150
+                        }
+                    ]
+                }]
+            }],
+
+            "title-background-shadow":
+            [{
+                "instantiate": "ax::Sprite",
+                "parent": "container",
+                "frame": "sprites/menu/vertical-gradient.png",
+                "color": "black",
+                "opacity": 0.5,
+                "z-order": -1490
+            }],
+
+            "title-bottom-shadow":
+            [{
+                "instantiate": "ax::Sprite",
+                "parent": "container",
+                "frame": "sprites/menu/vertical-gradient.png",
+                "color": "black",
+                "opacity": 1,
+                "z-order": -1510
+            }]
+        }],
+
+        "bounds":
+        [{
+            "background": [ "layout/fill" ],
+            "container": [ "layout/fill" ],
+            "client_container": [ "layout/fill" ],
+            "pattern":
+            [
+                "layout/fill",
+                {
+                    "width.percents": 150,
+                    "height.percents": 150
+                }
+            ],
+
+            "title-background":
+            [{
+                "anchor.x": 0.5,
+                "anchor.y": 1,
+                "anchor.reference.x": 0.5,
+                "anchor.reference.y": 1,
+                "width.percents": 100,
+                "height.percents": 10
+            }],
+
+            "title-background-pattern":
+            [
+                "layout/fill",
+                {
+                    "reference": "title-background"
+                }
+            ],
+
+            "title-background-shadow":
+            [
+                "layout/fill",
+                {
+                    "reference": "title-background"
+                }
+            ],
+
+            "title-bottom-shadow":
+            [{
+                "anchor.x": 0.5,
+                "anchor.y": 1,
+                "anchor.reference.x": 0.5,
+                "anchor.reference.y": 0.91,
+                "width.percents": 100,
+                "height.percents": 3
+            }]
+        }]
+    }
+}
