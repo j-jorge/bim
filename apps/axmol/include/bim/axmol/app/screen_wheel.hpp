@@ -30,6 +30,11 @@ namespace bim
 
 namespace iscool
 {
+  namespace audio
+  {
+    class mixer;
+  }
+
   namespace preferences
   {
     class local_preferences;
@@ -59,10 +64,12 @@ namespace bim::axmol::app
   {
     ic_declare_context(
         m_context,
-        ic_context_declare_parent_properties(                      //
-            ((const bim::axmol::widget::context&)(widget_context)) //
-            ((main_scene*)(main_scene))                            //
-            ((bim::net::session_handler*)(session_handler))        //
+        ic_context_declare_parent_properties(                              //
+            ((iscool::preferences::local_preferences*)(local_preferences)) //
+            ((const bim::axmol::widget::context&)(widget_context))         //
+            ((main_scene*)(main_scene))                                    //
+            ((bim::net::session_handler*)(session_handler))                //
+            ((iscool::audio::mixer*)(audio))                               //
             ((iscool::system::haptic_feedback*)(haptic_feedback))),
         ic_context_no_properties);
 

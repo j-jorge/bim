@@ -11,6 +11,7 @@ set(sprites
 
   "sprites/menu/audio.png"
   "sprites/menu/dot-100.png"
+  "sprites/menu/gear.png"
   "sprites/menu/glow.png"
   "sprites/menu/music.png"
   "sprites/menu/rays.png"

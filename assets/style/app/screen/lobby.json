@@ -1,10 +1,21 @@
 {
     "style":
     {
+        "settings": [ "popup/settings" ],
+
         "widgets":
         [
             "app/screen/part/menu-background",
             {
+                "settings_button":
+                [
+                    "button/yellow-with-icon",
+                    {
+                        "widgets/icon/frame": "sprites/menu/gear.png",
+                        "z-order": 20
+                    }
+                ],
+
                 "play_button":
                 [
                     "button/yellow-with-label",

@@ -31,6 +31,8 @@ set(main_task_style_files
   ${CMAKE_CURRENT_LIST_DIR}/button/green-with-label.json
   ${CMAKE_CURRENT_LIST_DIR}/button/red-with-label.json
   ${CMAKE_CURRENT_LIST_DIR}/button/sprite.json
+  ${CMAKE_CURRENT_LIST_DIR}/button/thick-base.json
+  ${CMAKE_CURRENT_LIST_DIR}/button/yellow-with-icon.json
   ${CMAKE_CURRENT_LIST_DIR}/button/yellow-with-label.json
 
   ${CMAKE_CURRENT_LIST_DIR}/font/bold.json

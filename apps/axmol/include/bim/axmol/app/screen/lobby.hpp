@@ -18,22 +18,44 @@ namespace bim::net
   class session_handler;
 }
 
+namespace iscool::audio
+{
+  class mixer;
+}
+
+namespace iscool::preferences
+{
+  class local_preferences;
+}
+
 namespace iscool::style
 {
   class declaration;
 }
 
+namespace iscool::system
+{
+  class haptic_feedback;
+}
+
 namespace bim::axmol::app
 {
+  class main_scene;
+  class settings_popup;
+
   class lobby
   {
     DECLARE_VOID_SIGNAL(play, m_play)
 
     ic_declare_context(
         m_context,
-        ic_context_declare_parent_properties(                      //
-            ((const bim::axmol::widget::context&)(widget_context)) //
-            ((bim::net::session_handler*)(session_handler))),
+        ic_context_declare_parent_properties(                              //
+            ((const bim::axmol::widget::context&)(widget_context))         //
+            ((main_scene*)(main_scene))                                    //
+            ((bim::net::session_handler*)(session_handler))                //
+            ((iscool::audio::mixer*)(audio))                               //
+            ((iscool::preferences::local_preferences*)(local_preferences)) //
+            ((iscool::system::haptic_feedback*)(haptic_feedback))),
         ic_context_no_properties);
 
   public:
@@ -51,7 +73,9 @@ namespace bim::axmol::app
 
   private:
     bim::axmol::input::tree m_inputs;
-    bim_declare_controls_struct(controls, m_controls, 1);
+    bim_declare_controls_struct(controls, m_controls, 2);
+
+    std::unique_ptr<settings_popup> m_settings;
 
     iscool::signals::scoped_connection m_session_connection;
   };

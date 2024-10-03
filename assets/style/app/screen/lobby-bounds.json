@@ -6,6 +6,16 @@
 
     "style":
     {
+        "settings_button":
+        [{
+            "anchor.x": 0.5,
+            "anchor.y": 0.5,
+            "anchor.reference.x": 0.9,
+            "anchor.reference.y": 0.95,
+            "height.percents": 8,
+            "width-ratio": 1
+        }],
+
         "play_button":
         [{
             "anchor.x": 0.5,
