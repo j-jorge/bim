@@ -9,8 +9,10 @@ set(sprites
   "sprites/power-up-flame.png"
   "sprites/solid-wall.png"
 
+  "sprites/menu/audio.png"
   "sprites/menu/dot-100.png"
   "sprites/menu/glow.png"
+  "sprites/menu/music.png"
   "sprites/menu/rays.png"
   "sprites/menu/rounded-button-border-54-66.png"
   "sprites/menu/rounded-button-fill-54-66.png"
@@ -19,6 +21,7 @@ set(sprites
   "sprites/menu/silhouette-3.png"
   "sprites/menu/silhouette-4.png"
   "sprites/menu/stripe-1-79-1-258.png"
+  "sprites/menu/vibration.png"
 
   "sprites/popup/popup-border-146-146.png"
   "sprites/popup/popup-fill-146-146.png"

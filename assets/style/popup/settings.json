@@ -1,0 +1,185 @@
+{
+    "style":
+    {
+        "popup": [ "popup/full-screen" ],
+
+        "widgets":
+        [{
+            "title":
+            [
+                "font/bold",
+                {
+                    "instantiate": "ax::Label",
+                    "text.i18n": "Settings",
+                    "font.color": "desert-storm",
+                    "font.size": 90
+                }
+            ],
+
+            "music-icon":
+            [{
+                "instantiate": "ax::Sprite",
+                "frame": "sprites/menu/music.png",
+                "color": "desert-storm"
+            }],
+
+            "music-label":
+            [
+                "popup/settings/font/main",
+                {
+                    "text.i18n": "Music"
+                }
+            ],
+
+            "music": [ "toggle/flat" ],
+
+            "sound-effects-icon":
+            [{
+                "instantiate": "ax::Sprite",
+                "frame": "sprites/menu/audio.png",
+                "color": "desert-storm"
+            }],
+
+            "sound-effects-label":
+            [
+                "popup/settings/font/main",
+                {
+                    "text.i18n": "Sound effects"
+                }
+            ],
+
+            "sound_effects": [ "toggle/flat" ],
+
+            "vibrations-icon":
+            [{
+                "instantiate": "ax::Sprite",
+                "frame": "sprites/menu/vibration.png",
+                "color": "desert-storm"
+            }],
+
+            "vibrations-label":
+            [
+                "popup/settings/font/main",
+                {
+                    "text.i18n": "Vibrations"
+                }
+            ],
+
+            "vibrations": [ "toggle/flat" ],
+
+            "close_button":
+            [
+                "button/yellow-with-label",
+                {
+                    "widgets/label/text.i18n": "OK",
+                    "z-order": 0
+                }
+            ]
+        }],
+
+        "bounds":
+        [{
+            "title":
+            [{
+                "anchor.x": 0.5,
+                "anchor.y": 0.5,
+                "anchor.reference.x": 0.5,
+                "anchor.reference.y": 0.95
+            }],
+
+            "music-icon":
+            [{
+                "anchor.x": 0.5,
+                "anchor.y": 0.5,
+                "anchor.reference.x": 0.1,
+                "anchor.reference.y": 0.8,
+                "keep-ratio": true,
+                "height.percents": 5
+            }],
+
+            "music-label":
+            [{
+                "anchor.x": 0,
+                "anchor.y": 0.5,
+                "anchor.reference.x": 0.16,
+                "anchor.reference.y": 0.8
+            }],
+
+            "music":
+            [{
+                "anchor.x": 0.5,
+                "anchor.y": 0.5,
+                "anchor.reference.x": 0.8,
+                "anchor.reference.y": 0.8,
+                "width.percents": 30,
+                "height.percents": 10
+            }],
+
+            "sound-effects-icon":
+            [{
+                "anchor.x": 0.5,
+                "anchor.y": 0.5,
+                "anchor.reference.x": 0.1,
+                "anchor.reference.y": 0.72,
+                "keep-ratio": true,
+                "height.percents": 5
+            }],
+
+            "sound-effects-label":
+            [{
+                "anchor.x": 0,
+                "anchor.y": 0.5,
+                "anchor.reference.x": 0.16,
+                "anchor.reference.y": 0.72
+            }],
+
+            "sound_effects":
+            [{
+                "anchor.x": 0.5,
+                "anchor.y": 0.5,
+                "anchor.reference.x": 0.8,
+                "anchor.reference.y": 0.72,
+                "width.percents": 30,
+                "height.percents": 10
+            }],
+
+            "vibrations-icon":
+            [{
+                "anchor.x": 0.5,
+                "anchor.y": 0.5,
+                "anchor.reference.x": 0.1,
+                "anchor.reference.y": 0.64,
+                "keep-ratio": true,
+                "height.percents": 5
+            }],
+
+            "vibrations-label":
+            [{
+                "anchor.x": 0,
+                "anchor.y": 0.5,
+                "anchor.reference.x": 0.16,
+                "anchor.reference.y": 0.64
+            }],
+
+            "vibrations":
+            [{
+                "anchor.x": 0.5,
+                "anchor.y": 0.5,
+                "anchor.reference.x": 0.8,
+                "anchor.reference.y": 0.64,
+                "width.percents": 30,
+                "height.percents": 10
+            }],
+
+            "close_button":
+            [{
+                "anchor.x": 0.5,
+                "anchor.y": 0.5,
+                "anchor.reference.x": 0.5,
+                "anchor.reference.y": 0.15,
+                "width.percents": 50,
+                "height.percents": 12
+            }]
+        }]
+    }
+}

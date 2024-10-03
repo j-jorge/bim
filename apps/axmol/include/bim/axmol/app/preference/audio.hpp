@@ -9,5 +9,8 @@ namespace iscool::preferences
 namespace bim::axmol::app
 {
   bool music_enabled(const iscool::preferences::local_preferences& p);
+  void music_enabled(iscool::preferences::local_preferences& p, bool v);
+
   bool effects_enabled(const iscool::preferences::local_preferences& p);
+  void effects_enabled(iscool::preferences::local_preferences& p, bool v);
 }

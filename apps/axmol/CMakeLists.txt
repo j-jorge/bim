@@ -11,6 +11,7 @@ add_library(bim_app
 
   src/bim/axmol/app/popup/message.cpp
   src/bim/axmol/app/popup/popup.cpp
+  src/bim/axmol/app/popup/settings_popup.cpp
 
   src/bim/axmol/app/preference/audio.cpp
   src/bim/axmol/app/preference/haptic.cpp

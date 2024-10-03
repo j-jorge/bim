@@ -10,4 +10,6 @@ namespace bim::axmol::app
 {
   bool
   haptic_feedback_enabled(const iscool::preferences::local_preferences& p);
+  void haptic_feedback_enabled(iscool::preferences::local_preferences& p,
+                               bool v);
 }

@@ -31,6 +31,18 @@ shiru8bit
 From https://opengameart.org/content/8-bit-chiptune-spring-came
 CC-BY 3.0
 
+assets/sprites/menu/audio.png
+Kenney.nl
+From https://opengameart.org/content/game-icons
+CC0
+
+assets/sprites/menu/gear.png
+assets/sprites/menu/music.png
+assets/sprites/menu/vibration.png
+Kenney.nl, adapted by Julien Jorge
+From https://opengameart.org/content/game-icons
+CC0
+
 assets/sprites/bomb.png
 assets/sprites/brick-wall.png
 assets/sprites/player-1.png
@@ -40,6 +52,7 @@ assets/sprites/player-4.png
 assets/sprites/power-up-bomb.png
 assets/sprites/power-up-flame.png
 assets/sprites/solid-wall.png
+assets/sprites/menu/dot-100.png
 assets/sprites/menu/glow.png
 assets/sprites/menu/horizontal-gradient.png
 assets/sprites/menu/rays.png
@@ -67,6 +80,7 @@ assets/texture/menu-background-pattern.png
 assets/texture/popup-background-pattern.png
 assets/texture/search-background-pattern.png
 assets/texture/victory-background-pattern.png
+assets/texture/squares.png
 assets/texture/stars.png
 static-assets/audio/tick.ogg
 Julien Jorge

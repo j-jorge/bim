@@ -8,3 +8,9 @@ bool bim::axmol::app::haptic_feedback_enabled(
 {
   return p.get_value("haptic_feedback.enabled", true);
 }
+
+void bim::axmol::app::haptic_feedback_enabled(
+    iscool::preferences::local_preferences& p, bool v)
+{
+  p.set_value("haptic_feedback.enabled", v);
+}

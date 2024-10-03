@@ -40,7 +40,10 @@ set(main_task_style_files
 
   ${CMAKE_CURRENT_LIST_DIR}/popup/full-screen.json
   ${CMAKE_CURRENT_LIST_DIR}/popup/message.json
+  ${CMAKE_CURRENT_LIST_DIR}/popup/settings.json
   ${CMAKE_CURRENT_LIST_DIR}/popup/small.json
+
+  ${CMAKE_CURRENT_LIST_DIR}/popup/settings/font/main.json
 
   ${CMAKE_CURRENT_LIST_DIR}/toggle/flat.json
 
