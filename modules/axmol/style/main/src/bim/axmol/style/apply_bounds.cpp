@@ -7,6 +7,8 @@
 
 #include <axmol/2d/Label.h>
 #include <axmol/2d/Node.h>
+#include <axmol/2d/Sprite.h>
+#include <axmol/2d/SpriteFrame.h>
 
 #include <cassert>
 
@@ -75,8 +77,22 @@ void apply_size(ax::Node& node, const ax::Node& reference,
     }
   else
     {
-      const float ratio = size.x / size.y;
-      const bool keep_ratio = bounds.keep_ratio && !std::isnan(ratio);
+      float ratio;
+      bool keep_ratio = false;
+
+      if (bounds.keep_ratio)
+        {
+          if (const ax::Sprite* const sprite =
+                  dynamic_cast<ax::Sprite*>(&node))
+            if (const ax::SpriteFrame* const sprite_frame =
+                    sprite->getSpriteFrame())
+              {
+                const ax::Vec2& sprite_size = sprite_frame->getOriginalSize();
+
+                ratio = sprite_size.x / sprite_size.y;
+                keep_ratio = !std::isnan(ratio);
+              }
+        }
 
       if (apply_width(size.x, reference, bounds) && keep_ratio)
         size.y = size.x / ratio;
