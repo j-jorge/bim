@@ -83,6 +83,8 @@ void bim::axmol::audio::mixer::set_music_muted(bool muted)
   if (m_music_muted == muted)
     return;
 
+  m_music_muted = muted;
+
   if (muted)
     {
       if (m_current_music_id != g_invalid_audio_id)
