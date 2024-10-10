@@ -11,6 +11,9 @@ set(sprites
 
   "sprites/menu/audio.png"
   "sprites/menu/dot-100.png"
+  "sprites/menu/gamepad.png"
+  "sprites/menu/gamepad-d-pad-left.png"
+  "sprites/menu/gamepad-d-pad-right.png"
   "sprites/menu/gear.png"
   "sprites/menu/glow.png"
   "sprites/menu/music.png"
@@ -72,7 +75,7 @@ add_custom_command(
     --no-crop
     --no-rotation
     --format plist
-    --size 1024x1024
+    --size 2048x2048
     ${sprites}
     --bleeding
     ${sprites_bleeding}

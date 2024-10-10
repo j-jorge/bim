@@ -59,8 +59,14 @@ namespace bim::axmol::app
     void show();
 
   private:
-    bim_declare_controls_struct(controls, m_controls, 4);
+    void set_direction_pad_display(bool pad_on_the_left);
+
+  private:
+    bim_declare_controls_struct(controls, m_controls, 5);
     const iscool::style::declaration& m_style_bounds;
+
+    const iscool::style::declaration& m_style_pad_on_the_left;
+    const iscool::style::declaration& m_style_pad_on_the_right;
 
     std::unique_ptr<popup> m_popup;
 

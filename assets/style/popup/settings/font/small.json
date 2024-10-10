@@ -1,0 +1,13 @@
+{
+    "meta":
+    {
+        "overrides": [ "font/regular" ]
+    },
+
+    "style":
+    {
+        "instantiate": "ax::Label",
+        "font.size": 32,
+        "font.color": "desert-storm"
+    }
+}

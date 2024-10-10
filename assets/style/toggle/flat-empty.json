@@ -1,0 +1,71 @@
+{
+    "style":
+    {
+        "widgets":
+        [{
+            "background":
+            [{
+                "instantiate": "nine_slices",
+                "widgets/sprite":
+                [{
+                    "frame": "sprites/menu/dot-100.png",
+                    "insets.left": 49,
+                    "insets.top": 49,
+                    "insets.width": 1,
+                    "insets.height": 1
+                }],
+                "stretch-direction.vertical": false,
+                "color": "desert-storm"
+            }]
+        }],
+
+        "bounds":
+        [{
+            "background": [ "layout/fill" ]
+        }],
+
+        "display.off": [],
+        "display.on": [],
+
+        "action.pressed":
+        [{
+            "instantiate": "spawn",
+            "ease": "sine-out",
+
+            "scale":
+            [{
+                "instantiate": "scale",
+                "to": 0.9,
+                "duration": 0.3
+            }],
+
+            "tint":
+            [{
+                "instantiate": "tint",
+                "to": "#c0c0c0",
+                "duration": 0.3
+            }]
+        }],
+
+        "action.released":
+        [{
+            "instantiate": "spawn",
+
+            "scale":
+            [{
+                "instantiate": "scale",
+                "to": 1,
+                "duration": 0.2
+            }],
+
+            "tint":
+            [{
+                "instantiate": "tint",
+                "to": "white",
+                "duration": 0.3
+            }]
+        }],
+
+        "sound.click": "tick"
+    }
+}

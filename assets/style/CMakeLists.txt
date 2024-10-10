@@ -46,8 +46,11 @@ set(main_task_style_files
   ${CMAKE_CURRENT_LIST_DIR}/popup/small.json
 
   ${CMAKE_CURRENT_LIST_DIR}/popup/settings/font/main.json
+  ${CMAKE_CURRENT_LIST_DIR}/popup/settings/font/small.json
+  ${CMAKE_CURRENT_LIST_DIR}/popup/settings/toggle/controls.json
 
   ${CMAKE_CURRENT_LIST_DIR}/toggle/flat.json
+  ${CMAKE_CURRENT_LIST_DIR}/toggle/flat-empty.json
 
   ${common_style_files}
 )

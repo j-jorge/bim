@@ -67,6 +67,40 @@
 
             "vibrations": [ "toggle/flat" ],
 
+            "d-pad-position-icon":
+            [{
+                "instantiate": "ax::Sprite",
+                "frame": "sprites/menu/gamepad.png",
+                "color": "desert-storm"
+            }],
+
+            "d-pad-position-label":
+            [
+                "popup/settings/font/main",
+                {
+                    "text.i18n": "Controls"
+                }
+            ],
+
+            "d-pad-position-label-description-right":
+            [
+                "popup/settings/font/small",
+                {
+                    "text.i18n": "Directions on the right,\nactions on the left."
+                }
+            ],
+
+
+            "d-pad-position-label-description-left":
+            [
+                "popup/settings/font/small",
+                {
+                    "text.i18n": "Directions on the left,\nactions on the right."
+                }
+            ],
+
+            "d_pad_position": [ "popup/settings/toggle/controls" ],
+
             "close_button":
             [
                 "button/yellow-with-label",
@@ -171,6 +205,50 @@
                 "height.percents": 10
             }],
 
+            "d-pad-position-icon":
+            [{
+                "anchor.x": 0.5,
+                "anchor.y": 0.5,
+                "anchor.reference.x": 0.1,
+                "anchor.reference.y": 0.56,
+                "keep-ratio": true,
+                "height.percents": 5
+            }],
+
+            "d-pad-position-label":
+            [{
+                "anchor.x": 0,
+                "anchor.y": 0.5,
+                "anchor.reference.x": 0.16,
+                "anchor.reference.y": 0.56
+            }],
+
+            "d-pad-position-label-description-left":
+            [{
+                "anchor.x": 0,
+                "anchor.y": 1,
+                "anchor.reference.x": 0.16,
+                "anchor.reference.y": 0.54
+            }],
+
+            "d-pad-position-label-description-right":
+            [{
+                "anchor.x": 0,
+                "anchor.y": 1,
+                "anchor.reference.x": 0.16,
+                "anchor.reference.y": 0.54
+            }],
+
+            "d_pad_position":
+            [{
+                "anchor.x": 0.5,
+                "anchor.y": 0.5,
+                "anchor.reference.x": 0.8,
+                "anchor.reference.y": 0.56,
+                "width.percents": 30,
+                "height.percents": 10
+            }],
+
             "close_button":
             [{
                 "anchor.x": 0.5,
@@ -180,6 +258,18 @@
                 "width.percents": 50,
                 "height.percents": 12
             }]
+        }],
+
+        "display.d-pad-on-the-left":
+        [{
+            "d-pad-position-label-description-left/visible": true,
+            "d-pad-position-label-description-right/visible": false
+        }],
+
+        "display.d-pad-on-the-right":
+        [{
+            "d-pad-position-label-description-left/visible": false,
+            "d-pad-position-label-description-right/visible": true
         }]
     }
 }

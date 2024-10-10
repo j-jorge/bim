@@ -4,8 +4,10 @@
 #include <bim/axmol/app/popup/popup.hpp>
 
 #include <bim/axmol/app/preference/audio.hpp>
+#include <bim/axmol/app/preference/controls.hpp>
 #include <bim/axmol/app/preference/haptic.hpp>
 
+#include <bim/axmol/widget/apply_display.hpp>
 #include <bim/axmol/widget/implement_widget.hpp>
 #include <bim/axmol/widget/ui/button.hpp>
 #include <bim/axmol/widget/ui/toggle.hpp>
@@ -16,7 +18,8 @@
   x_widget(bim::axmol::widget::button, close_button)                          \
       x_widget(bim::axmol::widget::toggle, music)                             \
           x_widget(bim::axmol::widget::toggle, sound_effects)                 \
-              x_widget(bim::axmol::widget::toggle, vibrations)
+              x_widget(bim::axmol::widget::toggle, vibrations)                \
+                  x_widget(bim::axmol::widget::toggle, d_pad_position)
 
 #include <bim/axmol/widget/implement_controls_struct.hpp>
 
@@ -29,12 +32,17 @@ bim::axmol::app::settings_popup::settings_popup(
   : m_context(context)
   , m_controls(context.get_widget_context(), *style.get_declaration("widgets"))
   , m_style_bounds(*style.get_declaration("bounds"))
+  , m_style_pad_on_the_left(
+        *style.get_declaration("display.d-pad-on-the-left"))
+  , m_style_pad_on_the_right(
+        *style.get_declaration("display.d-pad-on-the-right"))
   , m_popup(new popup(context, *style.get_declaration("popup")))
 {
   m_inputs.push_back(m_controls->close_button->input_node());
   m_inputs.push_back(m_controls->music->input_node());
   m_inputs.push_back(m_controls->sound_effects->input_node());
   m_inputs.push_back(m_controls->vibrations->input_node());
+  m_inputs.push_back(m_controls->d_pad_position->input_node());
 
   m_controls->close_button->connect_to_clicked(
       [this]()
@@ -80,6 +88,18 @@ bim::axmol::app::settings_popup::settings_popup(
 
         m_context.get_haptic_feedback()->set_enabled(v);
       });
+
+  m_controls->d_pad_position->connect_to_clicked(
+      [this]()
+      {
+        iscool::preferences::local_preferences& preferences =
+            *m_context.get_local_preferences();
+
+        const bool v = !direction_pad_on_the_left(preferences);
+        direction_pad_on_the_left(preferences, v);
+
+        set_direction_pad_display(v);
+      });
 }
 
 bim::axmol::app::settings_popup::~settings_popup() = default;
@@ -93,5 +113,17 @@ void bim::axmol::app::settings_popup::show()
   m_controls->sound_effects->set_state(effects_enabled(preferences));
   m_controls->vibrations->set_state(haptic_feedback_enabled(preferences));
 
+  set_direction_pad_display(direction_pad_on_the_left(preferences));
+
   m_popup->show(m_controls->all_nodes, m_style_bounds, m_inputs.root());
+}
+
+void bim::axmol::app::settings_popup::set_direction_pad_display(
+    bool pad_on_the_left)
+{
+  m_controls->d_pad_position->set_state(pad_on_the_left);
+
+  bim::axmol::widget::apply_display(
+      m_context.get_widget_context().style_cache, m_controls->all_nodes,
+      pad_on_the_left ? m_style_pad_on_the_left : m_style_pad_on_the_right);
 }
