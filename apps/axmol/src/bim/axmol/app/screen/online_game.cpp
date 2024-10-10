@@ -1,6 +1,10 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/axmol/app/screen/online_game.hpp>
 
+#include <bim/axmol/app/preference/controls.hpp>
+
+#include <bim/axmol/widget/apply_bounds.hpp>
+#include <bim/axmol/widget/context.hpp>
 #include <bim/axmol/widget/factory/sprite.hpp>
 #include <bim/axmol/widget/named_node_group.hpp>
 #include <bim/axmol/widget/ui/button.hpp>
@@ -41,7 +45,7 @@
 #define x_widget_controls                                                     \
   x_widget(ax::Node, arena)                                                   \
       x_widget(bim::axmol::widget::soft_pad, directional_pad)                 \
-          x_widget(bim::axmol::widget::button, bomb_button_left)              \
+          x_widget(bim::axmol::widget::button, bomb_button)                   \
               x_widget(ax::Label, debug_delta_ticks)
 #include <bim/axmol/widget/implement_controls_struct.hpp>
 
@@ -66,6 +70,9 @@ bim::axmol::app::online_game::online_game(
     const context& context, const iscool::style::declaration& style)
   : m_context(context)
   , m_controls(context.get_widget_context(), *style.get_declaration("widgets"))
+  , m_style_pad_on_the_left(*style.get_declaration("bounds.d-pad-on-the-left"))
+  , m_style_pad_on_the_right(
+        *style.get_declaration("bounds.d-pad-on-the-right"))
   , m_flame_center_asset_name(*style.get_string("flame-center-asset-name"))
   , m_flame_arm_asset_name(*style.get_string("flame-arm-asset-name"))
   , m_flame_end_asset_name(*style.get_string("flame-end-asset-name"))
@@ -76,9 +83,9 @@ bim::axmol::app::online_game::online_game(
     m_bomb_drop_requested = true;
   };
 
-  m_controls->bomb_button_left->connect_to_clicked(request_drop_bomb);
+  m_controls->bomb_button->connect_to_clicked(request_drop_bomb);
 
-  m_inputs.push_back(m_controls->bomb_button_left->input_node());
+  m_inputs.push_back(m_controls->bomb_button->input_node());
   m_inputs.push_back(m_controls->directional_pad->input_node());
 
   m_controls->directional_pad->connect_to_pressed(
@@ -174,6 +181,12 @@ void bim::axmol::app::online_game::attached()
 void bim::axmol::app::online_game::displaying(
     const bim::net::game_launch_event& event)
 {
+  bim::axmol::widget::apply_bounds(
+      m_context.get_widget_context().style_cache, m_controls->all_nodes,
+      direction_pad_on_the_left(*m_context.get_local_preferences())
+          ? m_style_pad_on_the_left
+          : m_style_pad_on_the_right);
+
   m_contest.reset(new bim::game::contest(
       event.seed, event.brick_wall_probability, event.player_count,
       event.arena_width, event.arena_height));

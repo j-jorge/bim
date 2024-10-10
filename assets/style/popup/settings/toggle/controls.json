@@ -1,0 +1,79 @@
+{
+    "meta":
+    {
+        "overrides": [ "toggle/flat-empty" ]
+    },
+
+    "style":
+    {
+        "widgets":
+        [{
+            "icon.off":
+            [{
+                "instantiate": "nine_slices",
+                "widgets/sprite":
+                [{
+                    "frame": "sprites/menu/gamepad-d-pad-right.png",
+                    "insets.left": 68,
+                    "insets.top": 33,
+                    "insets.width": 1,
+                    "insets.height": 1,
+                    "color": "cod-gray"
+                }],
+                "stretch-direction.vertical": false,
+                "z-order": 10
+            }],
+
+            "icon.on":
+            [{
+                "instantiate": "nine_slices",
+                "widgets/sprite":
+                [{
+                    "frame": "sprites/menu/gamepad-d-pad-left.png",
+                    "insets.left": 68,
+                    "insets.top": 33,
+                    "insets.width": 1,
+                    "insets.height": 1,
+                    "color": "cod-gray"
+                }],
+                "stretch-direction.vertical": false,
+                "z-order": 10
+            }]
+        }],
+
+        "bounds":
+        [{
+            "icon.off":
+            [
+                "layout/center",
+                {
+                    "reference": "background",
+                    "width.percents": 55,
+                    "height.percents": 55
+                }
+            ],
+
+            "icon.on":
+            [
+                "layout/center",
+                {
+                    "reference": "background",
+                    "width.percents": 55,
+                    "height.percents": 55
+                }
+            ]
+        }],
+
+        "display.off":
+        [{
+            "icon.off/visible": true,
+            "icon.on/visible": false
+        }],
+
+        "display.on":
+        [{
+            "icon.off/visible": false,
+            "icon.on/visible": true
+        }]
+    }
+}

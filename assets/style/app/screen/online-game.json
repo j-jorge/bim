@@ -14,7 +14,7 @@
                 "z-order": -10
             }],
 
-            "bomb_button_left":
+            "bomb_button":
             [
                 "button/sprite",
                 {
@@ -76,6 +76,56 @@
         "flame-end-asset-name": "sprites/flame-end.png",
 
         "power-up-bomb/frame": "sprites/power-up-bomb.png",
-        "power-up-flame/frame": "sprites/power-up-flame.png"
+        "power-up-flame/frame": "sprites/power-up-flame.png",
+
+        "bounds.d-pad-on-the-right":
+        [{
+            "bomb_button":
+            [{
+                "reference": "controls-area",
+                "anchor.x": 0.5,
+                "anchor.y": 0.5,
+                "anchor.reference.x": 0.2,
+                "anchor.reference.y": 0.6,
+                "width.percents": 20,
+                "height-ratio": 1
+            }],
+
+            "directional_pad":
+            [{
+                "reference": "controls-area",
+                "anchor.x": 0.5,
+                "anchor.y": 0.5,
+                "anchor.reference.x": 0.66,
+                "anchor.reference.y": 0.5,
+                "width.percents": 50,
+                "height-ratio": 1
+            }]
+        }],
+
+        "bounds.d-pad-on-the-left":
+        [{
+            "bomb_button":
+            [{
+                "reference": "controls-area",
+                "anchor.x": 0.5,
+                "anchor.y": 0.5,
+                "anchor.reference.x": 0.8,
+                "anchor.reference.y": 0.6,
+                "width.percents": 20,
+                "height-ratio": 1
+            }],
+
+            "directional_pad":
+            [{
+                "reference": "controls-area",
+                "anchor.x": 0.5,
+                "anchor.y": 0.5,
+                "anchor.reference.x": 0.33,
+                "anchor.reference.y": 0.5,
+                "width.percents": 50,
+                "height-ratio": 1
+            }]
+        }]
     }
 }

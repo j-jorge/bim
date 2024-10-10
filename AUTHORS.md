@@ -32,6 +32,7 @@ From https://opengameart.org/content/8-bit-chiptune-spring-came
 CC-BY 3.0
 
 assets/sprites/menu/audio.png
+assets/sprites/menu/gamepad.png
 Kenney.nl
 From https://opengameart.org/content/game-icons
 CC0
@@ -53,6 +54,8 @@ assets/sprites/power-up-bomb.png
 assets/sprites/power-up-flame.png
 assets/sprites/solid-wall.png
 assets/sprites/menu/dot-100.png
+assets/sprites/menu/gamepad-d-pad-left.png
+assets/sprites/menu/gamepad-d-pad-right.png
 assets/sprites/menu/glow.png
 assets/sprites/menu/horizontal-gradient.png
 assets/sprites/menu/rays.png
