@@ -80,7 +80,8 @@ void bim::server::random_game_encounter_service::clean_up()
       const session_to_encounter_map::iterator it =
           m_session_to_encounter.find(event.session);
 
-      if (event.encounter_id != it->second)
+      if ((it == m_session_to_encounter.end())
+          || (event.encounter_id != it->second))
         continue;
 
       ic_log(iscool::log::nature::info(), "random_game_encounter_service",
