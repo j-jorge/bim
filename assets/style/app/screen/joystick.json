@@ -1,0 +1,27 @@
+{
+    "style":
+    {
+        "widgets":
+        [{
+            "stick/frame": "sprites/ui/joystick-stick.png",
+
+            "background":
+            [{
+                "instantiate": "ax::Sprite",
+                "frame": "sprites/ui/joystick-background.png"
+            }]
+        }],
+
+        "bounds":
+        [{
+            "stick":
+            [{
+                "width.percents": 50,
+                "height.percents": 50,
+                "z-order": 10
+            }],
+
+            "background": [ "layout/fill" ]
+        }]
+    }
+}

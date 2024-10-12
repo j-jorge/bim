@@ -33,6 +33,7 @@ CC-BY 3.0
 
 assets/sprites/menu/audio.png
 assets/sprites/menu/gamepad.png
+assets/sprites/menu/joystick.png
 Kenney.nl
 From https://opengameart.org/content/game-icons
 CC0
@@ -42,6 +43,12 @@ assets/sprites/menu/music.png
 assets/sprites/menu/vibration.png
 Kenney.nl, adapted by Julien Jorge
 From https://opengameart.org/content/game-icons
+CC0
+
+assets/sprites/ui/joystick-background.png
+assets/sprites/ui/joystick-stick.png
+AliHamieh
+From https://opengameart.org/content/mmorpg-virtual-joysticks
 CC0
 
 assets/sprites/bomb.png
