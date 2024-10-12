@@ -33,6 +33,7 @@ CC-BY 3.0
 
 assets/sprites/menu/audio.png
 assets/sprites/menu/gamepad.png
+assets/sprites/menu/joystick.png
 Kenney.nl
 From https://opengameart.org/content/game-icons
 CC0

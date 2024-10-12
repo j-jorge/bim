@@ -14,3 +14,15 @@ void bim::axmol::app::direction_pad_on_the_left(
 {
   p.set_value("controls.direction_pad_on_the_left", v);
 }
+
+bool bim::axmol::app::direction_pad_kind_is_stick(
+    const iscool::preferences::local_preferences& p)
+{
+  return p.get_value("controls.direction_pad_kind_is_stick", false);
+}
+
+void bim::axmol::app::direction_pad_kind_is_stick(
+    iscool::preferences::local_preferences& p, bool v)
+{
+  p.set_value("controls.direction_pad_kind_is_stick", v);
+}

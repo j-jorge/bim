@@ -16,6 +16,7 @@ set(sprites
   "sprites/menu/gamepad-d-pad-right.png"
   "sprites/menu/gear.png"
   "sprites/menu/glow.png"
+  "sprites/menu/joystick.png"
   "sprites/menu/music.png"
   "sprites/menu/rays.png"
   "sprites/menu/rounded-button-border-54-66.png"
@@ -38,6 +39,8 @@ set(sprites
   "sprites/ui/directional-pad-up-on.png"
   "sprites/ui/directional-pad-down-on.png"
   "sprites/ui/directional-pad-down.png"
+  "sprites/ui/joystick-background.png"
+  "sprites/ui/joystick-stick.png"
 )
 set(sprites_bleeding
   "sprites/flame-arm.png"
