@@ -23,6 +23,7 @@
             ],
 
             "directional_pad": [ "app/screen/directional-pad" ],
+            "joystick": [ "app/screen/joystick" ],
 
             "debug_delta_ticks":
             [
@@ -100,6 +101,17 @@
                 "anchor.reference.y": 0.5,
                 "width.percents": 50,
                 "height-ratio": 1
+            }],
+
+            "joystick":
+            [{
+                "reference": "controls-area",
+                "anchor.x": 0.5,
+                "anchor.y": 0.5,
+                "anchor.reference.x": 0.5,
+                "anchor.reference.y": 0.5,
+                "width.percents": 90,
+                "height.percents": 90
             }]
         }],
 
@@ -125,7 +137,30 @@
                 "anchor.reference.y": 0.5,
                 "width.percents": 50,
                 "height-ratio": 1
+            }],
+
+            "joystick":
+            [{
+                "reference": "controls-area",
+                "anchor.x": 0.5,
+                "anchor.y": 0.5,
+                "anchor.reference.x": 0.5,
+                "anchor.reference.y": 0.5,
+                "width.percents": 90,
+                "height.percents": 90
             }]
+        }],
+
+        "display.use-joystick":
+        [{
+            "joystick/visible": true,
+            "directional_pad/visible": false
+        }],
+
+        "display.use-d-pad":
+        [{
+            "joystick/visible": false,
+            "directional_pad/visible": true
         }]
     }
 }

@@ -91,6 +91,8 @@ namespace bim::axmol::app
     void closing();
 
   private:
+    void configure_direction_pad();
+
     void schedule_tick();
     void tick();
 
@@ -118,10 +120,12 @@ namespace bim::axmol::app
 
   private:
     bim::axmol::input::tree m_inputs;
-    bim_declare_controls_struct(controls, m_controls, 4);
+    bim_declare_controls_struct(controls, m_controls, 5);
 
     const iscool::style::declaration& m_style_pad_on_the_left;
     const iscool::style::declaration& m_style_pad_on_the_right;
+    const iscool::style::declaration& m_style_use_joystick;
+    const iscool::style::declaration& m_style_use_d_pad;
 
     iscool::signals::scoped_connection m_tick_connection;
 
@@ -153,5 +157,6 @@ namespace bim::axmol::app
     std::uint8_t m_local_player_index;
 
     bool m_bomb_drop_requested;
+    bool m_use_stick;
   };
 }

@@ -18,10 +18,11 @@ namespace bim::axmol::input
    */
   class soft_stick : public axmol_node_touch_observer
   {
-    DECLARE_ASYNC_VOID_SIGNAL(changed, m_changed)
+    DECLARE_ASYNC_SIGNAL(void(ax::Vec2), move, m_move)
+    DECLARE_ASYNC_VOID_SIGNAL(up, m_up)
 
   public:
-    explicit soft_stick(const ax::Node& reference);
+    soft_stick(const ax::Node& reference, const ax::Node& stick);
     ~soft_stick();
 
     void enable(bool v);
@@ -37,11 +38,11 @@ namespace bim::axmol::input
 
     bool should_ignore_touches() const;
 
-    void constraint_drag(ax::Vec2 touch_location, ax::Vec2 scale);
+    void constraint_drag(ax::Vec2 touch_location);
 
   private:
+    const ax::Node& m_stick;
     std::optional<int> m_touch_id;
-    ax::Vec2 m_origin;
     ax::Vec2 m_drag;
     bool m_enabled;
   };

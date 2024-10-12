@@ -10,10 +10,13 @@
 #include <axmol/2d/Node.h>
 #include <axmol/base/Touch.h>
 
-IMPLEMENT_SIGNAL(bim::axmol::input::soft_stick, changed, m_changed);
+IMPLEMENT_SIGNAL(bim::axmol::input::soft_stick, move, m_move);
+IMPLEMENT_SIGNAL(bim::axmol::input::soft_stick, up, m_up);
 
-bim::axmol::input::soft_stick::soft_stick(const ax::Node& reference)
+bim::axmol::input::soft_stick::soft_stick(const ax::Node& reference,
+                                          const ax::Node& stick)
   : axmol_node_touch_observer(reference)
+  , m_stick(stick)
   , m_enabled(true)
 {}
 
@@ -59,26 +62,10 @@ void bim::axmol::input::soft_stick::do_pressed(const touch_event_view& touches)
 
   m_touch_id = touch.get()->getID();
 
-  const ax::Rect node_box_on_screen =
-      bim::axmol::bounding_box_on_screen(m_node);
-  const ax::Vec2 half_size = node_box_on_screen.size / 2;
-  const ax::Vec2 quarter_size = node_box_on_screen.size / 4;
-  const ax::Vec2 node_center_on_screen = node_box_on_screen.origin + half_size;
   const ax::Vec2 touch_position = touch.get()->getLocation();
-  const ax::Vec2 distance_to_center = touch_position - node_center_on_screen;
 
-  if ((std::abs(distance_to_center.x) < quarter_size.x)
-      && (std::abs(distance_to_center.y) < quarter_size.y))
-    // The touch is near the center, let's assume the player wants a smooth
-    // movement.
-    m_origin = touch_position;
-  else
-    {
-      // Far from the center, the player wants to move in this direction.
-      m_origin = node_center_on_screen;
-      constraint_drag(touch_position, half_size);
-      m_changed();
-    }
+  m_drag = {};
+  m_move(touch_position);
 }
 
 void bim::axmol::input::soft_stick::do_moved(const touch_event_view& touches)
@@ -86,24 +73,21 @@ void bim::axmol::input::soft_stick::do_moved(const touch_event_view& touches)
   if (!m_touch_id || should_ignore_touches())
     return;
 
-  bool dispatch_changed = false;
+  std::optional<ax::Vec2> position;
 
   for (touch_event& touch : touches)
     if (touch.is_available() && (touch.get()->getID() == *m_touch_id))
       {
         touch.consume();
 
-        const ax::Vec2 size = bim::axmol::bounding_box_on_screen(m_node).size;
-        const ax::Vec2 half_size = size / 2;
-
-        constraint_drag(touch.get()->getLocation(), half_size);
-        dispatch_changed = true;
+        position = touch.get()->getLocation();
+        constraint_drag(*position);
 
         break;
       }
 
-  if (dispatch_changed)
-    m_changed();
+  if (position)
+    m_move(*position);
 }
 
 void bim::axmol::input::soft_stick::do_released(
@@ -126,7 +110,7 @@ void bim::axmol::input::soft_stick::do_cancelled(
 
         m_touch_id = std::nullopt;
         m_drag = {};
-        m_changed();
+        m_up();
 
         break;
       }
@@ -137,20 +121,15 @@ bool bim::axmol::input::soft_stick::should_ignore_touches() const
   return !m_enabled || axmol_node_touch_observer::should_ignore_touches();
 }
 
-void bim::axmol::input::soft_stick::constraint_drag(ax::Vec2 touch_location,
-                                                    ax::Vec2 scale)
+void bim::axmol::input::soft_stick::constraint_drag(ax::Vec2 touch_location)
 {
-  m_drag = touch_location - m_origin;
+  const ax::Node& parent = *m_stick.getParent();
+  const ax::Vec2 size = bim::axmol::bounding_box_on_screen(parent).size;
+  const ax::Vec2 half_size = size / 2;
 
-  // Drag is proportional to the reference node, but the stick should not go to
-  // the edges (otherwise it's ugly).
-  m_drag = m_drag / scale;
+  const ax::Vec2 origin = parent.convertToWorldSpace(half_size);
+  m_drag = (touch_location - origin) / half_size;
 
-  constexpr float max_length = 2.f / 3;
-
-  if (m_drag.lengthSquared() >= max_length * max_length)
-    {
-      m_drag.normalize();
-      m_drag.scale(max_length);
-    }
+  if (m_drag.lengthSquared() >= 1)
+    m_drag.normalize();
 }

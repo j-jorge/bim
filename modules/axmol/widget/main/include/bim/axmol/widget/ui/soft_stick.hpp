@@ -22,6 +22,8 @@ namespace bim::axmol::widget
                const iscool::style::declaration& style);
     ~soft_stick();
 
+    void set_layout_on_the_left(bool left);
+
     bim::axmol::input::node_reference input_node() const;
 
     void onEnter() override;
@@ -38,6 +40,7 @@ namespace bim::axmol::widget
     bool init() override;
 
     void update_display();
+    void move_stick_to(const ax::Vec2& world_position);
 
   private:
     const bim::axmol::widget::context& m_context;
@@ -46,6 +49,11 @@ namespace bim::axmol::widget
     const bim::axmol::input::soft_stick_handle m_soft_stick_input;
     bim::axmol::input::tree m_inputs;
 
-    const iscool::style::declaration& m_style_bounds;
+    const iscool::style::declaration& m_style_bounds_left;
+    const iscool::style::declaration& m_style_bounds_right;
+
+    ax::Vec2 m_original_stick_world_position;
+
+    bool m_on_the_left;
   };
 }

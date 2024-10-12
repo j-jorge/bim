@@ -1,0 +1,71 @@
+{
+    "style":
+    {
+        "widgets":
+        [{
+            "container":
+            [{
+                "instantiate": "ax::Node",
+                "anchor-point.x": 0.5,
+                "anchor-point.y": 0.5
+            }],
+
+            "stick":
+            [{
+                "parent": "container",
+                "frame": "sprites/ui/joystick-stick.png"
+            }],
+
+            "background":
+            [{
+                "parent": "container",
+                "instantiate": "ax::Sprite",
+                "frame": "sprites/ui/joystick-background.png"
+            }]
+        }],
+
+        "bounds.left":
+        [{
+            "container":
+            [{
+                "anchor.x": 0.5,
+                "anchor.y": 0.5,
+                "anchor.reference.x": 0.25,
+                "anchor.reference.y": 0.5,
+                "height.percents": 50,
+                "width-ratio": 1
+            }],
+
+            "stick":
+            [{
+                "width-ratio": 1,
+                "height.percents": 50,
+                "z-order": 10
+            }],
+
+            "background": [ "layout/fill" ]
+        }],
+
+        "bounds.right":
+        [{
+            "container":
+            [{
+                "anchor.x": 0.5,
+                "anchor.y": 0.5,
+                "anchor.reference.x": 0.75,
+                "anchor.reference.y": 0.5,
+                "height.percents": 50,
+                "width-ratio": 1
+            }],
+
+            "stick":
+            [{
+                "width-ratio": 1,
+                "height.percents": 50,
+                "z-order": 10
+            }],
+
+            "background": [ "layout/fill" ]
+        }]
+    }
+}

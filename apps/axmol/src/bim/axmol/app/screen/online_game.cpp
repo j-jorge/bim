@@ -4,11 +4,13 @@
 #include <bim/axmol/app/preference/controls.hpp>
 
 #include <bim/axmol/widget/apply_bounds.hpp>
+#include <bim/axmol/widget/apply_display.hpp>
 #include <bim/axmol/widget/context.hpp>
 #include <bim/axmol/widget/factory/sprite.hpp>
 #include <bim/axmol/widget/named_node_group.hpp>
 #include <bim/axmol/widget/ui/button.hpp>
 #include <bim/axmol/widget/ui/soft_pad.hpp>
+#include <bim/axmol/widget/ui/soft_stick.hpp>
 
 #include <bim/net/contest_runner.hpp>
 #include <bim/net/exchange/game_launch_event.hpp>
@@ -44,9 +46,10 @@
 #define x_widget_type_name controls
 #define x_widget_controls                                                     \
   x_widget(ax::Node, arena)                                                   \
-      x_widget(bim::axmol::widget::soft_pad, directional_pad)                 \
-          x_widget(bim::axmol::widget::button, bomb_button)                   \
-              x_widget(ax::Label, debug_delta_ticks)
+      x_widget(bim::axmol::widget::soft_stick, joystick)                      \
+          x_widget(bim::axmol::widget::soft_pad, directional_pad)             \
+              x_widget(bim::axmol::widget::button, bomb_button)               \
+                  x_widget(ax::Label, debug_delta_ticks)
 #include <bim/axmol/widget/implement_controls_struct.hpp>
 
 #include <axmol/2d/Sprite.h>
@@ -73,6 +76,8 @@ bim::axmol::app::online_game::online_game(
   , m_style_pad_on_the_left(*style.get_declaration("bounds.d-pad-on-the-left"))
   , m_style_pad_on_the_right(
         *style.get_declaration("bounds.d-pad-on-the-right"))
+  , m_style_use_joystick(*style.get_declaration("display.use-joystick"))
+  , m_style_use_d_pad(*style.get_declaration("display.use-d-pad"))
   , m_flame_center_asset_name(*style.get_string("flame-center-asset-name"))
   , m_flame_arm_asset_name(*style.get_string("flame-arm-asset-name"))
   , m_flame_end_asset_name(*style.get_string("flame-end-asset-name"))
@@ -86,6 +91,7 @@ bim::axmol::app::online_game::online_game(
   m_controls->bomb_button->connect_to_clicked(request_drop_bomb);
 
   m_inputs.push_back(m_controls->bomb_button->input_node());
+  m_inputs.push_back(m_controls->joystick->input_node());
   m_inputs.push_back(m_controls->directional_pad->input_node());
 
   m_controls->directional_pad->connect_to_pressed(
@@ -181,11 +187,7 @@ void bim::axmol::app::online_game::attached()
 void bim::axmol::app::online_game::displaying(
     const bim::net::game_launch_event& event)
 {
-  bim::axmol::widget::apply_bounds(
-      m_context.get_widget_context().style_cache, m_controls->all_nodes,
-      direction_pad_on_the_left(*m_context.get_local_preferences())
-          ? m_style_pad_on_the_left
-          : m_style_pad_on_the_right);
+  configure_direction_pad();
 
   m_contest.reset(new bim::game::contest(
       event.seed, event.brick_wall_probability, event.player_count,
@@ -244,6 +246,25 @@ void bim::axmol::app::online_game::displayed()
 
 void bim::axmol::app::online_game::closing()
 {}
+
+void bim::axmol::app::online_game::configure_direction_pad()
+{
+  const bool pad_on_the_left =
+      direction_pad_on_the_left(*m_context.get_local_preferences());
+
+  bim::axmol::widget::apply_bounds(
+      m_context.get_widget_context().style_cache, m_controls->all_nodes,
+      pad_on_the_left ? m_style_pad_on_the_left : m_style_pad_on_the_right);
+  m_use_stick =
+      direction_pad_kind_is_stick(*m_context.get_local_preferences());
+
+  if (m_use_stick)
+    m_controls->joystick->set_layout_on_the_left(pad_on_the_left);
+
+  bim::axmol::widget::apply_display(
+      m_context.get_widget_context().style_cache, m_controls->all_nodes,
+      m_use_stick ? m_style_use_joystick : m_style_use_d_pad);
+}
 
 void bim::axmol::app::online_game::schedule_tick()
 {
@@ -332,10 +353,12 @@ void bim::axmol::app::online_game::apply_inputs()
   if (player_action == nullptr)
     return;
 
-  const ax::Vec2& drag = m_controls->directional_pad->direction();
+  const ax::Vec2& drag = m_use_stick
+                             ? m_controls->joystick->drag()
+                             : m_controls->directional_pad->direction();
+
   const float abs_x = std::abs(drag.x);
   const float abs_y = std::abs(drag.y);
-  // TODO: remove the threshold, the drag for the pad is -1, 0, or 1.
   constexpr float move_threshold = 0.1;
   const float dx = (abs_x >= move_threshold) ? drag.x : 0;
   const float dy = (abs_y >= move_threshold) ? drag.y : 0;
