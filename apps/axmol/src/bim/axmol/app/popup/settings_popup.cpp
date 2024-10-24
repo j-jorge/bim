@@ -8,9 +8,16 @@
 #include <bim/axmol/app/preference/haptic.hpp>
 
 #include <bim/axmol/widget/apply_display.hpp>
+#include <bim/axmol/widget/factory/label.hpp>
 #include <bim/axmol/widget/implement_widget.hpp>
 #include <bim/axmol/widget/ui/button.hpp>
 #include <bim/axmol/widget/ui/toggle.hpp>
+
+#include <bim/net/message/protocol_version.hpp>
+
+#include <bim/version.hpp>
+
+#include <axmol/2d/Label.h>
 
 #define x_widget_scope bim::axmol::app::settings_popup::
 #define x_widget_type_name controls
@@ -20,13 +27,16 @@
           x_widget(bim::axmol::widget::toggle, sound_effects)                 \
               x_widget(bim::axmol::widget::toggle, vibrations)                \
                   x_widget(bim::axmol::widget::toggle, d_pad_position)        \
-                      x_widget(bim::axmol::widget::toggle, d_pad_kind)
+                      x_widget(bim::axmol::widget::toggle, d_pad_kind)        \
+                          x_widget(ax::Label, version)
 
 #include <bim/axmol/widget/implement_controls_struct.hpp>
 
 #include <iscool/audio/mixer.hpp>
 #include <iscool/preferences/local_preferences.hpp>
 #include <iscool/system/haptic_feedback.hpp>
+
+#include <fmt/format.h>
 
 bim::axmol::app::settings_popup::settings_popup(
     const context& context, const iscool::style::declaration& style)
@@ -47,6 +57,9 @@ bim::axmol::app::settings_popup::settings_popup(
   m_inputs.push_back(m_controls->vibrations->input_node());
   m_inputs.push_back(m_controls->d_pad_position->input_node());
   m_inputs.push_back(m_controls->d_pad_kind->input_node());
+
+  m_controls->version->setString(
+      fmt::format("Version {}/{}", BIM_VERSION, bim::net::protocol_version));
 
   m_controls->close_button->connect_to_clicked(
       [this]()

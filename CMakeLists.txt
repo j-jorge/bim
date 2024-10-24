@@ -33,6 +33,9 @@ else()
 
   # Everything here is executed on the environment of the target
   # platform.
-  project(bim LANGUAGES CXX)
+  project(bim
+    VERSION ${project_version}
+    LANGUAGES CXX
+  )
   include(./CMakeLists-common.txt)
 endif()

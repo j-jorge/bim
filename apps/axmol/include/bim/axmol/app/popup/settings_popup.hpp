@@ -63,7 +63,7 @@ namespace bim::axmol::app
     void set_stick_or_pad_display(bool use_stick);
 
   private:
-    bim_declare_controls_struct(controls, m_controls, 6);
+    bim_declare_controls_struct(controls, m_controls, 7);
     const iscool::style::declaration& m_style_bounds;
 
     const iscool::style::declaration& m_style_pad_on_the_left;
