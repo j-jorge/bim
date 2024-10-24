@@ -506,8 +506,6 @@ void bim::axmol::app::application::apply_local_preferences()
 
   iscool::audio::mixer& audio = *m_context.get_audio();
 
-  printf("prefs: %d, %d\n", (int)music_enabled(preferences),
-         (int)effects_enabled(preferences));
   if (!music_enabled(preferences))
     audio.set_music_muted(true);
 
