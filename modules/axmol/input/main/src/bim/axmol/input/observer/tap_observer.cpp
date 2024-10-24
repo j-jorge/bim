@@ -37,7 +37,7 @@ void bim::axmol::input::tap_observer::do_pressed(
 
   const bool was_pressed = is_pressed();
 
-  for (const touch_event& touch : touches)
+  for (touch_event& touch : touches)
     update_touch_position(touch);
 
   if (!was_pressed && is_pressed())
@@ -115,13 +115,15 @@ bool bim::axmol::input::tap_observer::is_pressed() const
   return !m_touch_id_pressed_position.empty();
 }
 
-void bim::axmol::input::tap_observer::update_touch_position(
-    const touch_event& touch)
+void bim::axmol::input::tap_observer::update_touch_position(touch_event& touch)
 {
   const int id = touch.get()->getID();
 
   if (touch.is_available() && contains_touch(touch))
-    m_touch_id_pressed_position[id] = touch.get()->getLocation();
+    {
+      touch.consume();
+      m_touch_id_pressed_position[id] = touch.get()->getLocation();
+    }
   else
     m_touch_id_pressed_position.erase(id);
 }

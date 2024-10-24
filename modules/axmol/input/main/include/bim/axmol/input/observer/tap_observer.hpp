@@ -38,7 +38,7 @@ namespace bim::axmol::input
     bool should_ignore_touches() const;
     bool is_pressed() const;
 
-    void update_touch_position(const touch_event& touch);
+    void update_touch_position(touch_event& touch);
     bool consume_known_touches(const touch_event_view& touches);
 
     void disable_temporarily();
