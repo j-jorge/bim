@@ -1,0 +1,2 @@
+#pragma once
+#define BIM_VERSION "@CMAKE_PROJECT_VERSION@"
