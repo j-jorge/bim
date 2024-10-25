@@ -12,7 +12,18 @@ namespace
 {
   struct application
   {
-    bim::axmol::app::bridge bridge;
+    application()
+      : bridge(new bim::axmol::app::bridge())
+    {}
+
+    ~application()
+    {
+      // The bridge must be destroyed before the app becauses it accesses the
+      // global scheduler, which is destroyed with the app.
+      bridge.reset();
+    }
+
+    std::unique_ptr<bim::axmol::app::bridge> bridge;
     bim::axmol::jni::bridge jni;
     bim::axmol::app::application instance;
   };

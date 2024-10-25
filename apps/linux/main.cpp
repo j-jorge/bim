@@ -173,7 +173,8 @@ static command_line parse_command_line(int argc, char* argv[])
 
 int main(int argc, char* argv[])
 {
-  bim::axmol::app::bridge bridge;
+  std::unique_ptr<bim::axmol::app::bridge> bridge(
+      new bim::axmol::app::bridge());
 
   const ::command_line command_line = parse_command_line(argc, argv);
 
@@ -193,5 +194,11 @@ int main(int argc, char* argv[])
                                             options.screen_resolution.height),
                                    options.screen_scale);
 
-  return axmol::Application::getInstance()->run();
+  const int result = axmol::Application::getInstance()->run();
+
+  // The bridge must be destroyed before the app becauses it accesses the
+  // global scheduler, which is destroyed with the app.
+  bridge.reset();
+
+  return result;
 }
