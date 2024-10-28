@@ -27,8 +27,7 @@ bim::net::authentication_exchange::~authentication_exchange() = default;
 
 void bim::net::authentication_exchange::start()
 {
-  // TODO: random<client_token>()
-  m_token = iscool::random::rand::get_default().random();
+  m_token = iscool::random::rand::get_default().random<client_token>();
   m_client_message = authentication(protocol_version, m_token).build_message();
 
   m_channel_signal_connection = m_message_channel.connect_to_message(

@@ -112,8 +112,7 @@ void bim::net::new_game_exchange::internal_start(
 
   m_message_channel.rebind(session, 0);
 
-  // TODO: random<client_token>()
-  m_token = iscool::random::rand::get_default().random();
+  m_token = iscool::random::rand::get_default().random<client_token>();
 
   m_channel_signal_connection = m_message_channel.connect_to_message(
       std::bind(&new_game_exchange::interpret_received_message, this,
