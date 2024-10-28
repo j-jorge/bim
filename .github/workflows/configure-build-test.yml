@@ -44,13 +44,23 @@ jobs:
           ./ci/install-minimal-environment.sh
           --compiler ${{matrix.compiler}}
           --target-platform ${{steps.strings.outputs.target_platform}}
-          ;
 
       - name: Launch build
         run: >
           ./setup.sh
           --target-platform ${{steps.strings.outputs.target_platform}}
           --build-type ${{matrix.build_type}} ${{matrix.maybe_incremental}}
+
+      # Valgrind tests runs for a single configuration only because
+      # they are very slow.
+      - name: Valgrind tests
+        if: |
+          (matrix.maybe_incremental == '')
+          && (matrix.container == 'ubuntu:24.04')
+          && (matrix.build_type == 'release')
+          && (matrix.compiler == 'g++')
+        run: >
+          ./ci/run-test-programs.sh --use-valgrind build/linux/release
 
       - name: Archive artifacts
         if: |

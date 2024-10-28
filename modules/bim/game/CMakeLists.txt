@@ -64,6 +64,5 @@ target_link_libraries(
   PRIVATE
   bim_game
   GTest::gtest
-  GTest::gtest_main
+  bim_gtest_main
 )
-

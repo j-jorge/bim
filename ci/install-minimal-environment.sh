@@ -74,7 +74,8 @@ packages=(bzip2
 
 case "$target_platform" in
     linux)
-        packages+=(libgtk-3-dev)
+        packages+=(libgtk-3-dev
+                   valgrind)
         ;;
     android)
         packages+=(gradle

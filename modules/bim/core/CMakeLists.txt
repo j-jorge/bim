@@ -7,3 +7,12 @@ target_include_directories(
   main/include
   ${CMAKE_CURRENT_BINARY_DIR}/include
 )
+
+add_library(bim_gtest_main
+  tests/src/gtest-main/gtest_main.cpp
+)
+target_link_libraries(
+  bim_gtest_main
+  PRIVATE
+  GTest::gtest
+)

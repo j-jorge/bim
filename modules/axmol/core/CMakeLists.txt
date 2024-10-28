@@ -27,5 +27,5 @@ target_link_libraries(
   PRIVATE
   bim_axmol_core
   GTest::gtest
-  GTest::gtest_main
+  bim_gtest_main
 )
