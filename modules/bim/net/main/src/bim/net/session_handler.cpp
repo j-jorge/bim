@@ -14,6 +14,7 @@
 #include <iscool/signals/implement_signal.hpp>
 
 #include <cassert>
+#include <cstdlib>
 
 IMPLEMENT_SIGNAL(bim::net::session_handler, connected, m_connected);
 IMPLEMENT_SIGNAL(bim::net::session_handler, authentication_error,
@@ -40,23 +41,20 @@ bim::net::session_handler::session_handler()
 
 bim::net::session_handler::~session_handler() = default;
 
-void bim::net::session_handler::connect(const std::string& config_url)
+void bim::net::session_handler::connect()
 {
   m_authentication.stop();
   m_session_id = std::nullopt;
 
-  auto on_result = [this](const std::vector<char>& response) -> void
-  {
-    connect_to_game_server(response);
-  };
+  const char* const server_host = std::getenv("BIM_GAME_SERVER_HOST");
 
-  auto on_error = [this](const std::vector<char>& response) -> void
-  {
-    dispatch_error(response);
-  };
+  if (server_host)
+    {
+      connect_to_game_server(server_host);
+      return;
+    }
 
-  m_config_request_connections =
-      iscool::http::get(config_url, on_result, on_error);
+  fetch_server_list("https://bim.jorge.st/gs.json");
 }
 
 const iscool::net::message_stream&
@@ -76,7 +74,22 @@ iscool::net::session_id bim::net::session_handler::session_id() const
   return *m_session_id;
 }
 
-void bim::net::session_handler::connect_to_game_server(
+void bim::net::session_handler::fetch_server_list(const std::string& url)
+{
+  auto on_result = [this](const std::vector<char>& response) -> void
+  {
+    parse_server_list(response);
+  };
+
+  auto on_error = [this](const std::vector<char>& response) -> void
+  {
+    dispatch_error(response);
+  };
+
+  m_config_request_connections = iscool::http::get(url, on_result, on_error);
+}
+
+void bim::net::session_handler::parse_server_list(
     const std::vector<char>& response)
 {
   const Json::Value config = iscool::json::parse_string(
@@ -104,8 +117,7 @@ void bim::net::session_handler::connect_to_game_server(
               != bim::net::protocol_version))
         continue;
 
-      m_socket_stream.connect(iscool::json::cast<std::string>(host));
-      m_authentication.start();
+      connect_to_game_server(iscool::json::cast<std::string>(host));
       return;
     }
 
@@ -121,4 +133,10 @@ void bim::net::session_handler::dispatch_error(
          "Failed to fetch the game server config: %s", text);
 
   m_config_error();
+}
+
+void bim::net::session_handler::connect_to_game_server(const std::string& host)
+{
+  m_socket_stream.connect(host);
+  m_authentication.start();
 }

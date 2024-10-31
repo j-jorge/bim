@@ -24,7 +24,7 @@ namespace bim::net
     session_handler();
     ~session_handler();
 
-    void connect(const std::string& config_url);
+    void connect();
 
     const iscool::net::message_stream& message_stream() const;
 
@@ -32,8 +32,12 @@ namespace bim::net
     iscool::net::session_id session_id() const;
 
   private:
-    void connect_to_game_server(const std::vector<char>& response);
+    void fetch_server_list(const std::string& config_url);
+
+    void parse_server_list(const std::vector<char>& response);
     void dispatch_error(const std::vector<char>& response) const;
+
+    void connect_to_game_server(const std::string& host);
 
   private:
     iscool::net::socket_stream m_socket_stream;

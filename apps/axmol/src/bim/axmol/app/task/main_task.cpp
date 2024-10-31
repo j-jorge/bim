@@ -83,5 +83,5 @@ void bim::axmol::app::main_task::connect_to_game_server()
                     error_code)));
           });
 
-  m_session_handler.connect("https://bim.jorge.st/gs.json");
+  m_session_handler.connect();
 }
