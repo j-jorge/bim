@@ -1,7 +1,9 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-#include <gtest/gtest.h>
+#include <iscool/log/enable_console_log.hpp>
 
 #include <string_view>
+
+#include <gtest/gtest.h>
 
 int main(int argc, char* argv[])
 {
@@ -9,7 +11,9 @@ int main(int argc, char* argv[])
   bool show_help = false;
 
   for (int argi = 1; argi < argc; ++argi)
-    if (argv[argi] == std::string_view("--ignore-failures"))
+    if (argv[argi] == std::string_view("--console-log"))
+      iscool::log::enable_console_log();
+    else if (argv[argi] == std::string_view("--ignore-failures"))
       ignore_failures = true;
     else if (argv[argi] == std::string_view("--help"))
       show_help = true;
@@ -21,6 +25,8 @@ int main(int argc, char* argv[])
   if (show_help)
     std::cout << R"(
 Custom Options:
+  --console-log
+      Display logs in the terminal.
   --ignore-failures
       Close the program with exit code 0 even if there are failing tests. The
       goal of this option is to distinguish errors from the tests from errors

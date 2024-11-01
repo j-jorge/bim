@@ -15,4 +15,5 @@ target_link_libraries(
   bim_gtest_main
   PRIVATE
   GTest::gtest
+  iscool_log
 )
