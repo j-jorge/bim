@@ -77,6 +77,8 @@ public:
     , contest_result(bim::game::contest_result::create_still_running())
     , contest(seed, g_brick_wall_probability, player_count, 13, 15)
   {
+    std::sort(this->sessions.begin(), this->sessions.begin() + player_count);
+
     ready.fill(false);
     completed_tick_count_per_player.fill(0);
 
