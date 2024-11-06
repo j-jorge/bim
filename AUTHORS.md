@@ -84,6 +84,7 @@ assets/sprites/ui/directional-pad-right-on.png
 assets/sprites/ui/directional-pad-right.png
 assets/sprites/ui/directional-pad-up-on.png
 assets/sprites/ui/directional-pad-up.png
+assets/texture/bomb-stencil.png
 assets/texture/defeat-background-pattern.png
 assets/texture/draw-background-pattern.png
 assets/texture/menu-background-pattern.png

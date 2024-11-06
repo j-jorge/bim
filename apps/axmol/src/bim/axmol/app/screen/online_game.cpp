@@ -9,6 +9,7 @@
 #include <bim/axmol/widget/factory/sprite.hpp>
 #include <bim/axmol/widget/named_node_group.hpp>
 #include <bim/axmol/widget/ui/button.hpp>
+#include <bim/axmol/widget/ui/peephole.hpp>
 #include <bim/axmol/widget/ui/soft_pad.hpp>
 #include <bim/axmol/widget/ui/soft_stick.hpp>
 
@@ -49,7 +50,8 @@
       x_widget(bim::axmol::widget::soft_stick, joystick)                      \
           x_widget(bim::axmol::widget::soft_pad, directional_pad)             \
               x_widget(bim::axmol::widget::button, bomb_button)               \
-                  x_widget(ax::Label, debug_delta_ticks)
+                  x_widget(ax::Label, debug_delta_ticks)                      \
+                      x_widget(bim::axmol::widget::peephole, peephole)
 #include <bim/axmol/widget/implement_controls_struct.hpp>
 
 #include <axmol/2d/Sprite.h>
@@ -83,6 +85,12 @@ bim::axmol::app::online_game::online_game(
   , m_flame_end_asset_name(*style.get_string("flame-end-asset-name"))
   , m_arena_width_in_blocks(*style.get_number("arena-width-in-blocks"))
 {
+  m_controls->peephole->connect_to_shown(
+      [this]() -> void
+      {
+        m_update_exchange->start();
+      });
+
   const auto request_drop_bomb = [this]()
   {
     m_bomb_drop_requested = true;
@@ -197,6 +205,12 @@ void bim::axmol::app::online_game::displaying(
       m_context.get_session_handler()->session_id(), event.channel));
   m_update_exchange.reset(
       new bim::net::game_update_exchange(*m_game_channel, event.player_count));
+  m_update_exchange->connect_to_started(
+      [this]() -> void
+      {
+        m_controls->peephole->reveal();
+        schedule_tick();
+      });
   m_contest_runner.reset(new bim::net::contest_runner(
       *m_contest, *m_update_exchange, event.player_index, event.player_count));
 
@@ -232,16 +246,15 @@ void bim::axmol::app::online_game::displaying(
 
   display_brick_walls();
   display_players();
+
+  const ax::Node& player = *m_players[m_local_player_index];
+  m_controls->peephole->prepare(
+      player.convertToWorldSpace(player.getContentSize() / 2));
 }
 
 void bim::axmol::app::online_game::displayed()
 {
-  m_update_exchange->connect_to_started(
-      [this]() -> void
-      {
-        schedule_tick();
-      });
-  m_update_exchange->start();
+  m_controls->peephole->show();
 }
 
 void bim::axmol::app::online_game::closing()

@@ -1,4 +1,5 @@
 set(textures
+  "bomb-stencil.png"
   "defeat-background-pattern.png"
   "draw-background-pattern.png"
   "menu-background-pattern.png"

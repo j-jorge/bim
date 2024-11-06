@@ -34,7 +34,20 @@
                     "font.size": 32,
                     "font.color": "#f0f0f0"
                 }
-            ]
+            ],
+
+            "peephole":
+            [{
+                "widgets/sprite/frame": "texture/bomb-stencil.png",
+
+                "initial-scale": 0,
+                "wait-scale": 1.5,
+                "final-scale": 20,
+                "scale-in-seconds": 0.8,
+                "wait-seconds": 0.2,
+                "fade-out-seconds": 0.5,
+                "z-order": 1000
+            }]
         }],
 
         "arena-width-in-blocks": 13,

@@ -38,6 +38,8 @@
             "anchor.y": 1,
             "anchor.reference.x": 0,
             "anchor.reference.y": 0
-        }]
+        }],
+
+        "peephole": [ "layout/fill" ]
     }
 }

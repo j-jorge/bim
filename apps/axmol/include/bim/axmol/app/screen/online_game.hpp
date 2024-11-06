@@ -120,7 +120,7 @@ namespace bim::axmol::app
 
   private:
     bim::axmol::input::tree m_inputs;
-    bim_declare_controls_struct(controls, m_controls, 5);
+    bim_declare_controls_struct(controls, m_controls, 6);
 
     const iscool::style::declaration& m_style_pad_on_the_left;
     const iscool::style::declaration& m_style_pad_on_the_right;

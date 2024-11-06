@@ -121,8 +121,8 @@ void bim::axmol::app::screen_wheel::animate_lobby_to_matchmaking()
   m_inputs.erase(m_lobby->input_node());
 
   m_lobby->closing();
-  m_matchmaking->displaying();
   switch_view(*m_controls->matchmaking);
+  m_matchmaking->displaying();
 
   matchmaking_displayed();
 }
@@ -133,9 +133,9 @@ void bim::axmol::app::screen_wheel::animate_matchmaking_to_game(
   m_inputs.erase(m_matchmaking->input_node());
   m_matchmaking->closing();
 
+  switch_view(*m_controls->online_game);
   m_online_game->displaying(event);
   m_end_game->game_started(event);
-  switch_view(*m_controls->online_game);
 
   online_game_displayed();
 }
@@ -146,8 +146,8 @@ void bim::axmol::app::screen_wheel::animate_game_to_end_game(
   m_inputs.erase(m_online_game->input_node());
   m_online_game->closing();
 
-  m_end_game->displaying(result);
   switch_view(*m_controls->end_game);
+  m_end_game->displaying(result);
 
   end_game_displayed();
 }
@@ -167,8 +167,8 @@ void bim::axmol::app::screen_wheel::animate_end_game_to_matchmaking()
   m_inputs.erase(m_end_game->input_node());
   m_end_game->closing();
 
-  m_matchmaking->displaying();
   switch_view(*m_controls->matchmaking);
+  m_matchmaking->displaying();
 
   matchmaking_displayed();
 }
