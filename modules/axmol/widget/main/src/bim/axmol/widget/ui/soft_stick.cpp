@@ -62,6 +62,8 @@ void bim::axmol::widget::soft_stick::onEnter()
 {
   ax::Node::onEnter();
 
+  m_soft_stick_input->reset();
+
   update_display();
 }
 

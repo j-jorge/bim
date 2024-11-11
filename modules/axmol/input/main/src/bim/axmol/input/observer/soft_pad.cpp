@@ -10,6 +10,8 @@
 #include <axmol/2d/Node.h>
 #include <axmol/base/Touch.h>
 
+#include <numbers>
+
 IMPLEMENT_SIGNAL(bim::axmol::input::soft_pad, changed, m_changed);
 
 bim::axmol::input::soft_pad::soft_pad(const ax::Node& reference)
@@ -47,6 +49,12 @@ std::int8_t bim::axmol::input::soft_pad::horizontal() const
   return m_horizontal;
 }
 
+void bim::axmol::input::soft_pad::reset()
+{
+  m_horizontal = 0;
+  m_vertical = 0;
+}
+
 void bim::axmol::input::soft_pad::do_pressed(const touch_event_view& touches)
 {
   if (m_touch_id || should_ignore_touches())
@@ -74,8 +82,7 @@ void bim::axmol::input::soft_pad::check_touches(
   int8_t horizontal = 0;
 
   constexpr float min_range_squared = 1.f / 25;
-  constexpr float sqrt_2 = 1.414214f;
-  constexpr float angle_split = sqrt_2 / 2;
+  constexpr float angle_split = std::numbers::sqrt2_v<float> / 2;
 
   for (touch_event& touch : touches)
     {

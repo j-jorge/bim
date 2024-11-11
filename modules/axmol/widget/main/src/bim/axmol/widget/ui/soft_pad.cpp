@@ -58,6 +58,8 @@ void bim::axmol::widget::soft_pad::onEnter()
 {
   ax::Node::onEnter();
 
+  m_soft_pad_input->reset();
+
   update_display();
 }
 

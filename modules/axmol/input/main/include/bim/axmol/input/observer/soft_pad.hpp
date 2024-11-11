@@ -30,6 +30,8 @@ namespace bim::axmol::input
     std::int8_t vertical() const;
     std::int8_t horizontal() const;
 
+    void reset();
+
   private:
     void do_pressed(const touch_event_view& touches) override;
     void do_moved(const touch_event_view& touches) override;

@@ -30,6 +30,8 @@ namespace bim::axmol::input
 
     const ax::Vec2& drag() const;
 
+    void reset();
+
   private:
     void do_pressed(const touch_event_view& touches) override;
     void do_moved(const touch_event_view& touches) override;

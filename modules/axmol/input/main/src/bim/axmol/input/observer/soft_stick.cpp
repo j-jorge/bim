@@ -43,6 +43,11 @@ const ax::Vec2& bim::axmol::input::soft_stick::drag() const
   return m_drag;
 }
 
+void bim::axmol::input::soft_stick::reset()
+{
+  m_drag = {};
+}
+
 void bim::axmol::input::soft_stick::do_pressed(const touch_event_view& touches)
 {
   if (should_ignore_touches())

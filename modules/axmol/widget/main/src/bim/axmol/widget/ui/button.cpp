@@ -150,7 +150,9 @@ void bim::axmol::widget::button::input_press()
   update_display();
 
   m_action_runner.stop();
-  m_action_runner.run(*m_action_pressed);
+
+  if (m_action_pressed)
+    m_action_runner.run(*m_action_pressed);
 }
 
 void bim::axmol::widget::button::input_release()
@@ -159,7 +161,9 @@ void bim::axmol::widget::button::input_release()
   update_display();
 
   m_action_runner.stop();
-  m_action_runner.run(*m_action_released);
+
+  if (m_action_released)
+    m_action_runner.run(*m_action_released);
 }
 
 void bim::axmol::widget::button::click()
