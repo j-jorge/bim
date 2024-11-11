@@ -32,6 +32,7 @@ namespace bim::axmol::widget
     void setContentSize(const ax::Size& size) override;
 
     void enable(bool enabled);
+    void cancel_on_swipe(bool v);
 
   private:
     class widgets;

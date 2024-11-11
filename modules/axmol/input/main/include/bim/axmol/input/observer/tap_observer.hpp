@@ -29,6 +29,8 @@ namespace bim::axmol::input
     void enable(bool v);
     bool is_enabled() const;
 
+    void cancel_on_swipe(bool v);
+
   private:
     void do_pressed(const touch_event_view& touches) override;
     void do_moved(const touch_event_view& touches) override;
@@ -53,5 +55,13 @@ namespace bim::axmol::input
      */
     std::chrono::milliseconds m_cooldown_end_date;
     bool m_enabled;
+
+    /**
+     * When a widget is in a scrollable list the user may start a drag on the
+     * widget, in which case we don't want to trigger a tap when the finger is
+     * released on the widget at the end of the scroll. Enable this flag to
+     * prevent tap detection in this case.
+     */
+    bool m_cancel_on_swipe;
   };
 }

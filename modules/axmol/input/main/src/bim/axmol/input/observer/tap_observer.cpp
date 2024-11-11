@@ -15,6 +15,7 @@ bim::axmol::input::tap_observer::tap_observer(const ax::Node& reference)
   : axmol_node_touch_observer(reference)
   , m_cooldown_end_date(0)
   , m_enabled(true)
+  , m_cancel_on_swipe(true)
 {}
 
 bim::axmol::input::tap_observer::~tap_observer() = default;
@@ -27,6 +28,11 @@ void bim::axmol::input::tap_observer::enable(bool v)
 bool bim::axmol::input::tap_observer::is_enabled() const
 {
   return m_enabled;
+}
+
+void bim::axmol::input::tap_observer::cancel_on_swipe(bool v)
+{
+  m_cancel_on_swipe = v;
 }
 
 void bim::axmol::input::tap_observer::do_pressed(
@@ -46,7 +52,7 @@ void bim::axmol::input::tap_observer::do_pressed(
 
 void bim::axmol::input::tap_observer::do_moved(const touch_event_view& touches)
 {
-  if (!is_pressed() || should_ignore_touches())
+  if (!is_pressed() || should_ignore_touches() || !m_cancel_on_swipe)
     return;
 
   // If the move is larger than this threshold then we consider that the action

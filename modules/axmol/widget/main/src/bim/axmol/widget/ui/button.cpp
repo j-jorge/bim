@@ -107,6 +107,11 @@ void bim::axmol::widget::button::enable(bool enabled)
   update_display();
 }
 
+void bim::axmol::widget::button::cancel_on_swipe(bool v)
+{
+  m_tap_observer->cancel_on_swipe(v);
+}
+
 bool bim::axmol::widget::button::init()
 {
   if (!ax::Node::init())
