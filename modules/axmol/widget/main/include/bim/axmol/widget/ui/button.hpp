@@ -4,6 +4,8 @@
 #include <bim/axmol/widget/declare_controls_struct.hpp>
 #include <bim/axmol/widget/declare_widget_create_function.hpp>
 
+#include <bim/axmol/action/runner.hpp>
+
 #include <bim/axmol/input/observer/tap_observer_handle.hpp>
 #include <bim/axmol/input/tree.hpp>
 
@@ -60,10 +62,12 @@ namespace bim::axmol::widget
     const iscool::style::declaration& m_style_released;
     const iscool::style::declaration& m_style_disabled;
 
-    const bim::axmol::ref_ptr<ax::Action> m_action_pressed;
-    const bim::axmol::ref_ptr<ax::Action> m_action_released;
+    bim::axmol::ref_ptr<ax::Action> m_action_pressed;
+    bim::axmol::ref_ptr<ax::Action> m_action_released;
 
     const std::string m_sound;
+
+    bim::axmol::action::runner m_action_runner;
 
     bool m_bounds_dirty;
     bool m_display_dirty;

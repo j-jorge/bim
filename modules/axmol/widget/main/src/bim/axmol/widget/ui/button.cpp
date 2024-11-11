@@ -20,6 +20,7 @@
 #include <bim/axmol/widget/implement_controls_struct.hpp>
 
 #include <axmol/2d/Action.h>
+#include <axmol/2d/ActionInterval.h>
 
 IMPLEMENT_SIGNAL(bim::axmol::widget::button, clicked, m_clicked);
 
@@ -35,10 +36,6 @@ bim::axmol::widget::button::button(const bim::axmol::widget::context& context,
   , m_style_pressed(style.get_declaration_or_empty("display.pressed"))
   , m_style_released(style.get_declaration_or_empty("display.release"))
   , m_style_disabled(style.get_declaration_or_empty("display.disabled"))
-  , m_action_pressed(context.action_factory.create(
-        context.colors, style.get_declaration_or_empty("action.pressed")))
-  , m_action_released(context.action_factory.create(
-        context.colors, style.get_declaration_or_empty("action.released")))
   , m_sound(style.get_string("sound.click", ""))
   , m_bounds_dirty(true)
   , m_display_dirty(true)
@@ -65,6 +62,26 @@ bim::axmol::widget::button::button(const bim::axmol::widget::context& context,
       });
 
   m_inputs.attach_to_root(m_tap_observer);
+
+  const auto set_optional_action =
+      [&, this](bim::axmol::ref_ptr<ax::Action>& action,
+                const char* name) -> void
+  {
+    const iscool::optional<const iscool::style::declaration&> action_style =
+        style.get_declaration(name);
+
+    if (!action_style)
+      return;
+
+    bim::axmol::ref_ptr<ax::FiniteTimeAction> action_from_style =
+        context.action_factory.create(context.colors, *action_style);
+
+    action =
+        ax::TargetedAction::create(m_container.get(), action_from_style.get());
+  };
+
+  set_optional_action(m_action_pressed, "action.pressed");
+  set_optional_action(m_action_released, "action.released");
 }
 
 bim::axmol::widget::button::~button() = default;
@@ -132,8 +149,8 @@ void bim::axmol::widget::button::input_press()
   m_is_pressed = true;
   update_display();
 
-  m_container->stopAllActions();
-  m_container->runAction(m_action_pressed.get());
+  m_action_runner.stop();
+  m_action_runner.run(*m_action_pressed);
 }
 
 void bim::axmol::widget::button::input_release()
@@ -141,8 +158,8 @@ void bim::axmol::widget::button::input_release()
   m_is_pressed = false;
   update_display();
 
-  m_container->stopAllActions();
-  m_container->runAction(m_action_released.get());
+  m_action_runner.stop();
+  m_action_runner.run(*m_action_released);
 }
 
 void bim::axmol::widget::button::click()
