@@ -6,7 +6,7 @@
             "anchor.x": 0.5,
             "anchor.y": 1,
             "anchor.reference.x": 0.5,
-            "anchor.reference.y": 1,
+            "anchor.reference.y": 0.96,
             "height.percents": 69,
             "width-ratio": 0.866,
             "width.max-percents": 100
@@ -19,7 +19,7 @@
             "anchor.y": 1,
             "anchor.reference.x": 0.5,
             "anchor.reference.y": 0,
-            "height.percents": 45,
+            "height.percents": 43,
             "width.percents": 100
         }],
 
