@@ -18,7 +18,7 @@ TEST(game_service, new_game)
 
   const bim::server::game_info game = service.new_game(4, { 11, 22, 33, 44 });
 
-  EXPECT_EQ(4, game.player_count);
+  EXPECT_EQ(4, game.fingerprint.player_count);
   EXPECT_EQ(11, game.sessions[0]);
   EXPECT_EQ(22, game.sessions[1]);
   EXPECT_EQ(33, game.sessions[2]);
@@ -32,7 +32,7 @@ TEST(game_service, new_game)
 
   EXPECT_TRUE(!!game_opt);
 
-  EXPECT_EQ(4, game_opt->player_count);
+  EXPECT_EQ(4, game_opt->fingerprint.player_count);
   EXPECT_EQ(11, game_opt->sessions[0]);
   EXPECT_EQ(22, game_opt->sessions[1]);
   EXPECT_EQ(33, game_opt->sessions[2]);

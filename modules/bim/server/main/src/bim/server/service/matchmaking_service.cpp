@@ -197,17 +197,18 @@ void bim::server::matchmaking_service::mark_as_ready(
 
       ic_log(iscool::log::nature::info(), "matchmaking_service",
              "Channel for encounter %d is %d, seed %d.", it->first,
-             game->channel, game->seed);
+             game->channel, game->fingerprint.seed);
     }
 
-  constexpr std::uint32_t feature_mask = 0;
+  const bim::game::contest_fingerprint& fingerprint = game->fingerprint;
 
   m_message_stream.send(
       endpoint,
-      bim::net::launch_game(
-          request_token, game->seed, game->channel, feature_mask,
-          game->player_count, game->session_index(session),
-          game->brick_wall_probability, game->arena_width, game->arena_height)
+      bim::net::launch_game(request_token, fingerprint.seed, game->channel,
+                            fingerprint.feature_mask, fingerprint.player_count,
+                            game->session_index(session),
+                            fingerprint.brick_wall_probability,
+                            fingerprint.arena_width, fingerprint.arena_height)
           .build_message(),
       session, 0);
 }

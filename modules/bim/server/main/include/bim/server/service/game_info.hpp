@@ -2,23 +2,20 @@
 #pragma once
 
 #include <bim/game/constant/max_player_count.hpp>
+#include <bim/game/contest_fingerprint.hpp>
 
 #include <iscool/net/message/channel_id.hpp>
 #include <iscool/net/message/session_id.hpp>
 
 #include <array>
-#include <cstdint>
 
 namespace bim::server
 {
   struct game_info
   {
-    std::uint64_t seed;
+    bim::game::contest_fingerprint fingerprint;
+
     iscool::net::channel_id channel;
-    std::uint8_t player_count;
-    std::uint8_t brick_wall_probability;
-    std::uint8_t arena_width;
-    std::uint8_t arena_height;
 
     std::array<iscool::net::session_id, bim::game::g_max_player_count>
         sessions;

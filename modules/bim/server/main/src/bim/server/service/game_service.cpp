@@ -70,6 +70,7 @@ public:
        const std::array<iscool::net::session_id,
                         bim::game::g_max_player_count>& sessions)
     : seed(seed)
+    , feature_mask(0)
     , player_count(player_count)
     , sessions(sessions)
     , simulation_tick(0)
@@ -185,6 +186,7 @@ private:
 
 public:
   std::uint64_t seed;
+  std::uint32_t feature_mask;
   std::uint8_t player_count;
   std::array<iscool::net::session_id, bim::game::g_max_player_count> sessions;
   std::array<bool, bim::game::g_max_player_count> ready;
@@ -266,12 +268,14 @@ bim::server::game_service::find_game(iscool::net::channel_id channel) const
   if (it == m_games.end())
     return std::nullopt;
 
-  return game_info{ .seed = it->second.seed,
+  return game_info{ .fingerprint{
+                        .seed = it->second.seed,
+                        .feature_mask = it->second.feature_mask,
+                        .player_count = it->second.player_count,
+                        .brick_wall_probability = g_brick_wall_probability,
+                        .arena_width = it->second.contest.arena().width(),
+                        .arena_height = it->second.contest.arena().height() },
                     .channel = channel,
-                    .player_count = it->second.player_count,
-                    .brick_wall_probability = g_brick_wall_probability,
-                    .arena_width = it->second.contest.arena().width(),
-                    .arena_height = it->second.contest.arena().height(),
                     .sessions = it->second.sessions };
 }
 
@@ -297,12 +301,14 @@ bim::server::game_info bim::server::game_service::new_game(
 
   game.release_at_this_date = date_for_next_game_release();
 
-  return game_info{ .seed = game.seed,
+  return game_info{ .fingerprint{
+                        .seed = game.seed,
+                        .feature_mask = game.feature_mask,
+                        .player_count = game.player_count,
+                        .brick_wall_probability = g_brick_wall_probability,
+                        .arena_width = game.contest.arena().width(),
+                        .arena_height = game.contest.arena().height() },
                     .channel = channel,
-                    .player_count = game.player_count,
-                    .brick_wall_probability = g_brick_wall_probability,
-                    .arena_width = game.contest.arena().width(),
-                    .arena_height = game.contest.arena().height(),
                     .sessions = game.sessions };
 }
 
