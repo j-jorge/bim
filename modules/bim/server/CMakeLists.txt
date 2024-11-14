@@ -2,6 +2,7 @@ add_library(bim_server
   STATIC
   main/src/bim/server/server.cpp
   main/src/bim/server/service/authentication_service.cpp
+  main/src/bim/server/service/contest_timeline_service.cpp
   main/src/bim/server/service/game_info.cpp
   main/src/bim/server/service/game_service.cpp
   main/src/bim/server/service/lobby_service.cpp

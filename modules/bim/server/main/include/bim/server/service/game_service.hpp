@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #pragma once
 
+#include <bim/server/service/contest_timeline_service.hpp>
+
 #include <bim/game/constant/max_player_count.hpp>
 
 #include <iscool/net/message_stream.hpp>
@@ -80,5 +82,7 @@ namespace bim::server
     session_to_channel_map m_session_to_channel;
     std::mt19937_64 m_random;
     iscool::signals::scoped_connection m_clean_up_connection;
+
+    contest_timeline_service m_contest_timeline_service;
   };
 }

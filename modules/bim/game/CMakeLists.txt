@@ -5,6 +5,8 @@ add_library(bim_game
   main/src/bim/game/contest.cpp
   main/src/bim/game/contest_result.cpp
   main/src/bim/game/contest_runner.cpp
+  main/src/bim/game/contest_timeline_writer.cpp
+  main/src/bim/game/dump_arena.cpp
   main/src/bim/game/input_archive.cpp
   main/src/bim/game/level_generation.cpp
   main/src/bim/game/output_archive.cpp
@@ -15,8 +17,6 @@ add_library(bim_game
   main/src/bim/game/component/flame_direction.cpp
   main/src/bim/game/component/fractional_position_on_grid.cpp
   main/src/bim/game/component/player_action_queue.cpp
-
-  main/src/bim/game/debug/dump_arena.cpp
 
   main/src/bim/game/factory/bomb.cpp
   main/src/bim/game/factory/bomb_power_up.cpp
@@ -38,7 +38,7 @@ add_library(bim_game
   main/src/bim/game/system/update_players.cpp
 )
 target_include_directories(bim_game PUBLIC main/include)
-target_link_libraries(bim_game PUBLIC bim_core EnTT::EnTT)
+target_link_libraries(bim_game PUBLIC bim_core iscool_net EnTT::EnTT)
 
 add_executable(game-tests
   tests/src/bim/game/archive.cpp

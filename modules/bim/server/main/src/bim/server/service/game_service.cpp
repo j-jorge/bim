@@ -96,6 +96,16 @@ public:
             });
   }
 
+  bim::game::contest_fingerprint contest_fingerprint() const
+  {
+    return { .seed = seed,
+             .feature_mask = feature_mask,
+             .player_count = player_count,
+             .brick_wall_probability = g_brick_wall_probability,
+             .arena_width = contest.arena().width(),
+             .arena_height = contest.arena().height() };
+  }
+
   std::size_t session_index(iscool::net::session_id session) const
   {
     return std::find(sessions.begin(), sessions.end(), session)
@@ -130,6 +140,10 @@ public:
 
     if (offset == 0)
       return;
+
+    // The player actions will be reset by the sealing below, thus make sure we
+    // serialize them before.
+    save_actions_to_timeline(offset);
 
     // Play the ticks reached by all players.
     seal_player_actions(offset);
@@ -167,6 +181,28 @@ public:
   }
 
 private:
+  void save_actions_to_timeline(int count)
+  {
+    if (!timeline_writer)
+      return;
+
+    std::array<bim::game::player_action, bim::game::g_max_player_count>
+        player_actions;
+    std::span<bim::game::player_action> tick_actions =
+        std::span(player_actions.begin(), player_count);
+
+    for (int i = 0; i != count; ++i)
+      {
+        for (int p = 0; p != player_count; ++p)
+          player_actions[p] = actions[p][i];
+
+        timeline_writer.push(tick_actions);
+      }
+
+    if (!contest_result.still_running())
+      timeline_writer = {};
+  }
+
   void seal_player_actions(int count)
   {
     for (int i = 0; i != count; ++i)
@@ -228,6 +264,8 @@ public:
 
   bim::game::contest contest;
 
+  bim::game::contest_timeline_writer timeline_writer;
+
 private:
   std::array<bim::game::player_action*, bim::game::g_max_player_count>
       m_player_actions;
@@ -237,6 +275,7 @@ bim::server::game_service::game_service(iscool::net::socket_stream& socket)
   : m_message_stream(socket)
   , m_next_game_channel(1)
   , m_random(std::random_device()())
+  , m_contest_timeline_service("/tmp/")
 {
   schedule_clean_up();
 }
@@ -268,13 +307,7 @@ bim::server::game_service::find_game(iscool::net::channel_id channel) const
   if (it == m_games.end())
     return std::nullopt;
 
-  return game_info{ .fingerprint{
-                        .seed = it->second.seed,
-                        .feature_mask = it->second.feature_mask,
-                        .player_count = it->second.player_count,
-                        .brick_wall_probability = g_brick_wall_probability,
-                        .arena_width = it->second.contest.arena().width(),
-                        .arena_height = it->second.contest.arena().height() },
+  return game_info{ .fingerprint = it->second.contest_fingerprint(),
                     .channel = channel,
                     .sessions = it->second.sessions };
 }
@@ -301,13 +334,13 @@ bim::server::game_info bim::server::game_service::new_game(
 
   game.release_at_this_date = date_for_next_game_release();
 
-  return game_info{ .fingerprint{
-                        .seed = game.seed,
-                        .feature_mask = game.feature_mask,
-                        .player_count = game.player_count,
-                        .brick_wall_probability = g_brick_wall_probability,
-                        .arena_width = game.contest.arena().width(),
-                        .arena_height = game.contest.arena().height() },
+  const bim::game::contest_fingerprint contest_fingerprint =
+      game.contest_fingerprint();
+
+  game.timeline_writer =
+      m_contest_timeline_service.open(channel, contest_fingerprint);
+
+  return game_info{ .fingerprint = contest_fingerprint,
                     .channel = channel,
                     .sessions = game.sessions };
 }
