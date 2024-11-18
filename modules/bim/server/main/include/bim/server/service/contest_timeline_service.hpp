@@ -14,10 +14,12 @@ namespace bim::game
 
 namespace bim::server
 {
+  struct config;
+
   class contest_timeline_service
   {
   public:
-    explicit contest_timeline_service(std::filesystem::path dir);
+    explicit contest_timeline_service(const config& config);
 
     bim::game::contest_timeline_writer
     open(iscool::net::channel_id channel,

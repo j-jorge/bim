@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/server/service/game_service.hpp>
 
+#include <bim/server/config.hpp>
+#include <bim/server/service/contest_timeline_service.hpp>
 #include <bim/server/service/game_info.hpp>
 
 #include <bim/net/message/game_over.hpp>
@@ -271,12 +273,16 @@ private:
       m_player_actions;
 };
 
-bim::server::game_service::game_service(iscool::net::socket_stream& socket)
+bim::server::game_service::game_service(const config& config,
+                                        iscool::net::socket_stream& socket)
   : m_message_stream(socket)
   , m_next_game_channel(1)
   , m_random(std::random_device()())
-  , m_contest_timeline_service("/tmp/")
+  , m_clean_up_interval(config.game_service_clean_up_interval)
 {
+  if (config.enable_contest_timeline_recording)
+    m_contest_timeline_service.reset(new contest_timeline_service(config));
+
   schedule_clean_up();
 }
 
@@ -337,8 +343,9 @@ bim::server::game_info bim::server::game_service::new_game(
   const bim::game::contest_fingerprint contest_fingerprint =
       game.contest_fingerprint();
 
-  game.timeline_writer =
-      m_contest_timeline_service.open(channel, contest_fingerprint);
+  if (m_contest_timeline_service)
+    game.timeline_writer =
+        m_contest_timeline_service->open(channel, contest_fingerprint);
 
   return game_info{ .fingerprint = contest_fingerprint,
                     .channel = channel,
@@ -598,7 +605,7 @@ void bim::server::game_service::schedule_clean_up()
       {
         clean_up();
       },
-      std::chrono::minutes(3));
+      m_clean_up_interval);
 }
 
 void bim::server::game_service::clean_up()

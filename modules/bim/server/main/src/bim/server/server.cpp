@@ -1,20 +1,22 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/server/server.hpp>
 
+#include <bim/server/config.hpp>
+
 #include <bim/net/message/protocol_version.hpp>
 
 #include <iscool/log/log.hpp>
 #include <iscool/log/nature/info.hpp>
 #include <iscool/net/message/message.hpp>
 
-bim::server::server::server(unsigned short port)
-  : m_socket(port)
+bim::server::server::server(const config& config)
+  : m_socket(config.port)
   , m_authentication_service(m_socket)
-  , m_game_service(m_socket)
+  , m_game_service(config, m_socket)
   , m_lobby_service(m_socket, m_game_service)
 {
   ic_log(iscool::log::nature::info(), "server", "Server is up on port %d.",
-         port);
+         config.port);
   ic_log(iscool::log::nature::info(), "server", "Protocol version is %d.",
          bim::net::protocol_version);
 

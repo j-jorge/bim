@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-only
+#include <bim/server/config.hpp>
 #include <bim/server/server.hpp>
 
 #include <iscool/log/add_file_sink.hpp>
@@ -22,9 +23,10 @@ namespace
 {
   struct options
   {
-    unsigned short port;
     std::string log_to_file;
     bool console_log;
+
+    bim::server::config config;
   };
 
   struct command_line
@@ -62,6 +64,9 @@ static command_line parse_command_line(int argc, char* argv[])
       "port",
       boost::program_options::value<unsigned short>()->default_value(23899),
       "The port to listen on.");
+  options.add_options()(
+      "contest-timeline-folder", boost::program_options::value<std::string>(),
+      "Enable the recording of the contests and save them in this folder.");
 
   boost::program_options::variables_map variables;
   boost::program_options::store(
@@ -80,7 +85,14 @@ static command_line parse_command_line(int argc, char* argv[])
 
   ::options result;
   result.console_log = (variables.count("console-log") != 0);
-  result.port = variables["port"].as<unsigned short>();
+  result.config.port = variables["port"].as<unsigned short>();
+
+  result.config.enable_contest_timeline_recording =
+      variables.count("contest-timeline-folder") != 0;
+
+  if (result.config.enable_contest_timeline_recording)
+    result.config.contest_timeline_folder =
+        variables["contest-timeline-folder"].as<std::string>();
 
   if (variables.count("log-file") != 0)
     result.log_to_file = variables["log-file"].as<std::string>();
@@ -112,12 +124,11 @@ int main(int argc, char* argv[])
   iscool::schedule::manual_scheduler scheduler;
   iscool::schedule::initialize(scheduler.get_delayed_call_delegate());
 
-  constexpr unsigned short port = 23899;
-
   std::cout << "Press Ctrl+C to exit.\n";
-  ic_log(iscool::log::nature::info(), "server", "Running on port %d.", port);
+  ic_log(iscool::log::nature::info(), "server", "Running on port %d.",
+         command_line.options->config.port);
 
-  bim::server::server server(command_line.options->port);
+  bim::server::server server(command_line.options->config);
 
   using clock = std::chrono::steady_clock;
 

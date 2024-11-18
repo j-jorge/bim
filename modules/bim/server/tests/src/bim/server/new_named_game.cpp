@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/server/tests/fake_scheduler.hpp>
 
+#include <bim/server/config.hpp>
 #include <bim/server/server.hpp>
 
 #include <bim/net/exchange/authentication_exchange.hpp>
@@ -163,7 +164,7 @@ void new_game_test::client::send_accept_named_game(
 
 new_game_test::new_game_test()
   : m_port(10002)
-  , m_server(m_port)
+  , m_server(bim::server::config{ .port = m_port })
   , m_socket_stream("localhost:" + std::to_string(m_port),
                     iscool::net::socket_mode::client{})
   , m_message_stream(m_socket_stream)

@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/server/tests/fake_scheduler.hpp>
 
-#include <bim/server/service/game_service.hpp>
-
+#include <bim/server/config.hpp>
 #include <bim/server/service/game_info.hpp>
+#include <bim/server/service/game_service.hpp>
 
 #include <iscool/net/socket_stream.hpp>
 
@@ -14,7 +14,7 @@ TEST(game_service, new_game)
   bim::server::tests::fake_scheduler scheduler;
 
   iscool::net::socket_stream socket_stream(12345);
-  bim::server::game_service service(socket_stream);
+  bim::server::game_service service({}, socket_stream);
 
   const bim::server::game_info game = service.new_game(4, { 11, 22, 33, 44 });
 

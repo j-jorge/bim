@@ -8,13 +8,15 @@ services:
       - ./bin:/opt/bim/bin:ro
       - ./etc:/opt/bim/etc:ro
       - ./log:/opt/bim/log
+      - ./contest:/opt/bim/contest/
     deploy:
       restart_policy:
         condition: on-failure
     command: >
         bash -c "cp /opt/bim/etc/logrotate.d/* /etc/logrotate.d/
         && /opt/bim/bin/bim-server
-        --port 23899
+        --contest-timeline-folder /opt/bim/contest/
         --log-file /opt/bim/log/bim-server.txt
+        --port 23899
         > /opt/bim/log/bim-server.stdout.txt
         2> /opt/bim/log/bim-server.stderr.txt"

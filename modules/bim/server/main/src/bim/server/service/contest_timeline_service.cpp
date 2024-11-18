@@ -1,14 +1,16 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/server/service/contest_timeline_service.hpp>
 
+#include <bim/server/config.hpp>
+
 #include <iomanip>
 #include <sstream>
 
 #include <unistd.h>
 
 bim::server::contest_timeline_service::contest_timeline_service(
-    std::filesystem::path dir)
-  : m_directory(std::move(dir))
+    const config& config)
+  : m_directory(config.contest_timeline_folder)
 {}
 
 bim::game::contest_timeline_writer bim::server::contest_timeline_service::open(

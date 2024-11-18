@@ -10,10 +10,12 @@
 
 namespace bim::server
 {
+  struct config;
+
   class server
   {
   public:
-    explicit server(unsigned short port);
+    explicit server(const config& config);
 
   private:
     void dispatch(const iscool::net::endpoint& endpoint,
