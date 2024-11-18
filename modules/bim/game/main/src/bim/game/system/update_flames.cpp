@@ -16,8 +16,8 @@ void bim::game::update_flames(entt::registry& registry, arena& arena,
       {
         if (elapsed_time >= f.time_to_live)
           {
-            registry.destroy(e);
             arena.erase_entity(position.x, position.y);
+            registry.destroy(e);
           }
         else
           f.time_to_live -= elapsed_time;

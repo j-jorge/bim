@@ -97,9 +97,9 @@ void bim::game::update_bombs(entt::registry& registry, arena& arena,
       {
         if (elapsed_time >= b.duration_until_explosion)
           {
-            registry.destroy(e);
             arena.erase_entity(position.x, position.y);
             create_flames(registry, arena, position, b.strength);
+            registry.destroy(e);
           }
         else
           b.duration_until_explosion -= elapsed_time;
