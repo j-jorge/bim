@@ -2,8 +2,9 @@ version: "3.8"
 services:
   gs:
     image: ubuntu:24.04
+    network_mode: host
     ports:
-      - ${PORT}:23899/udp
+      - ${PORT}:${PORT}/udp
     volumes:
       - ./bin:/opt/bim/bin:ro
       - ./etc:/opt/bim/etc:ro
@@ -17,6 +18,6 @@ services:
         && /opt/bim/bin/bim-server
         --contest-timeline-folder /opt/bim/contest/
         --log-file /opt/bim/log/bim-server.txt
-        --port 23899
+        --port ${PORT}
         > /opt/bim/log/bim-server.stdout.txt
         2> /opt/bim/log/bim-server.stderr.txt"
