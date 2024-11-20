@@ -5,6 +5,7 @@ add_library(bim_game
   main/src/bim/game/contest.cpp
   main/src/bim/game/contest_result.cpp
   main/src/bim/game/contest_runner.cpp
+  main/src/bim/game/contest_timeline.cpp
   main/src/bim/game/contest_timeline_writer.cpp
   main/src/bim/game/dump_arena.cpp
   main/src/bim/game/input_archive.cpp
@@ -43,6 +44,7 @@ target_link_libraries(bim_game PUBLIC bim_core iscool_net EnTT::EnTT)
 add_executable(game-tests
   tests/src/bim/game/archive.cpp
   tests/src/bim/game/arena.cpp
+  tests/src/bim/game/contest_timeline.cpp
   tests/src/bim/game/level_generation.cpp
   tests/src/bim/game/player_action.cpp
 

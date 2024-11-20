@@ -17,3 +17,15 @@ bim::game::find_player_action_by_index(entt::registry& registry,
 
   return nullptr;
 }
+
+void bim::game::collect_player_actions(std::span<player_action*> actions,
+                                       entt::registry& registry)
+{
+  registry.view<bim::game::player, bim::game::player_action>().each(
+      [actions](const bim::game::player& player,
+                bim::game::player_action& action)
+      {
+        assert(player.index < actions.size());
+        actions[player.index] = &action;
+      });
+}

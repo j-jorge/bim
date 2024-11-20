@@ -2,7 +2,6 @@
 #pragma once
 
 #include <cstdio>
-#include <filesystem>
 #include <span>
 
 namespace bim::game
@@ -14,7 +13,7 @@ namespace bim::game
   {
   public:
     contest_timeline_writer();
-    contest_timeline_writer(std::filesystem::path file_path,
+    contest_timeline_writer(std::FILE* file,
                             const contest_fingerprint& contest);
     contest_timeline_writer(const contest_timeline_writer&) = delete;
     contest_timeline_writer(contest_timeline_writer&& that) noexcept;

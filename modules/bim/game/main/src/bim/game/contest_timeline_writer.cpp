@@ -18,8 +18,8 @@ bim::game::contest_timeline_writer::contest_timeline_writer()
 {}
 
 bim::game::contest_timeline_writer::contest_timeline_writer(
-    std::filesystem::path file_path, const contest_fingerprint& contest)
-  : m_file(std::fopen(file_path.c_str(), "w"))
+    std::FILE* file, const contest_fingerprint& contest)
+  : m_file(file)
 {
   if (!m_file)
     return;

@@ -5,7 +5,7 @@
 
 #include <iscool/net/message/channel_id.hpp>
 
-#include <filesystem>
+#include <string>
 
 namespace bim::game
 {
@@ -26,6 +26,6 @@ namespace bim::server
          const bim::game::contest_fingerprint& contest);
 
   private:
-    const std::filesystem::path m_directory;
+    const std::string m_directory;
   };
 }

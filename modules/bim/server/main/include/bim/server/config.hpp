@@ -2,7 +2,7 @@
 #pragma once
 
 #include <chrono>
-#include <filesystem>
+#include <string>
 
 namespace bim::server
 {
@@ -13,7 +13,7 @@ namespace bim::server
     std::chrono::seconds game_service_clean_up_interval =
         std::chrono::minutes(3);
 
-    std::filesystem::path contest_timeline_folder;
+    std::string contest_timeline_folder;
     bool enable_contest_timeline_recording = false;
   };
 }
