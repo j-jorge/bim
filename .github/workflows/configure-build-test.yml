@@ -20,15 +20,15 @@ jobs:
     strategy:
       matrix:
         # Last LTS and last non-LTS.
-        container: ["ubuntu:23.10", "ubuntu:24.04"]
+        container: ["ubuntu:24.04", "ubuntu:24.10"]
         build_type: [release, debug]
-        compiler: [g++, clang-17, clang-18]
+        compiler: [g++, clang-18, clang-19]
         maybe_incremental: [--incremental, ""]
         exclude:
-          - container: "ubuntu:23.10"
-            compiler: clang-18
           - container: "ubuntu:24.04"
-            compiler: clang-17
+            compiler: clang-19
+          - container: "ubuntu:24.10"
+            compiler: clang-18
 
     steps:
       - name: Checkout repository
@@ -56,7 +56,7 @@ jobs:
       - name: Valgrind tests
         if: |
           (matrix.maybe_incremental == '')
-          && (matrix.container == 'ubuntu:24.04')
+          && (matrix.container == 'ubuntu:24.10')
           && (matrix.build_type == 'release')
           && (matrix.compiler == 'g++')
         run: >
@@ -65,7 +65,7 @@ jobs:
       - name: Archive artifacts
         if: |
           (matrix.maybe_incremental == '')
-          && (matrix.container == 'ubuntu:24.04')
+          && (matrix.container == 'ubuntu:24.10')
         uses: actions/upload-artifact@v4
         with:
           name: server-${{matrix.build_type}}-${{matrix.compiler}}
