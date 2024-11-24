@@ -28,30 +28,11 @@ bim::game::fractional_position_on_grid::fractional_position_on_grid(
 
 std::uint8_t bim::game::fractional_position_on_grid::grid_aligned_x() const
 {
-  const value_type frac = x - fpm::floor(x);
-
-  if (frac < g_quarter)
-    {
-      assert((std::uint8_t)x >= 1);
-      return (std::uint8_t)x - 1;
-    }
-
-  if (frac > g_three_quarters)
-    return (std::uint8_t)x + 1;
-
   return (std::uint8_t)x;
 }
 
 std::uint8_t bim::game::fractional_position_on_grid::grid_aligned_y() const
 {
-  const value_type frac = y - fpm::floor(y);
-
-  if (frac < g_quarter)
-    return (std::uint8_t)y - 1;
-
-  if (frac > g_three_quarters)
-    return (std::uint8_t)y + 1;
-
   return (std::uint8_t)y;
 }
 
