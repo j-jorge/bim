@@ -47,11 +47,16 @@ namespace bim::server::tests
     void new_game();
     void tick(std::chrono::nanoseconds d);
 
+    bool is_in_game() const;
+    void leave_game();
+
+    void set_action(const bim::game::player_action& action);
+
   public:
     std::optional<bool> started;
     std::unique_ptr<bim::net::contest_runner> contest_runner;
+    std::unique_ptr<bim::game::contest> contest;
     bim::game::contest_result result;
-    bim::game::player_action* action;
     int player_index;
 
   private:
@@ -68,6 +73,5 @@ namespace bim::server::tests
     std::optional<iscool::net::session_id> m_session;
 
     std::unique_ptr<bim::net::game_update_exchange> m_game_update;
-    std::unique_ptr<bim::game::contest> m_contest;
   };
 }

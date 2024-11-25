@@ -15,8 +15,7 @@
 bim::server::tests::test_client::test_client(
     bim::server::tests::fake_scheduler& scheduler,
     iscool::net::message_stream& message_stream)
-  : action(nullptr)
-  , m_scheduler(scheduler)
+  : m_scheduler(scheduler)
   , m_authentication(message_stream)
   , m_new_game(message_stream)
 {
@@ -63,8 +62,7 @@ void bim::server::tests::test_client::new_game()
 
   m_message_channel.reset();
   m_game_update.reset();
-  m_contest.reset();
-  action = nullptr;
+  contest.reset();
   started = std::nullopt;
 
   m_new_game.start(*m_session);
@@ -82,14 +80,11 @@ void bim::server::tests::test_client::launch_game(
       new iscool::net::message_channel(stream, *m_session, event.channel));
   m_game_update.reset(new bim::net::game_update_exchange(*m_message_channel,
                                                          event.player_count));
-  m_contest.reset(new bim::game::contest(
+  contest.reset(new bim::game::contest(
       event.seed, event.brick_wall_probability, event.player_count,
       event.arena_width, event.arena_height));
   contest_runner.reset(new bim::net::contest_runner(
-      *m_contest, *m_game_update, event.player_index, event.player_count));
-
-  action = bim::game::find_player_action_by_index(m_contest->registry(),
-                                                  player_index);
+      *contest, *m_game_update, event.player_index, event.player_count));
 
   m_game_update->connect_to_started(
       [this]() -> void
@@ -100,8 +95,29 @@ void bim::server::tests::test_client::launch_game(
   m_game_update->start();
 }
 
+void bim::server::tests::test_client::set_action(
+    const bim::game::player_action& action)
+{
+  bim::game::player_action* const p = bim::game::find_player_action_by_index(
+      contest->registry(), player_index);
+
+  ASSERT_NE(nullptr, p) << "player_index=" << player_index;
+
+  *p = action;
+}
+
 void bim::server::tests::test_client::tick(std::chrono::nanoseconds d)
 {
   ASSERT_NE(nullptr, contest_runner);
   result = contest_runner->run(d);
+}
+
+bool bim::server::tests::test_client::is_in_game() const
+{
+  return !!started && *started;
+}
+
+void bim::server::tests::test_client::leave_game()
+{
+  started = std::nullopt;
 }

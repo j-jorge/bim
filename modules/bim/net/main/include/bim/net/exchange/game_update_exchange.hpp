@@ -54,13 +54,11 @@ namespace bim::net
 
     void confirm_game_tick(const iscool::net::message& m);
 
-    std::uint32_t
-    validate_message(const game_update_from_server& message) const;
+    bool validate_message(const game_update_from_server& message) const;
 
-    void store_server_frames(const game_update_from_server& message,
-                             std::uint32_t tick_count);
+    void store_server_frames(const game_update_from_server& message);
 
-    void remove_server_confirmed_actions(std::uint32_t last_confirmed_tick);
+    void remove_server_confirmed_actions();
 
     void dispatch_game_over(const iscool::net::message& m) const;
 

@@ -72,6 +72,9 @@ namespace bim::server
                         iscool::net::channel_id channel,
                         const game& game) const;
 
+    void check_drop_late_player(iscool::net::channel_id channel,
+                                game& game) const;
+
     void schedule_clean_up();
     void clean_up();
     void clean_up(iscool::net::channel_id channel, const game& g);
@@ -87,5 +90,6 @@ namespace bim::server
     std::chrono::seconds m_clean_up_interval;
 
     std::unique_ptr<contest_timeline_service> m_contest_timeline_service;
+    const int m_disconnection_lateness_threshold_in_ticks;
   };
 }

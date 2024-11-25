@@ -22,6 +22,7 @@
 #include <bim/game/constant/max_player_count.hpp>
 #include <bim/game/contest.hpp>
 #include <bim/game/input_archive.hpp>
+#include <bim/game/kick_event.hpp>
 #include <bim/game/output_archive.hpp>
 #include <bim/game/player_action.hpp>
 
@@ -108,20 +109,34 @@ bim::net::contest_runner::run(std::chrono::nanoseconds elapsed_wall_time)
 
 void bim::net::contest_runner::queue_updates(const server_update& updates)
 {
-  assert(updates.from_tick
-         == m_last_confirmed_tick + m_server_actions[0].size());
+  std::size_t tick_count = 0;
 
   for (int i = 0; i != m_player_count; ++i)
-    m_server_actions[i].insert(m_server_actions[i].end(),
-                               updates.actions[i].begin(),
-                               updates.actions[i].end());
+    {
+      const std::vector<bim::game::player_action>& remote_actions =
+          updates.actions[i];
+      std::vector<bim::game::player_action>& local_actions =
+          m_server_actions[i];
+
+      if (local_actions.size() > tick_count)
+        tick_count = local_actions.size();
+
+      local_actions.insert(local_actions.end(), remote_actions.begin(),
+                           remote_actions.end());
+    }
+
+  assert(updates.from_tick == m_last_confirmed_tick + tick_count);
 }
 
 void bim::net::contest_runner::sync_with_server(entt::registry& registry)
 {
   restore_last_confirmed_state(registry);
 
-  if (!m_server_actions[0].empty())
+  bool has_action = false;
+  for (const std::vector<bim::game::player_action>& actions : m_server_actions)
+    has_action |= !actions.empty();
+
+  if (has_action)
     {
       apply_server_actions(registry);
       save_contest_state(registry);
@@ -143,7 +158,14 @@ void bim::net::contest_runner::restore_last_confirmed_state(
 
 void bim::net::contest_runner::apply_server_actions(entt::registry& registry)
 {
-  const std::size_t tick_count = m_server_actions[0].size();
+  std::size_t tick_count = 0;
+
+  for (int player_index = 0; player_index != m_player_count; ++player_index)
+    if (m_server_actions[player_index].size() > tick_count)
+      tick_count = m_server_actions[player_index].size();
+
+  const std::array<std::size_t, bim::game::g_max_player_count> kick_tick =
+      bim::game::find_kick_event_tick(m_server_actions, tick_count);
 
   for (std::size_t tick = 0; tick != tick_count; ++tick)
     {
@@ -151,8 +173,16 @@ void bim::net::contest_runner::apply_server_actions(entt::registry& registry)
           [this, tick](const bim::game::player& p,
                        bim::game::player_action& action) -> void
           {
-            action = m_server_actions[p.index][tick];
+            const std::vector<bim::game::player_action>& actions =
+                m_server_actions[p.index];
+
+            if (tick < actions.size())
+              action = actions[tick];
           });
+
+      for (int i = 0; i != m_player_count; ++i)
+        if (tick == kick_tick[i])
+          bim::game::kick_player(registry, i);
 
       m_contest.tick();
     }
@@ -164,8 +194,14 @@ void bim::net::contest_runner::apply_server_actions(entt::registry& registry)
       {
         bim::game::player_action& action =
             m_unconfirmed_actions[player_index].back();
-        action = m_server_actions[player_index].back();
-        action.drop_bomb = false;
+
+        if (m_server_actions[player_index].empty())
+          action = {};
+        else
+          {
+            action = m_server_actions[player_index].back();
+            action.drop_bomb = false;
+          }
       }
 
   m_last_confirmed_tick += tick_count;
@@ -198,33 +234,28 @@ void bim::net::contest_runner::drop_confirmed_actions()
 void bim::net::contest_runner::apply_unconfirmed_actions(
     entt::registry& registry)
 {
-  std::array<bim::game::player_action*, bim::game::g_max_player_count>
-      player_action_pointers{};
-
-  registry.view<bim::game::player, bim::game::player_action>().each(
-      [&player_action_pointers](const bim::game::player& p,
-                                bim::game::player_action& action) -> void
-      {
-        player_action_pointers[p.index] = &action;
-      });
-
   for (std::size_t i = 0,
                    n = m_unconfirmed_actions[m_local_player_index].size();
        i != n; ++i)
     {
       for (int player_index = 0; player_index != m_player_count;
            ++player_index)
-        if (player_action_pointers[player_index])
-          {
-            const std::vector<bim::game::player_action>& actions =
-                m_unconfirmed_actions[player_index];
+        {
+          bim::game::player_action* const player_action =
+              bim::game::find_player_action_by_index(m_contest.registry(),
+                                                     player_index);
 
-            // Local players: apply the action they did in tick i.
-            // Distant players: repeat the last action received from the
-            // server.
-            *player_action_pointers[player_index] =
-                actions[std::min(actions.size() - 1, i)];
-          }
+          if (player_action)
+            {
+              const std::vector<bim::game::player_action>& actions =
+                  m_unconfirmed_actions[player_index];
+
+              // Local players: apply the action they did in tick i.
+              // Distant players: repeat the last action received from the
+              // server.
+              *player_action = actions[std::min(actions.size() - 1, i)];
+            }
+        }
 
       m_contest.tick();
     }

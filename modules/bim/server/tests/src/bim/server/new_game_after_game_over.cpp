@@ -35,18 +35,13 @@ TEST_P(new_game_after_game_over_test, game_over_then_new_random_game)
   const int last_player = player_count - 1;
   ASSERT_LE(0, last_player);
 
-  for (int i = 0; i != player_count; ++i)
-    ASSERT_NE(nullptr, m_simulator.clients[i].action) << "i=" << i;
-
   // Everyone except the last player drop a bomb.
   for (int i = 0; i != last_player; ++i)
-    *m_simulator.clients[i].action =
-        bim::game::player_action{ .movement = bim::game::player_movement::idle,
-                                  .drop_bomb = true };
+    m_simulator.clients[i].set_action(bim::game::player_action{
+        .movement = bim::game::player_movement::idle, .drop_bomb = true });
 
-  *m_simulator.clients[last_player].action =
-      bim::game::player_action{ .movement = bim::game::player_movement::idle,
-                                .drop_bomb = false };
+  m_simulator.clients[last_player].set_action(bim::game::player_action{
+      .movement = bim::game::player_movement::idle, .drop_bomb = false });
 
   m_simulator.tick();
 
@@ -56,7 +51,7 @@ TEST_P(new_game_after_game_over_test, game_over_then_new_random_game)
        tick_index != bim::game::player_action_queue::queue_size; ++tick_index)
     {
       for (int i = 0; i != player_count; ++i)
-        *m_simulator.clients[i].action = {};
+        m_simulator.clients[i].set_action({});
 
       m_simulator.tick();
     }

@@ -1,12 +1,9 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/game/component/player.hpp>
-#include <bim/game/component/player_action.hpp>
-#include <bim/game/constant/max_player_count.hpp>
 #include <bim/game/contest.hpp>
 #include <bim/game/contest_result.hpp>
 #include <bim/game/contest_timeline.hpp>
 #include <bim/game/dump_arena.hpp>
-#include <bim/game/player_action.hpp>
 
 #include <cerrno>
 #include <cstdio>
@@ -30,12 +27,6 @@ static void dump_timeline(const bim::game::contest_timeline& timeline)
                              fingerprint.player_count, fingerprint.arena_width,
                              fingerprint.arena_height);
 
-  std::array<bim::game::player_action*, bim::game::g_max_player_count>
-      player_actions;
-
-  bim::game::collect_player_actions(std::span(player_actions),
-                                    contest.registry());
-
   std::cout << "Initial state\n";
   bim::game::dump_arena(contest.arena(), contest.registry());
   std::cout << page_separator << '\n';
@@ -44,11 +35,7 @@ static void dump_timeline(const bim::game::contest_timeline& timeline)
 
   for (std::size_t t = 0, n = timeline.tick_count(); t != n; ++t)
     {
-      const std::span<const bim::game::player_action> actions =
-          timeline.tick(t);
-
-      for (int i = 0; i != fingerprint.player_count; ++i)
-        *player_actions[i] = actions[i];
+      timeline.load_tick(t, contest.registry());
 
       std::cout << "When tick #" << t << " begins.\n";
 

@@ -140,64 +140,54 @@ void bim::net::game_update_exchange::confirm_game_tick(
       return;
     }
 
-  const std::uint32_t tick_count = validate_message(*message);
-
-  if (tick_count == 0)
+  if (!validate_message(*message))
     return;
 
-  bim_assume(tick_count <= m_action_queue.size());
-
-  store_server_frames(*message, tick_count);
-  remove_server_confirmed_actions(tick_count);
+  store_server_frames(*message);
+  remove_server_confirmed_actions();
 
   m_updated(m_server_update);
 }
 
 /// Filter inconsistent messages: corrupted, forged, lost in the network…
-std::uint32_t bim::net::game_update_exchange::validate_message(
+bool bim::net::game_update_exchange::validate_message(
     const game_update_from_server& message) const
 {
   // The message should start from the last known server state.
   if (message.from_tick != m_current_update.from_tick)
     {
       // This happens quite frequently, so no log for it.
-      return 0;
+      return false;
     }
 
   if (message.actions.size() != m_player_count)
-    return 0;
+    return false;
 
   bim_assume(m_player_count >= 2);
   bim_assume(m_player_count <= bim::game::g_max_player_count);
 
-  const std::size_t tick_count = message.actions[0].size();
+  bool all_empty = true;
 
-  // No action, we are in sync with the server.
-  if (tick_count == 0)
-    return 0;
-
-  for (std::size_t i = 1, n = m_player_count; i != n; ++i)
-    if (message.actions[i].size() != tick_count)
-      {
-        ic_log(iscool::log::nature::info(), "game_update_exchange",
-               "Inconsistent tick count %d for player %d (expected %d).",
-               message.actions[i].size(), i, tick_count);
-        return 0;
-      }
-
-  // Suspiciously large message.
-  if (tick_count > 255)
+  for (std::size_t i = 0, n = m_player_count; i != n; ++i)
     {
-      ic_log(iscool::log::nature::info(), "game_update_exchange",
-             "Too many ticks: %d", tick_count);
-      return 0;
+      const std::size_t tick_count = message.actions[i].size();
+
+      if (tick_count > 255)
+        {
+          ic_log(iscool::log::nature::info(), "game_update_exchange",
+                 "Too many ticks from player %d: %d", i, tick_count);
+          return false;
+        }
+
+      all_empty = all_empty && (tick_count == 0);
     }
 
-  return tick_count;
+  // No action, we are in sync with the server.
+  return !all_empty;
 }
 
 void bim::net::game_update_exchange::store_server_frames(
-    const game_update_from_server& message, std::uint32_t tick_count)
+    const game_update_from_server& message)
 {
   bim_assume(m_player_count >= 2);
   bim_assume(m_player_count <= bim::game::g_max_player_count);
@@ -206,15 +196,25 @@ void bim::net::game_update_exchange::store_server_frames(
 
   for (int player_index = 0; player_index != m_player_count; ++player_index)
     {
-      m_server_update.actions[player_index].resize(tick_count);
-      std::copy_n(message.actions[player_index].begin(), tick_count,
-                  m_server_update.actions[player_index].begin());
+      const std::vector<bim::game::player_action>& server_actions =
+          message.actions[player_index];
+      std::vector<bim::game::player_action>& local_actions =
+          m_server_update.actions[player_index];
+
+      local_actions.resize(server_actions.size());
+      std::copy(server_actions.begin(), server_actions.end(),
+                local_actions.begin());
     }
 }
 
-void bim::net::game_update_exchange::remove_server_confirmed_actions(
-    std::uint32_t tick_count)
+void bim::net::game_update_exchange::remove_server_confirmed_actions()
 {
+  std::size_t tick_count = m_server_update.actions[0].size();
+
+  for (int player_index = 1; player_index != m_player_count; ++player_index)
+    if (m_server_update.actions[player_index].size() > tick_count)
+      tick_count = m_server_update.actions[player_index].size();
+
   m_current_update.from_tick += tick_count;
   m_current_update.actions.clear();
 

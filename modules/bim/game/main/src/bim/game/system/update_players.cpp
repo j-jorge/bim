@@ -6,6 +6,7 @@
 #include <bim/game/component/dead.hpp>
 #include <bim/game/component/flame.hpp>
 #include <bim/game/component/fractional_position_on_grid.hpp>
+#include <bim/game/component/kicked.hpp>
 #include <bim/game/component/player.hpp>
 
 #include <entt/entity/registry.hpp>
@@ -31,6 +32,9 @@ void bim::game::update_players(entt::registry& registry, const arena& arena)
       [&](entt::entity e, const player&,
           fractional_position_on_grid position) -> void
       {
-        check_player_collision(registry, arena, e, position);
+        if (registry.storage<kicked>().contains(e))
+          registry.emplace<dead>(e);
+        else
+          check_player_collision(registry, arena, e, position);
       });
 }

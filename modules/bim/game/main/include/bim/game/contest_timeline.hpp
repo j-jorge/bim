@@ -1,10 +1,13 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #pragma once
 
+#include <bim/game/constant/max_player_count.hpp>
 #include <bim/game/contest_fingerprint.hpp>
 
+#include <entt/entity/fwd.hpp>
+
+#include <array>
 #include <cstdio>
-#include <span>
 #include <vector>
 
 namespace bim::game
@@ -20,12 +23,20 @@ namespace bim::game
                                       std::FILE* file);
 
   public:
+    contest_timeline();
+    ~contest_timeline();
+
     const bim::game::contest_fingerprint& fingerprint() const;
-    std::span<const bim::game::player_action> tick(std::size_t i) const;
     std::size_t tick_count() const;
+
+    void load_tick(std::uint32_t tick, entt::registry& registry) const;
 
   private:
     bim::game::contest_fingerprint m_fingerprint;
     std::vector<bim::game::player_action> m_actions;
+
+    std::array<std::uint32_t, g_max_player_count> m_kick_event_tick;
+    std::array<std::uint8_t, g_max_player_count> m_kick_event_player;
+    std::uint8_t m_kick_event_count;
   };
 }

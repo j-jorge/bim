@@ -9,6 +9,7 @@ add_library(bim_game
   main/src/bim/game/contest_timeline_writer.cpp
   main/src/bim/game/dump_arena.cpp
   main/src/bim/game/input_archive.cpp
+  main/src/bim/game/kick_event.cpp
   main/src/bim/game/level_generation.cpp
   main/src/bim/game/output_archive.cpp
   main/src/bim/game/player_action.cpp

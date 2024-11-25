@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #pragma once
 
+#include <entt/entity/fwd.hpp>
+
 #include <cstdio>
-#include <span>
 
 namespace bim::game
 {
@@ -26,9 +27,10 @@ namespace bim::game
 
     explicit operator bool() const;
 
-    void push(std::span<player_action> actions);
+    void push(const entt::registry& registry);
 
   private:
     std::FILE* m_file;
+    std::uint8_t m_player_count;
   };
 }

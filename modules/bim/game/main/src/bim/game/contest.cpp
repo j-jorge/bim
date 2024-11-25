@@ -64,12 +64,6 @@ bim::game::contest::contest(std::uint64_t seed,
 
 bim::game::contest_result bim::game::contest::tick()
 {
-  remove_dead_objects(m_registry);
-  const contest_result result = check_game_over(m_registry);
-
-  if (!result.still_running())
-    return result;
-
   refresh_bomb_inventory(m_registry);
   apply_player_action(m_registry, m_arena);
   update_bombs(m_registry, m_arena, tick_interval);
@@ -80,6 +74,12 @@ bim::game::contest_result bim::game::contest::tick()
   update_flame_power_up_spawners(m_registry, m_arena);
   update_flame_power_ups(m_registry, m_arena);
   update_players(m_registry, m_arena);
+
+  remove_dead_objects(m_registry);
+  const contest_result result = check_game_over(m_registry);
+
+  if (!result.still_running())
+    return result;
 
   return result;
 }

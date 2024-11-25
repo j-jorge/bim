@@ -3,6 +3,9 @@
 
 #include <bim/server/config.hpp>
 
+#include <iscool/log/log.hpp>
+#include <iscool/log/nature/info.hpp>
+
 #include <cstring>
 #include <iomanip>
 #include <sstream>
@@ -12,7 +15,10 @@
 bim::server::contest_timeline_service::contest_timeline_service(
     const config& config)
   : m_directory(config.contest_timeline_folder)
-{}
+{
+  ic_log(iscool::log::nature::info(), "contest_timeline_service",
+         "Contests are saved in '%d'.", m_directory);
+}
 
 bim::game::contest_timeline_writer bim::server::contest_timeline_service::open(
     iscool::net::channel_id channel,

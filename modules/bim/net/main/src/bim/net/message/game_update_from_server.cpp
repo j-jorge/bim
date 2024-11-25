@@ -13,21 +13,22 @@ bim::net::game_update_from_server::game_update_from_server(
 {
   iscool::net::byte_array_reader reader(raw_content);
   std::uint8_t player_count;
-  std::uint8_t size;
 
-  reader >> from_tick >> player_count >> size;
-
+  reader >> from_tick >> player_count;
   actions.resize(player_count);
+
+  for (std::vector<bim::game::player_action>& v : actions)
+    {
+      std::uint8_t size;
+      reader >> size;
+      v.resize(size);
+    }
 
   iscool::net::byte_array_bit_reader bits(reader);
 
   for (std::vector<bim::game::player_action>& v : actions)
-    {
-      v.resize(size);
-
-      for (bim::game::player_action& action : v)
-        read(action, bits);
-    }
+    for (bim::game::player_action& action : v)
+      read(action, bits);
 }
 
 iscool::net::message bim::net::game_update_from_server::build_message() const
@@ -37,19 +38,19 @@ iscool::net::message bim::net::game_update_from_server::build_message() const
   const std::uint8_t player_count = actions.size();
   assert(player_count > 0);
 
-  const std::uint8_t size = actions[0].size();
+  content << from_tick << player_count;
 
-  content << from_tick << player_count << size;
+  for (const std::vector<bim::game::player_action>& v : actions)
+    {
+      const std::uint8_t size = v.size();
+      content << size;
+    }
 
   iscool::net::byte_array_bit_inserter bits(content);
 
   for (const std::vector<bim::game::player_action>& v : actions)
-    {
-      assert(v.size() == size);
-
-      for (const bim::game::player_action& action : v)
-        write(bits, action);
-    }
+    for (const bim::game::player_action& action : v)
+      write(bits, action);
 
   bits.flush();
 

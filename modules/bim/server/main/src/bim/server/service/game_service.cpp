@@ -17,6 +17,8 @@
 #include <bim/game/constant/max_player_count.hpp>
 #include <bim/game/contest.hpp>
 #include <bim/game/contest_result.hpp>
+#include <bim/game/kick_event.hpp>
+#include <bim/game/player_action.hpp>
 
 #include <bim/assume.hpp>
 
@@ -83,19 +85,11 @@ public:
     std::sort(this->sessions.begin(), this->sessions.begin() + player_count);
 
     ready.fill(false);
+    active.fill(false);
     completed_tick_count_per_player.fill(0);
 
     for (int i = 0; i != player_count; ++i)
       actions[i].reserve(32);
-
-    contest.registry()
-        .view<bim::game::player, bim::game::player_action>()
-        .each(
-            [this](const bim::game::player& player,
-                   bim::game::player_action& action)
-            {
-              m_player_actions[player.index] = &action;
-            });
   }
 
   bim::game::contest_fingerprint contest_fingerprint() const
@@ -116,13 +110,13 @@ public:
 
   /**
    * Remove from the action list all actions that have been confirmed by all
-   * players, i.e. everything between the first action and min_{i \in 0..3}
-   * last_received_player_tick[i] included. Update first_stored_tick
-   * accordingly.
+   * players. This updates the globally-confirmed state of the simulation.
+   *
+   * \return True if the simulation has been updated, false otherwise.
    */
-  void drop_old_actions()
+  bool drop_old_actions()
   {
-    std::uint32_t offset = std::numeric_limits<std::uint32_t>::max();
+    std::size_t offset = std::numeric_limits<std::size_t>::max();
 
     bim_assume(player_count >= 2);
     bim_assume(player_count <= bim::game::g_max_player_count);
@@ -131,21 +125,18 @@ public:
     // players.
     for (std::uint8_t player_index = 0; player_index != player_count;
          ++player_index)
-      {
-        const std::uint32_t player_offset =
-            completed_tick_count_per_player[player_index]
-            - completed_tick_count_all;
+      if (active[player_index])
+        {
+          const std::size_t player_offset =
+              completed_tick_count_per_player[player_index]
+              - completed_tick_count_all;
 
-        if (player_offset < offset)
-          offset = player_offset;
-      }
+          if (player_offset < offset)
+            offset = player_offset;
+        }
 
     if (offset == 0)
-      return;
-
-    // The player actions will be reset by the sealing below, thus make sure we
-    // serialize them before.
-    save_actions_to_timeline(offset);
+      return false;
 
     // Play the ticks reached by all players.
     seal_player_actions(offset);
@@ -153,10 +144,20 @@ public:
     // Actually remove the actions.
     for (std::uint8_t player_index = 0; player_index != player_count;
          ++player_index)
-      actions[player_index].erase(actions[player_index].begin(),
-                                  actions[player_index].begin() + offset);
+      {
+        std::vector<bim::game::player_action>& player_actions =
+            actions[player_index];
+
+        // Inactive players may not have "offset" actions, so we must restrict
+        // the removal to what we actually have.
+        player_actions.erase(player_actions.begin(),
+                             player_actions.begin()
+                                 + std::min(offset, player_actions.size()));
+      }
 
     completed_tick_count_all += offset;
+
+    return true;
   }
 
   /**
@@ -172,45 +173,37 @@ public:
 
     for (std::uint8_t player_index = 0; player_index != player_count;
          ++player_index)
-      {
-        const std::uint32_t tick_count = actions[player_index].size();
+      if (active[player_index])
+        {
+          const std::uint32_t tick_count = actions[player_index].size();
 
-        if (tick_count < simulation_offset)
-          simulation_offset = tick_count;
-      }
+          if (tick_count < simulation_offset)
+            simulation_offset = tick_count;
+        }
 
     simulation_tick = completed_tick_count_all + simulation_offset;
   }
 
 private:
-  void save_actions_to_timeline(int count)
+  void seal_player_actions(std::size_t count)
   {
-    if (!timeline_writer)
-      return;
-
-    std::array<bim::game::player_action, bim::game::g_max_player_count>
-        player_actions;
-    std::span<bim::game::player_action> tick_actions =
-        std::span(player_actions.begin(), player_count);
-
-    for (int i = 0; i != count; ++i)
+    for (std::size_t i = 0; i != count; ++i)
       {
+        std::array<bim::game::player_action*, bim::game::g_max_player_count>
+            player_actions;
+        bim::game::collect_player_actions(player_actions, contest.registry());
+
         for (int p = 0; p != player_count; ++p)
-          player_actions[p] = actions[p][i];
+          if (player_actions[p])
+            {
+              if (i < actions[p].size())
+                *player_actions[p] = actions[p][i];
+              else if (i == actions[p].size())
+                bim::game::kick_player(contest.registry(), p);
+            }
 
-        timeline_writer.push(tick_actions);
-      }
-
-    if (!contest_result.still_running())
-      timeline_writer = {};
-  }
-
-  void seal_player_actions(int count)
-  {
-    for (int i = 0; i != count; ++i)
-      {
-        for (int p = 0; p != player_count; ++p)
-          *m_player_actions[p] = actions[p][i];
+        if (timeline_writer)
+          timeline_writer.push(contest.registry());
 
         const bim::game::contest_result tick_result = contest.tick();
 
@@ -218,6 +211,7 @@ private:
           {
             contest_result = tick_result;
             game_over_tick = completed_tick_count_all + i;
+            timeline_writer = {};
           }
       }
   }
@@ -228,10 +222,11 @@ public:
   std::uint8_t player_count;
   std::array<iscool::net::session_id, bim::game::g_max_player_count> sessions;
   std::array<bool, bim::game::g_max_player_count> ready;
+  std::array<bool, bim::game::g_max_player_count> active;
 
   /**
    * The tick reached by every player. At this point, the clients may not know
-   * the state of every other player, but every client as simulated up to this
+   * the state of every other player, but every client has simulated up to this
    * point. This is the minimum of (completed_tick_count_per_player[i] +
    * actions[i].size()).
    */
@@ -267,10 +262,6 @@ public:
   bim::game::contest contest;
 
   bim::game::contest_timeline_writer timeline_writer;
-
-private:
-  std::array<bim::game::player_action*, bim::game::g_max_player_count>
-      m_player_actions;
 };
 
 bim::server::game_service::game_service(const config& config,
@@ -279,6 +270,8 @@ bim::server::game_service::game_service(const config& config,
   , m_next_game_channel(1)
   , m_random(std::random_device()())
   , m_clean_up_interval(config.game_service_clean_up_interval)
+  , m_disconnection_lateness_threshold_in_ticks(
+        config.game_service_disconnection_lateness_threshold_in_ticks)
 {
   if (config.enable_contest_timeline_recording)
     m_contest_timeline_service.reset(new contest_timeline_service(config));
@@ -395,6 +388,7 @@ void bim::server::game_service::mark_as_ready(
     }
 
   game.ready[existing_index] = true;
+  game.active[existing_index] = true;
 
   int ready_count = 0;
   for (int i = 0; i != game.player_count; ++i)
@@ -442,8 +436,11 @@ void bim::server::game_service::push_update(
   if (*tick_count != 0)
     queue_actions(*update, player_index, game);
 
-  game.drop_old_actions();
+  const bool simulation_updated = game.drop_old_actions();
   game.align_simulation_tick();
+
+  if (!simulation_updated)
+    check_drop_late_player(channel, game);
 
   if (!game.contest_result.still_running()
       && (game.game_over_tick
@@ -460,6 +457,10 @@ std::optional<std::size_t> bim::server::game_service::validate_message(
     const game& game) const
 {
   if (player_index >= game.player_count)
+    return std::nullopt;
+
+  // The player has been disconnected on the server's decision.
+  if (!game.active[player_index])
     return std::nullopt;
 
   // A message from the player's past, maybe it took a longer path on the
@@ -570,10 +571,32 @@ void bim::server::game_service::send_actions(
 
   for (std::uint8_t player = 0; player != game.player_count; ++player)
     {
+      // We must send as many actions as possible for inactive players because
+      // we don't know how far the other players had applied its actions
+      // before it was kicked out.
+      //
+      // As an example, let p1 be a kicked out player. When it was kicked out
+      // its simulation was at tick 100, simulation_tick was 90 (i.e. all
+      // players where at least at tick 90), completed_tick_count_all was 70
+      // (i.e. all clients knew the state of every other client up to tick
+      // 70). The list of actions for p1 had thus 30 actions.
+      //
+      // Later, simulation_tick is 105 but completed_tick_count_all is 80. We
+      // are sending a message to p0, and we have
+      // completed_tick_count_per_player[p0] >= 80. Let's say its'
+      // 80. Consequently we must send to p0 all actions from 80 to 105 for p0,
+      // p2, and p3, and from 80 to 100 for p1.
+      const std::size_t action_count = game.actions[player].size();
+      if (tick_start_index >= action_count)
+        continue;
+
+      const std::size_t adjusted_tick_count =
+          std::min(tick_count, action_count - tick_start_index);
+
       const std::vector<bim::game::player_action>::const_iterator begin =
           game.actions[player].begin() + tick_start_index;
       message.actions[player].insert(message.actions[player].end(), begin,
-                                     begin + tick_count);
+                                     begin + adjusted_tick_count);
     }
 
   m_message_stream.send(endpoint, message.build_message(), session, channel);
@@ -596,6 +619,39 @@ void bim::server::game_service::send_game_over(
   const bim::net::game_over message(winner_index);
 
   m_message_stream.send(endpoint, message.build_message(), session, channel);
+}
+
+void bim::server::game_service::check_drop_late_player(
+    iscool::net::channel_id channel, game& game) const
+{
+  for (int i = 0; i != game.player_count; ++i)
+    {
+      if (!game.active[i])
+        continue;
+
+      const int tick_i = game.actions[i].size();
+
+      for (int j = 0; j != game.player_count; ++j)
+        {
+          if ((i == j) || !game.active[j])
+            continue;
+
+          const int tick_j = game.actions[j].size();
+
+          if ((tick_i >= tick_j)
+              || (tick_j - tick_i
+                  < m_disconnection_lateness_threshold_in_ticks))
+            continue;
+
+          ic_log(iscool::log::nature::info(), "game_service",
+                 "Kicking out player=%d, session=%d, from game_id=%d, due to "
+                 "lateness. Tick is %d, %d behind %d. Threshold is %d.",
+                 i, game.sessions[i], channel, tick_i, tick_j - tick_i, tick_j,
+                 m_disconnection_lateness_threshold_in_ticks);
+          game.active[i] = false;
+          return;
+        }
+    }
 }
 
 void bim::server::game_service::schedule_clean_up()

@@ -1,4 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
+#pragma once
+
 #include <bim/server/tests/fake_scheduler.hpp>
 #include <bim/server/tests/test_client.hpp>
 
@@ -23,6 +25,7 @@ namespace bim::server::tests
     void join_game();
     void tick();
     void tick(std::chrono::nanoseconds d);
+    void tick(std::size_t tick_count);
     void wait(const std::function<bool()>& ready);
 
   private:

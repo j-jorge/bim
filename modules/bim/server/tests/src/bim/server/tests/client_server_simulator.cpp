@@ -56,17 +56,23 @@ void bim::server::tests::client_server_simulator::tick(
   const std::size_t tick_count = d / bim::game::contest::tick_interval
                                  + (d % bim::game::contest::tick_interval
                                     != std::chrono::nanoseconds::zero());
+  tick(tick_count);
+}
 
+void bim::server::tests::client_server_simulator::tick(std::size_t tick_count)
+{
   std::array<std::size_t, 4> expected_tick;
 
   for (int i = 0; i != m_player_count; ++i)
-    expected_tick[i] =
-        clients[i].contest_runner->confirmed_tick() + tick_count;
+    if (clients[i].is_in_game())
+      expected_tick[i] =
+          clients[i].contest_runner->confirmed_tick() + tick_count;
 
   const auto all_synchronized = [this, &expected_tick]() -> bool
   {
     for (int i = 0; i != m_player_count; ++i)
-      if (clients[i].contest_runner->confirmed_tick() != expected_tick[i])
+      if (clients[i].is_in_game()
+          && (clients[i].contest_runner->confirmed_tick() != expected_tick[i]))
         return false;
 
     return true;
@@ -75,7 +81,8 @@ void bim::server::tests::client_server_simulator::tick(
   for (std::size_t t = 0; t != tick_count; ++t)
     {
       for (int i = 0; i != m_player_count; ++i)
-        clients[i].tick(bim::game::contest::tick_interval);
+        if (clients[i].is_in_game())
+          clients[i].tick(bim::game::contest::tick_interval);
 
       std::this_thread::sleep_for(std::chrono::seconds(0));
       m_scheduler.tick(std::chrono::milliseconds(20));
@@ -91,7 +98,8 @@ void bim::server::tests::client_server_simulator::tick(
 
       // Force a potential update from the server.
       for (int i = 0; i != m_player_count; ++i)
-        clients[i].tick({});
+        if (clients[i].is_in_game())
+          clients[i].tick({});
     }
 }
 
