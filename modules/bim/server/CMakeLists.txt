@@ -24,7 +24,9 @@ add_executable(server-tests
   tests/src/bim/server/service/game_info.cpp
   tests/src/bim/server/service/game_service.cpp
 
+  tests/src/bim/server/tests/client_server_simulator.cpp
   tests/src/bim/server/tests/fake_scheduler.cpp
+  tests/src/bim/server/tests/test_client.cpp
 )
 target_include_directories(server-tests PRIVATE tests/include)
 target_link_libraries(
