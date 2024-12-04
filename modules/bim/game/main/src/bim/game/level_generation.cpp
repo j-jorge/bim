@@ -76,13 +76,10 @@ void bim::game::insert_random_brick_walls(arena& arena,
 
             for (int y : { -1, 0, 1 })
               for (int x : { -1, 0, 1 })
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wstringop-overflow="
                 // This warning is emitted by GCC 13.2.0 on this line, yet
                 // I see no issue in this code.
                 forbidden_positions.push_back(
                     position_on_grid(player_x + x, player_y + y));
-#pragma GCC diagnostic pop
           });
 
   std::vector<entt::entity> brick_walls;

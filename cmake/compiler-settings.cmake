@@ -4,6 +4,13 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 if (CMAKE_CXX_COMPILER_ID STREQUAL GNU)
   add_compile_options(-Wall -pedantic -Werror)
 
+  if (CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 13)
+    # This error is reported on some calls to std::vector::push_back()
+    # for which I cannot find any problem, so either I do not
+    # understand or it is a false positive.
+    add_compile_options(-Wno-stringop-overflow)
+  endif()
+
   option(BIM_ADDRESS_SANITIZER "Compile with AddressSanitizer enabled" OFF)
 
   if(BIM_ADDRESS_SANITIZER)
