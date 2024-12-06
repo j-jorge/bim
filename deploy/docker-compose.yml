@@ -2,7 +2,6 @@ version: "3.8"
 services:
   gs:
     image: ubuntu:24.04
-    network_mode: host
     ports:
       - ${PORT}:${PORT}/udp
     volumes:
