@@ -18,5 +18,5 @@ services:
         --contest-timeline-folder /opt/bim/contest/
         --log-file /opt/bim/log/bim-server.txt
         --port ${PORT}
-        > /opt/bim/log/bim-server.stdout.txt
-        2> /opt/bim/log/bim-server.stderr.txt"
+        >> /opt/bim/log/bim-server.stdout.txt
+        2>> /opt/bim/log/bim-server.stderr.txt"
