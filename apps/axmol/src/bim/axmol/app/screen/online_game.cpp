@@ -96,7 +96,7 @@ bim::axmol::app::online_game::online_game(
     m_bomb_drop_requested = true;
   };
 
-  m_controls->bomb_button->connect_to_clicked(request_drop_bomb);
+  m_controls->bomb_button->connect_to_pressed(request_drop_bomb);
   m_controls->bomb_button->cancel_on_swipe(false);
 
   m_inputs.push_back(m_controls->bomb_button->input_node());
