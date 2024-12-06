@@ -20,6 +20,7 @@ namespace bim::axmol::widget
   class button final : public ax::Node
   {
     DECLARE_VOID_SIGNAL(clicked, m_clicked)
+    DECLARE_VOID_SIGNAL(pressed, m_pressed)
 
   public:
     bim_declare_widget_create_function(button);

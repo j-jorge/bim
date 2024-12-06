@@ -23,6 +23,7 @@
 #include <axmol/2d/ActionInterval.h>
 
 IMPLEMENT_SIGNAL(bim::axmol::widget::button, clicked, m_clicked);
+IMPLEMENT_SIGNAL(bim::axmol::widget::button, pressed, m_pressed);
 
 bim_implement_widget(bim::axmol::widget::button);
 
@@ -153,6 +154,8 @@ void bim::axmol::widget::button::input_press()
 
   if (m_action_pressed)
     m_action_runner.run(*m_action_pressed);
+
+  m_pressed();
 }
 
 void bim::axmol::widget::button::input_release()
