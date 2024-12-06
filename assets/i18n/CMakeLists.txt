@@ -55,7 +55,6 @@ else()
       --keyword=ic_ngettext:1,2
       --from-code=utf-8
       --no-location
-      --sort-output
       --output=${pot_file}
       ${bim_app_sources}
       ${style_strings_source}
