@@ -18,19 +18,19 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 3.4.2\n"
 
-msgid "BACK"
-msgstr ""
-
 msgid "Could not get the config from the server."
-msgstr "Could not get the config from the server. Check your connection or update the app."
-
-msgid "Draw game!"
 msgstr ""
+"Could not get the config from the server. Check your connection or update "
+"the app."
 
-msgid "FIGHT!"
-msgstr ""
-
+#, c++-format
 msgid "Failed to authenticate with the game server. Error code {}."
+msgstr ""
+
+msgid "OK"
+msgstr ""
+
+msgid "BACK"
 msgstr ""
 
 msgid ""
@@ -38,10 +38,65 @@ msgid ""
 "GAME"
 msgstr ""
 
-msgid "OK"
+msgid ""
+"Start a new game\n"
+"and get your revenge!"
 msgstr ""
 
-msgid "Online Game"
+msgid ""
+"Was it pure luck?\n"
+"Confirm your skills in a new game!"
+msgstr ""
+
+msgid "Draw game!"
+msgstr ""
+
+msgid "You lost!"
+msgstr ""
+
+msgid "You won!"
+msgstr ""
+
+msgid "Directions kind"
+msgstr ""
+
+msgid "Directional pad, at a fixed position on the screen."
+msgstr ""
+
+msgid "Analog stick, it pops where you tap and follows the drag."
+msgstr ""
+
+msgid "Controls"
+msgstr ""
+
+msgid "Directions on the left, actions on the right."
+msgstr ""
+
+msgid "Directions on the right, actions on the left."
+msgstr ""
+
+msgid "D-pad"
+msgstr ""
+
+msgid "Stick"
+msgstr ""
+
+msgid "Off"
+msgstr ""
+
+msgid "On"
+msgstr ""
+
+msgid "Music"
+msgstr ""
+
+msgid "Sound effects"
+msgstr ""
+
+msgid "Settings"
+msgstr ""
+
+msgid "Vibrations"
 msgstr ""
 
 msgid ""
@@ -50,21 +105,8 @@ msgid ""
 msgstr ""
 
 msgid ""
-"Start a new game\n"
-"and get your revenge!"
-msgstr ""
-
-msgid "Start the game now!"
-msgstr ""
-
-msgid ""
-"Waiting for your opponents…\n"
-"Tell your friends to join!"
-msgstr ""
-
-msgid ""
-"Was it pure luck?\n"
-"Confirm your skills in a new game!"
+"You can start a two-players game\n"
+"now or wait for more players!"
 msgstr ""
 
 msgid ""
@@ -72,15 +114,18 @@ msgid ""
 "now or wait for more players!"
 msgstr ""
 
+msgid "Start the game now!"
+msgstr ""
+
+msgid "FIGHT!"
+msgstr ""
+
 msgid ""
-"You can start a two-players game\n"
-"now or wait for more players!"
+"Waiting for your opponents…\n"
+"Tell your friends to join!"
 msgstr ""
 
-msgid "You lost!"
-msgstr ""
-
-msgid "You won!"
+msgid "Online Game"
 msgstr ""
 
 #~ msgid "Setting up a new game..."
