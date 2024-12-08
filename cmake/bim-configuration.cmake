@@ -14,3 +14,13 @@ if(NOT DEFINED BIM_BUILDING_FOR_ANDROID)
   # host.
   set(BIM_BUILDING_FOR_ANDROID FALSE)
 endif()
+
+if(BIM_TARGET STREQUAL "android")
+  set(BIM_ANDROID_GENERATED_RES_DIR
+    "${CMAKE_BINARY_DIR}/android/app/res"
+    CACHE
+    PATH
+    "Path to the directory where the generated Android resources will be \
+produced."
+  )
+endif()

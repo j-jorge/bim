@@ -93,6 +93,7 @@ assets/texture/search-background-pattern.png
 assets/texture/victory-background-pattern.png
 assets/texture/squares.png
 assets/texture/stars.png
+assets/icon.png
 static-assets/audio/tick.ogg
 Julien Jorge
 CC-BY-SA 4.0

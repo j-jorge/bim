@@ -22,7 +22,10 @@ android {
 
     sourceSets.main {
         java.srcDirs '@this_file_directory@/src'
-        res.srcDirs '@this_file_directory@/res'
+        res.srcDirs = [
+            '@this_file_directory@/res',
+            '@BIM_ANDROID_GENERATED_RES_DIR@'
+        ]
         manifest.srcFile '@this_file_directory@/AndroidManifest.xml'
         assets.srcDirs = [
             '@CMAKE_SOURCE_DIR@/static-assets/',
