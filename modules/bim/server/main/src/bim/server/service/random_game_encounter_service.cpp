@@ -61,7 +61,7 @@ void bim::server::random_game_encounter_service::mark_as_ready(
     const iscool::net::endpoint& endpoint, iscool::net::session_id session,
     const bim::net::accept_random_game& message)
 {
-  ic_log(iscool::log::nature::info(), "named_game_encounter_service",
+  ic_log(iscool::log::nature::info(), "random_game_encounter_service",
          "Accepted game. Session %d, encounter %d.", session,
          message.get_encounter_id());
 
