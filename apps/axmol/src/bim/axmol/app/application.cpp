@@ -147,7 +147,7 @@ void bim::axmol::app::detail::persistent_systems::start_log_system()
   if (std::strftime(now_str, sizeof(now_str), "%FT%T%z", &now) == 0)
     ic_log(iscool::log::nature::info(), "StartUp", "Failed to get the date.");
   else
-    ic_log(iscool::log::nature::info(), g_log_context, "%1%",
+    ic_log(iscool::log::nature::info(), g_log_context, "{}",
            static_cast<const char*>(now_str));
 }
 
@@ -446,7 +446,7 @@ void bim::axmol::app::application::set_up_colour_chart()
   if (!iscool::files::file_exists(color_file))
     {
       ic_log(iscool::log::nature::info(), g_log_context,
-             "Could not find color file '%s'.", color_file);
+             "Could not find color file '{}'.", color_file);
       return;
     }
 
@@ -469,7 +469,7 @@ void bim::axmol::app::application::set_up_local_preferences()
   constexpr std::chrono::minutes flush_interval(5);
   const std::string path(iscool::files::get_writable_path()
                          + "preferences.json");
-  const std::string backup_extension(".bak.%1%");
+  const std::string backup_extension(".bak.{}");
   constexpr int backup_count = 1;
 
   iscool::preferences::local_preferences* const preferences =

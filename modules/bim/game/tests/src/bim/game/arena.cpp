@@ -46,9 +46,9 @@ TEST_P(bim_game_arena_test, defaults)
         EXPECT_FALSE(arena.is_static_wall(x, y)) << "x=" << x << ", y=" << y;
 }
 
-INSTANTIATE_TEST_CASE_P(bim_game_arena_suite, bim_game_arena_test,
-                        ::testing::Combine(::testing::Range(1, 10),
-                                           ::testing::Range(1, 10)));
+INSTANTIATE_TEST_SUITE_P(bim_game_arena_suite, bim_game_arena_test,
+                         ::testing::Combine(::testing::Range(1, 10),
+                                            ::testing::Range(1, 10)));
 
 TEST(bim_game_arena, static_wall_is_solid)
 {

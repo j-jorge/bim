@@ -279,13 +279,19 @@ template <typename Archive, typename Snapshot>
 void bim::net::contest_runner::archive_io(Snapshot&& snapshot,
                                           Archive&& archive) const
 {
-  snapshot.entities(archive)
-      .template component<
-          bim::game::bomb, bim::game::bomb_power_up,
-          bim::game::bomb_power_up_spawner, bim::game::brick_wall,
-          bim::game::burning, bim::game::dead, bim::game::flame,
-          bim::game::flame_power_up, bim::game::flame_power_up_spawner,
-          bim::game::fractional_position_on_grid, bim::game::player_action,
-          bim::game::player_action_queue, bim::game::player,
-          bim::game::position_on_grid>(archive);
+  snapshot.template get<entt::entity>(archive)
+      .template get<bim::game::bomb>(archive)
+      .template get<bim::game::bomb_power_up>(archive)
+      .template get<bim::game::bomb_power_up_spawner>(archive)
+      .template get<bim::game::brick_wall>(archive)
+      .template get<bim::game::burning>(archive)
+      .template get<bim::game::dead>(archive)
+      .template get<bim::game::flame>(archive)
+      .template get<bim::game::flame_power_up>(archive)
+      .template get<bim::game::flame_power_up_spawner>(archive)
+      .template get<bim::game::fractional_position_on_grid>(archive)
+      .template get<bim::game::player_action>(archive)
+      .template get<bim::game::player_action_queue>(archive)
+      .template get<bim::game::player>(archive)
+      .template get<bim::game::position_on_grid>(archive);
 }

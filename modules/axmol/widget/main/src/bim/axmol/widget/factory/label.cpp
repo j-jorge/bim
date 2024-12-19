@@ -55,7 +55,7 @@ bim::axmol::ref_ptr<ax::Label> bim::axmol::widget::factory<ax::Label>::create(
         horizontal_align = ax::TextHAlignment::RIGHT;
       else if (*horizontal_align_string != "left")
         ic_log(iscool::log::nature::error(), g_log_context,
-               "Unknown horizontal text alignment: '%s'.",
+               "Unknown horizontal text alignment: '{}'.",
                *horizontal_align_string);
     }
 
@@ -71,7 +71,7 @@ bim::axmol::ref_ptr<ax::Label> bim::axmol::widget::factory<ax::Label>::create(
         vertical_align = ax::TextVAlignment::BOTTOM;
       else if (*vertical_align_string != "center")
         ic_log(iscool::log::nature::error(), g_log_context,
-               "Unknown vertical text alignment: '%s'.",
+               "Unknown vertical text alignment: '{}'.",
                *vertical_align_string);
     }
 

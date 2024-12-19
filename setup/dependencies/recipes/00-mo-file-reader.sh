@@ -4,7 +4,7 @@ set -euo pipefail
 
 : "${mo_file_reader_repository:=https://github.com/j-jorge/mofilereader/}"
 : "${mo_file_reader_version:=1.2}"
-package_revision=1
+package_revision=2
 package_version="$mo_file_reader_version"-"$package_revision"
 build_type=release
 

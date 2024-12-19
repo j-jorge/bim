@@ -100,9 +100,9 @@ TEST_P(bim_game_level_generation_test, random_brick_walls)
   EXPECT_LE(brick_wall_count, free_cell_count);
 }
 
-INSTANTIATE_TEST_CASE_P(bim_game_arena_suite, bim_game_level_generation_test,
-                        ::testing::Combine(::testing::Range(3, 10),
-                                           ::testing::Range(3, 10)));
+INSTANTIATE_TEST_SUITE_P(bim_game_arena_suite, bim_game_level_generation_test,
+                         ::testing::Combine(::testing::Range(3, 10),
+                                            ::testing::Range(3, 10)));
 
 TEST(bim_game_insert_random_brick_walls, no_walls_near_player)
 {

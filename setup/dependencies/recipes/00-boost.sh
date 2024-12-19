@@ -4,9 +4,9 @@ set -euo pipefail
 
 : "${bim_host_prefix:-}"
 
-boost_version=1.82.0
+boost_version=1.87.0
 boost_version_underscore="${boost_version//./_}"
-package_revision=4
+package_revision=1
 version="$boost_version"-"$package_revision"
 build_type=release
 
@@ -15,7 +15,7 @@ build_type=release
 
 archive_basename=boost_"${boost_version_underscore}"
 archive_name="${archive_basename}".tar.bz2
-archive_url="https://boostorg.jfrog.io/artifactory/main/release/${boost_version}/source/${archive_name}"
+archive_url="https://archives.boost.io/release/${boost_version}/source/${archive_name}"
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd)"
 

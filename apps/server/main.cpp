@@ -125,7 +125,7 @@ int main(int argc, char* argv[])
   iscool::schedule::initialize(scheduler.get_delayed_call_delegate());
 
   std::cout << "Press Ctrl+C to exit.\n";
-  ic_log(iscool::log::nature::info(), "server", "Running on port %d.",
+  ic_log(iscool::log::nature::info(), "server", "Running on port {}.",
          command_line.options->config.port);
 
   bim::server::server server(command_line.options->config);

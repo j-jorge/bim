@@ -320,7 +320,7 @@ bim::server::game_info bim::server::game_service::new_game(
   ++m_next_game_channel;
 
   ic_log(iscool::log::nature::info(), "game_service",
-         "Creating new game %d for %d players.", channel, (int)player_count);
+         "Creating new game {} for {} players.", channel, (int)player_count);
 
   game& game =
       m_games
@@ -356,7 +356,7 @@ void bim::server::game_service::process(const iscool::net::endpoint& endpoint,
   if (it == m_games.end())
     {
       ic_log(iscool::log::nature::info(), "game_service",
-             "Game with channel %d does not exist.", channel);
+             "Game with channel {} does not exist.", channel);
       return;
     }
 
@@ -383,7 +383,7 @@ void bim::server::game_service::mark_as_ready(
   if (existing_index == game.sessions.size())
     {
       ic_log(iscool::log::nature::info(), "game_service",
-             "Session %d is not part of game %d.", session, channel);
+             "Session {} is not part of game {}.", session, channel);
       return;
     }
 
@@ -397,13 +397,13 @@ void bim::server::game_service::mark_as_ready(
   if (ready_count != game.player_count)
     {
       ic_log(iscool::log::nature::info(), "game_service",
-             "Session %d ready %d/%d.", session, ready_count,
+             "Session {} ready {}/{}.", session, ready_count,
              (int)game.player_count);
       return;
     }
 
   ic_log(iscool::log::nature::info(), "game_service",
-         "Channel %d all players ready, session %d.", channel, session);
+         "Channel {} all players ready, session {}.", channel, session);
 
   m_message_stream.send(endpoint, bim::net::start().build_message(), session,
                         channel);
@@ -421,7 +421,7 @@ void bim::server::game_service::push_update(
   if (!update)
     {
       ic_log(iscool::log::nature::info(), "game_service",
-             "Could not deserialize message game update from session=%d.",
+             "Could not deserialize message game update from session={}.",
              session);
       return;
     }
@@ -468,8 +468,8 @@ std::optional<std::size_t> bim::server::game_service::validate_message(
   if (message.from_tick < game.completed_tick_count_per_player[player_index])
     {
       ic_log(iscool::log::nature::info(), "game_service",
-             "Message from the past from session=%d, player=%d, got "
-             "%d, expected %d.",
+             "Message from the past from session={}, player={}, got "
+             "{}, expected {}.",
              session, (int)player_index, message.from_tick,
              game.completed_tick_count_per_player[player_index]);
       return std::nullopt;
@@ -479,8 +479,8 @@ std::optional<std::size_t> bim::server::game_service::validate_message(
   if (message.from_tick > game.simulation_tick)
     {
       ic_log(iscool::log::nature::info(), "game_service",
-             "Message from the future from session=%d, player=%d, "
-             "got %d, expected %d.",
+             "Message from the future from session={}, player={}, "
+             "got {}, expected {}.",
              session, (int)player_index, message.from_tick,
              game.simulation_tick);
       return std::nullopt;
@@ -502,8 +502,8 @@ std::optional<std::size_t> bim::server::game_service::validate_message(
   if (message.from_tick > player_tick)
     {
       ic_log(iscool::log::nature::info(), "game_service",
-             "Gap in player message for session=%d, player=%d, (received) %d "
-             "> %d (bound).",
+             "Gap in player message for session={}, player={}, (received) {} "
+             "> {} (bound).",
              session, (int)player_index, message.from_tick, tick_count,
              player_tick);
       return 0;
@@ -512,7 +512,7 @@ std::optional<std::size_t> bim::server::game_service::validate_message(
   if (tick_count > 255)
     {
       ic_log(iscool::log::nature::info(), "game_service",
-             "Too many action count/ticks %d for session=%d, player=%d.",
+             "Too many action count/ticks {} for session={}, player={}.",
              tick_count, session, (int)player_index);
       return std::nullopt;
     }
@@ -613,7 +613,7 @@ void bim::server::game_service::send_game_over(
                                : bim::game::g_max_player_count;
 
   ic_log(iscool::log::nature::info(), "game_service",
-         "Sending game over, session=%d, game_id=%d, winner=%d.", session,
+         "Sending game over, session={}, game_id={}, winner={}.", session,
          channel, winner_index);
 
   const bim::net::game_over message(winner_index);
@@ -644,8 +644,8 @@ void bim::server::game_service::check_drop_late_player(
             continue;
 
           ic_log(iscool::log::nature::info(), "game_service",
-                 "Kicking out player=%d, session=%d, from game_id=%d, due to "
-                 "lateness. Tick is %d, %d behind %d. Threshold is %d.",
+                 "Kicking out player={}, session={}, from game_id={}, due to "
+                 "lateness. Tick is {}, {} behind {}. Threshold is {}.",
                  i, game.sessions[i], channel, tick_i, tick_j - tick_i, tick_j,
                  m_disconnection_lateness_threshold_in_ticks);
           game.active[i] = false;
@@ -684,7 +684,7 @@ void bim::server::game_service::clean_up()
 void bim::server::game_service::clean_up(iscool::net::channel_id channel,
                                          const game& g)
 {
-  ic_log(iscool::log::nature::info(), "game_service", "Cleaning up game %d.",
+  ic_log(iscool::log::nature::info(), "game_service", "Cleaning up game {}.",
          channel);
 
   for (int i = 0; i != g.player_count; ++i)

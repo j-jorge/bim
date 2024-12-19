@@ -31,7 +31,7 @@ void bim::axmol::widget::set_node_parents(
         {
           ic_log(iscool::log::nature::error(),
                  bim::axmol::widget::g_log_context,
-                 "No reference node named '%s' to set as parent node for %s.",
+                 "No reference node named '{}' to set as parent node for {}.",
                  *parent_name, name);
           continue;
         }

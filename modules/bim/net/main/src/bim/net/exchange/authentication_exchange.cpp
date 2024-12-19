@@ -77,7 +77,7 @@ void bim::net::authentication_exchange::check_ok(const iscool::net::message& m)
     {
       stop();
       ic_log(iscool::log::nature::info(), "authentication_exchange",
-             "Authentication OK, session=%d", message->get_session_id());
+             "Authentication OK, session={}", message->get_session_id());
       m_authenticated(message->get_session_id());
     }
 }
@@ -94,7 +94,7 @@ void bim::net::authentication_exchange::check_ko(const iscool::net::message& m)
     {
       stop();
       ic_log(iscool::log::nature::error(), "authentication_exchange",
-             "Authentication KO, error_code=%d",
+             "Authentication KO, error_code={}",
              (int)message->get_error_code());
       m_error(message->get_error_code());
     }

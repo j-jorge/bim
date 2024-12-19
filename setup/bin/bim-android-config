@@ -43,7 +43,7 @@ do
             basename "$path"
             ;;
         --gradle-plugin-version)
-            echo 8.2.2
+            echo 8.7.3
             ;;
         --gradle-root)
             echo "$android_root"

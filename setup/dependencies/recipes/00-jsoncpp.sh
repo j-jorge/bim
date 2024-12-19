@@ -3,7 +3,7 @@
 set -euo pipefail
 
 : "${jsoncpp_repository:=https://github.com/open-source-parsers/jsoncpp.git}"
-: "${jsoncpp_version:=1.9.5}"
+: "${jsoncpp_version:=1.9.6}"
 package_revision=1
 version="$jsoncpp_version"-"$package_revision"
 build_type=release

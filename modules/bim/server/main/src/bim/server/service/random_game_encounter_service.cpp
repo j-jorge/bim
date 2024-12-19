@@ -42,7 +42,7 @@ void bim::server::random_game_encounter_service::process(
     }
 
   ic_log(iscool::log::nature::info(), "random_game_encounter_service",
-         "Trying to add session %d in existing encounter.", session);
+         "Trying to add session {} in existing encounter.", session);
 
   const std::optional<bim::net::encounter_id> encounter_id =
       m_matchmaking_service.add_in_any_encounter(endpoint, session,
@@ -62,7 +62,7 @@ void bim::server::random_game_encounter_service::mark_as_ready(
     const bim::net::accept_random_game& message)
 {
   ic_log(iscool::log::nature::info(), "random_game_encounter_service",
-         "Accepted game. Session %d, encounter %d.", session,
+         "Accepted game. Session {}, encounter {}.", session,
          message.get_encounter_id());
 
   m_matchmaking_service.mark_as_ready(endpoint, session,
@@ -85,7 +85,7 @@ void bim::server::random_game_encounter_service::clean_up()
         continue;
 
       ic_log(iscool::log::nature::info(), "random_game_encounter_service",
-             "Removing session %d from encounter %d.", event.session,
+             "Removing session {} from encounter {}.", event.session,
              event.encounter_id);
 
       m_session_to_encounter.erase(it);

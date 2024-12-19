@@ -15,9 +15,9 @@ bim::server::server::server(const config& config)
   , m_game_service(config, m_socket)
   , m_lobby_service(m_socket, m_game_service)
 {
-  ic_log(iscool::log::nature::info(), "server", "Server is up on port %d.",
+  ic_log(iscool::log::nature::info(), "server", "Server is up on port {}.",
          config.port);
-  ic_log(iscool::log::nature::info(), "server", "Protocol version is %d.",
+  ic_log(iscool::log::nature::info(), "server", "Protocol version is {}.",
          bim::net::protocol_version);
 
   m_authentication_service.connect_to_message(std::bind(

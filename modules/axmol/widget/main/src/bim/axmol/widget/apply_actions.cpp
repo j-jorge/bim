@@ -34,7 +34,7 @@ void bim::axmol::widget::apply_actions(bim::axmol::action::runner& runner,
         {
           bim_unreachable_in_release;
           ic_log(iscool::log::nature::error(),
-                 bim::axmol::widget::g_log_context, "No node named '%s'.",
+                 bim::axmol::widget::g_log_context, "No node named '{}'.",
                  node_name);
           continue;
         }
@@ -46,7 +46,7 @@ void bim::axmol::widget::apply_actions(bim::axmol::action::runner& runner,
         {
           bim_unreachable_in_release;
           ic_log(iscool::log::nature::error(),
-                 bim::axmol::widget::g_log_context, "No action for node '%s'.",
+                 bim::axmol::widget::g_log_context, "No action for node '{}'.",
                  node_name);
           continue;
         }

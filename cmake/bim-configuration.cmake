@@ -24,3 +24,9 @@ if(BIM_TARGET STREQUAL "android")
 produced."
   )
 endif()
+
+if(BIM_BUILDING_FOR_ANDROID)
+  # Boost's GDB scripts use inline assembly that is not compatible
+  # with armv7 targets.
+  add_compile_definitions(BOOST_ALL_NO_EMBEDDED_GDB_SCRIPTS)
+endif()

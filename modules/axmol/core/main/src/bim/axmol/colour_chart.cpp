@@ -13,7 +13,7 @@ static ax::Color4B parse_color(std::string_view color)
   if (((color.size() != 7) && (color.size() != 9)) || (color[0] != '#'))
     {
       ic_log(iscool::log::nature::error(), "colour_chart",
-             "Unknown colour '%s'. Supported format is '#rrggbb'.\n", color);
+             "Unknown colour '{}'. Supported format is '#rrggbb'.\n", color);
       return ax::Color4B::MAGENTA;
     }
 
@@ -45,7 +45,7 @@ static ax::Color4B parse_color(std::string_view color)
     }
 
   ic_log(iscool::log::nature::error(), "colour_chart",
-         "Failed to parse color '%s'. Supported format is '#rrggbb'.\n",
+         "Failed to parse color '{}'. Supported format is '#rrggbb'.\n",
          color);
 
   return ax::Color4B::MAGENTA;
