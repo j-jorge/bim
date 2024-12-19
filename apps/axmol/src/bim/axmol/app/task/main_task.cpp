@@ -59,7 +59,7 @@ void bim::axmol::app::main_task::read_translations()
 
   if (!iscool::i18n::load_translations(language_code, *mo_file))
     ic_log(iscool::log::nature::warning(), "main_task",
-           "Could not read translations from %s.\n", translations_file);
+           "Could not read translations from {}.\n", translations_file);
 }
 
 void bim::axmol::app::main_task::connect_to_game_server()

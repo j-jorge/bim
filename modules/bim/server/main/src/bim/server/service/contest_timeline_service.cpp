@@ -17,7 +17,7 @@ bim::server::contest_timeline_service::contest_timeline_service(
   : m_directory(config.contest_timeline_folder)
 {
   ic_log(iscool::log::nature::info(), "contest_timeline_service",
-         "Contests are saved in '%d'.", m_directory);
+         "Contests are saved in '{}'.", m_directory);
 }
 
 bim::game::contest_timeline_writer bim::server::contest_timeline_service::open(
@@ -32,7 +32,7 @@ bim::game::contest_timeline_writer bim::server::contest_timeline_service::open(
 
   const std::time_t t = std::time(nullptr);
   std::ostringstream oss;
-  oss << std::put_time(std::gmtime(&t), "%Y%m%d_%H%M%S") << '_' << getpid()
+  oss << std::put_time(std::gmtime(&t), "%Y%m%s_%H%M%S") << '_' << getpid()
       << '_' << this << '_' << std::setfill('0') << std::setw(10) << channel;
   const std::string base_file_name(std::move(oss).str());
   std::string file_path;

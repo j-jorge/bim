@@ -60,7 +60,7 @@ bool bim::game::load_contest_timeline(contest_timeline& timeline, std::FILE* f)
   if (file_version != 2)
     {
       ic_log(iscool::log::nature::error(), "load_contest_timeline",
-             "Unsupported file format version %d.", file_version);
+             "Unsupported file format version {}.", file_version);
       return false;
     }
 
@@ -96,7 +96,7 @@ bool bim::game::load_contest_timeline(contest_timeline& timeline, std::FILE* f)
     {
       ic_log(iscool::log::nature::error(), "load_contest_timeline",
              "there are too many players in this game, I cannot handle more "
-             "than %d.",
+             "than {}.",
              bim::game::g_max_player_count);
       return false;
     }

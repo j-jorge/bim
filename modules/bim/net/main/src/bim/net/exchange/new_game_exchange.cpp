@@ -39,7 +39,7 @@ void bim::net::new_game_exchange::start(iscool::net::session_id session,
                                         const game_name& name)
 {
   ic_log(iscool::log::nature::info(), "new_game_exchange",
-         "Requesting game '%s' in session %d.",
+         "Requesting game '{}' in session {}.",
          std::string_view((const char*)name.data(), name.size()), session);
 
   m_monitor->set_start_named_state();
@@ -56,7 +56,7 @@ void bim::net::new_game_exchange::start(iscool::net::session_id session,
 void bim::net::new_game_exchange::start(iscool::net::session_id session)
 {
   ic_log(iscool::log::nature::info(), "new_game_exchange",
-         "Requesting random game in session %d.", session);
+         "Requesting random game in session {}.", session);
 
   m_monitor->set_start_random_state();
 
@@ -73,7 +73,7 @@ void bim::net::new_game_exchange::accept()
   assert(!!m_encounter_id);
 
   ic_log(iscool::log::nature::info(), "new_game_exchange",
-         "Accepting encounter %d.", *m_encounter_id);
+         "Accepting encounter {}.", *m_encounter_id);
 
   assert(m_update_connection.connected());
 
@@ -159,7 +159,7 @@ void bim::net::new_game_exchange::check_on_hold(const iscool::net::message& m)
 
   if (!m_encounter_id)
     ic_log(iscool::log::nature::info(), "new_game_exchange",
-           "Got game proposal %d.", message->get_encounter_id());
+           "Got game proposal {}.", message->get_encounter_id());
 
   m_encounter_id = message->get_encounter_id();
 
@@ -182,7 +182,7 @@ void bim::net::new_game_exchange::check_launch_game(
   if (message->get_request_token() != m_token)
     return;
 
-  ic_log(iscool::log::nature::info(), "new_game_exchange", "Launch game %d.",
+  ic_log(iscool::log::nature::info(), "new_game_exchange", "Launch game {}.",
          *m_encounter_id);
 
   stop();

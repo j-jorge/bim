@@ -31,7 +31,7 @@ void bim::server::named_game_encounter_service::process(
     return;
 
   ic_log(iscool::log::nature::info(), "named_game_encounter_service",
-         "New game request for session %d.", session);
+         "New game request for session {}.", session);
 
   char name[std::tuple_size_v<bim::net::game_name> + 1];
   std::copy(request.get_name().begin(), request.get_name().end(), name);
@@ -52,7 +52,7 @@ void bim::server::named_game_encounter_service::mark_as_ready(
     const bim::net::accept_named_game& message)
 {
   ic_log(iscool::log::nature::info(), "named_game_encounter_service",
-         "Accepted game. Session %d, encounter %d.", session,
+         "Accepted game. Session {}, encounter {}.", session,
          message.get_encounter_id());
 
   m_matchmaking_service.mark_as_ready(endpoint, session,
@@ -67,7 +67,7 @@ void bim::server::named_game_encounter_service::create_encounter(
     const bim::net::new_named_game_request& request, std::string name)
 {
   ic_log(iscool::log::nature::info(), "named_game_encounter_service",
-         "Creating new encounter for game '%s' on request of session %d.",
+         "Creating new encounter for game '{}' on request of session {}.",
          name, session);
 
   const bim::net::encounter_id encounter_id =
@@ -97,7 +97,7 @@ void bim::server::named_game_encounter_service::clean_up()
        m_matchmaking_service.garbage_encounters())
     {
       ic_log(iscool::log::nature::info(), "named_game_encounter_service",
-             "Cleaning up encounter %d.", encounter_id);
+             "Cleaning up encounter {}.", encounter_id);
 
       const encounter_map::iterator it = m_encounters.find(encounter_id);
 

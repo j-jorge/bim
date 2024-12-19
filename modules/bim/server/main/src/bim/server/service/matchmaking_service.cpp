@@ -71,7 +71,7 @@ bim::net::encounter_id bim::server::matchmaking_service::new_encounter(
     bim::net::client_token request_token)
 {
   ic_log(iscool::log::nature::info(), "matchmaking_service",
-         "Creating new encounter %d on request of session %d.",
+         "Creating new encounter {} on request of session {}.",
          m_next_encounter_id, session);
 
   const bim::net::encounter_id encounter_id = m_next_encounter_id;
@@ -149,7 +149,7 @@ void bim::server::matchmaking_service::mark_as_ready(
   if (it == m_encounters.end())
     {
       ic_log(iscool::log::nature::info(), "matchmaking_service",
-             "Game %d does not exist.", encounter_id);
+             "Game {} does not exist.", encounter_id);
       return;
     }
 
@@ -160,7 +160,7 @@ void bim::server::matchmaking_service::mark_as_ready(
   if (existing_index == encounter.sessions.size())
     {
       ic_log(iscool::log::nature::info(), "matchmaking_service",
-             "Session %d is not part of encounter %d.", session, encounter_id);
+             "Session {} is not part of encounter {}.", session, encounter_id);
       return;
     }
 
@@ -196,7 +196,7 @@ void bim::server::matchmaking_service::mark_as_ready(
       encounter.channel = game->channel;
 
       ic_log(iscool::log::nature::info(), "matchmaking_service",
-             "Channel for encounter %d is %d, seed %d.", it->first,
+             "Channel for encounter {} is {}, seed {}.", it->first,
              game->channel, game->fingerprint.seed);
     }
 
@@ -237,7 +237,7 @@ void bim::server::matchmaking_service::refresh_encounter(
     bim::net::client_token request_token, std::size_t session_index)
 {
   ic_log(iscool::log::nature::info(), "matchmaking_service",
-         "Refreshing encounter %d with %d players on request of session %d.",
+         "Refreshing encounter {} with {} players on request of session {}.",
          encounter_id, (int)encounter.player_count, session);
 
   // Update for a player on hold.
@@ -295,7 +295,7 @@ void bim::server::matchmaking_service::remove_inactive_sessions(
     if (encounter.release_at_this_date[i] <= now)
       {
         ic_log(iscool::log::nature::info(), "matchmaking_service",
-               "Kicking %d from %d: timeout.", encounter.sessions[i],
+               "Kicking {} from {}: timeout.", encounter.sessions[i],
                encounter_id);
 
         m_done_sessions.emplace_back(encounter.sessions[i], encounter_id);
@@ -321,7 +321,7 @@ void bim::server::matchmaking_service::clean_up(
     bim::net::encounter_id encounter_id)
 {
   ic_log(iscool::log::nature::info(), "matchmaking_service",
-         "Cleaning up encounter %d.", encounter_id);
+         "Cleaning up encounter {}.", encounter_id);
 
   const encounter_map::iterator encounter_it = m_encounters.find(encounter_id);
 

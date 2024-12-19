@@ -42,7 +42,7 @@ bim::axmol::widget::factory<ax::Sprite>::create(
 
       if (result == nullptr)
         ic_log(iscool::log::nature::error(), g_log_context,
-               "Cannot load sprite '%s'.", *frame_name);
+               "Cannot load sprite '{}'.", *frame_name);
     }
 
   if (result == nullptr)

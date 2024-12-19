@@ -130,7 +130,7 @@ void bim::net::session_handler::dispatch_error(
   const std::string_view text(response.begin(), response.end());
 
   ic_log(iscool::log::nature::error(), "session_handler",
-         "Failed to fetch the game server config: %s", text);
+         "Failed to fetch the game server config: {}", text);
 
   m_config_error();
 }

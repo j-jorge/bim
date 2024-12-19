@@ -65,13 +65,13 @@ void bim::server::authentication_service::check_authentication(
   const bim::net::client_token token = message->get_request_token();
 
   ic_log(iscool::log::nature::info(), "authentication_service",
-         "Received authentication request from token %d.", token);
+         "Received authentication request from token {}.", token);
 
   if (message->get_protocol_version() != bim::net::protocol_version)
     {
       ic_log(iscool::log::nature::info(), "server",
-             "Authentication request from token %d, ip=%s: bad protocol %d.",
-             token, endpoint.address().to_v4().to_string(),
+             "Authentication request from token {}, ip={}: bad protocol {}.",
+             token, endpoint.address().to_string(),
              message->get_protocol_version());
 
       m_message_stream.send(
@@ -90,8 +90,8 @@ void bim::server::authentication_service::check_authentication(
   std::tie(it, inserted) = m_sessions.emplace(token, session);
 
   ic_log(iscool::log::nature::info(), "server",
-         "Attach session %d to token %d from ip=%s.", it->second, token,
-         endpoint.address().to_v4().to_string());
+         "Attach session {} to token {} from ip={}.", it->second, token,
+         endpoint.address().to_string());
 
   if (inserted)
     {
@@ -116,7 +116,7 @@ bim::server::authentication_service::schedule_disconnection(
   return iscool::schedule::delayed_call(
       [this, session]() -> void
       {
-        ic_log(iscool::log::nature::info(), "server", "Disconnected %d.",
+        ic_log(iscool::log::nature::info(), "server", "Disconnected {}.",
                session);
         client_map::iterator it = m_clients.find(session);
 

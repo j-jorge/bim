@@ -36,7 +36,7 @@ bim::axmol::widget::factory<ax::ui::Scale9Sprite>::create(
 
       if (frame == nullptr)
         ic_log(iscool::log::nature::error(), g_log_context,
-               "Cannot load sprite '%s'.", *frame_name);
+               "Cannot load sprite '{}'.", *frame_name);
       else
         {
           ax::Vec2 third_of_size = frame->getRect().size / 3;

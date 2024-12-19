@@ -175,7 +175,7 @@ bool bim::net::game_update_exchange::validate_message(
       if (tick_count > 255)
         {
           ic_log(iscool::log::nature::info(), "game_update_exchange",
-                 "Too many ticks from player %d: %d", i, tick_count);
+                 "Too many ticks from player {}: {}", i, tick_count);
           return false;
         }
 
