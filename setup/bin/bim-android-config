@@ -19,9 +19,6 @@ do
                 arm64)
                     echo arm64-v8a
                     ;;
-                armv7)
-                    echo armeabi-v7a
-                    ;;
                 x86-64)
                     echo x86_64
                     ;;
@@ -33,7 +30,6 @@ do
             ;;
         --arch)
             echo arm64
-            echo armv7
             echo x86-64
             ;;
         --build-tools-version)
@@ -101,9 +97,6 @@ do
             case "$1" in
                 arm64)
                     echo aarch64-linux-android
-                    ;;
-                armv7)
-                    echo arm-linux-androideabi
                     ;;
                 x86-64)
                     echo x86_64-linux-android
