@@ -5,6 +5,7 @@
 #include <bim/net/message/encounter_id.hpp>
 
 #include <iscool/net/message_stream.hpp>
+#include <iscool/signals/scoped_connection.hpp>
 
 #include <boost/unordered/unordered_map.hpp>
 
@@ -17,6 +18,8 @@ namespace bim::server
 {
   class game_service;
 
+  struct config;
+
   class matchmaking_service
   {
   public:
@@ -27,7 +30,8 @@ namespace bim::server
     };
 
   public:
-    matchmaking_service(iscool::net::socket_stream& socket,
+    matchmaking_service(const config& config,
+                        iscool::net::socket_stream& socket,
                         game_service& game_service);
     ~matchmaking_service();
 
@@ -74,11 +78,13 @@ namespace bim::server
 
     void remove_inactive_sessions(bim::net::encounter_id encounter_id,
                                   encounter_info& encounter);
+    void remove_inactive_sessions(std::chrono::nanoseconds now,
+                                  bim::net::encounter_id encounter_id,
+                                  encounter_info& encounter);
 
-    iscool::signals::connection
-    schedule_clean_up(bim::net::encounter_id encounter_id);
+    void schedule_clean_up();
 
-    void clean_up(bim::net::encounter_id encounter_id);
+    void clean_up();
 
   private:
     iscool::net::message_stream m_message_stream;
@@ -86,6 +92,9 @@ namespace bim::server
 
     encounter_map m_encounters;
     bim::net::encounter_id m_next_encounter_id;
+
+    iscool::signals::scoped_connection m_clean_up_connection;
+    std::chrono::seconds m_clean_up_interval;
 
     std::vector<kick_session_event> m_done_sessions;
     std::vector<bim::net::encounter_id> m_done_encounters;
