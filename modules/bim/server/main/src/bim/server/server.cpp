@@ -11,7 +11,7 @@
 
 bim::server::server::server(const config& config)
   : m_socket(config.port)
-  , m_authentication_service(m_socket)
+  , m_authentication_service(config, m_socket)
   , m_game_service(config, m_socket)
   , m_lobby_service(config, m_socket, m_game_service)
 {

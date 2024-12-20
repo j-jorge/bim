@@ -14,14 +14,17 @@ namespace bim::net
 
 namespace bim::server
 {
+  struct config;
+
   class authentication_service
   {
     DECLARE_SIGNAL(void(const iscool::net::endpoint&,
                         const iscool::net::message& message),
-                   message, _message)
+                   message, m_message)
 
   public:
-    explicit authentication_service(iscool::net::socket_stream& socket);
+    authentication_service(const config& config,
+                           iscool::net::socket_stream& socket);
     ~authentication_service();
 
   private:
@@ -40,8 +43,9 @@ namespace bim::server
     void check_authentication(const iscool::net::endpoint& endpoint,
                               const iscool::net::message& m);
 
-    iscool::signals::connection
-    schedule_disconnection(iscool::net::session_id session);
+    void schedule_clean_up();
+
+    void clean_up();
 
   private:
     iscool::net::message_stream m_message_stream;
@@ -49,5 +53,8 @@ namespace bim::server
 
     session_map m_sessions;
     client_map m_clients;
+
+    iscool::signals::scoped_connection m_clean_up_connection;
+    std::chrono::seconds m_clean_up_interval;
   };
 }

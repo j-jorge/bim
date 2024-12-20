@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/server/service/authentication_service.hpp>
 
+#include <bim/server/config.hpp>
+
 #include <bim/net/message/authentication.hpp>
 #include <bim/net/message/authentication_ko.hpp>
 #include <bim/net/message/authentication_ok.hpp>
@@ -12,23 +14,33 @@
 #include <iscool/schedule/delayed_call.hpp>
 #include <iscool/signals/implement_signal.hpp>
 #include <iscool/signals/scoped_connection.hpp>
+#include <iscool/time/now.hpp>
 
-IMPLEMENT_SIGNAL(bim::server::authentication_service, message, _message);
+IMPLEMENT_SIGNAL(bim::server::authentication_service, message, m_message);
+
+static std::chrono::nanoseconds authentication_date_for_next_release()
+{
+  return iscool::time::now<std::chrono::nanoseconds>()
+         + std::chrono::minutes(10);
+}
 
 struct bim::server::authentication_service::client_info
 {
   bim::net::client_token token;
-  iscool::signals::scoped_connection timeout_signal_connection;
+  std::chrono::nanoseconds release_at_this_date;
 };
 
 bim::server::authentication_service::authentication_service(
-    iscool::net::socket_stream& socket)
+    const config& config, iscool::net::socket_stream& socket)
   : m_message_stream(socket)
   , m_next_session_id(1)
+  , m_clean_up_interval(config.authentication_clean_up_interval)
 {
   m_message_stream.connect_to_message(
       std::bind(&authentication_service::check_session, this,
                 std::placeholders::_1, std::placeholders::_2));
+
+  schedule_clean_up();
 }
 
 bim::server::authentication_service::~authentication_service() = default;
@@ -49,9 +61,9 @@ void bim::server::authentication_service::check_session(
 
       if (it != m_clients.end())
         {
-          it->second.timeout_signal_connection =
-              schedule_disconnection(session);
-          _message(endpoint, message);
+          it->second.release_at_this_date =
+              authentication_date_for_next_release();
+          m_message(endpoint, message);
         }
     }
 }
@@ -98,8 +110,8 @@ void bim::server::authentication_service::check_authentication(
       ++m_next_session_id;
 
       client_info client{ .token = token,
-                          .timeout_signal_connection =
-                              schedule_disconnection(session) };
+                          .release_at_this_date =
+                              authentication_date_for_next_release() };
 
       m_clients.emplace(session, std::move(client));
     }
@@ -109,19 +121,31 @@ void bim::server::authentication_service::check_authentication(
       bim::net::authentication_ok(token, it->second).build_message());
 }
 
-iscool::signals::connection
-bim::server::authentication_service::schedule_disconnection(
-    iscool::net::session_id session)
+void bim::server::authentication_service::schedule_clean_up()
 {
-  return iscool::schedule::delayed_call(
-      [this, session]() -> void
+  m_clean_up_connection = iscool::schedule::delayed_call(
+      [this]() -> void
+      {
+        clean_up();
+        schedule_clean_up();
+      },
+      m_clean_up_interval);
+}
+
+void bim::server::authentication_service::clean_up()
+{
+  const std::chrono::nanoseconds now =
+      iscool::time::now<std::chrono::nanoseconds>();
+
+  for (client_map::iterator it = m_clients.begin(), eit = m_clients.end();
+       it != eit;)
+    if (it->second.release_at_this_date <= now)
       {
         ic_log(iscool::log::nature::info(), "server", "Disconnected {}.",
-               session);
-        client_map::iterator it = m_clients.find(session);
-
+               it->first);
         m_sessions.erase(it->second.token);
-        m_clients.erase(it);
-      },
-      std::chrono::minutes(10));
+        it = m_clients.erase(it);
+      }
+    else
+      ++it;
 }
