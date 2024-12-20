@@ -14,10 +14,12 @@ namespace bim::server
 {
   class game_service;
 
+  struct config;
+
   class lobby_service
   {
   public:
-    lobby_service(iscool::net::socket_stream& socket,
+    lobby_service(const config& config, iscool::net::socket_stream& socket,
                   game_service& game_service);
     ~lobby_service();
 

@@ -10,9 +10,10 @@
 #include <iscool/log/nature/info.hpp>
 
 bim::server::random_game_encounter_service::random_game_encounter_service(
-    iscool::net::socket_stream& socket, game_service& game_service)
+    const config& config, iscool::net::socket_stream& socket,
+    game_service& game_service)
   : m_game_service(game_service)
-  , m_matchmaking_service(socket, game_service)
+  , m_matchmaking_service(config, socket, game_service)
 {}
 
 bim::server::random_game_encounter_service::~random_game_encounter_service() =

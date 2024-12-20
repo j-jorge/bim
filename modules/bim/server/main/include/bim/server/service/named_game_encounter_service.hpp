@@ -28,10 +28,13 @@ namespace bim::server
 {
   class game_service;
 
+  struct config;
+
   class named_game_encounter_service
   {
   public:
-    named_game_encounter_service(iscool::net::socket_stream& socket,
+    named_game_encounter_service(const config& config,
+                                 iscool::net::socket_stream& socket,
                                  game_service& game_service);
     ~named_game_encounter_service();
 
