@@ -11,6 +11,12 @@ namespace bim::server
     unsigned short port;
 
     /**
+     * Time interval at which we remove the sessions from the authentication.
+     */
+    std::chrono::seconds authentication_clean_up_interval =
+        std::chrono::minutes(3);
+
+    /**
      * Time interval at which we remove the encounters from the matchmaking.
      */
     std::chrono::seconds matchmaking_clean_up_interval =
