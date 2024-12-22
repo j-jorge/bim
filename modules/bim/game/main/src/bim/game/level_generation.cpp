@@ -2,7 +2,7 @@
 #include <bim/game/level_generation.hpp>
 
 #include <bim/game/arena.hpp>
-
+#include <bim/game/cell_neighborhood.hpp>
 #include <bim/game/component/bomb_power_up_spawner.hpp>
 #include <bim/game/component/flame_power_up_spawner.hpp>
 #include <bim/game/component/fractional_position_on_grid.hpp>
@@ -28,23 +28,37 @@ void bim::game::generate_basic_level_structure(arena& arena)
   bim_assume(width >= 3);
   bim_assume(height >= 3);
 
+  // Unbreakable walls in the corners.
+  arena.set_static_wall(
+      0, 0, cell_neighborhood::all & ~cell_neighborhood::down_right);
+  arena.set_static_wall(
+      width - 1, 0, cell_neighborhood::all & ~cell_neighborhood::down_left);
+  arena.set_static_wall(0, height - 1,
+                        cell_neighborhood::all & ~cell_neighborhood::up_right);
+  arena.set_static_wall(width - 1, height - 1,
+                        cell_neighborhood::all & ~cell_neighborhood::up_left);
+
   // Unbreakable walls on the borders.
-  for (int x = 0; x != width; ++x)
-    arena.set_static_wall(x, 0);
+  for (int x = 1; x != width - 1; ++x)
+    arena.set_static_wall(x, 0,
+                          cell_neighborhood::all & ~cell_neighborhood::down);
 
-  for (int x = 0; x != width; ++x)
-    arena.set_static_wall(x, height - 1);
+  for (int x = 1; x != width - 1; ++x)
+    arena.set_static_wall(x, height - 1,
+                          cell_neighborhood::all & ~cell_neighborhood::up);
 
   for (int y = 1; y < height - 1; ++y)
-    arena.set_static_wall(0, y);
+    arena.set_static_wall(0, y,
+                          cell_neighborhood::all & ~cell_neighborhood::right);
 
   for (int y = 1; y < height - 1; ++y)
-    arena.set_static_wall(width - 1, y);
+    arena.set_static_wall(width - 1, y,
+                          cell_neighborhood::all & ~cell_neighborhood::left);
 
   // Unbreakable walls in the game area.
   for (int y = 2; y < height - 1; y += 2)
     for (int x = 2; x < width - 1; x += 2)
-      arena.set_static_wall(x, y);
+      arena.set_static_wall(x, y, cell_neighborhood::none);
 }
 
 void bim::game::insert_random_brick_walls(arena& arena,

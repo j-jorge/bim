@@ -6,12 +6,11 @@
             "arena": [],
             "controls-area/instantiate": "ax::Node",
 
-            "ground":
+            "background":
             [{
-                "instantiate": "ax::LayerColor",
-                "opacity": 1,
-                "color": "#385b59",
-                "z-order": -10
+                "widgets/sprite/frame": "texture/grass.png",
+                "width-in-tiles": 4,
+                "z-order": -100
             }],
 
             "bomb_button":
@@ -78,6 +77,48 @@
             "frame": "sprites/player-4.png",
             "anchor-point.y": 0.33,
             "z-order": 10
+        }],
+
+        "arena-border.top/frame": "sprites/arena-border.png",
+
+        "arena-border.left":
+        [{
+            "frame": "sprites/arena-border.png",
+            "rotation": -90
+        }],
+
+        "arena-border.right":
+        [{
+            "frame": "sprites/arena-border.png",
+            "rotation": 90
+        }],
+
+        "arena-border.bottom":
+        [{
+            "frame": "sprites/arena-border.png",
+            "rotation": 180
+        }],
+
+        "arena-border.top-left/frame": "sprites/arena-corner.png",
+
+        "arena-border.top-right":
+        [{
+            "frame": "sprites/arena-corner.png",
+            "rotation": 90
+        }],
+
+
+        "arena-border.bottom-left":
+        [{
+            "frame": "sprites/arena-corner.png",
+            "rotation": -90
+        }],
+
+
+        "arena-border.bottom-right":
+        [{
+            "frame": "sprites/arena-corner.png",
+            "rotation": -180
         }],
 
         "bomb/frame": "sprites/bomb.png",

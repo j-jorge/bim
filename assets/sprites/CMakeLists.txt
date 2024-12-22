@@ -43,6 +43,8 @@ set(sprites
   "sprites/ui/joystick-stick.png"
 )
 set(sprites_bleeding
+  "sprites/arena-border.png"
+  "sprites/arena-corner.png"
   "sprites/flame-arm.png"
   "sprites/flame-center.png"
   "sprites/flame-end.png"

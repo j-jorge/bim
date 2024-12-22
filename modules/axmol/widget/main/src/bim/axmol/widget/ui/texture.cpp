@@ -29,8 +29,9 @@ bim::axmol::widget::texture::texture(
 {
   ax::Sprite& s = *m_controls->sprite;
 
-  s.setAnchorPoint(ax::Vec2(0, 0));
-  s.setPosition(ax::Vec2(0, 0));
+  s.setStretchEnabled(false);
+  s.setAutoSize(false);
+  s.setAnchorPoint(ax::Vec2(0.5, 0.5));
   s.getTexture()->setTexParameters(
       { ax::backend::SamplerFilter::LINEAR, ax::backend::SamplerFilter::LINEAR,
         ax::backend::SamplerAddressMode::REPEAT,
@@ -49,6 +50,8 @@ void bim::axmol::widget::texture::setContentSize(const ax::Size& size)
   ax::Sprite& s = *m_controls->sprite;
   const float final_scale = m_device_scale * m_scale;
 
+  s.setContentSize(size);
+  s.setPosition(size / 2);
   s.setTextureRect(
       ax::Rect(0, 0, size.width / final_scale, size.height / final_scale));
   s.setScale(final_scale);

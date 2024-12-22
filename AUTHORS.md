@@ -51,6 +51,8 @@ AliHamieh
 From https://opengameart.org/content/mmorpg-virtual-joysticks
 CC0
 
+assets/sprites/arena-border.png
+assets/sprites/arena-corner.png
 assets/sprites/bomb.png
 assets/sprites/brick-wall.png
 assets/sprites/player-1.png
@@ -95,5 +97,6 @@ assets/texture/squares.png
 assets/texture/stars.png
 assets/icon.png
 static-assets/audio/tick.ogg
+static-assets/texture/grass.png
 Julien Jorge
 CC-BY-SA 4.0

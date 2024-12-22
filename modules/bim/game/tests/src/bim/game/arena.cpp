@@ -1,7 +1,9 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/game/arena.hpp>
 
+#include <bim/game/cell_neighborhood.hpp>
 #include <bim/game/component/position_on_grid.hpp>
+#include <bim/game/static_wall.hpp>
 
 #include <entt/entity/registry.hpp>
 
@@ -24,16 +26,17 @@ TEST_P(bim_game_arena_test, defaults)
     for (int x = 0; x != width; ++x)
       EXPECT_FALSE(arena.is_static_wall(x, y)) << "x=" << x << ", y=" << y;
 
-  arena.set_static_wall(0, 0);
+  arena.set_static_wall(0, 0, bim::game::cell_neighborhood::none);
   EXPECT_TRUE(arena.is_static_wall(0, 0));
 
-  arena.set_static_wall(width / 2, 0);
+  arena.set_static_wall(width / 2, 0, bim::game::cell_neighborhood::none);
   EXPECT_TRUE(arena.is_static_wall(width / 2, 0));
 
-  arena.set_static_wall(0, height / 2);
+  arena.set_static_wall(0, height / 2, bim::game::cell_neighborhood::none);
   EXPECT_TRUE(arena.is_static_wall(0, height / 2));
 
-  arena.set_static_wall(width / 2, height / 2);
+  arena.set_static_wall(width / 2, height / 2,
+                        bim::game::cell_neighborhood::none);
   EXPECT_TRUE(arena.is_static_wall(width / 2, height / 2));
 
   for (int y = 0; y != height; ++y)
@@ -54,12 +57,30 @@ TEST(bim_game_arena, static_wall_is_solid)
 {
   bim::game::arena arena(2, 2);
 
-  arena.set_static_wall(0, 1);
+  arena.set_static_wall(0, 1, bim::game::cell_neighborhood::none);
 
   EXPECT_FALSE(arena.is_solid(0, 0));
   EXPECT_TRUE(arena.is_solid(0, 1));
   EXPECT_FALSE(arena.is_solid(1, 0));
   EXPECT_FALSE(arena.is_solid(1, 1));
+}
+
+TEST(bim_game_arena, static_wall_view)
+{
+  bim::game::arena arena(2, 2);
+
+  arena.set_static_wall(0, 1, bim::game::cell_neighborhood::left);
+  arena.set_static_wall(1, 0, bim::game::cell_neighborhood::right);
+
+  const std::span<const bim::game::static_wall> walls = arena.static_walls();
+
+  EXPECT_EQ(0, walls[0].x);
+  EXPECT_EQ(1, walls[0].y);
+  EXPECT_EQ(bim::game::cell_neighborhood::left, walls[0].neighbors);
+
+  EXPECT_EQ(1, walls[1].x);
+  EXPECT_EQ(0, walls[1].y);
+  EXPECT_EQ(bim::game::cell_neighborhood::right, walls[1].neighbors);
 }
 
 TEST(bim_game_arena, solid_not_static_wall)

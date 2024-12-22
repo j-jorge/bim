@@ -4,6 +4,8 @@
 #include <bim/axmol/input/tree.hpp>
 #include <bim/axmol/widget/declare_controls_struct.hpp>
 
+#include <bim/game/cell_neighborhood.hpp>
+
 #include <iscool/context.hpp>
 #include <iscool/signals/declare_signal.hpp>
 #include <iscool/signals/scoped_connection.hpp>
@@ -14,6 +16,7 @@
 
 #include <boost/unordered/unordered_map.hpp>
 
+#include <array>
 #include <chrono>
 #include <vector>
 
@@ -104,6 +107,8 @@ namespace bim::axmol::app
 
     void apply_inputs();
 
+    void display_static_walls() const;
+
     void refresh_display() const;
     void display_brick_walls() const;
     void display_players() const;
@@ -120,7 +125,7 @@ namespace bim::axmol::app
 
   private:
     bim::axmol::input::tree m_inputs;
-    bim_declare_controls_struct(controls, m_controls, 6);
+    bim_declare_controls_struct(controls, m_controls, 7);
 
     const iscool::style::declaration& m_style_pad_on_the_left;
     const iscool::style::declaration& m_style_pad_on_the_right;
@@ -136,7 +141,9 @@ namespace bim::axmol::app
     std::unique_ptr<bim::net::contest_runner> m_contest_runner;
 
     std::vector<ax::Sprite*> m_players;
-    std::vector<ax::Sprite*> m_walls;
+    std::array<std::vector<ax::Sprite*>,
+               (std::size_t)bim::game::cell_neighborhood::all>
+        m_walls;
     std::vector<ax::Sprite*> m_brick_walls;
     std::vector<ax::Sprite*> m_bombs;
     std::vector<ax::Sprite*> m_flames;

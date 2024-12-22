@@ -23,7 +23,7 @@
             "width.percents": 100
         }],
 
-        "ground":
+        "background":
         [
             "layout/fill",
             {

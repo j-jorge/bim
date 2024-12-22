@@ -2,7 +2,7 @@
 #include <bim/game/system/apply_player_action.hpp>
 
 #include <bim/game/arena.hpp>
-
+#include <bim/game/cell_neighborhood.hpp>
 #include <bim/game/component/bomb.hpp>
 #include <bim/game/component/fractional_position_on_grid.hpp>
 #include <bim/game/component/player.hpp>
@@ -48,20 +48,23 @@ bim_game_apply_player_action_test::bim_game_apply_player_action_test()
  */
 
   for (int x = 0; x != m_arena.width(); ++x)
-    m_arena.set_static_wall(x, 0);
+    m_arena.set_static_wall(x, 0, bim::game::cell_neighborhood::none);
 
-  m_arena.set_static_wall(0, 1);
-  m_arena.set_static_wall(m_arena.width() - 1, 1);
+  m_arena.set_static_wall(0, 1, bim::game::cell_neighborhood::none);
+  m_arena.set_static_wall(m_arena.width() - 1, 1,
+                          bim::game::cell_neighborhood::none);
 
-  m_arena.set_static_wall(0, 2);
-  m_arena.set_static_wall(2, 2);
-  m_arena.set_static_wall(m_arena.width() - 1, 2);
+  m_arena.set_static_wall(0, 2, bim::game::cell_neighborhood::none);
+  m_arena.set_static_wall(2, 2, bim::game::cell_neighborhood::none);
+  m_arena.set_static_wall(m_arena.width() - 1, 2,
+                          bim::game::cell_neighborhood::none);
 
-  m_arena.set_static_wall(0, 3);
-  m_arena.set_static_wall(m_arena.width() - 1, 3);
+  m_arena.set_static_wall(0, 3, bim::game::cell_neighborhood::none);
+  m_arena.set_static_wall(m_arena.width() - 1, 3,
+                          bim::game::cell_neighborhood::none);
 
   for (int x = 0; x != m_arena.width(); ++x)
-    m_arena.set_static_wall(x, 4);
+    m_arena.set_static_wall(x, 4, bim::game::cell_neighborhood::none);
 }
 
 void bim_game_apply_player_action_test::run_forward_move_test(
