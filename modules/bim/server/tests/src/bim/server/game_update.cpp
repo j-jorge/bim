@@ -161,7 +161,7 @@ void game_update_test::client::launch_game(
 
 game_update_test::game_update_test()
   : m_port(10004)
-  , m_server(bim::server::config{ .port = m_port })
+  , m_server(bim::server::config(m_port))
   , m_socket_stream("localhost:" + std::to_string(m_port),
                     iscool::net::socket_mode::client{})
   , m_message_stream(m_socket_stream)

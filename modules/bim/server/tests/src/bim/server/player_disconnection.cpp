@@ -21,11 +21,15 @@ protected:
 
 player_disconnection_state::player_disconnection_state()
   : m_ticks_for_disconnection(10)
-  , m_simulator(GetParam(),
-                bim::server::config{
-                    .port = 10006,
-                    .game_service_disconnection_lateness_threshold_in_ticks =
-                        m_ticks_for_disconnection })
+  , m_simulator(
+        GetParam(),
+        [this]() -> bim::server::config
+        {
+          bim::server::config config(10006);
+          config.game_service_disconnection_lateness_threshold_in_ticks =
+              m_ticks_for_disconnection;
+          return config;
+        }())
 {}
 
 /**

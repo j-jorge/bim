@@ -164,7 +164,7 @@ void new_game_test::client::send_accept_named_game(
 
 new_game_test::new_game_test()
   : m_port(10002)
-  , m_server(bim::server::config{ .port = m_port })
+  , m_server(bim::server::config(m_port))
   , m_socket_stream("localhost:" + std::to_string(m_port),
                     iscool::net::socket_mode::client{})
   , m_message_stream(m_socket_stream)

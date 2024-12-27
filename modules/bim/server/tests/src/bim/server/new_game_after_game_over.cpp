@@ -19,7 +19,7 @@ protected:
 };
 
 new_game_after_game_over_test::new_game_after_game_over_test()
-  : m_simulator(GetParam(), bim::server::config{ .port = 10005 })
+  : m_simulator(GetParam(), bim::server::config(10005))
 {}
 
 /**
