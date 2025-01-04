@@ -2,6 +2,7 @@
 #include <bim/axmol/app/screen/online_game.hpp>
 
 #include <bim/axmol/app/preference/controls.hpp>
+#include <bim/axmol/app/widget/player.hpp>
 
 #include <bim/axmol/widget/apply_bounds.hpp>
 #include <bim/axmol/widget/apply_display.hpp>
@@ -71,10 +72,11 @@
 
 #include <cassert>
 
-static void hide_all(std::span<ax::Sprite* const> sprites)
+template <typename T>
+static void hide_all(std::vector<T*> nodes)
 {
-  for (ax::Sprite* const s : sprites)
-    s->setVisible(false);
+  for (T* const n : nodes)
+    n->setVisible(false);
 }
 
 static void hide_while_visible(std::span<ax::Sprite* const> sprites)
@@ -131,9 +133,6 @@ bim::axmol::app::online_game::online_game(
   const bim::axmol::widget::context& widget_context =
       m_context.get_widget_context();
 
-  constexpr int inner_width = bim::game::g_default_arena_width - 2;
-  constexpr int inner_height = bim::game::g_default_arena_height - 2;
-
   m_players.resize(bim::game::g_max_player_count);
 
   for (int i = 0; i != bim::game::g_max_player_count; ++i)
@@ -141,13 +140,13 @@ bim::axmol::app::online_game::online_game(
       const iscool::style::declaration& player_style =
           *style.get_declaration("player-" + std::to_string(i + 1));
 
-      const bim::axmol::ref_ptr<ax::Sprite> widget =
-          bim::axmol::widget::factory<ax::Sprite>::create(widget_context,
-                                                          player_style);
-      widget->setVisible(false);
-      m_players[i] = widget.get();
-      m_controls->arena->addChild(m_players[i]);
+      m_players[i] =
+          alloc_asset<player>(m_context.get_widget_context(), player_style)
+              .get();
     }
+
+  constexpr int inner_width = bim::game::g_default_arena_width - 2;
+  constexpr int inner_height = bim::game::g_default_arena_height - 2;
 
   alloc_assets(m_walls[(std::size_t)bim::game::cell_neighborhood::none],
                widget_context, inner_width * inner_height,
@@ -229,17 +228,17 @@ void bim::axmol::app::online_game::attached()
   m_block_size = m_arena_view_size.x / m_arena_width_in_blocks;
 
   const auto resize_to_block_width =
-      [this](const std::vector<ax::Sprite*>& sprites)
+      [this]<typename T>(const std::vector<T*>& nodes)
   {
-    if (sprites.empty())
+    if (nodes.empty())
       return;
 
-    const ax::Vec2 sprite_size = sprites[0]->getContentSize();
+    const ax::Vec2 sprite_size = nodes[0]->getContentSize();
     const float height_ratio = sprite_size.y / sprite_size.x;
     const ax::Vec2 size(m_block_size, m_block_size * height_ratio);
 
-    for (ax::Sprite* s : sprites)
-      s->setContentSize(size);
+    for (T* n : nodes)
+      n->setContentSize(size);
   };
 
   for (const std::vector<ax::Sprite*>& walls : m_walls)
@@ -396,18 +395,24 @@ void bim::axmol::app::online_game::alloc_assets(
     std::vector<T*>& out, const bim::axmol::widget::context& context,
     std::size_t count, const iscool::style::declaration& style) const
 {
-  ax::Node& arena = *m_controls->arena;
-
   out.resize(count);
 
   for (T*& p : out)
-    {
-      const bim::axmol::ref_ptr<T> widget =
-          bim::axmol::widget::factory<T>::create(context, style);
-      p = widget.get();
-      p->setVisible(false);
-      arena.addChild(p);
-    }
+    p = alloc_asset<T>(context, style).get();
+}
+
+template <typename T>
+bim::axmol::ref_ptr<T> bim::axmol::app::online_game::alloc_asset(
+    const bim::axmol::widget::context& context,
+    const iscool::style::declaration& style) const
+{
+  const bim::axmol::ref_ptr<T> widget =
+      bim::axmol::widget::factory<T>::create(context, style);
+
+  widget->setVisible(false);
+  m_controls->arena->addChild(widget.get());
+
+  return widget;
 }
 
 void bim::axmol::app::online_game::apply_inputs()
@@ -553,16 +558,19 @@ void bim::axmol::app::online_game::display_players()
 {
   const entt::registry& registry = m_contest->registry();
 
-  for (ax::Sprite* s : m_players)
-    s->setVisible(false);
+  for (player* p : m_players)
+    p->setVisible(false);
 
   registry.view<bim::game::player, bim::game::fractional_position_on_grid>()
       .each(
           [this](const bim::game::player& player,
                  const bim::game::fractional_position_on_grid& p) -> void
           {
-            display_at(p.grid_aligned_y(), *m_players[player.index],
+            bim::axmol::app::player& w = *m_players[player.index];
+
+            display_at(p.grid_aligned_y(), w,
                        grid_position_to_display(p.x_float(), p.y_float()));
+            w.set_direction(player.current_direction);
           });
 }
 

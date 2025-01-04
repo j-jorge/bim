@@ -26,6 +26,8 @@ add_library(bim_app
   src/bim/axmol/app/screen/online_game.cpp
 
   src/bim/axmol/app/task/main_task.cpp
+
+  src/bim/axmol/app/widget/player.cpp
 )
 target_include_directories(bim_app PUBLIC include)
 target_link_libraries(bim_app

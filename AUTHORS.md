@@ -7,12 +7,6 @@ static-assets/font/OpenSans-Regular.ttf
 Steve Matteson
 Open Font License 1.1
 
-assets/sprites/flame-arm.png
-assets/sprites/flame-center.png
-assets/sprites/flame-end.png
-Matt Hackett of Lost Decade Games, expanded by Cem Kalyoncu
-CC-BY 3.0
-
 assets/sprites/menu/silhouette-1.png
 assets/sprites/menu/silhouette-3.png
 From https://commons.wikimedia.org/wiki/File:Silhouette_of_Woman_with_Short_Hair_and_Jeans.svg
@@ -51,15 +45,32 @@ AliHamieh
 From https://opengameart.org/content/mmorpg-virtual-joysticks
 CC0
 
+assets/sprites/bomb.png
+assets/sprites/crate.png
+assets/sprites/flame-arm.png
+assets/sprites/flame-center.png
+assets/sprites/flame-end.png
+assets/sprites/player-1-back.png
+assets/sprites/player-1-front.png
+assets/sprites/player-1-left.png
+Aryeom
+CC-BY-SA 4.0
+
+assets/sprites/player-2-back.png
+assets/sprites/player-2-front.png
+assets/sprites/player-2-left.png
+assets/sprites/player-3-back.png
+assets/sprites/player-3-front.png
+assets/sprites/player-3-left.png
+assets/sprites/player-4-back.png
+assets/sprites/player-4-front.png
+assets/sprites/player-4-left.png
+Julien Jorge, based on the work of Aryeom
+CC-BY-SA 4.0
+
 assets/sprites/arena-border.png
 assets/sprites/arena-corner.png
-assets/sprites/bomb.png
-assets/sprites/brick-wall.png
 assets/sprites/pixel.png
-assets/sprites/player-1.png
-assets/sprites/player-2.png
-assets/sprites/player-3.png
-assets/sprites/player-4.png
 assets/sprites/power-up-bomb.png
 assets/sprites/power-up-flame.png
 assets/sprites/solid-wall.png

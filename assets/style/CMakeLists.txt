@@ -32,6 +32,10 @@ set(main_task_style_files
   ${CMAKE_CURRENT_LIST_DIR}/app/screen/part/menu-background-bounds.json
   ${CMAKE_CURRENT_LIST_DIR}/app/screen/part/menu-stripe.json
   ${CMAKE_CURRENT_LIST_DIR}/app/screen/part/menu-stripe-bounds.json
+  ${CMAKE_CURRENT_LIST_DIR}/app/screen/part/player-1.json
+  ${CMAKE_CURRENT_LIST_DIR}/app/screen/part/player-2.json
+  ${CMAKE_CURRENT_LIST_DIR}/app/screen/part/player-3.json
+  ${CMAKE_CURRENT_LIST_DIR}/app/screen/part/player-4.json
 
   ${CMAKE_CURRENT_LIST_DIR}/button/base.json
   ${CMAKE_CURRENT_LIST_DIR}/button/feature-unavailable.json

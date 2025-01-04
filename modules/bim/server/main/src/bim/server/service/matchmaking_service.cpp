@@ -101,7 +101,6 @@ bim::net::encounter_id bim::server::matchmaking_service::new_encounter(
   encounter.player_count = 1;
   encounter.sessions[0] = session;
   encounter.features.fill({});
-  ;
   encounter.release_at_this_date[0] = matchmaking_date_for_next_release();
   encounter.ready.fill(false);
 

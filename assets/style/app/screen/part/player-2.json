@@ -1,0 +1,17 @@
+{
+    "meta":
+    {
+        "overrides": [ "app/screen/part/player-1" ]
+    },
+
+    "style":
+    {
+        "widgets":
+        [{
+            "front/frame": "sprites/player-2-front.png",
+            "back/frame": "sprites/player-2-back.png",
+            "left/frame": "sprites/player-2-left.png",
+            "right/frame": "sprites/player-2-left.png"
+        }]
+    }
+}

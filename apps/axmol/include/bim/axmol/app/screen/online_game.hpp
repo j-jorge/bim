@@ -66,6 +66,8 @@ namespace iscool::system
 
 namespace bim::axmol::app
 {
+  class player;
+
   class online_game
   {
     DECLARE_SIGNAL(void(const bim::game::contest_result&), game_over,
@@ -104,6 +106,10 @@ namespace bim::axmol::app
                       const bim::axmol::widget::context& context,
                       std::size_t count,
                       const iscool::style::declaration& style) const;
+    template <typename T>
+    bim::axmol::ref_ptr<T>
+    alloc_asset(const bim::axmol::widget::context& context,
+                const iscool::style::declaration& style) const;
 
     void apply_inputs();
 
@@ -144,7 +150,7 @@ namespace bim::axmol::app
     std::unique_ptr<bim::net::game_update_exchange> m_update_exchange;
     std::unique_ptr<bim::net::contest_runner> m_contest_runner;
 
-    std::vector<ax::Sprite*> m_players;
+    std::vector<player*> m_players;
     std::array<std::vector<ax::Sprite*>,
                (std::size_t)bim::game::cell_neighborhood::all>
         m_walls;
