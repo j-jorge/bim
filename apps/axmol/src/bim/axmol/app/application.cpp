@@ -41,8 +41,13 @@
 #include <axmol/2d/SpriteFrameCache.h> // TODO: remove
 #include <axmol/base/Director.h>
 #include <axmol/base/EventDispatcher.h>
+#include <axmol/base/Utils.h>
 #include <axmol/platform/FileUtils.h>
 #include <axmol/platform/Image.h>
+
+#include <ctime>
+#include <iomanip>
+#include <sstream>
 
 static const char* const g_log_context = "StartUp";
 
@@ -329,6 +334,7 @@ bim::axmol::app::application::application(
     float screen_scale)
   : m_asset_directories(std::move(asset_directories))
   , m_style_cache(m_colors)
+  , m_screen_capture_key_observer(ax::EventKeyboard::KeyCode::KEY_C)
   , m_reset_key_observer(ax::EventKeyboard::KeyCode::KEY_R)
   , m_input_root(m_reset_key_observer)
   , m_screen_config{ screen_size, screen_scale }
@@ -342,6 +348,13 @@ bim::axmol::app::application::application(
       [this]()
       {
         reset();
+      });
+
+  m_input_root.push_back(m_screen_capture_key_observer);
+  m_screen_capture_key_observer->connect_to_released(
+      [this]()
+      {
+        capture_scren();
       });
 }
 
@@ -552,4 +565,17 @@ void bim::axmol::app::application::listen_to_frame_event()
 void bim::axmol::app::application::tick()
 {
   m_context.get_audio()->tick();
+}
+
+void bim::axmol::app::application::capture_scren() const
+{
+  ax::utils::captureScreen(
+      [](ax::RefPtr<ax::Image> image) -> void
+      {
+        std::ostringstream oss;
+        const std::time_t t = std::time(nullptr);
+        oss << std::put_time(std::gmtime(&t), "%Y-%m-%d_%H-%M-%S") << ".png";
+
+        image->saveToFile(oss.str());
+      });
 }

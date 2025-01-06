@@ -106,6 +106,8 @@ namespace bim::axmol::app
     void listen_to_frame_event();
     void tick();
 
+    void capture_scren() const;
+
   private:
     std::vector<std::string> m_asset_directories;
 
@@ -123,6 +125,8 @@ namespace bim::axmol::app
 
     std::unique_ptr<main_task> m_main_task;
 
+    bim::axmol::input::single_key_observer_handle
+        m_screen_capture_key_observer;
     bim::axmol::input::single_key_observer_handle m_reset_key_observer;
     bim::axmol::input::node m_input_root;
 
