@@ -4,6 +4,7 @@
 #include <bim/net/message/client_token.hpp>
 #include <bim/net/message/encounter_id.hpp>
 
+#include <iscool/net/message_pool.hpp>
 #include <iscool/net/message_stream.hpp>
 #include <iscool/signals/scoped_connection.hpp>
 
@@ -98,5 +99,7 @@ namespace bim::server
 
     std::vector<kick_session_event> m_done_sessions;
     std::vector<bim::net::encounter_id> m_done_encounters;
+
+    iscool::net::message_pool m_message_pool;
   };
 }

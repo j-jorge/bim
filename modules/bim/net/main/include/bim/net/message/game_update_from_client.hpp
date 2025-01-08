@@ -21,7 +21,7 @@ namespace bim::net
     explicit game_update_from_client(
         const iscool::net::byte_array& raw_content);
 
-    iscool::net::message build_message() const;
+    void build_message(iscool::net::message& message) const;
 
   public:
     std::uint32_t from_tick;

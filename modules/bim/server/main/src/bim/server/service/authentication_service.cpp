@@ -35,6 +35,7 @@ bim::server::authentication_service::authentication_service(
   : m_message_stream(socket)
   , m_next_session_id(1)
   , m_clean_up_interval(config.authentication_clean_up_interval)
+  , m_message_pool(64)
 {
   m_message_stream.connect_to_message(
       std::bind(&authentication_service::check_session, this,
@@ -86,11 +87,15 @@ void bim::server::authentication_service::check_authentication(
              token, endpoint.address().to_string(),
              message->get_protocol_version());
 
-      m_message_stream.send(
-          endpoint,
-          bim::net::authentication_ko(
-              token, bim::net::authentication_error_code::bad_protocol)
-              .build_message());
+      const iscool::net::message_pool::slot s =
+          m_message_pool.pick_available();
+      bim::net::authentication_ko(
+          token, bim::net::authentication_error_code::bad_protocol)
+          .build_message(*s.value);
+
+      m_message_stream.send(endpoint, *s.value);
+      m_message_pool.release(s.id);
+
       return;
     }
 
@@ -116,9 +121,11 @@ void bim::server::authentication_service::check_authentication(
       m_clients.emplace(session, std::move(client));
     }
 
-  m_message_stream.send(
-      endpoint,
-      bim::net::authentication_ok(token, it->second).build_message());
+  const iscool::net::message_pool::slot s = m_message_pool.pick_available();
+  bim::net::authentication_ok(token, it->second).build_message(*s.value);
+
+  m_message_stream.send(endpoint, *s.value);
+  m_message_pool.release(s.id);
 }
 
 void bim::server::authentication_service::schedule_clean_up()

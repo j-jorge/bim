@@ -45,9 +45,10 @@ bim::net::launch_game::launch_game(const iscool::net::byte_array& raw_content)
   reader >> m_brick_wall_probability >> m_arena_width >> m_arena_height;
 }
 
-iscool::net::message bim::net::launch_game::build_message() const
+void bim::net::launch_game::build_message(iscool::net::message& message) const
 {
-  iscool::net::byte_array content;
+  message.reset(get_type());
+  iscool::net::byte_array& content = message.get_content();
 
   content << m_request_token << m_seed << m_game_channel << m_feature_mask;
 
@@ -64,8 +65,6 @@ iscool::net::message bim::net::launch_game::build_message() const
   bits.flush();
 
   content << m_brick_wall_probability << m_arena_width << m_arena_height;
-
-  return iscool::net::message(get_type(), content);
 }
 
 bim::net::client_token bim::net::launch_game::get_request_token() const

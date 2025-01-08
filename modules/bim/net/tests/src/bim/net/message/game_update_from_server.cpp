@@ -30,7 +30,8 @@ TEST(bim_net_game_update_from_server, serialization)
   source.actions[3].push_back({ bim::game::player_movement::down, true });
   source.actions[3].push_back({ bim::game::player_movement::down, true });
 
-  const iscool::net::message message(source.build_message());
+  iscool::net::message message;
+  source.build_message(message);
 
   EXPECT_EQ(bim::net::message_type::game_update_from_server,
             message.get_type());

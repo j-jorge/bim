@@ -62,6 +62,7 @@ bim::server::matchmaking_service::matchmaking_service(
   , m_game_service(game_service)
   , m_next_encounter_id(1)
   , m_clean_up_interval(config.matchmaking_clean_up_interval)
+  , m_message_pool(64)
 {
   m_done_encounters.reserve(8);
 
@@ -205,15 +206,18 @@ void bim::server::matchmaking_service::mark_as_ready(
 
   const bim::game::contest_fingerprint& fingerprint = game->fingerprint;
 
-  m_message_stream.send(
-      endpoint,
-      bim::net::launch_game(request_token, fingerprint.seed, game->channel,
-                            fingerprint.feature_mask, fingerprint.player_count,
-                            game->session_index(session),
-                            fingerprint.brick_wall_probability,
-                            fingerprint.arena_width, fingerprint.arena_height)
-          .build_message(),
-      session, 0);
+  const iscool::net::message_pool::slot s = m_message_pool.pick_available();
+
+  bim::net::launch_game(request_token, fingerprint.seed, game->channel,
+                        fingerprint.feature_mask, fingerprint.player_count,
+                        game->session_index(session),
+                        fingerprint.brick_wall_probability,
+                        fingerprint.arena_width, fingerprint.arena_height)
+      .build_message(*s.value);
+
+  m_message_stream.send(endpoint, *s.value, session, 0);
+
+  m_message_pool.release(s.id);
 }
 
 std::span<const bim::net::encounter_id>
@@ -278,11 +282,13 @@ void bim::server::matchmaking_service::send_game_on_hold(
     iscool::net::session_id session, bim::net::encounter_id encounter_id,
     std::uint8_t player_count)
 {
-  m_message_stream.send(
-      endpoint,
-      bim::net::game_on_hold(token, encounter_id, player_count)
-          .build_message(),
-      session, 0);
+  const iscool::net::message_pool::slot s = m_message_pool.pick_available();
+
+  bim::net::game_on_hold(token, encounter_id, player_count)
+      .build_message(*s.value),
+      m_message_stream.send(endpoint, *s.value, session, 0);
+
+  m_message_pool.release(s.id);
 }
 
 void bim::server::matchmaking_service::remove_inactive_sessions(

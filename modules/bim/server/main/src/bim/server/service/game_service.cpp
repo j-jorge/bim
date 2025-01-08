@@ -272,6 +272,7 @@ bim::server::game_service::game_service(const config& config,
   , m_clean_up_interval(config.game_service_clean_up_interval)
   , m_disconnection_lateness_threshold_in_ticks(
         config.game_service_disconnection_lateness_threshold_in_ticks)
+  , m_message_pool(64)
 {
   if (config.enable_contest_timeline_recording)
     m_contest_timeline_service.reset(new contest_timeline_service(config));
@@ -405,8 +406,11 @@ void bim::server::game_service::mark_as_ready(
   ic_log(iscool::log::nature::info(), "game_service",
          "Channel {} all players ready, session {}.", channel, session);
 
-  m_message_stream.send(endpoint, bim::net::start().build_message(), session,
-                        channel);
+  const iscool::net::message_pool::slot s = m_message_pool.pick_available();
+  bim::net::start().build_message(*s.value);
+
+  m_message_stream.send(endpoint, *s.value, session, channel);
+  m_message_pool.release(s.id);
 }
 
 void bim::server::game_service::push_update(
@@ -544,7 +548,7 @@ void bim::server::game_service::queue_actions(
 void bim::server::game_service::send_actions(
     const iscool::net::endpoint& endpoint, iscool::net::session_id session,
     iscool::net::channel_id channel, std::size_t player_index,
-    const game& game) const
+    const game& game)
 {
   // All we need to send to a player P is the sequence of actions from the
   // other players that happened between the last synchronized tick of P and
@@ -599,12 +603,16 @@ void bim::server::game_service::send_actions(
                                      begin + adjusted_tick_count);
     }
 
-  m_message_stream.send(endpoint, message.build_message(), session, channel);
+  const iscool::net::message_pool::slot s = m_message_pool.pick_available();
+  message.build_message(*s.value);
+
+  m_message_stream.send(endpoint, *s.value, session, channel);
+  m_message_pool.release(s.id);
 }
 
 void bim::server::game_service::send_game_over(
     const iscool::net::endpoint& endpoint, iscool::net::session_id session,
-    iscool::net::channel_id channel, const game& game) const
+    iscool::net::channel_id channel, const game& game)
 {
   assert(!game.contest_result.still_running());
 
@@ -617,8 +625,11 @@ void bim::server::game_service::send_game_over(
          channel, winner_index);
 
   const bim::net::game_over message(winner_index);
+  const iscool::net::message_pool::slot s = m_message_pool.pick_available();
+  message.build_message(*s.value);
 
-  m_message_stream.send(endpoint, message.build_message(), session, channel);
+  m_message_stream.send(endpoint, *s.value, session, channel);
+  m_message_pool.release(s.id);
 }
 
 void bim::server::game_service::check_drop_late_player(

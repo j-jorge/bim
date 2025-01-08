@@ -23,9 +23,12 @@ bim::net::game_update_from_client::game_update_from_client(
     read(action, bits);
 }
 
-iscool::net::message bim::net::game_update_from_client::build_message() const
+void bim::net::game_update_from_client::build_message(
+    iscool::net::message& message) const
 {
-  iscool::net::byte_array content;
+  message.reset(get_type());
+
+  iscool::net::byte_array& content = message.get_content();
   content << from_tick << (std::uint8_t)actions.size();
 
   iscool::net::byte_array_bit_inserter bits(content);
@@ -34,6 +37,4 @@ iscool::net::message bim::net::game_update_from_client::build_message() const
     write(bits, action);
 
   bits.flush();
-
-  return iscool::net::message(get_type(), content);
 }

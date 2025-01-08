@@ -121,9 +121,12 @@ void new_game_test::client::send_new_named_game_request(
 
   ASSERT_NE(nullptr, m_message_channel);
 
+  iscool::net::message m;
+  message.build_message(m);
+
   for (int i = 0; (i != 10) && !game_on_hold_answer; ++i)
     {
-      m_message_channel->send(message.build_message());
+      m_message_channel->send(m);
       m_scheduler.tick(std::chrono::milliseconds(50));
     }
 }
@@ -155,9 +158,12 @@ void new_game_test::client::send_accept_named_game(
 
   ASSERT_NE(nullptr, m_message_channel);
 
+  iscool::net::message m;
+  message.build_message(m);
+
   for (int i = 0; (i != 10) && !launch_game_answer; ++i)
     {
-      m_message_channel->send(message.build_message());
+      m_message_channel->send(m);
       m_scheduler.tick(std::chrono::milliseconds(50));
     }
 }

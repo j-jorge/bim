@@ -3,6 +3,7 @@
 
 #include <bim/game/constant/max_player_count.hpp>
 
+#include <iscool/net/message_pool.hpp>
 #include <iscool/net/message_stream.hpp>
 
 #include <iscool/signals/scoped_connection.hpp>
@@ -66,11 +67,10 @@ namespace bim::server
     void send_actions(const iscool::net::endpoint& endpoint,
                       iscool::net::session_id session,
                       iscool::net::channel_id channel,
-                      std::size_t player_index, const game& game) const;
+                      std::size_t player_index, const game& game);
     void send_game_over(const iscool::net::endpoint& endpoint,
                         iscool::net::session_id session,
-                        iscool::net::channel_id channel,
-                        const game& game) const;
+                        iscool::net::channel_id channel, const game& game);
 
     void check_drop_late_player(iscool::net::channel_id channel,
                                 game& game) const;
@@ -91,5 +91,7 @@ namespace bim::server
 
     std::unique_ptr<contest_timeline_service> m_contest_timeline_service;
     const int m_disconnection_lateness_threshold_in_ticks;
+
+    iscool::net::message_pool m_message_pool;
   };
 }

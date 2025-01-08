@@ -21,7 +21,7 @@ namespace bim::net
     explicit game_update_from_server(
         const iscool::net::byte_array& raw_content);
 
-    iscool::net::message build_message() const;
+    void build_message(iscool::net::message& message) const;
 
   public:
     /** Tick from which to play the following actions apply. */

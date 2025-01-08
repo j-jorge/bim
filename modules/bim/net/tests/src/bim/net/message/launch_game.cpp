@@ -10,7 +10,8 @@ TEST(bim_net_launch_game, serialization)
 
   EXPECT_EQ(bim::net::message_type::launch_game, source.get_type());
 
-  const iscool::net::message message(source.build_message());
+  iscool::net::message message;
+  source.build_message(message);
   EXPECT_EQ(bim::net::message_type::launch_game, message.get_type());
 
   const bim::net::launch_game deserialized(message.get_content());

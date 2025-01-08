@@ -31,9 +31,12 @@ bim::net::game_update_from_server::game_update_from_server(
       read(action, bits);
 }
 
-iscool::net::message bim::net::game_update_from_server::build_message() const
+void bim::net::game_update_from_server::build_message(
+    iscool::net::message& message) const
 {
-  iscool::net::byte_array content;
+  message.reset(get_type());
+
+  iscool::net::byte_array& content = message.get_content();
 
   const std::uint8_t player_count = actions.size();
   assert(player_count > 0);
@@ -53,6 +56,4 @@ iscool::net::message bim::net::game_update_from_server::build_message() const
       write(bits, action);
 
   bits.flush();
-
-  return iscool::net::message(get_type(), std::move(content));
 }

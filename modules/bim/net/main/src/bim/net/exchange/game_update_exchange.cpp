@@ -45,7 +45,7 @@ void bim::net::game_update_exchange::start()
 {
   m_monitor->set_start_state();
 
-  m_client_out_message = bim::net::ready().build_message();
+  bim::net::ready().build_message(m_client_out_message);
   send();
 }
 
@@ -55,7 +55,7 @@ void bim::net::game_update_exchange::push(
   m_action_queue.emplace_back(action);
 
   if (append_to_current_update(action))
-    m_client_out_message = m_current_update.build_message();
+    m_current_update.build_message(m_client_out_message);
 
   if (!m_send_connection.connected())
     send();
@@ -227,7 +227,7 @@ void bim::net::game_update_exchange::remove_server_confirmed_actions()
     if (!append_to_current_update(action))
       break;
 
-  m_client_out_message = m_current_update.build_message();
+  m_current_update.build_message(m_client_out_message);
 }
 
 void bim::net::game_update_exchange::dispatch_game_over(

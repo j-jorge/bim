@@ -23,7 +23,7 @@ namespace bim::net
                 std::uint8_t arena_width, std::uint8_t arena_height);
     explicit launch_game(const iscool::net::byte_array& raw_content);
 
-    iscool::net::message build_message() const;
+    void build_message(iscool::net::message& message) const;
 
     client_token get_request_token() const;
     std::uint64_t get_seed() const;

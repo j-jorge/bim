@@ -65,9 +65,12 @@ void authentication_test::test_full_exchange(
           std::bind(&authentication_test::interpret_received_message, this,
                     message.get_request_token(), std::placeholders::_2));
 
+  iscool::net::message m;
+  message.build_message(m);
+
   for (int i = 0; (i != 10) && !m_answer_ok && !m_answer_ko; ++i)
     {
-      m_message_channel.send(message.build_message());
+      m_message_channel.send(m);
       m_scheduler.tick(std::chrono::seconds(1));
     }
 }
