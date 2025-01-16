@@ -55,6 +55,7 @@ assets/sprites/arena-border.png
 assets/sprites/arena-corner.png
 assets/sprites/bomb.png
 assets/sprites/brick-wall.png
+assets/sprites/pixel.png
 assets/sprites/player-1.png
 assets/sprites/player-2.png
 assets/sprites/player-3.png

@@ -55,28 +55,28 @@
         [{
             "frame": "sprites/player-1.png",
             "anchor-point.y": 0.33,
-            "z-order": 10
+            "z-order": 100
         }],
 
         "player-2":
         [{
             "frame": "sprites/player-2.png",
             "anchor-point.y": 0.33,
-            "z-order": 10
+            "z-order": 100
         }],
 
         "player-3":
         [{
             "frame": "sprites/player-3.png",
             "anchor-point.y": 0.33,
-            "z-order": 10
+            "z-order": 100
         }],
 
         "player-4":
         [{
             "frame": "sprites/player-4.png",
             "anchor-point.y": 0.33,
-            "z-order": 10
+            "z-order": 100
         }],
 
         "arena-border.top/frame": "sprites/arena-border.png",
@@ -123,6 +123,16 @@
 
         "bomb/frame": "sprites/bomb.png",
         "wall/frame": "sprites/solid-wall.png",
+
+        "falling-block/frame": "sprites/solid-wall.png",
+
+        "falling-block-shadow":
+        [{
+            "frame": "sprites/pixel.png",
+            "color": "black",
+            "opacity": 0.4
+        }],
+
         "brick-wall/frame": "sprites/brick-wall.png",
 
         "flame/frame": "sprites/flame-center.png",

@@ -6,10 +6,12 @@
 #include <entt/entity/registry.hpp>
 
 #include <chrono>
+#include <memory>
 
 namespace bim::game
 {
   class contest_result;
+  class arena_reduction;
 
   class contest
   {
@@ -21,6 +23,7 @@ namespace bim::game
     contest(std::uint64_t seed, std::uint8_t brick_wall_probability,
             std::uint8_t player_count, std::uint8_t arena_width,
             std::uint8_t arena_height);
+    ~contest();
 
     contest_result tick();
 
@@ -32,5 +35,7 @@ namespace bim::game
   private:
     entt::registry m_registry;
     bim::game::arena m_arena;
+
+    std::unique_ptr<arena_reduction> m_arena_reduction;
   };
 }

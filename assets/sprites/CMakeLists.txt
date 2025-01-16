@@ -48,6 +48,7 @@ set(sprites_bleeding
   "sprites/flame-arm.png"
   "sprites/flame-center.png"
   "sprites/flame-end.png"
+  "sprites/pixel.png"
 
   "sprites/menu/horizontal-gradient.png"
   "sprites/menu/vertical-gradient.png"

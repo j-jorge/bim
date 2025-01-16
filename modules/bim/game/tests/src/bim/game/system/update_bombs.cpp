@@ -5,12 +5,14 @@
 
 #include <bim/game/component/bomb.hpp>
 #include <bim/game/component/burning.hpp>
+#include <bim/game/component/dead.hpp>
 #include <bim/game/component/flame.hpp>
 #include <bim/game/component/flame_direction.hpp>
 #include <bim/game/component/position_on_grid.hpp>
 #include <bim/game/component/timer.hpp>
 #include <bim/game/factory/bomb.hpp>
 #include <bim/game/factory/brick_wall.hpp>
+#include <bim/game/system/remove_dead_objects.hpp>
 #include <bim/game/system/update_timers.hpp>
 
 #include <entt/entity/registry.hpp>
@@ -86,7 +88,7 @@ TEST(update_bombs, explode_strength_2)
 
   bim::game::update_timers(registry, std::chrono::milliseconds(12));
   bim::game::update_bombs(registry, arena);
-  EXPECT_FALSE(registry.storage<bim::game::bomb>().contains(entity));
+  EXPECT_TRUE(registry.storage<bim::game::dead>().contains(entity));
 
   const std::vector<std::string> flames = flames_map(arena, registry);
   EXPECT_EQ("  V  ", flames[0]);
@@ -163,6 +165,7 @@ TEST(update_bombs, chain_reaction)
 
   bim::game::update_timers(registry, std::chrono::milliseconds(10));
   bim::game::update_bombs(registry, arena);
+  bim::game::remove_dead_objects(registry);
 
   std::vector<std::string> flames = flames_map(arena, registry);
   EXPECT_EQ("        ", flames[0]);
@@ -175,6 +178,7 @@ TEST(update_bombs, chain_reaction)
 
   bim::game::update_timers(registry, std::chrono::milliseconds(10));
   bim::game::update_bombs(registry, arena);
+  bim::game::remove_dead_objects(registry);
 
   flames = flames_map(arena, registry);
   EXPECT_EQ("        ", flames[0]);
@@ -187,6 +191,7 @@ TEST(update_bombs, chain_reaction)
 
   bim::game::update_timers(registry, std::chrono::milliseconds(10));
   bim::game::update_bombs(registry, arena);
+  bim::game::remove_dead_objects(registry);
 
   flames = flames_map(arena, registry);
   EXPECT_EQ("        ", flames[0]);
@@ -199,6 +204,7 @@ TEST(update_bombs, chain_reaction)
 
   bim::game::update_timers(registry, std::chrono::milliseconds(10));
   bim::game::update_bombs(registry, arena);
+  bim::game::remove_dead_objects(registry);
 
   flames = flames_map(arena, registry);
   EXPECT_EQ("        ", flames[0]);

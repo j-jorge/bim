@@ -11,6 +11,7 @@
 #include <bim/game/component/timer.hpp>
 #include <bim/game/factory/player.hpp>
 #include <bim/game/system/refresh_bomb_inventory.hpp>
+#include <bim/game/system/remove_dead_objects.hpp>
 #include <bim/game/system/update_bombs.hpp>
 #include <bim/game/system/update_timers.hpp>
 
@@ -268,7 +269,7 @@ TEST_F(bim_game_apply_player_action_test, cannot_go_through_bombs)
   EXPECT_EQ(start_y[1], positions[1].grid_aligned_y());
 }
 
-TEST_F(bim_game_apply_player_action_test, drop_bomb_decrease_inventory)
+TEST_F(bim_game_apply_player_action_test, drop_bomb_decreases_inventory)
 {
   constexpr int player_index = 3;
   constexpr int start_x = 1;
@@ -334,6 +335,7 @@ TEST_F(bim_game_apply_player_action_test, drop_bomb_decrease_inventory)
   // Explode the bombs. The player should get his inventory back.
   bim::game::update_timers(m_registry, timer.duration);
   bim::game::update_bombs(m_registry, m_arena);
+  bim::game::remove_dead_objects(m_registry);
   bim::game::refresh_bomb_inventory(m_registry);
   EXPECT_EQ(2, player.bomb_available);
 }

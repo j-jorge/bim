@@ -107,18 +107,21 @@ namespace bim::axmol::app
 
     void apply_inputs();
 
-    void display_static_walls() const;
+    void reset_z_order();
+    void refresh_display();
+    void display_static_walls();
+    void display_falling_blocks();
+    void display_brick_walls();
+    void display_players();
+    void display_bombs();
+    void display_flames();
+    void display_bomb_power_ups();
+    void display_flame_power_ups();
 
-    void refresh_display() const;
-    void display_brick_walls() const;
-    void display_players() const;
-    void display_bombs() const;
-    void display_flames() const;
-    void display_bomb_power_ups() const;
-    void display_flame_power_ups() const;
+    void display_at(std::size_t arena_y, ax::Node& node,
+                    const ax::Vec2& position);
 
-    ax::Vec2 grid_position_to_displayed_block_center(std::uint8_t x,
-                                                     std::uint8_t y) const;
+    ax::Vec2 grid_position_to_displayed_block_center(float x, float y) const;
     ax::Vec2 grid_position_to_display(float x, float y) const;
 
     void stop();
@@ -144,11 +147,15 @@ namespace bim::axmol::app
     std::array<std::vector<ax::Sprite*>,
                (std::size_t)bim::game::cell_neighborhood::all>
         m_walls;
+    std::vector<ax::Sprite*> m_falling_blocks;
+    std::vector<ax::Sprite*> m_falling_blocks_shadows;
     std::vector<ax::Sprite*> m_brick_walls;
     std::vector<ax::Sprite*> m_bombs;
     std::vector<ax::Sprite*> m_flames;
     std::vector<ax::Sprite*> m_bomb_power_ups;
     std::vector<ax::Sprite*> m_flame_power_ups;
+
+    std::vector<int> m_z_order;
 
     const std::string m_flame_center_asset_name;
     const std::string m_flame_arm_asset_name;

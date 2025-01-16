@@ -5,6 +5,7 @@
 
 #include <bim/game/component/bomb.hpp>
 #include <bim/game/component/burning.hpp>
+#include <bim/game/component/dead.hpp>
 #include <bim/game/component/flame_direction.hpp>
 #include <bim/game/component/position_on_grid.hpp>
 #include <bim/game/component/timer.hpp>
@@ -96,11 +97,12 @@ void bim::game::update_bombs(entt::registry& registry, arena& arena)
       [&](entt::entity e, const bomb& b, const position_on_grid& position,
           const timer& t) -> void
       {
-        if (t.duration.count() == 0)
-          {
-            arena.erase_entity(position.x, position.y);
-            create_flames(registry, arena, position, b.strength);
-            registry.destroy(e);
-          }
+        if (t.duration.count() > 0)
+          return;
+
+        arena.erase_entity(position.x, position.y);
+        create_flames(registry, arena, position, b.strength);
+        registry.emplace_or_replace<dead>(e);
+        // registry.destroy(e);
       });
 }

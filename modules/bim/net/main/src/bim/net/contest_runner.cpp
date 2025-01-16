@@ -5,12 +5,14 @@
 #include <bim/net/exchange/server_update.hpp>
 
 #include <bim/game/check_game_over.hpp>
+#include <bim/game/component/arena_reduction_state.hpp>
 #include <bim/game/component/bomb.hpp>
 #include <bim/game/component/bomb_power_up.hpp>
 #include <bim/game/component/bomb_power_up_spawner.hpp>
 #include <bim/game/component/brick_wall.hpp>
 #include <bim/game/component/burning.hpp>
 #include <bim/game/component/dead.hpp>
+#include <bim/game/component/falling_block.hpp>
 #include <bim/game/component/flame.hpp>
 #include <bim/game/component/flame_power_up.hpp>
 #include <bim/game/component/flame_power_up_spawner.hpp>
@@ -281,19 +283,21 @@ void bim::net::contest_runner::archive_io(Snapshot&& snapshot,
                                           Archive&& archive) const
 {
   snapshot.template get<entt::entity>(archive)
+      .template get<bim::game::arena_reduction_state>(archive)
       .template get<bim::game::bomb>(archive)
       .template get<bim::game::bomb_power_up>(archive)
       .template get<bim::game::bomb_power_up_spawner>(archive)
       .template get<bim::game::brick_wall>(archive)
       .template get<bim::game::burning>(archive)
       .template get<bim::game::dead>(archive)
+      .template get<bim::game::falling_block>(archive)
       .template get<bim::game::flame>(archive)
       .template get<bim::game::flame_power_up>(archive)
       .template get<bim::game::flame_power_up_spawner>(archive)
       .template get<bim::game::fractional_position_on_grid>(archive)
+      .template get<bim::game::player>(archive)
       .template get<bim::game::player_action>(archive)
       .template get<bim::game::player_action_queue>(archive)
-      .template get<bim::game::player>(archive)
       .template get<bim::game::position_on_grid>(archive)
       .template get<bim::game::timer>(archive);
 }
