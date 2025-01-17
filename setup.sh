@@ -255,7 +255,7 @@ configure()
     cmake_options=()
     case "$build_type" in
         asan)
-            cmake_options=(-DCMAKE_BUILD_TYPE=RelWithDebInfo
+            cmake_options=(-DCMAKE_BUILD_TYPE=Debug
                            -DBIM_ADDRESS_SANITIZER=ON)
             ;;
         debug)
