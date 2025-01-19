@@ -5,21 +5,20 @@
 
 #include <bim/game/component/flame.hpp>
 #include <bim/game/component/position_on_grid.hpp>
+#include <bim/game/component/timer.hpp>
 
 #include <entt/entity/registry.hpp>
 
-void bim::game::update_flames(entt::registry& registry, arena& arena,
-                              std::chrono::milliseconds elapsed_time)
+void bim::game::update_flames(entt::registry& registry, arena& arena)
 {
-  registry.view<flame, position_on_grid>().each(
-      [&](entt::entity e, flame& f, position_on_grid position) -> void
+  registry.view<flame, position_on_grid, timer>().each(
+      [&](entt::entity e, const flame& f, const position_on_grid& position,
+          const timer& t) -> void
       {
-        if (elapsed_time >= f.time_to_live)
+        if (t.duration.count() == 0)
           {
             arena.erase_entity(position.x, position.y);
             registry.destroy(e);
           }
-        else
-          f.time_to_live -= elapsed_time;
       });
 }

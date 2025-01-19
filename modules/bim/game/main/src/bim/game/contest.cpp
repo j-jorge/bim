@@ -19,6 +19,7 @@
 #include <bim/game/system/update_flame_power_ups.hpp>
 #include <bim/game/system/update_flames.hpp>
 #include <bim/game/system/update_players.hpp>
+#include <bim/game/system/update_timers.hpp>
 
 #include <bim/game/level_generation.hpp>
 #include <bim/game/random_generator.hpp>
@@ -65,9 +66,10 @@ bim::game::contest::contest(std::uint64_t seed,
 bim::game::contest_result bim::game::contest::tick()
 {
   refresh_bomb_inventory(m_registry);
+  update_timers(m_registry, tick_interval);
   apply_player_action(m_registry, m_arena);
-  update_bombs(m_registry, m_arena, tick_interval);
-  update_flames(m_registry, m_arena, tick_interval);
+  update_bombs(m_registry, m_arena);
+  update_flames(m_registry, m_arena);
   update_brick_walls(m_registry, m_arena);
   update_bomb_power_up_spawners(m_registry, m_arena);
   update_bomb_power_ups(m_registry, m_arena);

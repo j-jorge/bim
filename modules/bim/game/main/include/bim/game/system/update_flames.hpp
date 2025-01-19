@@ -3,12 +3,9 @@
 
 #include <entt/entity/fwd.hpp>
 
-#include <chrono>
-
 namespace bim::game
 {
   class arena;
 
-  void update_flames(entt::registry& registry, arena& arena,
-                     std::chrono::milliseconds elapsed_time);
+  void update_flames(entt::registry& registry, arena& arena);
 }

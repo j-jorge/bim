@@ -3,6 +3,7 @@
 
 #include <bim/game/component/bomb.hpp>
 #include <bim/game/component/position_on_grid.hpp>
+#include <bim/game/component/timer.hpp>
 
 #include <entt/entity/registry.hpp>
 
@@ -22,9 +23,9 @@ bim::game::bomb_factory(entt::registry& registry, std::uint8_t x,
 {
   const entt::entity entity = registry.create();
 
-  registry.emplace<bomb>(entity, duration_until_explosion, strength,
-                         player_index);
+  registry.emplace<bomb>(entity, strength, player_index);
   registry.emplace<position_on_grid>(entity, x, y);
+  registry.emplace<timer>(entity, duration_until_explosion);
 
   return entity;
 }

@@ -7,6 +7,7 @@
 #include <bim/game/component/burning.hpp>
 #include <bim/game/component/flame_direction.hpp>
 #include <bim/game/component/position_on_grid.hpp>
+#include <bim/game/component/timer.hpp>
 #include <bim/game/factory/flame.hpp>
 
 #include <entt/entity/registry.hpp>
@@ -83,25 +84,23 @@ static void create_flames(entt::registry& registry, bim::game::arena& arena,
                                             bim::game::flame_segment::origin));
 }
 
-void bim::game::update_bombs(entt::registry& registry, arena& arena,
-                             std::chrono::milliseconds elapsed_time)
+void bim::game::update_bombs(entt::registry& registry, arena& arena)
 {
-  registry.view<bomb, burning>().each(
-      [&](bomb& b) -> void
+  registry.view<bomb, timer, burning>().each(
+      [&](const bomb&, timer& t) -> void
       {
-        b.duration_until_explosion = std::chrono::seconds(0);
+        t.duration = std::chrono::seconds(0);
       });
 
-  registry.view<bomb, position_on_grid>().each(
-      [&](entt::entity e, bomb& b, position_on_grid position) -> void
+  registry.view<bomb, position_on_grid, timer>().each(
+      [&](entt::entity e, const bomb& b, const position_on_grid& position,
+          const timer& t) -> void
       {
-        if (elapsed_time >= b.duration_until_explosion)
+        if (t.duration.count() == 0)
           {
             arena.erase_entity(position.x, position.y);
             create_flames(registry, arena, position, b.strength);
             registry.destroy(e);
           }
-        else
-          b.duration_until_explosion -= elapsed_time;
       });
 }

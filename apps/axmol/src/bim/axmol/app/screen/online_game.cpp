@@ -31,6 +31,7 @@
 #include <bim/game/component/player_action_queue.hpp>
 #include <bim/game/component/player_movement.hpp>
 #include <bim/game/component/position_on_grid.hpp>
+#include <bim/game/component/timer.hpp>
 #include <bim/game/constant/max_bomb_count_per_player.hpp>
 #include <bim/game/constant/max_player_count.hpp>
 #include <bim/game/contest.hpp>
@@ -519,25 +520,28 @@ void bim::axmol::app::online_game::display_bombs() const
   const entt::registry& registry = m_contest->registry();
   std::size_t asset_index = 0;
 
-  registry.view<bim::game::position_on_grid, bim::game::bomb>().each(
-      [this, &asset_index](const bim::game::position_on_grid& p,
-                           const bim::game::bomb& b) -> void
-      {
-        ax::Sprite& s = *m_bombs[asset_index];
+  registry
+      .view<bim::game::position_on_grid, bim::game::bomb, bim::game::timer>()
+      .each(
+          [this, &asset_index](const bim::game::position_on_grid& p,
+                               const bim::game::bomb& b,
+                               const bim::game::timer& t) -> void
+          {
+            ax::Sprite& s = *m_bombs[asset_index];
 
-        s.setVisible(true);
-        s.setPosition(grid_position_to_displayed_block_center(p.x, p.y));
+            s.setVisible(true);
+            s.setPosition(grid_position_to_displayed_block_center(p.x, p.y));
 
-        const size_t f =
-            (b.duration_until_explosion > std::chrono::seconds(1)) ? 300 : 100;
+            const size_t f =
+                (t.duration > std::chrono::seconds(1)) ? 300 : 100;
 
-        if (b.duration_until_explosion.count() / f % 2 == 0)
-          s.setScale(1.1);
-        else
-          s.setScale(1);
+            if (t.duration.count() / f % 2 == 0)
+              s.setScale(1.1);
+            else
+              s.setScale(1);
 
-        ++asset_index;
-      });
+            ++asset_index;
+          });
 
   for (std::size_t n = m_bombs.size(); asset_index != n; ++asset_index)
     if (m_bombs[asset_index]->isVisible())

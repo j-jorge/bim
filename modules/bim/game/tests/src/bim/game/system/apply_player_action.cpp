@@ -8,9 +8,11 @@
 #include <bim/game/component/player.hpp>
 #include <bim/game/component/player_action_queue.hpp>
 #include <bim/game/component/player_movement.hpp>
+#include <bim/game/component/timer.hpp>
 #include <bim/game/factory/player.hpp>
 #include <bim/game/system/refresh_bomb_inventory.hpp>
 #include <bim/game/system/update_bombs.hpp>
+#include <bim/game/system/update_timers.hpp>
 
 #include <entt/entity/registry.hpp>
 
@@ -295,8 +297,10 @@ TEST_F(bim_game_apply_player_action_test, drop_bomb_decrease_inventory)
 
   EXPECT_EQ(1, player.bomb_available);
 
-  bim::game::bomb bomb = m_registry.storage<bim::game::bomb>().get(
-      m_arena.entity_at(position.grid_aligned_x(), position.grid_aligned_y()));
+  const entt::entity bomb_entity =
+      m_arena.entity_at(position.grid_aligned_x(), position.grid_aligned_y());
+  bim::game::bomb bomb =
+      m_registry.storage<bim::game::bomb>().get(bomb_entity);
   EXPECT_EQ(player_index, bomb.player_index);
   position.y += 1;
 
@@ -308,8 +312,7 @@ TEST_F(bim_game_apply_player_action_test, drop_bomb_decrease_inventory)
 
   EXPECT_EQ(0, player.bomb_available);
 
-  bomb = m_registry.storage<bim::game::bomb>().get(
-      m_arena.entity_at(position.grid_aligned_x(), position.grid_aligned_y()));
+  bomb = m_registry.storage<bim::game::bomb>().get(bomb_entity);
   EXPECT_EQ(player_index, bomb.player_index);
 
   position.y += 1;
@@ -326,8 +329,11 @@ TEST_F(bim_game_apply_player_action_test, drop_bomb_decrease_inventory)
               == m_arena.entity_at(position.grid_aligned_x(),
                                    position.grid_aligned_y()));
 
+  bim::game::timer timer =
+      m_registry.storage<bim::game::timer>().get(bomb_entity);
   // Explode the bombs. The player should get his inventory back.
-  bim::game::update_bombs(m_registry, m_arena, bomb.duration_until_explosion);
+  bim::game::update_timers(m_registry, timer.duration);
+  bim::game::update_bombs(m_registry, m_arena);
   bim::game::refresh_bomb_inventory(m_registry);
   EXPECT_EQ(2, player.bomb_available);
 }

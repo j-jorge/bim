@@ -3,6 +3,7 @@
 
 #include <bim/game/component/flame.hpp>
 #include <bim/game/component/position_on_grid.hpp>
+#include <bim/game/component/timer.hpp>
 
 #include <entt/entity/registry.hpp>
 
@@ -25,6 +26,7 @@ entt::entity bim::game::flame_factory(entt::registry& registry, std::uint8_t x,
 
   registry.emplace<flame>(entity, direction, segment, time_to_live);
   registry.emplace<position_on_grid>(entity, x, y);
+  registry.emplace<timer>(entity, time_to_live);
 
   return entity;
 }

@@ -19,6 +19,7 @@
 #include <bim/game/component/player_action.hpp>
 #include <bim/game/component/player_action_queue.hpp>
 #include <bim/game/component/position_on_grid.hpp>
+#include <bim/game/component/timer.hpp>
 #include <bim/game/constant/max_player_count.hpp>
 #include <bim/game/contest.hpp>
 #include <bim/game/input_archive.hpp>
@@ -293,5 +294,6 @@ void bim::net::contest_runner::archive_io(Snapshot&& snapshot,
       .template get<bim::game::player_action>(archive)
       .template get<bim::game::player_action_queue>(archive)
       .template get<bim::game::player>(archive)
-      .template get<bim::game::position_on_grid>(archive);
+      .template get<bim::game::position_on_grid>(archive)
+      .template get<bim::game::timer>(archive);
 }

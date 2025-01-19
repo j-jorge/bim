@@ -8,8 +8,10 @@
 #include <bim/game/component/flame.hpp>
 #include <bim/game/component/flame_direction.hpp>
 #include <bim/game/component/position_on_grid.hpp>
+#include <bim/game/component/timer.hpp>
 #include <bim/game/factory/bomb.hpp>
 #include <bim/game/factory/brick_wall.hpp>
+#include <bim/game/system/update_timers.hpp>
 
 #include <entt/entity/registry.hpp>
 
@@ -60,12 +62,9 @@ TEST(update_bombs, delay)
 
   const entt::entity entity = bim::game::bomb_factory(
       registry, x, y, strength, player_index, std::chrono::milliseconds(24));
-  bim::game::bomb& bomb = registry.get<bim::game::bomb>(entity);
+  bim::game::timer& timer = registry.get<bim::game::timer>(entity);
 
-  EXPECT_EQ(std::chrono::milliseconds(24), bomb.duration_until_explosion);
-
-  bim::game::update_bombs(registry, arena, std::chrono::milliseconds(12));
-  EXPECT_EQ(std::chrono::milliseconds(12), bomb.duration_until_explosion);
+  EXPECT_EQ(std::chrono::milliseconds(24), timer.duration);
 }
 
 TEST(update_bombs, explode_strength_2)
@@ -81,10 +80,12 @@ TEST(update_bombs, explode_strength_2)
       bim::game::bomb_factory(registry, bomb_x, bomb_y, strength, player_index,
                               std::chrono::milliseconds(24));
 
-  bim::game::update_bombs(registry, arena, std::chrono::milliseconds(12));
+  bim::game::update_timers(registry, std::chrono::milliseconds(12));
+  bim::game::update_bombs(registry, arena);
   EXPECT_TRUE(registry.storage<bim::game::bomb>().contains(entity));
 
-  bim::game::update_bombs(registry, arena, std::chrono::milliseconds(12));
+  bim::game::update_timers(registry, std::chrono::milliseconds(12));
+  bim::game::update_bombs(registry, arena);
   EXPECT_FALSE(registry.storage<bim::game::bomb>().contains(entity));
 
   const std::vector<std::string> flames = flames_map(arena, registry);
@@ -105,7 +106,8 @@ TEST(update_bombs, explode_strength_5)
   bim::game::bomb_factory(registry, bomb_x, bomb_y, strength, player_index,
                           std::chrono::milliseconds(0));
 
-  bim::game::update_bombs(registry, arena, std::chrono::milliseconds(24));
+  bim::game::update_timers(registry, std::chrono::milliseconds(24));
+  bim::game::update_bombs(registry, arena);
 
   const std::vector<std::string> flames = flames_map(arena, registry);
   EXPECT_EQ("     v     ", flames[0]);
@@ -159,7 +161,8 @@ TEST(update_bombs, chain_reaction)
                                            player_index,
                                            std::chrono::milliseconds(200)));
 
-  bim::game::update_bombs(registry, arena, std::chrono::milliseconds(10));
+  bim::game::update_timers(registry, std::chrono::milliseconds(10));
+  bim::game::update_bombs(registry, arena);
 
   std::vector<std::string> flames = flames_map(arena, registry);
   EXPECT_EQ("        ", flames[0]);
@@ -170,7 +173,8 @@ TEST(update_bombs, chain_reaction)
   EXPECT_EQ("   v    ", flames[5]);
   EXPECT_EQ("        ", flames[6]);
 
-  bim::game::update_bombs(registry, arena, std::chrono::milliseconds(10));
+  bim::game::update_timers(registry, std::chrono::milliseconds(10));
+  bim::game::update_bombs(registry, arena);
 
   flames = flames_map(arena, registry);
   EXPECT_EQ("        ", flames[0]);
@@ -181,7 +185,8 @@ TEST(update_bombs, chain_reaction)
   EXPECT_EQ("   v    ", flames[5]);
   EXPECT_EQ("        ", flames[6]);
 
-  bim::game::update_bombs(registry, arena, std::chrono::milliseconds(10));
+  bim::game::update_timers(registry, std::chrono::milliseconds(10));
+  bim::game::update_bombs(registry, arena);
 
   flames = flames_map(arena, registry);
   EXPECT_EQ("        ", flames[0]);
@@ -192,7 +197,8 @@ TEST(update_bombs, chain_reaction)
   EXPECT_EQ("   vBH  ", flames[5]);
   EXPECT_EQ("    V   ", flames[6]);
 
-  bim::game::update_bombs(registry, arena, std::chrono::milliseconds(10));
+  bim::game::update_timers(registry, std::chrono::milliseconds(10));
+  bim::game::update_bombs(registry, arena);
 
   flames = flames_map(arena, registry);
   EXPECT_EQ("        ", flames[0]);
@@ -223,7 +229,8 @@ TEST(update_bombs, burning_walls)
     bim::game::brick_wall_factory(registry, arena, 2, 5)
   };
 
-  bim::game::update_bombs(registry, arena, std::chrono::milliseconds(12));
+  bim::game::update_timers(registry, std::chrono::milliseconds(12));
+  bim::game::update_bombs(registry, arena);
 
   EXPECT_TRUE(registry.storage<bim::game::burning>().contains(walls[0]));
   EXPECT_TRUE(registry.storage<bim::game::burning>().contains(walls[1]));

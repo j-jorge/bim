@@ -8,6 +8,7 @@
 #include <bim/game/component/player.hpp>
 #include <bim/game/component/player_direction.hpp>
 #include <bim/game/component/position_on_grid.hpp>
+#include <bim/game/component/timer.hpp>
 
 #include <entt/entity/registry.hpp>
 #include <entt/entity/snapshot.hpp>
@@ -20,16 +21,17 @@ TEST(bim_game_archive, pod_components_multiple_steps)
   entt::entity entities[] = { registry.create(), registry.create(),
                               registry.create(), registry.create() };
 
-  registry.emplace<bim::game::bomb>(entities[0], std::chrono::milliseconds(2),
-                                    18);
+  registry.emplace<bim::game::bomb>(entities[0], 18);
+  registry.emplace<bim::game::timer>(entities[0],
+                                     std::chrono::milliseconds(2));
 
   registry.emplace<bim::game::position_on_grid>(entities[1], 11, 22);
   registry.emplace<bim::game::player>(
       entities[1], 24, bim::game::player_direction::up, 0, 0, 4);
 
-  registry.emplace<bim::game::flame>(
-      entities[3], bim::game::flame_direction::left,
-      bim::game::flame_segment::tip, std::chrono::milliseconds(40));
+  registry.emplace<bim::game::flame>(entities[3],
+                                     bim::game::flame_direction::left,
+                                     bim::game::flame_segment::tip);
 
   bim::game::archive_storage bytes;
   bim::game::output_archive out(bytes);
@@ -39,7 +41,8 @@ TEST(bim_game_archive, pod_components_multiple_steps)
       .get<bim::game::bomb>(out)
       .get<bim::game::position_on_grid>(out)
       .get<bim::game::player>(out)
-      .get<bim::game::flame>(out);
+      .get<bim::game::flame>(out)
+      .get<bim::game::timer>(out);
 
   registry.clear();
 
@@ -53,16 +56,18 @@ TEST(bim_game_archive, pod_components_multiple_steps)
       .get<bim::game::bomb>(in)
       .get<bim::game::position_on_grid>(in)
       .get<bim::game::player>(in)
-      .get<bim::game::flame>(in);
+      .get<bim::game::flame>(in)
+      .get<bim::game::timer>(in);
 
   for (std::size_t i = 0; i != std::size(entities); ++i)
     EXPECT_TRUE(registry.valid(entities[i])) << "i=" << i;
 
   ASSERT_TRUE(registry.storage<bim::game::bomb>().contains(entities[0]));
-  EXPECT_EQ(
-      std::chrono::milliseconds(2),
-      registry.get<bim::game::bomb>(entities[0]).duration_until_explosion);
   EXPECT_EQ(18, registry.get<bim::game::bomb>(entities[0]).strength);
+
+  ASSERT_TRUE(registry.storage<bim::game::timer>().contains(entities[0]));
+  EXPECT_EQ(std::chrono::milliseconds(2),
+            registry.get<bim::game::timer>(entities[0]).duration);
 
   ASSERT_TRUE(
       registry.storage<bim::game::position_on_grid>().contains(entities[1]));
@@ -80,6 +85,4 @@ TEST(bim_game_archive, pod_components_multiple_steps)
             registry.get<bim::game::flame>(entities[3]).direction);
   EXPECT_EQ(bim::game::flame_segment::tip,
             registry.get<bim::game::flame>(entities[3]).segment);
-  EXPECT_EQ(std::chrono::milliseconds(40),
-            registry.get<bim::game::flame>(entities[3]).time_to_live);
 }

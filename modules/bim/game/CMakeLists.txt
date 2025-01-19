@@ -39,6 +39,7 @@ add_library(bim_game
   main/src/bim/game/system/update_flame_power_ups.cpp
   main/src/bim/game/system/update_flames.cpp
   main/src/bim/game/system/update_players.cpp
+  main/src/bim/game/system/update_timers.cpp
 )
 target_include_directories(bim_game PUBLIC main/include)
 target_link_libraries(bim_game PUBLIC bim_core iscool_net EnTT::EnTT)
@@ -60,8 +61,8 @@ add_executable(game-tests
   tests/src/bim/game/system/update_brick_walls.cpp
   tests/src/bim/game/system/update_flame_power_up_spawners.cpp
   tests/src/bim/game/system/update_flame_power_ups.cpp
-  tests/src/bim/game/system/update_flames.cpp
   tests/src/bim/game/system/update_players.cpp
+  tests/src/bim/game/system/update_timers.cpp
 )
 target_link_libraries(
   game-tests
