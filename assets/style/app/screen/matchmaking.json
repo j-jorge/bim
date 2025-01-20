@@ -1,6 +1,8 @@
 {
     "style":
     {
+        "feature-deck": [ "app/screen/part/feature-deck" ],
+
         "widgets":
         [
             "app/screen/part/menu-background",
@@ -12,7 +14,7 @@
                 "pattern":
                 [{
                     "widgets/sprite/frame":
-                      "texture/search-background-pattern.png",
+                    "texture/search-background-pattern.png",
                     "scroll-per-second.x": -10,
                     "scale": 0.75
                 }],
@@ -65,33 +67,90 @@
                     "z-order": 2
                 }],
 
+                "feature-description-background":
+                [
+                    "nine-slice/rounded-rectangle",
+                    {
+                        "instantiate": "nine_slices",
+                        "z-order": 5
+                    }
+                ],
+
+                "feature-description.placeholder":
+                [
+                    "app/screen/part/matchmaking-feature-label",
+                    {
+                        "parent": "feature-description-background",
+                        "text.i18n": "Customize your experience below!"
+                    }
+                ],
+
+                "feature-description-background-spike":
+                [{
+                    "instantiate": "ax::Sprite",
+                    "frame": "sprites/menu/rounded-rectangle-spike.png",
+                    "parent": "feature-description-background",
+                    "flip.y": true,
+                    "z-order": 10
+                }],
+
+                "feature-description.on.1":
+                [
+                    "app/screen/part/matchmaking-feature-label",
+                    {
+                        "parent": "feature-description-background",
+                        "text.i18n": "Falling blocks reduce the arena after two minutes!"
+                    }
+                ],
+
+                "feature-description.off.1":
+                [
+                    "app/screen/part/matchmaking-feature-label",
+                    {
+                        "parent": "feature-description-background",
+                        "text.i18n": "No falling blocks! The game ends after 3 minutes if the players are still alive."
+                    }
+                ],
+
+                "feature-description.unavailable":
+                [
+                    "app/screen/part/matchmaking-feature-label",
+                    {
+                        "parent": "feature-description-background",
+                        "text.i18n": "Keep playing to unlock new game features!"
+                    }
+                ],
+
                 "label-2":
                 [
-                    "font/bold-center-normal-size-with-outline",
+                    "app/screen/part/matchmaking-player-label",
                     {
-                        "instantiate": "ax::Label",
-                        "text.i18n": "You can start a two-players game\nnow or wait for more players!",
-                        "z-order": 5
+                        "text.i18n": "You can start a two-players game\nnow or wait for more players!"
                     }
                 ],
 
                 "label-3":
                 [
-                    "font/bold-center-normal-size-with-outline",
+                    "app/screen/part/matchmaking-player-label",
                     {
-                        "instantiate": "ax::Label",
-                        "text.i18n": "You can start a three-players game\nnow or wait for more players!",
-                        "z-order": 5
+                        "text.i18n": "You can start a three-players game\nnow or wait for more players!"
                     }
                 ],
 
                 "label-4":
                 [
-                    "font/bold-center-normal-size-with-outline",
+                    "app/screen/part/matchmaking-player-label",
                     {
-                        "instantiate": "ax::Label",
-                        "text.i18n": "Start the game now!",
-                        "z-order": 5
+                        "text.i18n": "Start the game now!"
+                    }
+                ],
+
+                "label-background":
+                [
+                    "nine-slice/stripe",
+                    {
+                        "instantiate": "nine_slices",
+                        "z-order": -10
                     }
                 ],
 
@@ -108,12 +167,42 @@
 
         "display.displaying":
         [{
+            "feature-description-background": [{ "visible": true }],
+            "feature-description.placeholder": [{ "visible": true }],
+            "feature-description.on.1": [{ "visible": false }],
+            "feature-description.off.1": [{ "visible": false }],
+            "feature-description.unavailable": [{ "visible": false }],
+            "label-background": [{ "visible": false }],
             "player-2": [{ "visible": false }],
             "player-3": [{ "visible": false }],
             "player-4": [{ "visible": false }],
             "label-2": [{ "visible": false }],
             "label-3": [{ "visible": false }],
             "label-4": [{ "visible": false }]
+        }],
+
+        "display.feature.on.1":
+        [{
+            "feature-description.placeholder": [{ "visible": false }],
+            "feature-description.on.1": [{ "visible": true }],
+            "feature-description.off.1": [{ "visible": false }],
+            "feature-description.unavailable": [{ "visible": false }]
+        }],
+
+        "display.feature.off.1":
+        [{
+            "feature-description.placeholder": [{ "visible": false }],
+            "feature-description.on.1": [{ "visible": false }],
+            "feature-description.off.1": [{ "visible": true }],
+            "feature-description.unavailable": [{ "visible": false }]
+        }],
+
+        "display.feature.unavailable":
+        [{
+            "feature-description.placeholder": [{ "visible": false }],
+            "feature-description.on.1": [{ "visible": false }],
+            "feature-description.off.1": [{ "visible": false }],
+            "feature-description.unavailable": [{ "visible": true }]
         }],
 
         "actions.displaying":
@@ -134,6 +223,7 @@
         "actions.wait":
         [{
             "ready_button": [{ "instantiate": "hide" }],
+            "label-background": [{ "instantiate": "hide" }],
             "player-2": [{ "instantiate": "hide" }],
             "player-3": [{ "instantiate": "hide" }],
             "player-4": [{ "instantiate": "hide" }],
@@ -145,6 +235,7 @@
         "actions.2-players":
         [{
             "ready_button": [{ "instantiate": "show" }],
+            "label-background": [{ "instantiate": "show" }],
             "player-2": [{ "instantiate": "show" }],
             "player-3": [{ "instantiate": "hide" }],
             "player-4": [{ "instantiate": "hide" }],
@@ -156,6 +247,7 @@
         "actions.3-players":
         [{
             "ready_button": [{ "instantiate": "show" }],
+            "label-background": [{ "instantiate": "show" }],
             "player-2": [{ "instantiate": "show" }],
             "player-3": [{ "instantiate": "show" }],
             "player-4": [{ "instantiate": "hide" }],
@@ -167,6 +259,7 @@
         "actions.4-players":
         [{
             "ready_button": [{ "instantiate": "show" }],
+            "label-background": [{ "instantiate": "show" }],
             "player-2": [{ "instantiate": "show" }],
             "player-3": [{ "instantiate": "show" }],
             "player-4": [{ "instantiate": "show" }],

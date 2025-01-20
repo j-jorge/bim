@@ -1,0 +1,44 @@
+{
+    "style":
+    {
+        "feature_falling_blocks":
+        [
+            "app/screen/part/feature-deck-button-bounds",
+            {
+                "anchor.reference.x": 0.16
+            }
+        ],
+
+        "feature_extra_0":
+        [
+            "app/screen/part/feature-deck-button-bounds",
+            {
+                "anchor.reference.x": 0.16
+            }
+        ],
+
+        "feature_extra_1":
+        [
+            "app/screen/part/feature-deck-button-bounds",
+            {
+                "anchor.reference.x": 0.39
+            }
+        ],
+
+        "feature_extra_2":
+        [
+            "app/screen/part/feature-deck-button-bounds",
+            {
+                "anchor.reference.x": 0.61
+            }
+        ],
+
+        "feature_extra_3":
+        [
+            "app/screen/part/feature-deck-button-bounds",
+            {
+                "anchor.reference.x": 0.84
+            }
+        ]
+    }
+}

@@ -103,7 +103,7 @@ bool bim::axmol::widget::soft_pad::init()
 
 bool bim::axmol::widget::soft_pad::update_display()
 {
-  apply_bounds(m_context.style_cache, m_controls->all_nodes, m_style_bounds);
+  apply_bounds(m_context, m_controls->all_nodes, m_style_bounds);
 
   if (m_soft_pad_input->horizontal() > 0)
     apply_display(m_context.style_cache, m_controls->all_nodes, m_style_right);

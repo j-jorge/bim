@@ -1,9 +1,13 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/axmol/app/screen/matchmaking.hpp>
 
+#include <bim/axmol/app/feature_deck.hpp>
+#include <bim/axmol/app/preference/feature_flags.hpp>
+
 #include <bim/axmol/widget/apply_actions.hpp>
 #include <bim/axmol/widget/apply_display.hpp>
 #include <bim/axmol/widget/context.hpp>
+#include <bim/axmol/widget/merge_named_node_groups.hpp>
 #include <bim/axmol/widget/ui/button.hpp>
 
 #include <bim/net/exchange/new_game_exchange.hpp>
@@ -38,19 +42,57 @@ bim::axmol::app::matchmaking::matchmaking(
   , m_controls(context.get_widget_context(), *style.get_declaration("widgets"))
   , m_new_game(new bim::net::new_game_exchange(
         m_context.get_session_handler()->message_stream()))
+  , m_feature_deck(
+        new feature_deck(m_context, *style.get_declaration("feature-deck")))
   , m_style_displaying(*style.get_declaration("display.displaying"))
   , m_action_displaying(*style.get_declaration("actions.displaying"))
+  , m_feature_unavailable_display(
+        *style.get_declaration("display.feature.unavailable"))
   , m_action_wait(*style.get_declaration("actions.wait"))
   , m_action_2_players(*style.get_declaration("actions.2-players"))
   , m_action_3_players(*style.get_declaration("actions.3-players"))
   , m_action_4_players(*style.get_declaration("actions.4-players"))
 {
+  m_feature_display_on[bim::game::feature_flags::falling_blocks] =
+      &*style.get_declaration("display.feature.on.1");
+  m_feature_display_off[bim::game::feature_flags::falling_blocks] =
+      &*style.get_declaration("display.feature.off.1");
+
+  m_all_nodes = m_controls->all_nodes;
+  bim::axmol::widget::merge_named_node_groups(m_all_nodes,
+                                              m_feature_deck->display_nodes());
+
+  m_inputs.push_back(m_feature_deck->input_node());
   m_inputs.push_back(m_controls->ready_button->input_node());
 
   m_controls->ready_button->connect_to_clicked(
       [this]()
       {
         accept_game();
+      });
+
+  m_feature_deck->connect_to_enabled(
+      [this](bim::game::feature_flags f) -> void
+      {
+        bim::axmol::widget::apply_display(
+            m_context.get_widget_context().style_cache, m_controls->all_nodes,
+            *m_feature_display_on.find(f)->second);
+      });
+
+  m_feature_deck->connect_to_disabled(
+      [this](bim::game::feature_flags f) -> void
+      {
+        bim::axmol::widget::apply_display(
+            m_context.get_widget_context().style_cache, m_controls->all_nodes,
+            *m_feature_display_off.find(f)->second);
+      });
+
+  m_feature_deck->connect_to_unavailable(
+      [this]() -> void
+      {
+        bim::axmol::widget::apply_display(
+            m_context.get_widget_context().style_cache, m_controls->all_nodes,
+            m_feature_unavailable_display);
       });
 }
 
@@ -65,7 +107,7 @@ bim::axmol::app::matchmaking::input_node() const
 const bim::axmol::widget::named_node_group&
 bim::axmol::app::matchmaking::nodes() const
 {
-  return m_controls->all_nodes;
+  return m_all_nodes;
 }
 
 void bim::axmol::app::matchmaking::displaying()
@@ -74,6 +116,9 @@ void bim::axmol::app::matchmaking::displaying()
 
   bim::axmol::widget::apply_display(m_context.get_widget_context().style_cache,
                                     m_controls->all_nodes, m_style_displaying);
+
+  m_feature_deck->displaying(
+      enabled_feature_flags(*m_context.get_local_preferences()));
 
   run_actions(m_main_actions, m_action_displaying);
   run_actions(m_state_actions, m_action_wait);
@@ -157,7 +202,10 @@ void bim::axmol::app::matchmaking::accept_game()
   m_controls->ready_button->enable(false);
 
   m_game_proposal_connection.disconnect();
-  m_new_game->accept();
+
+  const bim::game::feature_flags features = m_feature_deck->features();
+  enabled_feature_flags(*m_context.get_local_preferences(), features);
+  m_new_game->accept(features);
 }
 
 void bim::axmol::app::matchmaking::launch_game(

@@ -1,0 +1,13 @@
+{
+    "style":
+    {
+        "widgets/sprite":
+        [{
+            "frame": "sprites/menu/stripe-1-79-1-258.png",
+            "insets.left": 1,
+            "insets.top": 79,
+            "insets.width": 1,
+            "insets.height": 258
+        }]
+    }
+}

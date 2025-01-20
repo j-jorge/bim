@@ -5,6 +5,8 @@
 #include <bim/net/message/encounter_id.hpp>
 #include <bim/net/message/game_name.hpp>
 
+#include <bim/game/feature_flags_fwd.hpp>
+
 #include <iscool/monitoring/declare_state_monitor.hpp>
 #include <iscool/net/message/message.hpp>
 #include <iscool/net/message_channel.hpp>
@@ -27,7 +29,7 @@ namespace bim::net
 
     void start(iscool::net::session_id session, const game_name& name);
     void start(iscool::net::session_id session);
-    void accept();
+    void accept(bim::game::feature_flags features);
     void stop();
 
   private:

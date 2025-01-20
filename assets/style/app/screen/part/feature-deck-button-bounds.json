@@ -1,0 +1,11 @@
+{
+    "style":
+    {
+        "anchor.x": 0.5,
+        "anchor.y": 0.5,
+        "anchor.reference.x": 0.5,
+        "anchor.reference.y": 0.3,
+        "width.percents": 20,
+        "height-ratio": 1
+    }
+}

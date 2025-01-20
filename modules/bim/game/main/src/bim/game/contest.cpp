@@ -9,6 +9,7 @@
 #include <bim/game/contest_result.hpp>
 #include <bim/game/factory/arena_reduction.hpp>
 #include <bim/game/factory/player.hpp>
+#include <bim/game/feature_flags.hpp>
 #include <bim/game/system/apply_player_action.hpp>
 #include <bim/game/system/arena_reduction.hpp>
 #include <bim/game/system/refresh_bomb_inventory.hpp>
@@ -57,7 +58,7 @@ bim::game::contest::contest(std::uint64_t seed,
                             std::uint8_t brick_wall_probability,
                             std::uint8_t player_count,
                             std::uint8_t arena_width,
-                            std::uint8_t arena_height)
+                            std::uint8_t arena_height, feature_flags features)
   : m_arena(arena_width, arena_height)
 {
   add_players(m_registry, player_count, arena_width, arena_height);
@@ -68,7 +69,9 @@ bim::game::contest::contest(std::uint64_t seed,
   insert_random_brick_walls(m_arena, m_registry, random,
                             brick_wall_probability);
 
-  arena_reduction_factory(m_registry, std::chrono::minutes(2));
+  if (!!(features & feature_flags::falling_blocks))
+    arena_reduction_factory(m_registry, std::chrono::minutes(2));
+
   m_arena_reduction.reset(new arena_reduction(m_arena));
 }
 

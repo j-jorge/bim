@@ -8,6 +8,7 @@ namespace bim::axmol::style
   enum class scale_mode : std::uint8_t
   {
     fit,
-    cover
+    cover,
+    device
   };
 }

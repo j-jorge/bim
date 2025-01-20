@@ -1,0 +1,15 @@
+{
+    "meta":
+    {
+        "overrides": [ "font/bold-center-normal-size" ]
+    },
+
+    "style":
+    {
+        "instantiate": "ax::Label",
+        "font.size": 40,
+        "font.color": "cod-gray",
+        "wrap": true,
+        "z-order": 10
+    }
+}

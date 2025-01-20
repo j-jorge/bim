@@ -45,11 +45,7 @@ void bim::net::new_game_exchange::start(iscool::net::session_id session,
   m_monitor->set_start_named_state();
 
   internal_start(session);
-
-  constexpr std::uint32_t feature_mask = 0;
-  new_named_game_request(m_token, feature_mask, name)
-      .build_message(m_client_message);
-
+  new_named_game_request(m_token, name).build_message(m_client_message);
   tick();
 }
 
@@ -61,14 +57,11 @@ void bim::net::new_game_exchange::start(iscool::net::session_id session)
   m_monitor->set_start_random_state();
 
   internal_start(session);
-
-  constexpr std::uint32_t feature_mask = 0;
-  new_random_game_request(m_token, feature_mask)
-      .build_message(m_client_message);
+  new_random_game_request(m_token).build_message(m_client_message);
   tick();
 }
 
-void bim::net::new_game_exchange::accept()
+void bim::net::new_game_exchange::accept(bim::game::feature_flags features)
 {
   assert(!!m_encounter_id);
 
@@ -80,13 +73,13 @@ void bim::net::new_game_exchange::accept()
   if (m_monitor->is_start_named_state())
     {
       m_monitor->set_accept_named_state();
-      accept_named_game(m_token, *m_encounter_id)
+      accept_named_game(m_token, *m_encounter_id, features)
           .build_message(m_client_message);
     }
   else
     {
       m_monitor->set_accept_random_state();
-      accept_random_game(m_token, *m_encounter_id)
+      accept_random_game(m_token, *m_encounter_id, features)
           .build_message(m_client_message);
     }
 }
@@ -192,7 +185,7 @@ void bim::net::new_game_exchange::check_launch_game(
       .channel = message->get_game_channel(),
       .player_count = message->get_player_count(),
       .player_index = message->get_player_index(),
-      .feature_mask = message->get_feature_mask(),
+      .features = message->get_features(),
       .brick_wall_probability = message->get_brick_wall_probability(),
       .arena_width = message->get_arena_width(),
       .arena_height = message->get_arena_height() });

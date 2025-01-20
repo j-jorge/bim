@@ -1,0 +1,27 @@
+{
+    "meta":
+    {
+        "overrides": [ "button/base" ]
+    },
+
+    "style":
+    {
+        "widgets":
+        [{
+            "icon":
+            [{
+                "instantiate": "ax::Sprite",
+                "frame": "sprites/features/unavailable.png"
+            }]
+        }],
+
+        "bounds":
+        [{
+            "icon": [ "layout/fit" ]
+        }],
+
+        "display.pressed": [],
+        "display.release": [],
+        "display.disabled": []
+    }
+}

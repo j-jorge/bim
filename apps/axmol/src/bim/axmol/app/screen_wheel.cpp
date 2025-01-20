@@ -71,8 +71,7 @@ void bim::axmol::app::screen_wheel::map_nodes(
     const std::string& bounds_style_name) const
 {
   bim::axmol::widget::add_group_as_children(container, nodes);
-  bim::axmol::widget::apply_bounds(m_context.get_widget_context().style_cache,
-                                   nodes,
+  bim::axmol::widget::apply_bounds(m_context.get_widget_context(), nodes,
                                    *style.get_declaration(bounds_style_name));
 }
 

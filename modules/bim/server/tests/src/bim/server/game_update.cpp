@@ -92,7 +92,8 @@ game_update_test::client::client(bim::server::tests::fake_scheduler& scheduler,
       });
 
   m_new_game.connect_to_game_proposal(
-      std::bind(&bim::net::new_game_exchange::accept, &m_new_game));
+      std::bind(&bim::net::new_game_exchange::accept, &m_new_game,
+                bim::game::feature_flags{}));
 
   m_new_game.connect_to_launch_game(std::bind(&client::launch_game, this,
                                               std::ref(message_stream),

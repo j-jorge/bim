@@ -4,6 +4,7 @@ add_library(bim_app
   STATIC
   src/bim/axmol/app/application.cpp
   src/bim/axmol/app/bridge.cpp
+  src/bim/axmol/app/feature_deck.cpp
   src/bim/axmol/app/main_scene.cpp
   src/bim/axmol/app/root_scene.cpp
   src/bim/axmol/app/scene_lock.cpp
@@ -15,6 +16,7 @@ add_library(bim_app
 
   src/bim/axmol/app/preference/audio.cpp
   src/bim/axmol/app/preference/controls.cpp
+  src/bim/axmol/app/preference/feature_flags.cpp
   src/bim/axmol/app/preference/haptic.cpp
   src/bim/axmol/app/preference/network.cpp
 

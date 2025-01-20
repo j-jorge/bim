@@ -2,6 +2,7 @@
 #pragma once
 
 #include <bim/game/arena.hpp>
+#include <bim/game/feature_flags_fwd.hpp>
 
 #include <entt/entity/registry.hpp>
 
@@ -22,7 +23,7 @@ namespace bim::game
   public:
     contest(std::uint64_t seed, std::uint8_t brick_wall_probability,
             std::uint8_t player_count, std::uint8_t arena_width,
-            std::uint8_t arena_height);
+            std::uint8_t arena_height, feature_flags features);
     ~contest();
 
     contest_result tick();

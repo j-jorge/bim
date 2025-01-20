@@ -107,11 +107,9 @@ bool bim::axmol::widget::soft_stick::init()
 void bim::axmol::widget::soft_stick::update_display()
 {
   if (m_on_the_left)
-    apply_bounds(m_context.style_cache, m_controls->all_nodes,
-                 m_style_bounds_left);
+    apply_bounds(m_context, m_controls->all_nodes, m_style_bounds_left);
   else
-    apply_bounds(m_context.style_cache, m_controls->all_nodes,
-                 m_style_bounds_right);
+    apply_bounds(m_context, m_controls->all_nodes, m_style_bounds_right);
 
   const ax::Node& stick = *m_controls->stick;
 

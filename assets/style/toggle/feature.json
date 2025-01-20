@@ -1,0 +1,33 @@
+{
+    "meta":
+    {
+        "overrides": [ "toggle/base" ]
+    },
+
+    "style":
+    {
+        "widgets":
+        [{
+            "off/instantiate": "ax::Sprite",
+            "on/instantiate": "ax::Sprite"
+        }],
+
+        "bounds":
+        [{
+            "off": [ "layout/fit" ],
+            "on": [ "layout/fit" ]
+        }],
+
+        "display.off":
+        [{
+            "off/visible": true,
+            "on/visible": false
+        }],
+
+        "display.on":
+        [{
+            "off/visible": false,
+            "on/visible": true
+        }]
+    }
+}

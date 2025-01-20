@@ -25,7 +25,7 @@ static void dump_timeline(const bim::game::contest_timeline& timeline)
   bim::game::contest contest(fingerprint.seed,
                              fingerprint.brick_wall_probability,
                              fingerprint.player_count, fingerprint.arena_width,
-                             fingerprint.arena_height);
+                             fingerprint.arena_height, fingerprint.features);
 
   std::cout << "Initial state\n";
   bim::game::dump_arena(contest.arena(), contest.registry());

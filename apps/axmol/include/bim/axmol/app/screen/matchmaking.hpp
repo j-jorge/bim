@@ -5,6 +5,8 @@
 #include <bim/axmol/input/tree.hpp>
 #include <bim/axmol/widget/declare_controls_struct.hpp>
 
+#include <bim/game/feature_flags_fwd.hpp>
+
 #include <iscool/context.hpp>
 #include <iscool/monitoring/declare_state_monitor.hpp>
 #include <iscool/net/message/channel_id.hpp>
@@ -23,6 +25,11 @@ namespace bim::net
   struct game_launch_event;
 }
 
+namespace iscool::preferences
+{
+  class local_preferences;
+}
+
 namespace iscool::style
 {
   class declaration;
@@ -30,6 +37,8 @@ namespace iscool::style
 
 namespace bim::axmol::app
 {
+  class feature_deck;
+
   class matchmaking
   {
     DECLARE_SIGNAL(void(const bim::net::game_launch_event&), start_game,
@@ -39,7 +48,8 @@ namespace bim::axmol::app
         m_context,
         ic_context_declare_parent_properties(                      //
             ((const bim::axmol::widget::context&)(widget_context)) //
-            ((bim::net::session_handler*)(session_handler))),
+            ((bim::net::session_handler*)(session_handler))        //
+            ((iscool::preferences::local_preferences*)(local_preferences))),
         ic_context_no_properties);
 
   public:
@@ -74,8 +84,19 @@ namespace bim::axmol::app
     iscool::signals::scoped_connection m_game_proposal_connection;
     iscool::signals::scoped_connection m_launch_connection;
 
+    std::unique_ptr<feature_deck> m_feature_deck;
+
     const iscool::style::declaration& m_style_displaying;
     const iscool::style::declaration& m_action_displaying;
+
+    std::unordered_map<bim::game::feature_flags,
+                       const iscool::style::declaration*>
+        m_feature_display_on;
+    std::unordered_map<bim::game::feature_flags,
+                       const iscool::style::declaration*>
+        m_feature_display_off;
+    const iscool::style::declaration& m_feature_unavailable_display;
+
     const iscool::style::declaration& m_action_wait;
     const iscool::style::declaration& m_action_2_players;
     const iscool::style::declaration& m_action_3_players;
@@ -83,5 +104,7 @@ namespace bim::axmol::app
 
     bim::axmol::action::runner m_main_actions;
     bim::axmol::action::runner m_state_actions;
+
+    bim::axmol::widget::named_node_group m_all_nodes;
   };
 }

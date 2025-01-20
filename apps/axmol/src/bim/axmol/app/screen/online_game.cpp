@@ -262,7 +262,7 @@ void bim::axmol::app::online_game::displaying(
 
   m_contest.reset(new bim::game::contest(
       event.seed, event.brick_wall_probability, event.player_count,
-      event.arena_width, event.arena_height));
+      event.arena_width, event.arena_height, event.features));
   m_game_channel.reset(new iscool::net::message_channel(
       m_context.get_session_handler()->message_stream(),
       m_context.get_session_handler()->session_id(), event.channel));
@@ -317,7 +317,7 @@ void bim::axmol::app::online_game::configure_direction_pad()
       direction_pad_on_the_left(*m_context.get_local_preferences());
 
   bim::axmol::widget::apply_bounds(
-      m_context.get_widget_context().style_cache, m_controls->all_nodes,
+      m_context.get_widget_context(), m_controls->all_nodes,
       pad_on_the_left ? m_style_pad_on_the_left : m_style_pad_on_the_right);
   m_use_stick =
       direction_pad_kind_is_stick(*m_context.get_local_preferences());

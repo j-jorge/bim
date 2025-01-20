@@ -161,7 +161,7 @@ void bim::axmol::widget::toggle::update_bounds()
       return;
     }
 
-  apply_bounds(m_context.style_cache, m_controls->all_nodes, m_style_bounds);
+  apply_bounds(m_context, m_controls->all_nodes, m_style_bounds);
   m_bounds_dirty = false;
 }
 

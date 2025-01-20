@@ -26,8 +26,9 @@ protected:
            iscool::net::message_stream& message_stream);
 
     void authenticate();
-    void new_game(const bim::net::game_name& name);
-    void new_game();
+    void new_game(const bim::net::game_name& name,
+                  bim::game::feature_flags features);
+    void new_game(bim::game::feature_flags features);
 
   public:
     std::optional<bim::net::game_launch_event> m_game_launch_event;
@@ -79,9 +80,6 @@ game_creation_test::client::client(
         EXPECT_TRUE(false);
       });
 
-  m_new_game.connect_to_game_proposal(
-      std::bind(&bim::net::new_game_exchange::accept, &m_new_game));
-
   m_new_game.connect_to_launch_game(
       std::bind(&client::launch_game, this, std::placeholders::_1));
 }
@@ -96,17 +94,23 @@ void game_creation_test::client::authenticate()
     m_scheduler.tick(std::chrono::seconds(1));
 }
 
-void game_creation_test::client::new_game(const bim::net::game_name& name)
+void game_creation_test::client::new_game(const bim::net::game_name& name,
+                                          bim::game::feature_flags features)
 {
   ASSERT_TRUE(!!m_session);
+
+  m_new_game.connect_to_game_proposal(
+      std::bind(&bim::net::new_game_exchange::accept, &m_new_game, features));
 
   m_new_game.start(*m_session, name);
 }
 
-void game_creation_test::client::new_game()
+void game_creation_test::client::new_game(bim::game::feature_flags features)
 {
   ASSERT_TRUE(!!m_session);
 
+  m_new_game.connect_to_game_proposal(
+      std::bind(&bim::net::new_game_exchange::accept, &m_new_game, features));
   m_new_game.start(*m_session);
 }
 
@@ -139,7 +143,8 @@ TEST_F(game_creation_test, two_named_games)
     m_clients[i].authenticate();
 
   for (int i = 0; i != 4; ++i)
-    m_clients[i].new_game({ 'g', 'a', 'm', 'e', '1' });
+    m_clients[i].new_game({ 'g', 'a', 'm', 'e', '1' },
+                          bim::game::feature_flags(0b1110 | (1 << i)));
 
   // Let the time pass such that the messages can move between the clients and
   // the server.
@@ -147,7 +152,8 @@ TEST_F(game_creation_test, two_named_games)
     m_scheduler.tick(std::chrono::seconds(1));
 
   for (int i = 4; i != 7; ++i)
-    m_clients[i].new_game({ 'g', 'a', 'm', 'e', '2' });
+    m_clients[i].new_game({ 'g', 'a', 'm', 'e', '2' },
+                          bim::game::feature_flags(0b1110'0000 | (1 << i)));
 
   // Time passes again…
   for (int i = 0; i != 10; ++i)
@@ -174,13 +180,23 @@ TEST_F(game_creation_test, two_named_games)
   EXPECT_NE(m_clients[2].m_game_launch_event->player_index,
             m_clients[3].m_game_launch_event->player_index);
 
-  // The game channel must be the same
+  // The game channel must be the same.
   EXPECT_EQ(m_clients[0].m_game_launch_event->channel,
             m_clients[1].m_game_launch_event->channel);
   EXPECT_EQ(m_clients[0].m_game_launch_event->channel,
             m_clients[2].m_game_launch_event->channel);
   EXPECT_EQ(m_clients[0].m_game_launch_event->channel,
             m_clients[3].m_game_launch_event->channel);
+
+  // The features must be the same.
+  EXPECT_EQ(bim::game::feature_flags(0b1110),
+            m_clients[0].m_game_launch_event->features);
+  EXPECT_EQ(m_clients[0].m_game_launch_event->features,
+            m_clients[1].m_game_launch_event->features);
+  EXPECT_EQ(m_clients[0].m_game_launch_event->features,
+            m_clients[2].m_game_launch_event->features);
+  EXPECT_EQ(m_clients[0].m_game_launch_event->features,
+            m_clients[3].m_game_launch_event->features);
 
   for (int i = 4; i != 7; ++i)
     {
@@ -197,11 +213,19 @@ TEST_F(game_creation_test, two_named_games)
   EXPECT_NE(m_clients[5].m_game_launch_event->player_index,
             m_clients[6].m_game_launch_event->player_index);
 
-  // The game channel must be the same
+  // The game channel must be the same.
   EXPECT_EQ(m_clients[4].m_game_launch_event->channel,
             m_clients[5].m_game_launch_event->channel);
   EXPECT_EQ(m_clients[4].m_game_launch_event->channel,
             m_clients[6].m_game_launch_event->channel);
+
+  // The features must be the same.
+  EXPECT_EQ(bim::game::feature_flags(0b1110'0000),
+            m_clients[4].m_game_launch_event->features);
+  EXPECT_EQ(m_clients[4].m_game_launch_event->features,
+            m_clients[5].m_game_launch_event->features);
+  EXPECT_EQ(m_clients[4].m_game_launch_event->features,
+            m_clients[6].m_game_launch_event->features);
 
   // The game channel of each group of players must be different.
   EXPECT_NE(m_clients[0].m_game_launch_event->channel,
@@ -218,7 +242,7 @@ TEST_F(game_creation_test, two_random_games)
     m_clients[i].authenticate();
 
   for (int i = 0; i != 4; ++i)
-    m_clients[i].new_game();
+    m_clients[i].new_game(bim::game::feature_flags(0b11 | (1 << i)));
 
   // Let the time pass such that the messages can move between the clients and
   // the server.
@@ -247,7 +271,7 @@ TEST_F(game_creation_test, two_random_games)
   EXPECT_NE(m_clients[2].m_game_launch_event->player_index,
             m_clients[3].m_game_launch_event->player_index);
 
-  // The game channel must be the same
+  // The game channel must be the same.
   EXPECT_EQ(m_clients[0].m_game_launch_event->channel,
             m_clients[1].m_game_launch_event->channel);
   EXPECT_EQ(m_clients[0].m_game_launch_event->channel,
@@ -255,9 +279,19 @@ TEST_F(game_creation_test, two_random_games)
   EXPECT_EQ(m_clients[0].m_game_launch_event->channel,
             m_clients[3].m_game_launch_event->channel);
 
+  // The features must be the same.
+  EXPECT_EQ(bim::game::feature_flags(0b11),
+            m_clients[0].m_game_launch_event->features);
+  EXPECT_EQ(m_clients[0].m_game_launch_event->features,
+            m_clients[1].m_game_launch_event->features);
+  EXPECT_EQ(m_clients[0].m_game_launch_event->features,
+            m_clients[2].m_game_launch_event->features);
+  EXPECT_EQ(m_clients[0].m_game_launch_event->features,
+            m_clients[3].m_game_launch_event->features);
+
   // Second group as for a random game
   for (int i = 4; i != 7; ++i)
-    m_clients[i].new_game();
+    m_clients[i].new_game(bim::game::feature_flags(0b1100'0000 | (1 << i)));
 
   // Time passes again…
   for (int i = 0; i != 10; ++i)
@@ -278,11 +312,19 @@ TEST_F(game_creation_test, two_random_games)
   EXPECT_NE(m_clients[5].m_game_launch_event->player_index,
             m_clients[6].m_game_launch_event->player_index);
 
-  // The game channel must be the same
+  // The game channel must be the same.
   EXPECT_EQ(m_clients[4].m_game_launch_event->channel,
             m_clients[5].m_game_launch_event->channel);
   EXPECT_EQ(m_clients[4].m_game_launch_event->channel,
             m_clients[6].m_game_launch_event->channel);
+
+  // The features must be the same.
+  EXPECT_EQ(bim::game::feature_flags(0b1100'0000),
+            m_clients[4].m_game_launch_event->features);
+  EXPECT_EQ(m_clients[4].m_game_launch_event->features,
+            m_clients[5].m_game_launch_event->features);
+  EXPECT_EQ(m_clients[4].m_game_launch_event->features,
+            m_clients[6].m_game_launch_event->features);
 
   // The game channel of each group of players must be different.
   EXPECT_NE(m_clients[0].m_game_launch_event->channel,
@@ -299,7 +341,7 @@ TEST_F(game_creation_test, two_random_games_simultaneously)
     m_clients[i].authenticate();
 
   for (int i = 0; i != 7; ++i)
-    m_clients[i].new_game();
+    m_clients[i].new_game({});
 
   // Let the time pass such that the messages can move between the clients and
   // the server.
@@ -337,10 +379,12 @@ TEST_F(game_creation_test, mix_random_and_named_games)
     m_clients[i].authenticate();
 
   for (int i = 0; i != 4; ++i)
-    m_clients[i].new_game();
+    m_clients[i].new_game(bim::game::feature_flags(0b1010 | (1 << i)));
 
   for (int i = 4; i != 7; ++i)
-    m_clients[i].new_game({ 'g', 'a', 'm', 'e' });
+    m_clients[i].new_game(
+        { 'g', 'a', 'm', 'e' },
+        bim::game::feature_flags(0b110'0000 | (1 << (i - 4))));
 
   // Let the time pass such that the messages can move between the clients and
   // the server.
@@ -372,13 +416,23 @@ TEST_F(game_creation_test, mix_random_and_named_games)
   EXPECT_NE(m_clients[2].m_game_launch_event->player_index,
             m_clients[3].m_game_launch_event->player_index);
 
-  // The game channel must be the same
+  // The game channel must be the same.
   EXPECT_EQ(m_clients[0].m_game_launch_event->channel,
             m_clients[1].m_game_launch_event->channel);
   EXPECT_EQ(m_clients[0].m_game_launch_event->channel,
             m_clients[2].m_game_launch_event->channel);
   EXPECT_EQ(m_clients[0].m_game_launch_event->channel,
             m_clients[3].m_game_launch_event->channel);
+
+  // The features must be the same.
+  EXPECT_EQ(bim::game::feature_flags(0b1010),
+            m_clients[0].m_game_launch_event->features);
+  EXPECT_EQ(m_clients[0].m_game_launch_event->features,
+            m_clients[1].m_game_launch_event->features);
+  EXPECT_EQ(m_clients[0].m_game_launch_event->features,
+            m_clients[2].m_game_launch_event->features);
+  EXPECT_EQ(m_clients[0].m_game_launch_event->features,
+            m_clients[3].m_game_launch_event->features);
 
   for (int i = 4; i != 7; ++i)
     {
@@ -395,11 +449,19 @@ TEST_F(game_creation_test, mix_random_and_named_games)
   EXPECT_NE(m_clients[5].m_game_launch_event->player_index,
             m_clients[6].m_game_launch_event->player_index);
 
-  // The game channel must be the same
+  // The game channel must be the same.
   EXPECT_EQ(m_clients[4].m_game_launch_event->channel,
             m_clients[5].m_game_launch_event->channel);
   EXPECT_EQ(m_clients[4].m_game_launch_event->channel,
             m_clients[6].m_game_launch_event->channel);
+
+  // The features must be the same.
+  EXPECT_EQ(bim::game::feature_flags(0b110'0000),
+            m_clients[4].m_game_launch_event->features);
+  EXPECT_EQ(m_clients[4].m_game_launch_event->features,
+            m_clients[5].m_game_launch_event->features);
+  EXPECT_EQ(m_clients[4].m_game_launch_event->features,
+            m_clients[6].m_game_launch_event->features);
 
   // The game channel of each group of players must be different.
   EXPECT_NE(m_clients[0].m_game_launch_event->channel,
@@ -408,7 +470,6 @@ TEST_F(game_creation_test, mix_random_and_named_games)
 
 void game_creation_test::validate_player_order()
 {
-
   // Let the time pass such that the messages can move between the clients and
   // the server.
   for (int i = 0; i != 10; ++i)
@@ -459,10 +520,10 @@ TEST_F(game_creation_test, player_order_named_games)
     m_clients[i].authenticate();
 
   const bim::net::game_name& game_name = { 'g', 'a', 'm', 'e', '1' };
-  m_clients[2].new_game(game_name);
-  m_clients[0].new_game(game_name);
-  m_clients[3].new_game(game_name);
-  m_clients[1].new_game(game_name);
+  m_clients[2].new_game(game_name, {});
+  m_clients[0].new_game(game_name, {});
+  m_clients[3].new_game(game_name, {});
+  m_clients[1].new_game(game_name, {});
 
   validate_player_order();
 }
@@ -475,10 +536,10 @@ TEST_F(game_creation_test, player_order_random_games)
   for (int i = 0; i != 4; ++i)
     m_clients[i].authenticate();
 
-  m_clients[3].new_game();
-  m_clients[0].new_game();
-  m_clients[2].new_game();
-  m_clients[1].new_game();
+  m_clients[3].new_game({});
+  m_clients[0].new_game({});
+  m_clients[2].new_game({});
+  m_clients[1].new_game({});
 
   validate_player_order();
 }

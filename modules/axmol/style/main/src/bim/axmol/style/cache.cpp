@@ -114,6 +114,12 @@ static void fill_scale(bim::axmol::style::bounds_properties& properties,
               bim::axmol::style::bounds_property_flags::scale_mode;
           properties.scale_mode = bim::axmol::style::scale_mode::cover;
         }
+      else if (*scale_mode == "device")
+        {
+          properties.flags |=
+              bim::axmol::style::bounds_property_flags::scale_mode;
+          properties.scale_mode = bim::axmol::style::scale_mode::device;
+        }
       else if (*scale_mode == "fit")
         {
           properties.flags |=

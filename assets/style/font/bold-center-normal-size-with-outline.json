@@ -1,13 +1,11 @@
 {
     "meta":
     {
-        "overrides": [ "font/bold" ]
+        "overrides": [ "font/bold-center-normal-size" ]
     },
 
     "style":
     {
-        "font.size": 52,
-        "font.color": "white",
         "outline.color": "cod-gray",
         "outline.size": 5,
         "align.horizontal": "center"

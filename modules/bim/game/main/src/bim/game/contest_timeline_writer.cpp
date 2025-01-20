@@ -11,6 +11,7 @@
 
 #include <iscool/log/log.hpp>
 #include <iscool/log/nature/error.hpp>
+#include <iscool/meta/underlying_type.hpp>
 #include <iscool/net/endianness.hpp>
 
 #include <entt/entity/registry.hpp>
@@ -78,9 +79,10 @@ bim::game::contest_timeline_writer::contest_timeline_writer(
     ic_log(iscool::log::nature::error(), "contest_timeline_writer",
            "Could not write the magic number.");
 
-  const auto write = [](FILE* f, auto d) -> bool
+  const auto write = []<typename T>(FILE* f, T d) -> bool
   {
-    auto s = iscool::net::to_network_endianness(d);
+    auto s = iscool::net::to_network_endianness(
+        (typename iscool::meta::underlying_type<T>::type)d);
     return std::fwrite(&s, sizeof(char), sizeof(s), f) == sizeof(s);
   };
 
@@ -94,7 +96,7 @@ bim::game::contest_timeline_writer::contest_timeline_writer(
     ic_log(iscool::log::nature::error(), "contest_timeline_writer",
            "Could not write the game's seed.");
 
-  if (!write(m_file, contest.feature_mask))
+  if (!write(m_file, contest.features))
     ic_log(iscool::log::nature::error(), "contest_timeline_writer",
            "Could not write the game's features.");
 

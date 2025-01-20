@@ -2,7 +2,6 @@ find_program(style_merger style-merger REQUIRED)
 
 set(common_style_files
   ${CMAKE_CURRENT_LIST_DIR}/layout/center.json
-  ${CMAKE_CURRENT_LIST_DIR}/layout/fill.json
 )
 
 set(main_task_style_files
@@ -20,14 +19,22 @@ set(main_task_style_files
   ${CMAKE_CURRENT_LIST_DIR}/app/screen/online-game.json
   ${CMAKE_CURRENT_LIST_DIR}/app/screen/online-game-bounds.json
 
+  ${CMAKE_CURRENT_LIST_DIR}/app/screen/font/stripe-message.json
+  ${CMAKE_CURRENT_LIST_DIR}/app/screen/font/stripe-title.json
+
+  ${CMAKE_CURRENT_LIST_DIR}/app/screen/part/feature-deck.json
+  ${CMAKE_CURRENT_LIST_DIR}/app/screen/part/feature-deck-bounds.json
+  ${CMAKE_CURRENT_LIST_DIR}/app/screen/part/feature-deck-button-bounds.json
+  ${CMAKE_CURRENT_LIST_DIR}/app/screen/part/matchmaking-feature-label.json
+  ${CMAKE_CURRENT_LIST_DIR}/app/screen/part/matchmaking-feature-label-bounds.json
+  ${CMAKE_CURRENT_LIST_DIR}/app/screen/part/matchmaking-player-label.json
   ${CMAKE_CURRENT_LIST_DIR}/app/screen/part/menu-background.json
   ${CMAKE_CURRENT_LIST_DIR}/app/screen/part/menu-background-bounds.json
   ${CMAKE_CURRENT_LIST_DIR}/app/screen/part/menu-stripe.json
   ${CMAKE_CURRENT_LIST_DIR}/app/screen/part/menu-stripe-bounds.json
 
-  ${CMAKE_CURRENT_LIST_DIR}/app/screen/font/stripe-message.json
-  ${CMAKE_CURRENT_LIST_DIR}/app/screen/font/stripe-title.json
-
+  ${CMAKE_CURRENT_LIST_DIR}/button/base.json
+  ${CMAKE_CURRENT_LIST_DIR}/button/feature-unavailable.json
   ${CMAKE_CURRENT_LIST_DIR}/button/flat-with-label.json
   ${CMAKE_CURRENT_LIST_DIR}/button/green-with-label.json
   ${CMAKE_CURRENT_LIST_DIR}/button/red-with-label.json
@@ -37,9 +44,17 @@ set(main_task_style_files
   ${CMAKE_CURRENT_LIST_DIR}/button/yellow-with-label.json
 
   ${CMAKE_CURRENT_LIST_DIR}/font/bold.json
+  ${CMAKE_CURRENT_LIST_DIR}/font/bold-center-normal-size.json
   ${CMAKE_CURRENT_LIST_DIR}/font/bold-center-normal-size-with-outline.json
+  ${CMAKE_CURRENT_LIST_DIR}/font/center-normal-size.json
   ${CMAKE_CURRENT_LIST_DIR}/font/regular.json
   ${CMAKE_CURRENT_LIST_DIR}/font/fancy-regular.json
+
+  ${CMAKE_CURRENT_LIST_DIR}/layout/fill.json
+  ${CMAKE_CURRENT_LIST_DIR}/layout/fit.json
+
+  ${CMAKE_CURRENT_LIST_DIR}/nine-slice/rounded-rectangle.json
+  ${CMAKE_CURRENT_LIST_DIR}/nine-slice/stripe.json
 
   ${CMAKE_CURRENT_LIST_DIR}/popup/full-screen.json
   ${CMAKE_CURRENT_LIST_DIR}/popup/message.json
@@ -50,6 +65,8 @@ set(main_task_style_files
   ${CMAKE_CURRENT_LIST_DIR}/popup/settings/font/small.json
   ${CMAKE_CURRENT_LIST_DIR}/popup/settings/toggle/controls.json
 
+  ${CMAKE_CURRENT_LIST_DIR}/toggle/base.json
+  ${CMAKE_CURRENT_LIST_DIR}/toggle/feature.json
   ${CMAKE_CURRENT_LIST_DIR}/toggle/flat.json
   ${CMAKE_CURRENT_LIST_DIR}/toggle/flat-empty.json
 

@@ -1,0 +1,14 @@
+{
+    "meta":
+    {
+        "overrides":
+        [
+            "font/center-normal-size",
+            "font/bold"
+        ]
+    },
+
+    "style":
+    {
+    }
+}

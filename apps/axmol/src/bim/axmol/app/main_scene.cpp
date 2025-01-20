@@ -25,7 +25,7 @@ bim::axmol::app::main_scene::main_scene(
   m_inputs.push_back(m_main_canvas_inputs.root());
 
   bim::axmol::widget::add_group_as_children(scene, m_controls->all_nodes);
-  bim::axmol::widget::apply_bounds(context.style_cache, m_controls->all_nodes,
+  bim::axmol::widget::apply_bounds(context, m_controls->all_nodes,
                                    *style.get_declaration("bounds"));
 }
 

@@ -15,10 +15,13 @@ TEST(game_service, new_game)
 
   iscool::net::socket_stream socket_stream(12345);
   bim::server::game_service service({}, socket_stream);
+  const bim::game::feature_flags features = (bim::game::feature_flags)42;
 
-  const bim::server::game_info game = service.new_game(4, { 11, 22, 33, 44 });
+  const bim::server::game_info game =
+      service.new_game(4, features, { 11, 22, 33, 44 });
 
   EXPECT_EQ(4, game.fingerprint.player_count);
+  EXPECT_EQ(features, game.fingerprint.features);
   EXPECT_EQ(11, game.sessions[0]);
   EXPECT_EQ(22, game.sessions[1]);
   EXPECT_EQ(33, game.sessions[2]);
@@ -30,9 +33,10 @@ TEST(game_service, new_game)
   std::optional<bim::server::game_info> game_opt =
       service.find_game(game.channel);
 
-  EXPECT_TRUE(!!game_opt);
+  ASSERT_TRUE(!!game_opt);
 
   EXPECT_EQ(4, game_opt->fingerprint.player_count);
+  EXPECT_EQ(features, game_opt->fingerprint.features);
   EXPECT_EQ(11, game_opt->sessions[0]);
   EXPECT_EQ(22, game_opt->sessions[1]);
   EXPECT_EQ(33, game_opt->sessions[2]);

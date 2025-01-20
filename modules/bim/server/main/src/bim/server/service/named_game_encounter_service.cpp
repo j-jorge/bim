@@ -56,9 +56,9 @@ void bim::server::named_game_encounter_service::mark_as_ready(
          "Accepted game. Session {}, encounter {}.", session,
          message.get_encounter_id());
 
-  m_matchmaking_service.mark_as_ready(endpoint, session,
-                                      message.get_encounter_id(),
-                                      message.get_request_token());
+  m_matchmaking_service.mark_as_ready(
+      endpoint, session, message.get_encounter_id(),
+      message.get_request_token(), message.get_features());
 
   clean_up();
 }

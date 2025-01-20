@@ -4,6 +4,8 @@
 #include <bim/net/message/client_token.hpp>
 #include <bim/net/message/encounter_id.hpp>
 
+#include <bim/game/feature_flags_fwd.hpp>
+
 #include <iscool/net/message_pool.hpp>
 #include <iscool/net/message_stream.hpp>
 #include <iscool/signals/scoped_connection.hpp>
@@ -51,7 +53,8 @@ namespace bim::server
     void mark_as_ready(const iscool::net::endpoint& endpoint,
                        iscool::net::session_id session,
                        bim::net::encounter_id encounter_id,
-                       bim::net::client_token request_token);
+                       bim::net::client_token request_token,
+                       bim::game::feature_flags features);
 
     std::span<const bim::net::encounter_id> garbage_encounters() const;
     std::span<const kick_session_event> garbage_sessions() const;

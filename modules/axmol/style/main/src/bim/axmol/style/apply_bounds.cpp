@@ -19,7 +19,8 @@ static bool apply_width(float& width, const ax::Node& reference,
 static bool apply_height(float& height, const ax::Node& reference,
                          const bim::axmol::style::bounds_properties& bounds);
 static void apply_scale(ax::Node& node, const ax::Node& reference,
-                        const bim::axmol::style::bounds_properties& bounds);
+                        const bim::axmol::style::bounds_properties& bounds,
+                        float device_scale);
 static void apply_position(ax::Node& node, const ax::Node& reference,
                            const bim::axmol::style::bounds_properties& bounds);
 static void set_bottom_left(ax::Node& node,
@@ -28,13 +29,14 @@ static void set_bottom_left(ax::Node& node,
                             const ax::Vec2& reference_size);
 
 void bim::axmol::style::apply_bounds(const bounds_properties& bounds,
-                                     ax::Node& node, const ax::Node& reference)
+                                     ax::Node& node, const ax::Node& reference,
+                                     float device_scale)
 {
   assert((&reference == node.getParent())
          || (reference.getParent() == node.getParent()));
 
   apply_size(node, reference, bounds);
-  apply_scale(node, reference, bounds);
+  apply_scale(node, reference, bounds, device_scale);
   apply_position(node, reference, bounds);
 }
 
@@ -142,7 +144,8 @@ bool apply_height(float& height, const ax::Node& reference,
 }
 
 void apply_scale(ax::Node& node, const ax::Node& reference,
-                 const bim::axmol::style::bounds_properties& bounds)
+                 const bim::axmol::style::bounds_properties& bounds,
+                 float device_scale)
 {
   if (bool(bounds.flags & bim::axmol::style::bounds_property_flags::scale))
     {
@@ -164,6 +167,9 @@ void apply_scale(ax::Node& node, const ax::Node& reference,
         {
         case bim::axmol::style::scale_mode::cover:
           node.setScale(std::min(scale_to_reference.x, scale_to_reference.y));
+          break;
+        case bim::axmol::style::scale_mode::device:
+          node.setScale(device_scale);
           break;
         case bim::axmol::style::scale_mode::fit:
           node.setScale(std::max(scale_to_reference.x, scale_to_reference.y));

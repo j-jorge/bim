@@ -37,7 +37,7 @@ void bim::axmol::widget::clipping_node::setContentSize(const ax::Size& size)
 
   // Add the stencil just to update its bounds.
   addChild(&m_stencil);
-  apply_bounds(m_context.style_cache, m_controls->all_nodes, m_style_bounds);
+  apply_bounds(m_context, m_controls->all_nodes, m_style_bounds);
   m_stencil.removeFromParent();
 }
 

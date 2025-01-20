@@ -10,6 +10,8 @@
 
 #include <bim/game/constant/max_player_count.hpp>
 
+#include <bim/to_underlying.hpp>
+
 #include <iscool/log/log.hpp>
 #include <iscool/log/nature/info.hpp>
 #include <iscool/schedule/delayed_call.hpp>
@@ -28,11 +30,22 @@ static std::chrono::nanoseconds matchmaking_date_for_next_release()
 struct bim::server::matchmaking_service::encounter_info
 {
   std::uint8_t player_count;
+  std::array<bim::game::feature_flags, bim::game::g_max_player_count> features;
   std::array<iscool::net::session_id, bim::game::g_max_player_count> sessions;
   std::array<std::chrono::nanoseconds, bim::game::g_max_player_count>
       release_at_this_date;
   std::array<bool, bim::game::g_max_player_count> ready;
   std::optional<iscool::net::channel_id> channel;
+
+  bim::game::feature_flags common_features() const
+  {
+    bim::game::feature_flags result = features[0];
+
+    for (std::uint8_t i = 1; i != player_count; ++i)
+      result &= features[i];
+
+    return result;
+  }
 
   void erase(std::size_t i)
   {
@@ -87,6 +100,8 @@ bim::net::encounter_id bim::server::matchmaking_service::new_encounter(
 
   encounter.player_count = 1;
   encounter.sessions[0] = session;
+  encounter.features.fill({});
+  ;
   encounter.release_at_this_date[0] = matchmaking_date_for_next_release();
   encounter.ready.fill(false);
 
@@ -146,7 +161,8 @@ bim::server::matchmaking_service::add_in_any_encounter(
 
 void bim::server::matchmaking_service::mark_as_ready(
     const iscool::net::endpoint& endpoint, iscool::net::session_id session,
-    bim::net::encounter_id encounter_id, bim::net::client_token request_token)
+    bim::net::encounter_id encounter_id, bim::net::client_token request_token,
+    bim::game::feature_flags features)
 {
   const encounter_map::iterator it = m_encounters.find(encounter_id);
 
@@ -172,9 +188,15 @@ void bim::server::matchmaking_service::mark_as_ready(
       matchmaking_date_for_next_release();
   encounter.ready[existing_index] = true;
 
-  // The game has not started yet, thus we can still update de player list.
   if (!encounter.channel)
-    remove_inactive_sessions(encounter_id, encounter);
+    {
+      // The game has not started yet, thus we can still update de player list.
+      remove_inactive_sessions(encounter_id, encounter);
+
+      // The features cannot change if the game has started, so we update them
+      // only if it has not started.
+      encounter.features[existing_index] = features;
+    }
 
   int ready_count = 0;
   for (int i = 0; i != encounter.player_count; ++i)
@@ -195,13 +217,15 @@ void bim::server::matchmaking_service::mark_as_ready(
     }
   else
     {
-      game =
-          m_game_service.new_game(encounter.player_count, encounter.sessions);
+      game = m_game_service.new_game(encounter.player_count,
+                                     encounter.common_features(),
+                                     encounter.sessions);
       encounter.channel = game->channel;
 
       ic_log(iscool::log::nature::info(), "matchmaking_service",
-             "Channel for encounter {} is {}, seed {}.", it->first,
-             game->channel, game->fingerprint.seed);
+             "Channel for encounter {} is {}, seed {}, features={:x}.",
+             it->first, game->channel, game->fingerprint.seed,
+             bim::to_underlying(game->fingerprint.features));
     }
 
   const bim::game::contest_fingerprint& fingerprint = game->fingerprint;
@@ -209,7 +233,7 @@ void bim::server::matchmaking_service::mark_as_ready(
   const iscool::net::message_pool::slot s = m_message_pool.pick_available();
 
   bim::net::launch_game(request_token, fingerprint.seed, game->channel,
-                        fingerprint.feature_mask, fingerprint.player_count,
+                        fingerprint.features, fingerprint.player_count,
                         game->session_index(session),
                         fingerprint.brick_wall_probability,
                         fingerprint.arena_width, fingerprint.arena_height)

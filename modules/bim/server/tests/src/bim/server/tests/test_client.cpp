@@ -34,7 +34,8 @@ bim::server::tests::test_client::test_client(
   m_new_game.connect_to_game_proposal(
       [this](unsigned) -> void
       {
-        m_new_game.accept();
+        constexpr bim::game::feature_flags features{};
+        m_new_game.accept(features);
       });
 
   m_new_game.connect_to_launch_game(
@@ -82,7 +83,7 @@ void bim::server::tests::test_client::launch_game(
                                                          event.player_count));
   contest.reset(new bim::game::contest(
       event.seed, event.brick_wall_probability, event.player_count,
-      event.arena_width, event.arena_height));
+      event.arena_width, event.arena_height, event.features));
   contest_runner.reset(new bim::net::contest_runner(
       *contest, *m_game_update, event.player_index, event.player_count));
 

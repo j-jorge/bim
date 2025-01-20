@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/axmol/widget/apply_bounds.hpp>
 
+#include <bim/axmol/widget/context.hpp>
 #include <bim/axmol/widget/log_context.hpp>
 
 #include <bim/axmol/style/apply_bounds.hpp>
@@ -32,7 +33,7 @@ namespace
   using styling_queue = boost::unordered_flat_map<ax::Node*, styling>;
 }
 
-static void apply_styling(bim::axmol::style::cache& style_cache,
+static void apply_styling(const bim::axmol::widget::context& context,
                           styling_queue& queue, ax::Node& node, styling& s)
 {
   if (s.done)
@@ -49,11 +50,11 @@ static void apply_styling(bim::axmol::style::cache& style_cache,
       // it may have been set in another call. In both cases we consider the
       // reference to be ready and proceed with the current node.
       if (r != queue.end())
-        apply_styling(style_cache, queue, *r->first, r->second);
+        apply_styling(context, queue, *r->first, r->second);
     }
 
-  bim::axmol::style::apply_bounds(style_cache.get_bounds(*s.style), node,
-                                  *s.reference);
+  bim::axmol::style::apply_bounds(context.style_cache.get_bounds(*s.style),
+                                  node, *s.reference, context.device_scale);
 }
 
 static styling_queue
@@ -112,12 +113,12 @@ build_styling_queue(const bim::axmol::widget::named_node_group& nodes,
   return queue;
 }
 
-void bim::axmol::widget::apply_bounds(bim::axmol::style::cache& style_cache,
-                                      const named_node_group& nodes,
-                                      const iscool::style::declaration& style)
+void bim::axmol::widget::apply_bounds(
+    const bim::axmol::widget::context& context, const named_node_group& nodes,
+    const iscool::style::declaration& style)
 {
   styling_queue queue = build_styling_queue(nodes, style);
 
   for (auto& [node, styling] : queue)
-    apply_styling(style_cache, queue, *node, styling);
+    apply_styling(context, queue, *node, styling);
 }

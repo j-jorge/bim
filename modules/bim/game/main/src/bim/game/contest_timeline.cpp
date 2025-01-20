@@ -7,6 +7,7 @@
 
 #include <iscool/log/log.hpp>
 #include <iscool/log/nature/error.hpp>
+#include <iscool/meta/underlying_type.hpp>
 #include <iscool/net/endianness.hpp>
 
 #include <entt/entity/registry.hpp>
@@ -38,12 +39,13 @@ bool bim::game::load_contest_timeline(contest_timeline& timeline, std::FILE* f)
       return false;
     }
 
-  const auto read = [](FILE* f, auto& d) -> bool
+  const auto read = []<typename T>(FILE* f, T& d) -> bool
   {
     if (std::fread(&d, sizeof(char), sizeof(d), f) != sizeof(d))
       return false;
 
-    d = iscool::net::to_host_endianness(d);
+    d = (T)iscool::net::to_host_endianness(
+        (typename iscool::meta::underlying_type<T>::type)d);
 
     return true;
   };
@@ -71,7 +73,7 @@ bool bim::game::load_contest_timeline(contest_timeline& timeline, std::FILE* f)
       return false;
     }
 
-  if (!read(f, timeline.m_fingerprint.feature_mask))
+  if (!read(f, timeline.m_fingerprint.features))
     {
       ic_log(iscool::log::nature::error(), "load_contest_timeline",
              "Failed to read the game's features.");

@@ -1,0 +1,12 @@
+{
+    "meta":
+    {
+        "overrides": [ "font/bold-center-normal-size" ]
+    },
+
+    "style":
+    {
+        "instantiate": "ax::Label",
+        "z-order": 5
+    }
+}

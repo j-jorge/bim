@@ -3,11 +3,6 @@
 
 #include <bim/axmol/widget/named_node_group.hpp>
 
-namespace bim::axmol::style
-{
-  class cache;
-}
-
 namespace iscool::style
 {
   class declaration;
@@ -15,7 +10,8 @@ namespace iscool::style
 
 namespace bim::axmol::widget
 {
-  void apply_bounds(bim::axmol::style::cache& style_cache,
-                    const named_node_group& nodes,
+  class context;
+
+  void apply_bounds(const context& context, const named_node_group& nodes,
                     const iscool::style::declaration& style);
 }

@@ -9,6 +9,10 @@ set(sprites
   "sprites/power-up-flame.png"
   "sprites/solid-wall.png"
 
+  "sprites/features/falling-block-off.png"
+  "sprites/features/falling-block-on.png"
+  "sprites/features/unavailable.png"
+
   "sprites/menu/audio.png"
   "sprites/menu/dot-100.png"
   "sprites/menu/gamepad.png"
@@ -21,6 +25,8 @@ set(sprites
   "sprites/menu/rays.png"
   "sprites/menu/rounded-button-border-54-66.png"
   "sprites/menu/rounded-button-fill-54-66.png"
+  "sprites/menu/rounded-rectangle-33-33.png"
+  "sprites/menu/rounded-rectangle-spike.png"
   "sprites/menu/silhouette-1.png"
   "sprites/menu/silhouette-2.png"
   "sprites/menu/silhouette-3.png"

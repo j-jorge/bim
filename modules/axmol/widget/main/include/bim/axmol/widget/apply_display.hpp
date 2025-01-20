@@ -15,6 +15,8 @@ namespace iscool::style
 
 namespace bim::axmol::widget
 {
+  class context;
+
   void apply_display(bim::axmol::style::cache& style_cache,
                      const named_node_group& nodes,
                      const iscool::style::declaration& style);

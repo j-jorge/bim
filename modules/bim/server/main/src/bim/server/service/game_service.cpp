@@ -71,16 +71,17 @@ struct bim::server::game_service::game
 
 public:
   game(std::uint8_t player_count, std::uint64_t seed,
+       bim::game::feature_flags features,
        const std::array<iscool::net::session_id,
                         bim::game::g_max_player_count>& sessions)
     : seed(seed)
-    , feature_mask(0)
+    , features(features)
     , player_count(player_count)
     , sessions(sessions)
     , simulation_tick(0)
     , completed_tick_count_all(0)
     , contest_result(bim::game::contest_result::create_still_running())
-    , contest(seed, g_brick_wall_probability, player_count, 13, 15)
+    , contest(seed, g_brick_wall_probability, player_count, 13, 15, features)
   {
     std::sort(this->sessions.begin(), this->sessions.begin() + player_count);
 
@@ -95,7 +96,7 @@ public:
   bim::game::contest_fingerprint contest_fingerprint() const
   {
     return { .seed = seed,
-             .feature_mask = feature_mask,
+             .features = features,
              .player_count = player_count,
              .brick_wall_probability = g_brick_wall_probability,
              .arena_width = contest.arena().width(),
@@ -218,7 +219,7 @@ private:
 
 public:
   std::uint64_t seed;
-  std::uint32_t feature_mask;
+  bim::game::feature_flags features;
   std::uint8_t player_count;
   std::array<iscool::net::session_id, bim::game::g_max_player_count> sessions;
   std::array<bool, bim::game::g_max_player_count> ready;
@@ -313,7 +314,7 @@ bim::server::game_service::find_game(iscool::net::channel_id channel) const
 }
 
 bim::server::game_info bim::server::game_service::new_game(
-    std::uint8_t player_count,
+    std::uint8_t player_count, bim::game::feature_flags features,
     const std::array<iscool::net::session_id, bim::game::g_max_player_count>&
         sessions)
 {
@@ -326,7 +327,8 @@ bim::server::game_info bim::server::game_service::new_game(
   game& game =
       m_games
           .emplace(std::piecewise_construct, std::forward_as_tuple(channel),
-                   std::forward_as_tuple(player_count, m_random(), sessions))
+                   std::forward_as_tuple(player_count, m_random(), features,
+                                         sessions))
           .first->second;
 
   for (int i = 0; i != player_count; ++i)

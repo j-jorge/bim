@@ -63,6 +63,9 @@ assets/sprites/player-4.png
 assets/sprites/power-up-bomb.png
 assets/sprites/power-up-flame.png
 assets/sprites/solid-wall.png
+assets/sprites/features/falling-block-off.png
+assets/sprites/features/falling-block-on.png
+assets/sprites/features/unavailable.png
 assets/sprites/menu/dot-100.png
 assets/sprites/menu/gamepad-d-pad-left.png
 assets/sprites/menu/gamepad-d-pad-right.png
@@ -71,6 +74,8 @@ assets/sprites/menu/horizontal-gradient.png
 assets/sprites/menu/rays.png
 assets/sprites/menu/rounded-button-border-54-66.png
 assets/sprites/menu/rounded-button-fill-54-66.png
+assets/sprites/menu/rounded-rectangle-33-33.png
+assets/sprites/menu/rounded-rectangle-spike.png
 assets/sprites/menu/stripe-1-79-1-258.png
 assets/sprites/menu/vertical-gradient.png
 assets/sprites/menu/vertical-gray-gradient.png
