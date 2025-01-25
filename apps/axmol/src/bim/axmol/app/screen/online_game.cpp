@@ -28,6 +28,7 @@
 #include <bim/game/component/flame_direction.hpp>
 #include <bim/game/component/flame_power_up.hpp>
 #include <bim/game/component/fractional_position_on_grid.hpp>
+#include <bim/game/component/game_timer.hpp>
 #include <bim/game/component/player.hpp>
 #include <bim/game/component/player_action_queue.hpp>
 #include <bim/game/component/player_movement.hpp>
@@ -55,7 +56,7 @@
       x_widget(bim::axmol::widget::soft_stick, joystick)                      \
           x_widget(bim::axmol::widget::soft_pad, directional_pad)             \
               x_widget(bim::axmol::widget::button, bomb_button)               \
-                  x_widget(ax::Label, debug_delta_ticks)                      \
+                  x_widget(ax::Label, timer)                                  \
                       x_widget(bim::axmol::widget::peephole, peephole)        \
                           x_widget(bim::axmol::widget::tiling, background)
 #include <bim/axmol/widget/implement_controls_struct.hpp>
@@ -301,6 +302,8 @@ void bim::axmol::app::online_game::displaying(
   const ax::Node& player = *m_players[m_local_player_index];
   m_controls->peephole->prepare(
       player.convertToWorldSpace(player.getContentSize() / 2));
+
+  m_controls->timer->setString("");
 }
 
 void bim::axmol::app::online_game::displayed()
@@ -459,14 +462,6 @@ void bim::axmol::app::online_game::reset_z_order()
 
 void bim::axmol::app::online_game::refresh_display()
 {
-  const int local_tick = m_contest_runner->local_tick();
-  const int server_tick = m_contest_runner->confirmed_tick();
-
-  m_controls->debug_delta_ticks->setString(
-      fmt::format("Player {}, Ticks: local={}, server={}, delta={}\n",
-                  m_local_player_index, local_tick, server_tick,
-                  local_tick - server_tick));
-
   reset_z_order();
   display_brick_walls();
   display_bombs();
@@ -477,6 +472,8 @@ void bim::axmol::app::online_game::refresh_display()
 
   display_static_walls();
   display_falling_blocks();
+
+  display_main_timer();
 }
 
 void bim::axmol::app::online_game::display_static_walls()
@@ -691,6 +688,25 @@ void bim::axmol::app::online_game::display_flame_power_ups()
       });
 
   hide_while_visible(std::span(m_flame_power_ups).subspan(asset_index));
+}
+
+void bim::axmol::app::online_game::display_main_timer()
+{
+  const entt::registry& registry = m_contest->registry();
+
+  registry.view<bim::game::timer, bim::game::game_timer>().each(
+      [this](const bim::game::timer& t) -> void
+      {
+        const int duration_in_second =
+            std::chrono::duration_cast<std::chrono::seconds>(t.duration)
+                .count();
+
+        const int seconds = duration_in_second % 60;
+        const int minutes = duration_in_second / 60;
+
+        m_controls->timer->setString(
+            fmt::format("{:02}:{:02}", minutes, seconds));
+      });
 }
 
 void bim::axmol::app::online_game::display_at(std::size_t arena_y,

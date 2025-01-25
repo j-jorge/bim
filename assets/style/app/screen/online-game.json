@@ -24,14 +24,15 @@
             "directional_pad": [ "app/screen/directional-pad" ],
             "joystick": [ "app/screen/joystick" ],
 
-            "debug_delta_ticks":
+            "timer":
             [
-                "font/regular",
+                "font/fancy-regular",
                 {
                     "anchor-point.x": 0,
                     "anchor-point.y": 1,
-                    "font.size": 32,
-                    "font.color": "#f0f0f0"
+                    "font.size": 52,
+                    "font.color": "white",
+                    "text": "00:00"
                 }
             ],
 

@@ -8,6 +8,7 @@
 #include <bim/game/component/position_on_grid.hpp>
 #include <bim/game/contest_result.hpp>
 #include <bim/game/factory/arena_reduction.hpp>
+#include <bim/game/factory/main_timer.hpp>
 #include <bim/game/factory/player.hpp>
 #include <bim/game/feature_flags.hpp>
 #include <bim/game/system/apply_player_action.hpp>
@@ -71,6 +72,8 @@ bim::game::contest::contest(std::uint64_t seed,
 
   if (!!(features & feature_flags::falling_blocks))
     arena_reduction_factory(m_registry, std::chrono::minutes(2));
+  else
+    main_timer_factory(m_registry, std::chrono::minutes(3));
 
   m_arena_reduction.reset(new arena_reduction(m_arena));
 }
@@ -94,12 +97,8 @@ bim::game::contest_result bim::game::contest::tick()
   update_players(m_registry, m_arena);
 
   remove_dead_objects(m_registry);
-  const contest_result result = check_game_over(m_registry);
 
-  if (!result.still_running())
-    return result;
-
-  return result;
+  return check_game_over(m_registry);
 }
 
 entt::registry& bim::game::contest::registry()

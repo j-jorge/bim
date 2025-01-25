@@ -29,6 +29,7 @@ add_library(bim_game
   main/src/bim/game/factory/falling_block.cpp
   main/src/bim/game/factory/flame.cpp
   main/src/bim/game/factory/flame_power_up.cpp
+  main/src/bim/game/factory/main_timer.cpp
   main/src/bim/game/factory/player.cpp
 
   main/src/bim/game/system/apply_player_action.cpp
@@ -52,6 +53,7 @@ target_link_libraries(bim_game PUBLIC bim_core iscool_net EnTT::EnTT)
 add_executable(game-tests
   tests/src/bim/game/archive.cpp
   tests/src/bim/game/arena.cpp
+  tests/src/bim/game/check_game_over.cpp
   tests/src/bim/game/contest_timeline.cpp
   tests/src/bim/game/level_generation.cpp
   tests/src/bim/game/player_action.cpp

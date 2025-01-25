@@ -117,6 +117,7 @@ namespace bim::axmol::app
     void display_flames();
     void display_bomb_power_ups();
     void display_flame_power_ups();
+    void display_main_timer();
 
     void display_at(std::size_t arena_y, ax::Node& node,
                     const ax::Vec2& position);

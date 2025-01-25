@@ -17,6 +17,8 @@
 #include <bim/game/component/flame_power_up.hpp>
 #include <bim/game/component/flame_power_up_spawner.hpp>
 #include <bim/game/component/fractional_position_on_grid.hpp>
+#include <bim/game/component/game_timer.hpp>
+#include <bim/game/component/kicked.hpp>
 #include <bim/game/component/player.hpp>
 #include <bim/game/component/player_action.hpp>
 #include <bim/game/component/player_action_queue.hpp>
@@ -295,6 +297,8 @@ void bim::net::contest_runner::archive_io(Snapshot&& snapshot,
       .template get<bim::game::flame_power_up>(archive)
       .template get<bim::game::flame_power_up_spawner>(archive)
       .template get<bim::game::fractional_position_on_grid>(archive)
+      .template get<bim::game::game_timer>(archive)
+      .template get<bim::game::kicked>(archive)
       .template get<bim::game::player>(archive)
       .template get<bim::game::player_action>(archive)
       .template get<bim::game::player_action_queue>(archive)
