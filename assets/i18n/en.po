@@ -105,6 +105,20 @@ msgid ""
 msgstr ""
 
 msgid ""
+"No falling blocks! The game ends after 3 minutes if the players are still "
+"alive."
+msgstr ""
+
+msgid "Falling blocks reduce the arena after two minutes!"
+msgstr ""
+
+msgid "Customize your experience below!"
+msgstr ""
+
+msgid "Keep playing to unlock new game features!"
+msgstr ""
+
+msgid ""
 "You can start a two-players game\n"
 "now or wait for more players!"
 msgstr ""
