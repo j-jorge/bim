@@ -113,11 +113,19 @@ void bim::game::insert_random_brick_walls(arena& arena,
       brick_wall_count,
       g_bomb_power_up_count_in_level + g_flame_power_up_count_in_level);
 
-  for (std::size_t i = 0, n = power_up_count; i != n; ++i)
+  for (std::size_t available = brick_wall_count, needed = power_up_count,
+                   i = 0, j = 0;
+       needed != 0; ++i, --available)
     {
-      const std::size_t j =
-          i + random(random_generator) % (brick_wall_count - i);
-      std::swap(brick_walls[i], brick_walls[j]);
+      boost::random::uniform_int_distribution<std::uint8_t> random(1,
+                                                                   available);
+
+      if (random(random_generator) <= needed)
+        {
+          std::swap(brick_walls[j], brick_walls[i]);
+          --needed;
+          ++j;
+        }
     }
 
   std::size_t i = 0;

@@ -34,6 +34,7 @@
 #include <bim/game/component/player_movement.hpp>
 #include <bim/game/component/position_on_grid.hpp>
 #include <bim/game/component/timer.hpp>
+#include <bim/game/constant/default_arena_size.hpp>
 #include <bim/game/constant/falling_block_duration.hpp>
 #include <bim/game/constant/max_bomb_count_per_player.hpp>
 #include <bim/game/constant/max_player_count.hpp>
@@ -130,10 +131,8 @@ bim::axmol::app::online_game::online_game(
   const bim::axmol::widget::context& widget_context =
       m_context.get_widget_context();
 
-  constexpr int default_width = 13;
-  constexpr int default_height = 15;
-  constexpr int inner_width = default_width - 2;
-  constexpr int inner_height = default_height - 2;
+  constexpr int inner_width = bim::game::g_default_arena_width - 2;
+  constexpr int inner_height = bim::game::g_default_arena_height - 2;
 
   m_players.resize(bim::game::g_max_player_count);
 

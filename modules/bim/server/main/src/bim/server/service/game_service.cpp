@@ -14,6 +14,7 @@
 
 #include <bim/game/component/player.hpp>
 #include <bim/game/component/player_action.hpp>
+#include <bim/game/constant/default_arena_size.hpp>
 #include <bim/game/constant/max_player_count.hpp>
 #include <bim/game/contest.hpp>
 #include <bim/game/contest_result.hpp>
@@ -32,8 +33,6 @@
 #include <limits>
 
 static constexpr std::uint8_t g_brick_wall_probability = 80;
-static constexpr std::uint8_t g_arena_width = 13;
-static constexpr std::uint8_t g_arena_height = 15;
 
 static std::chrono::nanoseconds date_for_next_game_release()
 {
@@ -81,7 +80,9 @@ public:
     , simulation_tick(0)
     , completed_tick_count_all(0)
     , contest_result(bim::game::contest_result::create_still_running())
-    , contest(seed, g_brick_wall_probability, player_count, 13, 15, features)
+    , contest(seed, g_brick_wall_probability, player_count,
+              bim::game::g_default_arena_width,
+              bim::game::g_default_arena_height, features)
   {
     std::sort(this->sessions.begin(), this->sessions.begin() + player_count);
 

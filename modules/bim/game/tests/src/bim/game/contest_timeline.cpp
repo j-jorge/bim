@@ -31,7 +31,7 @@ TEST(bim_game_contest_timeline, write_and_read)
   };
 
   int tick_count = 0;
-  size_t buffer_size;
+  int buffer_size;
 
   char buffer[4096];
   {
@@ -45,6 +45,7 @@ TEST(bim_game_contest_timeline, write_and_read)
 
     std::array<bim::game::player_action*, bim::game::g_max_player_count>
         action_pointers;
+    action_pointers.fill(nullptr);
 
     const auto tick = [&]() -> void
     {
@@ -92,6 +93,7 @@ TEST(bim_game_contest_timeline, write_and_read)
       }
 
     buffer_size = ftell(f);
+    ASSERT_LE(0, buffer_size);
 
     int bomb_count = 0;
     contest.registry()
@@ -129,9 +131,9 @@ TEST(bim_game_contest_timeline, write_and_read)
                 }
               else if (p.index == 1)
                 {
-                  EXPECT_EQ(
-                      bim::game::fractional_position_on_grid::value_type(2.5),
-                      pos.x);
+                  EXPECT_EQ(bim::game::fractional_position_on_grid::value_type(
+                                2.1875),
+                            pos.x);
                   EXPECT_EQ(
                       bim::game::fractional_position_on_grid::value_type(5.5),
                       pos.y);
@@ -209,7 +211,7 @@ TEST(bim_game_contest_timeline, write_and_read)
             else if (p.index == 1)
               {
                 EXPECT_EQ(
-                    bim::game::fractional_position_on_grid::value_type(2.5),
+                    bim::game::fractional_position_on_grid::value_type(2.1875),
                     pos.x);
                 EXPECT_EQ(
                     bim::game::fractional_position_on_grid::value_type(5.5),

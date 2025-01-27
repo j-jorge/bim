@@ -54,6 +54,7 @@ add_executable(game-tests
   tests/src/bim/game/archive.cpp
   tests/src/bim/game/arena.cpp
   tests/src/bim/game/check_game_over.cpp
+  tests/src/bim/game/contest.cpp
   tests/src/bim/game/contest_timeline.cpp
   tests/src/bim/game/level_generation.cpp
   tests/src/bim/game/player_action.cpp
