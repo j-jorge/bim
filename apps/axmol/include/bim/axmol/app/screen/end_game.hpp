@@ -21,7 +21,7 @@ namespace bim
 
   namespace net
   {
-    class game_launch_event;
+    struct game_launch_event;
   }
 }
 

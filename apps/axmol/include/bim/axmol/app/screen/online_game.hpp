@@ -34,7 +34,7 @@ namespace bim::game
 namespace bim::net
 {
   class contest_runner;
-  class game_launch_event;
+  struct game_launch_event;
   class game_update_exchange;
   class session_handler;
 }

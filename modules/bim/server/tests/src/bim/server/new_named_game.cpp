@@ -77,7 +77,7 @@ new_game_test::client::client(bim::server::tests::fake_scheduler& scheduler,
       });
 
   m_authentication.connect_to_error(
-      [this](bim::net::authentication_error_code) -> void
+      [](bim::net::authentication_error_code) -> void
       {
         EXPECT_TRUE(false);
       });

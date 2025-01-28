@@ -9,7 +9,7 @@ namespace iscool::net
 
 namespace bim::game
 {
-  class player_action;
+  struct player_action;
 }
 
 namespace bim::net

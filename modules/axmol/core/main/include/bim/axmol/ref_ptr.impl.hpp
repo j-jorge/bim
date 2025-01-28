@@ -77,7 +77,7 @@ bim::axmol::ref_ptr<T>::ref_ptr(ref_ptr<U>&& p) noexcept
 }
 
 template <typename T>
-bim::axmol::ref_ptr<T>::~ref_ptr()
+bim::axmol::ref_ptr<T>::ref_ptr::~ref_ptr()
 {
   if (m_ptr)
     m_ptr->release();

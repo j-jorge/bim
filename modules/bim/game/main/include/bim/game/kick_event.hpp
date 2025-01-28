@@ -11,7 +11,7 @@
 
 namespace bim::game
 {
-  class player_action;
+  struct player_action;
 
   void kick_player(entt::registry& registry, int player_index);
 

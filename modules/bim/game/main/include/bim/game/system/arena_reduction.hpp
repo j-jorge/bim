@@ -8,7 +8,7 @@
 namespace bim::game
 {
   class arena;
-  class position_on_grid;
+  struct position_on_grid;
 
   class arena_reduction
   {

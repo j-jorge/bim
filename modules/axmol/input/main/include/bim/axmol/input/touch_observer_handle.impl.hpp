@@ -9,8 +9,8 @@ bim::axmol::input::touch_observer_handle<T>::touch_observer_handle(
 {}
 
 template <typename T>
-bim::axmol::input::touch_observer_handle<T>::~touch_observer_handle() =
-    default;
+bim::axmol::input::touch_observer_handle<
+    T>::touch_observer_handle::~touch_observer_handle() = default;
 
 template <typename T>
 T* bim::axmol::input::touch_observer_handle<T>::operator->() const

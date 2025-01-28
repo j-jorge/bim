@@ -13,7 +13,7 @@
 namespace bim::game
 {
   class contest_timeline;
-  class player_action;
+  struct player_action;
 
   bool load_contest_timeline(contest_timeline& timeline, std::FILE* f);
 

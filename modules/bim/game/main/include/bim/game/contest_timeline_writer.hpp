@@ -7,8 +7,8 @@
 
 namespace bim::game
 {
-  class contest_fingerprint;
-  class player_action;
+  struct contest_fingerprint;
+  struct player_action;
 
   class contest_timeline_writer
   {

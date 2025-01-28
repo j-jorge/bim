@@ -22,7 +22,7 @@ namespace bim
   namespace game
   {
     class contest;
-    class player_action;
+    struct player_action;
   }
 
   namespace net

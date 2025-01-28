@@ -8,7 +8,8 @@ bim::axmol::input::key_observer_handle<T>::key_observer_handle(Arg&&... args)
 {}
 
 template <typename T>
-bim::axmol::input::key_observer_handle<T>::~key_observer_handle() = default;
+bim::axmol::input::key_observer_handle<
+    T>::key_observer_handle::~key_observer_handle() = default;
 
 template <typename T>
 T* bim::axmol::input::key_observer_handle<T>::operator->() const

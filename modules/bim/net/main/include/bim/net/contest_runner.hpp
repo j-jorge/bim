@@ -15,13 +15,13 @@
 namespace bim::game
 {
   class contest;
-  class player_action;
+  struct player_action;
 }
 
 namespace bim::net
 {
   class game_update_exchange;
-  class server_update;
+  struct server_update;
 
   class contest_runner
   {

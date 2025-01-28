@@ -5,12 +5,6 @@
 
 #include <cassert>
 
-static constexpr bim::game::fractional_position_on_grid::value_type g_quarter =
-    bim::game::fractional_position_on_grid::value_type(1) / 4;
-static constexpr bim::game::fractional_position_on_grid::value_type
-    g_three_quarters =
-        bim::game::fractional_position_on_grid::value_type(3) / 4;
-
 bim::game::fractional_position_on_grid::fractional_position_on_grid() =
     default;
 

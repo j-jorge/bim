@@ -56,8 +56,8 @@ namespace bim::axmol::app
 
   class application : private ax::Application
   {
-    friend class detail::persistent_systems;
-    friend class detail::session_systems;
+    friend struct detail::persistent_systems;
+    friend struct detail::session_systems;
 
     ic_declare_context(
         m_context, ic_context_no_parent_properties,

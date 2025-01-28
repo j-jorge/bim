@@ -23,8 +23,6 @@ IMPLEMENT_SIGNAL(bim::axmol::widget::peephole, shown, m_shown);
 
 bim_implement_widget(bim::axmol::widget::peephole);
 
-static constexpr std::string_view g_peephole_scroll_tag = "scroll";
-
 bim::axmol::widget::peephole::peephole(
     const bim::axmol::widget::context& context,
     const iscool::style::declaration& style)

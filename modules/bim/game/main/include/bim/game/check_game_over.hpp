@@ -7,7 +7,7 @@
 
 namespace bim::game
 {
-  struct contest_result;
+  class contest_result;
 
   contest_result check_game_over(const entt::registry& registry);
 }

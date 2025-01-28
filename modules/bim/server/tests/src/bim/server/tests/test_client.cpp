@@ -20,13 +20,13 @@ bim::server::tests::test_client::test_client(
   , m_new_game(message_stream)
 {
   m_authentication.connect_to_authenticated(
-      [this, &message_stream](iscool::net::session_id session) -> void
+      [this](iscool::net::session_id session) -> void
       {
         m_session = session;
       });
 
   m_authentication.connect_to_error(
-      [this](bim::net::authentication_error_code) -> void
+      [](bim::net::authentication_error_code) -> void
       {
         EXPECT_TRUE(false);
       });
