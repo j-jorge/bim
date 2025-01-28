@@ -50,6 +50,9 @@ bim_android_config(
 bim_android_config(
   bim_android_platform --prefix "${CMAKE_PREFIX_PATH}" --platform
 )
+bim_android_config(bim_android_ndk_version
+    --prefix "${CMAKE_PREFIX_PATH}" --ndk-version
+)
 bim_android_config(bim_android_sdk_root
     --prefix "${CMAKE_PREFIX_PATH}" --sdk-root
 )
@@ -57,6 +60,10 @@ bim_android_config(bim_android_stl --stl)
 bim_android_config(
   bim_android_target_sdk_version
   --prefix "${CMAKE_PREFIX_PATH}" --target-sdk-version
+)
+bim_android_config(
+  bim_android_min_sdk_version
+  --prefix "${CMAKE_PREFIX_PATH}" --min-sdk-version
 )
 bim_android_config(
   bim_android_toolchain --prefix "${CMAKE_PREFIX_PATH}" --toolchain
@@ -200,10 +207,18 @@ else()
   set(java_build_type Debug)
 endif()
 
+add_custom_target(aab ALL
+  COMMAND
+  ${CMAKE_COMMAND} -E env "ANDROID_HOME=${bim_android_sdk_root}"
+  ${gradlew_bin} -p "${generated_project_root}" "bundle${java_build_type}"
+  DEPENDS ${bim_android_archs} generated-assets
+  USES_TERMINAL
+)
+
 add_custom_target(apk ALL
   COMMAND
   ${CMAKE_COMMAND} -E env "ANDROID_HOME=${bim_android_sdk_root}"
-  ${gradlew_bin} -p "${generated_project_root}" "assemble${java_build_type}"
+  ${gradlew_bin} -p "${generated_project_root}" "assemble${java_build_type}" "bundle${java_build_type}"
   DEPENDS ${bim_android_archs} generated-assets
   USES_TERMINAL
 )

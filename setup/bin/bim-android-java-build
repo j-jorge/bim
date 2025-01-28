@@ -136,9 +136,12 @@ write_gradle_files()
     local build_tools_version
     build_tools_version="$(bim-android-config --prefix "$bim_host_prefix" \
                                               --build-tools-version)"
-    local sdk_version
-    sdk_version="$(bim-android-config --prefix "$bim_host_prefix" \
-                                      --target-sdk-version)"
+    local min_sdk_version
+    min_sdk_version="$(bim-android-config --prefix "$bim_host_prefix" \
+                                             --min-sdk-version)"
+    local target_sdk_version
+    target_sdk_version="$(bim-android-config --prefix "$bim_host_prefix" \
+                                             --target-sdk-version)"
     local gradle_plugin_version
     gradle_plugin_version="$(bim-android-config --gradle-plugin-version)"
 
@@ -162,10 +165,11 @@ android {
   namespace '$namespace'
 
   buildToolsVersion '$build_tools_version'
-  compileSdk $sdk_version
+  compileSdk $target_sdk_version
 
   defaultConfig {
-    targetSdk $sdk_version
+    minSdkVersion $min_sdk_version
+    targetSdkVersion $target_sdk_version
   }
 
   repositories {

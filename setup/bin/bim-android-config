@@ -2,6 +2,12 @@
 
 set -euo pipefail
 
+function ndk_root()
+{
+    find "$1"/sdk/ndk/ -mindepth 1 -maxdepth 1 -type d \
+        | head -n 1
+}
+
 while [[ $# -ne 0 ]]
 do
     arg="$1"
@@ -51,12 +57,17 @@ do
         --maven-root)
             echo "$android_root"/maven
             ;;
+        --min-sdk-version)
+            echo 17
+            ;;
         --modules-root)
             echo "$android_root"/modules
             ;;
         --ndk-root)
-            find "$android_root"/sdk/ndk/ -mindepth 1 -maxdepth 1 -type d \
-                 | head -n 1
+            ndk_root "$android_root" \
+            ;;
+        --ndk-version)
+            basename "$(ndk_root "$android_root")"
             ;;
         --platform)
             path="$(find "$android_root"/sdk/platforms/ \

@@ -4,6 +4,7 @@ apply plugin: 'com.android.application'
 android {
     namespace 'bim.app'
     compileSdk @bim_android_target_sdk_version@
+    ndkVersion "@bim_android_ndk_version@"
 
     repositories {
         maven {
@@ -14,9 +15,11 @@ android {
 
     defaultConfig {
         applicationId 'bim.app'
-        minSdkVersion 17
+        minSdkVersion @bim_android_min_sdk_version@
         targetSdkVersion @bim_android_target_sdk_version@
-        versionCode @CMAKE_PROJECT_VERSION@
+        versionCode(
+            @CMAKE_PROJECT_VERSION@ * 100 + @android_release_version@
+        )
         versionName '@CMAKE_PROJECT_VERSION@'
     }
 
@@ -79,6 +82,24 @@ android {
         aidl true
     }
 
+    bundle {
+        density {
+            // Different APKs are generated for devices with different
+            // screen densities; true by default.
+            enableSplit false
+        }
+        abi {
+            // Different APKs are generated for devices with different
+            // CPU architectures; true by default.
+            enableSplit true
+        }
+        language {
+            // This is disabled so that the App Bundle does NOT split
+            // the APK for each language. We're gonna use the same
+            // APK for all languages.
+            enableSplit false
+        }
+    }
     dependencies {
         implementation 'axmol:axmol:@axmol_version@'
         implementation 'iscool:system:@iscool_core_version@'
