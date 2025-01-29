@@ -16,7 +16,16 @@
 
 #include <gtest/gtest.h>
 
-TEST(bim_game_contest, power_up_distribution)
+template <typename Spawner>
+class bim_game_contest_power_up_distribution : public testing::Test
+{};
+
+using power_up_types = testing::Types<bim::game::bomb_power_up_spawner,
+                                      bim::game::flame_power_up_spawner>;
+
+TYPED_TEST_SUITE(bim_game_contest_power_up_distribution, power_up_types);
+
+TYPED_TEST(bim_game_contest_power_up_distribution, distribution)
 {
   constexpr int arena_width = bim::game::g_default_arena_width;
   constexpr int arena_height = bim::game::g_default_arena_height;
@@ -27,7 +36,7 @@ TEST(bim_game_contest, power_up_distribution)
   constexpr int brick_wall_probability = 80;
   constexpr int player_count = 4;
 
-  // Get teh basic structure of the level: count in usable_cells all the cells
+  // Get the basic structure of the level: count in usable_cells all the cells
   // that are not occupied by a static wall or the player, nor are located near
   // the players.
   {
@@ -68,20 +77,14 @@ TEST(bim_game_contest, power_up_distribution)
     ++sum_per_cell[p.y * arena_width + p.x];
   };
 
-  constexpr int iterations = 1000;
+  constexpr int iterations = 3000;
   for (int i = 0; i != iterations; ++i)
     {
       const bim::game::contest contest(i, brick_wall_probability, player_count,
                                        arena_width, arena_height, {});
 
-      contest.registry()
-          .view<bim::game::position_on_grid,
-                bim::game::flame_power_up_spawner>()
-          .each(count_power_up);
-      contest.registry()
-          .view<bim::game::position_on_grid,
-                bim::game::bomb_power_up_spawner>()
-          .each(count_power_up);
+      contest.registry().view<bim::game::position_on_grid, TypeParam>().each(
+          count_power_up);
     }
 
   const int power_up_count =

@@ -128,6 +128,15 @@ void bim::game::insert_random_brick_walls(arena& arena,
         }
     }
 
+  // Shuffle the walls that will receive the power-ups.
+  if (power_up_count)
+    for (std::size_t i = 0; i != power_up_count - 1; ++i)
+      {
+        boost::random::uniform_int_distribution<std::uint8_t> random(
+            i, power_up_count - 1);
+        std::swap(brick_walls[i], brick_walls[random(random_generator)]);
+      }
+
   std::size_t i = 0;
 
   // The bomb power-ups.
