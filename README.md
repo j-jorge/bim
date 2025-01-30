@@ -1,7 +1,7 @@
 # Bim!
 
-Bim! is an open-source online multiplayer mobile game inspired by
-classics such as Bomberman (also known as Dyna Blaster).
+Bim! is an open-source online multiplayer mobile game of the
+last man standing genre.
 
 <p align="center">
   <img src="assets/icon.png" width="25%"/>
@@ -12,6 +12,10 @@ the last person standing. The players can drop bombs to destroy the
 walls or, ultimately, attack another player. Sometimes the broken
 walls will expose a bonus such as extra bombs or an increase of the
 bombs' blast distance.
+
+The match features can be selected from the matchmaking
+screen. Features enabled by all participants will be used in the game,
+allowing players to customize their contest.
 
 <p align="center">
   <img src="docs/readme/title-screen.jpg" width="33%"/>
