@@ -7,8 +7,8 @@ set -euo pipefail
 : "${bim_packages_root:-}"
 
 : "${axmol_repository:=https://github.com/j-jorge/axmol/}"
-: "${axmol_version:=2.2.1j}"
-package_revision=3
+: "${axmol_version:=2.3.2j}"
+package_revision=1
 version="$axmol_version"-"$package_revision"
 
 if [[ "$bim_build_type" = "release" ]]
@@ -265,7 +265,7 @@ then
         --artifact-id "axmol" \
         --artifact-version "$version" \
         --install-dir "$install_dir" \
-        --namespace 'org.axmol.lib' \
+        --namespace 'dev.axmol.lib' \
         --api-dependency "androidx.media3:media3-exoplayer:1.0.2" \
         --implementation-dependency "androidx.annotation:annotation:1.3.0" \
         --source-dir "$source_dir"/core/platform/android/java/

@@ -60,7 +60,7 @@ macro(include_axmol)
 
   # Axmol forces this path for Android builds. We use it for all
   # builds to simplify the later commands.
-  set(GLSLCC_OUT_DIR ${CMAKE_CURRENT_BINARY_DIR}/build/runtime/axslc)
+  set(AXSLCC_OUT_DIR ${CMAKE_CURRENT_BINARY_DIR}/build/runtime/axslc)
 
   include(${axmol_root}/cmake/Modules/AXLinkHelpers.cmake)
   include(${axmol_root}/cmake/Modules/AXBuildSet.cmake)
@@ -348,8 +348,8 @@ macro(assign_platform_sources)
       ${source_root}/platform/android/FileUtils-android.cpp
       ${source_root}/platform/android/javaactivity-android.cpp
       ${source_root}/platform/android/jni/JniHelper.cpp
-      ${source_root}/platform/android/jni/Java_org_axmol_lib_AxmolEngine.cpp
-      ${source_root}/platform/android/jni/Java_org_axmol_lib_AxmolRenderer.cpp
+      ${source_root}/platform/android/jni/Java_dev_axmol_lib_AxmolEngine.cpp
+      ${source_root}/platform/android/jni/Java_dev_axmol_lib_AxmolRenderer.cpp
       ${source_root}/platform/android/jni/TouchesJni.cpp
       ${source_root}/ui/UIEditBox/UIEditBoxImpl-android.cpp
     )
@@ -474,7 +474,7 @@ endfunction()
 
 function(install_shaders root target)
   install(
-    DIRECTORY ${GLSLCC_OUT_DIR}/
+    DIRECTORY ${AXSLCC_OUT_DIR}/
     DESTINATION ${resource_install_dir}/axmol/shaders/
   )
 endfunction()

@@ -4,7 +4,7 @@ import iscool.jni.JniService;
 import iscool.system.SystemService;
 
 import android.os.Bundle;
-import org.axmol.lib.AxmolActivity;
+import dev.axmol.lib.AxmolActivity;
 import android.os.Build;
 import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
