@@ -10,6 +10,7 @@ add_library(bim_app
   src/bim/axmol/app/scene_lock.cpp
   src/bim/axmol/app/screen_wheel.cpp
 
+  src/bim/axmol/app/popup/debug_popup.cpp
   src/bim/axmol/app/popup/message.cpp
   src/bim/axmol/app/popup/popup.cpp
   src/bim/axmol/app/popup/settings_popup.cpp

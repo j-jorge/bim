@@ -326,12 +326,12 @@ void bim::axmol::app::detail::session_systems::stop_lock()
 }
 
 bim::axmol::app::application::application()
-  : application({}, ax::Size(1, 1), 1)
+  : application({}, ax::Size(1, 1), 1, false)
 {}
 
 bim::axmol::app::application::application(
     std::vector<std::string> asset_directories, const ax::Size& screen_size,
-    float screen_scale)
+    float screen_scale, bool enable_debug)
   : m_asset_directories(std::move(asset_directories))
   , m_style_cache(m_colors)
   , m_screen_capture_key_observer(ax::EventKeyboard::KeyCode::KEY_C)
@@ -356,6 +356,8 @@ bim::axmol::app::application::application(
       {
         capture_scren();
       });
+
+  m_context.set_enable_debug(enable_debug);
 }
 
 bim::axmol::app::application::~application() = default;

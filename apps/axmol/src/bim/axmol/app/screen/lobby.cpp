@@ -1,8 +1,11 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/axmol/app/screen/lobby.hpp>
 
+#include <bim/axmol/app/popup/debug_popup.hpp>
 #include <bim/axmol/app/popup/settings_popup.hpp>
 
+#include <bim/axmol/input/observer/tap_observer.hpp>
+#include <bim/axmol/input/touch_observer_handle.impl.hpp>
 #include <bim/axmol/widget/named_node_group.hpp>
 #include <bim/axmol/widget/ui/button.hpp>
 
@@ -14,7 +17,9 @@
 #define x_widget_type_name controls
 #define x_widget_controls                                                     \
   x_widget(bim::axmol::widget::button, settings_button)                       \
-      x_widget(bim::axmol::widget::button, play_button)
+      x_widget(bim::axmol::widget::button, play_button)                       \
+          x_widget(bim::axmol::widget::button, debug_button)                  \
+              x_widget(ax::Node, debug_activator)
 #include <bim/axmol/widget/implement_controls_struct.hpp>
 
 IMPLEMENT_SIGNAL(bim::axmol::app::lobby, play, m_play);
@@ -24,7 +29,27 @@ bim::axmol::app::lobby::lobby(const context& context,
   : m_context(context)
   , m_controls(context.get_widget_context(), *style.get_declaration("widgets"))
   , m_settings(new settings_popup(context, *style.get_declaration("settings")))
+  , m_debug(new debug_popup(context, *style.get_declaration("debug")))
+  , m_debug_tap(*m_controls->debug_activator)
+  , m_debug_activator_counter(0)
 {
+  if (m_context.get_enable_debug())
+    enable_debug();
+
+  m_debug_tap->connect_to_release(
+      [this]() -> void
+      {
+        increment_debug_activator_counter();
+      });
+  m_inputs.push_back(std::move(m_debug_tap));
+
+  m_inputs.push_back(m_controls->debug_button->input_node());
+  m_controls->debug_button->connect_to_clicked(
+      [this]()
+      {
+        m_debug->show();
+      });
+
   m_inputs.push_back(m_controls->settings_button->input_node());
   m_controls->settings_button->connect_to_clicked(
       [this]()
@@ -76,4 +101,21 @@ void bim::axmol::app::lobby::apply_connected_state()
 {
   m_controls->play_button->enable(
       m_context.get_session_handler()->connected());
+}
+
+void bim::axmol::app::lobby::increment_debug_activator_counter()
+{
+  if (m_debug_activator_counter >= 24)
+    return;
+
+  ++m_debug_activator_counter;
+
+  if (m_debug_activator_counter == 24)
+    enable_debug();
+}
+
+void bim::axmol::app::lobby::enable_debug()
+{
+  m_controls->debug_button->setVisible(true);
+  m_controls->debug_activator->setVisible(false);
 }

@@ -54,12 +54,15 @@ set(main_task_style_files
   ${CMAKE_CURRENT_LIST_DIR}/font/regular.json
   ${CMAKE_CURRENT_LIST_DIR}/font/fancy-regular.json
 
+  ${CMAKE_CURRENT_LIST_DIR}/layout/left-center.json
+  ${CMAKE_CURRENT_LIST_DIR}/layout/right-center.json
   ${CMAKE_CURRENT_LIST_DIR}/layout/fill.json
   ${CMAKE_CURRENT_LIST_DIR}/layout/fit.json
 
   ${CMAKE_CURRENT_LIST_DIR}/nine-slice/rounded-rectangle.json
   ${CMAKE_CURRENT_LIST_DIR}/nine-slice/stripe.json
 
+  ${CMAKE_CURRENT_LIST_DIR}/popup/debug.json
   ${CMAKE_CURRENT_LIST_DIR}/popup/full-screen.json
   ${CMAKE_CURRENT_LIST_DIR}/popup/message.json
   ${CMAKE_CURRENT_LIST_DIR}/popup/settings.json
@@ -68,6 +71,8 @@ set(main_task_style_files
   ${CMAKE_CURRENT_LIST_DIR}/popup/settings/font/main.json
   ${CMAKE_CURRENT_LIST_DIR}/popup/settings/font/small.json
   ${CMAKE_CURRENT_LIST_DIR}/popup/settings/toggle/controls.json
+
+  ${CMAKE_CURRENT_LIST_DIR}/popup/debug/font/main.json
 
   ${CMAKE_CURRENT_LIST_DIR}/toggle/base.json
   ${CMAKE_CURRENT_LIST_DIR}/toggle/feature.json

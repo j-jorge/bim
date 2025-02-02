@@ -1,0 +1,12 @@
+{
+    "meta":
+    {
+        "overrides": [ "font/bold" ]
+    },
+
+    "style":
+    {
+        "font.color": "desert-storm",
+        "font.size": 50
+    }
+}

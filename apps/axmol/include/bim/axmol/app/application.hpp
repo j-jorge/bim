@@ -67,12 +67,14 @@ namespace bim::axmol::app
             ((scene_lock*)(scene_lock))                                    //
             ((iscool::audio::mixer*)(audio))                               //
             ((iscool::preferences::local_preferences*)(local_preferences)) //
-            ((iscool::system::haptic_feedback*)(haptic_feedback))));
+            ((iscool::system::haptic_feedback*)(haptic_feedback))          //
+            ((bool)(enable_debug))));
 
   public:
     application();
     application(std::vector<std::string> asset_directories,
-                const ax::Size& screen_size, float screen_scale);
+                const ax::Size& screen_size, float screen_scale,
+                bool enable_debug);
     ~application();
 
     bool applicationDidFinishLaunching() override;

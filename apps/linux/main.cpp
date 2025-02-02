@@ -31,6 +31,7 @@ namespace
     screen_size screen_resolution;
     float screen_scale;
     bool console_log;
+    bool enable_debug;
     std::vector<std::string> asset_directories;
   };
 
@@ -114,6 +115,7 @@ static command_line parse_command_line(int argc, char* argv[])
       "Directories where the game assets can be found. Assets are searched "
       "in these directories, in the provided order.");
   options.add_options()("console-log", "Display logs in the terminal.");
+  options.add_options()("debug", "Display the debug menu.");
 
   boost::program_options::variables_map variables;
   boost::program_options::store(
@@ -144,6 +146,7 @@ static command_line parse_command_line(int argc, char* argv[])
   result.asset_directories =
       asset_directories->second.as<std::vector<std::string>>();
   result.console_log = (variables.count("console-log") != 0);
+  result.enable_debug = (variables.count("debug") != 0);
 
   if (variables.count("screen") != 0)
     {
@@ -192,7 +195,7 @@ int main(int argc, char* argv[])
   bim::axmol::app::application app(options.asset_directories,
                                    ax::Size(options.screen_resolution.width,
                                             options.screen_resolution.height),
-                                   options.screen_scale);
+                                   options.screen_scale, options.enable_debug);
 
   const int result = axmol::Application::getInstance()->run();
 

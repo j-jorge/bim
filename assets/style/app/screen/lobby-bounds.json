@@ -24,6 +24,24 @@
             "anchor.reference.y": 0.25,
             "width.percents": 50,
             "height.percents": 15
-        }]
+        }],
+
+        "debug_button":
+        [{
+            "anchor.x": 0.5,
+            "anchor.y": 0.5,
+            "anchor.reference.x": 0.5,
+            "anchor.reference.y": 0.12,
+            "width.percents": 50,
+            "height.percents": 10
+        }],
+
+        "debug_activator":
+        [
+            "layout/fill",
+            {
+                "reference": "debug_button"
+            }
+        ]
     }
 }

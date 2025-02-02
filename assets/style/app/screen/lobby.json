@@ -1,6 +1,7 @@
 {
     "style":
     {
+        "debug": [ "popup/debug" ],
         "settings": [ "popup/settings" ],
 
         "widgets":
@@ -23,7 +24,19 @@
                         "widgets/label/text.i18n": "PLAY\nONLINE",
                         "z-order": 20
                     }
-                ]
+                ],
+
+                "debug_button":
+                [
+                    "button/green-with-label",
+                    {
+                        "widgets/label/text.i18n": "DEBUG",
+                        "z-order": 20,
+                        "visible": false
+                    }
+                ],
+
+                "debug_activator": []
             }
         ]
     }
