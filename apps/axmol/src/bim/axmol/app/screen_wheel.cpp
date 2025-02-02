@@ -18,6 +18,8 @@
       x_widget(ax::Node, online_game) x_widget(ax::Node, end_game)
 #include <bim/axmol/widget/implement_controls_struct.hpp>
 
+#include <iscool/system/keep_screen_on.hpp>
+
 #include <axmol/2d/Node.h>
 
 bim::axmol::app::screen_wheel::screen_wheel(
@@ -129,6 +131,8 @@ void bim::axmol::app::screen_wheel::animate_lobby_to_matchmaking()
 void bim::axmol::app::screen_wheel::animate_matchmaking_to_game(
     const bim::net::game_launch_event& event)
 {
+  iscool::system::keep_screen_on(false);
+
   m_inputs.erase(m_matchmaking->input_node());
   m_matchmaking->closing();
 
@@ -180,6 +184,7 @@ void bim::axmol::app::screen_wheel::lobby_displayed()
 
 void bim::axmol::app::screen_wheel::matchmaking_displayed()
 {
+  iscool::system::keep_screen_on(true);
   m_inputs.push_back(m_matchmaking->input_node());
   m_matchmaking->displayed();
 }
