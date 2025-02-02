@@ -152,7 +152,7 @@ bool bim::axmol::input::tap_observer::consume_known_touches(
 
 void bim::axmol::input::tap_observer::disable_temporarily()
 {
-  const std::chrono::milliseconds cooldown(512);
+  constexpr std::chrono::milliseconds cooldown(100);
 
   m_cooldown_end_date =
       std::chrono::duration_cast<std::chrono::milliseconds>(
