@@ -24,6 +24,7 @@ add_library(bim_axmol_widget
   main/src/bim/axmol/widget/ui/clipping_node.cpp
   main/src/bim/axmol/widget/ui/list.cpp
   main/src/bim/axmol/widget/ui/nine_slices.cpp
+  main/src/bim/axmol/widget/ui/passive_node.cpp
   main/src/bim/axmol/widget/ui/peephole.cpp
   main/src/bim/axmol/widget/ui/soft_pad.cpp
   main/src/bim/axmol/widget/ui/soft_stick.cpp
