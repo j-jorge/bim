@@ -42,7 +42,7 @@ macro(assign_path_variables)
   set(source_root ${axmol_root}/core/)
   set(third_party_root ${axmol_root}/3rdparty/)
   set(third_party_binary_dir "${CMAKE_CURRENT_BINARY_DIR}/third-party-bin")
-  set(extensions_root ${axmol_root}/extensions/)
+  set(extensions_root ${axmol_root}/extensions)
 
   # To match Axmol's CMakeLists.txt
   set(_AX_ROOT ${axmol_root})
@@ -316,6 +316,10 @@ macro(assign_common_sources)
     ${source_root}/ui/UIEditBox/UIEditBox.cpp
     ${source_root}/ui/UIEditBox/UIEditBoxImpl-common.cpp
 
+    ${extensions_root}/GUI/src/GUI/ScrollView/ScrollView.cpp
+    ${extensions_root}/GUI/src/GUI/ScrollView/TableView.cpp
+    ${extensions_root}/GUI/src/GUI/ScrollView/TableViewCell.cpp
+
     ${poly2tri_sources}
    )
 
@@ -481,7 +485,15 @@ endfunction()
 
 macro(install_products)
   install_headers(${source_root} .)
-  install_shaders(${source_root} .)
+  install_headers(${extensions_root}/GUI/src/ extensions)
+  install(
+    FILES
+    ${extensions_root}/ExtensionExport.h
+    ${extensions_root}/ExtensionMacros.h
+    DESTINATION ${header_install_dir}/axmol/extensions/
+  )
+
+     install_shaders(${source_root} .)
   install(TARGETS axmol DESTINATION ${library_install_dir})
   install(TARGETS
     ${platform_install_targets}

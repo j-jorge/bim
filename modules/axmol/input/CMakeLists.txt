@@ -10,11 +10,12 @@ add_library(bim_axmol_input
 
   main/src/bim/axmol/input/observer/axmol_node_touch_observer.cpp
   main/src/bim/axmol/input/observer/key_sink.cpp
+  main/src/bim/axmol/input/observer/scroll_view_glue.cpp
   main/src/bim/axmol/input/observer/single_key_observer.cpp
-  main/src/bim/axmol/input/observer/tap_observer.cpp
-  main/src/bim/axmol/input/observer/touch_sink.cpp
   main/src/bim/axmol/input/observer/soft_pad.cpp
   main/src/bim/axmol/input/observer/soft_stick.cpp
+  main/src/bim/axmol/input/observer/tap_observer.cpp
+  main/src/bim/axmol/input/observer/touch_sink.cpp
 )
 
 target_include_directories(bim_axmol_input PUBLIC main/include)
