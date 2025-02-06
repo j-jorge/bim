@@ -1,7 +1,6 @@
 # Next
 
 - The player's inputs go through the popups.
-- Bug UBSan du serveur.
 - Check the soft stick, it has been reported to not react.
 - Automatically launch the game when one player is ready.
 - Restart the app if the player leaves for 30 seconds or more.

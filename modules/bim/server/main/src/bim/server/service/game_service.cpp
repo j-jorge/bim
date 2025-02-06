@@ -701,6 +701,9 @@ void bim::server::game_service::clean_up(iscool::net::channel_id channel,
   ic_log(iscool::log::nature::info(), "game_service", "Cleaning up game {}.",
          channel);
 
+  const session_to_channel_map::const_iterator eit =
+      m_session_to_channel.end();
+
   for (int i = 0; i != g.player_count; ++i)
     {
       // The sessions may have been assigned to another game between the end of
@@ -709,7 +712,8 @@ void bim::server::game_service::clean_up(iscool::net::channel_id channel,
       // session before removing it from the map.
       const session_to_channel_map::iterator stc =
           m_session_to_channel.find(g.sessions[i]);
-      if (stc->second == channel)
+
+      if ((stc != eit) && (stc->second == channel))
         m_session_to_channel.erase(stc);
     }
 }
