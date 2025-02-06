@@ -2,10 +2,6 @@
 #pragma once
 
 template <typename T>
-bim::axmol::input::touch_observer_handle<
-    T>::touch_observer_handle::touch_observer_handle() = default;
-
-template <typename T>
 template <typename... Arg>
 bim::axmol::input::touch_observer_handle<T>::touch_observer_handle(
     Arg&&... args)

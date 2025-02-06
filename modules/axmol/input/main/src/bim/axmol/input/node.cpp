@@ -27,21 +27,25 @@ bim::axmol::input::node::node(key_observer_pointer instance)
 
 void bim::axmol::input::node::attach(touch_observer_pointer observer)
 {
+  assert(observer.lock());
   m_touch_observer = std::move(observer);
 }
 
 void bim::axmol::input::node::attach(key_observer_pointer observer)
 {
+  assert(observer.lock());
   m_key_observer = std::move(observer);
 }
 
 void bim::axmol::input::node::push_back(touch_observer_pointer observer)
 {
+  assert(observer.lock());
   push_back(std::make_shared<node>(std::move(observer)));
 }
 
 void bim::axmol::input::node::push_back(key_observer_pointer observer)
 {
+  assert(observer.lock());
   push_back(std::make_shared<node>(std::move(observer)));
 }
 

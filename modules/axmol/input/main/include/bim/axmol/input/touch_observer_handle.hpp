@@ -13,8 +13,6 @@ namespace bim::axmol::input
   class touch_observer_handle
   {
   public:
-    touch_observer_handle();
-
     template <typename... Arg>
     explicit touch_observer_handle(Arg&&... args);
     ~touch_observer_handle();

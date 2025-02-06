@@ -61,7 +61,8 @@ namespace bim::axmol::widget
 
     const iscool::style::declaration& m_item_size;
 
-    bim::axmol::input::scroll_view_glue_handle m_scroll_view_inputs;
+    std::unique_ptr<bim::axmol::input::scroll_view_glue_handle>
+        m_scroll_view_inputs;
     bim::axmol::input::tree m_inputs;
 
     bool m_dirty;

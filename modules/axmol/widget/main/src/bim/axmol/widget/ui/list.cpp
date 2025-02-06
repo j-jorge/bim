@@ -149,7 +149,7 @@ void bim::axmol::widget::list::setContentSize(const ax::Size& size)
   m_table_view = nullptr;
 
   m_inputs.clear();
-  m_scroll_view_inputs = {};
+  m_scroll_view_inputs.reset();
 
   for (std::size_t i = 0, n = m_table_view_bridge->item_count(); i != n; ++i)
     set_item_size(m_table_view_bridge->at(i));
@@ -218,10 +218,10 @@ void bim::axmol::widget::list::create_view()
 
   addChild(m_table_view.get());
 
-  m_scroll_view_inputs =
-      bim::axmol::input::scroll_view_glue_handle(*m_table_view);
+  m_scroll_view_inputs.reset(
+      new bim::axmol::input::scroll_view_glue_handle(*m_table_view));
 
-  m_inputs.attach_to_root(m_scroll_view_inputs);
+  m_inputs.attach_to_root(*m_scroll_view_inputs);
 }
 
 void bim::axmol::widget::list::set_dirty()
