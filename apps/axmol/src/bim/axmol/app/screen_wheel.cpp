@@ -21,6 +21,10 @@
 #include <iscool/system/keep_screen_on.hpp>
 
 #include <axmol/2d/Node.h>
+#include <axmol/base/Director.h>
+
+static constexpr int g_fps_in_menus = 30;
+static constexpr int g_fps_in_game = 60;
 
 bim::axmol::app::screen_wheel::screen_wheel(
     const context& context, const iscool::style::declaration& style)
@@ -34,6 +38,8 @@ bim::axmol::app::screen_wheel::screen_wheel(
         new online_game(m_context, *style.get_declaration("online-game")))
   , m_end_game(new end_game(m_context, *style.get_declaration("end-game")))
 {
+  ax::Director::getInstance()->setAnimationInterval(1.f / g_fps_in_menus);
+
   m_context.get_main_scene()->add_in_main_canvas(*m_main_container,
                                                  m_inputs.root());
 
@@ -146,6 +152,8 @@ void bim::axmol::app::screen_wheel::animate_matchmaking_to_game(
 void bim::axmol::app::screen_wheel::animate_game_to_end_game(
     const bim::game::contest_result& result)
 {
+  ax::Director::getInstance()->setAnimationInterval(1.f / g_fps_in_menus);
+
   m_inputs.erase(m_online_game->input_node());
   m_online_game->closing();
 
@@ -191,6 +199,7 @@ void bim::axmol::app::screen_wheel::matchmaking_displayed()
 
 void bim::axmol::app::screen_wheel::online_game_displayed()
 {
+  ax::Director::getInstance()->setAnimationInterval(1.f / g_fps_in_game);
   m_inputs.push_back(m_online_game->input_node());
   m_online_game->displayed();
 }

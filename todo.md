@@ -3,11 +3,11 @@
 - Check the soft stick, it has been reported to not react.
 - Automatically launch the game when one player is ready.
 - Restart the app if the player leaves for 30 seconds or more.
-- 30 fps in the menus.
 - Fog feature.
 - Shield feature.
 - Nice UI for the in-game screen.
 - Add a contact button in the settings.
+- Remove the sound from the bomb button.
 
 # F-Droid
 
