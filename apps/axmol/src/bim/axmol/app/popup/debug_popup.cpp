@@ -25,6 +25,7 @@
 #include <iscool/system/language_code.hpp>
 
 #include <axmol/2d/Label.h>
+#include <axmol/base/Director.h>
 
 namespace
 {
@@ -89,9 +90,22 @@ void bim::axmol::app::debug_popup::show()
   add_feature_item("Falling blocks", bim::game::feature_flags::falling_blocks);
 
   add_title("SYSTEM");
+  add_fps_entry();
   add_text_item("Language", iscool::system::get_language_code());
 
   m_popup->show(m_controls->all_nodes, m_style_bounds, m_inputs.root());
+}
+
+void bim::axmol::app::debug_popup::add_fps_entry()
+{
+  ax::Director& director = *ax::Director::getInstance();
+
+  add_toggle_item("Show FPS", director.isStatsDisplay(),
+                  [&director]() -> bool
+                  {
+                    director.setStatsDisplay(!director.isStatsDisplay());
+                    return director.isStatsDisplay();
+                  });
 }
 
 void bim::axmol::app::debug_popup::add_feature_item(

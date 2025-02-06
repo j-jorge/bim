@@ -49,6 +49,7 @@ namespace bim::axmol::app
     void show();
 
   private:
+    void add_fps_entry();
     void add_feature_item(std::string_view label,
                           bim::game::feature_flags flag);
 
