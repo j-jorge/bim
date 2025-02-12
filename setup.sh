@@ -19,6 +19,7 @@ export bim_host_prefix="$host_prefix"
 export PATH="$script_dir/setup/bin/:$PATH"
 export CFLAGS="-fvisibility=hidden ${CFLAGS:-}"
 export CXXFLAGS="-fvisibility=hidden ${CXXFLAGS:-}"
+export CMAKE_GENERATOR="${CMAKE_GENERATOR:-Ninja}"
 
 check_host_dependency()
 {
