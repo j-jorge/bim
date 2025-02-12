@@ -79,7 +79,7 @@ case "$target_platform" in
         ;;
     android)
         packages+=(gradle
-                   libjpeg-turbo8-dev
+                   libjpeg-dev
                    libpng-dev)
         ;;
 esac

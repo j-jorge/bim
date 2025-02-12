@@ -9,10 +9,6 @@
 - Add a contact button in the settings.
 - Remove the sound from the bomb button.
 
-# F-Droid
-
-- libjpeg-turbo8-dev is not available in bookworm, use libjpeg-dev.
-
 # Client
 
 - Add a "shop" where the player can donate to the devs.
