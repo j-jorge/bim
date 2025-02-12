@@ -17,8 +17,8 @@ all_build_steps=(dependencies configure build test)
 
 export bim_host_prefix="$host_prefix"
 export PATH="$script_dir/setup/bin/:$PATH"
-export CFLAGS="-fvisibility=hidden"
-export CXXFLAGS="-fvisibility=hidden"
+export CFLAGS="-fvisibility=hidden ${CFLAGS:-}"
+export CXXFLAGS="-fvisibility=hidden ${CXXFLAGS:-}"
 
 check_host_dependency()
 {

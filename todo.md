@@ -13,7 +13,6 @@
 
 - setup.sh should set CMAKE_GENERATOR=Ninja.
 - libjpeg-turbo8-dev is not available in bookworm, use libjpeg-dev.
-- setup.sh should keep the global CXXFLAGS.
 
 # Client
 
