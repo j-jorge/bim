@@ -41,6 +41,7 @@ build()
          link=static \
          cxxflags="-std=c++20" \
          -j"$(nproc)" \
+         -d0 \
          --prefix="$install_dir" \
          "$@"
 
