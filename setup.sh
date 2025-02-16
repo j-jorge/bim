@@ -299,7 +299,15 @@ launch_build()
 
 launch_tests()
 {
-    "$script_dir"/ci/run-test-programs.sh "$build_dir"
+    local result=0
+
+    "$script_dir"/ci/run-test-programs.sh "$build_dir" \
+        || result=$((result + 1))
+
+    "$script_dir"/ci/no-metadata-in-png.sh "$build_dir" \
+        || result=$((result + 1))
+
+    return "$result"
 }
 
 set_up_host_prefix
