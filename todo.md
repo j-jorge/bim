@@ -15,7 +15,6 @@
 - Add a "shop" where the player can donate to the devs.
 - Get some coins for each game, unlock the features with the coins.
 - At most three enabled features per game.
-- Remove the build of the bundle when only the APK is targeted.
 
 # Server
 

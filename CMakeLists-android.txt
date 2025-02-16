@@ -218,7 +218,7 @@ add_custom_target(aab ALL
 add_custom_target(apk ALL
   COMMAND
   ${CMAKE_COMMAND} -E env "ANDROID_HOME=${bim_android_sdk_root}"
-  ${gradlew_bin} -p "${generated_project_root}" "assemble${java_build_type}" "bundle${java_build_type}"
+  ${gradlew_bin} -p "${generated_project_root}" "assemble${java_build_type}"
   DEPENDS ${bim_android_archs} generated-assets
   USES_TERMINAL
 )
