@@ -79,6 +79,7 @@ function(generate_legacy_icon output dpi size)
       -compose DstIn
       -composite
       -resize "${size}"
+      -strip
       "${output_file}"
     DEPENDS "${master_icon}"
     )
@@ -103,6 +104,7 @@ function(generate_adaptive_icon output dpi size)
       -set background "%[pixel:p{0,0}]"
       -gravity center
       -extent ${ref_size}x${ref_size}
+      -strip
       "${output_file}"
     DEPENDS "${master_icon}"
     )

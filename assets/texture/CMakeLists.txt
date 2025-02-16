@@ -29,7 +29,9 @@ foreach(t ${textures})
       -background black
       -alpha Remove mpr:image
       -compose Copy_Opacity
-      -composite "${output_file}"
+      -composite
+      -strip
+      "${output_file}"
     DEPENDS ${t}
     WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
   )
