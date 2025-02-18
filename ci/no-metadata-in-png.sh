@@ -2,6 +2,9 @@
 
 set -euo pipefail
 
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd)"
+PATH="$script_dir/../.backroom/host/bin:$PATH"
+
 pass_count=0
 file_count=0
 

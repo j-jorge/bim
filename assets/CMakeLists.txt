@@ -38,7 +38,7 @@ if(NOT BIM_BUILDING_FOR_ANDROID)
   return()
 endif()
 
-find_program(convert convert REQUIRED)
+find_program(magick magick REQUIRED)
 find_program(identify identify REQUIRED)
 
 set(master_icon "${CMAKE_CURRENT_LIST_DIR}/icon.png")
@@ -64,12 +64,12 @@ function(generate_legacy_icon output dpi size)
     COMMAND
       "${CMAKE_COMMAND}" -E make_directory "${output_dir}"
     COMMAND
-      "${convert}"
+      "${magick}"
       "${master_icon}"
       # Remove the extra margin.
       -crop "${ref_size}x${ref_size}+${ref_offset}+${ref_offset}"
       # Rounded rectangle mask.
-      -matte
+      -alpha set
       "\\\(" -size ${ref_size}x${ref_size}
         xc:none
         -draw
@@ -98,7 +98,7 @@ function(generate_adaptive_icon output dpi size)
     COMMAND
       "${CMAKE_COMMAND}" -E make_directory "${output_dir}"
     COMMAND
-      "${convert}"
+      "${magick}"
       "${master_icon}"
       # Pick the color of the top-left pixel.
       -set background "%[pixel:p{0,0}]"

@@ -10,7 +10,7 @@ set(textures
   "victory-background-pattern.png"
 )
 
-find_program(convert convert REQUIRED)
+find_program(magick magick REQUIRED)
 
 set(generated_textures)
 set(output_directory "${BIM_GENERATED_ASSETS_DIR}/texture")
@@ -23,7 +23,7 @@ foreach(t ${textures})
     OUTPUT "${output_file}"
     COMMAND
       ${CMAKE_COMMAND} -E make_directory "${output_directory}"
-    COMMAND ${convert}
+    COMMAND ${magick}
       ${t}
       -write mpr:image
       -background black

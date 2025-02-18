@@ -67,8 +67,11 @@ packages=(bzip2
           file
           gettext
           git
-          imagemagick
+          libjpeg-dev
+          libpng-dev
+          make
           ninja-build
+          pkg-config
           python3-venv
           "$compiler")
 
@@ -78,9 +81,7 @@ case "$target_platform" in
                    valgrind)
         ;;
     android)
-        packages+=(gradle
-                   libjpeg-dev
-                   libpng-dev)
+        packages+=(gradle)
         ;;
 esac
 

@@ -1,6 +1,7 @@
 00-android-sdk.sh
 00-axslcc.sh
 00-gradlew.sh
+00-image-magick.sh
 00-boost.sh
 00-claw.sh
 00-jsoncpp.sh
