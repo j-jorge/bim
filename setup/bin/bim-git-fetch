@@ -6,4 +6,5 @@ if [[ "$(git rev-parse HEAD 2>/dev/null)" != "$1" ]]
 then
     git fetch --quiet --depth 1 origin "$1"
     git reset --quiet --hard FETCH_HEAD
+    git clean -d --force -x
 fi
