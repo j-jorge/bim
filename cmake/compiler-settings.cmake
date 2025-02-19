@@ -11,6 +11,15 @@ if ((CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     "-fmacro-prefix-map=${BIM_PROJECT_ROOT}/=./"
   )
 
+  # F-Droid requires identical binaries between its build and the
+  # reference APK, thus we need a reproducible build for Android
+  # release builds. We are going to drop the build ID in this case as
+  # it is a cause of different binaries.
+  if(BIM_BUILDING_FOR_ANDROID AND (CMAKE_BUILD_TYPE STREQUAL Release))
+    message(STATUS "Disabling build ID.")
+    add_link_options("LINKER:--build-id=none")
+  endif()
+
   if ((CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
       AND (CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 13))
     # This error is reported on some calls to std::vector::push_back()
