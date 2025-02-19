@@ -3,7 +3,13 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 if ((CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     OR (CMAKE_CXX_COMPILER_ID STREQUAL "Clang"))
-  add_compile_options(-Wall -pedantic -Werror -fvisibility=hidden)
+  add_compile_options(
+    -Wall
+    -pedantic
+    -Werror
+    -fvisibility=hidden
+    "-fmacro-prefix-map=${BIM_PROJECT_ROOT}/=./"
+  )
 
   if ((CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
       AND (CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 13))

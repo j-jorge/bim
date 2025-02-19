@@ -17,8 +17,12 @@ all_build_steps=(dependencies configure build test)
 
 export bim_host_prefix="$host_prefix"
 export PATH="$script_dir/setup/bin/:$PATH"
-export CFLAGS="-fvisibility=hidden ${CFLAGS:-}"
-export CXXFLAGS="-fvisibility=hidden ${CXXFLAGS:-}"
+
+custom_cflags="-fvisibility=hidden"
+custom_cflags+=" -fmacro-prefix-map=$script_dir/=./"
+export CFLAGS="$custom_cflags ${CFLAGS:-}"
+export CXXFLAGS="$custom_cflags ${CXXFLAGS:-}"
+
 export CMAKE_GENERATOR="${CMAKE_GENERATOR:-Ninja}"
 
 check_host_dependency()
@@ -306,6 +310,13 @@ launch_tests()
 
     "$script_dir"/ci/no-metadata-in-png.sh "$build_dir" \
         || result=$((result + 1))
+
+    if [[ "$target_platform" == android ]] \
+           && [[ "$build_type" == release ]]
+    then
+        "$script_dir"/ci/no-path-in-apk.sh "$build_dir" \
+            || result=$((result + 1))
+    fi
 
     return "$result"
 }

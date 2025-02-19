@@ -8,7 +8,7 @@ set -euo pipefail
 
 : "${axmol_repository:=https://github.com/j-jorge/axmol/}"
 : "${axmol_version:=2.3.2j}"
-package_revision=2
+package_revision=5
 version="$axmol_version"-"$package_revision"
 
 if [[ "$bim_build_type" = "release" ]]

@@ -7,6 +7,8 @@ set(CMAKE_MODULE_PATH
   "${CMAKE_CURRENT_LIST_DIR}/cmake"
   ${CMAKE_MODULE_PATH}
 )
+set(BIM_PROJECT_ROOT "${CMAKE_CURRENT_LIST_DIR}")
+
 include(bim-configuration)
 
 if(BIM_TARGET STREQUAL "android")
