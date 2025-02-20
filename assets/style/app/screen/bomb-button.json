@@ -1,0 +1,36 @@
+{
+    "meta":
+    {
+        "overrides": [ "button/base" ]
+    },
+
+    "style":
+    {
+        "widgets":
+        [{
+            "sprite":
+            [{
+                "instantiate": "ax::Sprite",
+                "frame": "sprites/ui/bomb-button.png",
+                "anchor-point.x": 0.5,
+                "anchor-point.y": 0.5
+            }]
+        }],
+
+        "bounds":
+        [{
+            "sprite":
+            [
+                "layout/center",
+                {
+                    "width.percents": 100,
+                    "keep-ratio": true
+                }
+            ]
+        }],
+
+
+        "sound.click": ""
+    }
+}
+

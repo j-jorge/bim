@@ -20,7 +20,8 @@
             [{
                 "parent": "container",
                 "instantiate": "ax::Sprite",
-                "frame": "sprites/ui/joystick-background.png"
+                "frame": "sprites/ui/joystick-background.png",
+                "z-order": -10
             }]
         }],
 
@@ -30,17 +31,16 @@
             [{
                 "anchor.x": 0.5,
                 "anchor.y": 0.5,
-                "anchor.reference.x": 0.25,
+                "anchor.reference.x": 0.26,
                 "anchor.reference.y": 0.5,
-                "height.percents": 50,
-                "width-ratio": 1
+                "width.percents": 43,
+                "height-ratio": 1
             }],
 
             "stick":
             [{
-                "width-ratio": 1,
-                "height.percents": 50,
-                "z-order": 10
+                "keep-ratio": true,
+                "height.percents": 57
             }],
 
             "background": [ "layout/fill" ]
@@ -52,17 +52,16 @@
             [{
                 "anchor.x": 0.5,
                 "anchor.y": 0.5,
-                "anchor.reference.x": 0.75,
+                "anchor.reference.x": 0.74,
                 "anchor.reference.y": 0.5,
-                "height.percents": 50,
-                "width-ratio": 1
+                "width.percents": 43,
+                "height-ratio": 1
             }],
 
             "stick":
             [{
-                "width-ratio": 1,
-                "height.percents": 50,
-                "z-order": 10
+                "keep-ratio": true,
+                "height.percents": 57
             }],
 
             "background": [ "layout/fill" ]

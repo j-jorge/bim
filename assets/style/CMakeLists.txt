@@ -8,6 +8,7 @@ set(main_task_style_files
   ${CMAKE_CURRENT_LIST_DIR}/main-task.json
 
   ${CMAKE_CURRENT_LIST_DIR}/app/screen-wheel.json
+  ${CMAKE_CURRENT_LIST_DIR}/app/screen/bomb-button.json
   ${CMAKE_CURRENT_LIST_DIR}/app/screen/directional-pad.json
   ${CMAKE_CURRENT_LIST_DIR}/app/screen/end-game.json
   ${CMAKE_CURRENT_LIST_DIR}/app/screen/end-game-bounds.json
@@ -21,6 +22,9 @@ set(main_task_style_files
 
   ${CMAKE_CURRENT_LIST_DIR}/app/screen/font/stripe-message.json
   ${CMAKE_CURRENT_LIST_DIR}/app/screen/font/stripe-title.json
+
+  ${CMAKE_CURRENT_LIST_DIR}/app/screen/online-game/control-panel-decorum.json
+  ${CMAKE_CURRENT_LIST_DIR}/app/screen/online-game/control-panel-edging.json
 
   ${CMAKE_CURRENT_LIST_DIR}/app/screen/part/feature-deck.json
   ${CMAKE_CURRENT_LIST_DIR}/app/screen/part/feature-deck-bounds.json

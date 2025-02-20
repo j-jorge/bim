@@ -54,7 +54,7 @@
 #define x_widget_scope bim::axmol::app::online_game::
 #define x_widget_type_name controls
 #define x_widget_controls                                                     \
-  x_widget(ax::Node, arena)                                                   \
+  x_widget(ax::Node, arena) x_widget(ax::Node, control_panel)                 \
       x_widget(bim::axmol::widget::soft_stick, joystick)                      \
           x_widget(bim::axmol::widget::soft_pad, directional_pad)             \
               x_widget(bim::axmol::widget::button, bomb_button)               \
@@ -101,11 +101,20 @@ bim::axmol::app::online_game::online_game(
         *style.get_declaration("bounds.d-pad-on-the-right"))
   , m_style_use_joystick(*style.get_declaration("display.use-joystick"))
   , m_style_use_d_pad(*style.get_declaration("display.use-d-pad"))
+  , m_style_player{ &*style.get_declaration("display.player-1"),
+                    &*style.get_declaration("display.player-2"),
+                    &*style.get_declaration("display.player-3"),
+                    &*style.get_declaration("display.player-4") }
   , m_flame_center_asset_name(*style.get_string("flame-center-asset-name"))
   , m_flame_arm_asset_name(*style.get_string("flame-arm-asset-name"))
   , m_flame_end_asset_name(*style.get_string("flame-end-asset-name"))
   , m_arena_width_in_blocks(*style.get_number("arena-width-in-blocks"))
 {
+  // The control panel fills the space below the arena. Its size will be
+  // adjusted when the screen is added in the scene.
+  m_controls->control_panel->setAnchorPoint(ax::Vec2(0, 0));
+  m_controls->control_panel->setPosition(ax::Vec2(0, 0));
+
   m_controls->peephole->connect_to_shown(
       [this]() -> void
       {
@@ -222,9 +231,16 @@ bim::axmol::app::online_game::nodes() const
 
 void bim::axmol::app::online_game::attached()
 {
+  ax::Node& arena = *m_controls->arena;
+  m_arena_view_size = arena.getContentSize();
+
+  // Adjust the control panel to fill the space below the arena.
+  m_controls->control_panel->setContentSize(ax::Vec2(
+      m_arena_view_size.x,
+      arena.getPosition().y - arena.getAnchorPoint().y * m_arena_view_size.y));
+
   m_bomb_drop_requested = false;
 
-  m_arena_view_size = m_controls->arena->getContentSize();
   m_block_size = m_arena_view_size.x / m_arena_width_in_blocks;
 
   const auto resize_to_block_width =
@@ -258,6 +274,11 @@ void bim::axmol::app::online_game::displaying(
     const bim::net::game_launch_event& event)
 {
   configure_direction_pad();
+
+  bim::axmol::widget::apply_display(
+      m_context.get_widget_context().style_cache, m_controls->all_nodes,
+      *m_style_player[std::min<std::size_t>(event.player_index,
+                                            m_style_player.size())]);
 
   m_contest.reset(new bim::game::contest(
       event.seed, event.brick_wall_probability, event.player_count,
@@ -301,7 +322,7 @@ void bim::axmol::app::online_game::displaying(
   m_controls->peephole->prepare(
       player.convertToWorldSpace(player.getContentSize() / 2));
 
-  m_controls->timer->setString("");
+  m_controls->timer->setString("BIM!");
 }
 
 void bim::axmol::app::online_game::displayed()

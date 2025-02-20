@@ -1,20 +1,20 @@
 # Next
 
-- Check the soft stick, it has been reported to not react.
 - Automatically launch the game when one player is ready.
 - Restart the app if the player leaves for 30 seconds or more.
+- Add a contact button in the settings.
+- Fix the glitch when the game starts.
+- Display the frame duration (without the sleep) in addition to the FPS.
+- Check the soft stick, it has been reported to not react.
 - Fog feature.
 - Shield feature.
-- Nice UI for the in-game screen.
-- Add a contact button in the settings.
-- Remove the sound from the bomb button.
-- Display the frame duration (without the sleep) in addition to the FPS.
 
 # Client
 
 - Add a "shop" where the player can donate to the devs.
 - Get some coins for each game, unlock the features with the coins.
 - At most three enabled features per game.
+- Back button from the matchmaking screen.
 
 # Server
 

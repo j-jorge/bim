@@ -4,7 +4,26 @@
         "widgets":
         [{
             "arena": [],
-            "controls-area/instantiate": "ax::Node",
+            "control_panel": [],
+
+            "arena-shadow.top":
+            [{
+                "instantiate": "ax::Sprite",
+                "frame": "sprites/menu/vertical-gradient.png",
+                "color": "black",
+                "opacity": 0.3,
+                "flip.y": true,
+                "z-order": -150
+            }],
+
+            "arena-shadow.bottom":
+            [{
+                "instantiate": "ax::Sprite",
+                "frame": "sprites/menu/vertical-gradient.png",
+                "color": "black",
+                "opacity": 0.3,
+                "z-order": -150
+            }],
 
             "background":
             [{
@@ -13,26 +32,117 @@
                 "z-order": -100
             }],
 
+            "control-panel.background":
+            [{
+                "instantiate": "texture",
+                "widgets/sprite/frame": "texture/carbon.png",
+                "rotation": -10,
+                "z-order": -200
+            }],
+
+            "control-panel.shadow":
+            [{
+                "instantiate": "ax::Sprite",
+                "frame": "sprites/menu/vertical-gradient.png",
+                "color": "black",
+                "opacity": 0.3,
+                "flip.y": true,
+                "z-order": -150
+            }],
+
+            "top-edge":
+            [{
+                "instantiate": "nine_slices",
+                "widgets/sprite":
+                [{
+                    "frame": "sprites/ui/line-7-4.png",
+                    "insets.left": 7,
+                    "insets.top": 4,
+                    "insets.width": 1,
+                    "insets.height": 1
+                }],
+                "cascade-color": true,
+                "stretch-direction.vertical": false,
+                "z-order": -130
+            }],
+
+            "control-panel.left-edging":
+            [{
+                "instantiate": "nine_slices",
+                "widgets/sprite":
+                [{
+                    "frame": "sprites/ui/edging-60-88.png",
+                    "insets.left": 60,
+                    "insets.top": 88,
+                    "insets.width": 1,
+                    "insets.height": 1
+                }],
+                "cascade-color": true,
+                "z-order": -130
+            }],
+
+            "control-panel.right-edging":
+            [{
+                "instantiate": "nine_slices",
+                "widgets/sprite":
+                [{
+                    "frame": "sprites/ui/edging-216-88.png",
+                    "insets.left": 216,
+                    "insets.top": 88,
+                    "insets.width": 1,
+                    "insets.height": 1
+                }],
+                "cascade-color": true,
+                "z-order": -130
+            }],
+
             "bomb_button":
             [
-                "button/sprite",
+                "app/screen/bomb-button",
                 {
-                    "widgets/sprite/frame": "sprites/bomb.png"
+                    "z-order": -50
                 }
             ],
 
-            "directional_pad": [ "app/screen/directional-pad" ],
-            "joystick": [ "app/screen/joystick" ],
+            "directional_pad":
+            [
+                "app/screen/directional-pad",
+                {
+                    "z-order": -100
+                }
+            ],
+
+            "joystick":
+            [
+                "app/screen/joystick",
+                {
+                    "z-order": -100
+                }
+            ],
 
             "timer":
             [
                 "font/fancy-regular",
                 {
+                    "anchor-point.x": 0.5,
+                    "anchor-point.y": 1,
+                    "font.size": 60,
+                    "font.color": "desert-storm",
+                    "text": "00:00"
+                }
+            ],
+
+            "bim":
+            [
+                "font/fancy-regular",
+                {
+                    "instantiate": "ax::Label",
                     "anchor-point.x": 0,
                     "anchor-point.y": 1,
-                    "font.size": 52,
-                    "font.color": "white",
-                    "text": "00:00"
+                    "font.size": 60,
+                    "font.color": "desert-storm",
+                    "text": "BIM!",
+                    "visible": false
                 }
             ],
 
@@ -122,76 +232,22 @@
         "power-up-flame/frame": "sprites/power-up-flame.png",
 
         "bounds.d-pad-on-the-right":
-        [{
-            "bomb_button":
-            [{
-                "reference": "controls-area",
-                "anchor.x": 0.5,
-                "anchor.y": 0.5,
-                "anchor.reference.x": 0.2,
-                "anchor.reference.y": 0.6,
-                "width.percents": 20,
-                "height-ratio": 1
-            }],
-
-            "directional_pad":
-            [{
-                "reference": "controls-area",
-                "anchor.x": 0.5,
-                "anchor.y": 0.5,
-                "anchor.reference.x": 0.66,
-                "anchor.reference.y": 0.5,
-                "width.percents": 50,
-                "height-ratio": 1
-            }],
-
-            "joystick":
-            [{
-                "reference": "controls-area",
-                "anchor.x": 0.5,
-                "anchor.y": 0.5,
-                "anchor.reference.x": 0.5,
-                "anchor.reference.y": 0.5,
-                "width.percents": 90,
-                "height.percents": 90
-            }]
-        }],
+        [
+            "app/screen/online-game/control-panel-decorum",
+            {
+                "bomb_button/anchor.reference.x": 0.28,
+                "directional_pad/anchor.reference.x": 0.72
+            }
+        ],
 
         "bounds.d-pad-on-the-left":
-        [{
-            "bomb_button":
-            [{
-                "reference": "controls-area",
-                "anchor.x": 0.5,
-                "anchor.y": 0.5,
-                "anchor.reference.x": 0.8,
-                "anchor.reference.y": 0.6,
-                "width.percents": 20,
-                "height-ratio": 1
-            }],
-
-            "directional_pad":
-            [{
-                "reference": "controls-area",
-                "anchor.x": 0.5,
-                "anchor.y": 0.5,
-                "anchor.reference.x": 0.33,
-                "anchor.reference.y": 0.5,
-                "width.percents": 50,
-                "height-ratio": 1
-            }],
-
-            "joystick":
-            [{
-                "reference": "controls-area",
-                "anchor.x": 0.5,
-                "anchor.y": 0.5,
-                "anchor.reference.x": 0.5,
-                "anchor.reference.y": 0.5,
-                "width.percents": 90,
-                "height.percents": 90
-            }]
-        }],
+        [
+            "app/screen/online-game/control-panel-decorum",
+            {
+                "bomb_button/anchor.reference.x": 0.72,
+                "directional_pad/anchor.reference.x": 0.28
+            }
+        ],
 
         "display.use-joystick":
         [{
@@ -203,6 +259,34 @@
         [{
             "joystick/visible": false,
             "directional_pad/visible": true
+        }],
+
+        "display.player-1":
+        [{
+            "top-edge/color": "player-1",
+            "control-panel.left-edging/color": "player-1",
+            "control-panel.right-edging/color": "player-1"
+        }],
+
+        "display.player-2":
+        [{
+            "top-edge/color": "player-2",
+            "control-panel.left-edging/color": "player-2",
+            "control-panel.right-edging/color": "player-2"
+        }],
+
+        "display.player-3":
+        [{
+            "top-edge/color": "player-3",
+            "control-panel.left-edging/color": "player-3",
+            "control-panel.right-edging/color": "player-3"
+        }],
+
+        "display.player-4":
+        [{
+            "top-edge/color": "player-4",
+            "control-panel.left-edging/color": "player-4",
+            "control-panel.right-edging/color": "player-4"
         }]
     }
 }

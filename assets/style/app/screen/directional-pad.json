@@ -12,7 +12,7 @@
             "up.on":
             [{
                 "instantiate": "ax::Sprite",
-                "frame": "sprites/ui/directional-pad-up-on.png"
+                "frame": "sprites/ui/directional-pad-up.png"
             }],
 
             "down.off":
@@ -24,7 +24,7 @@
             "down.on":
             [{
                 "instantiate": "ax::Sprite",
-                "frame": "sprites/ui/directional-pad-down-on.png"
+                "frame": "sprites/ui/directional-pad-down.png"
             }],
 
             "left.off":
@@ -36,7 +36,7 @@
             "left.on":
             [{
                 "instantiate": "ax::Sprite",
-                "frame": "sprites/ui/directional-pad-left-on.png"
+                "frame": "sprites/ui/directional-pad-left.png"
             }],
 
             "right.off":
@@ -48,81 +48,89 @@
             "right.on":
             [{
                 "instantiate": "ax::Sprite",
-                "frame": "sprites/ui/directional-pad-right-on.png"
+                "frame": "sprites/ui/directional-pad-right.png"
             }]
         }],
 
         "bounds":
         [{
-            "up.on":
+            "up.off":
             [{
                 "anchor.x": 0.5,
-                "anchor.y": 1,
+                "anchor.y": 0.5,
                 "anchor.reference.x": 0.5,
-                "anchor.reference.y": 0.9,
-                "width.percents": 52,
-                "height.percents": 22
+                "anchor.reference.y": 0.77,
+                "keep-ratio": true,
+                "width.percents": 66
             }],
 
-            "up.off":
+            "up.on":
             [
-                "layout/fill",
+                "layout/center",
                 {
-                    "reference": "up.on"
+                    "reference": "up.off",
+                    "width.percents": 90,
+                    "keep-ratio": true
                 }
             ],
-
-            "down.on":
-            [{
-                "anchor.x": 0.5,
-                "anchor.y": 0,
-                "anchor.reference.x": 0.5,
-                "anchor.reference.y": 0.1,
-                "width.percents": 52,
-                "height.percents": 22
-            }],
 
             "down.off":
+            [{
+                "anchor.x": 0.5,
+                "anchor.y": 0.5,
+                "anchor.reference.x": 0.5,
+                "anchor.reference.y": 0.23,
+                "keep-ratio": true,
+                "width.percents": 66
+            }],
+
+            "down.on":
             [
-                "layout/fill",
+                "layout/center",
                 {
-                    "reference": "down.on"
+                    "reference": "down.off",
+                    "width.percents": 90,
+                    "keep-ratio": true
                 }
             ],
-
-            "left.on":
-            [{
-                "anchor.x": 0,
-                "anchor.y": 0.5,
-                "anchor.reference.x": 0.1,
-                "anchor.reference.y": 0.5,
-                "width.percents": 22,
-                "height.percents": 52
-            }],
 
             "left.off":
+            [{
+                "anchor.x": 0.5,
+                "anchor.y": 0.5,
+                "anchor.reference.x": 0.23,
+                "anchor.reference.y": 0.5,
+                "height.percents": 66,
+                "keep-ratio": true
+            }],
+
+            "left.on":
             [
-                "layout/fill",
+                "layout/center",
                 {
-                    "reference": "left.on"
+                    "reference": "left.off",
+                    "height.percents": 90,
+                    "keep-ratio": true
                 }
             ],
 
-            "right.on":
+            "right.off":
             [{
-                "anchor.x": 1,
+                "anchor.x": 0.5,
                 "anchor.y": 0.5,
-                "anchor.reference.x": 0.9,
+                "anchor.reference.x": 0.77,
                 "anchor.reference.y": 0.5,
-                "width.percents": 22,
-                "height.percents": 52
+                "height.percents": 66,
+                "keep-ratio": true
             }],
 
-            "right.off":
+            "right.on":
             [
-                "layout/fill",
+                "layout/center",
                 {
-                    "reference": "right.on"
+                    "reference": "right.off",
+                    "height.percents": 90,
+                    "keep-ratio": true
                 }
             ]
         }],

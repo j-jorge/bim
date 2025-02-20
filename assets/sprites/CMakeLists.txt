@@ -45,16 +45,14 @@ set(sprites
   "sprites/popup/popup-border-146-146.png"
   "sprites/popup/popup-fill-146-146.png"
 
+  "sprites/ui/bomb-button.png"
   "sprites/ui/directional-pad-left.png"
   "sprites/ui/directional-pad-right.png"
-  "sprites/ui/directional-pad-left-on.png"
-  "sprites/ui/directional-pad-right-on.png"
   "sprites/ui/directional-pad-up.png"
-  "sprites/ui/directional-pad-up-on.png"
-  "sprites/ui/directional-pad-down-on.png"
   "sprites/ui/directional-pad-down.png"
   "sprites/ui/joystick-background.png"
   "sprites/ui/joystick-stick.png"
+  "sprites/ui/line-7-4.png"
 )
 set(sprites_bleeding
   "sprites/arena-border.png"
@@ -70,6 +68,9 @@ set(sprites_bleeding
   "sprites/menu/vertical-green-gradient.png"
   "sprites/menu/vertical-red-gradient.png"
   "sprites/menu/vertical-yellow-gradient.png"
+
+  "sprites/ui/edging-60-88.png"
+  "sprites/ui/edging-216-88.png"
 )
 
 foreach(s ${sprites} ${sprites_bleeding})

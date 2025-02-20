@@ -95,14 +95,14 @@ assets/sprites/menu/vertical-red-gradient.png
 assets/sprites/menu/vertical-yellow-gradient.png
 assets/sprites/popup/popup-border-146-146.png
 assets/sprites/popup/popup-fill-146-146.png
-assets/sprites/ui/directional-pad-down-on.png
+assets/sprites/ui/bomb-button.png
 assets/sprites/ui/directional-pad-down.png
-assets/sprites/ui/directional-pad-left-on.png
 assets/sprites/ui/directional-pad-left.png
-assets/sprites/ui/directional-pad-right-on.png
 assets/sprites/ui/directional-pad-right.png
-assets/sprites/ui/directional-pad-up-on.png
 assets/sprites/ui/directional-pad-up.png
+assets/sprites/ui/edging-216-88.png
+assets/sprites/ui/edging-60-88.png
+assets/sprites/ui/line-7-4.png
 assets/texture/bomb-stencil.png
 assets/texture/defeat-background-pattern.png
 assets/texture/draw-background-pattern.png
@@ -114,6 +114,8 @@ assets/texture/squares.png
 assets/texture/stars.png
 assets/icon.png
 static-assets/audio/tick.ogg
+static-assets/texture/carbon.png
 static-assets/texture/grass.png
 Julien Jorge
 CC-BY-SA 4.0
+

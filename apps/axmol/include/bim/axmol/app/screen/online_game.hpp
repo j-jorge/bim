@@ -135,12 +135,13 @@ namespace bim::axmol::app
 
   private:
     bim::axmol::input::tree m_inputs;
-    bim_declare_controls_struct(controls, m_controls, 7);
+    bim_declare_controls_struct(controls, m_controls, 8);
 
     const iscool::style::declaration& m_style_pad_on_the_left;
     const iscool::style::declaration& m_style_pad_on_the_right;
     const iscool::style::declaration& m_style_use_joystick;
     const iscool::style::declaration& m_style_use_d_pad;
+    const std::array<const iscool::style::declaration*, 4> m_style_player;
 
     iscool::signals::scoped_connection m_tick_connection;
 

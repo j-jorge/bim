@@ -18,5 +18,10 @@
     "west-side": "#fc9711",
     "dandelion": "#fede5e",
 
-    "cod-gray": "#141213"
+    "cod-gray": "#141213",
+
+    "player-1": "#107dbc",
+    "player-2": "#a4122c",
+    "player-3": "#a2a000",
+    "player-4": "#2f9a0d"
 }
