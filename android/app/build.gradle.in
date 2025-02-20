@@ -100,6 +100,13 @@ android {
             enableSplit false
         }
     }
+
+    dependenciesInfo {
+        // Disables dependency metadata when building APKs. F-Droid
+        // refuses them.
+        includeInApk = false
+    }
+
     dependencies {
         implementation 'axmol:axmol:@axmol_version@'
         implementation 'iscool:system:@iscool_core_version@'
