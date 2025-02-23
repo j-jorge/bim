@@ -112,7 +112,7 @@ assets/texture/search-background-pattern.png
 assets/texture/victory-background-pattern.png
 assets/texture/squares.png
 assets/texture/stars.png
-assets/icon.png
+metadata/en-US/images/icon.png
 static-assets/audio/tick.ogg
 static-assets/texture/carbon.png
 static-assets/texture/grass.png
