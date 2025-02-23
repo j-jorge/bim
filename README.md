@@ -1,10 +1,10 @@
 # Bim!
 
-Bim! is an open-source online multiplayer mobile game of the
+Bim! is an open-source multiplayer online mobile game of the
 last man standing genre.
 
 <p align="center">
-  <img src="assets/icon.png" width="25%"/>
+  <img src="metadata/en-US/images/icon.png" width="25%"/>
 </p>
 
 Up to four players are stuck in a small arena with a single goal: be
@@ -18,15 +18,19 @@ screen. Features enabled by all participants will be used in the game,
 allowing players to customize their contest.
 
 <p align="center">
-  <img src="docs/readme/title-screen.jpg" width="33%"/>
-  <img src="docs/readme/matchmaking.jpg" width="33%"/>
+  <img src="docs/readme/title-screen.jpg" width="540px"/>
+  <img src="metadata/en-US/images/phoneScreenshots/screenshot-1-matchmaking.jpg"
+       width="540px"/>
 </p>
 <p align="center">
-  <img src="docs/readme/gameplay.jpg" width="33%"/>
-  <img src="docs/readme/victory.jpg" width="33%"/>
+  <img src="metadata/en-US/images/phoneScreenshots/screenshot-2-gameplay.jpg"
+       width="540px"/>
+  <img src="metadata/en-US/images/phoneScreenshots/screenshot-3-victory.jpg"
+       width="540px"/>
 </p>
 <p align="center">
-  <img src="docs/readme/settings.jpg" width="33%"/>
+  <img src="metadata/en-US/images/phoneScreenshots/screenshot-4-settings.jpg"
+       width="540px"/>
 </p>
 
 # Installing
