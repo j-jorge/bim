@@ -2,6 +2,7 @@
 #include <bim/axmol/app/screen_wheel.hpp>
 
 #include <bim/axmol/app/main_scene.hpp>
+#include <bim/axmol/app/popup/message.hpp>
 #include <bim/axmol/app/screen/end_game.hpp>
 #include <bim/axmol/app/screen/lobby.hpp>
 #include <bim/axmol/app/screen/matchmaking.hpp>
@@ -10,6 +11,12 @@
 #include <bim/axmol/widget/add_group_as_children.hpp>
 #include <bim/axmol/widget/apply_bounds.hpp>
 #include <bim/axmol/widget/context.hpp>
+
+#include <bim/net/exchange/keep_alive_exchange.hpp>
+#include <bim/net/session_handler.hpp>
+
+#include <iscool/i18n/gettext.hpp>
+#include <iscool/signals/implement_signal.hpp>
 
 #define x_widget_scope bim::axmol::app::screen_wheel::
 #define x_widget_type_name controls
@@ -26,6 +33,8 @@
 static constexpr int g_fps_in_menus = 30;
 static constexpr int g_fps_in_game = 60;
 
+IMPLEMENT_SIGNAL(bim::axmol::app::screen_wheel, reset, m_reset)
+
 bim::axmol::app::screen_wheel::screen_wheel(
     const context& context, const iscool::style::declaration& style)
   : m_context(context)
@@ -37,6 +46,10 @@ bim::axmol::app::screen_wheel::screen_wheel(
   , m_online_game(
         new online_game(m_context, *style.get_declaration("online-game")))
   , m_end_game(new end_game(m_context, *style.get_declaration("end-game")))
+  , m_message_popup(
+        new message_popup(m_context, *style.get_declaration("message-popup")))
+  , m_keep_alive(new bim::net::keep_alive_exchange(
+        m_context.get_session_handler()->message_stream()))
 {
   ax::Director::getInstance()->setAnimationInterval(1.f / g_fps_in_menus);
 
@@ -65,6 +78,20 @@ bim::axmol::app::screen_wheel::screen_wheel(
   m_controls->end_game->removeFromParent();
 
   wire_permanent_connections();
+
+  m_message_popup->connect_to_ok(
+      [this]() -> void
+      {
+        m_reset();
+      });
+
+  m_context.get_session_handler()->connect_to_connected(
+      [this]()
+      {
+        connect_keep_alive();
+      });
+
+  connect_keep_alive();
 
   // Start on the lobby, In the initial state
   m_active_view = m_controls->lobby;
@@ -103,6 +130,12 @@ void bim::axmol::app::screen_wheel::wire_permanent_connections()
         animate_game_to_end_game(result);
       });
 
+  m_online_game->connect_to_disconnected(
+      [this]()
+      {
+        disconnected();
+      });
+
   m_end_game->connect_to_quit(
       [this]()
       {
@@ -114,6 +147,28 @@ void bim::axmol::app::screen_wheel::wire_permanent_connections()
       {
         animate_end_game_to_matchmaking();
       });
+
+  m_keep_alive->connect_to_disconnected(
+      [this]()
+      {
+        disconnected();
+      });
+}
+
+void bim::axmol::app::screen_wheel::connect_keep_alive()
+{
+  bim::net::session_handler& session_handler =
+      *m_context.get_session_handler();
+
+  if (!session_handler.connected())
+    return;
+
+  m_keep_alive_connection = m_keep_alive->connect_to_disconnected(
+      [this]() -> void
+      {
+        disconnected();
+      });
+  m_keep_alive->start(session_handler.session_id());
 }
 
 void bim::axmol::app::screen_wheel::switch_view(ax::Node& new_view)
@@ -208,4 +263,12 @@ void bim::axmol::app::screen_wheel::end_game_displayed()
 {
   m_inputs.push_back(m_end_game->input_node());
   m_end_game->displayed();
+}
+
+void bim::axmol::app::screen_wheel::disconnected()
+{
+  m_online_game->closing();
+  m_keep_alive->stop();
+
+  m_message_popup->show(ic_gettext("You have been disconnected."));
 }

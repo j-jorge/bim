@@ -1,7 +1,7 @@
 # Next
 
-- Automatically launch the game when one player is ready.
 - Restart the app if the player leaves for 30 seconds or more.
+- Add a message on the lobby to tell that the game is in alpha.
 - Add a contact button in the settings.
 - Fix the glitch when the game starts.
 - Display the frame duration (without the sleep) in addition to the FPS.
@@ -11,6 +11,7 @@
 
 # Client
 
+- Automatically launch the game when one player is ready.
 - Add a "shop" where the player can donate to the devs.
 - Get some coins for each game, unlock the features with the coins.
 - At most three enabled features per game.
@@ -21,7 +22,6 @@
 - Load the config from a Json file.
 - Accept config parameters as command line arguments.
 - Collect some stats about the games and clients.
-- Refresh session on every message.
 - Web services
   - Hot reload of the config.
   - Retrieve the stats.

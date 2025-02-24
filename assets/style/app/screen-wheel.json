@@ -1,6 +1,8 @@
 {
     "style":
     {
+        "message-popup": [ "popup/message" ],
+
         "widgets":
         [{
             "lobby": [],

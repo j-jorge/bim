@@ -44,6 +44,9 @@ namespace bim::server
     void check_authentication(const iscool::net::endpoint& endpoint,
                               const iscool::net::message& m);
 
+    void send_acknowledge_keep_alive(const iscool::net::endpoint& endpoint,
+                                     iscool::net::session_id session);
+
     void schedule_clean_up();
 
     void clean_up();

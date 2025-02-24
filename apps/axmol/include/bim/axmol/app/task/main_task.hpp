@@ -43,6 +43,7 @@ namespace bim::axmol::app
   class main_task
   {
     DECLARE_VOID_SIGNAL(end, m_end)
+    DECLARE_VOID_SIGNAL(reset, m_reset)
 
     ic_declare_context(
         m_context,

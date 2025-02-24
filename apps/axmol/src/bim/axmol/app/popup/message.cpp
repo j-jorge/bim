@@ -7,6 +7,8 @@
 #include <bim/axmol/widget/implement_widget.hpp>
 #include <bim/axmol/widget/ui/button.hpp>
 
+#include <iscool/signals/implement_signal.hpp>
+
 #include <axmol/2d/Label.h>
 
 #define x_widget_scope bim::axmol::app::message_popup::
@@ -15,6 +17,8 @@
   x_widget(ax::Label, message) x_widget(bim::axmol::widget::button, yes_button)
 
 #include <bim/axmol/widget/implement_controls_struct.hpp>
+
+IMPLEMENT_SIGNAL(bim::axmol::app::message_popup, ok, m_ok);
 
 bim::axmol::app::message_popup::message_popup(
     const context& context, const iscool::style::declaration& style)
@@ -27,6 +31,7 @@ bim::axmol::app::message_popup::message_popup(
       [this]()
       {
         m_popup->hide();
+        m_ok();
       });
 }
 

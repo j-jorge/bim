@@ -4,6 +4,7 @@ add_library(bim_net STATIC
 
   main/src/bim/net/exchange/authentication_exchange.cpp
   main/src/bim/net/exchange/game_update_exchange.cpp
+  main/src/bim/net/exchange/keep_alive_exchange.cpp
   main/src/bim/net/exchange/new_game_exchange.cpp
 
   main/src/bim/net/message/game_update_from_client.cpp

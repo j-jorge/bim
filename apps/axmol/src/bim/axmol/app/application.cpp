@@ -543,6 +543,13 @@ void bim::axmol::app::application::launch_game()
         m_persistent_systems = nullptr;
         ax::Director::getInstance()->end();
       });
+  m_main_task->connect_to_reset(
+      [this]() -> void
+      {
+        ic_log(iscool::log::nature::info(), g_log_context,
+               "Resetting the game.");
+        reset();
+      });
 
   m_main_task->start();
 }
