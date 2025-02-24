@@ -72,6 +72,7 @@ namespace bim::axmol::app
   {
     DECLARE_SIGNAL(void(const bim::game::contest_result&), game_over,
                    m_game_over)
+    DECLARE_VOID_SIGNAL(disconnected, m_disconnected)
 
     ic_declare_context(
         m_context,

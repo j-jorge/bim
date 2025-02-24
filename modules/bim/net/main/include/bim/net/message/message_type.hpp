@@ -8,6 +8,8 @@ namespace bim::net::message_type
   constexpr iscool::net::message_type authentication = 1;
   constexpr iscool::net::message_type authentication_ok = 2;
   constexpr iscool::net::message_type authentication_ko = 3;
+  constexpr iscool::net::message_type keep_alive = 4;
+  constexpr iscool::net::message_type acknowledge_keep_alive = 5;
 
   constexpr iscool::net::message_type new_named_game_request = 10;
   constexpr iscool::net::message_type new_random_game_request = 11;

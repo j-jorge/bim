@@ -4,6 +4,7 @@
 #include <bim/axmol/widget/declare_controls_struct.hpp>
 
 #include <iscool/context.hpp>
+#include <iscool/signals/declare_signal.hpp>
 
 #include <memory>
 #include <string_view>
@@ -25,6 +26,8 @@ namespace bim::axmol::app
 
   class message_popup
   {
+    DECLARE_VOID_SIGNAL(ok, m_ok)
+
     ic_declare_context(
         m_context,
         ic_context_declare_parent_properties(                      //

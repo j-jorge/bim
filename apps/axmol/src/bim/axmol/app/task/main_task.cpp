@@ -21,6 +21,7 @@
 #include <fmt/format.h>
 
 IMPLEMENT_SIGNAL(bim::axmol::app::main_task, end, m_end);
+IMPLEMENT_SIGNAL(bim::axmol::app::main_task, reset, m_reset);
 
 bim::axmol::app::main_task::main_task(context context)
   : m_context(context)
@@ -44,6 +45,11 @@ void bim::axmol::app::main_task::start()
 
   m_screen_wheel.reset(
       new screen_wheel(m_context, *m_style.get_declaration("screen-wheel")));
+  m_screen_wheel->connect_to_reset(
+      [this]() -> void
+      {
+        m_reset();
+      });
 }
 
 void bim::axmol::app::main_task::read_translations()

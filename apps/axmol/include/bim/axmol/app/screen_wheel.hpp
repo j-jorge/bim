@@ -5,6 +5,8 @@
 #include <bim/axmol/widget/declare_controls_struct.hpp>
 
 #include <iscool/context.hpp>
+#include <iscool/signals/declare_signal.hpp>
+#include <iscool/signals/scoped_connection.hpp>
 
 #include <memory>
 #include <string>
@@ -18,6 +20,7 @@ namespace bim
 
   namespace net
   {
+    class keep_alive_exchange;
     class session_handler;
     struct game_launch_event;
   }
@@ -57,11 +60,14 @@ namespace bim::axmol::app
   class lobby;
   class main_scene;
   class matchmaking;
+  class message_popup;
   class online_game;
   class scene_lock;
 
   class screen_wheel
   {
+    DECLARE_VOID_SIGNAL(reset, m_reset)
+
     ic_declare_context(
         m_context,
         ic_context_declare_parent_properties(                              //
@@ -86,6 +92,7 @@ namespace bim::axmol::app
                    const std::string& bounds_style_name) const;
 
     void wire_permanent_connections();
+    void connect_keep_alive();
 
     void switch_view(ax::Node& new_view);
 
@@ -100,6 +107,8 @@ namespace bim::axmol::app
     void online_game_displayed();
     void end_game_displayed();
 
+    void disconnected();
+
   private:
     bim::axmol::ref_ptr<ax::Node> m_main_container;
     bim::axmol::input::tree m_inputs;
@@ -111,5 +120,10 @@ namespace bim::axmol::app
     std::unique_ptr<matchmaking> m_matchmaking;
     std::unique_ptr<online_game> m_online_game;
     std::unique_ptr<end_game> m_end_game;
+
+    std::unique_ptr<message_popup> m_message_popup;
+
+    std::unique_ptr<bim::net::keep_alive_exchange> m_keep_alive;
+    iscool::signals::scoped_connection m_keep_alive_connection;
   };
 }

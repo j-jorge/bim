@@ -44,6 +44,8 @@
 #include <bim/game/player_action.hpp>
 #include <bim/game/static_wall.hpp>
 
+#include <iscool/log/log.hpp>
+#include <iscool/log/nature/info.hpp>
 #include <iscool/schedule/delayed_call.hpp>
 #include <iscool/signals/implement_signal.hpp>
 #include <iscool/system/haptic_feedback.hpp>
@@ -90,7 +92,8 @@ static void hide_while_visible(std::span<ax::Sprite* const> sprites)
     }
 }
 
-IMPLEMENT_SIGNAL(bim::axmol::app::online_game, game_over, m_game_over);
+IMPLEMENT_SIGNAL(bim::axmol::app::online_game, game_over, m_game_over)
+IMPLEMENT_SIGNAL(bim::axmol::app::online_game, disconnected, m_disconnected)
 
 bim::axmol::app::online_game::online_game(
     const context& context, const iscool::style::declaration& style)
@@ -331,7 +334,9 @@ void bim::axmol::app::online_game::displayed()
 }
 
 void bim::axmol::app::online_game::closing()
-{}
+{
+  stop();
+}
 
 void bim::axmol::app::online_game::configure_direction_pad()
 {
@@ -378,6 +383,17 @@ void bim::axmol::app::online_game::tick()
 
   const int ticks_ahead =
       m_contest_runner->local_tick() - m_contest_runner->confirmed_tick();
+
+  // If the player is 5 seconds too far ahead it is most certainly
+  // disconnected.
+  if (ticks_ahead > 5 * 60)
+    {
+      stop();
+      ic_log(iscool::log::nature::info(), "online_game", "Disconnected.");
+      m_disconnected();
+      return;
+    }
+
   const int max_ticks_ahead = bim::game::player_action_queue::queue_size;
 
   if (ticks_ahead <= max_ticks_ahead)
@@ -772,4 +788,5 @@ void bim::axmol::app::online_game::stop()
   m_update_exchange.reset();
   m_game_channel.reset();
   m_contest.reset();
+  m_tick_connection.disconnect();
 }

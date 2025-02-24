@@ -3,9 +3,11 @@
 
 #include <bim/server/config.hpp>
 
+#include <bim/net/message/acknowledge_keep_alive.hpp>
 #include <bim/net/message/authentication.hpp>
 #include <bim/net/message/authentication_ko.hpp>
 #include <bim/net/message/authentication_ok.hpp>
+#include <bim/net/message/keep_alive.hpp>
 #include <bim/net/message/protocol_version.hpp>
 #include <bim/net/message/try_deserialize_message.hpp>
 
@@ -55,18 +57,24 @@ void bim::server::authentication_service::check_session(
     {
       if (message.get_type() == bim::net::message_type::authentication)
         check_authentication(endpoint, message);
-    }
-  else
-    {
-      const client_map::iterator it = m_clients.find(session);
 
-      if (it != m_clients.end())
-        {
-          it->second.release_at_this_date =
-              authentication_date_for_next_release();
-          m_message(endpoint, message);
-        }
+      return;
     }
+
+  const client_map::iterator it = m_clients.find(session);
+
+  if (it == m_clients.end())
+    return;
+
+  it->second.release_at_this_date = authentication_date_for_next_release();
+
+  if (message.get_type() == bim::net::message_type::keep_alive)
+    {
+      send_acknowledge_keep_alive(endpoint, session);
+      return;
+    }
+
+  m_message(endpoint, message);
 }
 
 void bim::server::authentication_service::check_authentication(
@@ -125,6 +133,16 @@ void bim::server::authentication_service::check_authentication(
   bim::net::authentication_ok(token, it->second).build_message(*s.value);
 
   m_message_stream.send(endpoint, *s.value);
+  m_message_pool.release(s.id);
+}
+
+void bim::server::authentication_service::send_acknowledge_keep_alive(
+    const iscool::net::endpoint& endpoint, iscool::net::session_id session)
+{
+  const iscool::net::message_pool::slot s = m_message_pool.pick_available();
+  bim::net::acknowledge_keep_alive().build_message(*s.value);
+
+  m_message_stream.send(endpoint, *s.value, session, 0);
   m_message_pool.release(s.id);
 }
 
