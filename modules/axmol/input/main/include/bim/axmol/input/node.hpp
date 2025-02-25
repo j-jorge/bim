@@ -33,6 +33,8 @@ namespace bim::axmol::input
     void attach(touch_observer_pointer observer);
     void attach(key_observer_pointer observer);
 
+    void push_front(const node_reference& child);
+
     void push_back(touch_observer_pointer observer);
     void push_back(key_observer_pointer observer);
     void push_back(const node_reference& child);

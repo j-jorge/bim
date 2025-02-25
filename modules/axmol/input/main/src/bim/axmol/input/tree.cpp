@@ -17,6 +17,11 @@ std::string bim::axmol::input::tree::to_string() const
   return m_root->to_string();
 }
 
+void bim::axmol::input::tree::push_front(const node_reference& child)
+{
+  m_root->push_front(child);
+}
+
 void bim::axmol::input::tree::push_back(const touch_observer_pointer& observer)
 {
   m_root->push_back(observer);

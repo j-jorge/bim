@@ -37,6 +37,13 @@ void bim::axmol::input::node::attach(key_observer_pointer observer)
   m_key_observer = std::move(observer);
 }
 
+void bim::axmol::input::node::push_front(const node_reference& child)
+{
+  assert(child.m_node != nullptr);
+  m_children.insert(m_children.begin(), child.m_node);
+  assert(check_no_duplicates());
+}
+
 void bim::axmol::input::node::push_back(touch_observer_pointer observer)
 {
   assert(observer.lock());

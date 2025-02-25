@@ -59,7 +59,7 @@ void bim::axmol::app::main_scene::add_in_overlays(
 {
   m_controls->overlay->addChild(&node);
 
-  m_overlay_inputs.push_back(inputs);
+  m_overlay_inputs.push_front(inputs);
   m_overlay_node_inputs.insert(node_to_inputs_map::value_type(&node, inputs));
 }
 

@@ -17,6 +17,8 @@ namespace bim::axmol::input
     node_reference root() const;
     std::string to_string() const;
 
+    void push_front(const node_reference& child);
+
     void push_back(const touch_observer_pointer& observer);
     void push_back(const key_observer_pointer& observer);
     void push_back(const node_reference& child);
