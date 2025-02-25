@@ -1,6 +1,5 @@
 # Next
 
-- Restart the app if the player leaves for 30 seconds or more.
 - Add a message on the lobby to tell that the game is in alpha.
 - Add a contact button in the settings.
 - Fix the glitch when the game starts.
