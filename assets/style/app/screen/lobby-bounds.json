@@ -6,6 +6,29 @@
 
     "style":
     {
+        "stripe-reference":
+        [{
+            "anchor.x": 0,
+            "anchor.y": 1,
+            "anchor.reference.x": 0,
+            "anchor.reference.y": 1,
+            "height.percents": 7,
+            "width-ratio": 1
+        }],
+
+        "stripe-background":
+        [{
+            "reference": "stripe-reference",
+            "anchor.x": 0.5,
+            "anchor.y": 0.5,
+            "anchor.reference.x": 1,
+            "anchor.reference.y": 0,
+            "width.percents": 400,
+            "keep-ratio": true
+        }],
+
+        "stripe-message": [ "layout/center" ],
+
         "settings_button":
         [{
             "anchor.x": 0.5,

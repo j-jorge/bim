@@ -35,6 +35,7 @@ set(sprites
   "sprites/menu/rounded-button-fill-54-66.png"
   "sprites/menu/rounded-rectangle-33-33.png"
   "sprites/menu/rounded-rectangle-spike.png"
+  "sprites/menu/serrated-stripe.png"
   "sprites/menu/silhouette-1.png"
   "sprites/menu/silhouette-2.png"
   "sprites/menu/silhouette-3.png"

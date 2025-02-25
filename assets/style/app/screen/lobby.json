@@ -8,6 +8,33 @@
         [
             "app/screen/part/menu-background",
             {
+                "stripe-reference": [{ "instantiate": "ax::Node" }],
+
+                "stripe-background":
+                [{
+                    "instantiate": "ax::Sprite",
+                    "frame": "sprites/menu/serrated-stripe.png",
+                    "rotation": -45,
+                    "z-order": -10
+                }],
+
+                "stripe-message":
+                [
+                    "font/fancy-regular",
+                    {
+                        "instantiate": "ax::Label",
+                        "font.size": 48,
+                        "parent": "stripe-background",
+                        "font.color": "white",
+                        "shadow.color": "cod-gray",
+                        "shadow.offset.y": -4,
+                        "outline.color": "cod-gray",
+                        "outline.size": 5,
+                        "align.horizontal": "center",
+                        "text.i18n": "ALPHA\nVERSION"
+                    }
+                ],
+
                 "settings_button":
                 [
                     "button/yellow-with-icon",

@@ -1,6 +1,5 @@
 # Next
 
-- Add a message on the lobby to tell that the game is in alpha.
 - Add a contact button in the settings.
 - Fix the glitch when the game starts.
 - Display the frame duration (without the sleep) in addition to the FPS.
