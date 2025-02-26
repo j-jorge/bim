@@ -1,6 +1,8 @@
 package bim.app;
 
 import iscool.jni.JniService;
+import iscool.social.LinkService;
+import iscool.social.ShareService;
 import iscool.system.SystemService;
 
 import android.os.Bundle;
@@ -16,6 +18,8 @@ public class AppActivity extends AxmolActivity {
         super.onCreate(savedInstanceState);
 
         JniService.init(this);
+        LinkService.init(this);
+        ShareService.init(this, "bim.app.fileprovider");
         SystemService.init(this);
 
         // Workaround in

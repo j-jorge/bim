@@ -33,6 +33,11 @@ namespace iscool
     class local_preferences;
   }
 
+  namespace social
+  {
+    class service;
+  }
+
   namespace system
   {
     class haptic_feedback;
@@ -67,6 +72,7 @@ namespace bim::axmol::app
             ((scene_lock*)(scene_lock))                                    //
             ((iscool::audio::mixer*)(audio))                               //
             ((iscool::preferences::local_preferences*)(local_preferences)) //
+            ((iscool::social::service*)(social))                           //
             ((iscool::system::haptic_feedback*)(haptic_feedback))          //
             ((bool)(enable_debug))));
 

@@ -146,6 +146,24 @@
                 }
             ],
 
+            "share_button":
+            [
+                "button/white-with-icon",
+                {
+                    "widgets/icon/frame": "sprites/menu/share.png",
+                    "bounds/icon/height.percents": 50
+                }
+            ],
+
+            "mail_button":
+            [
+                "button/white-with-icon",
+                {
+                    "widgets/icon/frame": "sprites/menu/mail.png",
+                    "bounds/icon/height.percents": 40
+                }
+            ],
+
             "close_button":
             [
                 "button/yellow-with-label",
@@ -342,6 +360,26 @@
                 "anchor.reference.y": 0.44,
                 "width.percents": 30,
                 "height.percents": 10
+            }],
+
+            "share_button":
+            [{
+                "anchor.x": 0.5,
+                "anchor.y": 0.5,
+                "anchor.reference.x": 0.37,
+                "anchor.reference.y": 0.3,
+                "height.percents": 8,
+                "width-ratio": 0.95
+            }],
+
+            "mail_button":
+            [{
+                "anchor.x": 0.5,
+                "anchor.y": 0.5,
+                "anchor.reference.x": 0.63,
+                "anchor.reference.y": 0.3,
+                "height.percents": 8,
+                "width-ratio": 0.95
             }],
 
             "close_button":

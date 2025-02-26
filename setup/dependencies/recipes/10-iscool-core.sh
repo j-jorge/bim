@@ -6,7 +6,7 @@ set -euo pipefail
 
 : "${iscool_core_repository:=https://github.com/j-jorge/iscool-core/}"
 : "${iscool_core_version:=1.12.0}"
-package_revision=2
+package_revision=3
 version="$iscool_core_version"-"$package_revision"
 flavor="$bim_build_type"
 build_type=
@@ -85,6 +85,11 @@ build_android_lib()
 
 if [[ "$bim_package_install_platform" = "android" ]]
 then
+    build_android_lib \
+        social \
+        --api-dependency "androidx.annotation:annotation:1.8.0" \
+        --api-dependency "androidx.core:core:1.8.0"
+
     build_android_lib \
         system \
         --api-dependency "androidx.annotation:annotation:1.8.0"

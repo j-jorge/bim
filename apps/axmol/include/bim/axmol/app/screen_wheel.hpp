@@ -43,6 +43,11 @@ namespace iscool
     class local_preferences;
   }
 
+  namespace social
+  {
+    class service;
+  }
+
   namespace style
   {
     class declaration;
@@ -76,6 +81,7 @@ namespace bim::axmol::app
             ((main_scene*)(main_scene))                                    //
             ((bim::net::session_handler*)(session_handler))                //
             ((iscool::audio::mixer*)(audio))                               //
+            ((iscool::social::service*)(social))                           //
             ((iscool::system::haptic_feedback*)(haptic_feedback))          //
             ((bool)(enable_debug))),
         ic_context_no_properties);

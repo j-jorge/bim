@@ -32,6 +32,7 @@
 #include <iscool/log/setup.hpp>
 #include <iscool/preferences/local_preferences.hpp>
 #include <iscool/schedule/delayed_call.hpp>
+#include <iscool/social/service.hpp>
 #include <iscool/style/loader.hpp>
 #include <iscool/style/setup.hpp>
 #include <iscool/system/device_date.hpp>
@@ -67,6 +68,9 @@ private:
 
   void start_display();
   void stop_display();
+
+  void start_social();
+  void stop_social();
 
   void start_haptic_feedback();
   void stop_haptic_feedback();
@@ -116,6 +120,7 @@ bim::axmol::app::detail::persistent_systems::persistent_systems(
 {
   start_log_system();
   start_display();
+  start_social();
   start_haptic_feedback();
   start_audio();
   start_root_scene();
@@ -126,6 +131,7 @@ bim::axmol::app::detail::persistent_systems::~persistent_systems()
   stop_root_scene();
   stop_audio();
   stop_haptic_feedback();
+  stop_social();
   stop_display();
   stop_log_system();
 }
@@ -199,6 +205,25 @@ void bim::axmol::app::detail::persistent_systems::stop_haptic_feedback()
 
   delete m_application.m_context.get_haptic_feedback();
   m_application.m_context.reset_haptic_feedback();
+}
+
+void bim::axmol::app::detail::persistent_systems::start_social()
+{
+  ic_log(iscool::log::nature::info(), g_log_context, "Start: social.");
+
+  assert(!m_application.m_context.is_social_set());
+
+  iscool::social::service* const service(new iscool::social::service());
+
+  m_application.m_context.set_social(service);
+}
+
+void bim::axmol::app::detail::persistent_systems::stop_social()
+{
+  ic_log(iscool::log::nature::info(), g_log_context, "Stop: social.");
+
+  delete m_application.m_context.get_social();
+  m_application.m_context.reset_social();
 }
 
 void bim::axmol::app::detail::persistent_systems::start_audio()

@@ -45,6 +45,7 @@ target_link_libraries(bim_app
   iscool_i18n
   iscool_preferences
   iscool_signals
+  iscool_social
   iscool_system
   iscool_style
 )

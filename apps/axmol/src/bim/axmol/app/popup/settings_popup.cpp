@@ -17,18 +17,24 @@
 
 #include <bim/version.hpp>
 
+#include <iscool/i18n/gettext.hpp>
+#include <iscool/social/service.hpp>
+#include <iscool/system/send_mail.hpp>
+
 #include <axmol/2d/Label.h>
 
 #define x_widget_scope bim::axmol::app::settings_popup::
 #define x_widget_type_name controls
 #define x_widget_controls                                                     \
-  x_widget(bim::axmol::widget::button, close_button)                          \
-      x_widget(bim::axmol::widget::toggle, music)                             \
-          x_widget(bim::axmol::widget::toggle, sound_effects)                 \
-              x_widget(bim::axmol::widget::toggle, vibrations)                \
-                  x_widget(bim::axmol::widget::toggle, d_pad_position)        \
-                      x_widget(bim::axmol::widget::toggle, d_pad_kind)        \
-                          x_widget(ax::Label, version)
+  x_widget(bim::axmol::widget::button,                                        \
+           close_button) x_widget(bim::axmol::widget::button, mail_button)    \
+      x_widget(bim::axmol::widget::button, share_button)                      \
+          x_widget(bim::axmol::widget::toggle, music)                         \
+              x_widget(bim::axmol::widget::toggle, sound_effects)             \
+                  x_widget(bim::axmol::widget::toggle, vibrations)            \
+                      x_widget(bim::axmol::widget::toggle, d_pad_position)    \
+                          x_widget(bim::axmol::widget::toggle, d_pad_kind)    \
+                              x_widget(ax::Label, version)
 
 #include <bim/axmol/widget/implement_controls_struct.hpp>
 
@@ -52,6 +58,8 @@ bim::axmol::app::settings_popup::settings_popup(
   , m_popup(new popup(context, *style.get_declaration("popup")))
 {
   m_inputs.push_back(m_controls->close_button->input_node());
+  m_inputs.push_back(m_controls->mail_button->input_node());
+  m_inputs.push_back(m_controls->share_button->input_node());
   m_inputs.push_back(m_controls->music->input_node());
   m_inputs.push_back(m_controls->sound_effects->input_node());
   m_inputs.push_back(m_controls->vibrations->input_node());
@@ -65,6 +73,21 @@ bim::axmol::app::settings_popup::settings_popup(
       [this]()
       {
         m_popup->hide();
+      });
+
+  m_controls->mail_button->connect_to_clicked(
+      []()
+      {
+        iscool::system::send_mail("bim-game@gmx.com",
+                                  ic_gettext("Feedback about Bim!"), "");
+      });
+
+  m_controls->share_button->connect_to_clicked(
+      [this]()
+      {
+        m_context.get_social()->share_message(ic_gettext(
+            "Come play a game of Bim! "
+            "https://play.google.com/store/apps/details?id=bim.app"));
       });
 
   m_controls->music->connect_to_clicked(

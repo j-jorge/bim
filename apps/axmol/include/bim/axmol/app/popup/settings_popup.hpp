@@ -19,6 +19,11 @@ namespace iscool::preferences
   class local_preferences;
 }
 
+namespace iscool::social
+{
+  class service;
+}
+
 namespace iscool::style
 {
   class declaration;
@@ -48,6 +53,7 @@ namespace bim::axmol::app
             ((main_scene*)(main_scene))                                    //
             ((iscool::audio::mixer*)(audio))                               //
             ((iscool::preferences::local_preferences*)(local_preferences)) //
+            ((iscool::social::service*)(social))                           //
             ((iscool::system::haptic_feedback*)(haptic_feedback))),
         ic_context_no_properties);
 
@@ -63,7 +69,7 @@ namespace bim::axmol::app
     void set_stick_or_pad_display(bool use_stick);
 
   private:
-    bim_declare_controls_struct(controls, m_controls, 7);
+    bim_declare_controls_struct(controls, m_controls, 9);
     const iscool::style::declaration& m_style_bounds;
 
     const iscool::style::declaration& m_style_pad_on_the_left;

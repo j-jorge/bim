@@ -1,0 +1,24 @@
+{
+    "meta":
+    {
+        "overrides": [ "button/yellow-with-icon" ]
+    },
+
+    "style":
+    {
+        "widgets":
+        [{
+            "decorum-on/widgets/fill":
+            [{
+                "frame": "sprites/pixel.png",
+                "color": "desert-storm"
+            }],
+
+            "icon":
+            [{
+                "color": "cod-gray"
+            }]
+        }]
+    }
+}
+

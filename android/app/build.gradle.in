@@ -109,6 +109,7 @@ android {
 
     dependencies {
         implementation 'axmol:axmol:@axmol_version@'
+        implementation 'iscool:social:@iscool_core_version@'
         implementation 'iscool:system:@iscool_core_version@'
         implementation 'iscool:jni:@iscool_core_version@'
     }
