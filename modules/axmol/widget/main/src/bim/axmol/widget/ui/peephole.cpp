@@ -71,7 +71,7 @@ void bim::axmol::widget::peephole::prepare(
 {
   m_focus = convertToNodeSpace(focus_world_position);
 
-  // m_focus is used in texture coordinates, this increasing row index when
+  // m_focus is used in texture coordinates, thus increasing row index when
   // going down visually.
   m_focus.y = getContentSize().y - m_focus.y;
 
@@ -113,8 +113,8 @@ void bim::axmol::widget::peephole::scale_sprite(float from, float to, float f)
 {
   ax::Sprite& sprite = *m_controls->sprite;
 
-  const float scale = m_device_scale * ((1 - f) * from + f * to);
-
+  const float scale =
+      std::max(m_device_scale * ((1 - f) * from + f * to), 0.0001f);
   const ax::Vec2 origin = m_focus / scale - m_sprite_size / 2;
   const ax::Vec2 size = getContentSize() / scale;
 

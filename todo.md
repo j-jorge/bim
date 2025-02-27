@@ -1,6 +1,5 @@
 # Next
 
-- Fix the glitch when the game starts.
 - Display the frame duration (without the sleep) in addition to the FPS.
 - Check the soft stick, it has been reported to not react.
 - Fog feature.
