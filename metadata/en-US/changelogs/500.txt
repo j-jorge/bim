@@ -1,0 +1,10 @@
+- Keep the screen on while on the matchmaking screen.
+- Reduce the cooldown between two taps to 100 ms.
+- Switch to 30 FPS in the menus.
+- New in-game UI assets.
+- Show a message and reset the app when the player is disconnected.
+- Restart the app if the player leaves for 30 seconds or more.
+- Fix incorrect order of the inputs for the popups.
+- Add a message on the lobby to tell that the game is in alpha.
+- Add the share and e-mail buttons in the settings.
+- Fix the glitch when the game starts.
