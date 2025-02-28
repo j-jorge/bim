@@ -16,6 +16,17 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+msgid "You have been disconnected."
+msgstr ""
+
+msgid "Feedback about Bim!"
+msgstr ""
+
+msgid ""
+"Come play a game of Bim! https://play.google.com/store/apps/details?id=bim."
+"app"
+msgstr ""
+
 msgid "Could not get the config from the server."
 msgstr ""
 
@@ -53,6 +64,15 @@ msgstr ""
 msgid "You won!"
 msgstr ""
 
+msgid "Off"
+msgstr ""
+
+msgid "On"
+msgstr ""
+
+msgid "Debug"
+msgstr ""
+
 msgid "Directions kind"
 msgstr ""
 
@@ -77,12 +97,6 @@ msgstr ""
 msgid "Stick"
 msgstr ""
 
-msgid "Off"
-msgstr ""
-
-msgid "On"
-msgstr ""
-
 msgid "Music"
 msgstr ""
 
@@ -95,9 +109,17 @@ msgstr ""
 msgid "Vibrations"
 msgstr ""
 
+msgid "DEBUG"
+msgstr ""
+
 msgid ""
 "PLAY\n"
 "ONLINE"
+msgstr ""
+
+msgid ""
+"ALPHA\n"
+"VERSION"
 msgstr ""
 
 msgid ""

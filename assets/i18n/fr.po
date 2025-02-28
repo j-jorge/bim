@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-03-09 22:26+0100\n"
-"PO-Revision-Date: 2025-01-27 22:16+0100\n"
+"PO-Revision-Date: 2025-02-28 07:30+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -17,6 +17,19 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 3.5\n"
+
+msgid "You have been disconnected."
+msgstr "Tu as été déconnecté :("
+
+msgid "Feedback about Bim!"
+msgstr "Commentaires à propos de Bim!"
+
+msgid ""
+"Come play a game of Bim! https://play.google.com/store/apps/details?id=bim."
+"app"
+msgstr ""
+"Viens faire une partie de Bim! https://play.google.com/store/apps/details?"
+"id=bim.app"
 
 msgid "Could not get the config from the server."
 msgstr ""
@@ -65,6 +78,15 @@ msgstr "Perdu !"
 msgid "You won!"
 msgstr "Victoire !"
 
+msgid "Off"
+msgstr "Sans"
+
+msgid "On"
+msgstr "Avec"
+
+msgid "Debug"
+msgstr "Debug"
+
 msgid "Directions kind"
 msgstr "Mode de direction"
 
@@ -91,12 +113,6 @@ msgstr "Croix"
 msgid "Stick"
 msgstr "Stick"
 
-msgid "Off"
-msgstr "Sans"
-
-msgid "On"
-msgstr "Avec"
-
 msgid "Music"
 msgstr "Musique"
 
@@ -109,12 +125,22 @@ msgstr "Paramètres"
 msgid "Vibrations"
 msgstr "Vibrations"
 
+msgid "DEBUG"
+msgstr "DEBUG"
+
 msgid ""
 "PLAY\n"
 "ONLINE"
 msgstr ""
 "JOUER\n"
 "EN LIGNE"
+
+msgid ""
+"ALPHA\n"
+"VERSION"
+msgstr ""
+"VERSION\n"
+"ALPHA"
 
 msgid ""
 "No falling blocks! The game ends after 3 minutes if the players are still "
@@ -124,11 +150,10 @@ msgstr ""
 "joueurs."
 
 msgid "Falling blocks reduce the arena after two minutes!"
-msgstr ""
-"Des blocs tombent et réduisent l'espace de combat après deux minutes !"
+msgstr "Des blocs tombent et réduisent l'espace de combat après deux minutes !"
 
 msgid "Customize your experience below!"
-msgstr "Personnalisez la partie avec les options ci-dessous !"
+msgstr "Personnalise la partie avec les options ci-dessous !"
 
 msgid "Keep playing to unlock new game features!"
 msgstr "Continue de jouer pour débloquer de nouvelles fonctionnalités !"
