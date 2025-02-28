@@ -25,6 +25,7 @@ set(main_task_style_files
 
   ${CMAKE_CURRENT_LIST_DIR}/app/screen/online-game/control-panel-decorum.json
   ${CMAKE_CURRENT_LIST_DIR}/app/screen/online-game/control-panel-edging.json
+  ${CMAKE_CURRENT_LIST_DIR}/app/screen/online-game/fog-display.json
 
   ${CMAKE_CURRENT_LIST_DIR}/app/screen/part/feature-deck.json
   ${CMAKE_CURRENT_LIST_DIR}/app/screen/part/feature-deck-bounds.json

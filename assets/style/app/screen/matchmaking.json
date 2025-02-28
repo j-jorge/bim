@@ -112,6 +112,25 @@
                     }
                 ],
 
+
+                "feature-description.on.2":
+                [
+                    "app/screen/part/matchmaking-feature-label",
+                    {
+                        "parent": "feature-description-background",
+                        "text.i18n": "Fog on!"
+                    }
+                ],
+
+                "feature-description.off.2":
+                [
+                    "app/screen/part/matchmaking-feature-label",
+                    {
+                        "parent": "feature-description-background",
+                        "text.i18n": "Fog off."
+                    }
+                ],
+
                 "feature-description.unavailable":
                 [
                     "app/screen/part/matchmaking-feature-label",
@@ -180,6 +199,8 @@
             "feature-description.placeholder": [{ "visible": true }],
             "feature-description.on.1": [{ "visible": false }],
             "feature-description.off.1": [{ "visible": false }],
+            "feature-description.on.2": [{ "visible": false }],
+            "feature-description.off.2": [{ "visible": false }],
             "feature-description.unavailable": [{ "visible": false }],
             "label-background": [{ "visible": false }],
             "player-2": [{ "visible": false }],
@@ -206,11 +227,29 @@
             "feature-description.unavailable": [{ "visible": false }]
         }],
 
+        "display.feature.on.2":
+        [{
+            "feature-description.placeholder": [{ "visible": false }],
+            "feature-description.on.2": [{ "visible": true }],
+            "feature-description.off.2": [{ "visible": false }],
+            "feature-description.unavailable": [{ "visible": false }]
+        }],
+
+        "display.feature.off.2":
+        [{
+            "feature-description.placeholder": [{ "visible": false }],
+            "feature-description.on.2": [{ "visible": false }],
+            "feature-description.off.2": [{ "visible": true }],
+            "feature-description.unavailable": [{ "visible": false }]
+        }],
+
         "display.feature.unavailable":
         [{
             "feature-description.placeholder": [{ "visible": false }],
             "feature-description.on.1": [{ "visible": false }],
             "feature-description.off.1": [{ "visible": false }],
+            "feature-description.on.2": [{ "visible": false }],
+            "feature-description.off.2": [{ "visible": false }],
             "feature-description.unavailable": [{ "visible": true }]
         }],
 

@@ -44,6 +44,14 @@
             "width.max-percents": 100
         }],
 
+        "fog_container":
+        [
+            "layout/fill",
+            {
+                "reference": "arena"
+            }
+        ],
+
         "background":
         [
             "layout/fill",

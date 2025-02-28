@@ -22,10 +22,7 @@ static void dump_timeline(const bim::game::contest_timeline& timeline)
             << "Player count: " << (int)fingerprint.player_count << ".\n"
             << page_separator << '\n';
 
-  bim::game::contest contest(fingerprint.seed,
-                             fingerprint.brick_wall_probability,
-                             fingerprint.player_count, fingerprint.arena_width,
-                             fingerprint.arena_height, fingerprint.features);
+  bim::game::contest contest(fingerprint);
 
   std::cout << "Initial state\n";
   bim::game::dump_arena(contest.arena(), contest.registry());

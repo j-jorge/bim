@@ -1,8 +1,18 @@
 # Next
 
-- Display the frame duration (without the sleep) in addition to the FPS.
-- Check the soft stick, it has been reported to not react.
 - Fog feature.
+- The settings are not saved on Android.
+- The control deck is not centered on wide screens.
+- Check the soft stick, it has been reported to not react.
+- Enlarge the d-pad.
+- Unlock system for the game features, per game count.
+- Display a message when a new version is available.
+- Automatically launch the game on the server-side after a short delay
+  if a player is ready.
+- Randomize the initial position of the players.
+
+# General
+
 - Shield feature.
 
 # Client
@@ -11,7 +21,8 @@
 - Add a "shop" where the player can donate to the devs.
 - Get some coins for each game, unlock the features with the coins.
 - At most three enabled features per game.
-- Back button from the matchmaking screen.
+- Display the frame duration (without the sleep) in addition to the FPS.
+- The bomb button is sometime stuck when the game begins.
 
 # Server
 

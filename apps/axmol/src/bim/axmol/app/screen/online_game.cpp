@@ -1,13 +1,16 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/axmol/app/screen/online_game.hpp>
 
+#include <bim/axmol/app/alloc_assets.hpp>
+#include <bim/axmol/app/fog_display.hpp>
 #include <bim/axmol/app/preference/controls.hpp>
 #include <bim/axmol/app/widget/player.hpp>
 
 #include <bim/axmol/widget/apply_bounds.hpp>
 #include <bim/axmol/widget/apply_display.hpp>
 #include <bim/axmol/widget/context.hpp>
-#include <bim/axmol/widget/factory/sprite.hpp>
+#include <bim/axmol/widget/hide_while_visible.hpp>
+#include <bim/axmol/widget/merge_named_node_groups.hpp>
 #include <bim/axmol/widget/named_node_group.hpp>
 #include <bim/axmol/widget/ui/button.hpp>
 #include <bim/axmol/widget/ui/peephole.hpp>
@@ -40,6 +43,7 @@
 #include <bim/game/constant/max_bomb_count_per_player.hpp>
 #include <bim/game/constant/max_player_count.hpp>
 #include <bim/game/contest.hpp>
+#include <bim/game/contest_fingerprint.hpp>
 #include <bim/game/level_generation.hpp>
 #include <bim/game/player_action.hpp>
 #include <bim/game/static_wall.hpp>
@@ -81,15 +85,14 @@ static void hide_all(std::vector<T*> nodes)
     n->setVisible(false);
 }
 
-static void hide_while_visible(std::span<ax::Sprite* const> sprites)
+static void alloc_assets(std::vector<ax::Sprite*>& out,
+                         const bim::axmol::widget::context& context,
+                         std::size_t count,
+                         const iscool::style::declaration& style,
+                         ax::Node& parent)
 {
-  for (ax::Sprite* const s : sprites)
-    {
-      if (!s->isVisible())
-        break;
-
-      s->setVisible(false);
-    }
+  bim::axmol::app::alloc_assets(out, context, count, style, parent);
+  hide_all(out);
 }
 
 IMPLEMENT_SIGNAL(bim::axmol::app::online_game, game_over, m_game_over)
@@ -108,11 +111,15 @@ bim::axmol::app::online_game::online_game(
                     &*style.get_declaration("display.player-2"),
                     &*style.get_declaration("display.player-3"),
                     &*style.get_declaration("display.player-4") }
+  , m_fog(new fog_display(context, *style.get_declaration("fog-display")))
   , m_flame_center_asset_name(*style.get_string("flame-center-asset-name"))
   , m_flame_arm_asset_name(*style.get_string("flame-arm-asset-name"))
   , m_flame_end_asset_name(*style.get_string("flame-end-asset-name"))
   , m_arena_width_in_blocks(*style.get_number("arena-width-in-blocks"))
 {
+  m_nodes = m_controls->all_nodes;
+  bim::axmol::widget::merge_named_node_groups(m_nodes, m_fog->display_nodes());
+
   // The control panel fills the space below the arena. Its size will be
   // adjusted when the screen is added in the scene.
   m_controls->control_panel->setAnchorPoint(ax::Vec2(0, 0));
@@ -160,62 +167,71 @@ bim::axmol::app::online_game::online_game(
   constexpr int inner_width = bim::game::g_default_arena_width - 2;
   constexpr int inner_height = bim::game::g_default_arena_height - 2;
 
-  alloc_assets(m_walls[(std::size_t)bim::game::cell_neighborhood::none],
-               widget_context, inner_width * inner_height,
-               *style.get_declaration("wall"));
-  alloc_assets(m_walls[(std::size_t)(bim::game::cell_neighborhood::all
-                                     & ~bim::game::cell_neighborhood::down)],
-               widget_context, inner_width,
-               *style.get_declaration("arena-border.top"));
-  alloc_assets(m_walls[(std::size_t)(bim::game::cell_neighborhood::all
-                                     & ~bim::game::cell_neighborhood::up)],
-               widget_context, inner_width,
-               *style.get_declaration("arena-border.bottom"));
-  alloc_assets(m_walls[(std::size_t)(bim::game::cell_neighborhood::all
-                                     & ~bim::game::cell_neighborhood::right)],
-               widget_context, inner_height,
-               *style.get_declaration("arena-border.left"));
-  alloc_assets(m_walls[(std::size_t)(bim::game::cell_neighborhood::all
-                                     & ~bim::game::cell_neighborhood::left)],
-               widget_context, inner_height,
-               *style.get_declaration("arena-border.right"));
-  alloc_assets(
+  ::alloc_assets(m_walls[(std::size_t)bim::game::cell_neighborhood::none],
+                 widget_context, inner_width * inner_height,
+                 *style.get_declaration("wall"), *m_controls->arena);
+  ::alloc_assets(m_walls[(std::size_t)(bim::game::cell_neighborhood::all
+                                       & ~bim::game::cell_neighborhood::down)],
+                 widget_context, inner_width,
+                 *style.get_declaration("arena-border.top"),
+                 *m_controls->arena);
+  ::alloc_assets(m_walls[(std::size_t)(bim::game::cell_neighborhood::all
+                                       & ~bim::game::cell_neighborhood::up)],
+                 widget_context, inner_width,
+                 *style.get_declaration("arena-border.bottom"),
+                 *m_controls->arena);
+  ::alloc_assets(
+      m_walls[(std::size_t)(bim::game::cell_neighborhood::all
+                            & ~bim::game::cell_neighborhood::right)],
+      widget_context, inner_height,
+      *style.get_declaration("arena-border.left"), *m_controls->arena);
+  ::alloc_assets(m_walls[(std::size_t)(bim::game::cell_neighborhood::all
+                                       & ~bim::game::cell_neighborhood::left)],
+                 widget_context, inner_height,
+                 *style.get_declaration("arena-border.right"),
+                 *m_controls->arena);
+  ::alloc_assets(
       m_walls[(std::size_t)(bim::game::cell_neighborhood::all
                             & ~bim::game::cell_neighborhood::down_right)],
-      widget_context, 1, *style.get_declaration("arena-border.top-left"));
-  alloc_assets(
+      widget_context, 1, *style.get_declaration("arena-border.top-left"),
+      *m_controls->arena);
+  ::alloc_assets(
       m_walls[(std::size_t)(bim::game::cell_neighborhood::all
                             & ~bim::game::cell_neighborhood::down_left)],
-      widget_context, 1, *style.get_declaration("arena-border.top-right"));
-  alloc_assets(
+      widget_context, 1, *style.get_declaration("arena-border.top-right"),
+      *m_controls->arena);
+  ::alloc_assets(
       m_walls[(std::size_t)(bim::game::cell_neighborhood::all
                             & ~bim::game::cell_neighborhood::up_right)],
-      widget_context, 1, *style.get_declaration("arena-border.bottom-left"));
-  alloc_assets(
+      widget_context, 1, *style.get_declaration("arena-border.bottom-left"),
+      *m_controls->arena);
+  ::alloc_assets(
       m_walls[(std::size_t)(bim::game::cell_neighborhood::all
                             & ~bim::game::cell_neighborhood::up_left)],
-      widget_context, 1, *style.get_declaration("arena-border.bottom-right"));
+      widget_context, 1, *style.get_declaration("arena-border.bottom-right"),
+      *m_controls->arena);
 
   constexpr int free_cell_count =
       (inner_width * inner_height) - (inner_width * inner_height) / 4;
-  alloc_assets(m_falling_blocks, widget_context, free_cell_count,
-               *style.get_declaration("falling-block"));
-  alloc_assets(m_falling_blocks_shadows, widget_context, free_cell_count,
-               *style.get_declaration("falling-block-shadow"));
-  alloc_assets(m_brick_walls, widget_context, free_cell_count,
-               *style.get_declaration("brick-wall"));
-  alloc_assets(m_bombs, widget_context,
-               bim::game::g_max_player_count
-                   * bim::game::g_max_bomb_count_per_player,
-               *style.get_declaration("bomb"));
-  alloc_assets(m_flames, widget_context, free_cell_count,
-               *style.get_declaration("flame"));
-  alloc_assets(m_bomb_power_ups, widget_context,
-               bim::game::g_bomb_power_up_count_in_level,
-               *style.get_declaration("power-up-bomb"));
-  alloc_assets(m_flame_power_ups, widget_context,
-               bim::game::g_flame_power_up_count_in_level,
-               *style.get_declaration("power-up-flame"));
+  ::alloc_assets(m_falling_blocks, widget_context, free_cell_count,
+                 *style.get_declaration("falling-block"), *m_controls->arena);
+  ::alloc_assets(m_falling_blocks_shadows, widget_context, free_cell_count,
+                 *style.get_declaration("falling-block-shadow"),
+                 *m_controls->arena);
+  ::alloc_assets(m_brick_walls, widget_context, free_cell_count,
+                 *style.get_declaration("brick-wall"), *m_controls->arena);
+  ::alloc_assets(m_bombs, widget_context,
+                 bim::game::g_max_player_count
+                     * bim::game::g_max_bomb_count_per_player,
+                 *style.get_declaration("bomb"), *m_controls->arena);
+  ::alloc_assets(m_flames, widget_context, free_cell_count,
+                 *style.get_declaration("flame"), *m_controls->arena);
+  ::alloc_assets(m_bomb_power_ups, widget_context,
+                 bim::game::g_bomb_power_up_count_in_level,
+                 *style.get_declaration("power-up-bomb"), *m_controls->arena);
+  ::alloc_assets(m_flame_power_ups, widget_context,
+                 bim::game::g_flame_power_up_count_in_level,
+                 *style.get_declaration("power-up-flame"), *m_controls->arena);
 }
 
 bim::axmol::app::online_game::~online_game() = default;
@@ -229,36 +245,24 @@ bim::axmol::app::online_game::input_node() const
 const bim::axmol::widget::named_node_group&
 bim::axmol::app::online_game::nodes() const
 {
-  return m_controls->all_nodes;
+  return m_nodes;
 }
 
 void bim::axmol::app::online_game::attached()
 {
   ax::Node& arena = *m_controls->arena;
-  m_arena_view_size = arena.getContentSize();
+  const ax::Vec2 arena_view_size = arena.getContentSize();
 
   // Adjust the control panel to fill the space below the arena.
   m_controls->control_panel->setContentSize(ax::Vec2(
-      m_arena_view_size.x,
-      arena.getPosition().y - arena.getAnchorPoint().y * m_arena_view_size.y));
+      arena_view_size.x,
+      arena.getPosition().y - arena.getAnchorPoint().y * arena_view_size.y));
 
   m_bomb_drop_requested = false;
 
-  m_block_size = m_arena_view_size.x / m_arena_width_in_blocks;
-
-  const auto resize_to_block_width =
-      [this]<typename T>(const std::vector<T*>& nodes)
-  {
-    if (nodes.empty())
-      return;
-
-    const ax::Vec2 sprite_size = nodes[0]->getContentSize();
-    const float height_ratio = sprite_size.y / sprite_size.x;
-    const ax::Vec2 size(m_block_size, m_block_size * height_ratio);
-
-    for (T* n : nodes)
-      n->setContentSize(size);
-  };
+  const float block_size = arena_view_size.x / m_arena_width_in_blocks;
+  m_display_config = arena_display_config{ .block_size = block_size,
+                                           .view_height = arena_view_size.y };
 
   for (const std::vector<ax::Sprite*>& walls : m_walls)
     resize_to_block_width(walls);
@@ -271,6 +275,8 @@ void bim::axmol::app::online_game::attached()
   resize_to_block_width(m_bombs);
   resize_to_block_width(m_bomb_power_ups);
   resize_to_block_width(m_flame_power_ups);
+
+  m_fog->attached(m_display_config);
 }
 
 void bim::axmol::app::online_game::displaying(
@@ -283,14 +289,15 @@ void bim::axmol::app::online_game::displaying(
       *m_style_player[std::min<std::size_t>(event.player_index,
                                             m_style_player.size())]);
 
-  m_contest.reset(new bim::game::contest(
-      event.seed, event.brick_wall_probability, event.player_count,
-      event.arena_width, event.arena_height, event.features));
+  m_contest.reset(
+      new bim::game::contest(event.fingerprint, event.player_index));
   m_game_channel.reset(new iscool::net::message_channel(
       m_context.get_session_handler()->message_stream(),
       m_context.get_session_handler()->session_id(), event.channel));
+
+  const int player_count = event.fingerprint.player_count;
   m_update_exchange.reset(
-      new bim::net::game_update_exchange(*m_game_channel, event.player_count));
+      new bim::net::game_update_exchange(*m_game_channel, player_count));
   m_update_exchange->connect_to_started(
       [this]() -> void
       {
@@ -298,11 +305,11 @@ void bim::axmol::app::online_game::displaying(
         schedule_tick();
       });
   m_contest_runner.reset(new bim::net::contest_runner(
-      *m_contest, *m_update_exchange, event.player_index, event.player_count));
+      *m_contest, *m_update_exchange, event.player_index, player_count));
 
   m_local_player_index = event.player_index;
 
-  m_z_order.resize(event.arena_height);
+  m_z_order.resize(event.fingerprint.arena_height);
 
   // Hide all assets
   hide_all(m_players);
@@ -313,13 +320,16 @@ void bim::axmol::app::online_game::displaying(
   hide_all(m_flames);
   hide_all(m_bomb_power_ups);
   hide_all(m_flame_power_ups);
+  m_fog->displaying(m_local_player_index);
 
   reset_z_order();
   display_brick_walls();
   display_players();
   display_static_walls();
+  m_fog->update(*m_contest);
 
-  m_controls->background->set_node_width_in_tiles(event.arena_width);
+  m_controls->background->set_node_width_in_tiles(
+      event.fingerprint.arena_width);
 
   const ax::Node& player = *m_players[m_local_player_index];
   m_controls->peephole->prepare(
@@ -428,17 +438,6 @@ void bim::axmol::app::online_game::tick()
 }
 
 template <typename T>
-void bim::axmol::app::online_game::alloc_assets(
-    std::vector<T*>& out, const bim::axmol::widget::context& context,
-    std::size_t count, const iscool::style::declaration& style) const
-{
-  out.resize(count);
-
-  for (T*& p : out)
-    p = alloc_asset<T>(context, style).get();
-}
-
-template <typename T>
 bim::axmol::ref_ptr<T> bim::axmol::app::online_game::alloc_asset(
     const bim::axmol::widget::context& context,
     const iscool::style::declaration& style) const
@@ -450,6 +449,29 @@ bim::axmol::ref_ptr<T> bim::axmol::app::online_game::alloc_asset(
   m_controls->arena->addChild(widget.get());
 
   return widget;
+}
+
+template <typename T>
+void bim::axmol::app::online_game::resize_to_block_width(
+    const std::vector<T*>& nodes) const
+{
+  resize_to_block_width(std::span<T* const>(nodes));
+}
+
+template <typename T>
+void bim::axmol::app::online_game::resize_to_block_width(
+    std::span<T* const> nodes) const
+{
+  if (nodes.empty())
+    return;
+
+  const ax::Vec2 initial_size = nodes[0]->getContentSize();
+  const float height_ratio = initial_size.y / initial_size.x;
+  const ax::Vec2 size(m_display_config.block_size,
+                      m_display_config.block_size * height_ratio);
+
+  for (T* n : nodes)
+    n->setContentSize(size);
 }
 
 void bim::axmol::app::online_game::apply_inputs()
@@ -513,6 +535,7 @@ void bim::axmol::app::online_game::refresh_display()
 
   display_static_walls();
   display_falling_blocks();
+  m_fog->update(*m_contest);
 
   display_main_timer();
 }
@@ -520,7 +543,7 @@ void bim::axmol::app::online_game::refresh_display()
 void bim::axmol::app::online_game::display_static_walls()
 {
   const bim::game::arena& arena = m_contest->arena();
-  std::array<std::size_t, (std::size_t)bim::game::cell_neighborhood::all>
+  std::array<std::size_t, bim::game::cell_neighborhood_layout_count>
       asset_index{};
 
   for (const bim::game::static_wall& wall : arena.static_walls())
@@ -532,12 +555,13 @@ void bim::axmol::app::online_game::display_static_walls()
         continue;
 
       display_at(wall.y, *m_walls[n][i],
-                 grid_position_to_displayed_block_center(wall.x, wall.y));
+                 m_display_config.grid_position_to_displayed_block_center(
+                     wall.x, wall.y));
       ++i;
     }
 
   for (std::size_t i = 0; i != asset_index.size(); ++i)
-    hide_while_visible(std::span(m_walls[i]).subspan(asset_index[i]));
+    bim::axmol::widget::hide_while_visible(m_walls[i], asset_index[i]);
 }
 
 void bim::axmol::app::online_game::display_falling_blocks()
@@ -553,9 +577,11 @@ void bim::axmol::app::online_game::display_falling_blocks()
                                const bim::game::timer& t) -> void
           {
             const ax::Vec2 start =
-                grid_position_to_displayed_block_center(p.x, p.y - 1);
+                m_display_config.grid_position_to_displayed_block_center(
+                    p.x, p.y - 1);
             const ax::Vec2 end =
-                grid_position_to_displayed_block_center(p.x, p.y);
+                m_display_config.grid_position_to_displayed_block_center(p.x,
+                                                                         p.y);
             const float remaining_ratio =
                 std::chrono::duration_cast<std::chrono::duration<float>>(
                     t.duration)
@@ -571,8 +597,9 @@ void bim::axmol::app::online_game::display_falling_blocks()
             ++asset_index;
           });
 
-  hide_while_visible(std::span(m_falling_blocks).subspan(asset_index));
-  hide_while_visible(std::span(m_falling_blocks_shadows).subspan(asset_index));
+  bim::axmol::widget::hide_while_visible(m_falling_blocks, asset_index);
+  bim::axmol::widget::hide_while_visible(m_falling_blocks_shadows,
+                                         asset_index);
 }
 
 void bim::axmol::app::online_game::display_brick_walls()
@@ -584,11 +611,12 @@ void bim::axmol::app::online_game::display_brick_walls()
       [this, &asset_index](const bim::game::position_on_grid& p) -> void
       {
         display_at(p.y, *m_brick_walls[asset_index],
-                   grid_position_to_displayed_block_center(p.x, p.y));
+                   m_display_config.grid_position_to_displayed_block_center(
+                       p.x, p.y));
         ++asset_index;
       });
 
-  hide_while_visible(std::span(m_brick_walls).subspan(asset_index));
+  bim::axmol::widget::hide_while_visible(m_brick_walls, asset_index);
 }
 
 void bim::axmol::app::online_game::display_players()
@@ -606,7 +634,8 @@ void bim::axmol::app::online_game::display_players()
             bim::axmol::app::player& w = *m_players[player.index];
 
             display_at(p.grid_aligned_y(), w,
-                       grid_position_to_display(p.x_float(), p.y_float()));
+                       m_display_config.grid_position_to_display(p.x_float(),
+                                                                 p.y_float()));
             w.set_direction(player.current_direction);
           });
 }
@@ -625,8 +654,10 @@ void bim::axmol::app::online_game::display_bombs()
           {
             ax::Sprite& s = *m_bombs[asset_index];
 
-            display_at(p.y, s,
-                       grid_position_to_displayed_block_center(p.x, p.y));
+            display_at(
+                p.y, s,
+                m_display_config.grid_position_to_displayed_block_center(p.x,
+                                                                         p.y));
 
             const size_t f =
                 (t.duration > std::chrono::seconds(1)) ? 300 : 100;
@@ -639,7 +670,7 @@ void bim::axmol::app::online_game::display_bombs()
             ++asset_index;
           });
 
-  hide_while_visible(std::span(m_bombs).subspan(asset_index));
+  bim::axmol::widget::hide_while_visible(m_bombs, asset_index);
 }
 
 void bim::axmol::app::online_game::display_flames()
@@ -656,7 +687,9 @@ void bim::axmol::app::online_game::display_flames()
         // restore it ourselves.
         ax::Vec2 size = s.getContentSize();
 
-        display_at(p.y, s, grid_position_to_displayed_block_center(p.x, p.y));
+        display_at(p.y, s,
+                   m_display_config.grid_position_to_displayed_block_center(
+                       p.x, p.y));
 
         switch (f.segment)
           {
@@ -699,7 +732,7 @@ void bim::axmol::app::online_game::display_flames()
         ++asset_index;
       });
 
-  hide_while_visible(std::span(m_flames).subspan(asset_index));
+  bim::axmol::widget::hide_while_visible(m_flames, asset_index);
 }
 
 void bim::axmol::app::online_game::display_bomb_power_ups()
@@ -711,11 +744,12 @@ void bim::axmol::app::online_game::display_bomb_power_ups()
       [this, &asset_index](const bim::game::position_on_grid& p) -> void
       {
         display_at(p.y, *m_bomb_power_ups[asset_index],
-                   grid_position_to_displayed_block_center(p.x, p.y));
+                   m_display_config.grid_position_to_displayed_block_center(
+                       p.x, p.y));
         ++asset_index;
       });
 
-  hide_while_visible(std::span(m_bomb_power_ups).subspan(asset_index));
+  bim::axmol::widget::hide_while_visible(m_bomb_power_ups, asset_index);
 }
 
 void bim::axmol::app::online_game::display_flame_power_ups()
@@ -727,11 +761,12 @@ void bim::axmol::app::online_game::display_flame_power_ups()
       [this, &asset_index](const bim::game::position_on_grid& p) -> void
       {
         display_at(p.y, *m_flame_power_ups[asset_index],
-                   grid_position_to_displayed_block_center(p.x, p.y));
+                   m_display_config.grid_position_to_displayed_block_center(
+                       p.x, p.y));
         ++asset_index;
       });
 
-  hide_while_visible(std::span(m_flame_power_ups).subspan(asset_index));
+  bim::axmol::widget::hide_while_visible(m_flame_power_ups, asset_index);
 }
 
 void bim::axmol::app::online_game::display_main_timer()
@@ -759,27 +794,10 @@ void bim::axmol::app::online_game::display_at(std::size_t arena_y,
 {
   node.setPosition(position);
   node.setVisible(true);
+
+  assert(arena_y < m_z_order.size());
   node.setLocalZOrder(m_z_order[arena_y]);
   ++m_z_order[arena_y];
-}
-
-ax::Vec2 bim::axmol::app::online_game::grid_position_to_displayed_block_center(
-    float x, float y) const
-{
-  const float center_x = (float)x * m_block_size + m_block_size / 2;
-  const float center_y =
-      m_arena_view_size.y - m_block_size / 2 - (float)y * m_block_size;
-
-  return ax::Vec2(center_x, center_y);
-}
-
-ax::Vec2 bim::axmol::app::online_game::grid_position_to_display(float x,
-                                                                float y) const
-{
-  const float view_x = x * m_block_size;
-  const float view_y = m_arena_view_size.y - y * m_block_size;
-
-  return ax::Vec2(view_x, view_y);
 }
 
 void bim::axmol::app::online_game::stop()

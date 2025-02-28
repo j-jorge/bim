@@ -65,6 +65,10 @@ bim::axmol::app::matchmaking::matchmaking(
       &*style.get_declaration("display.feature.on.1");
   m_feature_display_off[bim::game::feature_flags::falling_blocks] =
       &*style.get_declaration("display.feature.off.1");
+  m_feature_display_on[bim::game::feature_flags::fog_of_war] =
+      &*style.get_declaration("display.feature.on.2");
+  m_feature_display_off[bim::game::feature_flags::fog_of_war] =
+      &*style.get_declaration("display.feature.off.2");
 
   m_all_nodes = m_controls->all_nodes;
   bim::axmol::widget::merge_named_node_groups(m_all_nodes,

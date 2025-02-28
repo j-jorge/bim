@@ -95,6 +95,16 @@
             "app/screen/part/matchmaking-feature-label-bounds"
         ],
 
+        "feature-description.on.2":
+        [
+            "app/screen/part/matchmaking-feature-label-bounds"
+        ],
+
+        "feature-description.off.2":
+        [
+            "app/screen/part/matchmaking-feature-label-bounds"
+        ],
+
         "feature-description.unavailable":
         [
             "app/screen/part/matchmaking-feature-label-bounds"

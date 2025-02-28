@@ -1,0 +1,18 @@
+{
+    "style":
+    {
+        "widgets":
+        [{
+            "fog_container/z-order": 10
+        }],
+
+        "fog-of-war": [],
+
+        "roll-in-frame.0": "sprites/fog/roll-in-1.png",
+        "roll-in-frame.1": "sprites/fog/roll-in-2.png",
+        "roll-in-frame.2": "sprites/fog/roll-in-3.png",
+        "roll-in-frame.3": "sprites/fog/roll-in-4.png",
+        "roll-in-frame.4": "sprites/fog/roll-in-5.png",
+        "roll-in-frame.5": "sprites/fog/roll-in-6.png"
+    }
+}

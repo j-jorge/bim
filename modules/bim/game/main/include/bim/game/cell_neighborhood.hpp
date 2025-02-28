@@ -22,4 +22,7 @@ namespace bim::game
     all =
         left | right | up | down | up_left | up_right | down_left | down_right
   };
+
+  static_assert((int)cell_neighborhood::all + 1
+                == cell_neighborhood_layout_count);
 }

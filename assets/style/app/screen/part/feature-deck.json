@@ -19,6 +19,22 @@
                 }
             ],
 
+            "feature_fog_of_war":
+            [
+                "toggle/feature",
+                {
+                    "widgets/off":
+                    [{
+                        "frame": "sprites/features/falling-block-off.png"
+                    }],
+
+                    "widgets/on":
+                    [{
+                        "frame": "sprites/features/falling-block-on.png"
+                    }]
+                }
+            ],
+
             "feature_extra_0": [ "button/feature-unavailable" ],
             "feature_extra_1": [ "button/feature-unavailable" ],
             "feature_extra_2": [ "button/feature-unavailable" ],

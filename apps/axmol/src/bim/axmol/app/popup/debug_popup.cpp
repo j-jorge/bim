@@ -88,6 +88,7 @@ void bim::axmol::app::debug_popup::show()
 
   add_title("FEATURES");
   add_feature_item("Falling blocks", bim::game::feature_flags::falling_blocks);
+  add_feature_item("Fog of war", bim::game::feature_flags::fog_of_war);
 
   add_title("SYSTEM");
   add_fps_entry();

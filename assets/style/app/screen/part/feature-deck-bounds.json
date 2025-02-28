@@ -17,6 +17,14 @@
             }
         ],
 
+        "feature_fog_of_war":
+        [
+            "app/screen/part/feature-deck-button-bounds",
+            {
+                "anchor.reference.x": 0.39
+            }
+        ],
+
         "feature_extra_1":
         [
             "app/screen/part/feature-deck-button-bounds",

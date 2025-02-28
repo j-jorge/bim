@@ -16,6 +16,7 @@
 #include <bim/game/component/flame.hpp>
 #include <bim/game/component/flame_power_up.hpp>
 #include <bim/game/component/flame_power_up_spawner.hpp>
+#include <bim/game/component/fog_of_war.hpp>
 #include <bim/game/component/fractional_position_on_grid.hpp>
 #include <bim/game/component/game_timer.hpp>
 #include <bim/game/component/kicked.hpp>
@@ -296,6 +297,7 @@ void bim::net::contest_runner::archive_io(Snapshot&& snapshot,
       .template get<bim::game::flame>(archive)
       .template get<bim::game::flame_power_up>(archive)
       .template get<bim::game::flame_power_up_spawner>(archive)
+      .template get<bim::game::fog_of_war>(archive)
       .template get<bim::game::fractional_position_on_grid>(archive)
       .template get<bim::game::game_timer>(archive)
       .template get<bim::game::kicked>(archive)

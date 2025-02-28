@@ -31,6 +31,34 @@ bim::game::cell_neighborhood& bim::game::operator&=(cell_neighborhood& lhs,
   return lhs;
 }
 
+bim::game::cell_neighborhood bim::game::operator>>(cell_neighborhood lhs,
+                                                   int rhs)
+{
+  return cell_neighborhood((std::underlying_type_t<cell_neighborhood>)lhs
+                           >> rhs);
+}
+
+bim::game::cell_neighborhood& bim::game::operator>>=(cell_neighborhood& lhs,
+                                                     int rhs)
+{
+  lhs = lhs >> rhs;
+  return lhs;
+}
+
+bim::game::cell_neighborhood bim::game::operator<<(cell_neighborhood lhs,
+                                                   int rhs)
+{
+  return cell_neighborhood((std::underlying_type_t<cell_neighborhood>)lhs
+                           << rhs);
+}
+
+bim::game::cell_neighborhood& bim::game::operator<<=(cell_neighborhood& lhs,
+                                                     int rhs)
+{
+  lhs = lhs << rhs;
+  return lhs;
+}
+
 bim::game::cell_neighborhood bim::game::operator~(cell_neighborhood lhs)
 {
   return cell_neighborhood(~(std::underlying_type_t<cell_neighborhood>)lhs);

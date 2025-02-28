@@ -80,9 +80,12 @@ public:
     , simulation_tick(0)
     , completed_tick_count_all(0)
     , contest_result(bim::game::contest_result::create_still_running())
-    , contest(seed, g_brick_wall_probability, player_count,
-              bim::game::g_default_arena_width,
-              bim::game::g_default_arena_height, features)
+    , contest({ .seed = seed,
+                .features = features,
+                .player_count = player_count,
+                .brick_wall_probability = g_brick_wall_probability,
+                .arena_width = bim::game::g_default_arena_width,
+                .arena_height = bim::game::g_default_arena_height })
   {
     std::sort(this->sessions.begin(), this->sessions.begin() + player_count);
 

@@ -181,12 +181,13 @@ void bim::net::new_game_exchange::check_launch_game(
   stop();
 
   m_launch_game(game_launch_event{
-      .seed = message->get_seed(),
       .channel = message->get_game_channel(),
-      .player_count = message->get_player_count(),
-      .player_index = message->get_player_index(),
-      .features = message->get_features(),
-      .brick_wall_probability = message->get_brick_wall_probability(),
-      .arena_width = message->get_arena_width(),
-      .arena_height = message->get_arena_height() });
+      .fingerprint = { .seed = message->get_seed(),
+                       .features = message->get_features(),
+                       .player_count = message->get_player_count(),
+                       .brick_wall_probability =
+                           message->get_brick_wall_probability(),
+                       .arena_width = message->get_arena_width(),
+                       .arena_height = message->get_arena_height() },
+      .player_index = message->get_player_index() });
 }

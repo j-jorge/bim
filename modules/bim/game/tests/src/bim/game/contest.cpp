@@ -7,6 +7,7 @@
 #include <bim/game/component/player.hpp>
 #include <bim/game/component/position_on_grid.hpp>
 #include <bim/game/constant/default_arena_size.hpp>
+#include <bim/game/contest_fingerprint.hpp>
 
 #include <entt/entity/registry.hpp>
 
@@ -40,8 +41,13 @@ TYPED_TEST(bim_game_contest_power_up_distribution, distribution)
   // that are not occupied by a static wall or the player, nor are located near
   // the players.
   {
-    const bim::game::contest contest(0, brick_wall_probability, player_count,
-                                     arena_width, arena_height, {});
+    const bim::game::contest contest(
+        { .seed = 0,
+          .features = {},
+          .player_count = player_count,
+          .brick_wall_probability = brick_wall_probability,
+          .arena_width = arena_width,
+          .arena_height = arena_height });
 
     for (int y = 0; y != arena_height; ++y)
       for (int x = 0; x != arena_width; ++x)
@@ -77,11 +83,16 @@ TYPED_TEST(bim_game_contest_power_up_distribution, distribution)
     ++sum_per_cell[p.y * arena_width + p.x];
   };
 
-  constexpr int iterations = 3000;
-  for (int i = 0; i != iterations; ++i)
+  constexpr std::size_t iterations = 3000;
+  for (std::size_t i = 0; i != iterations; ++i)
     {
-      const bim::game::contest contest(i, brick_wall_probability, player_count,
-                                       arena_width, arena_height, {});
+      const bim::game::contest contest(
+          { .seed = i,
+            .features = {},
+            .player_count = player_count,
+            .brick_wall_probability = brick_wall_probability,
+            .arena_width = arena_width,
+            .arena_height = arena_height });
 
       contest.registry().view<bim::game::position_on_grid, TypeParam>().each(
           count_power_up);

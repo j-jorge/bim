@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #pragma once
 
+#include <bim/axmol/app/arena_display_config.hpp>
+
 #include <bim/axmol/input/tree.hpp>
 #include <bim/axmol/widget/declare_controls_struct.hpp>
 
@@ -66,6 +68,7 @@ namespace iscool::system
 
 namespace bim::axmol::app
 {
+  class fog_display;
   class player;
 
   class online_game
@@ -103,14 +106,14 @@ namespace bim::axmol::app
     void tick();
 
     template <typename T>
-    void alloc_assets(std::vector<T*>& out,
-                      const bim::axmol::widget::context& context,
-                      std::size_t count,
-                      const iscool::style::declaration& style) const;
-    template <typename T>
     bim::axmol::ref_ptr<T>
     alloc_asset(const bim::axmol::widget::context& context,
                 const iscool::style::declaration& style) const;
+
+    template <typename T>
+    void resize_to_block_width(const std::vector<T*>& nodes) const;
+    template <typename T>
+    void resize_to_block_width(std::span<T* const> nodes) const;
 
     void apply_inputs();
 
@@ -154,7 +157,7 @@ namespace bim::axmol::app
 
     std::vector<player*> m_players;
     std::array<std::vector<ax::Sprite*>,
-               (std::size_t)bim::game::cell_neighborhood::all>
+               bim::game::cell_neighborhood_layout_count>
         m_walls;
     std::vector<ax::Sprite*> m_falling_blocks;
     std::vector<ax::Sprite*> m_falling_blocks_shadows;
@@ -164,6 +167,8 @@ namespace bim::axmol::app
     std::vector<ax::Sprite*> m_bomb_power_ups;
     std::vector<ax::Sprite*> m_flame_power_ups;
 
+    std::unique_ptr<fog_display> m_fog;
+
     std::vector<int> m_z_order;
 
     const std::string m_flame_center_asset_name;
@@ -171,15 +176,13 @@ namespace bim::axmol::app
     const std::string m_flame_end_asset_name;
 
     const float m_arena_width_in_blocks;
+    arena_display_config m_display_config;
 
-    /// Width, and height, of a displayed block in the arena view.
-    float m_block_size;
-
-    /// The size of the node containing the arena.
-    ax::Vec2 m_arena_view_size;
     std::uint8_t m_local_player_index;
 
     bool m_bomb_drop_requested;
     bool m_use_stick;
+
+    bim::axmol::widget::named_node_group m_nodes;
   };
 }

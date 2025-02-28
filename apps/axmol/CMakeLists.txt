@@ -2,9 +2,12 @@ find_package(axmol 1.0.0 REQUIRED)
 
 add_library(bim_app
   STATIC
+  src/bim/axmol/app/alloc_assets.cpp
   src/bim/axmol/app/application.cpp
+  src/bim/axmol/app/arena_display_config.cpp
   src/bim/axmol/app/bridge.cpp
   src/bim/axmol/app/feature_deck.cpp
+  src/bim/axmol/app/fog_display.cpp
   src/bim/axmol/app/main_scene.cpp
   src/bim/axmol/app/root_scene.cpp
   src/bim/axmol/app/scene_lock.cpp

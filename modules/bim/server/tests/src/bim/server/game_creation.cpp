@@ -162,7 +162,7 @@ TEST_F(game_creation_test, two_named_games)
   for (int i = 0; i != 4; ++i)
     {
       ASSERT_TRUE(!!m_clients[i].m_game_launch_event) << "i=" << i;
-      EXPECT_EQ(4, m_clients[i].m_game_launch_event->player_count)
+      EXPECT_EQ(4, m_clients[i].m_game_launch_event->fingerprint.player_count)
           << "i=" << i;
     }
 
@@ -190,18 +190,18 @@ TEST_F(game_creation_test, two_named_games)
 
   // The features must be the same.
   EXPECT_EQ(bim::game::feature_flags(0b1110),
-            m_clients[0].m_game_launch_event->features);
-  EXPECT_EQ(m_clients[0].m_game_launch_event->features,
-            m_clients[1].m_game_launch_event->features);
-  EXPECT_EQ(m_clients[0].m_game_launch_event->features,
-            m_clients[2].m_game_launch_event->features);
-  EXPECT_EQ(m_clients[0].m_game_launch_event->features,
-            m_clients[3].m_game_launch_event->features);
+            m_clients[0].m_game_launch_event->fingerprint.features);
+  EXPECT_EQ(m_clients[0].m_game_launch_event->fingerprint.features,
+            m_clients[1].m_game_launch_event->fingerprint.features);
+  EXPECT_EQ(m_clients[0].m_game_launch_event->fingerprint.features,
+            m_clients[2].m_game_launch_event->fingerprint.features);
+  EXPECT_EQ(m_clients[0].m_game_launch_event->fingerprint.features,
+            m_clients[3].m_game_launch_event->fingerprint.features);
 
   for (int i = 4; i != 7; ++i)
     {
       ASSERT_TRUE(!!m_clients[i].m_game_launch_event) << "i=" << i;
-      EXPECT_EQ(3, m_clients[i].m_game_launch_event->player_count)
+      EXPECT_EQ(3, m_clients[i].m_game_launch_event->fingerprint.player_count)
           << "i=" << i;
     }
 
@@ -221,11 +221,11 @@ TEST_F(game_creation_test, two_named_games)
 
   // The features must be the same.
   EXPECT_EQ(bim::game::feature_flags(0b1110'0000),
-            m_clients[4].m_game_launch_event->features);
-  EXPECT_EQ(m_clients[4].m_game_launch_event->features,
-            m_clients[5].m_game_launch_event->features);
-  EXPECT_EQ(m_clients[4].m_game_launch_event->features,
-            m_clients[6].m_game_launch_event->features);
+            m_clients[4].m_game_launch_event->fingerprint.features);
+  EXPECT_EQ(m_clients[4].m_game_launch_event->fingerprint.features,
+            m_clients[5].m_game_launch_event->fingerprint.features);
+  EXPECT_EQ(m_clients[4].m_game_launch_event->fingerprint.features,
+            m_clients[6].m_game_launch_event->fingerprint.features);
 
   // The game channel of each group of players must be different.
   EXPECT_NE(m_clients[0].m_game_launch_event->channel,
@@ -253,7 +253,7 @@ TEST_F(game_creation_test, two_random_games)
   for (int i = 0; i != 4; ++i)
     {
       ASSERT_TRUE(!!m_clients[i].m_game_launch_event) << "i=" << i;
-      EXPECT_EQ(4, m_clients[i].m_game_launch_event->player_count)
+      EXPECT_EQ(4, m_clients[i].m_game_launch_event->fingerprint.player_count)
           << "i=" << i;
     }
 
@@ -281,13 +281,13 @@ TEST_F(game_creation_test, two_random_games)
 
   // The features must be the same.
   EXPECT_EQ(bim::game::feature_flags(0b11),
-            m_clients[0].m_game_launch_event->features);
-  EXPECT_EQ(m_clients[0].m_game_launch_event->features,
-            m_clients[1].m_game_launch_event->features);
-  EXPECT_EQ(m_clients[0].m_game_launch_event->features,
-            m_clients[2].m_game_launch_event->features);
-  EXPECT_EQ(m_clients[0].m_game_launch_event->features,
-            m_clients[3].m_game_launch_event->features);
+            m_clients[0].m_game_launch_event->fingerprint.features);
+  EXPECT_EQ(m_clients[0].m_game_launch_event->fingerprint.features,
+            m_clients[1].m_game_launch_event->fingerprint.features);
+  EXPECT_EQ(m_clients[0].m_game_launch_event->fingerprint.features,
+            m_clients[2].m_game_launch_event->fingerprint.features);
+  EXPECT_EQ(m_clients[0].m_game_launch_event->fingerprint.features,
+            m_clients[3].m_game_launch_event->fingerprint.features);
 
   // Second group as for a random game
   for (int i = 4; i != 7; ++i)
@@ -300,7 +300,7 @@ TEST_F(game_creation_test, two_random_games)
   for (int i = 4; i != 7; ++i)
     {
       ASSERT_TRUE(!!m_clients[i].m_game_launch_event) << "i=" << i;
-      EXPECT_EQ(3, m_clients[i].m_game_launch_event->player_count)
+      EXPECT_EQ(3, m_clients[i].m_game_launch_event->fingerprint.player_count)
           << "i=" << i;
     }
 
@@ -320,11 +320,11 @@ TEST_F(game_creation_test, two_random_games)
 
   // The features must be the same.
   EXPECT_EQ(bim::game::feature_flags(0b1100'0000),
-            m_clients[4].m_game_launch_event->features);
-  EXPECT_EQ(m_clients[4].m_game_launch_event->features,
-            m_clients[5].m_game_launch_event->features);
-  EXPECT_EQ(m_clients[4].m_game_launch_event->features,
-            m_clients[6].m_game_launch_event->features);
+            m_clients[4].m_game_launch_event->fingerprint.features);
+  EXPECT_EQ(m_clients[4].m_game_launch_event->fingerprint.features,
+            m_clients[5].m_game_launch_event->fingerprint.features);
+  EXPECT_EQ(m_clients[4].m_game_launch_event->fingerprint.features,
+            m_clients[6].m_game_launch_event->fingerprint.features);
 
   // The game channel of each group of players must be different.
   EXPECT_NE(m_clients[0].m_game_launch_event->channel,
@@ -398,7 +398,7 @@ TEST_F(game_creation_test, mix_random_and_named_games)
   for (int i = 0; i != 4; ++i)
     {
       ASSERT_TRUE(!!m_clients[i].m_game_launch_event) << "i=" << i;
-      EXPECT_EQ(4, m_clients[i].m_game_launch_event->player_count)
+      EXPECT_EQ(4, m_clients[i].m_game_launch_event->fingerprint.player_count)
           << "i=" << i;
     }
 
@@ -426,18 +426,18 @@ TEST_F(game_creation_test, mix_random_and_named_games)
 
   // The features must be the same.
   EXPECT_EQ(bim::game::feature_flags(0b1010),
-            m_clients[0].m_game_launch_event->features);
-  EXPECT_EQ(m_clients[0].m_game_launch_event->features,
-            m_clients[1].m_game_launch_event->features);
-  EXPECT_EQ(m_clients[0].m_game_launch_event->features,
-            m_clients[2].m_game_launch_event->features);
-  EXPECT_EQ(m_clients[0].m_game_launch_event->features,
-            m_clients[3].m_game_launch_event->features);
+            m_clients[0].m_game_launch_event->fingerprint.features);
+  EXPECT_EQ(m_clients[0].m_game_launch_event->fingerprint.features,
+            m_clients[1].m_game_launch_event->fingerprint.features);
+  EXPECT_EQ(m_clients[0].m_game_launch_event->fingerprint.features,
+            m_clients[2].m_game_launch_event->fingerprint.features);
+  EXPECT_EQ(m_clients[0].m_game_launch_event->fingerprint.features,
+            m_clients[3].m_game_launch_event->fingerprint.features);
 
   for (int i = 4; i != 7; ++i)
     {
       ASSERT_TRUE(!!m_clients[i].m_game_launch_event) << "i=" << i;
-      EXPECT_EQ(3, m_clients[i].m_game_launch_event->player_count)
+      EXPECT_EQ(3, m_clients[i].m_game_launch_event->fingerprint.player_count)
           << "i=" << i;
     }
 
@@ -457,11 +457,11 @@ TEST_F(game_creation_test, mix_random_and_named_games)
 
   // The features must be the same.
   EXPECT_EQ(bim::game::feature_flags(0b110'0000),
-            m_clients[4].m_game_launch_event->features);
-  EXPECT_EQ(m_clients[4].m_game_launch_event->features,
-            m_clients[5].m_game_launch_event->features);
-  EXPECT_EQ(m_clients[4].m_game_launch_event->features,
-            m_clients[6].m_game_launch_event->features);
+            m_clients[4].m_game_launch_event->fingerprint.features);
+  EXPECT_EQ(m_clients[4].m_game_launch_event->fingerprint.features,
+            m_clients[5].m_game_launch_event->fingerprint.features);
+  EXPECT_EQ(m_clients[4].m_game_launch_event->fingerprint.features,
+            m_clients[6].m_game_launch_event->fingerprint.features);
 
   // The game channel of each group of players must be different.
   EXPECT_NE(m_clients[0].m_game_launch_event->channel,
@@ -479,7 +479,7 @@ void game_creation_test::validate_player_order()
   for (int i = 0; i != 4; ++i)
     {
       ASSERT_TRUE(!!m_clients[i].m_game_launch_event) << "i=" << i;
-      EXPECT_EQ(4, m_clients[i].m_game_launch_event->player_count)
+      EXPECT_EQ(4, m_clients[i].m_game_launch_event->fingerprint.player_count)
           << "i=" << i;
       ASSERT_LT(m_clients[i].m_game_launch_event->player_index, 4)
           << "i=" << i;

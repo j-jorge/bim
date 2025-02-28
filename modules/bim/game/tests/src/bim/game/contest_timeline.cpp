@@ -35,10 +35,7 @@ TEST(bim_game_contest_timeline, write_and_read)
 
   char buffer[4096];
   {
-    bim::game::contest contest(
-        original_fingerprint.seed, original_fingerprint.brick_wall_probability,
-        original_fingerprint.player_count, original_fingerprint.arena_width,
-        original_fingerprint.arena_height, original_fingerprint.features);
+    bim::game::contest contest(original_fingerprint);
 
     std::FILE* const f = fmemopen(buffer, sizeof(buffer), "w");
     bim::game::contest_timeline_writer writer(f, original_fingerprint);
@@ -163,11 +160,7 @@ TEST(bim_game_contest_timeline, write_and_read)
   EXPECT_EQ(original_fingerprint.arena_height,
             timeline.fingerprint().arena_height);
 
-  bim::game::contest contest(
-      timeline.fingerprint().seed,
-      timeline.fingerprint().brick_wall_probability,
-      timeline.fingerprint().player_count, timeline.fingerprint().arena_width,
-      timeline.fingerprint().arena_height, timeline.fingerprint().features);
+  bim::game::contest contest(timeline.fingerprint());
 
   for (int i = 0; i != tick_count; ++i)
     {
@@ -241,10 +234,7 @@ TEST(bim_game_contest_timeline, kick_event)
 
   char buffer[4096];
   {
-    bim::game::contest contest(
-        original_fingerprint.seed, original_fingerprint.brick_wall_probability,
-        original_fingerprint.player_count, original_fingerprint.arena_width,
-        original_fingerprint.arena_height, original_fingerprint.features);
+    bim::game::contest contest(original_fingerprint);
 
     std::FILE* const f = fmemopen(buffer, sizeof(buffer), "w");
     bim::game::contest_timeline_writer writer(f, original_fingerprint);
@@ -330,11 +320,7 @@ TEST(bim_game_contest_timeline, kick_event)
   EXPECT_EQ(original_fingerprint.arena_height,
             timeline.fingerprint().arena_height);
 
-  bim::game::contest contest(
-      timeline.fingerprint().seed,
-      timeline.fingerprint().brick_wall_probability,
-      timeline.fingerprint().player_count, timeline.fingerprint().arena_width,
-      timeline.fingerprint().arena_height, timeline.fingerprint().features);
+  bim::game::contest contest(timeline.fingerprint());
 
   bim::game::contest_result contest_result;
 
@@ -370,10 +356,7 @@ TEST(bim_game_contest_timeline, three_players_dead_or_kicked)
 
   char buffer[4096];
   {
-    bim::game::contest contest(
-        original_fingerprint.seed, original_fingerprint.brick_wall_probability,
-        original_fingerprint.player_count, original_fingerprint.arena_width,
-        original_fingerprint.arena_height, original_fingerprint.features);
+    bim::game::contest contest(original_fingerprint);
 
     std::FILE* const f = fmemopen(buffer, sizeof(buffer), "w");
     bim::game::contest_timeline_writer writer(f, original_fingerprint);
@@ -467,11 +450,7 @@ TEST(bim_game_contest_timeline, three_players_dead_or_kicked)
   EXPECT_EQ(original_fingerprint.arena_height,
             timeline.fingerprint().arena_height);
 
-  bim::game::contest contest(
-      timeline.fingerprint().seed,
-      timeline.fingerprint().brick_wall_probability,
-      timeline.fingerprint().player_count, timeline.fingerprint().arena_width,
-      timeline.fingerprint().arena_height, timeline.fingerprint().features);
+  bim::game::contest contest(timeline.fingerprint());
 
   bim::game::contest_result contest_result;
 

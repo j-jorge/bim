@@ -125,8 +125,8 @@ void game_update_test::client::launch_game(
 
   m_message_channel.reset(
       new iscool::net::message_channel(stream, *m_session, event.channel));
-  m_game_update.reset(new bim::net::game_update_exchange(*m_message_channel,
-                                                         event.player_count));
+  m_game_update.reset(new bim::net::game_update_exchange(
+      *m_message_channel, event.fingerprint.player_count));
 
   m_game_update->connect_to_started(
       [this]() -> void
@@ -134,7 +134,7 @@ void game_update_test::client::launch_game(
         m_started.emplace(true);
       });
   m_game_update->connect_to_updated(
-      [this, player_count = event.player_count](
+      [this, player_count = event.fingerprint.player_count](
           const bim::net::server_update& update) -> void
       {
         for (std::size_t i = 0; i != player_count; ++i)
