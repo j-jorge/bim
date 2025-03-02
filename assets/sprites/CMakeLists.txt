@@ -22,6 +22,7 @@ set(sprites
   "sprites/features/unavailable.png"
 
   "sprites/menu/audio.png"
+  "sprites/menu/back.png"
   "sprites/menu/dot-100.png"
   "sprites/menu/gamepad.png"
   "sprites/menu/gamepad-d-pad-left.png"

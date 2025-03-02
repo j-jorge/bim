@@ -104,6 +104,7 @@ namespace bim::axmol::app
 
     void animate_lobby_to_matchmaking();
     void animate_matchmaking_to_game(const bim::net::game_launch_event& event);
+    void animate_matchmaking_to_lobby();
     void animate_game_to_end_game(const bim::game::contest_result& result);
     void animate_end_game_to_lobby();
     void animate_end_game_to_matchmaking();

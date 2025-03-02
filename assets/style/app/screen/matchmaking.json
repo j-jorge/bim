@@ -161,6 +161,15 @@
                         "widgets/label/text.i18n": "FIGHT!",
                         "z-order": 20
                     }
+                ],
+
+                "back_button":
+                [
+                    "button/yellow-with-icon",
+                    {
+                        "widgets/icon/frame": "sprites/menu/back.png",
+                        "z-order": 20
+                    }
                 ]
             }
         ],
@@ -223,6 +232,7 @@
         "actions.wait":
         [{
             "ready_button": [{ "instantiate": "hide" }],
+            "back_button": [{ "instantiate": "show" }],
             "label-background": [{ "instantiate": "hide" }],
             "player-2": [{ "instantiate": "hide" }],
             "player-3": [{ "instantiate": "hide" }],
@@ -235,6 +245,7 @@
         "actions.2-players":
         [{
             "ready_button": [{ "instantiate": "show" }],
+            "back_button": [{ "instantiate": "hide" }],
             "label-background": [{ "instantiate": "show" }],
             "player-2": [{ "instantiate": "show" }],
             "player-3": [{ "instantiate": "hide" }],
@@ -247,6 +258,7 @@
         "actions.3-players":
         [{
             "ready_button": [{ "instantiate": "show" }],
+            "back_button": [{ "instantiate": "hide" }],
             "label-background": [{ "instantiate": "show" }],
             "player-2": [{ "instantiate": "show" }],
             "player-3": [{ "instantiate": "show" }],
@@ -259,6 +271,7 @@
         "actions.4-players":
         [{
             "ready_button": [{ "instantiate": "show" }],
+            "back_button": [{ "instantiate": "hide" }],
             "label-background": [{ "instantiate": "show" }],
             "player-2": [{ "instantiate": "show" }],
             "player-3": [{ "instantiate": "show" }],

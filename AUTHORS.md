@@ -77,6 +77,7 @@ assets/sprites/solid-wall.png
 assets/sprites/features/falling-block-off.png
 assets/sprites/features/falling-block-on.png
 assets/sprites/features/unavailable.png
+assets/sprites/menu/back.png
 assets/sprites/menu/dot-100.png
 assets/sprites/menu/gamepad-d-pad-left.png
 assets/sprites/menu/gamepad-d-pad-right.png

@@ -2,6 +2,7 @@
 #pragma once
 
 #include <bim/axmol/action/runner.hpp>
+#include <bim/axmol/input/observer/single_key_observer_handle.hpp>
 #include <bim/axmol/input/tree.hpp>
 #include <bim/axmol/widget/declare_controls_struct.hpp>
 
@@ -43,6 +44,7 @@ namespace bim::axmol::app
   {
     DECLARE_SIGNAL(void(const bim::net::game_launch_event&), start_game,
                    m_start_game)
+    DECLARE_VOID_SIGNAL(back, m_back)
 
     ic_declare_context(
         m_context,
@@ -73,11 +75,14 @@ namespace bim::axmol::app
     void accept_game();
     void launch_game(const bim::net::game_launch_event& event);
 
+    void dispatch_back() const;
+
   private:
     ic_declare_state_monitor(m_monitor);
 
+    bim::axmol::input::single_key_observer_handle m_escape;
     bim::axmol::input::tree m_inputs;
-    bim_declare_controls_struct(controls, m_controls, 1);
+    bim_declare_controls_struct(controls, m_controls, 2);
 
     std::unique_ptr<bim::net::new_game_exchange> m_new_game;
 

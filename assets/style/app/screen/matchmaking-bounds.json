@@ -152,6 +152,16 @@
             "anchor.reference.y": 0.18,
             "width.percents": 50,
             "height.percents": 10
+        }],
+
+        "back_button":
+        [{
+            "anchor.x": 0.5,
+            "anchor.y": 0.5,
+            "anchor.reference.x": 0.13,
+            "anchor.reference.y": 0.05,
+            "height.percents": 7,
+            "width-ratio": 1.3
         }]
     }
 }

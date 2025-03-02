@@ -124,6 +124,12 @@ void bim::axmol::app::screen_wheel::wire_permanent_connections()
         animate_matchmaking_to_game(event);
       });
 
+  m_matchmaking->connect_to_back(
+      [this]()
+      {
+        animate_matchmaking_to_lobby();
+      });
+
   m_online_game->connect_to_game_over(
       [this](const bim::game::contest_result& result)
       {
@@ -202,6 +208,18 @@ void bim::axmol::app::screen_wheel::animate_matchmaking_to_game(
   m_end_game->game_started(event);
 
   online_game_displayed();
+}
+
+void bim::axmol::app::screen_wheel::animate_matchmaking_to_lobby()
+{
+  iscool::system::keep_screen_on(false);
+
+  m_inputs.erase(m_matchmaking->input_node());
+  m_matchmaking->closing();
+
+  switch_view(*m_controls->lobby);
+
+  lobby_displayed();
 }
 
 void bim::axmol::app::screen_wheel::animate_game_to_end_game(

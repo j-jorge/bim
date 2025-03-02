@@ -10,6 +10,9 @@
 #include <bim/axmol/widget/merge_named_node_groups.hpp>
 #include <bim/axmol/widget/ui/button.hpp>
 
+#include <bim/axmol/input/key_observer_handle.impl.hpp>
+#include <bim/axmol/input/observer/single_key_observer.hpp>
+
 #include <bim/net/exchange/new_game_exchange.hpp>
 #include <bim/net/session_handler.hpp>
 
@@ -18,19 +21,23 @@
 #include <iscool/signals/implement_signal.hpp>
 
 #include <axmol/2d/Label.h>
+#include <axmol/base/EventKeyboard.h>
 
 #include <fmt/format.h>
 
 #define x_widget_scope bim::axmol::app::matchmaking::
 #define x_widget_type_name controls
-#define x_widget_controls x_widget(bim::axmol::widget::button, ready_button)
+#define x_widget_controls                                                     \
+  x_widget(bim::axmol::widget::button, ready_button)                          \
+      x_widget(bim::axmol::widget::button, back_button)
 #include <bim/axmol/widget/implement_controls_struct.hpp>
 
 IMPLEMENT_SIGNAL(bim::axmol::app::matchmaking, start_game, m_start_game);
+IMPLEMENT_SIGNAL(bim::axmol::app::matchmaking, back, m_back);
 
 ic_implement_state_monitor(bim::axmol::app::matchmaking, m_monitor, off,
                            ((off)((waiting)))                               //
-                           ((waiting)((match_2)(match_3)(match_4)))         //
+                           ((waiting)((match_2)(match_3)(match_4)(off)))    //
                            ((match_2)((waiting)(match_3)(match_4)(launch))) //
                            ((match_3)((waiting)(match_2)(match_4)(launch))) //
                            ((match_4)((waiting)(match_2)(match_3)(launch))) //
@@ -39,6 +46,7 @@ ic_implement_state_monitor(bim::axmol::app::matchmaking, m_monitor, off,
 bim::axmol::app::matchmaking::matchmaking(
     const context& context, const iscool::style::declaration& style)
   : m_context(context)
+  , m_escape(ax::EventKeyboard::KeyCode::KEY_BACK)
   , m_controls(context.get_widget_context(), *style.get_declaration("widgets"))
   , m_new_game(new bim::net::new_game_exchange(
         m_context.get_session_handler()->message_stream()))
@@ -64,11 +72,24 @@ bim::axmol::app::matchmaking::matchmaking(
 
   m_inputs.push_back(m_feature_deck->input_node());
   m_inputs.push_back(m_controls->ready_button->input_node());
+  m_inputs.push_back(m_escape);
+  m_inputs.push_back(m_controls->back_button->input_node());
 
   m_controls->ready_button->connect_to_clicked(
       [this]()
       {
         accept_game();
+      });
+
+  m_escape->connect_to_released(
+      [this]()
+      {
+        dispatch_back();
+      });
+  m_controls->back_button->connect_to_clicked(
+      [this]()
+      {
+        dispatch_back();
       });
 
   m_feature_deck->connect_to_enabled(
@@ -214,4 +235,12 @@ void bim::axmol::app::matchmaking::launch_game(
 {
   m_launch_connection.disconnect();
   m_start_game(event);
+}
+
+void bim::axmol::app::matchmaking::dispatch_back() const
+{
+  if (!m_monitor->is_waiting_state())
+    return;
+
+  m_back();
 }
