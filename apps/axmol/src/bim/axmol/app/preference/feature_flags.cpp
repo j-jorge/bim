@@ -19,3 +19,17 @@ void bim::axmol::app::enabled_feature_flags(
 {
   p.set_value("feature_flags.enabled", std::int64_t(v));
 }
+
+bim::game::feature_flags bim::axmol::app::available_feature_flags(
+    const iscool::preferences::local_preferences& p)
+{
+  return (bim::game::feature_flags)p.get_value(
+      "feature_flags.available",
+      std::int64_t(bim::game::feature_flags::falling_blocks));
+}
+
+void bim::axmol::app::available_feature_flags(
+    iscool::preferences::local_preferences& p, bim::game::feature_flags v)
+{
+  p.set_value("feature_flags.available", std::int64_t(v));
+}

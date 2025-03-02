@@ -11,6 +11,7 @@
 
 namespace bim::axmol::widget
 {
+  class button;
   class context;
   class toggle;
 }
@@ -41,11 +42,19 @@ namespace bim::axmol::app
 
     bim::axmol::input::node_reference input_node() const;
     const bim::axmol::widget::named_node_group& display_nodes() const;
-    void displaying(bim::game::feature_flags f);
+
+    void displaying(bim::game::feature_flags enabled_features,
+                    bim::game::feature_flags available_features);
 
     bim::game::feature_flags features() const;
 
   private:
+    void
+    configure_feature_button(bim::axmol::widget::toggle& state_toggle,
+                             bim::axmol::widget::button& unavailable_button,
+                             bim::game::feature_flags available_features,
+                             bim::game::feature_flags feature) const;
+
     void toggle_feature(bim::axmol::widget::toggle& t,
                         bim::game::feature_flags f);
 

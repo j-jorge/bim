@@ -19,14 +19,7 @@
                 }
             ],
 
-            "feature_extra_0":
-            [
-                "button/feature-unavailable",
-                {
-                    "visible": false
-                }
-            ],
-
+            "feature_extra_0": [ "button/feature-unavailable" ],
             "feature_extra_1": [ "button/feature-unavailable" ],
             "feature_extra_2": [ "button/feature-unavailable" ],
             "feature_extra_3": [ "button/feature-unavailable" ]

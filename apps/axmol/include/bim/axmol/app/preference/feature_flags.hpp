@@ -14,4 +14,9 @@ namespace bim::axmol::app
   enabled_feature_flags(const iscool::preferences::local_preferences& p);
   void enabled_feature_flags(iscool::preferences::local_preferences& p,
                              bim::game::feature_flags v);
+
+  bim::game::feature_flags
+  available_feature_flags(const iscool::preferences::local_preferences& p);
+  void available_feature_flags(iscool::preferences::local_preferences& p,
+                               bim::game::feature_flags v);
 }

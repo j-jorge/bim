@@ -111,22 +111,22 @@ void bim::axmol::app::debug_popup::add_fps_entry()
 void bim::axmol::app::debug_popup::add_feature_item(
     std::string_view label, bim::game::feature_flags flag)
 {
-  const bool enabled = !!(bim::axmol::app::enabled_feature_flags(
-                              *m_context.get_local_preferences())
-                          & flag);
+  const bool available = !!(bim::axmol::app::available_feature_flags(
+                                *m_context.get_local_preferences())
+                            & flag);
 
   auto toggle_flag = [this, flag]() -> bool
   {
     const bim::game::feature_flags new_flags =
-        bim::axmol::app::enabled_feature_flags(
+        bim::axmol::app::available_feature_flags(
             *m_context.get_local_preferences())
         ^ flag;
-    bim::axmol::app::enabled_feature_flags(*m_context.get_local_preferences(),
-                                           new_flags);
+    bim::axmol::app::available_feature_flags(
+        *m_context.get_local_preferences(), new_flags);
     return !!(new_flags & flag);
   };
 
-  add_toggle_item(label, enabled, toggle_flag);
+  add_toggle_item(label, available, toggle_flag);
 }
 
 void bim::axmol::app::debug_popup::add_title(std::string_view label)

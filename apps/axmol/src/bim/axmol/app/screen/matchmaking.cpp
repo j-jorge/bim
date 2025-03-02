@@ -118,7 +118,8 @@ void bim::axmol::app::matchmaking::displaying()
                                     m_controls->all_nodes, m_style_displaying);
 
   m_feature_deck->displaying(
-      enabled_feature_flags(*m_context.get_local_preferences()));
+      enabled_feature_flags(*m_context.get_local_preferences()),
+      available_feature_flags(*m_context.get_local_preferences()));
 
   run_actions(m_main_actions, m_action_displaying);
   run_actions(m_state_actions, m_action_wait);

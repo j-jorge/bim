@@ -71,16 +71,35 @@ bim::axmol::app::feature_deck::display_nodes() const
   return m_controls->all_nodes;
 }
 
-void bim::axmol::app::feature_deck::displaying(bim::game::feature_flags f)
+void bim::axmol::app::feature_deck::displaying(
+    bim::game::feature_flags enabled_features,
+    bim::game::feature_flags available_features)
 {
-  m_feature_flags = f;
-  m_controls->feature_falling_blocks->set_state(
-      !!(m_feature_flags & bim::game::feature_flags::falling_blocks));
+  m_feature_flags = enabled_features;
+
+  configure_feature_button(*m_controls->feature_falling_blocks,
+                           *m_controls->feature_extra_0, available_features,
+                           bim::game::feature_flags::falling_blocks);
 }
 
 bim::game::feature_flags bim::axmol::app::feature_deck::features() const
 {
   return m_feature_flags;
+}
+
+void bim::axmol::app::feature_deck::configure_feature_button(
+    bim::axmol::widget::toggle& state_toggle,
+    bim::axmol::widget::button& unavailable_button,
+    bim::game::feature_flags available_features,
+    bim::game::feature_flags feature) const
+{
+  const bool available = !!(feature & available_features);
+
+  state_toggle.setVisible(available);
+  unavailable_button.setVisible(!available);
+
+  if (available)
+    state_toggle.set_state(!!(m_feature_flags & feature));
 }
 
 void bim::axmol::app::feature_deck::toggle_feature(
