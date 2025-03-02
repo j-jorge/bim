@@ -33,12 +33,10 @@ bim::game::cell_neighborhood& bim::game::operator&=(cell_neighborhood& lhs,
 
 bim::game::cell_neighborhood bim::game::operator~(cell_neighborhood lhs)
 {
-  return cell_neighborhood(
-      (std::underlying_type_t<cell_neighborhood>)cell_neighborhood::all
-      & ~(std::underlying_type_t<cell_neighborhood>)lhs);
+  return cell_neighborhood(~(std::underlying_type_t<cell_neighborhood>)lhs);
 }
 
 bool bim::game::operator!(cell_neighborhood lhs)
 {
-  return (std::underlying_type_t<cell_neighborhood>)lhs != 0;
+  return (std::underlying_type_t<cell_neighborhood>)lhs == 0;
 }
