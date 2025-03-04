@@ -17,3 +17,14 @@ target_link_libraries(
   GTest::gtest
   iscool_log
 )
+
+add_executable(core-tests
+  tests/src/bim/core/table_2d.cpp
+)
+target_link_libraries(
+  core-tests
+  PRIVATE
+  bim_core
+  GTest::gtest
+  bim_gtest_main
+)
