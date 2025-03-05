@@ -148,7 +148,11 @@
 
             "peephole":
             [{
-                "widgets/sprite/frame": "texture/bomb-stencil.png",
+                "widgets/sprite":
+                [{
+                    "auto-size": true,
+                    "frame": "texture/bomb-stencil.png"
+                }],
 
                 "initial-scale": 0,
                 "wait-scale": 1.5,

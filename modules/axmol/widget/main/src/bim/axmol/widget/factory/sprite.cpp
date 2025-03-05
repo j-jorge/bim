@@ -50,6 +50,7 @@ bim::axmol::widget::factory<ax::Sprite>::create(
 
   result->setFlippedX(style.get_boolean("flip.x", false));
   result->setFlippedY(style.get_boolean("flip.y", false));
+  result->setAutoSize(style.get_boolean("auto-size", false));
 
   bim::axmol::style::apply_display(context.style_cache.get_display(style),
                                    *result);
