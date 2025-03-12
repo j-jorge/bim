@@ -23,12 +23,10 @@ bim::axmol::widget::factory<ax::Sprite>::create(
     const iscool::style::declaration& style)
 {
   bim::axmol::ref_ptr<ax::Sprite> result;
-  const iscool::optional<std::string> frame_name = style.get_string("frame");
+  const iscool::optional<const std::string&> frame_name =
+      style.get_string("frame");
 
-  if (!frame_name)
-    ic_log(iscool::log::nature::error(), g_log_context,
-           "No frame provided for sprite.");
-  else
+  if (frame_name)
     {
       ax::SpriteFrame* const frame =
           ax::SpriteFrameCache::getInstance()->getSpriteFrameByName(
