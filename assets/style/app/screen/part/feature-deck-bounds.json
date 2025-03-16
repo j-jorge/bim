@@ -5,7 +5,7 @@
         [
             "app/screen/part/feature-deck-button-bounds",
             {
-                "anchor.reference.x": 0.16
+                "anchor.reference.x": 0.37
             }
         ],
 
@@ -13,7 +13,7 @@
         [
             "app/screen/part/feature-deck-button-bounds",
             {
-                "anchor.reference.x": 0.16
+                "anchor.reference.x": 0.37
             }
         ],
 
@@ -21,7 +21,7 @@
         [
             "app/screen/part/feature-deck-button-bounds",
             {
-                "anchor.reference.x": 0.39
+                "anchor.reference.x": 0.63
             }
         ],
 
@@ -29,7 +29,7 @@
         [
             "app/screen/part/feature-deck-button-bounds",
             {
-                "anchor.reference.x": 0.39
+                "anchor.reference.x": 0.63
             }
         ],
 
