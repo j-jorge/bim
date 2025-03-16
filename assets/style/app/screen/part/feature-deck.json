@@ -25,12 +25,12 @@
                 {
                     "widgets/off":
                     [{
-                        "frame": "sprites/features/falling-block-off.png"
+                        "frame": "sprites/features/fog-of-war-off.png"
                     }],
 
                     "widgets/on":
                     [{
-                        "frame": "sprites/features/falling-block-on.png"
+                        "frame": "sprites/features/fog-of-war-on.png"
                     }]
                 }
             ],

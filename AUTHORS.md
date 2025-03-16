@@ -76,6 +76,8 @@ assets/sprites/power-up-flame.png
 assets/sprites/solid-wall.png
 assets/sprites/features/falling-block-off.png
 assets/sprites/features/falling-block-on.png
+assets/sprites/features/fog-of-war-off.png
+assets/sprites/features/fog-of-war-on.png
 assets/sprites/features/unavailable.png
 assets/sprites/fog/00000000.png
 assets/sprites/fog/00000001.png
