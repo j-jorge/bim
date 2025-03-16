@@ -80,32 +80,7 @@
             "scale-mode": "device"
         }],
 
-        "feature-description.placeholder":
-        [
-            "app/screen/part/matchmaking-feature-label-bounds"
-        ],
-
-        "feature-description.on.1":
-        [
-            "app/screen/part/matchmaking-feature-label-bounds"
-        ],
-
-        "feature-description.off.1":
-        [
-            "app/screen/part/matchmaking-feature-label-bounds"
-        ],
-
-        "feature-description.on.2":
-        [
-            "app/screen/part/matchmaking-feature-label-bounds"
-        ],
-
-        "feature-description.off.2":
-        [
-            "app/screen/part/matchmaking-feature-label-bounds"
-        ],
-
-        "feature-description.unavailable":
+        "feature_description":
         [
             "app/screen/part/matchmaking-feature-label-bounds"
         ],

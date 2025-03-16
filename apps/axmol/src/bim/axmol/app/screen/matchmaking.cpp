@@ -7,6 +7,7 @@
 #include <bim/axmol/widget/apply_actions.hpp>
 #include <bim/axmol/widget/apply_display.hpp>
 #include <bim/axmol/widget/context.hpp>
+#include <bim/axmol/widget/factory/label.hpp>
 #include <bim/axmol/widget/merge_named_node_groups.hpp>
 #include <bim/axmol/widget/ui/button.hpp>
 
@@ -29,7 +30,8 @@
 #define x_widget_type_name controls
 #define x_widget_controls                                                     \
   x_widget(bim::axmol::widget::button, ready_button)                          \
-      x_widget(bim::axmol::widget::button, back_button)
+      x_widget(bim::axmol::widget::button, back_button)                       \
+          x_widget(ax::Label, feature_description)
 #include <bim/axmol/widget/implement_controls_struct.hpp>
 
 IMPLEMENT_SIGNAL(bim::axmol::app::matchmaking, start_game, m_start_game);
@@ -54,22 +56,11 @@ bim::axmol::app::matchmaking::matchmaking(
         new feature_deck(m_context, *style.get_declaration("feature-deck")))
   , m_style_displaying(*style.get_declaration("display.displaying"))
   , m_action_displaying(*style.get_declaration("actions.displaying"))
-  , m_feature_unavailable_display(
-        *style.get_declaration("display.feature.unavailable"))
   , m_action_wait(*style.get_declaration("actions.wait"))
   , m_action_2_players(*style.get_declaration("actions.2-players"))
   , m_action_3_players(*style.get_declaration("actions.3-players"))
   , m_action_4_players(*style.get_declaration("actions.4-players"))
 {
-  m_feature_display_on[bim::game::feature_flags::falling_blocks] =
-      &*style.get_declaration("display.feature.on.1");
-  m_feature_display_off[bim::game::feature_flags::falling_blocks] =
-      &*style.get_declaration("display.feature.off.1");
-  m_feature_display_on[bim::game::feature_flags::fog_of_war] =
-      &*style.get_declaration("display.feature.on.2");
-  m_feature_display_off[bim::game::feature_flags::fog_of_war] =
-      &*style.get_declaration("display.feature.off.2");
-
   m_all_nodes = m_controls->all_nodes;
   bim::axmol::widget::merge_named_node_groups(m_all_nodes,
                                               m_feature_deck->display_nodes());
@@ -99,25 +90,20 @@ bim::axmol::app::matchmaking::matchmaking(
   m_feature_deck->connect_to_enabled(
       [this](bim::game::feature_flags f) -> void
       {
-        bim::axmol::widget::apply_display(
-            m_context.get_widget_context().style_cache, m_controls->all_nodes,
-            *m_feature_display_on.find(f)->second);
+        show_feature_on_message(f);
       });
 
   m_feature_deck->connect_to_disabled(
       [this](bim::game::feature_flags f) -> void
       {
-        bim::axmol::widget::apply_display(
-            m_context.get_widget_context().style_cache, m_controls->all_nodes,
-            *m_feature_display_off.find(f)->second);
+        show_feature_off_message(f);
       });
 
   m_feature_deck->connect_to_unavailable(
       [this]() -> void
       {
-        bim::axmol::widget::apply_display(
-            m_context.get_widget_context().style_cache, m_controls->all_nodes,
-            m_feature_unavailable_display);
+        m_controls->feature_description->setString(
+            ic_gettext("Keep playing to unlock new game features!"));
       });
 }
 
@@ -149,6 +135,8 @@ void bim::axmol::app::matchmaking::displaying()
   run_actions(m_main_actions, m_action_displaying);
   run_actions(m_state_actions, m_action_wait);
 
+  m_controls->feature_description->setString(
+      ic_gettext("Customize your experience below!"));
   m_controls->ready_button->enable(true);
 }
 
@@ -247,4 +235,44 @@ void bim::axmol::app::matchmaking::dispatch_back() const
     return;
 
   m_back();
+}
+
+void bim::axmol::app::matchmaking::show_feature_on_message(
+    bim::game::feature_flags f) const
+{
+  const char* message = "";
+
+  switch (f)
+    {
+    case bim::game::feature_flags::falling_blocks:
+      message =
+          ic_gettext("Falling blocks reduce the arena after two minutes!");
+      break;
+    case bim::game::feature_flags::fog_of_war:
+      message = ic_gettext(
+          "A thick fog covers the arena. You can't see were you did not go!");
+      break;
+    }
+
+  m_controls->feature_description->setString(message);
+}
+
+void bim::axmol::app::matchmaking::show_feature_off_message(
+    bim::game::feature_flags f) const
+{
+  const char* message = "";
+
+  switch (f)
+    {
+    case bim::game::feature_flags::falling_blocks:
+      message = ic_gettext("No falling blocks! The game ends after 3 minutes "
+                           "if the players are still alive.");
+      break;
+    case bim::game::feature_flags::fog_of_war:
+      message = ic_gettext("Immediate forcast: Clear sky during the game, you "
+                           "can see the whole arena!");
+      break;
+    }
+
+  m_controls->feature_description->setString(message);
 }

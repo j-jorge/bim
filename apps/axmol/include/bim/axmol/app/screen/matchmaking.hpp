@@ -77,12 +77,15 @@ namespace bim::axmol::app
 
     void dispatch_back() const;
 
+    void show_feature_on_message(bim::game::feature_flags f) const;
+    void show_feature_off_message(bim::game::feature_flags f) const;
+
   private:
     ic_declare_state_monitor(m_monitor);
 
     bim::axmol::input::single_key_observer_handle m_escape;
     bim::axmol::input::tree m_inputs;
-    bim_declare_controls_struct(controls, m_controls, 2);
+    bim_declare_controls_struct(controls, m_controls, 3);
 
     std::unique_ptr<bim::net::new_game_exchange> m_new_game;
 
@@ -93,14 +96,6 @@ namespace bim::axmol::app
 
     const iscool::style::declaration& m_style_displaying;
     const iscool::style::declaration& m_action_displaying;
-
-    std::unordered_map<bim::game::feature_flags,
-                       const iscool::style::declaration*>
-        m_feature_display_on;
-    std::unordered_map<bim::game::feature_flags,
-                       const iscool::style::declaration*>
-        m_feature_display_off;
-    const iscool::style::declaration& m_feature_unavailable_display;
 
     const iscool::style::declaration& m_action_wait;
     const iscool::style::declaration& m_action_2_players;
