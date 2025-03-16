@@ -1,6 +1,5 @@
 # Next
 
-- Fog feature.
 - The settings are not saved on Android.
 - The control deck is not centered on wide screens.
 - Check the soft stick, it has been reported to not react.

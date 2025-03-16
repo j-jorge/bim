@@ -74,7 +74,7 @@
         "feature-description-background-spike":
         [{
             "anchor.x": 0.5,
-            "anchor.y": 0.66,
+            "anchor.y": 0.7,
             "anchor.reference.x": 0.5,
             "anchor.reference.y": 0,
             "scale-mode": "device"

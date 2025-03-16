@@ -89,7 +89,6 @@
                     "instantiate": "ax::Sprite",
                     "frame": "sprites/menu/rounded-rectangle-spike.png",
                     "parent": "feature-description-background",
-                    "flip.y": true,
                     "z-order": 10
                 }],
 
