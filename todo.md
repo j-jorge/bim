@@ -2,7 +2,6 @@
 
 - The control deck is not centered on wide screens.
 - Check the soft stick, it has been reported to not react.
-- Enlarge the d-pad.
 - Unlock system for the game features, per game count.
 - Display a message when a new version is available.
 - Automatically launch the game on the server-side after a short delay
