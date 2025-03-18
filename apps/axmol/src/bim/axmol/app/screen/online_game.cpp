@@ -258,8 +258,6 @@ void bim::axmol::app::online_game::attached()
       arena_view_size.x,
       arena.getPosition().y - arena.getAnchorPoint().y * arena_view_size.y));
 
-  m_bomb_drop_requested = false;
-
   const float block_size = arena_view_size.x / m_arena_width_in_blocks;
   m_display_config = arena_display_config{ .block_size = block_size,
                                            .view_height = arena_view_size.y };
@@ -282,6 +280,9 @@ void bim::axmol::app::online_game::attached()
 void bim::axmol::app::online_game::displaying(
     const bim::net::game_launch_event& event)
 {
+  m_bomb_drop_requested = false;
+  m_controls->bomb_button->enable(false);
+
   configure_direction_pad();
 
   bim::axmol::widget::apply_display(
@@ -302,6 +303,7 @@ void bim::axmol::app::online_game::displaying(
       [this]() -> void
       {
         m_controls->peephole->reveal();
+        m_controls->bomb_button->enable(true);
         schedule_tick();
       });
   m_contest_runner.reset(new bim::net::contest_runner(

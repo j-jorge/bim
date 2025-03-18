@@ -20,7 +20,6 @@
 - Get some coins for each game, unlock the features with the coins.
 - At most three enabled features per game.
 - Display the frame duration (without the sleep) in addition to the FPS.
-- The bomb button is sometime stuck when the game begins.
 
 # Server
 

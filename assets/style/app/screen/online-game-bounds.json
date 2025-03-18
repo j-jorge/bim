@@ -80,6 +80,12 @@
             "height.percents": 10
         }],
 
-        "peephole": [ "layout/fill" ]
+        "peephole":
+        [
+            "layout/fill",
+            {
+                "reference": "arena"
+            }
+        ]
     }
 }
