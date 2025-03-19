@@ -32,7 +32,8 @@ void bim::axmol::style::apply_size(
                & bim::axmol::style::bounds_property_flags::max_percents_size)
           && (100 * size.x / reference_size.x > bounds.max_percents_size))
         {
-          size.x = reference.getContentSize().x;
+          size.x =
+              reference.getContentSize().x * bounds.max_percents_size / 100;
           size.y = size.x / bounds.ratio;
         }
     }
@@ -48,8 +49,9 @@ void bim::axmol::style::apply_size(
                & bim::axmol::style::bounds_property_flags::max_percents_size)
           && (100 * size.y / reference_size.y > bounds.max_percents_size))
         {
-          size.y = reference.getContentSize().y;
-          size.x = size.x / bounds.ratio;
+          size.y =
+              reference.getContentSize().y * bounds.max_percents_size / 100;
+          size.x = size.y / bounds.ratio;
         }
     }
   else
