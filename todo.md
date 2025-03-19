@@ -1,11 +1,11 @@
 # Next
 
-- Checklist for the releases.
-- Check the soft stick, it has been reported to not react.
-- Unlock system for the game features, per game count.
-- Display a message when a new version is available.
 - Automatically launch the game on the server-side after a short delay
   if a player is ready.
+- Use a version.minor scheme for the versions.
+- Unlock system for the game features, per game count.
+- Display a message when a new version is available.
+- Pick the game server according to the app version, not the protocol version.
 
 # General
 
