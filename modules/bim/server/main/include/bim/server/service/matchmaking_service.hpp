@@ -13,6 +13,7 @@
 #include <boost/unordered/unordered_map.hpp>
 
 #include <optional>
+#include <random>
 #include <span>
 #include <string>
 #include <vector>
@@ -104,5 +105,7 @@ namespace bim::server
     std::vector<bim::net::encounter_id> m_done_encounters;
 
     iscool::net::message_pool m_message_pool;
+
+    std::mt19937_64 m_random;
   };
 }

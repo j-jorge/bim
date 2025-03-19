@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/server/tests/client_server_simulator.hpp>
 
+#include <bim/server/tests/new_test_config.hpp>
+
 #include <bim/server/config.hpp>
 
 #include <bim/game/component/player.hpp>
@@ -25,7 +27,7 @@ player_disconnection_state::player_disconnection_state()
         GetParam(),
         [this]() -> bim::server::config
         {
-          bim::server::config config(10006);
+          bim::server::config config = bim::server::tests::new_test_config();
           config.game_service_disconnection_lateness_threshold_in_ticks =
               m_ticks_for_disconnection;
           return config;

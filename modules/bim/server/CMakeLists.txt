@@ -28,6 +28,7 @@ add_executable(server-tests
 
   tests/src/bim/server/tests/client_server_simulator.cpp
   tests/src/bim/server/tests/fake_scheduler.cpp
+  tests/src/bim/server/tests/new_test_config.cpp
   tests/src/bim/server/tests/test_client.cpp
 )
 target_include_directories(server-tests PRIVATE tests/include)

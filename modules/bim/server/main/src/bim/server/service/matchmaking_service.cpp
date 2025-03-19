@@ -76,6 +76,7 @@ bim::server::matchmaking_service::matchmaking_service(
   , m_next_encounter_id(1)
   , m_clean_up_interval(config.matchmaking_clean_up_interval)
   , m_message_pool(64)
+  , m_random(config.random_seed)
 {
   m_done_encounters.reserve(8);
 
@@ -216,9 +217,13 @@ void bim::server::matchmaking_service::mark_as_ready(
     }
   else
     {
+      std::array<iscool::net::session_id, bim::game::g_max_player_count>
+          sessions(encounter.sessions);
+      std::shuffle(sessions.begin(), sessions.begin() + encounter.player_count,
+                   m_random);
+
       game = m_game_service.new_game(encounter.player_count,
-                                     encounter.common_features(),
-                                     encounter.sessions);
+                                     encounter.common_features(), sessions);
       encounter.channel = game->channel;
 
       ic_log(iscool::log::nature::info(), "matchmaking_service",

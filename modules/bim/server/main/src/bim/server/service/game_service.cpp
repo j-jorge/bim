@@ -87,8 +87,6 @@ public:
                 .arena_width = bim::game::g_default_arena_width,
                 .arena_height = bim::game::g_default_arena_height })
   {
-    std::sort(this->sessions.begin(), this->sessions.begin() + player_count);
-
     ready.fill(false);
     active.fill(false);
     completed_tick_count_per_player.fill(0);
@@ -273,7 +271,7 @@ bim::server::game_service::game_service(const config& config,
                                         iscool::net::socket_stream& socket)
   : m_message_stream(socket)
   , m_next_game_channel(1)
-  , m_random(std::random_device()())
+  , m_random(config.random_seed)
   , m_clean_up_interval(config.game_service_clean_up_interval)
   , m_disconnection_lateness_threshold_in_ticks(
         config.game_service_disconnection_lateness_threshold_in_ticks)

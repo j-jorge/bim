@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/server/tests/fake_scheduler.hpp>
 
-#include <bim/server/config.hpp>
+#include <bim/server/tests/new_test_config.hpp>
+
 #include <bim/server/server.hpp>
 
 #include <bim/net/message/authentication.hpp>
@@ -37,7 +38,7 @@ protected:
   iscool::log::scoped_initializer m_log;
   bim::server::tests::fake_scheduler m_scheduler;
 
-  const unsigned short m_port;
+  const bim::server::config m_config;
   bim::server::server m_server;
   iscool::net::socket_stream m_socket_stream;
   iscool::net::message_stream m_message_stream;
@@ -48,9 +49,9 @@ protected:
 };
 
 authentication_test::authentication_test()
-  : m_port(10001)
-  , m_server(bim::server::config(m_port))
-  , m_socket_stream("localhost:" + std::to_string(m_port),
+  : m_config(bim::server::tests::new_test_config())
+  , m_server(m_config)
+  , m_socket_stream("localhost:" + std::to_string(m_config.port),
                     iscool::net::socket_mode::client{})
   , m_message_stream(m_socket_stream)
   , m_message_channel(m_message_stream, 0, 0)

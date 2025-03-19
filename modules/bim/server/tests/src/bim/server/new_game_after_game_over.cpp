@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/server/tests/client_server_simulator.hpp>
 
-#include <bim/server/config.hpp>
+#include <bim/server/tests/new_test_config.hpp>
 
 #include <bim/game/component/player_action_queue.hpp>
 #include <bim/game/component/player_movement.hpp>
@@ -19,7 +19,7 @@ protected:
 };
 
 new_game_after_game_over_test::new_game_after_game_over_test()
-  : m_simulator(GetParam(), bim::server::config(10005))
+  : m_simulator(GetParam(), bim::server::tests::new_test_config())
 {}
 
 /**

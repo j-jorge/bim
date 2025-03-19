@@ -9,9 +9,13 @@ namespace bim::server
   struct config
   {
     config();
-    explicit config(unsigned short port);
 
     unsigned short port;
+
+    /**
+     * The seed to initialize all random generators.
+     */
+    std::uint64_t random_seed;
 
     /**
      * Time interval at which we remove the sessions from the authentication.

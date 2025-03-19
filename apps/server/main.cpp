@@ -15,6 +15,7 @@
 #include <chrono>
 #include <csignal>
 #include <iostream>
+#include <random>
 #include <thread>
 
 static bool g_keep_running = true;
@@ -85,6 +86,7 @@ static command_line parse_command_line(int argc, char* argv[])
 
   ::options result;
   result.console_log = (variables.count("console-log") != 0);
+  result.config.random_seed = std::random_device()();
   result.config.port = variables["port"].as<unsigned short>();
 
   result.config.enable_contest_timeline_recording =

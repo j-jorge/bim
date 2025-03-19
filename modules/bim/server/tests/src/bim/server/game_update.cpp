@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/server/tests/fake_scheduler.hpp>
 
-#include <bim/server/config.hpp>
+#include <bim/server/tests/new_test_config.hpp>
+
 #include <bim/server/server.hpp>
 
 #include <bim/net/exchange/authentication_exchange.hpp>
@@ -36,6 +37,7 @@ protected:
     std::unique_ptr<bim::net::game_update_exchange> m_game_update;
 
     bim::net::server_update m_all_updates;
+    std::optional<std::uint8_t> m_player_index;
 
   private:
     void launch_game(iscool::net::message_stream& stream,
@@ -63,7 +65,7 @@ protected:
   iscool::log::scoped_initializer m_log;
   bim::server::tests::fake_scheduler m_scheduler;
 
-  const unsigned short m_port;
+  const bim::server::config m_config;
   bim::server::server m_server;
   iscool::net::socket_stream m_socket_stream;
   iscool::net::message_stream m_message_stream;
@@ -123,6 +125,8 @@ void game_update_test::client::launch_game(
 {
   EXPECT_TRUE(!!m_session);
 
+  m_player_index = event.player_index;
+
   m_message_channel.reset(
       new iscool::net::message_channel(stream, *m_session, event.channel));
   m_game_update.reset(new bim::net::game_update_exchange(
@@ -161,9 +165,9 @@ void game_update_test::client::launch_game(
 }
 
 game_update_test::game_update_test()
-  : m_port(10004)
-  , m_server(bim::server::config(m_port))
-  , m_socket_stream("localhost:" + std::to_string(m_port),
+  : m_config(bim::server::tests::new_test_config())
+  , m_server(m_config)
+  , m_socket_stream("localhost:" + std::to_string(m_config.port),
                     iscool::net::socket_mode::client{})
   , m_message_stream(m_socket_stream)
   , m_clients{ client(m_scheduler, m_message_stream),
@@ -253,8 +257,13 @@ TEST_P(game_update_test, game_instant)
                               .drop_bomb = false }
   };
 
+  int player_to_action_index[std::size(actions)] = {};
+
   for (int i = 0; i != player_count; ++i)
-    m_clients[i].m_game_update->push(actions[i]);
+    {
+      player_to_action_index[*m_clients[i].m_player_index] = i;
+      m_clients[i].m_game_update->push(actions[i]);
+    }
 
   wait();
 
@@ -272,11 +281,12 @@ TEST_P(game_update_test, game_instant)
           ASSERT_EQ(1, server_actions.size())
               << "i=" << i << ", player_index=" << player_index;
 
-          EXPECT_EQ(actions[player_index].movement, server_actions[0].movement)
-              << "i=" << i << ", player_index=" << player_index;
-          EXPECT_EQ(actions[player_index].drop_bomb,
-                    server_actions[0].drop_bomb)
-              << "i=" << i << ", player_index=" << player_index;
+          const int j = player_to_action_index[player_index];
+
+          EXPECT_EQ(actions[j].movement, server_actions[0].movement)
+              << "i=" << i << ", player_index=" << player_index << ", j=" << j;
+          EXPECT_EQ(actions[j].drop_bomb, server_actions[0].drop_bomb)
+              << "i=" << i << ", player_index=" << player_index << ", j=" << j;
         }
     }
 }
@@ -292,7 +302,8 @@ TEST_P(game_update_test, player_two_is_late)
   join_game(player_count, { 'l', 'a', 't', 'e' });
 
   constexpr int tick_count = 5;
-  const bim::game::player_movement movements[4][tick_count] = {
+  constexpr int max_player_count = 4;
+  const bim::game::player_movement movements[max_player_count][tick_count] = {
     {
         bim::game::player_movement::up,
         bim::game::player_movement::down,
@@ -310,11 +321,16 @@ TEST_P(game_update_test, player_two_is_late)
       bim::game::player_movement::down, bim::game::player_movement::left,
       bim::game::player_movement::right }
   };
+  int player_to_action_index[max_player_count] = {};
 
   // Every player sends an action.
   for (int client_index = 0; client_index != player_count; ++client_index)
-    m_clients[client_index].m_game_update->push(bim::game::player_action{
-        .movement = movements[client_index][0], .drop_bomb = false });
+    {
+      player_to_action_index[*m_clients[client_index].m_player_index] =
+          client_index;
+      m_clients[client_index].m_game_update->push(bim::game::player_action{
+          .movement = movements[client_index][0], .drop_bomb = false });
+    }
 
   wait();
 
@@ -338,10 +354,13 @@ TEST_P(game_update_test, player_two_is_late)
             ASSERT_EQ(expected_tick + 1, server_actions.size())
                 << "client_index=" << client_index
                 << ", player_index=" << player_index;
-            EXPECT_EQ(movements[player_index][expected_tick],
+
+            const int j = player_to_action_index[player_index];
+            EXPECT_EQ(movements[j][expected_tick],
                       server_actions[expected_tick].movement)
                 << "client_index=" << client_index
-                << ", player_index=" << player_index;
+                << ", player_index=" << player_index << ", j=" << j;
+
             EXPECT_FALSE(server_actions[expected_tick].drop_bomb)
                 << "client_index=" << client_index
                 << ", player_index=" << player_index;
@@ -388,13 +407,15 @@ TEST_P(game_update_test, player_two_is_late)
               << "client_index=" << client_index
               << ", player_index=" << player_index;
 
+          const int j = player_to_action_index[player_index];
+
           // Each player sees a state for all players.
           for (int frame_index = 1; frame_index != tick_count; ++frame_index)
             {
-              EXPECT_EQ(movements[player_index][frame_index],
+              EXPECT_EQ(movements[j][frame_index],
                         server_actions[frame_index].movement)
                   << "client_index=" << client_index
-                  << ", player_index=" << player_index
+                  << ", player_index=" << player_index << ", j=" << j
                   << ", frame_index=" << frame_index;
               EXPECT_FALSE(server_actions[frame_index].drop_bomb)
                   << "client_index=" << client_index
