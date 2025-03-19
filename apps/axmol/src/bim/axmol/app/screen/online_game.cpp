@@ -122,8 +122,7 @@ bim::axmol::app::online_game::online_game(
 
   // The control panel fills the space below the arena. Its size will be
   // adjusted when the screen is added in the scene.
-  m_controls->control_panel->setAnchorPoint(ax::Vec2(0, 0));
-  m_controls->control_panel->setPosition(ax::Vec2(0, 0));
+  m_controls->control_panel->setAnchorPoint(ax::Vec2(0.5, 0));
 
   m_controls->peephole->connect_to_shown(
       [this]() -> void
@@ -252,11 +251,16 @@ void bim::axmol::app::online_game::attached()
 {
   ax::Node& arena = *m_controls->arena;
   const ax::Vec2 arena_view_size = arena.getContentSize();
+  const ax::Vec2 arena_anchor_point = arena.getAnchorPoint();
 
   // Adjust the control panel to fill the space below the arena.
+  m_controls->control_panel->setPosition(
+      ax::Vec2(arena.getPosition().x - arena_anchor_point.x * arena_view_size.x
+                   + arena_view_size.x / 2,
+               0));
   m_controls->control_panel->setContentSize(ax::Vec2(
       arena_view_size.x,
-      arena.getPosition().y - arena.getAnchorPoint().y * arena_view_size.y));
+      arena.getPosition().y - arena_anchor_point.y * arena_view_size.y));
 
   const float block_size = arena_view_size.x / m_arena_width_in_blocks;
   m_display_config = arena_display_config{ .block_size = block_size,

@@ -1,7 +1,6 @@
 # Next
 
 - Checklist for the releases.
-- The control deck is not centered on wide screens.
 - Check the soft stick, it has been reported to not react.
 - Unlock system for the game features, per game count.
 - Display a message when a new version is available.
