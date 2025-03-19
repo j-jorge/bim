@@ -18,19 +18,19 @@ screen. Features enabled by all participants will be used in the game,
 allowing players to customize their contest.
 
 <p align="center">
-  <img src="docs/readme/title-screen.jpg" width="540px"/>
+  <img src="docs/readme/title-screen.jpg" width="270px"/>
   <img src="metadata/en-US/images/phoneScreenshots/screenshot-1-matchmaking.jpg"
-       width="540px"/>
+       width="270px"/>
 </p>
 <p align="center">
   <img src="metadata/en-US/images/phoneScreenshots/screenshot-2-gameplay.jpg"
-       width="540px"/>
+       width="270px"/>
   <img src="metadata/en-US/images/phoneScreenshots/screenshot-3-victory.jpg"
-       width="540px"/>
+       width="270px"/>
 </p>
 <p align="center">
   <img src="metadata/en-US/images/phoneScreenshots/screenshot-4-settings.jpg"
-       width="540px"/>
+       width="270px"/>
 </p>
 
 # Installing
