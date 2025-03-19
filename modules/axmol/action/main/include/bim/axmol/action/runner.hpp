@@ -20,6 +20,7 @@ namespace bim::axmol::action
     ~runner();
 
     void run(ax::Action& action);
+    void run_complete(ax::Action& action);
     void stop();
 
   private:

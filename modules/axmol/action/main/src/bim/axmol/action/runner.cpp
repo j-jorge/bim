@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/axmol/action/runner.hpp>
 
+#include <axmol/2d/ActionInterval.h>
 #include <axmol/2d/ActionManager.h>
 #include <axmol/2d/Node.h>
 #include <axmol/base/Director.h>
@@ -43,6 +44,13 @@ void bim::axmol::action::runner::run(ax::Action& action)
       this, 0, false, m_scheduler_key);
 
   m_update_scheduled = true;
+}
+
+void bim::axmol::action::runner::run_complete(ax::Action& action)
+{
+  m_target->runAction(&action);
+  action.update(1);
+  m_target->stopAction(&action);
 }
 
 void bim::axmol::action::runner::stop()

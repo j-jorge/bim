@@ -104,6 +104,18 @@ void bim::axmol::widget::button::onEnter()
     update_display();
 }
 
+void bim::axmol::widget::button::onExit()
+{
+  if (m_is_pressed && m_action_released)
+    {
+      m_is_pressed = false;
+      m_action_runner.stop();
+      m_action_runner.run_complete(*m_action_released);
+    }
+
+  ax::Node::onExit();
+}
+
 void bim::axmol::widget::button::setContentSize(const ax::Size& size)
 {
   if (size.equals(getContentSize()))

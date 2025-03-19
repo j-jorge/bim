@@ -32,6 +32,7 @@ namespace bim::axmol::widget
     bim::axmol::input::node_reference input_node() const;
 
     void onEnter() override;
+    void onExit() override;
     void setContentSize(const ax::Size& size) override;
 
     void enable(bool enabled);
