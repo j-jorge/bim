@@ -31,13 +31,6 @@ bim::server::tests::test_client::test_client(
         EXPECT_TRUE(false);
       });
 
-  m_new_game.connect_to_game_proposal(
-      [this](unsigned) -> void
-      {
-        constexpr bim::game::feature_flags features{};
-        m_new_game.accept(features);
-      });
-
   m_new_game.connect_to_launch_game(
       [this, &message_stream](const bim::net::game_launch_event& event) -> void
       {
@@ -65,6 +58,13 @@ void bim::server::tests::test_client::new_game()
   m_game_update.reset();
   contest.reset();
   started = std::nullopt;
+
+  m_game_proposal_connection = m_new_game.connect_to_game_proposal(
+      [this](int) -> void
+      {
+        m_game_proposal_connection.disconnect();
+        m_new_game.accept({});
+      });
 
   m_new_game.start(*m_session);
 }

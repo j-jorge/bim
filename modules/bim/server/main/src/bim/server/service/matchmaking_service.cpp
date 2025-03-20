@@ -222,7 +222,11 @@ void bim::server::matchmaking_service::mark_as_ready(
     ready_count += encounter.ready[i];
 
   if ((ready_count != encounter.player_count) || (ready_count <= 1))
-    return;
+    {
+      send_game_on_hold(endpoint, request_token, session, encounter_id,
+                        encounter.player_count);
+      return;
+    }
 
   // All players are ready, send the game configuration to the client.
   std::optional<game_info> game;

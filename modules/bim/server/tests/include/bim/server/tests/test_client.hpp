@@ -7,6 +7,7 @@
 #include <bim/game/contest_result.hpp>
 
 #include <iscool/net/message/session_id.hpp>
+#include <iscool/signals/connection.hpp>
 
 #include <chrono>
 #include <memory>
@@ -68,6 +69,7 @@ namespace bim::server::tests
 
     bim::net::authentication_exchange m_authentication;
     bim::net::new_game_exchange m_new_game;
+    iscool::signals::connection m_game_proposal_connection;
     std::unique_ptr<iscool::net::message_channel> m_message_channel;
 
     std::optional<iscool::net::session_id> m_session;

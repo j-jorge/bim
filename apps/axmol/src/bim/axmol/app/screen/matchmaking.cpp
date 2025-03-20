@@ -37,12 +37,15 @@
 IMPLEMENT_SIGNAL(bim::axmol::app::matchmaking, start_game, m_start_game);
 IMPLEMENT_SIGNAL(bim::axmol::app::matchmaking, back, m_back);
 
-ic_implement_state_monitor(bim::axmol::app::matchmaking, m_monitor, off,
-                           ((off)((waiting)))                               //
-                           ((waiting)((match_2)(match_3)(match_4)(off)))    //
-                           ((match_2)((waiting)(match_3)(match_4)(launch))) //
-                           ((match_3)((waiting)(match_2)(match_4)(launch))) //
-                           ((match_4)((waiting)(match_2)(match_3)(launch))) //
+ic_implement_state_monitor(bim::axmol::app::matchmaking,
+                           m_player_count_monitor, off,
+                           ((off)((waiting)))                            //
+                           ((waiting)((match_2)(match_3)(match_4)(off))) //
+                           ((match_2)((waiting)(match_3)(match_4)(off))) //
+                           ((match_3)((waiting)(match_2)(match_4)(off))) //
+                           ((match_4)((waiting)(match_2)(match_3)(off))));
+ic_implement_state_monitor(bim::axmol::app::matchmaking, m_launch_monitor, off,
+                           ((off)((launch)(off))) //
                            ((launch)((off))));
 
 bim::axmol::app::matchmaking::matchmaking(
@@ -123,7 +126,7 @@ bim::axmol::app::matchmaking::nodes() const
 
 void bim::axmol::app::matchmaking::displaying()
 {
-  m_monitor->set_waiting_state();
+  m_player_count_monitor->set_waiting_state();
 
   bim::axmol::widget::apply_display(m_context.get_widget_context().style_cache,
                                     m_controls->all_nodes, m_style_displaying);
@@ -159,7 +162,9 @@ void bim::axmol::app::matchmaking::displayed()
 
 void bim::axmol::app::matchmaking::closing()
 {
-  m_monitor->set_off_state();
+  m_player_count_monitor->set_off_state();
+  m_launch_monitor->set_off_state();
+
   m_game_proposal_connection.disconnect();
   m_new_game->stop();
 }
@@ -167,32 +172,43 @@ void bim::axmol::app::matchmaking::closing()
 void bim::axmol::app::matchmaking::update_display_with_game_proposal(
     unsigned player_count)
 {
+  // If we tried to launch the game but we are back to a single player
+  // (i.e. the local player), then the request has failed. Let's start a new
+  // request.
+  if ((player_count == 1) && m_launch_monitor->is_launch_state())
+    {
+      m_launch_monitor->set_off_state();
+      m_new_game->stop();
+      m_new_game->start(m_context.get_session_handler()->session_id());
+      m_controls->ready_button->enable(true);
+    }
+
   const iscool::style::declaration* action;
 
   switch (player_count)
     {
     case 1:
-      if (m_monitor->is_waiting_state())
+      if (m_player_count_monitor->is_waiting_state())
         return;
-      m_monitor->set_waiting_state();
+      m_player_count_monitor->set_waiting_state();
       action = &m_action_wait;
       break;
     case 2:
-      if (m_monitor->is_match_2_state())
+      if (m_player_count_monitor->is_match_2_state())
         return;
-      m_monitor->set_match_2_state();
+      m_player_count_monitor->set_match_2_state();
       action = &m_action_2_players;
       break;
     case 3:
-      if (m_monitor->is_match_3_state())
+      if (m_player_count_monitor->is_match_3_state())
         return;
-      m_monitor->set_match_3_state();
+      m_player_count_monitor->set_match_3_state();
       action = &m_action_3_players;
       break;
     default:
-      if (m_monitor->is_match_4_state())
+      if (m_player_count_monitor->is_match_4_state())
         return;
-      m_monitor->set_match_4_state();
+      m_player_count_monitor->set_match_4_state();
       action = &m_action_4_players;
       break;
     }
@@ -212,10 +228,8 @@ void bim::axmol::app::matchmaking::run_actions(
 
 void bim::axmol::app::matchmaking::accept_game()
 {
-  m_monitor->set_launch_state();
+  m_launch_monitor->set_launch_state();
   m_controls->ready_button->enable(false);
-
-  m_game_proposal_connection.disconnect();
 
   const bim::game::feature_flags features = m_feature_deck->features();
   enabled_feature_flags(*m_context.get_local_preferences(), features);
@@ -225,13 +239,14 @@ void bim::axmol::app::matchmaking::accept_game()
 void bim::axmol::app::matchmaking::launch_game(
     const bim::net::game_launch_event& event)
 {
+  m_game_proposal_connection.disconnect();
   m_launch_connection.disconnect();
   m_start_game(event);
 }
 
 void bim::axmol::app::matchmaking::dispatch_back() const
 {
-  if (!m_monitor->is_waiting_state())
+  if (!m_player_count_monitor->is_waiting_state())
     return;
 
   m_back();

@@ -137,8 +137,9 @@ void bim::net::new_game_exchange::interpret_received_message(
 
 void bim::net::new_game_exchange::check_on_hold(const iscool::net::message& m)
 {
-  if (!m_monitor->is_start_named_state()
-      && !m_monitor->is_start_random_state())
+  if (!m_monitor->is_start_named_state() && !m_monitor->is_start_random_state()
+      && !m_monitor->is_accept_named_state()
+      && !m_monitor->is_accept_random_state())
     return;
 
   const std::optional<game_on_hold> message =

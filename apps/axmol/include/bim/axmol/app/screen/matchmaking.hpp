@@ -81,7 +81,8 @@ namespace bim::axmol::app
     void show_feature_off_message(bim::game::feature_flags f) const;
 
   private:
-    ic_declare_state_monitor(m_monitor);
+    ic_declare_state_monitor(m_player_count_monitor);
+    ic_declare_state_monitor(m_launch_monitor);
 
     bim::axmol::input::single_key_observer_handle m_escape;
     bim::axmol::input::tree m_inputs;

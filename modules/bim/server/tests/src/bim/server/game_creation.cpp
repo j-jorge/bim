@@ -46,6 +46,7 @@ protected:
 
     bim::net::authentication_exchange m_authentication;
     bim::net::new_game_exchange m_new_game;
+    iscool::signals::connection m_game_proposal_connection;
 
     std::optional<iscool::net::session_id> m_session;
   };
@@ -103,8 +104,12 @@ void game_creation_test::client::new_game_auto_accept(
 {
   ASSERT_TRUE(!!m_session);
 
-  m_new_game.connect_to_game_proposal(
-      std::bind(&bim::net::new_game_exchange::accept, &m_new_game, features));
+  m_game_proposal_connection = m_new_game.connect_to_game_proposal(
+      [this, features](int) -> void
+      {
+        m_game_proposal_connection.disconnect();
+        m_new_game.accept(features);
+      });
 
   m_new_game.start(*m_session, name);
 }
@@ -114,8 +119,13 @@ void game_creation_test::client::new_game_auto_accept(
 {
   ASSERT_TRUE(!!m_session);
 
-  m_new_game.connect_to_game_proposal(
-      std::bind(&bim::net::new_game_exchange::accept, &m_new_game, features));
+  m_game_proposal_connection = m_new_game.connect_to_game_proposal(
+      [this, features](int) -> void
+      {
+        m_game_proposal_connection.disconnect();
+        m_new_game.accept(features);
+      });
+
   m_new_game.start(*m_session);
 }
 

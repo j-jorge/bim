@@ -48,6 +48,7 @@ protected:
 
     bim::net::authentication_exchange m_authentication;
     bim::net::new_game_exchange m_new_game;
+    iscool::signals::connection m_game_proposal_connection;
     std::unique_ptr<iscool::net::message_channel> m_message_channel;
 
     std::optional<iscool::net::session_id> m_session;
@@ -93,9 +94,12 @@ game_update_test::client::client(bim::server::tests::fake_scheduler& scheduler,
         EXPECT_TRUE(false);
       });
 
-  m_new_game.connect_to_game_proposal(
-      std::bind(&bim::net::new_game_exchange::accept, &m_new_game,
-                bim::game::feature_flags{}));
+  m_game_proposal_connection = m_new_game.connect_to_game_proposal(
+      [this](int) -> void
+      {
+        m_game_proposal_connection.disconnect();
+        m_new_game.accept({});
+      });
 
   m_new_game.connect_to_launch_game(std::bind(&client::launch_game, this,
                                               std::ref(message_stream),
