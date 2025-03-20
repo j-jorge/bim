@@ -27,6 +27,12 @@ namespace bim::server
   class matchmaking_service
   {
   public:
+    enum class try_start_mode
+    {
+      wait,
+      now
+    };
+
     struct kick_session_event
     {
       iscool::net::session_id session;
@@ -55,7 +61,8 @@ namespace bim::server
                        iscool::net::session_id session,
                        bim::net::encounter_id encounter_id,
                        bim::net::client_token request_token,
-                       bim::game::feature_flags features);
+                       bim::game::feature_flags features,
+                       try_start_mode try_start);
 
     std::span<const bim::net::encounter_id> garbage_encounters() const;
     std::span<const kick_session_event> garbage_sessions() const;
@@ -80,6 +87,9 @@ namespace bim::server
                            iscool::net::session_id session,
                            bim::net::encounter_id encounter_id,
                            std::uint8_t player_count);
+
+    void remove_non_ready_players(bim::net::encounter_id encounter_id,
+                                  encounter_info& encounter);
 
     void remove_inactive_sessions(bim::net::encounter_id encounter_id,
                                   encounter_info& encounter);

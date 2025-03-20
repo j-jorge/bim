@@ -8,6 +8,8 @@
 #include <iscool/net/endpoint.hpp>
 #include <iscool/net/message/session_id.hpp>
 
+#include <chrono>
+
 namespace iscool::net
 {
   class socket_stream;
@@ -43,6 +45,8 @@ namespace bim::server
   private:
     using session_to_encounter_map =
         boost::unordered_map<iscool::net::session_id, bim::net::encounter_id>;
+    using auto_start_date_map =
+        boost::unordered_map<bim::net::encounter_id, std::chrono::nanoseconds>;
 
   private:
     void clean_up();
@@ -52,5 +56,8 @@ namespace bim::server
     matchmaking_service m_matchmaking_service;
 
     session_to_encounter_map m_session_to_encounter;
+    auto_start_date_map m_auto_start_date;
+
+    std::chrono::seconds m_auto_start_delay;
   };
 }

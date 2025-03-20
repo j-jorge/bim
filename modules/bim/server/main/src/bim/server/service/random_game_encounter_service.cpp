@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/server/service/random_game_encounter_service.hpp>
 
+#include <bim/server/config.hpp>
 #include <bim/server/service/game_service.hpp>
 
 #include <bim/net/message/accept_random_game.hpp>
@@ -8,12 +9,14 @@
 
 #include <iscool/log/log.hpp>
 #include <iscool/log/nature/info.hpp>
+#include <iscool/time/now.hpp>
 
 bim::server::random_game_encounter_service::random_game_encounter_service(
     const config& config, iscool::net::socket_stream& socket,
     game_service& game_service)
   : m_game_service(game_service)
   , m_matchmaking_service(config, socket, game_service)
+  , m_auto_start_delay(config.random_game_auto_start_delay)
 {}
 
 bim::server::random_game_encounter_service::~random_game_encounter_service() =
@@ -62,19 +65,40 @@ void bim::server::random_game_encounter_service::mark_as_ready(
     const iscool::net::endpoint& endpoint, iscool::net::session_id session,
     const bim::net::accept_random_game& message)
 {
-  ic_log(iscool::log::nature::info(), "random_game_encounter_service",
-         "Accepted game. Session {}, encounter {}.", session,
-         message.get_encounter_id());
+  const bim::net::encounter_id encounter_id = message.get_encounter_id();
 
-  m_matchmaking_service.mark_as_ready(
-      endpoint, session, message.get_encounter_id(),
-      message.get_request_token(), message.get_features());
+  ic_log(iscool::log::nature::info(), "random_game_encounter_service",
+         "Accepted game. Session {}, encounter {}.", session, encounter_id);
+
+  matchmaking_service::try_start_mode try_start_mode =
+      matchmaking_service::try_start_mode::wait;
+
+  const auto_start_date_map::const_iterator it =
+      m_auto_start_date.find(encounter_id);
+  const std::chrono::nanoseconds now =
+      iscool::time::now<std::chrono::nanoseconds>();
+
+  if (it == m_auto_start_date.end())
+    m_auto_start_date[encounter_id] = now + m_auto_start_delay;
+  else if (now >= it->second)
+    {
+      m_auto_start_date.erase(it);
+      try_start_mode = matchmaking_service::try_start_mode::now;
+    }
+
+  m_matchmaking_service.mark_as_ready(endpoint, session, encounter_id,
+                                      message.get_request_token(),
+                                      message.get_features(), try_start_mode);
 
   clean_up();
 }
 
 void bim::server::random_game_encounter_service::clean_up()
 {
+  for (bim::net::encounter_id encounter_id :
+       m_matchmaking_service.garbage_encounters())
+    m_auto_start_date.erase(encounter_id);
+
   for (const bim::server::matchmaking_service::kick_session_event& event :
        m_matchmaking_service.garbage_sessions())
     {

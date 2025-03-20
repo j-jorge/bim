@@ -47,10 +47,25 @@ struct bim::server::matchmaking_service::encounter_info
     return result;
   }
 
+  void insert(iscool::net::session_id session)
+  {
+    assert(player_count < sessions.size());
+
+    const std::size_t new_index = player_count;
+    ++player_count;
+    features[new_index] = {};
+    sessions[new_index] = session;
+    release_at_this_date[new_index] = matchmaking_date_for_next_release();
+    ready[new_index] = 0;
+    channel = std::nullopt;
+  }
+
   void erase(std::size_t i)
   {
     assert(i < player_count);
 
+    std::copy(features.begin() + i + 1, features.begin() + player_count,
+              features.begin() + i);
     std::copy(sessions.begin() + i + 1, sessions.begin() + player_count,
               sessions.begin() + i);
     std::copy(release_at_this_date.begin() + i + 1,
@@ -63,7 +78,8 @@ struct bim::server::matchmaking_service::encounter_info
 
   size_t session_index(iscool::net::session_id session) const
   {
-    return std::find(sessions.begin(), sessions.end(), session)
+    return std::find(sessions.begin(), sessions.begin() + player_count,
+                     session)
            - sessions.begin();
   }
 };
@@ -149,7 +165,7 @@ bim::server::matchmaking_service::add_in_any_encounter(
         continue;
 
       const std::size_t session_index = encounter.session_index(session);
-      assert(session_index == encounter.sessions.size());
+      assert(session_index == encounter.player_count);
 
       refresh_encounter(encounter_id, encounter, endpoint, session,
                         request_token, session_index);
@@ -162,7 +178,7 @@ bim::server::matchmaking_service::add_in_any_encounter(
 void bim::server::matchmaking_service::mark_as_ready(
     const iscool::net::endpoint& endpoint, iscool::net::session_id session,
     bim::net::encounter_id encounter_id, bim::net::client_token request_token,
-    bim::game::feature_flags features)
+    bim::game::feature_flags features, try_start_mode try_start)
 {
   const encounter_map::iterator it = m_encounters.find(encounter_id);
 
@@ -177,7 +193,7 @@ void bim::server::matchmaking_service::mark_as_ready(
   const std::size_t existing_index = encounter.session_index(session);
 
   // Update for a player on hold.
-  if (existing_index == encounter.sessions.size())
+  if (existing_index == encounter.player_count)
     {
       ic_log(iscool::log::nature::info(), "matchmaking_service",
              "Session {} is not part of encounter {}.", session, encounter_id);
@@ -196,6 +212,9 @@ void bim::server::matchmaking_service::mark_as_ready(
       // The features cannot change if the game has started, so we update them
       // only if it has not started.
       encounter.features[existing_index] = features;
+
+      if (try_start == try_start_mode::now)
+        remove_non_ready_players(encounter_id, encounter);
     }
 
   int ready_count = 0;
@@ -276,7 +295,7 @@ void bim::server::matchmaking_service::refresh_encounter(
          encounter_id, (int)encounter.player_count, session);
 
   // Update for a player on hold.
-  if (session_index < encounter.sessions.size())
+  if (session_index < encounter.player_count)
     {
       encounter.release_at_this_date[session_index] =
           matchmaking_date_for_next_release();
@@ -287,13 +306,7 @@ void bim::server::matchmaking_service::refresh_encounter(
       remove_inactive_sessions(encounter_id, encounter);
 
       if (encounter.player_count != encounter.sessions.size())
-        {
-          const std::size_t new_index = encounter.player_count;
-          encounter.sessions[new_index] = session;
-          encounter.release_at_this_date[new_index] =
-              matchmaking_date_for_next_release();
-          ++encounter.player_count;
-        }
+        encounter.insert(session);
       else
         // The encounter is full, we can't do anything for the requesting
         // session.
@@ -317,6 +330,23 @@ void bim::server::matchmaking_service::send_game_on_hold(
       m_message_stream.send(endpoint, *s.value, session, 0);
 
   m_message_pool.release(s.id);
+}
+
+void bim::server::matchmaking_service::remove_non_ready_players(
+    bim::net::encounter_id encounter_id, encounter_info& encounter)
+{
+  for (int i = 0; i != encounter.player_count;)
+    if (!encounter.ready[i])
+      {
+        ic_log(iscool::log::nature::info(), "matchmaking_service",
+               "Kicking non-ready session {} from {}.", encounter.sessions[i],
+               encounter_id);
+
+        m_done_sessions.emplace_back(encounter.sessions[i], encounter_id);
+        encounter.erase(i);
+      }
+    else
+      ++i;
 }
 
 void bim::server::matchmaking_service::remove_inactive_sessions(

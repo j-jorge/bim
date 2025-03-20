@@ -27,9 +27,13 @@ protected:
            iscool::net::message_stream& message_stream);
 
     void authenticate();
-    void new_game(const bim::net::game_name& name,
-                  bim::game::feature_flags features);
-    void new_game(bim::game::feature_flags features);
+    void new_game_auto_accept(const bim::net::game_name& name,
+                              bim::game::feature_flags features);
+    void new_game_auto_accept(bim::game::feature_flags features);
+    void new_game(const bim::net::game_name& name);
+    void new_game();
+
+    void accept_game(bim::game::feature_flags features);
 
   public:
     std::optional<bim::net::game_launch_event> m_game_launch_event;
@@ -94,8 +98,8 @@ void game_creation_test::client::authenticate()
     m_scheduler.tick(std::chrono::seconds(1));
 }
 
-void game_creation_test::client::new_game(const bim::net::game_name& name,
-                                          bim::game::feature_flags features)
+void game_creation_test::client::new_game_auto_accept(
+    const bim::net::game_name& name, bim::game::feature_flags features)
 {
   ASSERT_TRUE(!!m_session);
 
@@ -105,13 +109,33 @@ void game_creation_test::client::new_game(const bim::net::game_name& name,
   m_new_game.start(*m_session, name);
 }
 
-void game_creation_test::client::new_game(bim::game::feature_flags features)
+void game_creation_test::client::new_game_auto_accept(
+    bim::game::feature_flags features)
 {
   ASSERT_TRUE(!!m_session);
 
   m_new_game.connect_to_game_proposal(
       std::bind(&bim::net::new_game_exchange::accept, &m_new_game, features));
   m_new_game.start(*m_session);
+}
+
+void game_creation_test::client::new_game(const bim::net::game_name& name)
+{
+  ASSERT_TRUE(!!m_session);
+
+  m_new_game.start(*m_session, name);
+}
+
+void game_creation_test::client::new_game()
+{
+  ASSERT_TRUE(!!m_session);
+
+  m_new_game.start(*m_session);
+}
+
+void game_creation_test::client::accept_game(bim::game::feature_flags features)
+{
+  m_new_game.accept(features);
 }
 
 void game_creation_test::client::launch_game(
@@ -122,7 +146,14 @@ void game_creation_test::client::launch_game(
 }
 
 game_creation_test::game_creation_test()
-  : m_config(bim::server::tests::new_test_config())
+  : m_config(
+        []() -> bim::server::config
+        {
+          bim::server::config config = bim::server::tests::new_test_config();
+          // Short delay for the tests where one player never accept the game.
+          config.random_game_auto_start_delay = std::chrono::seconds(10);
+          return config;
+        }())
   , m_server(m_config)
   , m_socket_stream("localhost:" + std::to_string(m_config.port),
                     iscool::net::socket_mode::client{})
@@ -143,8 +174,9 @@ TEST_F(game_creation_test, two_named_games)
     m_clients[i].authenticate();
 
   for (int i = 0; i != 4; ++i)
-    m_clients[i].new_game({ 'g', 'a', 'm', 'e', '1' },
-                          bim::game::feature_flags(0b1110 | (1 << i)));
+    m_clients[i].new_game_auto_accept(
+        { 'g', 'a', 'm', 'e', '1' },
+        bim::game::feature_flags(0b1110 | (1 << i)));
 
   // Let the time pass such that the messages can move between the clients and
   // the server.
@@ -152,8 +184,9 @@ TEST_F(game_creation_test, two_named_games)
     m_scheduler.tick(std::chrono::seconds(1));
 
   for (int i = 4; i != 7; ++i)
-    m_clients[i].new_game({ 'g', 'a', 'm', 'e', '2' },
-                          bim::game::feature_flags(0b1110'0000 | (1 << i)));
+    m_clients[i].new_game_auto_accept(
+        { 'g', 'a', 'm', 'e', '2' },
+        bim::game::feature_flags(0b1110'0000 | (1 << i)));
 
   // Time passes again…
   for (int i = 0; i != 10; ++i)
@@ -242,7 +275,8 @@ TEST_F(game_creation_test, two_random_games)
     m_clients[i].authenticate();
 
   for (int i = 0; i != 4; ++i)
-    m_clients[i].new_game(bim::game::feature_flags(0b11 | (1 << i)));
+    m_clients[i].new_game_auto_accept(
+        bim::game::feature_flags(0b11 | (1 << i)));
 
   // Let the time pass such that the messages can move between the clients and
   // the server.
@@ -291,7 +325,8 @@ TEST_F(game_creation_test, two_random_games)
 
   // Second group as for a random game
   for (int i = 4; i != 7; ++i)
-    m_clients[i].new_game(bim::game::feature_flags(0b1100'0000 | (1 << i)));
+    m_clients[i].new_game_auto_accept(
+        bim::game::feature_flags(0b1100'0000 | (1 << i)));
 
   // Time passes again…
   for (int i = 0; i != 10; ++i)
@@ -341,7 +376,7 @@ TEST_F(game_creation_test, two_random_games_simultaneously)
     m_clients[i].authenticate();
 
   for (int i = 0; i != 7; ++i)
-    m_clients[i].new_game({});
+    m_clients[i].new_game_auto_accept({});
 
   // Let the time pass such that the messages can move between the clients and
   // the server.
@@ -379,10 +414,11 @@ TEST_F(game_creation_test, mix_random_and_named_games)
     m_clients[i].authenticate();
 
   for (int i = 0; i != 4; ++i)
-    m_clients[i].new_game(bim::game::feature_flags(0b1010 | (1 << i)));
+    m_clients[i].new_game_auto_accept(
+        bim::game::feature_flags(0b1010 | (1 << i)));
 
   for (int i = 4; i != 7; ++i)
-    m_clients[i].new_game(
+    m_clients[i].new_game_auto_accept(
         { 'g', 'a', 'm', 'e' },
         bim::game::feature_flags(0b110'0000 | (1 << (i - 4))));
 
@@ -466,4 +502,85 @@ TEST_F(game_creation_test, mix_random_and_named_games)
   // The game channel of each group of players must be different.
   EXPECT_NE(m_clients[0].m_game_launch_event->channel,
             m_clients[4].m_game_launch_event->channel);
+}
+
+/**
+ * One player never accepts the random game, it should be created anyway with
+ * the other players.
+ */
+TEST_F(game_creation_test, random_game_ignore_never_accepting_player)
+{
+  for (int i = 0; i != 4; ++i)
+    m_clients[i].authenticate();
+
+  constexpr int inactive_player_index = 2;
+
+  for (int i = 0; i != 4; ++i)
+    if (i != inactive_player_index)
+      m_clients[i].new_game_auto_accept({});
+
+  m_clients[inactive_player_index].new_game();
+
+  // Let the time pass such that the messages can move between the clients and
+  // the server.
+  for (int i = 0; i != 100; ++i)
+    m_scheduler.tick(std::chrono::seconds(1));
+
+  // All players except the inactive one must be in a game.
+  EXPECT_TRUE(!m_clients[inactive_player_index].m_game_launch_event);
+
+  for (int i = 0; i != 4; ++i)
+    if (i != inactive_player_index)
+      {
+        ASSERT_TRUE(!!m_clients[i].m_game_launch_event) << "i=" << i;
+      }
+
+  for (int i = 0; i != 4; ++i)
+    if (i != inactive_player_index)
+      {
+        EXPECT_EQ(m_clients[0].m_game_launch_event->channel,
+                  m_clients[i].m_game_launch_event->channel)
+            << "i=" << i;
+      }
+}
+
+/**
+ * One player never accepts the named game, we should wait.
+ */
+TEST_F(game_creation_test, named_game_ignore_never_accepting_player)
+{
+  for (int i = 0; i != 4; ++i)
+    m_clients[i].authenticate();
+
+  const bim::net::game_name name{ 'i', 'n', 'a', 'c', 't', 'i', 'v', 'e' };
+  constexpr int inactive_player_index = 2;
+
+  for (int i = 0; i != 4; ++i)
+    if (i != inactive_player_index)
+      m_clients[i].new_game_auto_accept(name, {});
+
+  m_clients[inactive_player_index].new_game(name);
+
+  // Let the time pass such that the messages can move between the clients and
+  // the server.
+  for (int i = 0; i != 100; ++i)
+    m_scheduler.tick(std::chrono::seconds(1));
+
+  // The game should not have started.
+  for (int i = 0; i != 4; ++i)
+    EXPECT_TRUE(!m_clients[i].m_game_launch_event) << "i=" << i;
+
+  m_clients[inactive_player_index].accept_game({});
+
+  for (int i = 0; i != 100; ++i)
+    m_scheduler.tick(std::chrono::seconds(1));
+
+  // The game should have started with all players.
+  for (int i = 0; i != 4; ++i)
+    ASSERT_TRUE(!!m_clients[i].m_game_launch_event) << "i=" << i;
+
+  for (int i = 0; i != 4; ++i)
+    EXPECT_EQ(m_clients[0].m_game_launch_event->channel,
+              m_clients[i].m_game_launch_event->channel)
+        << "i=" << i;
 }

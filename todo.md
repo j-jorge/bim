@@ -1,7 +1,5 @@
 # Next
 
-- Automatically launch the game on the server-side after a short delay
-  if a player is ready.
 - Use a version.minor scheme for the versions.
 - Unlock system for the game features, per game count.
 - Display a message when a new version is available.

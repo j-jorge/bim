@@ -28,6 +28,12 @@ namespace bim::server
     std::chrono::seconds matchmaking_clean_up_interval;
 
     /**
+     * How long to wait for the players to be ready before automatically
+     * launching a random game.
+     */
+    std::chrono::seconds random_game_auto_start_delay;
+
+    /**
      * Time interval at which we remove the games for which no activity has
      * been observed.
      */

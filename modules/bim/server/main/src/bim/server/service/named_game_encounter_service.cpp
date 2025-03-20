@@ -58,7 +58,8 @@ void bim::server::named_game_encounter_service::mark_as_ready(
 
   m_matchmaking_service.mark_as_ready(
       endpoint, session, message.get_encounter_id(),
-      message.get_request_token(), message.get_features());
+      message.get_request_token(), message.get_features(),
+      matchmaking_service::try_start_mode::wait);
 
   clean_up();
 }
