@@ -141,12 +141,6 @@ void bim::axmol::app::screen_wheel::wire_permanent_connections()
         animate_game_to_end_game(result);
       });
 
-  m_online_game->connect_to_disconnected(
-      [this]()
-      {
-        disconnected();
-      });
-
   m_end_game->connect_to_quit(
       [this]()
       {

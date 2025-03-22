@@ -97,7 +97,6 @@ static void alloc_assets(std::vector<ax::Sprite*>& out,
 }
 
 IMPLEMENT_SIGNAL(bim::axmol::app::online_game, game_over, m_game_over)
-IMPLEMENT_SIGNAL(bim::axmol::app::online_game, disconnected, m_disconnected)
 
 bim::axmol::app::online_game::online_game(
     const context& context, const iscool::style::declaration& style)
@@ -309,6 +308,8 @@ void bim::axmol::app::online_game::displaying(
       {
         m_controls->peephole->reveal();
         m_controls->bomb_button->enable(true);
+        m_last_tick_date =
+            iscool::time::monotonic_now<std::chrono::nanoseconds>();
         schedule_tick();
       });
   m_contest_runner.reset(new bim::net::contest_runner(
@@ -381,7 +382,6 @@ void bim::axmol::app::online_game::schedule_tick()
           std::chrono::duration<float>(
               ax::Director::getInstance()->getAnimationInterval()));
 
-  m_last_tick_date = iscool::time::monotonic_now<std::chrono::nanoseconds>();
   m_tick_connection = iscool::schedule::delayed_call(
       [this]() -> void
       {
@@ -401,16 +401,6 @@ void bim::axmol::app::online_game::tick()
   const int ticks_ahead =
       m_contest_runner->local_tick() - m_contest_runner->confirmed_tick();
 
-  // If the player is 5 seconds too far ahead it is most certainly
-  // disconnected.
-  if (ticks_ahead > 5 * 60)
-    {
-      stop();
-      ic_log(iscool::log::nature::info(), "online_game", "Disconnected.");
-      m_disconnected();
-      return;
-    }
-
   const int max_ticks_ahead = bim::game::player_action_queue::queue_size;
 
   if (ticks_ahead <= max_ticks_ahead)
@@ -420,12 +410,10 @@ void bim::axmol::app::online_game::tick()
       // Slow the game if the player is far ahead the shared state.
       const int delta_tick = ticks_ahead - max_ticks_ahead;
       const std::chrono::nanoseconds adjusted_step =
-          runner_step
-          - runner_step * delta_tick * delta_tick
-                / (max_ticks_ahead * max_ticks_ahead);
+          runner_step - runner_step * delta_tick / (3 * max_ticks_ahead);
 
       final_step =
-          std::max(runner_step / 2, std::min(adjusted_step, runner_step));
+          std::max(2 * runner_step / 3, std::min(adjusted_step, runner_step));
     }
 
   const bim::game::contest_result result = m_contest_runner->run(final_step);
