@@ -2,6 +2,7 @@
 #include <bim/axmol/app/screen_wheel.hpp>
 
 #include <bim/axmol/app/main_scene.hpp>
+#include <bim/axmol/app/player_progress_tracker.hpp>
 #include <bim/axmol/app/popup/message.hpp>
 #include <bim/axmol/app/screen/end_game.hpp>
 #include <bim/axmol/app/screen/lobby.hpp>
@@ -40,17 +41,21 @@ bim::axmol::app::screen_wheel::screen_wheel(
   : m_context(context)
   , m_main_container(ax::Node::create())
   , m_controls(context.get_widget_context(), *style.get_declaration("widgets"))
-  , m_lobby(new lobby(m_context, *style.get_declaration("lobby")))
+  , m_player_progress_tracker(new player_progress_tracker(context))
+  , m_lobby(new lobby(context, *style.get_declaration("lobby")))
   , m_matchmaking(
-        new matchmaking(m_context, *style.get_declaration("matchmaking")))
-  , m_online_game(
-        new online_game(m_context, *style.get_declaration("online-game")))
-  , m_end_game(new end_game(m_context, *style.get_declaration("end-game")))
+        new matchmaking(context, *style.get_declaration("matchmaking")))
+  , m_end_game(new end_game(context, *style.get_declaration("end-game")))
   , m_message_popup(
-        new message_popup(m_context, *style.get_declaration("message-popup")))
+        new message_popup(context, *style.get_declaration("message-popup")))
   , m_keep_alive(new bim::net::keep_alive_exchange(
-        m_context.get_session_handler()->message_stream()))
+        context.get_session_handler()->message_stream()))
 {
+  m_context.set_player_progress_tracker(m_player_progress_tracker.get());
+
+  m_online_game.reset(
+      new online_game(m_context, *style.get_declaration("online-game")));
+
   ax::Director::getInstance()->setAnimationInterval(1.f / g_fps_in_menus);
 
   m_context.get_main_scene()->add_in_main_canvas(*m_main_container,

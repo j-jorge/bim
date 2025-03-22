@@ -1,7 +1,6 @@
 # Next
 
 - Use a version.minor scheme for the versions.
-- Unlock system for the game features, per game count.
 - Display a message when a new version is available.
 - Pick the game server according to the app version, not the protocol version.
 

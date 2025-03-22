@@ -3,6 +3,7 @@
 
 #include <bim/axmol/app/alloc_assets.hpp>
 #include <bim/axmol/app/fog_display.hpp>
+#include <bim/axmol/app/player_progress_tracker.hpp>
 #include <bim/axmol/app/preference/controls.hpp>
 #include <bim/axmol/app/widget/player.hpp>
 
@@ -439,6 +440,8 @@ void bim::axmol::app::online_game::tick()
   else
     {
       stop();
+      m_context.get_player_progress_tracker()->game_over_in_public_arena(
+          result, m_local_player_index);
       m_game_over(result);
     }
 }

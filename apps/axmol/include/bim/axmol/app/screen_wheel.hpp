@@ -67,6 +67,7 @@ namespace bim::axmol::app
   class matchmaking;
   class message_popup;
   class online_game;
+  class player_progress_tracker;
   class scene_lock;
 
   class screen_wheel
@@ -84,7 +85,8 @@ namespace bim::axmol::app
             ((iscool::social::service*)(social))                           //
             ((iscool::system::haptic_feedback*)(haptic_feedback))          //
             ((bool)(enable_debug))),
-        ic_context_no_properties);
+        ic_context_declare_properties(
+            ((player_progress_tracker*)(player_progress_tracker))));
 
   public:
     screen_wheel(const context& context,
@@ -123,6 +125,7 @@ namespace bim::axmol::app
 
     bim_declare_controls_struct(controls, m_controls, 4);
 
+    std::unique_ptr<player_progress_tracker> m_player_progress_tracker;
     std::unique_ptr<lobby> m_lobby;
     std::unique_ptr<matchmaking> m_matchmaking;
     std::unique_ptr<online_game> m_online_game;

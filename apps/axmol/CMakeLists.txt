@@ -9,6 +9,7 @@ add_library(bim_app
   src/bim/axmol/app/feature_deck.cpp
   src/bim/axmol/app/fog_display.cpp
   src/bim/axmol/app/main_scene.cpp
+  src/bim/axmol/app/player_progress_tracker.cpp
   src/bim/axmol/app/root_scene.cpp
   src/bim/axmol/app/scene_lock.cpp
   src/bim/axmol/app/screen_wheel.cpp
@@ -18,6 +19,7 @@ add_library(bim_app
   src/bim/axmol/app/popup/popup.cpp
   src/bim/axmol/app/popup/settings_popup.cpp
 
+  src/bim/axmol/app/preference/arena_stats.cpp
   src/bim/axmol/app/preference/audio.cpp
   src/bim/axmol/app/preference/controls.cpp
   src/bim/axmol/app/preference/feature_flags.cpp

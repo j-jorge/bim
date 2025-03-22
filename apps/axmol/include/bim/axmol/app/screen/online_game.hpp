@@ -70,6 +70,7 @@ namespace bim::axmol::app
 {
   class fog_display;
   class player;
+  class player_progress_tracker;
 
   class online_game
   {
@@ -81,6 +82,7 @@ namespace bim::axmol::app
         m_context,
         ic_context_declare_parent_properties(                              //
             ((const bim::axmol::widget::context&)(widget_context))         //
+            ((player_progress_tracker*)(player_progress_tracker))          //
             ((bim::net::session_handler*)(session_handler))                //
             ((iscool::preferences::local_preferences*)(local_preferences)) //
             ((iscool::system::haptic_feedback*)(haptic_feedback))),

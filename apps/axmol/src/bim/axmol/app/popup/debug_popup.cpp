@@ -2,6 +2,7 @@
 #include <bim/axmol/app/popup/debug_popup.hpp>
 
 #include <bim/axmol/app/popup/popup.hpp>
+#include <bim/axmol/app/preference/arena_stats.hpp>
 #include <bim/axmol/app/preference/feature_flags.hpp>
 
 #include <bim/axmol/widget/factory/label.hpp>
@@ -89,6 +90,17 @@ void bim::axmol::app::debug_popup::show()
   add_title("FEATURES");
   add_feature_item("Falling blocks", bim::game::feature_flags::falling_blocks);
   add_feature_item("Fog of war", bim::game::feature_flags::fog_of_war);
+
+  add_title("PREFERENCES");
+  add_text_item("Game count in arena",
+                std::to_string(bim::axmol::app::games_in_arena(
+                    *m_context.get_local_preferences())));
+  add_text_item("Victories in arena",
+                std::to_string(bim::axmol::app::victories_in_arena(
+                    *m_context.get_local_preferences())));
+  add_text_item("Defeats in arena",
+                std::to_string(bim::axmol::app::defeats_in_arena(
+                    *m_context.get_local_preferences())));
 
   add_title("SYSTEM");
   add_fps_entry();

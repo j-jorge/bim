@@ -10,8 +10,7 @@ bim::game::feature_flags bim::axmol::app::enabled_feature_flags(
     const iscool::preferences::local_preferences& p)
 {
   return (bim::game::feature_flags)p.get_value(
-      "feature_flags.enabled",
-      std::int64_t(bim::game::feature_flags::falling_blocks));
+      "feature_flags.enabled", std::int64_t(bim::game::feature_flags{}));
 }
 
 void bim::axmol::app::enabled_feature_flags(
@@ -24,8 +23,7 @@ bim::game::feature_flags bim::axmol::app::available_feature_flags(
     const iscool::preferences::local_preferences& p)
 {
   return (bim::game::feature_flags)p.get_value(
-      "feature_flags.available",
-      std::int64_t(bim::game::feature_flags::falling_blocks));
+      "feature_flags.available", std::int64_t(bim::game::feature_flags{}));
 }
 
 void bim::axmol::app::available_feature_flags(
