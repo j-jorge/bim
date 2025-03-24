@@ -54,10 +54,12 @@ namespace bim::server
   private:
     void mark_as_ready(const iscool::net::endpoint& endpoint,
                        iscool::net::session_id session,
-                       iscool::net::channel_id channel, game& game);
+                       iscool::net::channel_id channel, game& game,
+                       std::chrono::nanoseconds now);
     void push_update(const iscool::net::endpoint& endpoint,
                      iscool::net::channel_id channel,
-                     const iscool::net::message& message, game& game);
+                     const iscool::net::message& message, game& game,
+                     std::chrono::nanoseconds now);
 
     std::optional<std::size_t>
     validate_message(const bim::net::game_update_from_client& message,
@@ -73,8 +75,9 @@ namespace bim::server
                         iscool::net::session_id session,
                         iscool::net::channel_id channel, const game& game);
 
-    void check_drop_late_player(iscool::net::channel_id channel,
-                                game& game) const;
+    void check_drop_desynchronized_player(iscool::net::channel_id channel,
+                                          game& game,
+                                          std::chrono::nanoseconds now) const;
 
     void schedule_clean_up();
     void clean_up();
@@ -92,6 +95,8 @@ namespace bim::server
 
     std::unique_ptr<contest_timeline_service> m_contest_timeline_service;
     const int m_disconnection_lateness_threshold_in_ticks;
+    const int m_disconnection_earliness_threshold_in_ticks;
+    const std::chrono::seconds m_disconnection_inactivity_delay;
 
     iscool::net::message_pool m_message_pool;
   };

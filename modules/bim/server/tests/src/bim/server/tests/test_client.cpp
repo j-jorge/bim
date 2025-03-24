@@ -120,4 +120,5 @@ bool bim::server::tests::test_client::is_in_game() const
 void bim::server::tests::test_client::leave_game()
 {
   started = std::nullopt;
+  m_game_update.reset();
 }

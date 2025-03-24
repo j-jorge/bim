@@ -51,6 +51,12 @@ namespace bim::server
      */
     int game_service_disconnection_earliness_threshold_in_ticks;
 
+    /**
+     * How many seconds of inactivity (i.e. no message from the client) do we
+     * tolerate before disconnecting a client.
+     */
+    std::chrono::seconds game_service_disconnection_inactivity_delay;
+
     /** Path to the folder where to store the contest timelines. */
     std::string contest_timeline_folder;
 

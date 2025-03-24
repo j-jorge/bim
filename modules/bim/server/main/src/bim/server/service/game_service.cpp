@@ -34,12 +34,6 @@
 
 static constexpr std::uint8_t g_brick_wall_probability = 80;
 
-static std::chrono::nanoseconds date_for_next_game_release()
-{
-  return iscool::time::now<std::chrono::nanoseconds>()
-         + std::chrono::minutes(1);
-}
-
 struct bim::server::game_service::game
 {
   /*
@@ -257,7 +251,10 @@ public:
              bim::game::g_max_player_count>
       actions;
 
-  std::chrono::nanoseconds release_at_this_date;
+  std::array<std::chrono::nanoseconds, bim::game::g_max_player_count>
+      release_player_at_this_date;
+
+  std::chrono::nanoseconds release_game_at_this_date;
 
   std::uint32_t game_over_tick;
   bim::game::contest_result contest_result;
@@ -275,6 +272,10 @@ bim::server::game_service::game_service(const config& config,
   , m_clean_up_interval(config.game_service_clean_up_interval)
   , m_disconnection_lateness_threshold_in_ticks(
         config.game_service_disconnection_lateness_threshold_in_ticks)
+  , m_disconnection_earliness_threshold_in_ticks(
+        config.game_service_disconnection_earliness_threshold_in_ticks)
+  , m_disconnection_inactivity_delay(
+        config.game_service_disconnection_inactivity_delay)
   , m_message_pool(64)
 {
   if (config.enable_contest_timeline_recording)
@@ -336,7 +337,17 @@ bim::server::game_info bim::server::game_service::new_game(
   for (int i = 0; i != player_count; ++i)
     m_session_to_channel[sessions[i]] = channel;
 
-  game.release_at_this_date = date_for_next_game_release();
+  const std::chrono::nanoseconds now =
+      iscool::time::now<std::chrono::nanoseconds>();
+
+  game.release_game_at_this_date = now + m_clean_up_interval;
+
+  for (int i = 0; i != player_count; ++i)
+    {
+      game.active[i] = true;
+      game.release_player_at_this_date[i] =
+          now + m_disconnection_inactivity_delay;
+    }
 
   const bim::game::contest_fingerprint contest_fingerprint =
       game.contest_fingerprint();
@@ -365,22 +376,26 @@ void bim::server::game_service::process(const iscool::net::endpoint& endpoint,
       return;
     }
 
-  it->second.release_at_this_date = date_for_next_game_release();
+  const std::chrono::nanoseconds now =
+      iscool::time::now<std::chrono::nanoseconds>();
+
+  it->second.release_game_at_this_date = now + m_clean_up_interval;
 
   switch (message.get_type())
     {
     case bim::net::message_type::ready:
-      mark_as_ready(endpoint, message.get_session_id(), channel, it->second);
+      mark_as_ready(endpoint, message.get_session_id(), channel, it->second,
+                    now);
       break;
     case bim::net::message_type::game_update_from_client:
-      push_update(endpoint, channel, message, it->second);
+      push_update(endpoint, channel, message, it->second, now);
       break;
     }
 }
 
 void bim::server::game_service::mark_as_ready(
     const iscool::net::endpoint& endpoint, iscool::net::session_id session,
-    iscool::net::channel_id channel, game& game)
+    iscool::net::channel_id channel, game& game, std::chrono::nanoseconds now)
 {
   const std::size_t existing_index = game.session_index(session);
 
@@ -392,14 +407,31 @@ void bim::server::game_service::mark_as_ready(
       return;
     }
 
+  if (!game.active[existing_index])
+    {
+      ic_log(iscool::log::nature::info(), "game_service",
+             "Session {} has been kicked from game {}.", session, channel);
+      return;
+    }
+
   game.ready[existing_index] = true;
   game.active[existing_index] = true;
 
-  int ready_count = 0;
-  for (int i = 0; i != game.player_count; ++i)
-    ready_count += game.ready[i];
+  game.release_player_at_this_date[existing_index] =
+      now + m_disconnection_inactivity_delay;
 
-  if (ready_count != game.player_count)
+  check_drop_desynchronized_player(channel, game, now);
+
+  int ready_count = 0;
+  int active_count = 0;
+
+  for (int i = 0; i != game.player_count; ++i)
+    {
+      ready_count += game.ready[i];
+      active_count += game.active[i];
+    }
+
+  if (ready_count != active_count)
     {
       ic_log(iscool::log::nature::info(), "game_service",
              "Session {} ready {}/{}.", session, ready_count,
@@ -419,7 +451,8 @@ void bim::server::game_service::mark_as_ready(
 
 void bim::server::game_service::push_update(
     const iscool::net::endpoint& endpoint, iscool::net::channel_id channel,
-    const iscool::net::message& message, game& game)
+    const iscool::net::message& message, game& game,
+    std::chrono::nanoseconds now)
 {
   const std::optional<bim::net::game_update_from_client> update =
       bim::net::try_deserialize_message<bim::net::game_update_from_client>(
@@ -441,6 +474,9 @@ void bim::server::game_service::push_update(
   if (!tick_count)
     return;
 
+  game.release_player_at_this_date[player_index] =
+      now + m_disconnection_inactivity_delay;
+
   if (*tick_count != 0)
     queue_actions(*update, player_index, game);
 
@@ -448,7 +484,7 @@ void bim::server::game_service::push_update(
   game.align_simulation_tick();
 
   if (!simulation_updated)
-    check_drop_late_player(channel, game);
+    check_drop_desynchronized_player(channel, game, now);
 
   if (!game.contest_result.still_running()
       && (game.game_over_tick
@@ -636,36 +672,80 @@ void bim::server::game_service::send_game_over(
   m_message_pool.release(s.id);
 }
 
-void bim::server::game_service::check_drop_late_player(
-    iscool::net::channel_id channel, game& game) const
+void bim::server::game_service::check_drop_desynchronized_player(
+    iscool::net::channel_id channel, game& game,
+    std::chrono::nanoseconds now) const
 {
+  // Exclude the players for which we have no news since a long time.
   for (int i = 0; i != game.player_count; ++i)
+    if (game.active[i] && (now >= game.release_player_at_this_date[i]))
+      {
+        ic_log(iscool::log::nature::info(), "game_service",
+               "Kicking out player={}, session={}, from game_id={}, due to "
+               "lateness. No news since {}.",
+               i, game.sessions[i], channel, m_disconnection_inactivity_delay);
+        game.active[i] = false;
+      }
+
+  std::array<int, bim::game::g_max_player_count> player_tick;
+  std::array<std::uint8_t, bim::game::g_max_player_count> player_index;
+  int player_count = 0;
+
+  for (int i = 0; i != game.player_count; ++i)
+    if (game.active[i])
+      {
+        player_tick[player_count] =
+            game.completed_tick_count_per_player[i] + game.actions[i].size();
+        player_index[player_count] = i;
+        ++player_count;
+
+        for (int j = player_count - 1; j != 0; --j)
+          if (player_tick[j] < player_tick[j - 1])
+            {
+              std::swap(player_tick[j], player_tick[j - 1]);
+              std::swap(player_index[j], player_index[j - 1]);
+            }
+      }
+
+  assert(
+      std::is_sorted(player_tick.begin(), player_tick.begin() + player_count));
+
+  if (player_count < 2)
+    return;
+
+  const int slowest_tick = player_tick[0];
+  const int second_slowest_tick = player_tick[1];
+
+  // Exclude the slowest player if it is too far behind.
+  if (second_slowest_tick - slowest_tick
+      >= m_disconnection_lateness_threshold_in_ticks)
     {
-      if (!game.active[i])
-        continue;
+      const int i = player_index[0];
+      ic_log(iscool::log::nature::info(), "game_service",
+             "Kicking out player={}, session={}, from game_id={}, due to "
+             "lateness. Tick is {}, {} behind {}. Threshold is {}.",
+             i, game.sessions[i], channel, slowest_tick,
+             second_slowest_tick - slowest_tick, second_slowest_tick,
+             m_disconnection_lateness_threshold_in_ticks);
+      game.active[i] = false;
+    }
 
-      const int tick_i = game.actions[i].size();
+  // Exclude the fastest player if it is too far ahead. Aren't they waiting for
+  // the server updates?
+  const int fastest_tick = player_tick[player_count - 1];
+  const int second_fastest_tick = player_tick[player_count - 2];
 
-      for (int j = 0; j != game.player_count; ++j)
-        {
-          if ((i == j) || !game.active[j])
-            continue;
-
-          const int tick_j = game.actions[j].size();
-
-          if ((tick_i >= tick_j)
-              || (tick_j - tick_i
-                  < m_disconnection_lateness_threshold_in_ticks))
-            continue;
-
-          ic_log(iscool::log::nature::info(), "game_service",
-                 "Kicking out player={}, session={}, from game_id={}, due to "
-                 "lateness. Tick is {}, {} behind {}. Threshold is {}.",
-                 i, game.sessions[i], channel, tick_i, tick_j - tick_i, tick_j,
-                 m_disconnection_lateness_threshold_in_ticks);
-          game.active[i] = false;
-          return;
-        }
+  if (fastest_tick - second_fastest_tick
+      >= m_disconnection_earliness_threshold_in_ticks)
+    {
+      const int i = player_index[player_count - 1];
+      ic_log(iscool::log::nature::info(), "game_service",
+             "Kicking out player={}, session={}, from game_id={}, due to "
+             "earliness. Tick is {}, {} ahead of {}. Threshold is {}.",
+             i, game.sessions[i], channel, fastest_tick,
+             fastest_tick - second_fastest_tick, second_fastest_tick,
+             m_disconnection_earliness_threshold_in_ticks);
+      game.active[i] = false;
     }
 }
 
@@ -685,7 +765,7 @@ void bim::server::game_service::clean_up()
       iscool::time::now<std::chrono::nanoseconds>();
 
   for (game_map::iterator it = m_games.begin(); it != m_games.end();)
-    if (it->second.release_at_this_date <= now)
+    if (it->second.release_game_at_this_date <= now)
       {
         clean_up(it->first, it->second);
         it = m_games.erase(it);

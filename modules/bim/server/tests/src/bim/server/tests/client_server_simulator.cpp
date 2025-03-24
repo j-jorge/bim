@@ -103,6 +103,33 @@ void bim::server::tests::client_server_simulator::tick(std::size_t tick_count)
     }
 }
 
+void bim::server::tests::client_server_simulator::tick(int client_index,
+                                                       std::size_t tick_count)
+{
+  const std::size_t expected_tick =
+      clients[client_index].contest_runner->confirmed_tick() + tick_count;
+
+  for (std::size_t t = 0; t != tick_count; ++t)
+    {
+      clients[client_index].tick(bim::game::contest::tick_interval);
+      std::this_thread::sleep_for(std::chrono::seconds(0));
+      m_scheduler.tick(std::chrono::milliseconds(20));
+    }
+
+  for (int i = 0; i != 100; ++i)
+    {
+      if (clients[client_index].contest_runner->confirmed_tick()
+          == expected_tick)
+        return;
+
+      std::this_thread::sleep_for(std::chrono::seconds(0));
+      m_scheduler.tick(std::chrono::milliseconds(20));
+
+      // Force a potential update from the server.
+      clients[client_index].tick({});
+    }
+}
+
 void bim::server::tests::client_server_simulator::tick()
 {
   tick(bim::game::contest::tick_interval);
