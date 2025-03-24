@@ -17,9 +17,7 @@ android {
         applicationId 'bim.app'
         minSdkVersion @bim_android_min_sdk_version@
         targetSdkVersion @bim_android_target_sdk_version@
-        versionCode(
-            @CMAKE_PROJECT_VERSION@ * 100 + @android_release_version@
-        )
+        versionCode @android_version_code@
         versionName '@CMAKE_PROJECT_VERSION@'
     }
 
