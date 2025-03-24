@@ -45,6 +45,16 @@ AliHamieh
 From https://opengameart.org/content/mmorpg-virtual-joysticks
 CC0
 
+assets/sprites/menu/bluesky.png
+Eric Bailey
+From https://commons.wikimedia.org/wiki/File:Bluesky_Logo.svg
+Public domain
+
+assets/sprites/menu/github.png
+GitHub
+From https://commons.wikimedia.org/wiki/File:GitHub_Invertocat_Logo.svg
+CC-BY 4.0
+
 assets/sprites/bomb.png
 assets/sprites/crate.png
 assets/sprites/flame-arm.png

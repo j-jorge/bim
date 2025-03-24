@@ -19,6 +19,7 @@
 
 #include <iscool/i18n/gettext.hpp>
 #include <iscool/social/service.hpp>
+#include <iscool/system/open_url.hpp>
 #include <iscool/system/send_mail.hpp>
 
 #include <axmol/2d/Label.h>
@@ -27,8 +28,10 @@
 #define x_widget_type_name controls
 #define x_widget_controls                                                     \
   x_widget(bim::axmol::widget::button,                                        \
-           close_button) x_widget(bim::axmol::widget::button, mail_button)    \
-      x_widget(bim::axmol::widget::button, share_button)                      \
+           close_button) x_widget(bim::axmol::widget::button, bluesky_button) \
+      x_widget(bim::axmol::widget::button, github_button) x_widget(           \
+          bim::axmol::widget::button,                                         \
+          mail_button) x_widget(bim::axmol::widget::button, share_button)     \
           x_widget(bim::axmol::widget::toggle, music)                         \
               x_widget(bim::axmol::widget::toggle, sound_effects)             \
                   x_widget(bim::axmol::widget::toggle, vibrations)            \
@@ -58,6 +61,8 @@ bim::axmol::app::settings_popup::settings_popup(
   , m_popup(new popup(context, *style.get_declaration("popup")))
 {
   m_inputs.push_back(m_controls->close_button->input_node());
+  m_inputs.push_back(m_controls->bluesky_button->input_node());
+  m_inputs.push_back(m_controls->github_button->input_node());
   m_inputs.push_back(m_controls->mail_button->input_node());
   m_inputs.push_back(m_controls->share_button->input_node());
   m_inputs.push_back(m_controls->music->input_node());
@@ -67,12 +72,25 @@ bim::axmol::app::settings_popup::settings_popup(
   m_inputs.push_back(m_controls->d_pad_kind->input_node());
 
   m_controls->version->setString(
-      fmt::format("Version {}/{}", BIM_VERSION, bim::net::protocol_version));
+      fmt::format("Version {}-{}", BIM_VERSION, bim::net::protocol_version));
 
   m_controls->close_button->connect_to_clicked(
       [this]()
       {
         m_popup->hide();
+      });
+
+  m_controls->bluesky_button->connect_to_clicked(
+      []()
+      {
+        iscool::system::open_url(
+            "https://bsky.app/profile/j-jorge.bsky.social");
+      });
+
+  m_controls->github_button->connect_to_clicked(
+      []()
+      {
+        iscool::system::open_url("https://github.com/j-jorge/bim/");
       });
 
   m_controls->mail_button->connect_to_clicked(

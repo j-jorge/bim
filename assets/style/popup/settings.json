@@ -146,11 +146,25 @@
                 }
             ],
 
-            "share_button":
+            "bluesky_button":
             [
                 "button/white-with-icon",
                 {
-                    "widgets/icon/frame": "sprites/menu/share.png",
+                    "widgets/icon":
+                    [{
+                        "frame": "sprites/menu/bluesky.png",
+                        "color": "white"
+                    }],
+
+                    "bounds/icon/height.percents": 50
+                }
+            ],
+
+            "github_button":
+            [
+                "button/white-with-icon",
+                {
+                    "widgets/icon/frame": "sprites/menu/github.png",
                     "bounds/icon/height.percents": 50
                 }
             ],
@@ -161,6 +175,15 @@
                 {
                     "widgets/icon/frame": "sprites/menu/mail.png",
                     "bounds/icon/height.percents": 40
+                }
+            ],
+
+            "share_button":
+            [
+                "button/white-with-icon",
+                {
+                    "widgets/icon/frame": "sprites/menu/share.png",
+                    "bounds/icon/height.percents": 50
                 }
             ],
 
@@ -362,11 +385,21 @@
                 "height.percents": 10
             }],
 
-            "share_button":
+            "bluesky_button":
             [{
                 "anchor.x": 0.5,
                 "anchor.y": 0.5,
-                "anchor.reference.x": 0.37,
+                "anchor.reference.x": 0.19,
+                "anchor.reference.y": 0.3,
+                "height.percents": 8,
+                "width-ratio": 0.95
+            }],
+
+            "github_button":
+            [{
+                "anchor.x": 0.5,
+                "anchor.y": 0.5,
+                "anchor.reference.x": 0.4,
                 "anchor.reference.y": 0.3,
                 "height.percents": 8,
                 "width-ratio": 0.95
@@ -376,7 +409,17 @@
             [{
                 "anchor.x": 0.5,
                 "anchor.y": 0.5,
-                "anchor.reference.x": 0.63,
+                "anchor.reference.x": 0.6,
+                "anchor.reference.y": 0.3,
+                "height.percents": 8,
+                "width-ratio": 0.95
+            }],
+
+            "share_button":
+            [{
+                "anchor.x": 0.5,
+                "anchor.y": 0.5,
+                "anchor.reference.x": 0.81,
                 "anchor.reference.y": 0.3,
                 "height.percents": 8,
                 "width-ratio": 0.95

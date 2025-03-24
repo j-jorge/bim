@@ -25,11 +25,13 @@ set(sprites
 
   "sprites/menu/audio.png"
   "sprites/menu/back.png"
+  "sprites/menu/bluesky.png"
   "sprites/menu/dot-100.png"
   "sprites/menu/gamepad.png"
   "sprites/menu/gamepad-d-pad-left.png"
   "sprites/menu/gamepad-d-pad-right.png"
   "sprites/menu/gear.png"
+  "sprites/menu/github.png"
   "sprites/menu/glow.png"
   "sprites/menu/joystick.png"
   "sprites/menu/mail.png"
