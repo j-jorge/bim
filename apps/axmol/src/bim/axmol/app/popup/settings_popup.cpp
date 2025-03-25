@@ -13,8 +13,6 @@
 #include <bim/axmol/widget/ui/button.hpp>
 #include <bim/axmol/widget/ui/toggle.hpp>
 
-#include <bim/net/message/protocol_version.hpp>
-
 #include <bim/version.hpp>
 
 #include <iscool/i18n/gettext.hpp>
@@ -72,7 +70,7 @@ bim::axmol::app::settings_popup::settings_popup(
   m_inputs.push_back(m_controls->d_pad_kind->input_node());
 
   m_controls->version->setString(
-      fmt::format("Version {}-{}", BIM_VERSION, bim::net::protocol_version));
+      fmt::format(fmt::runtime(ic_gettext("Version {}")), bim::version));
 
   m_controls->close_button->connect_to_clicked(
       [this]()

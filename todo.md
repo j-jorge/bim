@@ -1,6 +1,5 @@
 # Next
 
-- Use a version.minor scheme for the versions.
 - Display a message when a new version is available.
 - Pick the game server according to the app version, not the protocol version.
 
@@ -15,6 +14,7 @@
 - Get some coins for each game, unlock the features with the coins.
 - At most three enabled features per game.
 - Display the frame duration (without the sleep) in addition to the FPS.
+- Close the settings when the back button is pressed.
 
 # Server
 

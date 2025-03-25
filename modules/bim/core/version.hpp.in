@@ -1,2 +1,9 @@
 #pragma once
-#define BIM_VERSION "@CMAKE_PROJECT_VERSION@"
+
+#include <string_view>
+
+namespace bim
+{
+  constexpr std::string_view version = "@CMAKE_PROJECT_VERSION@";
+  constexpr int version_major = @CMAKE_PROJECT_VERSION_MAJOR@;
+}
