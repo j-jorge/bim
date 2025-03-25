@@ -3,6 +3,7 @@
 
 #include <bim/axmol/app/popup/popup.hpp>
 #include <bim/axmol/app/preference/arena_stats.hpp>
+#include <bim/axmol/app/preference/date_of_next_config_update.hpp>
 #include <bim/axmol/app/preference/feature_flags.hpp>
 
 #include <bim/axmol/widget/factory/label.hpp>
@@ -24,6 +25,7 @@
 
 #include <iscool/preferences/local_preferences.hpp>
 #include <iscool/system/language_code.hpp>
+#include <iscool/time/now.hpp>
 
 #include <axmol/2d/Label.h>
 #include <axmol/base/Director.h>
@@ -92,15 +94,22 @@ void bim::axmol::app::debug_popup::show()
   add_feature_item("Fog of war", bim::game::feature_flags::fog_of_war);
 
   add_title("PREFERENCES");
+  const iscool::preferences::local_preferences& preferences =
+      *m_context.get_local_preferences();
+
   add_text_item("Game count in arena",
-                std::to_string(bim::axmol::app::games_in_arena(
-                    *m_context.get_local_preferences())));
+                std::to_string(games_in_arena(preferences)));
   add_text_item("Victories in arena",
-                std::to_string(bim::axmol::app::victories_in_arena(
-                    *m_context.get_local_preferences())));
+                std::to_string(victories_in_arena(preferences)));
   add_text_item("Defeats in arena",
-                std::to_string(bim::axmol::app::defeats_in_arena(
-                    *m_context.get_local_preferences())));
+                std::to_string(defeats_in_arena(preferences)));
+  {
+    const std::chrono::seconds now = iscool::time::now<std::chrono::hours>();
+    const std::chrono::hours d = date_of_next_config_update(preferences);
+
+    add_text_item("Config update in",
+                  std::to_string((d - now).count()) + " h.");
+  }
 
   add_title("SYSTEM");
   add_fps_entry();

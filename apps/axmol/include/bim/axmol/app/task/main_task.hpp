@@ -1,11 +1,14 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #pragma once
 
+#include <bim/axmol/app/config.hpp>
+
 #include <bim/net/session_handler.hpp>
 
 #include <iscool/context.hpp>
 #include <iscool/signals/declare_signal.hpp>
 #include <iscool/signals/scoped_connection.hpp>
+#include <iscool/signals/shared_connection_set.hpp>
 #include <iscool/style/declaration.hpp>
 
 #include <memory>
@@ -61,8 +64,9 @@ namespace bim::axmol::app
             ((iscool::social::service*)(social))                           //
             ((iscool::system::haptic_feedback*)(haptic_feedback))          //
             ((bool)(enable_debug))),
-        ic_context_declare_properties(
-            ((bim::net::session_handler*)(session_handler))));
+        ic_context_declare_properties(                      //
+            ((bim::net::session_handler*)(session_handler)) //
+            ((config*)(config))));
 
   public:
     explicit main_task(context context);
@@ -71,6 +75,10 @@ namespace bim::axmol::app
     void start();
 
   private:
+    void load_config();
+    void fetch_remote_config();
+    void validate_remote_config(const std::string_view& str) const;
+
     void read_translations();
     void connect_to_game_server();
 
@@ -80,8 +88,11 @@ namespace bim::axmol::app
     std::unique_ptr<message_popup> m_message_popup;
     std::unique_ptr<screen_wheel> m_screen_wheel;
 
-    iscool::signals::scoped_connection m_session_config_error_connection;
     iscool::signals::scoped_connection
         m_session_authentication_error_connection;
+
+    iscool::signals::shared_connection_set m_config_request_connections;
+
+    config m_config;
   };
 }

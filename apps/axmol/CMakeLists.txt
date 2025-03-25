@@ -6,6 +6,7 @@ add_library(bim_app
   src/bim/axmol/app/application.cpp
   src/bim/axmol/app/arena_display_config.cpp
   src/bim/axmol/app/bridge.cpp
+  src/bim/axmol/app/config.cpp
   src/bim/axmol/app/feature_deck.cpp
   src/bim/axmol/app/fog_display.cpp
   src/bim/axmol/app/main_scene.cpp
@@ -22,6 +23,7 @@ add_library(bim_app
   src/bim/axmol/app/preference/arena_stats.cpp
   src/bim/axmol/app/preference/audio.cpp
   src/bim/axmol/app/preference/controls.cpp
+  src/bim/axmol/app/preference/date_of_next_config_update.cpp
   src/bim/axmol/app/preference/feature_flags.cpp
   src/bim/axmol/app/preference/haptic.cpp
   src/bim/axmol/app/preference/network.cpp

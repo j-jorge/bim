@@ -3,6 +3,8 @@
 
 #include <bim/axmol/app/bridge.hpp>
 
+#include <iscool/http/get_global_mockup.hpp>
+#include <iscool/http/mockup.hpp>
 #include <iscool/log/enable_console_log.hpp>
 #include <iscool/strings/unordered_string_map.hpp>
 
@@ -33,6 +35,7 @@ namespace
     bool console_log;
     bool enable_debug;
     std::vector<std::string> asset_directories;
+    std::vector<std::string> http_mockup_directories;
   };
 
   struct command_line
@@ -110,12 +113,18 @@ static command_line parse_command_line(int argc, char* argv[])
   options.add_options()(
       "assets",
       boost::program_options::value<std::vector<std::string>>()
-          ->value_name("path...")
+          ->value_name("path…")
           ->multitoken(),
       "Directories where the game assets can be found. Assets are searched "
       "in these directories, in the provided order.");
   options.add_options()("console-log", "Display logs in the terminal.");
   options.add_options()("debug", "Display the debug menu.");
+  options.add_options()(
+      "http-mockup",
+      boost::program_options::value<std::vector<std::string>>()
+          ->value_name("path…")
+          ->multitoken(),
+      "Files from which the game can find fake responses to HTTP requests.");
 
   boost::program_options::variables_map variables;
   boost::program_options::store(
@@ -147,6 +156,10 @@ static command_line parse_command_line(int argc, char* argv[])
       asset_directories->second.as<std::vector<std::string>>();
   result.console_log = (variables.count("console-log") != 0);
   result.enable_debug = (variables.count("debug") != 0);
+
+  if (variables.count("http-mockup") != 0)
+    result.http_mockup_directories =
+        variables["http-mockup"].as<std::vector<std::string>>();
 
   if (variables.count("screen") != 0)
     {
@@ -191,6 +204,14 @@ int main(int argc, char* argv[])
 
   if (options.console_log)
     iscool::log::enable_console_log();
+
+  if (!options.http_mockup_directories.empty())
+    {
+      iscool::http::get_global_mockup().set_enabled(true);
+
+      for (const std::string& dir : options.http_mockup_directories)
+        iscool::http::get_global_mockup().add_predefined_responses(dir);
+    }
 
   bim::axmol::app::application app(options.asset_directories,
                                    ax::Size(options.screen_resolution.width,

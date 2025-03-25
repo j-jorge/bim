@@ -2,23 +2,43 @@
 #include <bim/axmol/app/task/main_task.hpp>
 
 #include <bim/axmol/app/popup/message.hpp>
+#include <bim/axmol/app/preference/date_of_next_config_update.hpp>
 #include <bim/axmol/app/screen_wheel.hpp>
 
 #include <bim/net/message/authentication_error_code.hpp>
 
+#include <bim/version.hpp>
+
 #include <iscool/audio/loop_mode.hpp>
 #include <iscool/audio/mixer.hpp>
 #include <iscool/files/file_exists.hpp>
+#include <iscool/files/full_path_exists.hpp>
+#include <iscool/files/get_writable_path.hpp>
 #include <iscool/files/read_file.hpp>
+#include <iscool/files/rename_file.hpp>
+#include <iscool/http/send.hpp>
 #include <iscool/i18n/gettext.hpp>
 #include <iscool/i18n/load_translations.hpp>
+#include <iscool/json/from_file.hpp>
+#include <iscool/json/parse_string.hpp>
+#include <iscool/json/write_to_stream.hpp>
 #include <iscool/log/log.hpp>
+#include <iscool/log/nature/info.hpp>
 #include <iscool/log/nature/warning.hpp>
 #include <iscool/signals/implement_signal.hpp>
 #include <iscool/style/loader.hpp>
 #include <iscool/system/language_code.hpp>
+#include <iscool/time/now.hpp>
 
 #include <fmt/format.h>
+
+#include <cstdlib>
+#include <fstream>
+
+static std::string cached_remote_config_file()
+{
+  return iscool::files::get_writable_path() + "/remote-config.json";
+}
 
 IMPLEMENT_SIGNAL(bim::axmol::app::main_task, end, m_end);
 IMPLEMENT_SIGNAL(bim::axmol::app::main_task, reset, m_reset);
@@ -28,6 +48,7 @@ bim::axmol::app::main_task::main_task(context context)
   , m_style(iscool::style::loader::load("main-task"))
 {
   m_context.set_session_handler(&m_session_handler);
+  m_context.set_config(&m_config);
 }
 
 bim::axmol::app::main_task::~main_task() = default;
@@ -36,6 +57,8 @@ void bim::axmol::app::main_task::start()
 {
   m_context.get_audio()->play_music("menu", iscool::audio::loop_mode::forever);
 
+  load_config();
+  fetch_remote_config();
   read_translations();
 
   m_message_popup.reset(
@@ -52,6 +75,91 @@ void bim::axmol::app::main_task::start()
       });
 }
 
+void bim::axmol::app::main_task::load_config()
+{
+  const std::string remote_config_file = cached_remote_config_file();
+
+  if (iscool::files::full_path_exists(remote_config_file))
+    {
+      std::optional<config> config = bim::axmol::app::load_config(
+          iscool::json::from_file(remote_config_file));
+
+      if (config)
+        m_config = std::move(*config);
+    }
+}
+
+void bim::axmol::app::main_task::fetch_remote_config()
+{
+  if (iscool::time::now<std::chrono::hours>()
+      < date_of_next_config_update(*m_context.get_local_preferences()))
+    return;
+
+  ic_log(iscool::log::nature::info(), "main_task", "Updating config.");
+
+  auto on_result = [this](const std::vector<char>& response) -> void
+  {
+    validate_remote_config(std::string_view(response.begin(), response.end()));
+  };
+
+  auto on_error = [](const std::vector<char>& response) -> void
+  {
+    ic_log(iscool::log::nature::warning(), "main_task",
+           "Failed to fetch remote config {}.",
+           std::string(response.begin(), response.end()));
+  };
+
+  m_config_request_connections = iscool::http::get(
+      "https://bim.jorge.st/client-config.json", on_result, on_error);
+}
+
+void bim::axmol::app::main_task::validate_remote_config(
+    const std::string_view& str) const
+{
+  const Json::Value json_config = iscool::json::parse_string(std::string(str));
+
+  if (!json_config)
+    {
+      ic_log(iscool::log::nature::warning(), "main_task",
+             "Failed to parse remote config {}.", str);
+      return;
+    }
+
+  const std::optional<config> config =
+      bim::axmol::app::load_config(json_config);
+
+  if (!config)
+    {
+      ic_log(iscool::log::nature::warning(), "main_task",
+             "Failed to load remote config from Json {}.", str);
+      return;
+    }
+
+  const std::string tmp_path =
+      iscool::files::get_writable_path() + "/remote-config.json.tmp";
+  std::ofstream f(tmp_path);
+
+  if (!iscool::json::write_to_stream(f, json_config))
+    {
+      ic_log(iscool::log::nature::warning(), "main_task",
+             "Failed to save remote config {}.", str);
+      return;
+    }
+
+  if (!iscool::files::rename_file(tmp_path, cached_remote_config_file()))
+    {
+      ic_log(iscool::log::nature::warning(), "main_task",
+             "Failed to move remote config file to its final location.");
+      return;
+    }
+
+  ic_log(iscool::log::nature::info(), "main_task", "Config updated.");
+
+  date_of_next_config_update(*m_context.get_local_preferences(),
+                             iscool::time::now<std::chrono::hours>()
+                                 + config->remote_config_update_interval);
+}
+
 void bim::axmol::app::main_task::read_translations()
 {
   const std::string language_code = iscool::system::get_language_code();
@@ -65,19 +173,11 @@ void bim::axmol::app::main_task::read_translations()
 
   if (!iscool::i18n::load_translations(language_code, *mo_file))
     ic_log(iscool::log::nature::warning(), "main_task",
-           "Could not read translations from {}.\n", translations_file);
+           "Could not read translations from {}.", translations_file);
 }
 
 void bim::axmol::app::main_task::connect_to_game_server()
 {
-  m_session_config_error_connection =
-      m_session_handler.connect_to_config_error(
-          [this]()
-          {
-            m_message_popup->show(
-                ic_gettext("Could not get the config from the server."));
-          });
-
   m_session_authentication_error_connection =
       m_session_handler.connect_to_authentication_error(
           [this](bim::net::authentication_error_code error_code)
@@ -89,5 +189,13 @@ void bim::axmol::app::main_task::connect_to_game_server()
                     error_code)));
           });
 
-  m_session_handler.connect();
+  const char* const env_server = std::getenv("BIM_GAME_SERVER_HOST");
+  std::string_view server_host;
+
+  if (env_server)
+    server_host = env_server;
+  else
+    server_host = m_config.game_server;
+
+  m_session_handler.connect(server_host);
 }
