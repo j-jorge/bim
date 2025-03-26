@@ -1,7 +1,6 @@
 # Next
 
-- Display a message when a new version is available.
-- Pick the game server according to the app version, not the protocol version.
+- Publish a new version :)
 
 # General
 

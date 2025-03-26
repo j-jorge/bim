@@ -68,6 +68,31 @@
             ]
         }],
 
+        "button-item-controls":
+        [{
+            "label": [ "popup/debug/font/main" ],
+            "button":
+            [
+                "button/flat-with-label",
+                {
+                    "widgets/label/text": "Go"
+                }
+            ]
+        }],
+
+        "button-item-bounds":
+        [{
+            "label": [ "layout/left-center" ],
+            "button":
+            [
+                "layout/right-center",
+                {
+                    "width.percents": 20,
+                    "height.percents": 90
+                }
+            ]
+        }],
+
         "widgets":
         [{
             "title":

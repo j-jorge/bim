@@ -24,6 +24,7 @@ add_library(bim_app
   src/bim/axmol/app/preference/audio.cpp
   src/bim/axmol/app/preference/controls.cpp
   src/bim/axmol/app/preference/date_of_next_config_update.cpp
+  src/bim/axmol/app/preference/date_of_next_version_update_message.cpp
   src/bim/axmol/app/preference/feature_flags.cpp
   src/bim/axmol/app/preference/haptic.cpp
   src/bim/axmol/app/preference/network.cpp

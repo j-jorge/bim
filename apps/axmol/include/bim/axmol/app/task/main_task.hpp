@@ -80,6 +80,8 @@ namespace bim::axmol::app
     void validate_remote_config(const std::string_view& str) const;
 
     void read_translations();
+
+    bool display_version_update_message();
     void connect_to_game_server();
 
   private:
@@ -90,6 +92,7 @@ namespace bim::axmol::app
 
     iscool::signals::scoped_connection
         m_session_authentication_error_connection;
+    iscool::signals::scoped_connection m_message_connection;
 
     iscool::signals::shared_connection_set m_config_request_connections;
 

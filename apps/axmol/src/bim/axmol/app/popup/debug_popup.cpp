@@ -4,6 +4,7 @@
 #include <bim/axmol/app/popup/popup.hpp>
 #include <bim/axmol/app/preference/arena_stats.hpp>
 #include <bim/axmol/app/preference/date_of_next_config_update.hpp>
+#include <bim/axmol/app/preference/date_of_next_version_update_message.hpp>
 #include <bim/axmol/app/preference/feature_flags.hpp>
 
 #include <bim/axmol/widget/factory/label.hpp>
@@ -56,6 +57,15 @@ namespace
   x_widget(ax::Label, label) x_widget(bim::axmol::widget::toggle, toggle)
 
 #include <bim/axmol/widget/implement_controls_struct.hpp>
+
+  struct button_controls;
+
+#define x_widget_scope
+#define x_widget_type_name button_controls
+#define x_widget_controls                                                     \
+  x_widget(ax::Label, label) x_widget(bim::axmol::widget::button, button)
+
+#include <bim/axmol/widget/implement_controls_struct.hpp>
 }
 
 bim::axmol::app::debug_popup::debug_popup(
@@ -70,6 +80,8 @@ bim::axmol::app::debug_popup::debug_popup(
   , m_text_item_bounds(*style.get_declaration("text-item-bounds"))
   , m_toggle_item_controls(*style.get_declaration("toggle-item-controls"))
   , m_toggle_item_bounds(*style.get_declaration("toggle-item-bounds"))
+  , m_button_item_controls(*style.get_declaration("button-item-controls"))
+  , m_button_item_bounds(*style.get_declaration("button-item-bounds"))
   , m_popup(new popup(context, *style.get_declaration("popup")))
 {
   m_controls->close_button->connect_to_clicked(
@@ -94,7 +106,7 @@ void bim::axmol::app::debug_popup::show()
   add_feature_item("Fog of war", bim::game::feature_flags::fog_of_war);
 
   add_title("PREFERENCES");
-  const iscool::preferences::local_preferences& preferences =
+  iscool::preferences::local_preferences& preferences =
       *m_context.get_local_preferences();
 
   add_text_item("Game count in arena",
@@ -103,12 +115,30 @@ void bim::axmol::app::debug_popup::show()
                 std::to_string(victories_in_arena(preferences)));
   add_text_item("Defeats in arena",
                 std::to_string(defeats_in_arena(preferences)));
+
+  const std::chrono::hours now = iscool::time::now<std::chrono::hours>();
   {
-    const std::chrono::seconds now = iscool::time::now<std::chrono::hours>();
     const std::chrono::hours d = date_of_next_config_update(preferences);
 
     add_text_item("Config update in",
                   std::to_string((d - now).count()) + " h.");
+  }
+  {
+    const std::chrono::hours d =
+        date_of_next_version_update_message(preferences);
+
+    add_button_item(
+        "Version check in "
+            + std::to_string(
+                std::chrono::duration_cast<std::chrono::minutes>(d - now)
+                    .count())
+            + " min.",
+        [&preferences, now]() -> void
+        {
+          date_of_next_version_update_message(
+              preferences,
+              std::chrono::duration_cast<std::chrono::hours>(now));
+        });
   }
 
   add_title("SYSTEM");
@@ -189,6 +219,21 @@ void bim::axmol::app::debug_popup::add_toggle_item(
       });
 
   add_item(controls.all_nodes, m_toggle_item_bounds);
+}
+void bim::axmol::app::debug_popup::add_button_item(
+    std::string_view label, std::function<void()> do_action)
+{
+  button_controls controls(m_context.get_widget_context(),
+                           m_button_item_controls);
+  controls.label->setString(label);
+
+  bim::axmol::widget::button& b = *controls.button;
+
+  m_inputs.push_back(b.input_node());
+
+  b.connect_to_clicked(do_action);
+
+  add_item(controls.all_nodes, m_button_item_bounds);
 }
 
 void bim::axmol::app::debug_popup::add_item(

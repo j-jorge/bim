@@ -3,6 +3,7 @@
 
 #include <bim/axmol/app/popup/message.hpp>
 #include <bim/axmol/app/preference/date_of_next_config_update.hpp>
+#include <bim/axmol/app/preference/date_of_next_version_update_message.hpp>
 #include <bim/axmol/app/screen_wheel.hpp>
 
 #include <bim/net/message/authentication_error_code.hpp>
@@ -64,8 +65,6 @@ void bim::axmol::app::main_task::start()
   m_message_popup.reset(
       new message_popup(m_context, *m_style.get_declaration("message-popup")));
 
-  connect_to_game_server();
-
   m_screen_wheel.reset(
       new screen_wheel(m_context, *m_style.get_declaration("screen-wheel")));
   m_screen_wheel->connect_to_reset(
@@ -73,6 +72,9 @@ void bim::axmol::app::main_task::start()
       {
         m_reset();
       });
+
+  if (!display_version_update_message())
+    connect_to_game_server();
 }
 
 void bim::axmol::app::main_task::load_config()
@@ -174,6 +176,34 @@ void bim::axmol::app::main_task::read_translations()
   if (!iscool::i18n::load_translations(language_code, *mo_file))
     ic_log(iscool::log::nature::warning(), "main_task",
            "Could not read translations from {}.", translations_file);
+}
+
+bool bim::axmol::app::main_task::display_version_update_message()
+{
+  if (m_config.most_recent_version <= bim::version_major)
+    return false;
+
+  const std::chrono::hours now = iscool::time::now<std::chrono::hours>();
+  iscool::preferences::local_preferences& preferences =
+      *m_context.get_local_preferences();
+
+  if (now < date_of_next_version_update_message(preferences))
+    return false;
+
+  date_of_next_version_update_message(preferences,
+                                      now + m_config.version_update_interval);
+
+  m_message_connection = m_message_popup->connect_to_ok(
+      [this]() -> void
+      {
+        m_message_connection.disconnect();
+        connect_to_game_server();
+      });
+
+  m_message_popup->show(ic_gettext("A new version of Bim! is available! "
+                                   "Please update as soon as possible."));
+
+  return true;
 }
 
 void bim::axmol::app::main_task::connect_to_game_server()

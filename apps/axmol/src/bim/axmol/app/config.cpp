@@ -11,6 +11,17 @@
 #include <iscool/json/is_of_type_string.hpp>
 #include <iscool/json/is_of_type_uint.hpp>
 
+#include <type_traits>
+
+bim::axmol::app::config::config()
+  : most_recent_version(bim::version_major)
+  , game_server("bim.jorge.st:"
+                + std::to_string(20000 + bim::version_major * 100
+                                 + bim::net::protocol_version))
+  , remote_config_update_interval(std::chrono::hours(1))
+  , version_update_interval(std::chrono::days(1))
+{}
+
 static bool parse_server_list(bim::axmol::app::config& result,
                               const Json::Value& servers)
 {
