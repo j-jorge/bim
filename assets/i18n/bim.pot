@@ -19,6 +19,10 @@ msgstr ""
 msgid "You have been disconnected."
 msgstr ""
 
+#, c++-format
+msgid "Version {}"
+msgstr ""
+
 msgid "Feedback about Bim!"
 msgstr ""
 
@@ -27,7 +31,28 @@ msgid ""
 "app"
 msgstr ""
 
-msgid "Could not get the config from the server."
+msgid "Keep playing to unlock new game features!"
+msgstr ""
+
+msgid "Customize your experience below!"
+msgstr ""
+
+msgid "Falling blocks reduce the arena after two minutes!"
+msgstr ""
+
+msgid "A thick fog covers the arena. You can't see were you did not go!"
+msgstr ""
+
+msgid ""
+"No falling blocks! The game ends after 3 minutes if the players are still "
+"alive."
+msgstr ""
+
+msgid ""
+"Immediate forcast: Clear sky during the game, you can see the whole arena!"
+msgstr ""
+
+msgid "A new version of Bim! is available! Please update as soon as possible."
 msgstr ""
 
 #, c++-format
@@ -120,20 +145,6 @@ msgstr ""
 msgid ""
 "ALPHA\n"
 "VERSION"
-msgstr ""
-
-msgid ""
-"No falling blocks! The game ends after 3 minutes if the players are still "
-"alive."
-msgstr ""
-
-msgid "Falling blocks reduce the arena after two minutes!"
-msgstr ""
-
-msgid "Customize your experience below!"
-msgstr ""
-
-msgid "Keep playing to unlock new game features!"
 msgstr ""
 
 msgid ""

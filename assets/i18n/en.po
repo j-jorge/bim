@@ -21,6 +21,10 @@ msgstr ""
 msgid "You have been disconnected."
 msgstr "You have been disconnected :("
 
+#, c++-format
+msgid "Version {}"
+msgstr ""
+
 msgid "Feedback about Bim!"
 msgstr ""
 
@@ -29,10 +33,29 @@ msgid ""
 "app"
 msgstr ""
 
-msgid "Could not get the config from the server."
+msgid "Keep playing to unlock new game features!"
 msgstr ""
-"Could not get the config from the server. Check your connection or update "
-"the app."
+
+msgid "Customize your experience below!"
+msgstr ""
+
+msgid "Falling blocks reduce the arena after two minutes!"
+msgstr ""
+
+msgid "A thick fog covers the arena. You can't see were you did not go!"
+msgstr ""
+
+msgid ""
+"No falling blocks! The game ends after 3 minutes if the players are still "
+"alive."
+msgstr ""
+
+msgid ""
+"Immediate forcast: Clear sky during the game, you can see the whole arena!"
+msgstr ""
+
+msgid "A new version of Bim! is available! Please update as soon as possible."
+msgstr ""
 
 #, c++-format
 msgid "Failed to authenticate with the game server. Error code {}."
@@ -127,20 +150,6 @@ msgid ""
 msgstr ""
 
 msgid ""
-"No falling blocks! The game ends after 3 minutes if the players are still "
-"alive."
-msgstr ""
-
-msgid "Falling blocks reduce the arena after two minutes!"
-msgstr ""
-
-msgid "Customize your experience below!"
-msgstr ""
-
-msgid "Keep playing to unlock new game features!"
-msgstr ""
-
-msgid ""
 "You can start a two-players game\n"
 "now or wait for more players!"
 msgstr ""
@@ -163,6 +172,11 @@ msgstr ""
 
 msgid "Online Game"
 msgstr ""
+
+#~ msgid "Could not get the config from the server."
+#~ msgstr ""
+#~ "Could not get the config from the server. Check your connection or update "
+#~ "the app."
 
 #~ msgid "Setting up a new game..."
 #~ msgstr "Setting up a new game…"
