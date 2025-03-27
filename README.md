@@ -25,11 +25,13 @@ allowing players to customize their contest.
 <p align="center">
   <img src="metadata/en-US/images/phoneScreenshots/screenshot-2-gameplay.jpg"
        width="270px"/>
-  <img src="metadata/en-US/images/phoneScreenshots/screenshot-3-victory.jpg"
+  <img src="metadata/en-US/images/phoneScreenshots/screenshot-3-gameplay.jpg"
        width="270px"/>
 </p>
 <p align="center">
-  <img src="metadata/en-US/images/phoneScreenshots/screenshot-4-settings.jpg"
+  <img src="metadata/en-US/images/phoneScreenshots/screenshot-4-victory.jpg"
+       width="270px"/>
+  <img src="metadata/en-US/images/phoneScreenshots/screenshot-5-settings.jpg"
        width="270px"/>
 </p>
 
