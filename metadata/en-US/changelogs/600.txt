@@ -1,0 +1,10 @@
+- Display a message when a new version is available.
+- Fetch the app config from the server.
+- Reduce the strength of the slowness applied when the client is too
+  far ahead.
+- Unlock game features as the player wins games.
+- Keep updating the matchmaking screen even when the ready button has
+  been pressed.
+- Display only two features on the matchmaking screen.
+- Add the fog of war game feature.
+- Add a button to leave the matchmaking screen toward the lobby.

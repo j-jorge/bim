@@ -1,0 +1,10 @@
+- Un message s'affiche lorsqu'une nouvelle version est disponible.
+- Récupération de la configuration au lancement.
+- Baisse de l'intensité du ralentissement lorsque le client est
+  en avance.
+- Déblocage progressif des fonctionnalités de jeu.
+- Mise à jour de l'écran de matchmaking même après avoir appuyé sur le
+  bouton « GO! ».
+- Deux fonctionnalités sont affichées sur l'écran de matchmaking.
+- Ajout du brouillard de guerre.
+- Bouton pour quitter l'écran de matchmaking.
