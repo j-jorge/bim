@@ -37,9 +37,14 @@ allowing players to customize their contest.
 
 # Installing
 
-The game is available for Android devices but not yet in the
-stores. In order to install it you must download the APK from [the
-releases page](https://github.com/j-jorge/bim/releases/latest).
+The game is available for Android devices but still in beta on the
+PlayStore. In order to install it you can download the APK from [the
+releases page](https://github.com/j-jorge/bim/releases/latest) or get
+it from alternative stores.
+
+[<img src="docs/badges/fdroid.png" alt="F-Droid" width="160">](https://f-droid.org/en/packages/bim.app/)
+[<img src="docs/badges/openapk.png" alt="OpenAPK" width="160">](https://www.openapk.net/bim/bim.app/)
+[<img src="docs/badges/obtainium.png" alt="Obtainium" width="160">](http://apps.obtainium.imranr.dev/redirect.html?r=obtainium://app/%7B%22id%22%3A%22bim.app%22%2C%22url%22%3A%22https%3A%2F%2Fgithub.com%2Fj-jorge%2Fbim%2F%22%2C%22author%22%3A%22Julien%20Jorge%22%2C%22name%22%3A%22Bim%21%22%2C%22additionalSettings%22%3A%22%7B%5C%22includePrereleases%5C%22%3Afalse%7D%22%7D)
 
 # License
 
