@@ -2,6 +2,16 @@
 
 set -euo pipefail
 
+temp_config=
+
+function clean_up()
+{
+    if [[ -n "${temp_config:-}" ]]
+    then
+        rm --force "$temp_config"
+    fi
+}
+
 function usage()
 {
     cat <<EOF
@@ -90,10 +100,20 @@ ssh "$login_at_host" \
 rsync "$build_dir"/apps/server/bim-server "$login_at_host":bim/"$port"/bin/
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd)"
-rsync --recursive "$script_dir"/docker-compose.yml \
+
+temp_config="$(mktemp)"
+sed "s/PORT/$port/" "$script_dir"/client-config.json > "$temp_config"
+
+rsync "$temp_config" "$login_at_host":./
+
+rsync --recursive \
+      "$script_dir"/docker-compose.yml \
       "$script_dir"/etc \
       "$login_at_host":bim/"$port"/
 
 ssh "$login_at_host" \
-    cd bim/"$port"/  \
+    mv --backup \
+    "$(basename "$temp_config")" /srv/www/bim/client-config.json \
+    '&&' chmod a+r /srv/www/bim/client-config.json \
+    '&&' cd bim/"$port"/  \
     '&&' PORT="$port" docker-compose up --detach
