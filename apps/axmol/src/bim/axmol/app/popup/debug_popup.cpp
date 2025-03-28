@@ -127,18 +127,14 @@ void bim::axmol::app::debug_popup::show()
     const std::chrono::hours d =
         date_of_next_version_update_message(preferences);
 
-    add_button_item(
-        "Version check in "
-            + std::to_string(
-                std::chrono::duration_cast<std::chrono::minutes>(d - now)
-                    .count())
-            + " min.",
-        [&preferences, now]() -> void
-        {
-          date_of_next_version_update_message(
-              preferences,
-              std::chrono::duration_cast<std::chrono::hours>(now));
-        });
+    add_button_item("Version check in " + std::to_string((d - now).count())
+                        + " h.",
+                    [&preferences, now]() -> void
+                    {
+                      date_of_next_version_update_message(
+                          preferences,
+                          std::chrono::duration_cast<std::chrono::hours>(now));
+                    });
   }
 
   add_title("SYSTEM");

@@ -99,16 +99,26 @@ bim::axmol::app::load_config(const Json::Value& json)
   result.most_recent_version =
       iscool::json::cast<unsigned int>(json["mrv"], bim::version_major);
 
-  if (iscool::json::is_member("rcui", json))
-    {
-      const Json::Value& rcui = json["rcui"];
+  const auto read_hours = [&json](std::chrono::hours& r, const char* n) -> bool
+  {
+    if (!iscool::json::is_member(n, json))
+      return true;
 
-      if (!iscool::json::is_of_type<std::uint64_t>(rcui))
-        return std::nullopt;
+    const Json::Value& v = json[n];
 
-      result.remote_config_update_interval =
-          std::chrono::hours(iscool::json::cast<std::uint64_t>(rcui));
-    }
+    if (!iscool::json::is_of_type<std::uint64_t>(v))
+      return false;
+
+    r = std::chrono::hours(iscool::json::cast<std::uint64_t>(v));
+
+    return true;
+  };
+
+  if (!read_hours(result.remote_config_update_interval, "rcui"))
+    return std::nullopt;
+
+  if (!read_hours(result.version_update_interval, "vui"))
+    return std::nullopt;
 
   if (!parse_server_list(result, json["gs"]))
     return std::nullopt;
