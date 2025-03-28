@@ -120,8 +120,14 @@ void bim::axmol::app::debug_popup::show()
   {
     const std::chrono::hours d = date_of_next_config_update(preferences);
 
-    add_text_item("Config update in",
-                  std::to_string((d - now).count()) + " h.");
+    add_button_item("Config update in " + std::to_string((d - now).count())
+                        + " h.",
+                    [&preferences, now]() -> void
+                    {
+                      date_of_next_config_update(
+                          preferences,
+                          std::chrono::duration_cast<std::chrono::hours>(now));
+                    });
   }
   {
     const std::chrono::hours d =
