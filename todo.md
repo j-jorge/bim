@@ -1,16 +1,13 @@
 # Next
 
-- Publish a new version :)
-
-# General
-
+- Animated player with updated colors.
 - Shield feature.
+- Add a "shop" where the player can donate to the devs.
+- Get some coins for each game, unlock the features with the coins.
+- Add a shop to buy coins, PlayStore build only.
 
 # Client
 
-- Automatically launch the game when one player is ready.
-- Add a "shop" where the player can donate to the devs.
-- Get some coins for each game, unlock the features with the coins.
 - At most three enabled features per game.
 - Display the frame duration (without the sleep) in addition to the FPS.
 - Close the settings when the back button is pressed.
