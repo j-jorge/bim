@@ -728,6 +728,7 @@ void bim::server::game_service::check_drop_desynchronized_player(
              second_slowest_tick - slowest_tick, second_slowest_tick,
              m_disconnection_lateness_threshold_in_ticks);
       game.active[i] = false;
+      return;
     }
 
   // Exclude the fastest player if it is too far ahead. Aren't they waiting for
