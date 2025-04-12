@@ -23,7 +23,7 @@ TEST(update_flame_power_ups, player_collision)
   const entt::entity power_up_entity =
       flame_power_up_factory(registry, arena, x, y);
   const entt::entity player_entity =
-      bim::game::player_factory(registry, 0, x, y);
+      bim::game::player_factory(registry, 0, x, y, bim::game::animation_id{});
 
   const bim::game::player& player =
       registry.get<bim::game::player>(player_entity);
@@ -46,8 +46,8 @@ TEST(update_flame_power_ups, two_players_only_one_get_the_power_up)
   flame_power_up_factory(registry, arena, x, y);
 
   const entt::entity player_entity[2] = {
-    bim::game::player_factory(registry, 0, x, y),
-    bim::game::player_factory(registry, 1, x, y)
+    bim::game::player_factory(registry, 0, x, y, bim::game::animation_id{}),
+    bim::game::player_factory(registry, 1, x, y, bim::game::animation_id{})
   };
 
   bim::game::player* players[2] = {
@@ -71,7 +71,7 @@ TEST(update_flame_power_ups, max_capacity)
   const int y = 1;
 
   const entt::entity player_entity =
-      bim::game::player_factory(registry, 0, x, y);
+      bim::game::player_factory(registry, 0, x, y, bim::game::animation_id{});
   bim::game::player& player = registry.get<bim::game::player>(player_entity);
   player.bomb_strength = 0;
 

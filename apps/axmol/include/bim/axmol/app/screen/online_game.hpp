@@ -24,6 +24,7 @@
 
 namespace bim::axmol::widget
 {
+  class animation_cache;
   class context;
 }
 
@@ -107,11 +108,6 @@ namespace bim::axmol::app
     void tick();
 
     template <typename T>
-    bim::axmol::ref_ptr<T>
-    alloc_asset(const bim::axmol::widget::context& context,
-                const iscool::style::declaration& style) const;
-
-    template <typename T>
     void resize_to_block_width(const std::vector<T*>& nodes) const;
     template <typename T>
     void resize_to_block_width(std::span<T* const> nodes) const;
@@ -155,6 +151,8 @@ namespace bim::axmol::app
     std::unique_ptr<iscool::net::message_channel> m_game_channel;
     std::unique_ptr<bim::net::game_update_exchange> m_update_exchange;
     std::unique_ptr<bim::net::contest_runner> m_contest_runner;
+
+    std::unique_ptr<bim::axmol::widget::animation_cache> m_animation_cache;
 
     std::vector<player*> m_players;
     std::array<std::vector<ax::Sprite*>,

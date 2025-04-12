@@ -7,6 +7,7 @@
 #include <bim/axmol/app/preference/controls.hpp>
 #include <bim/axmol/app/widget/player.hpp>
 
+#include <bim/axmol/widget/animation/animation_cache.hpp>
 #include <bim/axmol/widget/apply_bounds.hpp>
 #include <bim/axmol/widget/apply_display.hpp>
 #include <bim/axmol/widget/context.hpp>
@@ -24,6 +25,7 @@
 #include <bim/net/exchange/game_update_exchange.hpp>
 #include <bim/net/session_handler.hpp>
 
+#include <bim/game/component/animation_state.hpp>
 #include <bim/game/component/bomb.hpp>
 #include <bim/game/component/bomb_power_up.hpp>
 #include <bim/game/component/brick_wall.hpp>
@@ -45,6 +47,8 @@
 #include <bim/game/constant/max_player_count.hpp>
 #include <bim/game/contest.hpp>
 #include <bim/game/contest_fingerprint.hpp>
+#include <bim/game/context/context.hpp>
+#include <bim/game/context/player_animations.hpp>
 #include <bim/game/level_generation.hpp>
 #include <bim/game/player_action.hpp>
 #include <bim/game/static_wall.hpp>
@@ -111,12 +115,15 @@ bim::axmol::app::online_game::online_game(
                     &*style.get_declaration("display.player-2"),
                     &*style.get_declaration("display.player-3"),
                     &*style.get_declaration("display.player-4") }
+  , m_animation_cache(new bim::axmol::widget::animation_cache())
   , m_fog(new fog_display(context, *style.get_declaration("fog-display")))
   , m_flame_center_asset_name(*style.get_string("flame-center-asset-name"))
   , m_flame_arm_asset_name(*style.get_string("flame-arm-asset-name"))
   , m_flame_end_asset_name(*style.get_string("flame-end-asset-name"))
   , m_arena_width_in_blocks(*style.get_number("arena-width-in-blocks"))
 {
+  m_animation_cache->load("animations.json"sv);
+
   m_nodes = m_controls->all_nodes;
   bim::axmol::widget::merge_named_node_groups(m_nodes, m_fog->display_nodes());
 
@@ -153,14 +160,17 @@ bim::axmol::app::online_game::online_game(
 
   m_players.resize(bim::game::g_max_player_count);
 
+  const iscool::style::declaration& player_style =
+      *style.get_declaration("player");
+
   for (int i = 0; i != bim::game::g_max_player_count; ++i)
     {
-      const iscool::style::declaration& player_style =
-          *style.get_declaration("player-" + std::to_string(i + 1));
+      m_players[i] = bim::axmol::widget::factory<player>::create(
+                         m_context.get_widget_context(), player_style)
+                         .get();
 
-      m_players[i] =
-          alloc_asset<player>(m_context.get_widget_context(), player_style)
-              .get();
+      m_players[i]->setVisible(false);
+      m_controls->arena->addChild(m_players[i]);
     }
 
   constexpr int inner_width = bim::game::g_default_arena_width - 2;
@@ -301,6 +311,12 @@ void bim::axmol::app::online_game::displaying(
       m_context.get_session_handler()->session_id(), event.channel));
 
   const int player_count = event.fingerprint.player_count;
+  const bim::game::player_animations& player_animations =
+      m_contest->context().get<const bim::game::player_animations>();
+
+  for (int i = 0; i != player_count; ++i)
+    m_players[i]->configure(*m_animation_cache, player_animations, i);
+
   m_update_exchange.reset(
       new bim::net::game_update_exchange(*m_game_channel, player_count));
   m_update_exchange->connect_to_started(
@@ -432,20 +448,6 @@ void bim::axmol::app::online_game::tick()
           result, m_local_player_index);
       m_game_over(result);
     }
-}
-
-template <typename T>
-bim::axmol::ref_ptr<T> bim::axmol::app::online_game::alloc_asset(
-    const bim::axmol::widget::context& context,
-    const iscool::style::declaration& style) const
-{
-  const bim::axmol::ref_ptr<T> widget =
-      bim::axmol::widget::factory<T>::create(context, style);
-
-  widget->setVisible(false);
-  m_controls->arena->addChild(widget.get());
-
-  return widget;
 }
 
 template <typename T>
@@ -623,17 +625,20 @@ void bim::axmol::app::online_game::display_players()
   for (player* p : m_players)
     p->setVisible(false);
 
-  registry.view<bim::game::player, bim::game::fractional_position_on_grid>()
+  registry
+      .view<bim::game::player, bim::game::fractional_position_on_grid,
+            bim::game::animation_state>()
       .each(
           [this](const bim::game::player& player,
-                 const bim::game::fractional_position_on_grid& p) -> void
+                 const bim::game::fractional_position_on_grid& p,
+                 const bim::game::animation_state& a) -> void
           {
             bim::axmol::app::player& w = *m_players[player.index];
 
             display_at(p.grid_aligned_y(), w,
                        m_display_config.grid_position_to_display(p.x_float(),
                                                                  p.y_float()));
-            w.set_direction(player.current_direction);
+            w.set_animation(a);
           });
 }
 

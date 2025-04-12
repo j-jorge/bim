@@ -1,4 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
+#include <bim/game/contest_timeline.hpp>
+
 #include <bim/game/component/bomb.hpp>
 #include <bim/game/component/fractional_position_on_grid.hpp>
 #include <bim/game/component/player.hpp>
@@ -9,10 +11,11 @@
 #include <bim/game/constant/max_player_count.hpp>
 #include <bim/game/contest.hpp>
 #include <bim/game/contest_result.hpp>
-#include <bim/game/contest_timeline.hpp>
 #include <bim/game/contest_timeline_writer.hpp>
 #include <bim/game/kick_event.hpp>
 #include <bim/game/player_action.hpp>
+
+#include <entt/entity/registry.hpp>
 
 #include <cstdio>
 
@@ -421,8 +424,19 @@ TEST(bim_game_contest_timeline, three_players_dead_or_kicked)
          ++i)
       tick();
 
-    // One final tick, just to get the result of the contest.
-    const bim::game::contest_result contest_result = tick();
+    // Wait for the result of the contest, which is available once the
+    // animations are over.
+    bim::game::contest_result contest_result =
+        bim::game::contest_result::create_still_running();
+
+    // Wait until the bomb explodes.
+    for (std::size_t i = 0;
+         (i
+          != (std::size_t)(std::chrono::seconds(10)
+                           / bim::game::contest::tick_interval))
+         && contest_result.still_running();
+         ++i)
+      contest_result = tick();
 
     // The game should be over since there is only one player left.
     EXPECT_FALSE(contest_result.still_running());

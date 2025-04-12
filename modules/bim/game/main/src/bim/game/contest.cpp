@@ -5,15 +5,18 @@
 #include <bim/game/check_game_over.hpp>
 #include <bim/game/component/player.hpp>
 #include <bim/game/component/player_action.hpp>
-#include <bim/game/component/player_direction.hpp>
 #include <bim/game/component/position_on_grid.hpp>
 #include <bim/game/contest_fingerprint.hpp>
 #include <bim/game/contest_result.hpp>
+#include <bim/game/context/context.hpp>
+#include <bim/game/context/fill_context.hpp>
+#include <bim/game/context/player_animations.hpp>
 #include <bim/game/factory/arena_reduction.hpp>
 #include <bim/game/factory/fog_of_war.hpp>
 #include <bim/game/factory/main_timer.hpp>
 #include <bim/game/factory/player.hpp>
 #include <bim/game/feature_flags.hpp>
+#include <bim/game/system/animator.hpp>
 #include <bim/game/system/apply_player_action.hpp>
 #include <bim/game/system/arena_reduction.hpp>
 #include <bim/game/system/fog_of_war_updater.hpp>
@@ -41,10 +44,14 @@
 
 constexpr std::chrono::milliseconds bim::game::contest::tick_interval;
 
-static void add_players(entt::registry& registry, std::uint8_t player_count,
+static void add_players(const bim::game::context& context,
+                        entt::registry& registry, std::uint8_t player_count,
                         std::uint8_t arena_width, std::uint8_t arena_height)
 {
   bim_assume(player_count > 0);
+
+  const bim::game::animation_id initial_state =
+      context.get<const bim::game::player_animations>().idle_down;
 
   const bim::game::position_on_grid player_start_position[] = {
     bim::game::position_on_grid(1, 1),
@@ -57,9 +64,9 @@ static void add_players(entt::registry& registry, std::uint8_t player_count,
   for (std::size_t i = 0; i != player_count; ++i)
     {
       const int start_position_index = i % start_position_count;
-      bim::game::player_factory(registry, i,
-                                player_start_position[start_position_index].x,
-                                player_start_position[start_position_index].y);
+      bim::game::player_factory(
+          registry, i, player_start_position[start_position_index].x,
+          player_start_position[start_position_index].y, initial_state);
     }
 }
 
@@ -129,11 +136,14 @@ bim::game::contest::contest(const contest_fingerprint& fingerprint)
 bim::game::contest::contest(const contest_fingerprint& fingerprint,
                             std::uint8_t local_player_index)
   : m_registry(new entt::registry())
+  , m_context(new bim::game::context())
   , m_arena(new bim::game::arena(fingerprint.arena_width,
                                  fingerprint.arena_height))
 {
-  add_players(*m_registry, fingerprint.player_count, fingerprint.arena_width,
-              fingerprint.arena_height);
+  fill_context(*m_context);
+
+  add_players(*m_context, *m_registry, fingerprint.player_count,
+              fingerprint.arena_width, fingerprint.arena_height);
   generate_basic_level_structure(*m_arena);
 
   bim::game::random_generator random(fingerprint.seed);
@@ -171,9 +181,10 @@ bim::game::contest_result bim::game::contest::tick()
 {
   refresh_bomb_inventory(*m_registry);
   update_timers(*m_registry, tick_interval);
-  apply_player_action(*m_registry, *m_arena);
+  animator(*m_context, *m_registry, tick_interval);
+  apply_player_action(*m_context, *m_registry, *m_arena);
   m_arena_reduction->update(*m_registry, *m_arena);
-  update_falling_blocks(*m_registry, *m_arena);
+  update_falling_blocks(*m_context, *m_registry, *m_arena);
   update_bombs(*m_registry, *m_arena);
   update_flames(*m_registry, *m_arena);
   update_brick_walls(*m_registry, *m_arena);
@@ -181,12 +192,17 @@ bim::game::contest_result bim::game::contest::tick()
   update_bomb_power_ups(*m_registry, *m_arena);
   update_flame_power_up_spawners(*m_registry, *m_arena);
   update_flame_power_ups(*m_registry, *m_arena);
-  update_players(*m_registry, *m_arena);
+  update_players(*m_context, *m_registry, *m_arena);
   m_fog_of_war->update(*m_registry);
 
   remove_dead_objects(*m_registry);
 
-  return check_game_over(*m_registry);
+  return check_game_over(*m_context, *m_registry);
+}
+
+const bim::game::context& bim::game::contest::context() const
+{
+  return *m_context;
 }
 
 entt::registry& bim::game::contest::registry()

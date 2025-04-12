@@ -168,10 +168,7 @@
 
         "arena-width-in-blocks": 13,
 
-        "player-1": [ "app/screen/part/player-1" ],
-        "player-2": [ "app/screen/part/player-2" ],
-        "player-3": [ "app/screen/part/player-3" ],
-        "player-4": [ "app/screen/part/player-4" ],
+        "player": [ "app/screen/part/player" ],
 
         "arena-border.top/frame": "sprites/arena-border.png",
 

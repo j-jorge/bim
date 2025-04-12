@@ -1,6 +1,6 @@
 ---
-Language:        Cpp
-BasedOnStyle:  GNU
+Language: Cpp
+BasedOnStyle: GNU
 SpaceBeforeParens: true
 AllowShortEnumsOnASingleLine: false
 AllowShortFunctionsOnASingleLine: false
@@ -40,4 +40,7 @@ Standard: c++20
 # break before parenthesis
 # all params on next line if overflow
 # arguments: bin pack (configuration_file)
+---
+Language: Json
+BasedOnStyle: GNU
 ...

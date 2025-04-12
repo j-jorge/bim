@@ -5,6 +5,7 @@
 #include <bim/net/exchange/server_update.hpp>
 
 #include <bim/game/check_game_over.hpp>
+#include <bim/game/component/animation_state.hpp>
 #include <bim/game/component/arena_reduction_state.hpp>
 #include <bim/game/component/bomb.hpp>
 #include <bim/game/component/bomb_power_up.hpp>
@@ -286,6 +287,7 @@ void bim::net::contest_runner::archive_io(Snapshot&& snapshot,
                                           Archive&& archive) const
 {
   snapshot.template get<entt::entity>(archive)
+      .template get<bim::game::animation_state>(archive)
       .template get<bim::game::arena_reduction_state>(archive)
       .template get<bim::game::bomb>(archive)
       .template get<bim::game::bomb_power_up>(archive)

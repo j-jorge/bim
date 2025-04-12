@@ -12,6 +12,9 @@ add_library(bim_axmol_widget
   main/src/bim/axmol/widget/register_widgets.cpp
   main/src/bim/axmol/widget/set_node_parents.cpp
 
+  main/src/bim/axmol/widget/animation/animation.cpp
+  main/src/bim/axmol/widget/animation/animation_cache.cpp
+
   main/src/bim/axmol/widget/factory/animation.cpp
   main/src/bim/axmol/widget/factory/clipping_node.cpp
   main/src/bim/axmol/widget/factory/label.cpp
@@ -43,12 +46,14 @@ target_link_libraries(
   bim_axmol_input
   bim_axmol_style
   bim_axmol_core
+  bim_game
   bim_core
   iscool_audio
   iscool_i18n
 )
 
 add_executable(axmol-widget-tests
+  tests/src/bim/axmol/widget/animation/animation_cache.cpp
   tests/src/bim/axmol/widget/factory/node.cpp
 )
 target_link_libraries(

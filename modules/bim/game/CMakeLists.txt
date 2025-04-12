@@ -18,9 +18,16 @@ add_library(bim_game
   main/src/bim/game/random_generator.cpp
   main/src/bim/game/tick_counter.cpp
 
+  main/src/bim/game/animation/animation_catalog.cpp
+
+  main/src/bim/game/component/animation_state.cpp
   main/src/bim/game/component/flame_direction.cpp
   main/src/bim/game/component/fractional_position_on_grid.cpp
   main/src/bim/game/component/player_action_queue.cpp
+
+  main/src/bim/game/context/fill_context.cpp
+  main/src/bim/game/context/player_animations.cpp
+  main/src/bim/game/context/register_player_animations.cpp
 
   main/src/bim/game/factory/arena_reduction.cpp
   main/src/bim/game/factory/bomb.cpp
@@ -33,6 +40,7 @@ add_library(bim_game
   main/src/bim/game/factory/main_timer.cpp
   main/src/bim/game/factory/player.cpp
 
+  main/src/bim/game/system/animator.cpp
   main/src/bim/game/system/apply_player_action.cpp
   main/src/bim/game/system/arena_reduction.cpp
   main/src/bim/game/system/fog_of_war_updater.cpp
@@ -61,9 +69,11 @@ add_executable(game-tests
   tests/src/bim/game/level_generation.cpp
   tests/src/bim/game/player_action.cpp
 
+  tests/src/bim/game/component/animation_state.cpp
   tests/src/bim/game/component/flame_direction.cpp
   tests/src/bim/game/component/player_action_queue.cpp
 
+  tests/src/bim/game/system/animator.cpp
   tests/src/bim/game/system/apply_player_action.cpp
   tests/src/bim/game/system/arena_reduction.cpp
   tests/src/bim/game/system/fog_of_war.cpp

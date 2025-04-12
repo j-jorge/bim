@@ -1,21 +1,10 @@
 set(sprites
   "sprites/bomb.png"
   "sprites/crate.png"
-  "sprites/player-1-back.png"
-  "sprites/player-1-front.png"
-  "sprites/player-1-left.png"
-  "sprites/player-2-back.png"
-  "sprites/player-2-front.png"
-  "sprites/player-2-left.png"
-  "sprites/player-3-back.png"
-  "sprites/player-3-front.png"
-  "sprites/player-3-left.png"
-  "sprites/player-4-back.png"
-  "sprites/player-4-front.png"
-  "sprites/player-4-left.png"
   "sprites/power-up-bomb.png"
   "sprites/power-up-flame.png"
   "sprites/solid-wall.png"
+  "sprites/transparent.png"
 
   "sprites/features/falling-block-off.png"
   "sprites/features/falling-block-on.png"
@@ -49,6 +38,83 @@ set(sprites
   "sprites/menu/silhouette-4.png"
   "sprites/menu/stripe-1-79-1-258.png"
   "sprites/menu/vibration.png"
+
+  "sprites/player/1-disappear-0.png"
+  "sprites/player/1-disappear-1.png"
+  "sprites/player/1-disappear-2.png"
+  "sprites/player/1-disappear-3.png"
+  "sprites/player/1-walk-back-0-4.png"
+  "sprites/player/1-walk-back-1-3-m5-m7.png"
+  "sprites/player/1-walk-back-2-m6.png"
+  "sprites/player/1-walk-front-0-4.png"
+  "sprites/player/1-walk-front-1-m5.png"
+  "sprites/player/1-walk-front-2-m6.png"
+  "sprites/player/1-walk-front-3-m7.png"
+  "sprites/player/1-walk-side-0-4.png"
+  "sprites/player/1-walk-side-1-3.png"
+  "sprites/player/1-walk-side-2.png"
+  "sprites/player/1-walk-side-5-7.png"
+  "sprites/player/1-walk-side-6.png"
+  "sprites/player/2-disappear-0.png"
+  "sprites/player/2-disappear-1.png"
+  "sprites/player/2-disappear-2.png"
+  "sprites/player/2-disappear-3.png"
+  "sprites/player/2-walk-back-0-4.png"
+  "sprites/player/2-walk-back-1-3-m5-m7.png"
+  "sprites/player/2-walk-back-2-m6.png"
+  "sprites/player/2-walk-front-0-4.png"
+  "sprites/player/2-walk-front-1-m5.png"
+  "sprites/player/2-walk-front-2-m6.png"
+  "sprites/player/2-walk-front-3-m7.png"
+  "sprites/player/2-walk-side-0-4.png"
+  "sprites/player/2-walk-side-1-3.png"
+  "sprites/player/2-walk-side-2.png"
+  "sprites/player/2-walk-side-5-7.png"
+  "sprites/player/2-walk-side-6.png"
+  "sprites/player/3-disappear-0.png"
+  "sprites/player/3-disappear-1.png"
+  "sprites/player/3-disappear-2.png"
+  "sprites/player/3-disappear-3.png"
+  "sprites/player/3-walk-back-0-4.png"
+  "sprites/player/3-walk-back-1-3-m5-m7.png"
+  "sprites/player/3-walk-back-2-m6.png"
+  "sprites/player/3-walk-front-0-4.png"
+  "sprites/player/3-walk-front-1-m5.png"
+  "sprites/player/3-walk-front-2-m6.png"
+  "sprites/player/3-walk-front-3-m7.png"
+  "sprites/player/3-walk-side-0-4.png"
+  "sprites/player/3-walk-side-1-3.png"
+  "sprites/player/3-walk-side-2.png"
+  "sprites/player/3-walk-side-5-7.png"
+  "sprites/player/3-walk-side-6.png"
+  "sprites/player/4-disappear-0.png"
+  "sprites/player/4-disappear-1.png"
+  "sprites/player/4-disappear-2.png"
+  "sprites/player/4-disappear-3.png"
+  "sprites/player/4-walk-back-0-4.png"
+  "sprites/player/4-walk-back-1-3-m5-m7.png"
+  "sprites/player/4-walk-back-2-m6.png"
+  "sprites/player/4-walk-front-0-4.png"
+  "sprites/player/4-walk-front-1-m5.png"
+  "sprites/player/4-walk-front-2-m6.png"
+  "sprites/player/4-walk-front-3-m7.png"
+  "sprites/player/4-walk-side-0-4.png"
+  "sprites/player/4-walk-side-1-3.png"
+  "sprites/player/4-walk-side-2.png"
+  "sprites/player/4-walk-side-5-7.png"
+  "sprites/player/4-walk-side-6.png"
+  "sprites/player/burned-0.png"
+  "sprites/player/burned-1-6.png"
+  "sprites/player/burned-2-7.png"
+  "sprites/player/burned-3.png"
+  "sprites/player/burned-4.png"
+  "sprites/player/burned-5.png"
+  "sprites/player/burned-8.png"
+  "sprites/player/burned-9.png"
+  "sprites/player/disappear-burned-0.png"
+  "sprites/player/disappear-burned-1.png"
+  "sprites/player/disappear-burned-2.png"
+  "sprites/player/disappear-burned-3.png"
 
   "sprites/popup/popup-border-146-146.png"
   "sprites/popup/popup-fill-146-146.png"
@@ -151,8 +217,10 @@ find_program(auto_pack_my_sprites auto-pack-my-sprites REQUIRED)
 # sprite-sheet.png file there, we are going to have problems.
 add_custom_command(
   OUTPUT
-    ${BIM_GENERATED_ASSETS_DIR}/sprite-sheet.png
-    ${BIM_GENERATED_ASSETS_DIR}/sprite-sheet.plist
+    ${BIM_GENERATED_ASSETS_DIR}/sprite-sheet-1.png
+    ${BIM_GENERATED_ASSETS_DIR}/sprite-sheet-2.png
+    ${BIM_GENERATED_ASSETS_DIR}/sprite-sheet-1.plist
+    ${BIM_GENERATED_ASSETS_DIR}/sprite-sheet-2.plist
   COMMAND ${auto_pack_my_sprites}
     --output sprite-sheet
     --no-crop
@@ -163,11 +231,14 @@ add_custom_command(
     --bleeding
     ${sprites_bleeding}
   COMMAND
-    mv sprite-sheet.* ${BIM_GENERATED_ASSETS_DIR}
+    mv sprite-sheet*.* ${BIM_GENERATED_ASSETS_DIR}
   DEPENDS ${sprites_full_path}
   WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/..
 )
 
 add_custom_target(
-  sprite-sheets ALL DEPENDS ${BIM_GENERATED_ASSETS_DIR}/sprite-sheet.png
+  sprite-sheets ALL
+  DEPENDS
+  ${BIM_GENERATED_ASSETS_DIR}/sprite-sheet-1.png
+  ${BIM_GENERATED_ASSETS_DIR}/sprite-sheet-2.png
 )

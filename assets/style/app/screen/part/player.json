@@ -1,0 +1,18 @@
+{
+    "style":
+    {
+        "anchor-point.x": 0.5,
+        "anchor-point.y": 0.33,
+        "z-order": 10,
+
+        "widgets":
+        [{
+            "body/frame": "sprites/player/1-walk-front-0-4.png"
+        }],
+
+        "bounds":
+        [{
+            "body": [ "layout/fill" ]
+        }]
+    }
+}

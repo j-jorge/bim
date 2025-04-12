@@ -8,6 +8,8 @@
 namespace bim::game
 {
   class arena;
+  class context;
 
-  void update_falling_blocks(entt::registry& registry, arena& arena);
+  void update_falling_blocks(const context& context, entt::registry& registry,
+                             arena& arena);
 }

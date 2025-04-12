@@ -13,8 +13,9 @@
 namespace bim::game
 {
   class arena;
-  class contest_result;
   class arena_reduction;
+  class contest_result;
+  class context;
   class fog_of_war_updater;
   struct contest_fingerprint;
   struct fog_of_war;
@@ -33,6 +34,8 @@ namespace bim::game
 
     contest_result tick();
 
+    const bim::game::context& context() const;
+
     entt::registry& registry();
     const entt::registry& registry() const;
     const bim::game::arena& arena() const;
@@ -43,6 +46,7 @@ namespace bim::game
 
   private:
     std::unique_ptr<entt::registry> m_registry;
+    std::unique_ptr<bim::game::context> m_context;
     std::unique_ptr<bim::game::arena> m_arena;
 
     std::unique_ptr<arena_reduction> m_arena_reduction;

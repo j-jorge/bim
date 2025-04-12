@@ -2,12 +2,13 @@
 #include <bim/game/system/apply_player_action.hpp>
 
 #include <bim/game/arena.hpp>
-
+#include <bim/game/component/animation_state.hpp>
 #include <bim/game/component/fractional_position_on_grid.hpp>
 #include <bim/game/component/player.hpp>
 #include <bim/game/component/player_action_queue.hpp>
-#include <bim/game/component/player_direction.hpp>
 #include <bim/game/component/player_movement.hpp>
+#include <bim/game/context/context.hpp>
+#include <bim/game/context/player_animations.hpp>
 #include <bim/game/factory/bomb.hpp>
 
 #include <bim/assume.hpp>
@@ -37,10 +38,23 @@ static void drop_bomb(entt::registry& registry, bim::game::arena& arena,
 static void move_player(bim::game::player& player,
                         bim::game::fractional_position_on_grid& position,
                         bim::game::player_movement movement,
-                        const bim::game::arena& arena)
+                        bim::game::animation_state& state,
+                        const bim::game::arena& arena,
+                        const bim::game::player_animations& animations)
 {
   if (movement == bim::game::player_movement::idle)
-    return;
+    {
+      if (state.model == animations.walk_left)
+        state.transition_to(animations.idle_left);
+      else if (state.model == animations.walk_right)
+        state.transition_to(animations.idle_right);
+      else if (state.model == animations.walk_up)
+        state.transition_to(animations.idle_up);
+      else if (state.model == animations.walk_down)
+        state.transition_to(animations.idle_down);
+
+      return;
+    }
 
   using position_t = bim::game::fractional_position_on_grid::value_type;
 
@@ -75,7 +89,7 @@ static void move_player(bim::game::player& player,
   switch (movement)
     {
     case bim::game::player_movement::left:
-      player.current_direction = bim::game::player_direction::left;
+      state.transition_to(animations.walk_left);
 
       if ((x_decimal <= half + offset) && arena.is_solid(x_int - 1, y_int))
         {
@@ -104,7 +118,7 @@ static void move_player(bim::game::player& player,
         }
       break;
     case bim::game::player_movement::right:
-      player.current_direction = bim::game::player_direction::right;
+      state.transition_to(animations.walk_right);
 
       if ((x_decimal + offset >= half) && arena.is_solid(x_int + 1, y_int))
         {
@@ -133,7 +147,7 @@ static void move_player(bim::game::player& player,
         }
       break;
     case bim::game::player_movement::up:
-      player.current_direction = bim::game::player_direction::up;
+      state.transition_to(animations.walk_up);
 
       if ((y_decimal <= half + offset) && arena.is_solid(x_int, y_int - 1))
         {
@@ -162,7 +176,7 @@ static void move_player(bim::game::player& player,
         }
       break;
     case bim::game::player_movement::down:
-      player.current_direction = bim::game::player_direction::down;
+      state.transition_to(animations.walk_down);
 
       if ((y_decimal + offset >= half) && arena.is_solid(x_int, y_int + 1))
         {
@@ -227,33 +241,47 @@ static void move_player(bim::game::player& player,
 
 static void
 apply_player_actions(entt::registry& registry, bim::game::arena& arena,
+                     const bim::game::player_animations& animations,
                      bim::game::player& player,
                      bim::game::fractional_position_on_grid& position,
-                     const bim::game::queued_action& queued_action)
+                     const bim::game::queued_action& queued_action,
+                     bim::game::animation_state& state)
 {
-  move_player(player, position, queued_action.action.movement, arena);
+  move_player(player, position, queued_action.action.movement, state, arena,
+              animations);
 
   if (queued_action.action.drop_bomb)
     drop_bomb(registry, arena, player, queued_action.arena_x,
               queued_action.arena_y);
 }
 
-void bim::game::apply_player_action(entt::registry& registry, arena& arena)
+void bim::game::apply_player_action(const context& context,
+                                    entt::registry& registry, arena& arena)
 {
+  const player_animations& animations = context.get<const player_animations>();
+
   registry
       .view<player, fractional_position_on_grid, player_action,
-            player_action_queue>()
+            player_action_queue, animation_state>()
       .each(
-          [&registry, &arena](player& player,
-                              fractional_position_on_grid& position,
-                              player_action& scheduled_action,
-                              player_action_queue& action_queue) -> void
+          [&registry, &arena,
+           &animations](player& player, fractional_position_on_grid& position,
+                        player_action& scheduled_action,
+                        player_action_queue& action_queue,
+                        animation_state& state) -> void
           {
+            if (!animations.is_alive(state.model))
+              {
+                scheduled_action = {};
+                return;
+              }
+
             const queued_action action = action_queue.enqueue(
                 scheduled_action, position.grid_aligned_x(),
                 position.grid_aligned_y());
 
             scheduled_action = {};
-            apply_player_actions(registry, arena, player, position, action);
+            apply_player_actions(registry, arena, animations, player, position,
+                                 action, state);
           });
 }

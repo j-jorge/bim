@@ -1,14 +1,19 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/game/system/apply_player_action.hpp>
 
+#include <bim/game/animation/animation_catalog.hpp>
 #include <bim/game/arena.hpp>
 #include <bim/game/cell_neighborhood.hpp>
+#include <bim/game/component/animation_state.hpp>
 #include <bim/game/component/bomb.hpp>
 #include <bim/game/component/fractional_position_on_grid.hpp>
 #include <bim/game/component/player.hpp>
 #include <bim/game/component/player_action_queue.hpp>
 #include <bim/game/component/player_movement.hpp>
 #include <bim/game/component/timer.hpp>
+#include <bim/game/context/context.hpp>
+#include <bim/game/context/player_animations.hpp>
+#include <bim/game/context/register_player_animations.hpp>
 #include <bim/game/factory/player.hpp>
 #include <bim/game/system/refresh_bomb_inventory.hpp>
 #include <bim/game/system/remove_dead_objects.hpp>
@@ -26,21 +31,30 @@ public:
 
 protected:
   void run_forward_move_test(int start_x, int start_y,
-                             bim::game::player_movement movement, float end_x,
+                             bim::game::player_movement movement,
+                             bim::game::animation_id end_state, float end_x,
                              float end_y);
   void run_dodge_move_test(int start_x, int start_y,
                            bim::game::player_movement first_move,
-                           bim::game::player_movement second_move, float end_x,
+                           bim::game::player_movement second_move,
+                           bim::game::animation_id end_state, float end_x,
                            float end_y);
 
 protected:
   entt::registry m_registry;
+  bim::game::context m_context;
+  bim::game::player_animations m_player_animations;
   bim::game::arena m_arena;
 };
 
 bim_game_apply_player_action_test::bim_game_apply_player_action_test()
   : m_arena(5, 5)
-{ /*
+{
+  bim::game::animation_catalog animation_catalog;
+  bim::game::register_player_animations(m_context, animation_catalog);
+  m_player_animations = m_context.get<const bim::game::player_animations>();
+
+  /*
    Set-up the walls like this:
 
    XXXXX
@@ -71,11 +85,11 @@ bim_game_apply_player_action_test::bim_game_apply_player_action_test()
 }
 
 void bim_game_apply_player_action_test::run_forward_move_test(
-    int start_x, int start_y, bim::game::player_movement movement, float end_x,
-    float end_y)
+    int start_x, int start_y, bim::game::player_movement movement,
+    bim::game::animation_id end_state, float end_x, float end_y)
 {
-  const entt::entity player =
-      bim::game::player_factory(m_registry, 0, start_x, start_y);
+  const entt::entity player = bim::game::player_factory(
+      m_registry, 0, start_x, start_y, m_player_animations.idle_down);
   const bim::game::fractional_position_on_grid& position =
       m_registry.storage<bim::game::fractional_position_on_grid>().get(player);
 
@@ -88,13 +102,17 @@ void bim_game_apply_player_action_test::run_forward_move_test(
   for (int i = 0; i != bim::game::g_player_steps_per_cell; ++i)
     {
       action.movement = movement;
-      bim::game::apply_player_action(m_registry, m_arena);
+      bim::game::apply_player_action(m_context, m_registry, m_arena);
     }
+
+  bim::game::animation_state& state =
+      m_registry.storage<bim::game::animation_state>().get(player);
+  EXPECT_EQ(end_state, state.model);
 
   // Flush the queue.
   action = {};
   for (int i = 0; i != bim::game::player_action_queue::queue_size + 1; ++i)
-    bim::game::apply_player_action(m_registry, m_arena);
+    bim::game::apply_player_action(m_context, m_registry, m_arena);
 
   EXPECT_FLOAT_EQ(end_x, position.x_float());
   EXPECT_FLOAT_EQ(end_y, position.y_float());
@@ -102,10 +120,11 @@ void bim_game_apply_player_action_test::run_forward_move_test(
 
 void bim_game_apply_player_action_test::run_dodge_move_test(
     int start_x, int start_y, bim::game::player_movement first_move,
-    bim::game::player_movement second_move, float end_x, float end_y)
+    bim::game::player_movement second_move, bim::game::animation_id end_state,
+    float end_x, float end_y)
 {
-  const entt::entity player =
-      bim::game::player_factory(m_registry, 0, start_x, start_y);
+  const entt::entity player = bim::game::player_factory(
+      m_registry, 0, start_x, start_y, m_player_animations.idle_down);
   const bim::game::fractional_position_on_grid& position =
       m_registry.storage<bim::game::fractional_position_on_grid>().get(player);
 
@@ -118,19 +137,23 @@ void bim_game_apply_player_action_test::run_dodge_move_test(
   for (int i = 0; i != bim::game::g_player_steps_per_cell / 2 - 1; ++i)
     {
       action.movement = first_move;
-      bim::game::apply_player_action(m_registry, m_arena);
+      bim::game::apply_player_action(m_context, m_registry, m_arena);
     }
 
   for (int i = 0; i != bim::game::g_player_steps_per_cell; ++i)
     {
       action.movement = second_move;
-      bim::game::apply_player_action(m_registry, m_arena);
+      bim::game::apply_player_action(m_context, m_registry, m_arena);
     }
+
+  bim::game::animation_state& state =
+      m_registry.storage<bim::game::animation_state>().get(player);
+  EXPECT_EQ(end_state, state.model);
 
   // Flush the queue.
   action = {};
   for (int i = 0; i != bim::game::player_action_queue::queue_size + 1; ++i)
-    bim::game::apply_player_action(m_registry, m_arena);
+    bim::game::apply_player_action(m_context, m_registry, m_arena);
 
   EXPECT_FLOAT_EQ(end_x, position.x_float());
   EXPECT_FLOAT_EQ(end_y, position.y_float());
@@ -138,90 +161,106 @@ void bim_game_apply_player_action_test::run_dodge_move_test(
 
 TEST_F(bim_game_apply_player_action_test, move_right_freely)
 {
-  run_forward_move_test(1, 1, bim::game::player_movement::right, 2.5, 1.5);
+  run_forward_move_test(1, 1, bim::game::player_movement::right,
+                        m_player_animations.walk_right, 2.5, 1.5);
 }
 
 TEST_F(bim_game_apply_player_action_test, move_left_freely)
 {
-  run_forward_move_test(3, 1, bim::game::player_movement::left, 2.5, 1.5);
+  run_forward_move_test(3, 1, bim::game::player_movement::left,
+                        m_player_animations.walk_left, 2.5, 1.5);
 }
 
 TEST_F(bim_game_apply_player_action_test, move_down_freely)
 {
-  run_forward_move_test(1, 1, bim::game::player_movement::down, 1.5, 2.5);
+  run_forward_move_test(1, 1, bim::game::player_movement::down,
+                        m_player_animations.walk_down, 1.5, 2.5);
 }
 
 TEST_F(bim_game_apply_player_action_test, move_up_freely)
 {
-  run_forward_move_test(1, 3, bim::game::player_movement::up, 1.5, 2.5);
+  run_forward_move_test(1, 3, bim::game::player_movement::up,
+                        m_player_animations.walk_up, 1.5, 2.5);
 }
 
 TEST_F(bim_game_apply_player_action_test, cannot_move_right)
 {
-  run_forward_move_test(3, 1, bim::game::player_movement::right, 3.5, 1.5);
+  run_forward_move_test(3, 1, bim::game::player_movement::right,
+                        m_player_animations.walk_right, 3.5, 1.5);
 }
 
 TEST_F(bim_game_apply_player_action_test, cannot_move_left)
 {
-  run_forward_move_test(1, 1, bim::game::player_movement::left, 1.5, 1.5);
+  run_forward_move_test(1, 1, bim::game::player_movement::left,
+                        m_player_animations.walk_left, 1.5, 1.5);
 }
 
 TEST_F(bim_game_apply_player_action_test, cannot_move_down)
 {
-  run_forward_move_test(1, 3, bim::game::player_movement::down, 1.5, 3.5);
+  run_forward_move_test(1, 3, bim::game::player_movement::down,
+                        m_player_animations.walk_down, 1.5, 3.5);
 }
 
 TEST_F(bim_game_apply_player_action_test, cannot_move_up)
 {
-  run_forward_move_test(1, 1, bim::game::player_movement::up, 1.5, 1.5);
+  run_forward_move_test(1, 1, bim::game::player_movement::up,
+                        m_player_animations.walk_up, 1.5, 1.5);
 }
 
 TEST_F(bim_game_apply_player_action_test, move_right_up_around_wall)
 {
   run_dodge_move_test(1, 1, bim::game::player_movement::down,
-                      bim::game::player_movement::right, 2.5, 1.5);
+                      bim::game::player_movement::right,
+                      m_player_animations.walk_right, 2.5, 1.5);
 }
 
 TEST_F(bim_game_apply_player_action_test, move_right_down_around_wall)
 {
   run_dodge_move_test(1, 3, bim::game::player_movement::up,
-                      bim::game::player_movement::right, 2.5, 3.5);
+                      bim::game::player_movement::right,
+                      m_player_animations.walk_right, 2.5, 3.5);
 }
 
 TEST_F(bim_game_apply_player_action_test, move_left_up_around_wall)
 {
   run_dodge_move_test(3, 1, bim::game::player_movement::down,
-                      bim::game::player_movement::left, 2.5, 1.5);
+                      bim::game::player_movement::left,
+                      m_player_animations.walk_left, 2.5, 1.5);
 }
 
 TEST_F(bim_game_apply_player_action_test, move_left_down_around_wall)
 {
   run_dodge_move_test(3, 3, bim::game::player_movement::up,
-                      bim::game::player_movement::left, 2.5, 3.5);
+                      bim::game::player_movement::left,
+                      m_player_animations.walk_left, 2.5, 3.5);
 }
 
 TEST_F(bim_game_apply_player_action_test, move_down_left_around_wall)
 {
   run_dodge_move_test(1, 1, bim::game::player_movement::right,
-                      bim::game::player_movement::down, 1.5, 2.5);
+                      bim::game::player_movement::down,
+                      m_player_animations.walk_down, 1.5, 2.5);
 }
 
 TEST_F(bim_game_apply_player_action_test, move_down_right_around_wall)
 {
   run_dodge_move_test(3, 1, bim::game::player_movement::left,
-                      bim::game::player_movement::down, 3.5, 2.5);
+                      bim::game::player_movement::down,
+                      m_player_animations.walk_down, 3.5, 2.5);
 }
 
 TEST_F(bim_game_apply_player_action_test, move_up_left_around_wall)
 {
   run_dodge_move_test(1, 3, bim::game::player_movement::right,
-                      bim::game::player_movement::up, 1.5, 2.5);
+                      bim::game::player_movement::up,
+                      m_player_animations.walk_up, 1.5, 2.5);
 }
 
 TEST_F(bim_game_apply_player_action_test, move_up_right_around_wall)
 {
   run_dodge_move_test(3, 3, bim::game::player_movement::left,
-                      bim::game::player_movement::up, 3.5, 2.5);
+                      bim::game::player_movement::up,
+                      m_player_animations.walk_up, 3.5, 2.5);
 }
 
 TEST_F(bim_game_apply_player_action_test, cannot_go_through_bombs)
@@ -230,8 +269,10 @@ TEST_F(bim_game_apply_player_action_test, cannot_go_through_bombs)
   constexpr int start_x[player_count] = { 1, 1 };
   constexpr int start_y[player_count] = { 1, 3 };
   const entt::entity players[player_count] = {
-    bim::game::player_factory(m_registry, 0, start_x[0], start_y[0]),
-    bim::game::player_factory(m_registry, 1, start_x[1], start_y[1])
+    bim::game::player_factory(m_registry, 0, start_x[0], start_y[0],
+                              m_player_animations.idle_down),
+    bim::game::player_factory(m_registry, 1, start_x[1], start_y[1],
+                              m_player_animations.idle_down)
   };
 
   bim::game::player_action* const action[player_count] = {
@@ -245,12 +286,12 @@ TEST_F(bim_game_apply_player_action_test, cannot_go_through_bombs)
     {
       action[0]->movement = bim::game::player_movement::down;
       action[1]->movement = bim::game::player_movement::right;
-      bim::game::apply_player_action(m_registry, m_arena);
+      bim::game::apply_player_action(m_context, m_registry, m_arena);
     }
 
   // Flush the queue.
   for (int i = 0; i != bim::game::player_action_queue::queue_size + 1; ++i)
-    bim::game::apply_player_action(m_registry, m_arena);
+    bim::game::apply_player_action(m_context, m_registry, m_arena);
 
   const bim::game::fractional_position_on_grid positions[player_count] = {
     m_registry.storage<bim::game::fractional_position_on_grid>().get(
@@ -275,7 +316,8 @@ TEST_F(bim_game_apply_player_action_test, drop_bomb_decreases_inventory)
   constexpr int start_x = 1;
   constexpr int start_y = 1;
   const entt::entity player_entity =
-      bim::game::player_factory(m_registry, player_index, start_x, start_y);
+      bim::game::player_factory(m_registry, player_index, start_x, start_y,
+                                m_player_animations.idle_down);
 
   bim::game::player& player =
       m_registry.storage<bim::game::player>().get(player_entity);
@@ -294,7 +336,7 @@ TEST_F(bim_game_apply_player_action_test, drop_bomb_decreases_inventory)
 
   // Flush the queue.
   for (int i = 0; i != bim::game::player_action_queue::queue_size + 1; ++i)
-    bim::game::apply_player_action(m_registry, m_arena);
+    bim::game::apply_player_action(m_context, m_registry, m_arena);
 
   EXPECT_EQ(1, player.bomb_available);
 
@@ -309,7 +351,7 @@ TEST_F(bim_game_apply_player_action_test, drop_bomb_decreases_inventory)
   action.drop_bomb = true;
 
   for (int i = 0; i != bim::game::player_action_queue::queue_size + 1; ++i)
-    bim::game::apply_player_action(m_registry, m_arena);
+    bim::game::apply_player_action(m_context, m_registry, m_arena);
 
   EXPECT_EQ(0, player.bomb_available);
 
@@ -322,7 +364,7 @@ TEST_F(bim_game_apply_player_action_test, drop_bomb_decreases_inventory)
   action.drop_bomb = true;
 
   for (int i = 0; i != bim::game::player_action_queue::queue_size; ++i)
-    bim::game::apply_player_action(m_registry, m_arena);
+    bim::game::apply_player_action(m_context, m_registry, m_arena);
 
   EXPECT_EQ(0, player.bomb_available);
 
@@ -346,7 +388,8 @@ TEST_F(bim_game_apply_player_action_test, drop_bomb_where_the_player_was)
   constexpr int start_x = 1;
   constexpr int start_y = 1;
   const entt::entity player_entity =
-      bim::game::player_factory(m_registry, player_index, start_x, start_y);
+      bim::game::player_factory(m_registry, player_index, start_x, start_y,
+                                m_player_animations.idle_down);
 
   bim::game::player& player =
       m_registry.storage<bim::game::player>().get(player_entity);
@@ -380,7 +423,7 @@ TEST_F(bim_game_apply_player_action_test, drop_bomb_where_the_player_was)
   for (int i = 0; i != bim::game::player_action_queue::queue_size; ++i)
     {
       action.movement = bim::game::player_movement::down;
-      bim::game::apply_player_action(m_registry, m_arena);
+      bim::game::apply_player_action(m_context, m_registry, m_arena);
     }
 
   // The player has not moved, this is where the bomb should be dropped.
@@ -390,13 +433,13 @@ TEST_F(bim_game_apply_player_action_test, drop_bomb_where_the_player_was)
   // Queue the dropping.
   action.drop_bomb = true;
   action.movement = bim::game::player_movement::idle;
-  bim::game::apply_player_action(m_registry, m_arena);
+  bim::game::apply_player_action(m_context, m_registry, m_arena);
 
   action.drop_bomb = false;
 
   // Then flush the queue.
   for (int i = 0; i != bim::game::player_action_queue::queue_size; ++i)
-    bim::game::apply_player_action(m_registry, m_arena);
+    bim::game::apply_player_action(m_context, m_registry, m_arena);
 
   // The bomb has been dropped.
   EXPECT_EQ(0, player.bomb_available);
@@ -413,7 +456,8 @@ TEST_F(bim_game_apply_player_action_test, drop_bomb_flood)
   constexpr int start_x = 1;
   constexpr int start_y = 1;
   const entt::entity player_entity =
-      bim::game::player_factory(m_registry, player_index, start_x, start_y);
+      bim::game::player_factory(m_registry, player_index, start_x, start_y,
+                                m_player_animations.idle_down);
 
   bim::game::player& player =
       m_registry.storage<bim::game::player>().get(player_entity);
@@ -432,17 +476,17 @@ TEST_F(bim_game_apply_player_action_test, drop_bomb_flood)
     {
       action.drop_bomb = true;
       action.movement = bim::game::player_movement::down;
-      bim::game::apply_player_action(m_registry, m_arena);
+      bim::game::apply_player_action(m_context, m_registry, m_arena);
     }
 
   // Drop a bomb in the last cell too.
   action.drop_bomb = true;
   action.movement = bim::game::player_movement::down;
-  bim::game::apply_player_action(m_registry, m_arena);
+  bim::game::apply_player_action(m_context, m_registry, m_arena);
 
   // Flush the queue.
   for (int i = 0; i != bim::game::player_action_queue::queue_size + 1; ++i)
-    bim::game::apply_player_action(m_registry, m_arena);
+    bim::game::apply_player_action(m_context, m_registry, m_arena);
 
   EXPECT_EQ(0, player.bomb_available);
 

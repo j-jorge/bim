@@ -6,7 +6,6 @@
 #include <bim/game/component/flame.hpp>
 #include <bim/game/component/flame_direction.hpp>
 #include <bim/game/component/player.hpp>
-#include <bim/game/component/player_direction.hpp>
 #include <bim/game/component/position_on_grid.hpp>
 #include <bim/game/component/timer.hpp>
 
@@ -26,8 +25,7 @@ TEST(bim_game_archive, pod_components_multiple_steps)
                                      std::chrono::milliseconds(2));
 
   registry.emplace<bim::game::position_on_grid>(entities[1], 11, 22);
-  registry.emplace<bim::game::player>(
-      entities[1], 24, bim::game::player_direction::up, 0, 0, 4);
+  registry.emplace<bim::game::player>(entities[1], 24, 0, 0, 4);
 
   registry.emplace<bim::game::flame>(entities[3],
                                      bim::game::flame_direction::left,
@@ -76,8 +74,6 @@ TEST(bim_game_archive, pod_components_multiple_steps)
 
   ASSERT_TRUE(registry.storage<bim::game::player>().contains(entities[1]));
   EXPECT_EQ(24, registry.get<bim::game::player>(entities[1]).index);
-  EXPECT_EQ(bim::game::player_direction::up,
-            registry.get<bim::game::player>(entities[1]).current_direction);
   EXPECT_EQ(4, registry.get<bim::game::player>(entities[1]).bomb_strength);
 
   ASSERT_TRUE(registry.storage<bim::game::flame>().contains(entities[3]));

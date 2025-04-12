@@ -402,7 +402,9 @@ bool bim::axmol::app::application::applicationDidFinishLaunching()
 
   // TODO: in a loader.
   ax::SpriteFrameCache::getInstance()->addSpriteFramesWithFile(
-      "sprite-sheet.plist");
+      "sprite-sheet-1.plist");
+  ax::SpriteFrameCache::getInstance()->addSpriteFramesWithFile(
+      "sprite-sheet-2.plist");
   m_session_systems.reset(new detail::session_systems(*this));
 
   m_context.get_scene_lock()->instant_lock();

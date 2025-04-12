@@ -103,6 +103,5 @@ void bim::game::update_bombs(entt::registry& registry, arena& arena)
         arena.erase_entity(position.x, position.y);
         create_flames(registry, arena, position, b.strength);
         registry.emplace_or_replace<dead>(e);
-        // registry.destroy(e);
       });
 }

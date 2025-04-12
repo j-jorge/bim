@@ -5,7 +5,6 @@
 
 #include <bim/game/component/brick_wall.hpp>
 #include <bim/game/component/player.hpp>
-#include <bim/game/component/player_direction.hpp>
 #include <bim/game/component/position_on_grid.hpp>
 
 #include <bim/game/factory/player.hpp>
@@ -131,7 +130,8 @@ TEST(bim_game_insert_random_brick_walls, no_walls_near_player)
   int i = 0;
   for (bim::game::position_on_grid p : player_positions)
     {
-      bim::game::player_factory(registry, i, p.x, p.y);
+      bim::game::player_factory(registry, i, p.x, p.y,
+                                bim::game::animation_id{});
       ++i;
     }
 

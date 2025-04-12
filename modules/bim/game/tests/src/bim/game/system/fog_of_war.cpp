@@ -93,8 +93,10 @@ TEST(fog_of_war, initial_fog)
     5 .....    f...f
     6 .....    fffff
   */
-  bim::game::player_factory(registry, 0, player_0_x, player_0_y);
-  bim::game::player_factory(registry, 1, player_1_x, player_1_y);
+  bim::game::player_factory(registry, 0, player_0_x, player_0_y,
+                            bim::game::animation_id{});
+  bim::game::player_factory(registry, 1, player_1_x, player_1_y,
+                            bim::game::animation_id{});
 
   bim::game::fog_of_war_factory(registry, 1, arena.width(), arena.height(),
                                 {});
@@ -233,7 +235,8 @@ TEST(fog_of_war, excluded)
     5 ...x.    fff.f
     6 .....    fffff
   */
-  bim::game::player_factory(registry, 0, player_0_x, player_0_y);
+  bim::game::player_factory(registry, 0, player_0_x, player_0_y,
+                            bim::game::animation_id{});
 
   const bim::game::position_on_grid excluded[] = { { 1, 4 }, { 3, 5 } };
   bim::game::fog_of_war_factory(registry, 0, arena.width(), arena.height(),

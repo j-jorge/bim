@@ -58,8 +58,8 @@ TEST_P(new_game_after_game_over_test, game_over_then_new_random_game)
 
   // Wait three game-seconds for the bomb to explode.
   m_simulator.tick(std::chrono::seconds(3));
-  // Keep running a bit to synchronize with the server.
-  m_simulator.tick(std::chrono::seconds(1));
+  // Keep running a bit terminate the animations.
+  m_simulator.tick(std::chrono::seconds(5));
 
   // At this point all players except the last one are dead. The game should be
   // over.

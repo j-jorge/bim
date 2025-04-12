@@ -4,11 +4,24 @@
 #include <bim/axmol/widget/declare_controls_struct.hpp>
 #include <bim/axmol/widget/declare_widget_create_function.hpp>
 
-#include <bim/game/component/player_direction_fwd.hpp>
+#include <bim/game/animation/animation_id.hpp>
 
 #include <axmol/2d/Node.h>
 
 #include <cstdint>
+#include <unordered_map>
+
+namespace bim::axmol::widget
+{
+  class animation_cache;
+  struct animation;
+}
+
+namespace bim::game
+{
+  struct animation_state;
+  struct player_animations;
+}
 
 namespace bim::axmol::app
 {
@@ -19,9 +32,14 @@ namespace bim::axmol::app
 
     player(const bim::axmol::widget::context& context,
            const iscool::style::declaration& style);
+
     ~player();
 
-    void set_direction(bim::game::player_direction d);
+    void configure(const bim::axmol::widget::animation_cache& animations,
+                   const bim::game::player_animations& player_animations,
+                   std::uint8_t player_index);
+
+    void set_animation(const bim::game::animation_state& state);
 
     void setContentSize(const ax::Size& size) override;
 
@@ -30,8 +48,12 @@ namespace bim::axmol::app
 
   private:
     const bim::axmol::widget::context& m_context;
-    bim_declare_controls_struct(controls, m_controls, 4);
+    bim_declare_controls_struct(controls, m_controls, 1);
 
     const iscool::style::declaration& m_style_bounds;
+
+    std::unordered_map<bim::game::animation_id,
+                       const bim::axmol::widget::animation*>
+        m_animations;
   };
 }

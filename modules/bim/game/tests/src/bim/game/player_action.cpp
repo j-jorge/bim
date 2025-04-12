@@ -12,8 +12,10 @@ TEST(bim_game_player_action, find_player_action_by_index)
 {
   entt::registry registry;
 
-  const entt::entity player_0 = bim::game::player_factory(registry, 0, 1, 0);
-  const entt::entity player_1 = bim::game::player_factory(registry, 1, 1, 1);
+  const entt::entity player_0 =
+      bim::game::player_factory(registry, 0, 1, 0, bim::game::animation_id{});
+  const entt::entity player_1 =
+      bim::game::player_factory(registry, 1, 1, 1, bim::game::animation_id{});
 
   EXPECT_EQ(&registry.storage<bim::game::player_action>().get(player_0),
             bim::game::find_player_action_by_index(registry, 0));
