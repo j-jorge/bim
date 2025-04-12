@@ -22,6 +22,8 @@
 #include <axmol/2d/Sprite.h>
 #include <axmol/2d/SpriteFrameCache.h>
 
+#include <entt/entity/registry.hpp>
+
 #include <cassert>
 
 static bim::game::cell_neighborhood

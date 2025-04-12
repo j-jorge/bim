@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/game/contest.hpp>
 
+#include <bim/game/arena.hpp>
 #include <bim/game/check_game_over.hpp>
 #include <bim/game/component/player.hpp>
 #include <bim/game/component/player_action.hpp>
@@ -33,6 +34,8 @@
 #include <bim/game/random_generator.hpp>
 
 #include <bim/assume.hpp>
+
+#include <entt/entity/registry.hpp>
 
 #include <boost/random/uniform_int_distribution.hpp>
 
@@ -125,33 +128,35 @@ bim::game::contest::contest(const contest_fingerprint& fingerprint)
 
 bim::game::contest::contest(const contest_fingerprint& fingerprint,
                             std::uint8_t local_player_index)
-  : m_arena(fingerprint.arena_width, fingerprint.arena_height)
+  : m_registry(new entt::registry())
+  , m_arena(new bim::game::arena(fingerprint.arena_width,
+                                 fingerprint.arena_height))
 {
-  add_players(m_registry, fingerprint.player_count, fingerprint.arena_width,
+  add_players(*m_registry, fingerprint.player_count, fingerprint.arena_width,
               fingerprint.arena_height);
-  generate_basic_level_structure(m_arena);
+  generate_basic_level_structure(*m_arena);
 
   bim::game::random_generator random(fingerprint.seed);
 
-  insert_random_brick_walls(m_arena, m_registry, random,
+  insert_random_brick_walls(*m_arena, *m_registry, random,
                             fingerprint.brick_wall_probability);
 
   if (!!(fingerprint.features & feature_flags::falling_blocks))
-    arena_reduction_factory(m_registry, std::chrono::minutes(2));
+    arena_reduction_factory(*m_registry, std::chrono::minutes(2));
   else
-    main_timer_factory(m_registry, std::chrono::minutes(3));
+    main_timer_factory(*m_registry, std::chrono::minutes(3));
 
   // The fog of war is a local feature, it has no impact on simulations run
   // elsewhere. Consequently we instantiate it only if there is a local player.
   if ((local_player_index < fingerprint.player_count)
       && !!(fingerprint.features & feature_flags::fog_of_war))
-    add_fog_of_war(m_registry, fingerprint.player_count,
+    add_fog_of_war(*m_registry, fingerprint.player_count,
                    fingerprint.arena_width, fingerprint.arena_height,
                    fingerprint.seed);
 
-  m_arena_reduction.reset(new arena_reduction(m_arena));
+  m_arena_reduction.reset(new arena_reduction(*m_arena));
   m_fog_of_war.reset(
-      new fog_of_war_updater(m_registry, m_arena, fingerprint.player_count));
+      new fog_of_war_updater(*m_registry, *m_arena, fingerprint.player_count));
 }
 
 bim::game::contest::~contest() = default;
@@ -164,42 +169,42 @@ bim::game::contest::fog_map(std::size_t player_index) const
 
 bim::game::contest_result bim::game::contest::tick()
 {
-  refresh_bomb_inventory(m_registry);
-  update_timers(m_registry, tick_interval);
-  apply_player_action(m_registry, m_arena);
-  m_arena_reduction->update(m_registry, m_arena);
-  update_falling_blocks(m_registry, m_arena);
-  update_bombs(m_registry, m_arena);
-  update_flames(m_registry, m_arena);
-  update_brick_walls(m_registry, m_arena);
-  update_bomb_power_up_spawners(m_registry, m_arena);
-  update_bomb_power_ups(m_registry, m_arena);
-  update_flame_power_up_spawners(m_registry, m_arena);
-  update_flame_power_ups(m_registry, m_arena);
-  update_players(m_registry, m_arena);
-  m_fog_of_war->update(m_registry);
+  refresh_bomb_inventory(*m_registry);
+  update_timers(*m_registry, tick_interval);
+  apply_player_action(*m_registry, *m_arena);
+  m_arena_reduction->update(*m_registry, *m_arena);
+  update_falling_blocks(*m_registry, *m_arena);
+  update_bombs(*m_registry, *m_arena);
+  update_flames(*m_registry, *m_arena);
+  update_brick_walls(*m_registry, *m_arena);
+  update_bomb_power_up_spawners(*m_registry, *m_arena);
+  update_bomb_power_ups(*m_registry, *m_arena);
+  update_flame_power_up_spawners(*m_registry, *m_arena);
+  update_flame_power_ups(*m_registry, *m_arena);
+  update_players(*m_registry, *m_arena);
+  m_fog_of_war->update(*m_registry);
 
-  remove_dead_objects(m_registry);
+  remove_dead_objects(*m_registry);
 
-  return check_game_over(m_registry);
+  return check_game_over(*m_registry);
 }
 
 entt::registry& bim::game::contest::registry()
 {
-  return m_registry;
+  return *m_registry;
 }
 
 const entt::registry& bim::game::contest::registry() const
 {
-  return m_registry;
+  return *m_registry;
 }
 
 const bim::game::arena& bim::game::contest::arena() const
 {
-  return m_arena;
+  return *m_arena;
 }
 
 void bim::game::contest::arena(const bim::game::arena& a)
 {
-  m_arena = a;
+  *m_arena = a;
 }

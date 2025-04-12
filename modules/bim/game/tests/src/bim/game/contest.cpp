@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/game/contest.hpp>
 
+#include <bim/game/arena.hpp>
 #include <bim/game/component/bomb_power_up_spawner.hpp>
 #include <bim/game/component/flame_power_up_spawner.hpp>
 #include <bim/game/component/fractional_position_on_grid.hpp>

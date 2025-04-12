@@ -1,18 +1,18 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #pragma once
 
-#include <bim/game/arena.hpp>
 #include <bim/game/feature_flags_fwd.hpp>
 
 #include <bim/table_2d.hpp>
 
-#include <entt/entity/registry.hpp>
+#include <entt/entity/fwd.hpp>
 
 #include <chrono>
 #include <memory>
 
 namespace bim::game
 {
+  class arena;
   class contest_result;
   class arena_reduction;
   class fog_of_war_updater;
@@ -42,8 +42,8 @@ namespace bim::game
     fog_map(std::size_t player_index) const;
 
   private:
-    entt::registry m_registry;
-    bim::game::arena m_arena;
+    std::unique_ptr<entt::registry> m_registry;
+    std::unique_ptr<bim::game::arena> m_arena;
 
     std::unique_ptr<arena_reduction> m_arena_reduction;
     std::unique_ptr<fog_of_war_updater> m_fog_of_war;

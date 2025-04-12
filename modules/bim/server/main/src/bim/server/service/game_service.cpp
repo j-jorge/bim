@@ -12,6 +12,7 @@
 #include <bim/net/message/start.hpp>
 #include <bim/net/message/try_deserialize_message.hpp>
 
+#include <bim/game/arena.hpp>
 #include <bim/game/component/player.hpp>
 #include <bim/game/component/player_action.hpp>
 #include <bim/game/constant/default_arena_size.hpp>
