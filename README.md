@@ -57,3 +57,8 @@ use other free licenses, see [AUTHORS.md](AUTHORS.md) for details.
 You can take the code or the assets, do whatever you want with them,
 as long as you make your changes publicly available under the same
 terms.
+
+# Contributing
+
+Want to take part in the project? Let's begin with [the developer's
+guide](docs/developers.md).
