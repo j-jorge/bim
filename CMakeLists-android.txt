@@ -6,6 +6,20 @@ find_program(identify identify REQUIRED)
 find_program(magick magick REQUIRED)
 find_program(paco_info_bin paco-info REQUIRED)
 
+option(
+  BIM_ANDROID_DEV
+  "Create an Android build for developers, with a different app ID."
+  OFF
+)
+
+if(BIM_ANDROID_DEV)
+  set(bim_android_app_id "bim.app.dev")
+  set(bim_android_app_name "Bim! (dev)")
+else()
+  set(bim_android_app_id "bim.app")
+  set(bim_android_app_name "Bim!")
+endif()
+
 # Where the static part of the Android project is located (e.g. the
 # Java source of the game).
 set(android_app_root_dir "${CMAKE_CURRENT_LIST_DIR}/android")
@@ -217,6 +231,12 @@ function(generate_legacy_icon output dpi size)
   # Size for the rounded corners.
   math(EXPR ref_size_20_percents "20 * ${ref_size} / 100")
 
+  if (BIM_ANDROID_DEV)
+    set(additional_imagemagick_args -channel RGB -negate)
+  else()
+    set(additional_imagemagick_args)
+  endif()
+
   add_custom_command(
     OUTPUT "${output_file}"
     COMMAND
@@ -224,6 +244,8 @@ function(generate_legacy_icon output dpi size)
     COMMAND
       "${magick}"
       "${master_icon}"
+
+      ${additional_imagemagick_args}
       # Remove the extra margin.
       -crop "${ref_size}x${ref_size}+${ref_offset}+${ref_offset}"
       # Rounded rectangle mask.
@@ -251,6 +273,12 @@ function(generate_adaptive_icon output dpi size)
   # The master icon has extra margins that we are going to remove.
   math(EXPR ref_size "125 * ${master_icon_size} / 100")
 
+  if (BIM_ANDROID_DEV)
+    set(additional_imagemagick_args -channel RGB -negate)
+  else()
+    set(additional_imagemagick_args)
+  endif()
+
   add_custom_command(
     OUTPUT "${output_file}"
     COMMAND
@@ -262,6 +290,7 @@ function(generate_adaptive_icon output dpi size)
       -set background "%[pixel:p{0,0}]"
       -gravity center
       -extent ${ref_size}x${ref_size}
+      ${additional_imagemagick_args}
       -strip
       "${output_file}"
     DEPENDS "${master_icon}"
@@ -313,3 +342,19 @@ add_custom_target(apk-install
   DEPENDS apk
   USES_TERMINAL
 )
+
+if (BIM_ANDROID_DEV)
+  add_custom_command(
+    TARGET aab apk apk-install
+    POST_BUILD
+    COMMAND
+      ${CMAKE_COMMAND} -E echo
+      "-------------------------------------------------------"
+    COMMAND
+      ${CMAKE_COMMAND} -E echo
+      "/!\\\\ This is a build for developers. DO NOT PUBLISH. /!\\\\"
+    COMMAND
+      ${CMAKE_COMMAND} -E echo
+      "-------------------------------------------------------"
+  )
+endif()

@@ -34,7 +34,7 @@
 
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="bim.app.fileprovider"
+            android:authorities="@string/app_fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
 

@@ -2,7 +2,7 @@
 apply plugin: 'com.android.application'
 
 android {
-    namespace 'bim.app'
+    namespace '@bim_android_app_id@'
     compileSdk @bim_android_target_sdk_version@
     ndkVersion "@bim_android_ndk_version@"
 
@@ -14,11 +14,14 @@ android {
     }
 
     defaultConfig {
-        applicationId 'bim.app'
+        applicationId '@bim_android_app_id@'
         minSdkVersion @bim_android_min_sdk_version@
         targetSdkVersion @bim_android_target_sdk_version@
         versionCode @android_version_code@
         versionName '@CMAKE_PROJECT_VERSION@'
+        resValue "string", "app_name", "@bim_android_app_name@"
+        resValue "string", "app_fileprovider",
+            "@bim_android_app_name@.fileprovider"
     }
 
     sourceSets.main {

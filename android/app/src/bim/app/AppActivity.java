@@ -19,7 +19,7 @@ public class AppActivity extends AxmolActivity {
 
         JniService.init(this);
         LinkService.init(this);
-        ShareService.init(this, "bim.app.fileprovider");
+        ShareService.init(this, getPackageName() + ".fileprovider");
         SystemService.init(this);
 
         // Workaround in
