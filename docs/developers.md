@@ -26,3 +26,23 @@ The gameplay code and the server code are in `modules/bim`. The final
 apps are in `apps/axmol` for the client, and `apps/server` for the
 server.
 
+# Launching the game
+
+Supposing you've built the debug version of the game in a Linux
+environment, launch the game server with the following command:
+
+```
+./build/linux/debug/apps/server/bim-server
+```
+
+Then launch the game as follows, with the environment variable set to
+point to the server launched above.
+
+```
+BIM_GAME_SERVER_HOST=localhost:23899 \
+  ./build/linux/debug/apps/linux/bim \
+  --assets ./static-assets/ ./build/linux/debug/assets/generated/ \
+  --scale 0.5
+```
+
+Pass `--help` to any program to get additional information.
