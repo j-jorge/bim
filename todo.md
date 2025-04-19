@@ -1,6 +1,5 @@
 # Next
 
-- Animated player with updated colors.
 - Fully disconnect the client from the server when it is disconnected
   from the game service.
 - Shield feature.
