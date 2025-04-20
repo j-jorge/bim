@@ -3,6 +3,7 @@ set(sprites
   "sprites/crate.png"
   "sprites/power-up-bomb.png"
   "sprites/power-up-flame.png"
+  "sprites/power-up-invisibility.png"
   "sprites/solid-wall.png"
   "sprites/transparent.png"
 

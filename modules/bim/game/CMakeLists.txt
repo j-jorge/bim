@@ -37,6 +37,7 @@ add_library(bim_game
   main/src/bim/game/factory/flame.cpp
   main/src/bim/game/factory/flame_power_up.cpp
   main/src/bim/game/factory/fog_of_war.cpp
+  main/src/bim/game/factory/invisibility_power_up.cpp
   main/src/bim/game/factory/main_timer.cpp
   main/src/bim/game/factory/player.cpp
 
@@ -54,6 +55,8 @@ add_library(bim_game
   main/src/bim/game/system/update_flame_power_up_spawners.cpp
   main/src/bim/game/system/update_flame_power_ups.cpp
   main/src/bim/game/system/update_flames.cpp
+  main/src/bim/game/system/update_invisibility_power_up_spawners.cpp
+  main/src/bim/game/system/update_invisibility_power_ups.cpp
   main/src/bim/game/system/update_players.cpp
   main/src/bim/game/system/update_timers.cpp
 )
@@ -84,6 +87,8 @@ add_executable(game-tests
   tests/src/bim/game/system/update_falling_blocks.cpp
   tests/src/bim/game/system/update_flame_power_up_spawners.cpp
   tests/src/bim/game/system/update_flame_power_ups.cpp
+  tests/src/bim/game/system/update_invisibility_power_up_spawners.cpp
+  tests/src/bim/game/system/update_invisibility_power_ups.cpp
   tests/src/bim/game/system/update_players.cpp
   tests/src/bim/game/system/update_timers.cpp
 )

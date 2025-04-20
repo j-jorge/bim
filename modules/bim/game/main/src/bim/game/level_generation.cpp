@@ -6,6 +6,7 @@
 #include <bim/game/component/bomb_power_up_spawner.hpp>
 #include <bim/game/component/flame_power_up_spawner.hpp>
 #include <bim/game/component/fractional_position_on_grid.hpp>
+#include <bim/game/component/invisibility_power_up_spawner.hpp>
 #include <bim/game/component/player.hpp>
 #include <bim/game/component/position_on_grid.hpp>
 #include <bim/game/constant/max_player_count.hpp>
@@ -111,7 +112,8 @@ void bim::game::insert_random_brick_walls(arena& arena,
   const std::size_t brick_wall_count = brick_walls.size();
   const std::size_t power_up_count = std::min<std::size_t>(
       brick_wall_count,
-      g_bomb_power_up_count_in_level + g_flame_power_up_count_in_level);
+      g_bomb_power_up_count_in_level + g_flame_power_up_count_in_level +
+      g_invisibility_power_up_count_in_level);
 
   for (std::size_t available = brick_wall_count, needed = power_up_count,
                    i = 0, j = 0;
@@ -150,4 +152,9 @@ void bim::game::insert_random_brick_walls(arena& arena,
        (j != g_flame_power_up_count_in_level) && (i != brick_wall_count);
        ++i, ++j)
     registry.emplace<flame_power_up_spawner>(brick_walls[i]);
+
+  for (std::size_t j = 0;
+      (j != g_invisibility_power_up_count_in_level) && (i != brick_wall_count);
+      ++i, ++j)
+    registry.emplace<invisibility_power_up_spawner>(brick_walls[i]);
 }

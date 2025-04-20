@@ -8,6 +8,7 @@
 #include <bim/game/component/fractional_position_on_grid.hpp>
 #include <bim/game/component/kicked.hpp>
 #include <bim/game/component/player.hpp>
+#include <bim/game/component/timer.hpp>
 #include <bim/game/context/context.hpp>
 #include <bim/game/context/player_animations.hpp>
 
@@ -35,10 +36,12 @@ void bim::game::update_players(const context& context,
 {
   const player_animations& animations = context.get<const player_animations>();
 
-  registry.view<player, fractional_position_on_grid, animation_state>().each(
-      [&](entt::entity e, const player&, fractional_position_on_grid position,
-          animation_state& state) -> void
+  registry.view<player, fractional_position_on_grid, animation_state, timer>().each(
+      [&](entt::entity e, player& p, fractional_position_on_grid position,
+          animation_state& state, timer& t) -> void
       {
+        p.invisible = t.duration > std::chrono::milliseconds(0);
+
         if (registry.storage<kicked>().contains(e))
           registry.emplace<dead>(e);
         else if (animations.is_alive(state.model))

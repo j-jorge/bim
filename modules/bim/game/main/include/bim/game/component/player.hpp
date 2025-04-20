@@ -11,5 +11,6 @@ namespace bim::game
     std::uint8_t bomb_capacity;
     std::uint8_t bomb_available;
     std::uint8_t bomb_strength;
+    bool invisible;
   };
 }
