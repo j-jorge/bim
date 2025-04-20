@@ -12,6 +12,7 @@ python_virtual_environment_path="$host_prefix"/python
 build_type=release
 incremental_build=0
 target_platform=linux
+tag=
 build_steps=()
 all_build_steps=(dependencies configure build test)
 
@@ -55,6 +56,9 @@ Where OPTIONS is
      useful if you need your build to take longer than necessary.
   --target-platform P
      Build for platform P (either linux or android).
+  --tag T
+     Use this tag to name the build folder, as in build/linux/T. The
+     default is to use the build type as the tag.
 EOF
 }
 
@@ -107,6 +111,16 @@ do
         --incremental)
             incremental_build=1
             ;;
+        --tag)
+            if (( $# == 0 ))
+            then
+                echo "Missing value for --tag." >&2
+                exit 1
+            fi
+
+            tag="$1"
+            shift
+            ;;
         --target-platform)
             if (( $# == 0 ))
             then
@@ -141,6 +155,11 @@ fi
 if ((missing_dependencies != 0))
 then
     exit 1
+fi
+
+if [[ -z "${tag:-}" ]]
+then
+    tag="${build_type}"
 fi
 
 if [[ -f "$script_dir/.setup.conf" ]]
@@ -328,7 +347,7 @@ mkdir --parents "$bim_app_prefix"
 
 ! build_step_is_enabled dependencies || install_all_dependencies
 
-build_dir="$script_dir"/build/"$target_platform"/"$build_type"
+build_dir="$script_dir"/build/"$target_platform"/"$tag"
 
 if (( incremental_build != 0 ))
 then
