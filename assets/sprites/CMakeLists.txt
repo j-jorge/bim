@@ -11,6 +11,8 @@ set(sprites
   "sprites/features/falling-block-on.png"
   "sprites/features/fog-of-war-off.png"
   "sprites/features/fog-of-war-on.png"
+  "sprites/features/invisibility-off.png"
+  "sprites/features/invisibility-on.png"
   "sprites/features/unavailable.png"
 
   "sprites/menu/audio.png"

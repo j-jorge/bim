@@ -65,7 +65,8 @@ void bim::game::generate_basic_level_structure(arena& arena)
 void bim::game::insert_random_brick_walls(arena& arena,
                                           entt::registry& registry,
                                           random_generator& random_generator,
-                                          std::uint8_t brick_wall_probability)
+                                          std::uint8_t brick_wall_probability,
+                                          bool invisibility_power_up_enabled)
 {
   const int width = arena.width();
   const int height = arena.height();
@@ -153,8 +154,9 @@ void bim::game::insert_random_brick_walls(arena& arena,
        ++i, ++j)
     registry.emplace<flame_power_up_spawner>(brick_walls[i]);
 
-  for (std::size_t j = 0;
-      (j != g_invisibility_power_up_count_in_level) && (i != brick_wall_count);
-      ++i, ++j)
-    registry.emplace<invisibility_power_up_spawner>(brick_walls[i]);
+  if (invisibility_power_up_enabled)
+    for (std::size_t j = 0;
+        (j != g_invisibility_power_up_count_in_level) && (i != brick_wall_count);
+        ++i, ++j)
+      registry.emplace<invisibility_power_up_spawner>(brick_walls[i]);
 }

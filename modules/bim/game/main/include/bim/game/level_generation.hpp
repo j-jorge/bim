@@ -17,5 +17,6 @@ namespace bim::game
   void generate_basic_level_structure(arena& arena);
   void insert_random_brick_walls(arena& arena, entt::registry& registry,
                                  random_generator& random_generator,
-                                 std::uint8_t brick_wall_probability);
+                                 std::uint8_t brick_wall_probability,
+                                 bool invisibility_power_up_enabled = false);
 }

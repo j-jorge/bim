@@ -8,6 +8,7 @@
 #include <bim/game/component/flame_direction.hpp>
 #include <bim/game/component/flame_power_up.hpp>
 #include <bim/game/component/fractional_position_on_grid.hpp>
+#include <bim/game/component/invisibility_power_up.hpp>
 #include <bim/game/component/kicked.hpp>
 #include <bim/game/component/player.hpp>
 #include <bim/game/component/player_action.hpp>
@@ -148,6 +149,12 @@ void bim::game::dump_arena(const arena& arena, const entt::registry& registry)
         arena_str[pos.y][pos.x] = "F";
       });
 
+  registry.view<invisibility_power_up, position_on_grid>().each(
+      [&](position_on_grid pos) -> void
+      {
+        arena_str[pos.y][pos.x] = "I";
+      });
+
   struct bomb_state
   {
     std::uint8_t strength;
@@ -226,6 +233,12 @@ void bim::game::dump_arena(const arena& arena, const entt::registry& registry)
   printf("%-15s", "bomb_strength");
   for (int i = 0; i != player_count; ++i)
     dump_column(valid[i], (int)players[i].bomb_strength);
+  printf("\n");
+
+  print_arena_line(' ');
+  printf("%-15s", "invisible");
+  for (int i = 0; i != player_count; ++i)
+    dump_column(valid[i], (int)players[i].invisible);
   printf("\n");
 
   print_arena_line(' ');

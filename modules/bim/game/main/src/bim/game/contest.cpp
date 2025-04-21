@@ -151,7 +151,8 @@ bim::game::contest::contest(const contest_fingerprint& fingerprint,
   bim::game::random_generator random(fingerprint.seed);
 
   insert_random_brick_walls(*m_arena, *m_registry, random,
-                            fingerprint.brick_wall_probability);
+                            fingerprint.brick_wall_probability,
+                            !!(fingerprint.features & feature_flags::invisibility));
 
   if (!!(fingerprint.features & feature_flags::falling_blocks))
     arena_reduction_factory(*m_registry, std::chrono::minutes(2));
