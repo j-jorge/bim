@@ -6,6 +6,10 @@
     [
         {
             "h": "bim.jorge.st:PORT"
+        },
+        {
+            "p": 7,
+            "h": "bim.jorge.st:20607"
         }
     ]
 }

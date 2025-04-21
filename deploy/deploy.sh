@@ -90,6 +90,18 @@ then
     exit 1
 fi
 
+echo "Replacing server listening on port $port in 5 seconds."
+sleep 5
+
+echo "GO!"
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd)"
+
+temp_config="$(mktemp)"
+sed "s/PORT/$port/" "$script_dir"/client-config.json > "$temp_config"
+
+python3 -m json.tool --compact "$temp_config" "$temp_config"
+
 ssh "$login_at_host" \
     mkdir --parents bim/"$port"/{bin,etc,log} \
     '&&' cd bim/"$port"/ \
@@ -98,8 +110,6 @@ ssh "$login_at_host" \
     \)
 
 rsync "$build_dir"/apps/server/bim-server "$login_at_host":bim/"$port"/bin/
-
-script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd)"
 
 temp_config="$(mktemp)"
 sed "s/PORT/$port/" "$script_dir"/client-config.json > "$temp_config"
