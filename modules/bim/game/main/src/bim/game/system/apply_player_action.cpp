@@ -35,6 +35,20 @@ static void drop_bomb(entt::registry& registry, bim::game::arena& arena,
   arena.set_solid(arena_x, arena_y);
 }
 
+static void
+switch_to_idle_state(bim::game::animation_state& state,
+                     const bim::game::player_animations& animations)
+{
+  if (state.model == animations.walk_left)
+    state.transition_to(animations.idle_left);
+  else if (state.model == animations.walk_right)
+    state.transition_to(animations.idle_right);
+  else if (state.model == animations.walk_up)
+    state.transition_to(animations.idle_up);
+  else if (state.model == animations.walk_down)
+    state.transition_to(animations.idle_down);
+}
+
 static void move_player(bim::game::player& player,
                         bim::game::fractional_position_on_grid& position,
                         bim::game::player_movement movement,
@@ -44,15 +58,7 @@ static void move_player(bim::game::player& player,
 {
   if (movement == bim::game::player_movement::idle)
     {
-      if (state.model == animations.walk_left)
-        state.transition_to(animations.idle_left);
-      else if (state.model == animations.walk_right)
-        state.transition_to(animations.idle_right);
-      else if (state.model == animations.walk_up)
-        state.transition_to(animations.idle_up);
-      else if (state.model == animations.walk_down)
-        state.transition_to(animations.idle_down);
-
+      switch_to_idle_state(state, animations);
       return;
     }
 
@@ -237,6 +243,9 @@ static void move_player(bim::game::player& player,
             position.x += std::min(offset, half - x_decimal);
         }
     }
+
+  if ((position.x == x) && (position.y == y))
+    switch_to_idle_state(state, animations);
 }
 
 static void

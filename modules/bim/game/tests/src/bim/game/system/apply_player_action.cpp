@@ -186,25 +186,25 @@ TEST_F(bim_game_apply_player_action_test, move_up_freely)
 TEST_F(bim_game_apply_player_action_test, cannot_move_right)
 {
   run_forward_move_test(3, 1, bim::game::player_movement::right,
-                        m_player_animations.walk_right, 3.5, 1.5);
+                        m_player_animations.idle_right, 3.5, 1.5);
 }
 
 TEST_F(bim_game_apply_player_action_test, cannot_move_left)
 {
   run_forward_move_test(1, 1, bim::game::player_movement::left,
-                        m_player_animations.walk_left, 1.5, 1.5);
+                        m_player_animations.idle_left, 1.5, 1.5);
 }
 
 TEST_F(bim_game_apply_player_action_test, cannot_move_down)
 {
   run_forward_move_test(1, 3, bim::game::player_movement::down,
-                        m_player_animations.walk_down, 1.5, 3.5);
+                        m_player_animations.idle_down, 1.5, 3.5);
 }
 
 TEST_F(bim_game_apply_player_action_test, cannot_move_up)
 {
   run_forward_move_test(1, 1, bim::game::player_movement::up,
-                        m_player_animations.walk_up, 1.5, 1.5);
+                        m_player_animations.idle_up, 1.5, 1.5);
 }
 
 TEST_F(bim_game_apply_player_action_test, move_right_up_around_wall)
