@@ -23,6 +23,7 @@ add_library(bim_game
   main/src/bim/game/component/animation_state.cpp
   main/src/bim/game/component/flame_direction.cpp
   main/src/bim/game/component/fractional_position_on_grid.cpp
+  main/src/bim/game/component/invisibility_state.cpp
   main/src/bim/game/component/player_action_queue.cpp
 
   main/src/bim/game/context/fill_context.cpp
@@ -38,6 +39,7 @@ add_library(bim_game
   main/src/bim/game/factory/flame_power_up.cpp
   main/src/bim/game/factory/fog_of_war.cpp
   main/src/bim/game/factory/invisibility_power_up.cpp
+  main/src/bim/game/factory/invisibility_state.cpp
   main/src/bim/game/factory/main_timer.cpp
   main/src/bim/game/factory/player.cpp
 
@@ -57,6 +59,7 @@ add_library(bim_game
   main/src/bim/game/system/update_flames.cpp
   main/src/bim/game/system/update_invisibility_power_up_spawners.cpp
   main/src/bim/game/system/update_invisibility_power_ups.cpp
+  main/src/bim/game/system/update_invisibility_state.cpp  
   main/src/bim/game/system/update_players.cpp
   main/src/bim/game/system/update_timers.cpp
 )
@@ -89,6 +92,7 @@ add_executable(game-tests
   tests/src/bim/game/system/update_flame_power_ups.cpp
   tests/src/bim/game/system/update_invisibility_power_up_spawners.cpp
   tests/src/bim/game/system/update_invisibility_power_ups.cpp
+  tests/src/bim/game/system/update_invisibility_state.cpp
   tests/src/bim/game/system/update_players.cpp
   tests/src/bim/game/system/update_timers.cpp
 )

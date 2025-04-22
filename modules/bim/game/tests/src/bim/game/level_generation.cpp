@@ -72,7 +72,7 @@ TEST_P(bim_game_level_generation_test, random_brick_walls)
 
   entt::registry registry;
   bim::game::random_generator random(1234);
-  bim::game::insert_random_brick_walls(arena, registry, random, 50);
+  bim::game::insert_random_brick_walls(arena, registry, random, 50, {});
 
   int free_cell_count = 0;
 
@@ -138,7 +138,7 @@ TEST(bim_game_insert_random_brick_walls, no_walls_near_player)
   bim::game::random_generator random(1234);
 
   // Insert brick walls with a 100% probability, i.e. create a wall every time.
-  bim::game::insert_random_brick_walls(arena, registry, random, 100);
+  bim::game::insert_random_brick_walls(arena, registry, random, 100, {});
 
   for (int y = 0; y != height; ++y)
     for (int x = 0; x != width; ++x)

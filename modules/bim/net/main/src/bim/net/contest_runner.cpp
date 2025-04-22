@@ -22,6 +22,7 @@
 #include <bim/game/component/game_timer.hpp>
 #include <bim/game/component/invisibility_power_up.hpp>
 #include <bim/game/component/invisibility_power_up_spawner.hpp>
+#include <bim/game/component/invisibility_state.hpp>
 #include <bim/game/component/kicked.hpp>
 #include <bim/game/component/player.hpp>
 #include <bim/game/component/player_action.hpp>
@@ -306,6 +307,7 @@ void bim::net::contest_runner::archive_io(Snapshot&& snapshot,
       .template get<bim::game::game_timer>(archive)
       .template get<bim::game::invisibility_power_up>(archive)
       .template get<bim::game::invisibility_power_up_spawner>(archive)
+      .template get<bim::game::invisibility_state>(archive)
       .template get<bim::game::kicked>(archive)
       .template get<bim::game::player>(archive)
       .template get<bim::game::player_action>(archive)

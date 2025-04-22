@@ -9,11 +9,13 @@
 #include <entt/entity/registry.hpp>
 
 void bim::game::update_invisibility_power_up_spawners(entt::registry& registry,
-                                               arena& arena)
+                                                      arena& arena)
 {
-  registry.view<burning, invisibility_power_up_spawner, position_on_grid>().each(
-      [&](entt::entity, position_on_grid position) -> void
-      {
-        invisibility_power_up_factory(registry, arena, position.x, position.y);
-      });
+  registry.view<burning, invisibility_power_up_spawner, position_on_grid>()
+      .each(
+          [&](entt::entity, position_on_grid position) -> void
+          {
+            invisibility_power_up_factory(registry, arena, position.x,
+                                          position.y);
+          });
 }

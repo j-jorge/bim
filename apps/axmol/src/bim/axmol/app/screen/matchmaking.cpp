@@ -268,8 +268,8 @@ void bim::axmol::app::matchmaking::show_feature_on_message(
           "A thick fog covers the arena. You can't see were you did not go!");
       break;
     case bim::game::feature_flags::invisibility:
-      message = 
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do";
+      message =
+          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do";
       break;
     }
 

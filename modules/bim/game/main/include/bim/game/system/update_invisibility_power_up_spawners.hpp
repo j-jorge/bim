@@ -7,5 +7,6 @@ namespace bim::game
 {
   class arena;
 
-  void update_invisibility_power_up_spawners(entt::registry& registry, arena& arena);
+  void update_invisibility_power_up_spawners(entt::registry& registry,
+                                             arena& arena);
 }

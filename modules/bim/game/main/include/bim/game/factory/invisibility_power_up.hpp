@@ -9,6 +9,7 @@ namespace bim::game
 {
   class arena;
 
-  entt::entity invisibility_power_up_factory(entt::registry& registry, arena& arena,
-                                      std::uint8_t x, std::uint8_t y);
+  entt::entity invisibility_power_up_factory(entt::registry& registry,
+                                             arena& arena, std::uint8_t x,
+                                             std::uint8_t y);
 }

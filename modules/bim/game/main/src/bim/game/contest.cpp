@@ -32,6 +32,7 @@
 #include <bim/game/system/update_flames.hpp>
 #include <bim/game/system/update_invisibility_power_up_spawners.hpp>
 #include <bim/game/system/update_invisibility_power_ups.hpp>
+#include <bim/game/system/update_invisibility_state.hpp>
 #include <bim/game/system/update_players.hpp>
 #include <bim/game/system/update_timers.hpp>
 
@@ -152,7 +153,7 @@ bim::game::contest::contest(const contest_fingerprint& fingerprint,
 
   insert_random_brick_walls(*m_arena, *m_registry, random,
                             fingerprint.brick_wall_probability,
-                            !!(fingerprint.features & feature_flags::invisibility));
+                            fingerprint.features);
 
   if (!!(fingerprint.features & feature_flags::falling_blocks))
     arena_reduction_factory(*m_registry, std::chrono::minutes(2));
@@ -197,6 +198,7 @@ bim::game::contest_result bim::game::contest::tick()
   update_flame_power_ups(*m_registry, *m_arena);
   update_invisibility_power_up_spawners(*m_registry, *m_arena);
   update_invisibility_power_ups(*m_registry, *m_arena);
+  update_invisibility_state(*m_context, *m_registry);
   update_players(*m_context, *m_registry, *m_arena);
   m_fog_of_war->update(*m_registry);
 

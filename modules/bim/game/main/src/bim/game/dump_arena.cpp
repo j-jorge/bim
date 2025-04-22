@@ -9,6 +9,7 @@
 #include <bim/game/component/flame_power_up.hpp>
 #include <bim/game/component/fractional_position_on_grid.hpp>
 #include <bim/game/component/invisibility_power_up.hpp>
+#include <bim/game/component/invisibility_state.hpp>
 #include <bim/game/component/kicked.hpp>
 #include <bim/game/component/player.hpp>
 #include <bim/game/component/player_action.hpp>
@@ -238,7 +239,7 @@ void bim::game::dump_arena(const arena& arena, const entt::registry& registry)
   print_arena_line(' ');
   printf("%-15s", "invisible");
   for (int i = 0; i != player_count; ++i)
-    dump_column(valid[i], (int)players[i].invisible);
+    dump_column(valid[i], (int)is_invisible(registry, player_entities[i]));
   printf("\n");
 
   print_arena_line(' ');

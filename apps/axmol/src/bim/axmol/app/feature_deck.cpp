@@ -12,9 +12,9 @@
 #define x_widget_controls                                                     \
   x_widget(bim::axmol::widget::toggle, feature_falling_blocks)                \
       x_widget(bim::axmol::widget::toggle, feature_fog_of_war)                \
-        x_widget(bim::axmol::widget::toggle, feature_invisibility)            \
-          x_widget(bim::axmol::widget::button, feature_extra_0)               \
-              x_widget(bim::axmol::widget::button, feature_extra_1)           \
+          x_widget(bim::axmol::widget::toggle, feature_invisibility)          \
+              x_widget(bim::axmol::widget::button, feature_extra_0) x_widget( \
+                  bim::axmol::widget::button, feature_extra_1)                \
                   x_widget(bim::axmol::widget::button, feature_extra_2)       \
                       x_widget(bim::axmol::widget::button, feature_extra_3)
 #include <bim/axmol/widget/implement_controls_struct.hpp>

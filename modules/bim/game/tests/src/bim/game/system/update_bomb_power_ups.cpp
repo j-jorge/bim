@@ -38,7 +38,7 @@ TEST(update_bomb_power_ups, increment_player_capacity_and_available)
   EXPECT_TRUE(registry.storage<bim::game::dead>().contains(power_up_entity));
 }
 
-TEST(update_bomb_power_ups, two_players_only_one_get_the_power_up)
+TEST(update_bomb_power_ups, two_players_only_one_gets_the_power_up)
 {
   entt::registry registry;
   bim::game::arena arena(3, 3);

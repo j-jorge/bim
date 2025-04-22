@@ -9,8 +9,9 @@
 #include <entt/entity/registry.hpp>
 
 entt::entity bim::game::invisibility_power_up_factory(entt::registry& registry,
-                                               arena& arena, std::uint8_t x,
-                                               std::uint8_t y)
+                                                      arena& arena,
+                                                      std::uint8_t x,
+                                                      std::uint8_t y)
 {
   const entt::entity entity = registry.create();
 

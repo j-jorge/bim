@@ -16,7 +16,7 @@ entt::entity bim::game::player_factory(entt::registry& registry,
 {
   const entt::entity entity = registry.create();
 
-  registry.emplace<player>(entity, index, 1, 1, 1, false);
+  registry.emplace<player>(entity, index, 1, 1, 1);
 
   constexpr fractional_position_on_grid::value_type half =
       fractional_position_on_grid::value_type(1) / 2;
@@ -27,6 +27,5 @@ entt::entity bim::game::player_factory(entt::registry& registry,
   registry.emplace<player_action_queue>(entity);
   registry.emplace<animation_state>(entity, initial_state,
                                     std::chrono::seconds());
-  registry.emplace<timer>(entity, std::chrono::milliseconds());
   return entity;
 }

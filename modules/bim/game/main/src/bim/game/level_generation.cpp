@@ -66,7 +66,7 @@ void bim::game::insert_random_brick_walls(arena& arena,
                                           entt::registry& registry,
                                           random_generator& random_generator,
                                           std::uint8_t brick_wall_probability,
-                                          bool invisibility_power_up_enabled)
+                                          feature_flags features)
 {
   const int width = arena.width();
   const int height = arena.height();
@@ -109,12 +109,17 @@ void bim::game::insert_random_brick_walls(arena& arena,
           && (random(random_generator) < brick_wall_probability))
         brick_walls.emplace_back(brick_wall_factory(registry, arena, x, y));
 
+  const std::size_t invisibility_power_up_count =
+      !(features & feature_flags::invisibility)
+          ? 0
+          : g_invisibility_power_up_count_in_level;
+
   // Select the walls that will spawn power-ups.
   const std::size_t brick_wall_count = brick_walls.size();
   const std::size_t power_up_count = std::min<std::size_t>(
-      brick_wall_count,
-      g_bomb_power_up_count_in_level + g_flame_power_up_count_in_level +
-      g_invisibility_power_up_count_in_level);
+      brick_wall_count, g_bomb_power_up_count_in_level
+                            + g_flame_power_up_count_in_level
+                            + invisibility_power_up_count);
 
   for (std::size_t available = brick_wall_count, needed = power_up_count,
                    i = 0, j = 0;
@@ -154,9 +159,7 @@ void bim::game::insert_random_brick_walls(arena& arena,
        ++i, ++j)
     registry.emplace<flame_power_up_spawner>(brick_walls[i]);
 
-  if (invisibility_power_up_enabled)
-    for (std::size_t j = 0;
-        (j != g_invisibility_power_up_count_in_level) && (i != brick_wall_count);
-        ++i, ++j)
-      registry.emplace<invisibility_power_up_spawner>(brick_walls[i]);
+  for (std::size_t j = 0;
+       (j != invisibility_power_up_count) && (i != brick_wall_count); ++i, ++j)
+    registry.emplace<invisibility_power_up_spawner>(brick_walls[i]);
 }

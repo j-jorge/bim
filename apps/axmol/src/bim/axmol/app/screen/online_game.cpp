@@ -37,6 +37,7 @@
 #include <bim/game/component/fractional_position_on_grid.hpp>
 #include <bim/game/component/game_timer.hpp>
 #include <bim/game/component/invisibility_power_up.hpp>
+#include <bim/game/component/invisibility_state.hpp>
 #include <bim/game/component/player.hpp>
 #include <bim/game/component/player_action_queue.hpp>
 #include <bim/game/component/player_movement.hpp>
@@ -244,7 +245,8 @@ bim::axmol::app::online_game::online_game(
                  *style.get_declaration("power-up-flame"), *m_controls->arena);
   ::alloc_assets(m_invisibility_power_ups, widget_context,
                  bim::game::g_invisibility_power_up_count_in_level,
-                 *style.get_declaration("power-up-invisibility"), *m_controls->arena);
+                 *style.get_declaration("power-up-invisibility"),
+                 *m_controls->arena);
 }
 
 bim::axmol::app::online_game::~online_game() = default;
@@ -538,6 +540,7 @@ void bim::axmol::app::online_game::refresh_display()
   display_flame_power_ups();
   display_invisibility_power_ups();
   display_players();
+  display_invisibility_state();
 
   display_static_walls();
   display_falling_blocks();
@@ -641,9 +644,6 @@ void bim::axmol::app::online_game::display_players()
                  const bim::game::animation_state& a) -> void
           {
             bim::axmol::app::player& w = *m_players[player.index];
-
-            if (player.invisible && player.index != m_local_player_index)
-              return;
 
             display_at(p.grid_aligned_y(), w,
                        m_display_config.grid_position_to_display(p.x_float(),
@@ -786,16 +786,45 @@ void bim::axmol::app::online_game::display_invisibility_power_ups()
   const entt::registry& registry = m_contest->registry();
   std::size_t asset_index = 0;
 
-  registry.view<bim::game::position_on_grid, bim::game::invisibility_power_up>().each(
-      [this, &asset_index](const bim::game::position_on_grid& p) -> void
-      {
-        display_at(p.y, *m_invisibility_power_ups[asset_index],
-                   m_display_config.grid_position_to_displayed_block_center(
-                       p.x, p.y));
-        ++asset_index;
-      });
+  registry
+      .view<bim::game::position_on_grid, bim::game::invisibility_power_up>()
+      .each(
+          [this, &asset_index](const bim::game::position_on_grid& p) -> void
+          {
+            display_at(
+                p.y, *m_invisibility_power_ups[asset_index],
+                m_display_config.grid_position_to_displayed_block_center(p.x,
+                                                                         p.y));
+            ++asset_index;
+          });
 
-  bim::axmol::widget::hide_while_visible(m_invisibility_power_ups, asset_index);
+  bim::axmol::widget::hide_while_visible(m_invisibility_power_ups,
+                                         asset_index);
+}
+
+void bim::axmol::app::online_game::display_invisibility_state()
+{
+  const entt::registry& registry = m_contest->registry();
+  bool local_still_alive = false;
+
+  for (const auto& [_, p] : registry.view<bim::game::player>().each())
+    if (p.index == m_local_player_index)
+      {
+        local_still_alive = true;
+        break;
+      }
+
+  registry.view<bim::game::player>().each(
+      [this, &registry, local_still_alive](entt::entity e,
+                                           const bim::game::player& p) -> void
+      {
+        bim::axmol::app::player& w = *m_players[p.index];
+        const bool invisible = bim::game::is_invisible(registry, e);
+        const std::uint8_t opacity =
+            p.index == m_local_player_index ? 255 : 127 * !local_still_alive;
+
+        w.setOpacity(invisible ? opacity : 255);
+      });
 }
 
 void bim::axmol::app::online_game::display_main_timer()

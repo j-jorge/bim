@@ -36,7 +36,7 @@ TEST(update_flame_power_ups, player_collision)
   EXPECT_TRUE(registry.storage<bim::game::dead>().contains(power_up_entity));
 }
 
-TEST(update_flame_power_ups, two_players_only_one_get_the_power_up)
+TEST(update_flame_power_ups, two_players_only_one_gets_the_power_up)
 {
   entt::registry registry;
   bim::game::arena arena(3, 3);
