@@ -7,4 +7,5 @@ then
     git fetch --quiet --depth 1 origin "$1"
     git reset --quiet --hard FETCH_HEAD
     git clean -d --force -x
+    git submodule update --init --recursive .
 fi

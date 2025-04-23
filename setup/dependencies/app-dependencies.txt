@@ -3,6 +3,7 @@
 00-fpm.sh
 00-googletest.sh
 00-jsoncpp.sh
+00-maxminddb.sh
 00-mo-file-reader.sh
 10-axmol.sh
 10-iscool-core.sh

@@ -248,6 +248,7 @@ install_dependencies()
             "$script"
         else
             echo "Missing dependency script: '$script'." >&2
+            exit 1
         fi
     done
 )
