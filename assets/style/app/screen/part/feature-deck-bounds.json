@@ -5,7 +5,7 @@
         [
             "app/screen/part/feature-deck-button-bounds",
             {
-                "anchor.reference.x": 0.37
+                "anchor.reference.x": 0.24
             }
         ],
 
@@ -13,7 +13,7 @@
         [
             "app/screen/part/feature-deck-button-bounds",
             {
-                "anchor.reference.x": 0.37
+                "anchor.reference.x": 0.24
             }
         ],
 
@@ -21,7 +21,7 @@
         [
             "app/screen/part/feature-deck-button-bounds",
             {
-                "anchor.reference.x": 0.63
+                "anchor.reference.x": 0.5
             }
         ],
 
@@ -29,15 +29,23 @@
         [
             "app/screen/part/feature-deck-button-bounds",
             {
-                "anchor.reference.x": 0.63
+                "anchor.reference.x": 0.5
             }
         ],
 
+        "feature_invisibility":
+        [
+            "app/screen/part/feature-deck-button-bounds",
+            {
+                "anchor.reference.x": 0.76
+            }
+        ],
+        
         "feature_extra_2":
         [
             "app/screen/part/feature-deck-button-bounds",
             {
-                "anchor.reference.x": 0.61
+                "anchor.reference.x": 0.76
             }
         ],
 

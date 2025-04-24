@@ -267,6 +267,10 @@ void bim::axmol::app::matchmaking::show_feature_on_message(
       message = ic_gettext(
           "A thick fog covers the arena. You can't see were you did not go!");
       break;
+    case bim::game::feature_flags::invisibility:
+      message =
+          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do";
+      break;
     }
 
   m_controls->feature_description->setString(message);
@@ -286,6 +290,9 @@ void bim::axmol::app::matchmaking::show_feature_off_message(
     case bim::game::feature_flags::fog_of_war:
       message = ic_gettext("Immediate forcast: Clear sky during the game, you "
                            "can see the whole arena!");
+      break;
+    case bim::game::feature_flags::invisibility:
+      message = "Lorem ipsum dolor sit amet, consectetur";
       break;
     }
 

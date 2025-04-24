@@ -26,7 +26,7 @@ TEST(update_flame_power_up_spawners, burning)
   bim::game::update_flame_power_up_spawners(registry, arena);
 
   const entt::entity power_up = arena.entity_at(1, 2);
-  EXPECT_TRUE(entt::null != power_up);
+  ASSERT_TRUE(entt::null != power_up);
   EXPECT_TRUE(
       registry.storage<bim::game::flame_power_up>().contains(power_up));
 }

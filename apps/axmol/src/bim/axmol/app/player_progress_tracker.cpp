@@ -60,6 +60,13 @@ void bim::axmol::app::player_progress_tracker::game_over_in_public_arena(
       enabled_features |= bim::game::feature_flags::fog_of_war;
     }
 
+  if (!(available_features & bim::game::feature_flags::invisibility)
+      && ((victories >= 7) || (defeats >= 15)))
+    {
+      available_features |= bim::game::feature_flags::invisibility;
+      enabled_features |= bim::game::feature_flags::invisibility;
+    }
+
   available_feature_flags(preferences, available_features);
   enabled_feature_flags(preferences, enabled_features);
 }
