@@ -5,8 +5,9 @@
 
 #include <entt/entity/fwd.hpp>
 
+#include <bim/table_2d.hpp>
 #include <cstdint>
-#include <span>
+#include <optional>
 #include <vector>
 
 namespace bim::game
@@ -15,10 +16,6 @@ namespace bim::game
 
   class arena
   {
-  public:
-    using static_wall_const_iterator =
-        std::vector<static_wall>::const_iterator;
-
   public:
     arena();
     arena(std::uint8_t width, std::uint8_t height);
@@ -39,7 +36,7 @@ namespace bim::game
     bool is_solid(std::uint8_t x, std::uint8_t y) const;
     void set_solid(std::uint8_t x, std::uint8_t y);
 
-    std::span<const bim::game::static_wall> static_walls() const;
+    std::vector<bim::game::static_wall> static_walls() const;
 
     bool is_static_wall(std::uint8_t x, std::uint8_t y) const;
     void set_static_wall(std::uint8_t x, std::uint8_t y, cell_neighborhood n);
@@ -48,17 +45,17 @@ namespace bim::game
     std::uint8_t m_width;
     std::uint8_t m_height;
 
-    std::vector<entt::entity> m_entities;
+    table_2d<entt::entity> m_entities;
 
     /// Static walls, they are never removed.
-    std::vector<bool> m_is_static_wall;
+    table_2d<bool> m_is_static_wall;
 
-    std::vector<static_wall> m_static_walls;
+    table_2d<std::optional<static_wall>> m_static_walls ;
 
     /**
      * Tells if the cell cannot be crossed (i.e. static wall or destructible
      * wall).
      */
-    std::vector<bool> m_solids;
+    table_2d<bool> m_solids;
   };
 }
