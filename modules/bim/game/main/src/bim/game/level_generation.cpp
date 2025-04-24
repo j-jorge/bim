@@ -21,6 +21,51 @@
 #include <boost/algorithm/cxx11/any_of.hpp>
 #include <boost/random/uniform_int_distribution.hpp>
 
+template <typename Spawner, typename Predicate>
+static void generate_power_up_spawners(
+    entt::registry& registry, std::vector<entt::entity>& population,
+    std::size_t& population_size, std::size_t available, std::size_t needed,
+    bim::game::random_generator& random_generator, Predicate&& entity_filter)
+{
+  if (population_size < needed)
+    needed = population_size;
+
+  for (std::size_t i = 0; needed != 0; ++i)
+    {
+      if ((population[i] == entt::null) || !entity_filter(population[i]))
+        continue;
+
+      boost::random::uniform_int_distribution<std::uint8_t> random(1,
+                                                                   available);
+
+      if (random(random_generator) <= needed)
+        {
+          registry.emplace<Spawner>(population[i]);
+          population[i] = entt::null;
+          --population_size;
+          --needed;
+        }
+
+      --available;
+    }
+}
+
+template <typename Spawner>
+static void
+generate_power_up_spawners(entt::registry& registry,
+                           std::vector<entt::entity>& population,
+                           std::size_t& population_size, std::size_t needed,
+                           bim::game::random_generator& random_generator)
+{
+  generate_power_up_spawners<Spawner>(registry, population, population_size,
+                                      population_size, needed,
+                                      random_generator,
+                                      [](entt::entity) -> bool
+                                      {
+                                        return true;
+                                      });
+}
+
 void bim::game::generate_basic_level_structure(arena& arena)
 {
   const int width = arena.width();
@@ -75,7 +120,7 @@ void bim::game::insert_random_brick_walls(arena& arena,
 
   std::vector<position_on_grid> forbidden_positions;
   // Typically 9 blocks for each player: their position and the cells around
-  // them..
+  // them.
   forbidden_positions.reserve(g_max_player_count * 9);
 
   registry.view<bim::game::player, bim::game::fractional_position_on_grid>()
@@ -92,74 +137,93 @@ void bim::game::insert_random_brick_walls(arena& arena,
 
             for (int y : { -1, 0, 1 })
               for (int x : { -1, 0, 1 })
-                // This warning is emitted by GCC 13.2.0 on this line, yet
-                // I see no issue in this code.
                 forbidden_positions.push_back(
                     position_on_grid(player_x + x, player_y + y));
           });
 
+  // Generate the brick walls and remember their entities such that we can
+  // assign them the power-up spawners after.
   std::vector<entt::entity> brick_walls;
   brick_walls.reserve(width * height);
 
+  // The invisibility power-up applies to a restricted set of positions; we
+  // keep count of the walls matching these position to parameterize the draw
+  // of walls for them.
+  std::size_t count_for_invisibility = 0;
+
+  // The actual generation of brick walls.
   for (int y = 0; y != height; ++y)
     for (int x = 0; x != width; ++x)
       if (!arena.is_static_wall(x, y)
           && !boost::algorithm::any_of_equal(forbidden_positions,
                                              position_on_grid(x, y))
           && (random(random_generator) < brick_wall_probability))
-        brick_walls.emplace_back(brick_wall_factory(registry, arena, x, y));
-
-  const std::size_t invisibility_power_up_count =
-      !(features & feature_flags::invisibility)
-          ? 0
-          : g_invisibility_power_up_count_in_level;
-
-  // Select the walls that will spawn power-ups.
-  const std::size_t brick_wall_count = brick_walls.size();
-  const std::size_t power_up_count = std::min<std::size_t>(
-      brick_wall_count, g_bomb_power_up_count_in_level
-                            + g_flame_power_up_count_in_level
-                            + invisibility_power_up_count);
-
-  for (std::size_t available = brick_wall_count, needed = power_up_count,
-                   i = 0, j = 0;
-       needed != 0; ++i, --available)
-    {
-      boost::random::uniform_int_distribution<std::uint8_t> random(1,
-                                                                   available);
-
-      if (random(random_generator) <= needed)
         {
-          std::swap(brick_walls[j], brick_walls[i]);
-          --needed;
-          ++j;
+          brick_walls.emplace_back(brick_wall_factory(registry, arena, x, y));
+
+          if (valid_invisibility_power_up_position(x, y, width, height))
+            ++count_for_invisibility;
         }
+
+  // Shuffle the walls before assigning the power-ups.
+  for (std::size_t i = 0, n = brick_walls.size(); i != n - 1; ++i)
+    {
+      boost::random::uniform_int_distribution<std::uint8_t> random(i, n - 1);
+      std::swap(brick_walls[i], brick_walls[random(random_generator)]);
     }
 
-  // Shuffle the walls that will receive the power-ups.
-  if (power_up_count)
-    for (std::size_t i = 0; i != power_up_count - 1; ++i)
-      {
-        boost::random::uniform_int_distribution<std::uint8_t> random(
-            i, power_up_count - 1);
-        std::swap(brick_walls[i], brick_walls[random(random_generator)]);
-      }
+  // Select the walls that will spawn power-ups.
+  std::size_t brick_wall_count = brick_walls.size();
 
-  std::size_t i = 0;
+  // The invisibility power-ups.
+  if (!!(features & feature_flags::invisibility))
+    generate_power_up_spawners<invisibility_power_up_spawner>(
+        registry, brick_walls, brick_wall_count, count_for_invisibility,
+        g_invisibility_power_up_count_in_level, random_generator,
+        [=, &registry](entt::entity e) -> bool
+        {
+          const position_on_grid p =
+              registry.storage<position_on_grid>().get(e);
+
+          return valid_invisibility_power_up_position(p.x, p.y, width, height);
+        });
 
   // The bomb power-ups.
-  for (std::size_t j = 0;
-       (j != g_bomb_power_up_count_in_level) && (i != brick_wall_count);
-       ++i, ++j)
-    registry.emplace<bomb_power_up_spawner>(brick_walls[i]);
+  generate_power_up_spawners<bomb_power_up_spawner>(
+      registry, brick_walls, brick_wall_count, g_bomb_power_up_count_in_level,
+      random_generator);
 
   // The flame power-ups.
-  for (std::size_t j = 0;
-       (j != g_flame_power_up_count_in_level) && (i != brick_wall_count);
-       ++i, ++j)
-    registry.emplace<flame_power_up_spawner>(brick_walls[i]);
+  generate_power_up_spawners<flame_power_up_spawner>(
+      registry, brick_walls, brick_wall_count, g_flame_power_up_count_in_level,
+      random_generator);
+}
 
-  for (std::size_t j = 0;
-       (j != invisibility_power_up_count) && (i != brick_wall_count); ++i, ++j)
-    registry.emplace<invisibility_power_up_spawner>(brick_walls[i]);
+bool bim::game::valid_invisibility_power_up_position(int x, int y, int w,
+                                                     int h)
+{
+  bim_assume(x >= 0);
+  bim_assume(y >= 0);
+  bim_assume(w >= 0);
+  bim_assume(h >= 0);
+  bim_assume(x < w);
+  bim_assume(y < h);
+
+  const int r = (std::min(w, h) + 1) / 2;
+
+  // No invisibility power-up in the corners. Only the dots are valid
+  // positions:
+  //
+  // xxxxxxx
+  // xxx.xxx
+  // xx...xx
+  // x.....x
+  // .......
+  // x.....x
+  // xx...xx
+  // xxx.xxx
+  // xxxxxxx
+
+  return (x + y > r) && ((w - x - 1) + y > r) && (x + (h - y - 1) > r)
+         && ((w - x - 1) + (h - y - 1) > r);
 }

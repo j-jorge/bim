@@ -540,7 +540,6 @@ void bim::axmol::app::online_game::refresh_display()
   display_flame_power_ups();
   display_invisibility_power_ups();
   display_players();
-  display_invisibility_state();
 
   display_static_walls();
   display_falling_blocks();
@@ -632,6 +631,15 @@ void bim::axmol::app::online_game::display_players()
 {
   const entt::registry& registry = m_contest->registry();
 
+  bool local_still_alive = false;
+
+  for (const auto& [_, p] : registry.view<bim::game::player>().each())
+    if (p.index == m_local_player_index)
+      {
+        local_still_alive = true;
+        break;
+      }
+
   for (player* p : m_players)
     p->setVisible(false);
 
@@ -639,17 +647,35 @@ void bim::axmol::app::online_game::display_players()
       .view<bim::game::player, bim::game::fractional_position_on_grid,
             bim::game::animation_state>()
       .each(
-          [this](const bim::game::player& player,
-                 const bim::game::fractional_position_on_grid& p,
-                 const bim::game::animation_state& a) -> void
+          [this,
+           local_still_alive](entt::entity e, const bim::game::player& player,
+                              const bim::game::fractional_position_on_grid& p,
+                              const bim::game::animation_state& a) -> void
           {
-            bim::axmol::app::player& w = *m_players[player.index];
-
-            display_at(p.grid_aligned_y(), w,
-                       m_display_config.grid_position_to_display(p.x_float(),
-                                                                 p.y_float()));
-            w.set_animation(a);
+            display_player(local_still_alive, e, player, p, a);
           });
+}
+
+void bim::axmol::app::online_game::display_player(
+    bool local_still_alive, entt::entity e, const bim::game::player& player,
+    const bim::game::fractional_position_on_grid& p,
+    const bim::game::animation_state& a)
+{
+  const entt::registry& registry = m_contest->registry();
+  bim::axmol::app::player& w = *m_players[player.index];
+
+  display_at(
+      p.grid_aligned_y(), w,
+      m_display_config.grid_position_to_display(p.x_float(), p.y_float()));
+  w.set_animation(a);
+
+  const bool is_invisible = bim::game::is_invisible(registry, e);
+  const std::uint8_t opacity =
+      is_invisible
+          ? 127 * (player.index == m_local_player_index || !local_still_alive)
+          : 255;
+
+  w.setOpacity(opacity);
 }
 
 void bim::axmol::app::online_game::display_bombs()
@@ -800,31 +826,6 @@ void bim::axmol::app::online_game::display_invisibility_power_ups()
 
   bim::axmol::widget::hide_while_visible(m_invisibility_power_ups,
                                          asset_index);
-}
-
-void bim::axmol::app::online_game::display_invisibility_state()
-{
-  const entt::registry& registry = m_contest->registry();
-  bool local_still_alive = false;
-
-  for (const auto& [_, p] : registry.view<bim::game::player>().each())
-    if (p.index == m_local_player_index)
-      {
-        local_still_alive = true;
-        break;
-      }
-
-  registry.view<bim::game::player>().each(
-      [this, &registry, local_still_alive](entt::entity e,
-                                           const bim::game::player& p) -> void
-      {
-        bim::axmol::app::player& w = *m_players[p.index];
-        const bool invisible = bim::game::is_invisible(registry, e);
-        const std::uint8_t opacity =
-            p.index == m_local_player_index ? 255 : 127 * !local_still_alive;
-
-        w.setOpacity(invisible ? opacity : 255);
-      });
 }
 
 void bim::axmol::app::online_game::display_main_timer()

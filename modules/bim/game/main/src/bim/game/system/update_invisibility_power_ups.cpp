@@ -33,7 +33,7 @@ static void check_invisibility_power_up_player_collision(
           colliding_entity))
     {
       bim::game::invisibility_state_factory(registry, e,
-                                            std::chrono::milliseconds(7000));
+                                            std::chrono::seconds(15));
 
       arena.erase_entity(x, y);
       registry.emplace<bim::game::dead>(colliding_entity);

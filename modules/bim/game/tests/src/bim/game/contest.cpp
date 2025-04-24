@@ -5,10 +5,15 @@
 #include <bim/game/component/bomb_power_up_spawner.hpp>
 #include <bim/game/component/flame_power_up_spawner.hpp>
 #include <bim/game/component/fractional_position_on_grid.hpp>
+#include <bim/game/component/invisibility_power_up_spawner.hpp>
 #include <bim/game/component/player.hpp>
 #include <bim/game/component/position_on_grid.hpp>
 #include <bim/game/constant/default_arena_size.hpp>
 #include <bim/game/contest_fingerprint.hpp>
+#include <bim/game/feature_flags.hpp>
+#include <bim/game/level_generation.hpp>
+
+#include <bim/table_2d.impl.hpp>
 
 #include <entt/entity/registry.hpp>
 
@@ -18,42 +23,61 @@
 
 #include <gtest/gtest.h>
 
-template <typename Spawner>
 class bim_game_contest_power_up_distribution : public testing::Test
-{};
-
-using power_up_types = testing::Types<bim::game::bomb_power_up_spawner,
-                                      bim::game::flame_power_up_spawner>;
-
-TYPED_TEST_SUITE(bim_game_contest_power_up_distribution, power_up_types);
-
-TYPED_TEST(bim_game_contest_power_up_distribution, distribution)
 {
-  constexpr int arena_width = bim::game::g_default_arena_width;
-  constexpr int arena_height = bim::game::g_default_arena_height;
+protected:
+  static constexpr int arena_width = bim::game::g_default_arena_width;
+  static constexpr int arena_height = bim::game::g_default_arena_height;
 
-  std::array<bool, arena_width * arena_height> usable_cells;
-  usable_cells.fill(true);
+protected:
+  template <typename Spawner>
+  void run_test(bim::game::feature_flags feature_flags, std::size_t iterations,
+                std::size_t expected_count);
+  template <typename Spawner>
+  void run_test(bim::table_2d<bool>& usable_cells,
+                bim::game::feature_flags feature_flags, std::size_t iterations,
+                std::size_t expected_count);
+};
+
+template <typename Spawner>
+void bim_game_contest_power_up_distribution::run_test(
+    bim::game::feature_flags feature_flags, std::size_t iterations,
+    std::size_t expected_count)
+{
+  bim::table_2d<bool> usable_cells(arena_width, arena_height, true);
+  run_test<Spawner>(usable_cells, feature_flags, iterations, expected_count);
+}
+
+template <typename Spawner>
+void bim_game_contest_power_up_distribution::run_test(
+    bim::table_2d<bool>& usable_cells, bim::game::feature_flags feature_flags,
+    std::size_t iterations, std::size_t expected_count)
+{
+  ASSERT_EQ(arena_width, usable_cells.width());
+  ASSERT_EQ(arena_height, usable_cells.height());
 
   constexpr int brick_wall_probability = 80;
   constexpr int player_count = 4;
+
+  bim::game::contest_fingerprint fingerprint = { .seed = 0,
+                                                 .features = feature_flags,
+                                                 .player_count = player_count,
+                                                 .brick_wall_probability =
+                                                     brick_wall_probability,
+                                                 .arena_width = arena_width,
+                                                 .arena_height =
+                                                     arena_height };
 
   // Get the basic structure of the level: count in usable_cells all the cells
   // that are not occupied by a static wall or the player, nor are located near
   // the players.
   {
-    const bim::game::contest contest(
-        { .seed = 0,
-          .features = {},
-          .player_count = player_count,
-          .brick_wall_probability = brick_wall_probability,
-          .arena_width = arena_width,
-          .arena_height = arena_height });
+    const bim::game::contest contest(fingerprint);
 
     for (int y = 0; y != arena_height; ++y)
       for (int x = 0; x != arena_width; ++x)
         if (contest.arena().is_static_wall(x, y))
-          usable_cells[y * arena_width + x] = false;
+          usable_cells(x, y) = false;
 
     contest.registry()
         .view<bim::game::fractional_position_on_grid, bim::game::player>()
@@ -64,39 +88,35 @@ TYPED_TEST(bim_game_contest_power_up_distribution, distribution)
               const int x = p.grid_aligned_x();
               const int y = p.grid_aligned_y();
 
-              usable_cells[y * arena_width + x - 1] = false;
-              usable_cells[y * arena_width + x] = false;
-              usable_cells[y * arena_width + x + 1] = false;
-              usable_cells[(y - 1) * arena_width + x] = false;
-              usable_cells[y * arena_width + x] = false;
-              usable_cells[(y + 1) * arena_width + x] = false;
+              usable_cells(x - 1, y) = false;
+              usable_cells(x, y) = false;
+              usable_cells(x + 1, y) = false;
+              usable_cells(x, y - 1) = false;
+              usable_cells(x, y) = false;
+              usable_cells(x, y + 1) = false;
             });
   }
 
-  std::array<int, arena_width * arena_height> sum_per_cell;
-  sum_per_cell.fill(0);
+  bim::table_2d<int> sum_per_cell(arena_width, arena_height, 0);
 
-  const auto count_power_up = [&sum_per_cell, &usable_cells](
-                                  const bim::game::position_on_grid& p) -> void
-  {
-    ASSERT_TRUE(usable_cells[p.y * arena_width + p.x])
-        << "x=" << (int)p.x << ", y=" << p.y;
-    ++sum_per_cell[p.y * arena_width + p.x];
-  };
-
-  constexpr std::size_t iterations = 3000;
   for (std::size_t i = 0; i != iterations; ++i)
     {
-      const bim::game::contest contest(
-          { .seed = i,
-            .features = {},
-            .player_count = player_count,
-            .brick_wall_probability = brick_wall_probability,
-            .arena_width = arena_width,
-            .arena_height = arena_height });
+      fingerprint.seed = i;
+      const bim::game::contest contest(fingerprint);
+      std::size_t count = 0;
 
-      contest.registry().view<bim::game::position_on_grid, TypeParam>().each(
-          count_power_up);
+      for (const auto&& [_, p] :
+           contest.registry()
+               .view<bim::game::position_on_grid, Spawner>()
+               .each())
+        {
+          ASSERT_TRUE(usable_cells(p.x, p.y))
+              << "x=" << (int)p.x << ", y=" << p.y;
+          ++sum_per_cell(p.x, p.y);
+          ++count;
+        }
+
+      ASSERT_EQ(expected_count, count);
     }
 
   const int power_up_count =
@@ -111,9 +131,9 @@ TYPED_TEST(bim_game_contest_power_up_distribution, distribution)
       {
         for (int x = 0; x != arena_width; ++x)
           if ((y == cy) && (x == cx))
-            printf(" [%.3d]", sum_per_cell[y * arena_width + x]);
+            printf(" [%.3d]", sum_per_cell(x, y));
           else
-            printf("  %.3d ", sum_per_cell[y * arena_width + x]);
+            printf("  %.3d ", sum_per_cell(x, y));
 
         printf("\n");
       }
@@ -122,18 +142,17 @@ TYPED_TEST(bim_game_contest_power_up_distribution, distribution)
   for (int y = 0; y != arena_height; ++y)
     for (int x = 0; x != arena_width; ++x)
       {
-        const int i = y * arena_width + x;
-
-        if (!usable_cells[i])
+        if (!usable_cells(x, y))
           continue;
 
-        const int delta = std::abs(sum_per_cell[i] - expected_count_per_cell);
+        const int delta =
+            std::abs(sum_per_cell(x, y) - expected_count_per_cell);
 
         EXPECT_LE(delta * 100 / expected_count_per_cell,
                   10 * expected_count_per_cell / 100)
-            << "sum_per_cell[i]=" << sum_per_cell[i]
+            << "sum_per_cell(" << x << ", " << y << ")=" << sum_per_cell(x, y)
             << ", expected_count_per_cell=" << expected_count_per_cell
-            << ", delta=" << delta << " x=" << x << ", y=" << y;
+            << ", delta=" << delta;
 
         if (testing::Test::HasFailure())
           {
@@ -141,4 +160,45 @@ TYPED_TEST(bim_game_contest_power_up_distribution, distribution)
             return;
           }
       }
+}
+
+TEST_F(bim_game_contest_power_up_distribution, bomb_power_up)
+{
+  run_test<bim::game::bomb_power_up_spawner>(
+      {}, 3000, bim::game::g_bomb_power_up_count_in_level);
+}
+
+TEST_F(bim_game_contest_power_up_distribution, bomb_power_up_with_invisibility)
+{
+  run_test<bim::game::bomb_power_up_spawner>(
+      bim::game::feature_flags::invisibility, 3000,
+      bim::game::g_bomb_power_up_count_in_level);
+}
+
+TEST_F(bim_game_contest_power_up_distribution, flame_power_up)
+{
+  run_test<bim::game::flame_power_up_spawner>(
+      {}, 3000, bim::game::g_flame_power_up_count_in_level);
+}
+
+TEST_F(bim_game_contest_power_up_distribution,
+       flame_power_up_with_invisibility)
+{
+  run_test<bim::game::flame_power_up_spawner>(
+      bim::game::feature_flags::invisibility, 4000,
+      bim::game::g_flame_power_up_count_in_level);
+}
+
+TEST_F(bim_game_contest_power_up_distribution, invisibility_power_up)
+{
+  bim::table_2d<bool> usable_cells(arena_width, arena_height);
+
+  for (int y = 0; y != arena_height; ++y)
+    for (int x = 0; x != arena_width; ++x)
+      usable_cells(x, y) = bim::game::valid_invisibility_power_up_position(
+          x, y, arena_width, arena_height);
+
+  run_test<bim::game::invisibility_power_up_spawner>(
+      usable_cells, bim::game::feature_flags::invisibility, 6000,
+      bim::game::g_invisibility_power_up_count_in_level);
 }

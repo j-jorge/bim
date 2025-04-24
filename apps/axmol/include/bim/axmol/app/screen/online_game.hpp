@@ -32,6 +32,10 @@ namespace bim::game
 {
   class contest;
   class contest_result;
+  struct animation_state;
+  struct fractional_position_on_grid;
+  struct invisibility_state;
+  struct player;
 }
 
 namespace bim::net
@@ -120,14 +124,17 @@ namespace bim::axmol::app
     void display_falling_blocks();
     void display_brick_walls();
     void display_players();
+    void display_player(bool local_still_alive, entt::entity e,
+                        const bim::game::player& player,
+                        const bim::game::fractional_position_on_grid& p,
+                        const bim::game::animation_state& a);
     void display_bombs();
     void display_flames();
     void display_bomb_power_ups();
     void display_flame_power_ups();
     void display_invisibility_power_ups();
-    void display_invisibility_state();
     void display_main_timer();
-    
+
     void display_at(std::size_t arena_y, ax::Node& node,
                     const ax::Vec2& position);
 
