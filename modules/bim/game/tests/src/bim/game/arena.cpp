@@ -2,14 +2,12 @@
 #include <bim/game/arena.hpp>
 
 #include <bim/game/cell_neighborhood.hpp>
+#include <bim/game/component/position_on_grid.hpp>
 #include <bim/game/static_wall.hpp>
-
-
 
 #include <entt/entity/registry.hpp>
 
 #include <gtest/gtest.h>
-
 
 class bim_game_arena_test
   : public ::testing::TestWithParam<std::tuple<int, int>>
@@ -74,17 +72,16 @@ TEST(bim_game_arena, static_wall_view)
   arena.set_static_wall(0, 1, bim::game::cell_neighborhood::left);
   arena.set_static_wall(1, 0, bim::game::cell_neighborhood::right);
 
-  std::vector<bim::game::static_wall> walls = arena.static_walls();
+  const std::span<const bim::game::static_wall> walls = arena.static_walls();
 
-  EXPECT_EQ(1, walls[0].x); // Expecting the wall at (1, 0) first
-  EXPECT_EQ(0, walls[0].y);
-  EXPECT_EQ(bim::game::cell_neighborhood::right, walls[0].neighbors);
+  EXPECT_EQ(0, walls[0].x);
+  EXPECT_EQ(1, walls[0].y);
+  EXPECT_EQ(bim::game::cell_neighborhood::left, walls[0].neighbors);
 
-  EXPECT_EQ(0, walls[1].x); // Expecting the wall at (0, 1) second
-  EXPECT_EQ(1, walls[1].y);
-  EXPECT_EQ(bim::game::cell_neighborhood::left, walls[1].neighbors);
+  EXPECT_EQ(1, walls[1].x);
+  EXPECT_EQ(0, walls[1].y);
+  EXPECT_EQ(bim::game::cell_neighborhood::right, walls[1].neighbors);
 }
-
 
 TEST(bim_game_arena, solid_not_static_wall)
 {

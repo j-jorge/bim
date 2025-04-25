@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/game/arena.hpp>
 
+#include <bim/game/component/position_on_grid.hpp>
 #include <bim/game/static_wall.hpp>
 
 #include <bim/assume.hpp>

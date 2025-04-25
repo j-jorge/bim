@@ -17,6 +17,10 @@ namespace bim::game
   class arena
   {
   public:
+    using static_wall_const_iterator =
+        std::vector<static_wall>::const_iterator;
+
+  public:
     arena();
     arena(std::uint8_t width, std::uint8_t height);
     arena(const arena& that) noexcept;
