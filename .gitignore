@@ -3,3 +3,5 @@
 /build/
 /android/app/keystore.properties
 /android/app/release.keystore
+.idea/
+clion_wrapper.sh

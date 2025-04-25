@@ -7,7 +7,7 @@
 
 #include <bim/table_2d.hpp>
 #include <cstdint>
-#include <optional>
+#include <span>
 #include <vector>
 
 namespace bim::game
@@ -36,7 +36,7 @@ namespace bim::game
     bool is_solid(std::uint8_t x, std::uint8_t y) const;
     void set_solid(std::uint8_t x, std::uint8_t y);
 
-    std::vector<bim::game::static_wall> static_walls() const;
+    std::span<const bim::game::static_wall> static_walls() const;
 
     bool is_static_wall(std::uint8_t x, std::uint8_t y) const;
     void set_static_wall(std::uint8_t x, std::uint8_t y, cell_neighborhood n);
@@ -50,7 +50,7 @@ namespace bim::game
     /// Static walls, they are never removed.
     table_2d<bool> m_is_static_wall;
 
-    table_2d<std::optional<static_wall>> m_static_walls ;
+    std::vector<static_wall> m_static_walls;
 
     /**
      * Tells if the cell cannot be crossed (i.e. static wall or destructible
