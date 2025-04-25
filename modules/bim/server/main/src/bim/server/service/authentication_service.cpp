@@ -83,7 +83,8 @@ void bim::server::authentication_service::check_authentication(
   const std::optional<bim::net::authentication> message =
       bim::net::try_deserialize_message<bim::net::authentication>(m);
 
-  const bim::net::client_token token = message->get_request_token();
+  // TODO: Check if this message has a value, try_deserialize_message returns std::nullopt if it fails, however this is not checked afterwards and we may potentially try to get a request token from a nullopt
+  const bim::net::client_token token = message->get_request_token();  // <- Potential crash here!
 
   ic_log(iscool::log::nature::info(), "authentication_service",
          "Received authentication request from token {}.", token);
