@@ -46,25 +46,27 @@ void bim::axmol::app::player_progress_tracker::game_over_in_public_arena(
   bim::game::feature_flags enabled_features =
       enabled_feature_flags(preferences);
 
+  const std::int64_t rank = 2 * victories + defeats;
+
   if (!(available_features & bim::game::feature_flags::falling_blocks)
-      && ((victories >= 1) || (defeats >= 3)))
+      && (rank >= 2))
     {
       available_features |= bim::game::feature_flags::falling_blocks;
       enabled_features |= bim::game::feature_flags::falling_blocks;
     }
 
-  if (!(available_features & bim::game::feature_flags::fog_of_war)
-      && ((victories >= 5) || (defeats >= 10)))
-    {
-      available_features |= bim::game::feature_flags::fog_of_war;
-      enabled_features |= bim::game::feature_flags::fog_of_war;
-    }
-
   if (!(available_features & bim::game::feature_flags::invisibility)
-      && ((victories >= 7) || (defeats >= 15)))
+      && (rank >= 10))
     {
       available_features |= bim::game::feature_flags::invisibility;
       enabled_features |= bim::game::feature_flags::invisibility;
+    }
+
+  if (!(available_features & bim::game::feature_flags::fog_of_war)
+      && (rank >= 15))
+    {
+      available_features |= bim::game::feature_flags::fog_of_war;
+      enabled_features |= bim::game::feature_flags::fog_of_war;
     }
 
   available_feature_flags(preferences, available_features);

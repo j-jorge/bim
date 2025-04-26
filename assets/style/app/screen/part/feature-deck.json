@@ -19,22 +19,6 @@
                 }
             ],
 
-            "feature_fog_of_war":
-            [
-                "toggle/feature",
-                {
-                    "widgets/off":
-                    [{
-                        "frame": "sprites/features/fog-of-war-off.png"
-                    }],
-
-                    "widgets/on":
-                    [{
-                        "frame": "sprites/features/fog-of-war-on.png"
-                    }]
-                }
-            ],
-
             "feature_invisibility":
             [
                 "toggle/feature",
@@ -47,6 +31,22 @@
                     "widgets/on":
                     [{
                         "frame": "sprites/features/invisibility-on.png"
+                    }]
+                }
+            ],
+
+            "feature_fog_of_war":
+            [
+                "toggle/feature",
+                {
+                    "widgets/off":
+                    [{
+                        "frame": "sprites/features/fog-of-war-off.png"
+                    }],
+
+                    "widgets/on":
+                    [{
+                        "frame": "sprites/features/fog-of-war-on.png"
                     }]
                 }
             ],

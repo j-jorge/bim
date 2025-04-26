@@ -17,7 +17,7 @@
             }
         ],
 
-        "feature_fog_of_war":
+        "feature_invisibility":
         [
             "app/screen/part/feature-deck-button-bounds",
             {
@@ -33,14 +33,14 @@
             }
         ],
 
-        "feature_invisibility":
+        "feature_fog_of_war":
         [
             "app/screen/part/feature-deck-button-bounds",
             {
                 "anchor.reference.x": 0.76
             }
         ],
-        
+
         "feature_extra_2":
         [
             "app/screen/part/feature-deck-button-bounds",

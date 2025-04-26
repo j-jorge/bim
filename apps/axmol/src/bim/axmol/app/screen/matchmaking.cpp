@@ -268,8 +268,8 @@ void bim::axmol::app::matchmaking::show_feature_on_message(
           "A thick fog covers the arena. You can't see were you did not go!");
       break;
     case bim::game::feature_flags::invisibility:
-      message =
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do";
+      message = ic_gettext("Find the invisibility power up to disappear from "
+                           "the screen of all other players!");
       break;
     }
 
@@ -292,7 +292,7 @@ void bim::axmol::app::matchmaking::show_feature_off_message(
                            "can see the whole arena!");
       break;
     case bim::game::feature_flags::invisibility:
-      message = "Lorem ipsum dolor sit amet, consectetur";
+      message = ic_gettext("You can see everyone, and they can see you too!");
       break;
     }
 
