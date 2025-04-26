@@ -127,11 +127,14 @@ assets/sprites/arena-corner.png
 assets/sprites/pixel.png
 assets/sprites/power-up-bomb.png
 assets/sprites/power-up-flame.png
+assets/sprites/power-up-invisibility.png
 assets/sprites/solid-wall.png
 assets/sprites/features/falling-block-off.png
 assets/sprites/features/falling-block-on.png
 assets/sprites/features/fog-of-war-off.png
 assets/sprites/features/fog-of-war-on.png
+assets/sprites/features/invisibility-off.png
+assets/sprites/features/invisibility-on.png
 assets/sprites/features/unavailable.png
 assets/sprites/fog/00000000.png
 assets/sprites/fog/00000001.png
@@ -252,4 +255,3 @@ static-assets/texture/carbon.png
 static-assets/texture/grass.png
 Julien Jorge
 CC-BY-SA 4.0
-

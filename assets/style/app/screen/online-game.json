@@ -233,6 +233,7 @@
 
         "power-up-bomb/frame": "sprites/power-up-bomb.png",
         "power-up-flame/frame": "sprites/power-up-flame.png",
+        "power-up-invisibility/frame": "sprites/power-up-invisibility.png",
 
         "bounds.d-pad-on-the-right":
         [

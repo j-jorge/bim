@@ -28,7 +28,9 @@ bim::axmol::app::player::player(const bim::axmol::widget::context& context,
   : m_context(context)
   , m_controls(context, style.get_declaration_or_empty("widgets"))
   , m_style_bounds(*style.get_declaration("bounds"))
-{}
+{
+  setCascadeOpacityEnabled(true);
+}
 
 bim::axmol::app::player::~player() = default;
 

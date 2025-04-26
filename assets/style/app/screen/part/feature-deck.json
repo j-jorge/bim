@@ -35,16 +35,25 @@
                 }
             ],
 
-            "feature_extra_0": [ "button/feature-unavailable" ],
-            "feature_extra_1": [ "button/feature-unavailable" ],
-
-            "feature_extra_2":
+            "feature_invisibility":
             [
-                "button/feature-unavailable",
+                "toggle/feature",
                 {
-                    "visible": false
+                    "widgets/off":
+                    [{
+                        "frame": "sprites/features/invisibility-off.png"
+                    }],
+
+                    "widgets/on":
+                    [{
+                        "frame": "sprites/features/invisibility-on.png"
+                    }]
                 }
             ],
+
+            "feature_extra_0": [ "button/feature-unavailable" ],
+            "feature_extra_1": [ "button/feature-unavailable" ],
+            "feature_extra_2": [ "button/feature-unavailable" ],
 
             "feature_extra_3":
             [

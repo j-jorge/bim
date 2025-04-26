@@ -8,6 +8,7 @@ namespace bim::game
   enum class feature_flags : std::uint32_t
   {
     falling_blocks = (1 << 0),
-    fog_of_war = (1 << 1)
+    fog_of_war = (1 << 1),
+    invisibility = (1 << 2)
   };
 }
