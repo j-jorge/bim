@@ -9,7 +9,6 @@
 
 #include <entt/entity/entity.hpp>
 
-#include <vector>
 
 bim::game::arena::arena() = default;
 

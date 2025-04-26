@@ -3,9 +3,10 @@
 
 #include <bim/game/cell_neighborhood_fwd.hpp>
 
+#include <bim/table_2d.hpp>
+
 #include <entt/entity/fwd.hpp>
 
-#include <bim/table_2d.hpp>
 #include <cstdint>
 #include <span>
 #include <vector>
