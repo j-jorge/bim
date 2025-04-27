@@ -60,7 +60,9 @@ android {
             renderscriptDebuggable false
             minifyEnabled true
             shrinkResources true
-            signingConfig signingConfigs.release
+
+            if (signingConfigs.release.storeFile.exists())
+                signingConfig signingConfigs.release
 
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
