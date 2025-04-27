@@ -5,7 +5,7 @@
 #include <bim/game/static_wall.hpp>
 
 #include <bim/assume.hpp>
-#include <bim/table_2d.hpp>
+#include <bim/table_2d.impl.hpp>
 
 #include <entt/entity/entity.hpp>
 
