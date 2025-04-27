@@ -3,6 +3,8 @@
 
 #include <bim/game/cell_neighborhood_fwd.hpp>
 
+#include <bim/table_2d.hpp>
+
 #include <entt/entity/fwd.hpp>
 
 #include <cstdint>
@@ -48,10 +50,10 @@ namespace bim::game
     std::uint8_t m_width;
     std::uint8_t m_height;
 
-    std::vector<entt::entity> m_entities;
+    table_2d<entt::entity> m_entities;
 
     /// Static walls, they are never removed.
-    std::vector<bool> m_is_static_wall;
+    table_2d<bool> m_is_static_wall;
 
     std::vector<static_wall> m_static_walls;
 
@@ -59,6 +61,6 @@ namespace bim::game
      * Tells if the cell cannot be crossed (i.e. static wall or destructible
      * wall).
      */
-    std::vector<bool> m_solids;
+    table_2d<bool> m_solids;
   };
 }
