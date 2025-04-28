@@ -83,6 +83,11 @@ void bim::server::authentication_service::check_authentication(
   const std::optional<bim::net::authentication> message =
       bim::net::try_deserialize_message<bim::net::authentication>(m);
 
+  if (!message)
+    {
+      return;
+    }
+
   const bim::net::client_token token = message->get_request_token();
 
   ic_log(iscool::log::nature::info(), "authentication_service",
