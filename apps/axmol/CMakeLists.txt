@@ -10,6 +10,7 @@ add_library(bim_app
   src/bim/axmol/app/feature_deck.cpp
   src/bim/axmol/app/fog_display.cpp
   src/bim/axmol/app/main_scene.cpp
+  src/bim/axmol/app/matchmaking_wait_message.cpp
   src/bim/axmol/app/player_progress_tracker.cpp
   src/bim/axmol/app/root_scene.cpp
   src/bim/axmol/app/scene_lock.cpp

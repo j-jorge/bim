@@ -39,6 +39,7 @@ namespace iscool::style
 namespace bim::axmol::app
 {
   class feature_deck;
+  class matchmaking_wait_message;
 
   class matchmaking
   {
@@ -86,7 +87,7 @@ namespace bim::axmol::app
 
     bim::axmol::input::single_key_observer_handle m_escape;
     bim::axmol::input::tree m_inputs;
-    bim_declare_controls_struct(controls, m_controls, 3);
+    bim_declare_controls_struct(controls, m_controls, 4);
 
     std::unique_ptr<bim::net::new_game_exchange> m_new_game;
 
@@ -94,6 +95,7 @@ namespace bim::axmol::app
     iscool::signals::scoped_connection m_launch_connection;
 
     std::unique_ptr<feature_deck> m_feature_deck;
+    std::unique_ptr<matchmaking_wait_message> m_wait_message;
 
     const iscool::style::declaration& m_style_displaying;
     const iscool::style::declaration& m_action_displaying;

@@ -2,6 +2,7 @@
 #include <bim/axmol/app/screen/matchmaking.hpp>
 
 #include <bim/axmol/app/feature_deck.hpp>
+#include <bim/axmol/app/matchmaking_wait_message.hpp>
 #include <bim/axmol/app/preference/feature_flags.hpp>
 
 #include <bim/axmol/widget/apply_actions.hpp>
@@ -31,7 +32,8 @@
 #define x_widget_controls                                                     \
   x_widget(bim::axmol::widget::button, ready_button)                          \
       x_widget(bim::axmol::widget::button, back_button)                       \
-          x_widget(ax::Label, feature_description)
+          x_widget(ax::Label, feature_description)                            \
+              x_widget(ax::Label, wait_message)
 #include <bim/axmol/widget/implement_controls_struct.hpp>
 
 IMPLEMENT_SIGNAL(bim::axmol::app::matchmaking, start_game, m_start_game);
@@ -57,6 +59,7 @@ bim::axmol::app::matchmaking::matchmaking(
         m_context.get_session_handler()->message_stream()))
   , m_feature_deck(
         new feature_deck(m_context, *style.get_declaration("feature-deck")))
+  , m_wait_message(new matchmaking_wait_message())
   , m_style_displaying(*style.get_declaration("display.displaying"))
   , m_action_displaying(*style.get_declaration("actions.displaying"))
   , m_action_wait(*style.get_declaration("actions.wait"))
@@ -108,6 +111,12 @@ bim::axmol::app::matchmaking::matchmaking(
         m_controls->feature_description->setString(
             ic_gettext("Keep playing to unlock new game features!"));
       });
+
+  m_wait_message->connect_to_updated(
+      [this](std::string_view m) -> void
+      {
+        m_controls->wait_message->setString(m);
+      });
 }
 
 bim::axmol::app::matchmaking::~matchmaking() = default;
@@ -141,6 +150,7 @@ void bim::axmol::app::matchmaking::displaying()
   m_controls->feature_description->setString(
       ic_gettext("Customize your experience below!"));
   m_controls->ready_button->enable(true);
+  m_controls->wait_message->setString("");
 }
 
 void bim::axmol::app::matchmaking::displayed()
@@ -162,6 +172,7 @@ void bim::axmol::app::matchmaking::displayed()
 
 void bim::axmol::app::matchmaking::closing()
 {
+  m_wait_message->stop();
   m_player_count_monitor->set_off_state();
   m_launch_monitor->set_off_state();
 
@@ -185,6 +196,11 @@ void bim::axmol::app::matchmaking::update_display_with_game_proposal(
 
   const iscool::style::declaration* action;
 
+  if (player_count == 1)
+    m_wait_message->start();
+  else
+    m_wait_message->pause();
+
   switch (player_count)
     {
     case 1:
@@ -198,6 +214,7 @@ void bim::axmol::app::matchmaking::update_display_with_game_proposal(
         return;
       m_player_count_monitor->set_match_2_state();
       action = &m_action_2_players;
+      m_wait_message->pause();
       break;
     case 3:
       if (m_player_count_monitor->is_match_3_state())

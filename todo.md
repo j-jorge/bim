@@ -26,6 +26,7 @@
 
 # Nice to have
 
+- Set UBSAN_OPTIONS and co. to stop the tests on failure.
 - Why does --console-log on server-tests only works for the first test?
 - Robots, for the tests.
 - Opt-in for the console-log in Android builds.
