@@ -21,6 +21,7 @@ namespace bim::net
 
 namespace bim::server
 {
+  class authentication_service;
   class contest_timeline_service;
 
   struct config;
@@ -29,7 +30,8 @@ namespace bim::server
   class game_service
   {
   public:
-    game_service(const config& config, iscool::net::socket_stream& socket);
+    game_service(const config& config, iscool::net::socket_stream& socket,
+                 authentication_service& authentication);
     ~game_service();
 
     bool is_in_active_game(iscool::net::session_id session) const;
@@ -91,9 +93,10 @@ namespace bim::server
     std::mt19937_64 m_random;
 
     iscool::signals::scoped_connection m_clean_up_connection;
-    std::chrono::seconds m_clean_up_interval;
+    const std::chrono::seconds m_clean_up_interval;
 
     std::unique_ptr<contest_timeline_service> m_contest_timeline_service;
+    authentication_service& m_authentication_service;
     const int m_disconnection_lateness_threshold_in_ticks;
     const int m_disconnection_earliness_threshold_in_ticks;
     const std::chrono::seconds m_disconnection_inactivity_delay;

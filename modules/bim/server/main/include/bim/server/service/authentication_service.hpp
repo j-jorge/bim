@@ -28,6 +28,8 @@ namespace bim::server
                            iscool::net::socket_stream& socket);
     ~authentication_service();
 
+    void disconnect(iscool::net::session_id session);
+
   private:
     using session_map =
         boost::unordered_map<bim::net::client_token, iscool::net::session_id>;

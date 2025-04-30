@@ -2,6 +2,7 @@
 #include <bim/server/tests/fake_scheduler.hpp>
 
 #include <bim/server/config.hpp>
+#include <bim/server/service/authentication_service.hpp>
 #include <bim/server/service/game_info.hpp>
 #include <bim/server/service/game_service.hpp>
 
@@ -14,7 +15,9 @@ TEST(game_service, new_game)
   bim::server::tests::fake_scheduler scheduler;
 
   iscool::net::socket_stream socket_stream(12345);
-  bim::server::game_service service({}, socket_stream);
+  bim::server::authentication_service authentication_service({},
+                                                             socket_stream);
+  bim::server::game_service service({}, socket_stream, authentication_service);
   const bim::game::feature_flags features = (bim::game::feature_flags)42;
 
   const bim::server::game_info game =

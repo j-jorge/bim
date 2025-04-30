@@ -1,7 +1,5 @@
 # Next
 
-- Fully disconnect the client from the server when it is disconnected
-  from the game service.
 - Shield feature.
 - Add a "shop" where the player can donate to the devs.
 - Get some coins for each game, unlock the features with the coins.
