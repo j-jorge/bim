@@ -3,12 +3,18 @@
 set -euo pipefail
 
 temp_config=
+set_up=
 
 function clean_up()
 {
     if [[ -n "${temp_config:-}" ]]
     then
         rm --force "$temp_config"
+    fi
+
+    if [[ -n "${set_up:-}" ]]
+    then
+        rm --force "$set_up"
     fi
 }
 
@@ -102,18 +108,33 @@ sed "s/PORT/$port/" "$script_dir"/client-config.json > "$temp_config"
 
 python3 -m json.tool --compact "$temp_config" "$temp_config"
 
+set_up="$(mktemp)"
+
+cat > "$set_up" <<EOF
+#!/bin/bash
+
+set -euo pipefail
+
+if [[ -e bim/"$port"/lock ]]
+then
+    echo "'bim/$port/lock' exists. Aborting."
+    exit 1
+fi
+
+mkdir --parents bim/"$port"/{bin,etc,log}
+
+cd bim/"$port"/
+[[ ! -f docker-compose.yml ]] || PORT="$port" docker-compose down
+EOF
+
+rsync "$set_up" "$login_at_host":/tmp/bim-set-up.sh
+
 ssh "$login_at_host" \
-    mkdir --parents bim/"$port"/{bin,etc,log} \
-    '&&' cd bim/"$port"/ \
-    '&&' \( \
-    [[ ! -f docker-compose.yml ]] '||' PORT="$port" docker-compose down \
-    \)
+    chmod u+x /tmp/bim-set-up.sh \
+    '&&' /tmp/bim-set-up.sh \
+    '&&' rm --force /tmp/bim-set-up.sh
 
 rsync "$build_dir"/apps/server/bim-server "$login_at_host":bim/"$port"/bin/
-
-temp_config="$(mktemp)"
-sed "s/PORT/$port/" "$script_dir"/client-config.json > "$temp_config"
-
 rsync "$temp_config" "$login_at_host":./
 
 rsync --recursive \
