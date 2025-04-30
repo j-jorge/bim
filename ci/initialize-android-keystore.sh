@@ -75,7 +75,7 @@ then
     exit 1
 fi
 
-if [[ "$build_type" = release ]]
+if [[ "$build_type" = release ]] && [[ -n "${BIM_RELEASE_KEYSTORE:-}" ]]
 then
     echo "$BIM_RELEASE_KEYSTORE" \
         | base64 --decode > "$output_dir"/release.keystore
