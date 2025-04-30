@@ -8,3 +8,4 @@
  - Ensure that the CI passes.
  - Upload the Android bundle on GooglePlay, ensure that there are no issue.
  - Check that the F-Droid build passes.
+ - Update the remote config on the server to target the correct server.
