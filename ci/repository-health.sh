@@ -102,6 +102,7 @@ custom_command_test()
 run_test "Validating C++ source code formatting." \
          clang-format \
          --dry-run \
+         --Werror \
          -- \
          -name "*.[cht]pp"
 
