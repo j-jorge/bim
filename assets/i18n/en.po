@@ -18,6 +18,15 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 3.5\n"
 
+msgid "Please wait."
+msgstr ""
+
+msgid "Please wait.."
+msgstr ""
+
+msgid "Please wait..."
+msgstr ""
+
 msgid "You have been disconnected."
 msgstr "You have been disconnected :("
 
@@ -46,12 +55,20 @@ msgid "A thick fog covers the arena. You can't see were you did not go!"
 msgstr ""
 
 msgid ""
+"Find the invisibility power up to disappear from the screen of all other "
+"players!"
+msgstr ""
+
+msgid ""
 "No falling blocks! The game ends after 3 minutes if the players are still "
 "alive."
 msgstr ""
 
 msgid ""
 "Immediate forcast: Clear sky during the game, you can see the whole arena!"
+msgstr ""
+
+msgid "You can see everyone, and they can see you too!"
 msgstr ""
 
 msgid "A new version of Bim! is available! Please update as soon as possible."
