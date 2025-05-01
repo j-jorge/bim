@@ -4,10 +4,11 @@
 #include <bim/game/arena.hpp>
 
 #include <bim/game/component/dead.hpp>
+#include <bim/game/component/flame_power_up.hpp>
 #include <bim/game/component/player.hpp>
 #include <bim/game/constant/max_bomb_strength.hpp>
-#include <bim/game/factory/flame_power_up.hpp>
 #include <bim/game/factory/player.hpp>
+#include <bim/game/factory/power_up.hpp>
 
 #include <entt/entity/registry.hpp>
 
@@ -21,7 +22,7 @@ TEST(update_flame_power_ups, player_collision)
   const int y = 1;
 
   const entt::entity power_up_entity =
-      flame_power_up_factory(registry, arena, x, y);
+      power_up_factory<bim::game::flame_power_up>(registry, arena, x, y);
   const entt::entity player_entity =
       bim::game::player_factory(registry, 0, x, y, bim::game::animation_id{});
 
@@ -43,7 +44,7 @@ TEST(update_flame_power_ups, two_players_only_one_gets_the_power_up)
   const int x = 1;
   const int y = 1;
 
-  flame_power_up_factory(registry, arena, x, y);
+  power_up_factory<bim::game::flame_power_up>(registry, arena, x, y);
 
   const entt::entity player_entity[2] = {
     bim::game::player_factory(registry, 0, x, y, bim::game::animation_id{}),
@@ -77,7 +78,7 @@ TEST(update_flame_power_ups, max_capacity)
 
   for (int i = 0; i != bim::game::g_max_bomb_strength; ++i)
     {
-      flame_power_up_factory(registry, arena, x, y);
+      power_up_factory<bim::game::flame_power_up>(registry, arena, x, y);
       bim::game::update_flame_power_ups(registry, arena);
     }
 
@@ -87,7 +88,7 @@ TEST(update_flame_power_ups, max_capacity)
   // power-ups but not increase in strength.
   for (int i = 0; i != bim::game::g_max_bomb_strength; ++i)
     {
-      flame_power_up_factory(registry, arena, x, y);
+      power_up_factory<bim::game::flame_power_up>(registry, arena, x, y);
       bim::game::update_flame_power_ups(registry, arena);
 
       EXPECT_TRUE(entt::null == arena.entity_at(x, y));
