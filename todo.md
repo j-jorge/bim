@@ -27,7 +27,6 @@
 - Why does --console-log on server-tests only works for the first test?
 - Robots, for the tests.
 - Opt-in for the console-log in Android builds.
-- Rewrite the control area on the in-game screen.
 - Tests for the factories.
 - Tests for the flame power-ups.
 - Display some stats about the server in the client (e.g. active player
