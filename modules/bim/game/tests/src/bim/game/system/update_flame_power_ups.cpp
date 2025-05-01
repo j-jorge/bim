@@ -4,7 +4,6 @@
 #include <bim/game/arena.hpp>
 
 #include <bim/game/component/dead.hpp>
-#include <bim/game/component/flame_power_up.hpp>
 #include <bim/game/component/player.hpp>
 #include <bim/game/constant/max_bomb_strength.hpp>
 #include <bim/game/factory/player.hpp>
@@ -13,6 +12,11 @@
 #include <entt/entity/registry.hpp>
 
 #include <gtest/gtest.h>
+
+namespace bim::game
+{
+  struct flame_power_up;
+}
 
 TEST(update_flame_power_ups, player_collision)
 {

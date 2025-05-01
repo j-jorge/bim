@@ -2,7 +2,6 @@
 #include <bim/game/system/update_bomb_power_up_spawners.hpp>
 
 #include <bim/game/component/bomb.hpp>
-#include <bim/game/component/bomb_power_up.hpp>
 #include <bim/game/component/bomb_power_up_spawner.hpp>
 #include <bim/game/component/burning.hpp>
 #include <bim/game/component/position_on_grid.hpp>
@@ -11,6 +10,10 @@
 
 #include <entt/entity/registry.hpp>
 
+namespace bim::game
+{
+  struct bomb_power_up;
+}
 void bim::game::update_bomb_power_up_spawners(entt::registry& registry,
                                               arena& arena)
 {

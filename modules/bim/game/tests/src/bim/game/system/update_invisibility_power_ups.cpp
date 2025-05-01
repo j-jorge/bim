@@ -4,7 +4,6 @@
 #include <bim/game/arena.hpp>
 
 #include <bim/game/component/dead.hpp>
-#include <bim/game/component/invisibility_power_up.hpp>
 #include <bim/game/component/invisibility_state.hpp>
 #include <bim/game/factory/player.hpp>
 #include <bim/game/factory/power_up.hpp>
@@ -12,6 +11,11 @@
 #include <entt/entity/registry.hpp>
 
 #include <gtest/gtest.h>
+
+namespace bim::game
+{
+  struct invisibility_power_up;
+}
 
 TEST(update_invisibility_power_ups, player_collision)
 {

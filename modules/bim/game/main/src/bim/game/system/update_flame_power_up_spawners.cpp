@@ -3,12 +3,16 @@
 
 #include <bim/game/component/burning.hpp>
 #include <bim/game/component/flame.hpp>
-#include <bim/game/component/flame_power_up.hpp>
 #include <bim/game/component/flame_power_up_spawner.hpp>
 #include <bim/game/component/position_on_grid.hpp>
 #include <bim/game/factory/power_up.hpp>
 
 #include <entt/entity/registry.hpp>
+
+namespace bim::game
+{
+  struct flame_power_up;
+}
 
 void bim::game::update_flame_power_up_spawners(entt::registry& registry,
                                                arena& arena)

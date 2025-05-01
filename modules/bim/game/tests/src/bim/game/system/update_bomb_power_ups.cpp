@@ -3,7 +3,6 @@
 
 #include <bim/game/arena.hpp>
 
-#include <bim/game/component/bomb_power_up.hpp>
 #include <bim/game/component/dead.hpp>
 #include <bim/game/component/player.hpp>
 #include <bim/game/constant/max_bomb_count_per_player.hpp>
@@ -13,6 +12,11 @@
 #include <entt/entity/registry.hpp>
 
 #include <gtest/gtest.h>
+
+namespace bim::game
+{
+  struct bomb_power_up;
+}
 
 TEST(update_bomb_power_ups, increment_player_capacity_and_available)
 {

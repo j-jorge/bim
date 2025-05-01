@@ -42,5 +42,8 @@ else()
     VERSION ${project_version}
     LANGUAGES CXX
   )
+  # Add this line right after project() command
+  set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
   include(./CMakeLists-common.txt)
 endif()
