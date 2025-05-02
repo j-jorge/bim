@@ -7,6 +7,8 @@ set(common_style_files
 set(main_task_style_files
   ${CMAKE_CURRENT_LIST_DIR}/main-task.json
 
+  ${CMAKE_CURRENT_LIST_DIR}/action/rotate-forever-30s.json
+
   ${CMAKE_CURRENT_LIST_DIR}/app/screen-wheel.json
   ${CMAKE_CURRENT_LIST_DIR}/app/screen/bomb-button.json
   ${CMAKE_CURRENT_LIST_DIR}/app/screen/directional-pad.json
@@ -38,6 +40,7 @@ set(main_task_style_files
   ${CMAKE_CURRENT_LIST_DIR}/app/screen/part/menu-stripe.json
   ${CMAKE_CURRENT_LIST_DIR}/app/screen/part/menu-stripe-bounds.json
   ${CMAKE_CURRENT_LIST_DIR}/app/screen/part/player.json
+  ${CMAKE_CURRENT_LIST_DIR}/app/screen/part/wallet.json
 
   ${CMAKE_CURRENT_LIST_DIR}/button/base.json
   ${CMAKE_CURRENT_LIST_DIR}/button/feature-unavailable.json

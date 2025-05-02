@@ -1,8 +1,10 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/axmol/app/player_progress_tracker.hpp>
 
+#include <bim/axmol/app/config.hpp>
 #include <bim/axmol/app/preference/arena_stats.hpp>
 #include <bim/axmol/app/preference/feature_flags.hpp>
+#include <bim/axmol/app/preference/wallet.hpp>
 
 #include <bim/game/contest_result.hpp>
 #include <bim/game/feature_flags.hpp>
@@ -25,7 +27,10 @@ void bim::axmol::app::player_progress_tracker::game_over_in_public_arena(
   games_in_arena(preferences, games_in_arena(preferences) + 1);
 
   if (!result.has_a_winner())
-    return;
+    {
+      add_coins(preferences, m_context.get_config()->coins_per_draw);
+      return;
+    }
 
   std::int64_t victories = victories_in_arena(preferences);
   std::int64_t defeats = defeats_in_arena(preferences);
@@ -34,11 +39,13 @@ void bim::axmol::app::player_progress_tracker::game_over_in_public_arena(
     {
       ++victories;
       victories_in_arena(preferences, victories);
+      add_coins(preferences, m_context.get_config()->coins_per_victory);
     }
   else
     {
       ++defeats;
       defeats_in_arena(preferences, defeats);
+      add_coins(preferences, m_context.get_config()->coins_per_defeat);
     }
 
   bim::game::feature_flags available_features =

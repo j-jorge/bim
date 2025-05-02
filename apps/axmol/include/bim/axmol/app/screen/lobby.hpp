@@ -49,6 +49,7 @@ namespace bim::axmol::app
   class debug_popup;
   class main_scene;
   class settings_popup;
+  class wallet;
 
   class lobby
   {
@@ -74,6 +75,7 @@ namespace bim::axmol::app
     bim::axmol::input::node_reference input_node() const;
     const bim::axmol::widget::named_node_group& nodes() const;
 
+    void attached();
     void displayed();
     void closing();
 
@@ -87,6 +89,8 @@ namespace bim::axmol::app
     bim::axmol::input::tree m_inputs;
     bim_declare_controls_struct(controls, m_controls, 4);
 
+    const std::unique_ptr<wallet> m_wallet;
+
     std::unique_ptr<settings_popup> m_settings;
     std::unique_ptr<debug_popup> m_debug;
 
@@ -94,5 +98,7 @@ namespace bim::axmol::app
 
     bim::axmol::input::tap_observer_handle m_debug_tap;
     std::uint8_t m_debug_activator_counter;
+
+    bim::axmol::widget::named_node_group m_all_nodes;
   };
 }

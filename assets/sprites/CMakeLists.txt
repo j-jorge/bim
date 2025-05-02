@@ -1,4 +1,15 @@
 set(sprites
+  "sprites/menu/rounded-button-border-54-66.png"
+  "sprites/menu/rounded-button-fill-54-66.png"
+  "sprites/menu/rounded-rectangle-33-33.png"
+  "sprites/menu/stripe-1-79-1-258.png"
+
+  "sprites/popup/popup-border-146-146.png"
+  "sprites/popup/popup-fill-146-146.png"
+
+  "sprites/ui/line-7-4.png"
+)
+set(sprites_crop
   "sprites/bomb.png"
   "sprites/crate.png"
   "sprites/power-up-bomb.png"
@@ -18,6 +29,9 @@ set(sprites
   "sprites/menu/audio.png"
   "sprites/menu/back.png"
   "sprites/menu/bluesky.png"
+  "sprites/menu/coin.png"
+  "sprites/menu/coins-pack-1.png"
+  "sprites/menu/coins-pack-2.png"
   "sprites/menu/dot-100.png"
   "sprites/menu/gamepad.png"
   "sprites/menu/gamepad-d-pad-left.png"
@@ -29,9 +43,6 @@ set(sprites
   "sprites/menu/mail.png"
   "sprites/menu/music.png"
   "sprites/menu/rays.png"
-  "sprites/menu/rounded-button-border-54-66.png"
-  "sprites/menu/rounded-button-fill-54-66.png"
-  "sprites/menu/rounded-rectangle-33-33.png"
   "sprites/menu/rounded-rectangle-spike.png"
   "sprites/menu/serrated-stripe.png"
   "sprites/menu/share.png"
@@ -39,8 +50,8 @@ set(sprites
   "sprites/menu/silhouette-2.png"
   "sprites/menu/silhouette-3.png"
   "sprites/menu/silhouette-4.png"
-  "sprites/menu/stripe-1-79-1-258.png"
   "sprites/menu/vibration.png"
+  "sprites/menu/wallet-coin.png"
 
   "sprites/player/1-disappear-0.png"
   "sprites/player/1-disappear-1.png"
@@ -119,9 +130,6 @@ set(sprites
   "sprites/player/disappear-burned-2.png"
   "sprites/player/disappear-burned-3.png"
 
-  "sprites/popup/popup-border-146-146.png"
-  "sprites/popup/popup-fill-146-146.png"
-
   "sprites/ui/bomb-button.png"
   "sprites/ui/directional-pad-left.png"
   "sprites/ui/directional-pad-right.png"
@@ -129,7 +137,6 @@ set(sprites
   "sprites/ui/directional-pad-down.png"
   "sprites/ui/joystick-background.png"
   "sprites/ui/joystick-stick.png"
-  "sprites/ui/line-7-4.png"
 )
 set(sprites_bleeding
   "sprites/arena-border.png"
@@ -226,13 +233,14 @@ add_custom_command(
     ${BIM_GENERATED_ASSETS_DIR}/sprite-sheet-2.plist
   COMMAND ${auto_pack_my_sprites}
     --output sprite-sheet
-    --no-crop
     --no-rotation
     --format plist
     --size 2048x2048
     ${sprites}
     --bleeding
     ${sprites_bleeding}
+    --crop
+    ${sprites_crop}
   COMMAND
     mv sprite-sheet*.* ${BIM_GENERATED_ASSETS_DIR}
   DEPENDS ${sprites_full_path}

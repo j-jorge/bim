@@ -4,6 +4,7 @@
 #include <bim/axmol/app/popup/message.hpp>
 #include <bim/axmol/app/preference/date_of_next_config_update.hpp>
 #include <bim/axmol/app/preference/date_of_next_version_update_message.hpp>
+#include <bim/axmol/app/preference/update_preferences.hpp>
 #include <bim/axmol/app/screen_wheel.hpp>
 
 #include <bim/net/message/authentication_error_code.hpp>
@@ -60,6 +61,7 @@ void bim::axmol::app::main_task::start()
   m_context.get_audio()->play_music("menu", iscool::audio::loop_mode::forever);
 
   load_config();
+  update_preferences(*m_context.get_local_preferences(), m_config);
 
   if (iscool::time::now<std::chrono::hours>()
       >= date_of_next_config_update(*m_context.get_local_preferences()))

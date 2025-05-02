@@ -5,6 +5,7 @@
 
 #include <bim/version.hpp>
 
+#include <iscool/json/cast_int.hpp>
 #include <iscool/json/cast_string.hpp>
 #include <iscool/json/cast_uint.hpp>
 #include <iscool/json/is_member.hpp>
@@ -12,15 +13,6 @@
 #include <iscool/json/is_of_type_uint.hpp>
 
 #include <type_traits>
-
-bim::axmol::app::config::config()
-  : most_recent_version(bim::version_major)
-  , game_server("bim.jorge.st:"
-                + std::to_string(20000 + bim::version_major * 100
-                                 + bim::net::protocol_version))
-  , remote_config_update_interval(std::chrono::hours(1))
-  , version_update_interval(std::chrono::days(1))
-{}
 
 static bool parse_server_list(bim::axmol::app::config& result,
                               const Json::Value& servers)
@@ -88,6 +80,18 @@ static bool parse_server_list(bim::axmol::app::config& result,
   return true;
 }
 
+bim::axmol::app::config::config()
+  : most_recent_version(bim::version_major)
+  , game_server("bim.jorge.st:"
+                + std::to_string(20000 + bim::version_major * 100
+                                 + bim::net::protocol_version))
+  , remote_config_update_interval(std::chrono::hours(1))
+  , version_update_interval(std::chrono::days(1))
+  , coins_per_victory(50)
+  , coins_per_defeat(10)
+  , coins_per_draw(10)
+{}
+
 std::optional<bim::axmol::app::config>
 bim::axmol::app::load_config(const Json::Value& json)
 {
@@ -99,19 +103,33 @@ bim::axmol::app::load_config(const Json::Value& json)
   result.most_recent_version =
       iscool::json::cast<unsigned int>(json["mrv"], bim::version_major);
 
-  const auto read_hours = [&json](std::chrono::hours& r, const char* n) -> bool
+  const auto read_value = [&json]<typename T>(T& r, const char* n) -> bool
   {
     if (!iscool::json::is_member(n, json))
       return true;
 
     const Json::Value& v = json[n];
 
-    if (!iscool::json::is_of_type<std::uint64_t>(v))
+    if (!iscool::json::is_of_type<T>(v))
       return false;
 
-    r = std::chrono::hours(iscool::json::cast<std::uint64_t>(v));
+    r = iscool::json::cast<T>(v);
 
     return true;
+  };
+
+  const auto read_hours = [&read_value](std::chrono::hours& r,
+                                        const char* n) -> bool
+  {
+    std::uint64_t h = r.count();
+
+    if (read_value(h, n))
+      {
+        r = std::chrono::hours(h);
+        return true;
+      }
+
+    return false;
   };
 
   if (!read_hours(result.remote_config_update_interval, "rcui"))
@@ -121,6 +139,15 @@ bim::axmol::app::load_config(const Json::Value& json)
     return std::nullopt;
 
   if (!parse_server_list(result, json["gs"]))
+    return std::nullopt;
+
+  if (!read_value(result.coins_per_victory, "cpv"))
+    return std::nullopt;
+
+  if (!read_value(result.coins_per_defeat, "cpde"))
+    return std::nullopt;
+
+  if (!read_value(result.coins_per_draw, "cpdr"))
     return std::nullopt;
 
   return result;

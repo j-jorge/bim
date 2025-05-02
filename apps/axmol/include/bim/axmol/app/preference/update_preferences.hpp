@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #pragma once
 
-#include <string>
-
 namespace iscool::preferences
 {
   class local_preferences;
@@ -10,6 +8,8 @@ namespace iscool::preferences
 
 namespace bim::axmol::app
 {
-  std::string
-  preferred_game_server(const iscool::preferences::local_preferences& p);
+  struct config;
+
+  void update_preferences(iscool::preferences::local_preferences& p,
+                          const config& config);
 }

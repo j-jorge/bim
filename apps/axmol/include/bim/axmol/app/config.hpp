@@ -20,6 +20,10 @@ namespace bim::axmol::app
     std::string game_server;
     std::chrono::hours remote_config_update_interval;
     std::chrono::hours version_update_interval;
+
+    int coins_per_victory;
+    int coins_per_defeat;
+    int coins_per_draw;
   };
 
   std::optional<config> load_config(const Json::Value& json);

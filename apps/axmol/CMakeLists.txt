@@ -16,6 +16,8 @@ add_library(bim_app
   src/bim/axmol/app/scene_lock.cpp
   src/bim/axmol/app/screen_wheel.cpp
 
+  src/bim/axmol/app/part/wallet.cpp
+
   src/bim/axmol/app/popup/debug_popup.cpp
   src/bim/axmol/app/popup/message.cpp
   src/bim/axmol/app/popup/popup.cpp
@@ -28,7 +30,8 @@ add_library(bim_app
   src/bim/axmol/app/preference/date_of_next_version_update_message.cpp
   src/bim/axmol/app/preference/feature_flags.cpp
   src/bim/axmol/app/preference/haptic.cpp
-  src/bim/axmol/app/preference/network.cpp
+  src/bim/axmol/app/preference/update_preferences.cpp
+  src/bim/axmol/app/preference/wallet.cpp
 
   src/bim/axmol/app/screen/end_game.cpp
   src/bim/axmol/app/screen/lobby.cpp

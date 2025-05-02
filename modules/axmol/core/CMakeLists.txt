@@ -16,6 +16,7 @@ target_link_libraries(
   PUBLIC
   axmol::axmol
   iscool_log
+  iscool_memory
 )
 
 add_executable(axmol-core-tests

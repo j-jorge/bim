@@ -1,0 +1,76 @@
+{
+    "style":
+    {
+        "coin":
+        [{
+            "instantiate": "ax::Sprite",
+            "frame": "sprites/menu/coin.png"
+        }],
+
+        "coin-bounds":
+        [{
+            "height.percents": 66,
+            "keep-ratio": true
+        }],
+
+        "label-path-in-button": "container/label",
+
+        "widgets":
+        [{
+            "wallet_button":
+            [
+                "button/base",
+                {
+                    "z-order": 10000,
+
+                    "widgets":
+                    [{
+                        "icon":
+                        [{
+                            "instantiate": "ax::Sprite",
+                            "frame": "sprites/menu/wallet-coin.png"
+                        }],
+
+                        "label":
+                        [
+                            "font/bold-italic",
+                            {
+                                "instantiate": "ax::Label",
+                                "anchor-point.x": 0,
+                                "anchor-point.y": 0,
+                                "font.size": 52,
+                                "font.color": "white",
+                                "outline.color": "cod-gray",
+                                "outline.size": 7,
+                                "z-order": 10,
+                                "rotation": -10,
+                                "text": "0"
+                            }
+                        ]
+                    }],
+
+                    "bounds":
+                    [{
+                        "icon":
+                        [{
+                            "anchor.x": 0,
+                            "anchor.y": 0,
+                            "anchor.reference.x": 0,
+                            "anchor.reference.y": 0,
+                            "height.percents": 100,
+                            "keep-ratio": true
+                        }],
+
+                        "label":
+                        [{
+                            "anchor.x": 0,
+                            "anchor.y": 0.2,
+                            "anchor.reference.x": 0.4,
+                            "anchor.reference.y": 0
+                        }]
+                    }]
+                }
+            ]
+        }]
+    }
+}

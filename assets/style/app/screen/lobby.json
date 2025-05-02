@@ -3,18 +3,16 @@
     {
         "debug": [ "popup/debug" ],
         "settings": [ "popup/settings" ],
+        "wallet": [ "app/screen/part/wallet" ],
 
         "widgets":
         [
             "app/screen/part/menu-background",
             {
-                "stripe-reference": [{ "instantiate": "ax::Node" }],
-
                 "stripe-background":
                 [{
                     "instantiate": "ax::Sprite",
                     "frame": "sprites/menu/serrated-stripe.png",
-                    "rotation": -45,
                     "z-order": -10
                 }],
 
@@ -31,7 +29,7 @@
                         "outline.color": "cod-gray",
                         "outline.size": 5,
                         "align.horizontal": "center",
-                        "text.i18n": "ALPHA\nVERSION"
+                        "text.i18n": "VERSION ALPHA"
                     }
                 ],
 

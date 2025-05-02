@@ -172,6 +172,9 @@ void bim::axmol::app::matchmaking::displayed()
 
 void bim::axmol::app::matchmaking::closing()
 {
+  m_main_actions.stop();
+  m_state_actions.stop();
+
   m_wait_message->stop();
   m_player_count_monitor->set_off_state();
   m_launch_monitor->set_off_state();

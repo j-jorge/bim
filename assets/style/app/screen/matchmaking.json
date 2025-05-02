@@ -172,17 +172,7 @@
 
         "actions.displaying":
         [{
-            "rays":
-            [{
-                "instantiate": "repeat",
-                "forever": true,
-                "action":
-                [{
-                    "instantiate": "rotate",
-                    "by": -360,
-                    "duration": 30
-                }]
-            }]
+            "rays": [ "action/rotate-forever-30s" ]
         }],
 
         "actions.wait":

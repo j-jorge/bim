@@ -3,6 +3,7 @@ Astigmatic, adjusted by Julien Jorge.
 Apache 2.0
 
 static-assets/font/OpenSans-ExtraBold.ttf
+static-assets/font/OpenSans-ExtraBoldItalic.ttf
 static-assets/font/OpenSans-Regular.ttf
 Steve Matteson
 Open Font License 1.1
@@ -190,6 +191,9 @@ assets/sprites/fog/roll-in-4.png
 assets/sprites/fog/roll-in-5.png
 assets/sprites/fog/roll-in-6.png
 assets/sprites/menu/back.png
+assets/sprites/menu/coin.png
+assets/sprites/menu/coins-pack-1.png
+assets/sprites/menu/coins-pack-2.png
 assets/sprites/menu/dot-100.png
 assets/sprites/menu/gamepad-d-pad-left.png
 assets/sprites/menu/gamepad-d-pad-right.png
@@ -209,6 +213,7 @@ assets/sprites/menu/vertical-gray-gradient.png
 assets/sprites/menu/vertical-green-gradient.png
 assets/sprites/menu/vertical-red-gradient.png
 assets/sprites/menu/vertical-yellow-gradient.png
+assets/sprites/menu/wallet-coin.png
 assets/sprites/player/1-disappear-0.png
 assets/sprites/player/1-disappear-1.png
 assets/sprites/player/1-disappear-2.png

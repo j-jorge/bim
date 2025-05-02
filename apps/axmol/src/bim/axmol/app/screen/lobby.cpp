@@ -1,11 +1,13 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/axmol/app/screen/lobby.hpp>
 
+#include <bim/axmol/app/part/wallet.hpp>
 #include <bim/axmol/app/popup/debug_popup.hpp>
 #include <bim/axmol/app/popup/settings_popup.hpp>
 
 #include <bim/axmol/input/observer/tap_observer.hpp>
 #include <bim/axmol/input/touch_observer_handle.impl.hpp>
+#include <bim/axmol/widget/merge_named_node_groups.hpp>
 #include <bim/axmol/widget/named_node_group.hpp>
 #include <bim/axmol/widget/ui/button.hpp>
 
@@ -28,13 +30,21 @@ bim::axmol::app::lobby::lobby(const context& context,
                               const iscool::style::declaration& style)
   : m_context(context)
   , m_controls(context.get_widget_context(), *style.get_declaration("widgets"))
+  , m_wallet(new wallet(context, *style.get_declaration("wallet")))
   , m_settings(new settings_popup(context, *style.get_declaration("settings")))
-  , m_debug(new debug_popup(context, *style.get_declaration("debug")))
+  , m_debug(
+        new debug_popup(context, *style.get_declaration("debug"), *m_wallet))
   , m_debug_tap(*m_controls->debug_activator)
   , m_debug_activator_counter(0)
 {
+  m_all_nodes = m_controls->all_nodes;
+  bim::axmol::widget::merge_named_node_groups(m_all_nodes,
+                                              m_wallet->display_nodes());
+
   if (m_context.get_enable_debug())
     enable_debug();
+
+  m_inputs.push_back(m_wallet->input_node());
 
   m_debug_tap->connect_to_release(
       [this]() -> void
@@ -75,11 +85,18 @@ bim::axmol::input::node_reference bim::axmol::app::lobby::input_node() const
 const bim::axmol::widget::named_node_group&
 bim::axmol::app::lobby::nodes() const
 {
-  return m_controls->all_nodes;
+  return m_all_nodes;
+}
+
+void bim::axmol::app::lobby::attached()
+{
+  m_wallet->attached();
 }
 
 void bim::axmol::app::lobby::displayed()
 {
+  m_wallet->enter();
+
   bim::net::session_handler& session_handler =
       *m_context.get_session_handler();
 
