@@ -10,7 +10,6 @@
 
 #include <entt/entity/registry.hpp>
 
-#include <glad/gl.h>
 #include <gtest/gtest.h>
 
 template <typename T>

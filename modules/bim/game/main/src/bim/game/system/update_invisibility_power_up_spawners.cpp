@@ -7,7 +7,6 @@
 #include <bim/game/factory/power_up.hpp>
 
 #include <entt/entity/registry.hpp>
-#include <glad/gl.h>
 
 namespace bim::game
 {
