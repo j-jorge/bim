@@ -95,7 +95,7 @@ add_executable(game-tests
   tests/src/bim/game/system/update_invisibility_state.cpp
   tests/src/bim/game/system/update_players.cpp
   tests/src/bim/game/system/update_timers.cpp
- )
+)
 target_link_libraries(
   game-tests
   PRIVATE
