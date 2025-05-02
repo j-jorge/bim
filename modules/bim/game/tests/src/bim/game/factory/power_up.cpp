@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/game/arena.hpp>
 
-#include "bim/game/component/position_on_grid.hpp"
 #include <bim/game/component/bomb_power_up.hpp>
 #include <bim/game/component/flame_power_up.hpp>
 #include <bim/game/component/invisibility_power_up.hpp>
+#include <bim/game/component/position_on_grid.hpp>
 
 #include <bim/game/factory/power_up.hpp>
 
