@@ -11,7 +11,7 @@
 
 namespace bim::game
 {
-  struct invisibility_power_up;
+  class invisibility_power_up;
 }
 
 void bim::game::update_invisibility_power_up_spawners(entt::registry& registry,

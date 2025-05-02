@@ -11,7 +11,7 @@
 
 namespace bim::game
 {
-  struct flame_power_up;
+  class flame_power_up;
 }
 
 void bim::game::update_flame_power_up_spawners(entt::registry& registry,

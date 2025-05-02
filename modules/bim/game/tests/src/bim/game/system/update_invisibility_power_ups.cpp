@@ -14,7 +14,7 @@
 
 namespace bim::game
 {
-  struct invisibility_power_up;
+  class invisibility_power_up;
 }
 
 TEST(update_invisibility_power_ups, player_collision)

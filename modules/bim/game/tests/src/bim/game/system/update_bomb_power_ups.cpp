@@ -15,7 +15,7 @@
 
 namespace bim::game
 {
-  struct bomb_power_up;
+  class bomb_power_up;
 }
 
 TEST(update_bomb_power_ups, increment_player_capacity_and_available)

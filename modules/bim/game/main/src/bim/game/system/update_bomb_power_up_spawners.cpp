@@ -12,7 +12,7 @@
 
 namespace bim::game
 {
-  struct bomb_power_up;
+  class bomb_power_up;
 }
 void bim::game::update_bomb_power_up_spawners(entt::registry& registry,
                                               arena& arena)
