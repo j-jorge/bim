@@ -10,9 +10,11 @@
 #include <gtest/gtest.h>
 
 class bim_game_arena_test
-    : public ::testing::TestWithParam<std::tuple<int, int>> {};
+  : public ::testing::TestWithParam<std::tuple<int, int>>
+{};
 
-TEST_P(bim_game_arena_test, defaults) {
+TEST_P(bim_game_arena_test, defaults)
+{
   const uint8_t width = std::get<0>(GetParam());
   const uint8_t height = std::get<1>(GetParam());
   bim::game::arena arena(width, height);
@@ -39,9 +41,9 @@ TEST_P(bim_game_arena_test, defaults) {
 
   for (int y = 0; y != height; ++y)
     for (int x = 0; x != width; ++x)
-      if (((y == 0) && (x == 0)) || ((y == 0) && (x == width / 2)) ||
-          ((y == height / 2) && (x == 0)) ||
-          ((y == height / 2) && (x == width / 2)))
+      if (((y == 0) && (x == 0)) || ((y == 0) && (x == width / 2))
+          || ((y == height / 2) && (x == 0))
+          || ((y == height / 2) && (x == width / 2)))
         EXPECT_TRUE(arena.is_static_wall(x, y)) << "x=" << x << ", y=" << y;
       else
         EXPECT_FALSE(arena.is_static_wall(x, y)) << "x=" << x << ", y=" << y;
@@ -51,7 +53,8 @@ INSTANTIATE_TEST_SUITE_P(bim_game_arena_suite, bim_game_arena_test,
                          ::testing::Combine(::testing::Range(1, 10),
                                             ::testing::Range(1, 10)));
 
-TEST(bim_game_arena, static_wall_is_solid) {
+TEST(bim_game_arena, static_wall_is_solid)
+{
   bim::game::arena arena(2, 2);
 
   arena.set_static_wall(0, 1, bim::game::cell_neighborhood::none);
@@ -62,7 +65,8 @@ TEST(bim_game_arena, static_wall_is_solid) {
   EXPECT_FALSE(arena.is_solid(1, 1));
 }
 
-TEST(bim_game_arena, static_wall_view) {
+TEST(bim_game_arena, static_wall_view)
+{
   bim::game::arena arena(2, 2);
 
   arena.set_static_wall(0, 1, bim::game::cell_neighborhood::left);
@@ -79,7 +83,8 @@ TEST(bim_game_arena, static_wall_view) {
   EXPECT_EQ(bim::game::cell_neighborhood::right, walls[1].neighbors);
 }
 
-TEST(bim_game_arena, solid_not_static_wall) {
+TEST(bim_game_arena, solid_not_static_wall)
+{
   bim::game::arena arena(2, 2);
 
   arena.set_solid(0, 1);
@@ -90,7 +95,8 @@ TEST(bim_game_arena, solid_not_static_wall) {
   EXPECT_FALSE(arena.is_solid(1, 1));
 }
 
-TEST(bim_game_arena, put_entity) {
+TEST(bim_game_arena, put_entity)
+{
   bim::game::arena arena(2, 2);
 
   entt::registry registry;
@@ -104,11 +110,12 @@ TEST(bim_game_arena, put_entity) {
   EXPECT_NE(entity, arena.entity_at(1, 1));
 }
 
-TEST(bim_game_arena, erase_entity) {
+TEST(bim_game_arena, erase_entity)
+{
   bim::game::arena arena(2, 2);
 
   entt::registry registry;
-  const entt::entity entities[] = {registry.create(), registry.create()};
+  const entt::entity entities[] = { registry.create(), registry.create() };
 
   arena.put_entity(0, 1, entities[0]);
   arena.put_entity(1, 0, entities[1]);
