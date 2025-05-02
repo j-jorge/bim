@@ -32,16 +32,14 @@ add_library(bim_game
 
   main/src/bim/game/factory/arena_reduction.cpp
   main/src/bim/game/factory/bomb.cpp
-  main/src/bim/game/factory/bomb_power_up.cpp
   main/src/bim/game/factory/brick_wall.cpp
   main/src/bim/game/factory/falling_block.cpp
   main/src/bim/game/factory/flame.cpp
-  main/src/bim/game/factory/flame_power_up.cpp
   main/src/bim/game/factory/fog_of_war.cpp
-  main/src/bim/game/factory/invisibility_power_up.cpp
   main/src/bim/game/factory/invisibility_state.cpp
   main/src/bim/game/factory/main_timer.cpp
   main/src/bim/game/factory/player.cpp
+  main/src/bim/game/factory/power_up.cpp 
 
   main/src/bim/game/system/animator.cpp
   main/src/bim/game/system/apply_player_action.cpp
@@ -78,6 +76,8 @@ add_executable(game-tests
   tests/src/bim/game/component/animation_state.cpp
   tests/src/bim/game/component/flame_direction.cpp
   tests/src/bim/game/component/player_action_queue.cpp
+
+  tests/src/bim/game/factory/power_up.cpp 
 
   tests/src/bim/game/system/animator.cpp
   tests/src/bim/game/system/apply_player_action.cpp
