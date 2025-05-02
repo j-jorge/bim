@@ -38,7 +38,14 @@ EOF
 fi
 
 project_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")"/..; pwd)"
-apk="$(find "$1" -name "app-release.apk")"
+
+if [[ -s "$project_dir/android/app/release.keystore" ]]
+then
+    apk="$(find "$1" -name "app-release.apk")"
+else
+    apk="$(find "$1" -name "app-release-unsigned.apk")"
+fi
+
 apk="$(realpath --canonicalize-existing "$apk")"
 
 tmp_dir="$(mktemp --directory)"
