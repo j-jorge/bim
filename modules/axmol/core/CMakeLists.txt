@@ -5,6 +5,7 @@ add_library(bim_axmol_core
   main/src/bim/axmol/bounding_box_on_screen.cpp
   main/src/bim/axmol/colour_chart.cpp
   main/src/bim/axmol/displayed.cpp
+  main/src/bim/axmol/find_child_by_path.cpp
   main/src/bim/axmol/ref_ptr.cpp
 )
 
@@ -20,6 +21,7 @@ target_link_libraries(
 add_executable(axmol-core-tests
   tests/src/bim/axmol/colour_chart.cpp
   tests/src/bim/axmol/displayed.cpp
+  tests/src/bim/axmol/find_child_by_path.cpp
   tests/src/bim/axmol/ref_ptr.cpp
 )
 target_link_libraries(
