@@ -24,6 +24,9 @@
 
 #include <bim/axmol/widget/implement_controls_struct.hpp>
 
+#include <bim/axmol/input/key_observer_handle.impl.hpp>
+#include <bim/axmol/input/observer/single_key_observer.hpp>
+
 #include <bim/game/feature_flags.hpp>
 
 #include <iscool/preferences/local_preferences.hpp>
@@ -87,8 +90,14 @@ bim::axmol::app::debug_popup::debug_popup(
   , m_button_item_bounds(*style.get_declaration("button-item-bounds"))
   , m_popup(new popup(context, *style.get_declaration("popup")))
   , m_wallet(wallet)
+  , m_escape(ax::EventKeyboard::KeyCode::KEY_BACK)
 {
   m_controls->close_button->connect_to_clicked(
+      [this]()
+      {
+        m_popup->hide();
+      });
+  m_escape->connect_to_released(
       [this]()
       {
         m_popup->hide();
@@ -104,6 +113,7 @@ void bim::axmol::app::debug_popup::show()
   m_inputs.clear();
   m_inputs.push_back(m_controls->close_button->input_node());
   m_inputs.push_back(m_controls->list->input_node());
+  m_inputs.push_back(m_escape);
 
   add_title("FEATURES");
   add_feature_item("Falling blocks", bim::game::feature_flags::falling_blocks);

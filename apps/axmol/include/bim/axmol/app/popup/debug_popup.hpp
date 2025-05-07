@@ -3,6 +3,7 @@
 
 #include <bim/axmol/widget/declare_controls_struct.hpp>
 
+#include <bim/axmol/input/observer/single_key_observer_handle.hpp>
 #include <bim/axmol/input/tree.hpp>
 
 #include <bim/game/feature_flags_fwd.hpp>
@@ -83,6 +84,7 @@ namespace bim::axmol::app
     std::unique_ptr<popup> m_popup;
     wallet& m_wallet;
 
+    bim::axmol::input::single_key_observer_handle m_escape;
     bim::axmol::input::tree m_inputs;
   };
 }
