@@ -10,6 +10,7 @@ add_library(bim_server
   main/src/bim/server/service/matchmaking_service.cpp
   main/src/bim/server/service/named_game_encounter_service.cpp
   main/src/bim/server/service/random_game_encounter_service.cpp
+  main/src/bim/server/service/server_stats.cpp
 )
 
 target_include_directories(bim_server PUBLIC main/include)

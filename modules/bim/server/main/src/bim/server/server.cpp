@@ -10,9 +10,10 @@
 #include <iscool/net/message/message.hpp>
 
 bim::server::server::server(const config& config)
-  : m_socket(config.port)
-  , m_authentication_service(config, m_socket)
-  , m_game_service(config, m_socket)
+  : m_server_stats(m_stats_scheduler)
+  , m_socket(config.port)
+  , m_authentication_service(config, m_socket, m_server_stats)
+  , m_game_service(config, m_socket, m_server_stats)
   , m_lobby_service(config, m_socket, m_game_service)
 {
   ic_log(iscool::log::nature::info(), "server", "Server is up on port {}.",
