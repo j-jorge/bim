@@ -122,6 +122,11 @@ build()
         cmake_options+=("--cmake" "-D$definition")
     done
 
+    # Axmol's dependency management tool, 1k, is implemented in .Net,
+    # which requires libicu unless told not to. This environment variable
+    # turns this requerement off.
+    export DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1
+
     bim-cmake-build \
         --build-dir "$build_dir" \
         --build-type "${build_type^}" \
