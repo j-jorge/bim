@@ -66,6 +66,7 @@ namespace bim::axmol::app
     void attached();
     void enter();
 
+    void animate_cash_flow();
     void animate_cash_flow(const ax::Vec2& source_world_position);
 
   private:

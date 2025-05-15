@@ -40,6 +40,8 @@ namespace bim::axmol::app
 {
   class feature_deck;
   class matchmaking_wait_message;
+  class wallet;
+  struct config;
 
   class matchmaking
   {
@@ -49,10 +51,12 @@ namespace bim::axmol::app
 
     ic_declare_context(
         m_context,
-        ic_context_declare_parent_properties(                      //
-            ((const bim::axmol::widget::context&)(widget_context)) //
-            ((bim::net::session_handler*)(session_handler))        //
-            ((iscool::preferences::local_preferences*)(local_preferences))),
+        ic_context_declare_parent_properties(                              //
+            ((const bim::axmol::widget::context&)(widget_context))         //
+            ((bim::net::session_handler*)(session_handler))                //
+            ((iscool::preferences::local_preferences*)(local_preferences)) //
+            ((const config*)(config))                                      //
+            ),
         ic_context_no_properties);
 
   public:
@@ -64,6 +68,7 @@ namespace bim::axmol::app
     // TODO: rename display_nodes
     const bim::axmol::widget::named_node_group& nodes() const;
 
+    void attached();
     void displaying();
     void displayed();
     void closing();
@@ -78,8 +83,10 @@ namespace bim::axmol::app
 
     void dispatch_back() const;
 
-    void show_feature_on_message(bim::game::feature_flags f) const;
-    void show_feature_off_message(bim::game::feature_flags f) const;
+    void feature_flag_clicked(bim::game::feature_flags f) const;
+
+    void show_default_feature_message() const;
+    void show_feature_message(bim::game::feature_flags f) const;
 
   private:
     ic_declare_state_monitor(m_player_count_monitor);
@@ -88,6 +95,8 @@ namespace bim::axmol::app
     bim::axmol::input::single_key_observer_handle m_escape;
     bim::axmol::input::tree m_inputs;
     bim_declare_controls_struct(controls, m_controls, 4);
+
+    const std::unique_ptr<wallet> m_wallet;
 
     std::unique_ptr<bim::net::new_game_exchange> m_new_game;
 

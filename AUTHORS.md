@@ -136,7 +136,6 @@ assets/sprites/features/fog-of-war-off.png
 assets/sprites/features/fog-of-war-on.png
 assets/sprites/features/invisibility-off.png
 assets/sprites/features/invisibility-on.png
-assets/sprites/features/unavailable.png
 assets/sprites/fog/00000000.png
 assets/sprites/fog/00000001.png
 assets/sprites/fog/00000010.png
@@ -200,6 +199,7 @@ assets/sprites/menu/gamepad-d-pad-right.png
 assets/sprites/menu/glow.png
 assets/sprites/menu/horizontal-gradient.png
 assets/sprites/menu/mail.png
+assets/sprites/menu/price-tag-88-40.png
 assets/sprites/menu/rays.png
 assets/sprites/menu/rounded-button-border-54-66.png
 assets/sprites/menu/rounded-button-fill-54-66.png

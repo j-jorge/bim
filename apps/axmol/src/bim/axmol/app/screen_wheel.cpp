@@ -72,6 +72,7 @@ bim::axmol::app::screen_wheel::screen_wheel(
 
   map_nodes(*m_controls->matchmaking, m_matchmaking->nodes(), style,
             "matchmaking-bounds");
+  m_matchmaking->attached();
   m_controls->matchmaking->removeFromParent();
 
   map_nodes(*m_controls->online_game, m_online_game->nodes(), style,

@@ -1,12 +1,12 @@
 # Next
 
-- Shield feature.
-- Add a "shop" where the player can donate to the devs.
-- Get some coins for each game, unlock the features with the coins.
-- Add a shop to buy coins, PlayStore build only.
+- Activate all game features selected by the clients when creating a game.
+- Add the base billing features in the Android app.
 
 # Client
 
+- Add a shop to buy coins, PlayStore build only.
+- Shield feature.
 - At most three enabled features per game.
 - Display the frame duration (without the sleep) in addition to the FPS.
 - Close the settings when the back button is pressed.

@@ -5,7 +5,8 @@
         [
             "app/screen/part/menu-background-bounds",
             "app/screen/part/menu-stripe-bounds",
-            "app/screen/part/feature-deck-bounds"
+            "app/screen/part/feature-deck-bounds",
+            "app/screen/part/wallet-bounds"
         ]
     },
 

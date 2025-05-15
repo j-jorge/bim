@@ -1,6 +1,7 @@
 {
     "style":
     {
+        "wallet": [ "app/screen/part/wallet" ],
         "feature-deck": [ "app/screen/part/feature-deck" ],
 
         "widgets":

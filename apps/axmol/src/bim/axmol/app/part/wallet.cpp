@@ -86,6 +86,11 @@ void bim::axmol::app::wallet::enter()
       iscool::i18n::numeric::to_string(m_displayed_value));
 }
 
+void bim::axmol::app::wallet::animate_cash_flow()
+{
+  animate_cash_flow({});
+}
+
 void bim::axmol::app::wallet::animate_cash_flow(
     const ax::Vec2& source_world_position)
 {

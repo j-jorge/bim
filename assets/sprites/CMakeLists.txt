@@ -1,4 +1,5 @@
 set(sprites
+  "sprites/menu/price-tag-88-40.png"
   "sprites/menu/rounded-button-border-54-66.png"
   "sprites/menu/rounded-button-fill-54-66.png"
   "sprites/menu/rounded-rectangle-33-33.png"
@@ -24,7 +25,6 @@ set(sprites_crop
   "sprites/features/fog-of-war-on.png"
   "sprites/features/invisibility-off.png"
   "sprites/features/invisibility-on.png"
-  "sprites/features/unavailable.png"
 
   "sprites/menu/audio.png"
   "sprites/menu/back.png"

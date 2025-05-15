@@ -3,7 +3,12 @@
 
 #include <bim/axmol/app/config.hpp>
 #include <bim/axmol/app/preference/arena_stats.hpp>
+#include <bim/axmol/app/preference/feature_flags.hpp>
 #include <bim/axmol/app/preference/wallet.hpp>
+
+#include <bim/game/feature_flags.hpp>
+
+#include <bim/bit_map.impl.hpp>
 
 #include <iscool/preferences/local_preferences.hpp>
 
@@ -17,6 +22,22 @@ void bim::axmol::app::update_preferences(
       // Version 1 introduced the coins for each completed game.
       std::int64_t coins = victories_in_arena(p) * config.coins_per_victory
                            + defeats_in_arena(p) * config.coins_per_defeat;
+
+      // Game features are purchased with coins.
+      const bim::game::feature_flags features = available_feature_flags(p);
+
+      if (!!(features & bim::game::feature_flags::falling_blocks))
+        coins -=
+            config
+                .game_feature_price[bim::game::feature_flags::falling_blocks];
+
+      if (!!(features & bim::game::feature_flags::invisibility))
+        coins -=
+            config.game_feature_price[bim::game::feature_flags::invisibility];
+
+      if (!!(features & bim::game::feature_flags::fog_of_war))
+        coins -=
+            config.game_feature_price[bim::game::feature_flags::fog_of_war];
 
       coins_balance(p, std::max<int64_t>(0, coins));
       ++version;
