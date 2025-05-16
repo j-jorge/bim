@@ -7,3 +7,4 @@ target_link_libraries(
   bim_server
   Boost::program_options
 )
+post_build_strip(bim-server)

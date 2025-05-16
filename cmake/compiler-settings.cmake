@@ -53,6 +53,31 @@ if ((CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     # Emit debug info in release builds too, such that we can have
     # symbols in the debugger.
     add_compile_options(-g)
+
+    set(post_build_strip_defined ON)
+    function(post_build_strip target)
+      add_custom_command(
+        TARGET ${target}
+        POST_BUILD
+        COMMAND
+          ${CMAKE_OBJCOPY}
+          --only-keep-debug
+          $<TARGET_FILE:${target}>
+          $<TARGET_FILE:${target}>.dbg
+        COMMAND
+          ${CMAKE_STRIP} --strip-debug --strip-unneeded $<TARGET_FILE:${target}>
+        COMMAND
+          ${CMAKE_OBJCOPY}
+          --add-gnu-debuglink=$<TARGET_FILE:${target}>.dbg
+          $<TARGET_FILE:${target}>
+      )
+    endfunction()
   endif()
 endif()
 
+if(NOT post_build_strip_defined)
+  function(post_build_strip target)
+  endfunction()
+endif()
+
+unset(post_build_strip_defined)
