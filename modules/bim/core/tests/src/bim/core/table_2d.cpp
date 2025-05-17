@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/table_2d.impl.hpp>
 
-#include <entt/entity/registry.hpp>
-
 #include <gtest/gtest.h>
 
 TEST(bim_table_2d, write_read)
