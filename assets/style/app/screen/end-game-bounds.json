@@ -142,10 +142,10 @@
         [{
             "anchor.x": 0.5,
             "anchor.y": 0.5,
-            "anchor.reference.x": 0.5,
-            "anchor.reference.y": 0.12,
-            "width.percents": 50,
-            "height.percents": 8
+            "anchor.reference.x": 0.13,
+            "anchor.reference.y": 0.05,
+            "height.percents": 7,
+            "width-ratio": 1.3
         }]
     }
 }

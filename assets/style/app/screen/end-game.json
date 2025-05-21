@@ -152,17 +152,19 @@
 
                 "revenge_button":
                 [
-                    "button/green-with-label",
+                    "button/yellow-with-label",
                     {
-                        "widgets/label/text.i18n": "NEW\nGAME"
+                        "widgets/label/text.i18n": "NEW\nGAME",
+                        "z-order": 20
                     }
                 ],
 
                 "quit_button":
                 [
-                    "button/red-with-label",
+                    "button/yellow-with-icon",
                     {
-                        "widgets/label/text.i18n": "BACK"
+                        "widgets/icon/frame": "sprites/menu/back.png",
+                        "z-order": 20
                     }
                 ]
             }
