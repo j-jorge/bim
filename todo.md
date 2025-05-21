@@ -1,6 +1,5 @@
 # Next
 
-- Activate all game features selected by the clients when creating a game.
 - Add the base billing features in the Android app.
 
 # Client
