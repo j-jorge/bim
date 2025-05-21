@@ -17,7 +17,7 @@
             "anchor.reference.x": 0.5,
             "anchor.reference.y": 0.85,
             "width.percents": 100,
-            "height.percents": 5
+            "height.percents": 6
         }],
 
         "stripe-message": [ "layout/center" ],

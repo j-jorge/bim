@@ -201,11 +201,11 @@ assets/sprites/menu/horizontal-gradient.png
 assets/sprites/menu/mail.png
 assets/sprites/menu/price-tag-88-40.png
 assets/sprites/menu/rays.png
+assets/sprites/menu/red-stripe-1-7-1-136.png
 assets/sprites/menu/rounded-button-border-54-66.png
 assets/sprites/menu/rounded-button-fill-54-66.png
 assets/sprites/menu/rounded-rectangle-33-33.png
 assets/sprites/menu/rounded-rectangle-spike.png
-assets/sprites/menu/serrated-stripe.png
 assets/sprites/menu/share.png
 assets/sprites/menu/stripe-1-79-1-258.png
 assets/sprites/menu/vertical-gradient.png

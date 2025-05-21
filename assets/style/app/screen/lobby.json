@@ -11,8 +11,15 @@
             {
                 "stripe-background":
                 [{
-                    "instantiate": "ax::Sprite",
-                    "frame": "sprites/menu/serrated-stripe.png",
+                    "instantiate": "nine_slices",
+                    "widgets/sprite":
+                    [{
+                        "frame": "sprites/menu/red-stripe-1-7-1-136.png",
+                        "insets.left": 1,
+                        "insets.top": 7,
+                        "insets.width": 1,
+                        "insets.height": 136
+                    }],
                     "z-order": -10
                 }],
 
@@ -35,9 +42,10 @@
 
                 "settings_button":
                 [
-                    "button/yellow-with-icon",
+                    "button/white-with-icon",
                     {
                         "widgets/icon/frame": "sprites/menu/gear.png",
+                        "bounds/icon/height.percents": 50,
                         "z-order": 20
                     }
                 ],

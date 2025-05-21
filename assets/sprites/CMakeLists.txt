@@ -44,7 +44,6 @@ set(sprites_crop
   "sprites/menu/music.png"
   "sprites/menu/rays.png"
   "sprites/menu/rounded-rectangle-spike.png"
-  "sprites/menu/serrated-stripe.png"
   "sprites/menu/share.png"
   "sprites/menu/silhouette-1.png"
   "sprites/menu/silhouette-2.png"
@@ -201,6 +200,7 @@ set(sprites_bleeding
   "sprites/fog/roll-in-6.png"
 
   "sprites/menu/horizontal-gradient.png"
+  "sprites/menu/red-stripe-1-7-1-136.png"
   "sprites/menu/vertical-gradient.png"
   "sprites/menu/vertical-gray-gradient.png"
   "sprites/menu/vertical-green-gradient.png"
@@ -211,7 +211,7 @@ set(sprites_bleeding
   "sprites/ui/edging-216-88.png"
 )
 
-foreach(s ${sprites} ${sprites_bleeding})
+foreach(s ${sprites} ${sprites_crop} ${sprites_bleeding})
   set(sprites_full_path ${sprites_full_path} ${CMAKE_CURRENT_LIST_DIR}/../${s})
 endforeach()
 
