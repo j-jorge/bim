@@ -36,11 +36,11 @@ msgid "Feedback about Bim!"
 msgstr ""
 
 msgid ""
-"Come play a game of Bim! https://play.google.com/store/apps/details?id=bim."
-"app"
+"Come play a game of Bim! https://play.google.com/store/apps/details?"
+"id=bim.app"
 msgstr ""
 
-msgid "Keep playing to unlock new game features!"
+msgid "You need more coins to purchase this item!"
 msgstr ""
 
 msgid "Customize your experience below!"
@@ -57,18 +57,6 @@ msgid ""
 "players!"
 msgstr ""
 
-msgid ""
-"No falling blocks! The game ends after 3 minutes if the players are still "
-"alive."
-msgstr ""
-
-msgid ""
-"Immediate forcast: Clear sky during the game, you can see the whole arena!"
-msgstr ""
-
-msgid "You can see everyone, and they can see you too!"
-msgstr ""
-
 msgid "A new version of Bim! is available! Please update as soon as possible."
 msgstr ""
 
@@ -77,9 +65,6 @@ msgid "Failed to authenticate with the game server. Error code {}."
 msgstr ""
 
 msgid "OK"
-msgstr ""
-
-msgid "BACK"
 msgstr ""
 
 msgid ""
@@ -159,9 +144,10 @@ msgid ""
 "ONLINE"
 msgstr ""
 
-msgid ""
-"ALPHA\n"
-"VERSION"
+msgid "VERSION ALPHA"
+msgstr ""
+
+msgid "0"
 msgstr ""
 
 msgid ""
