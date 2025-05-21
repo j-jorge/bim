@@ -1,15 +1,24 @@
 {
-    "mrv": 6,
+    "mrv": 7,
     "rcui": 24,
-    "vui": 168,
+    "vui": 24,
     "gs":
     [
         {
             "h": "bim.jorge.st:PORT"
         },
         {
-            "p": 7,
-            "h": "bim.jorge.st:20607"
+            "v": 7,
+            "h": "bim.jorge.st:20708"
         }
-    ]
+    ],
+    "cpv": 50,
+    "cpde": 10,
+    "cpdr": 10,
+    "gfp":
+    {
+        "fb": 50,
+        "i": 250,
+        "fow": 1000
+    }
 }
