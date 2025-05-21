@@ -1,0 +1,4 @@
+- Le joueur gagne des pièces à chaque partie jouée.
+- Les options de jeu peuvent être achetées avec des pièces.
+- Toutes les options activées par les joueurs sont utilisées dans le jeu.
+- Diverses améliorations graphiques.
