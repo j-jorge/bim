@@ -11,6 +11,8 @@
 
     "style":
     {
+        "background.lose": [ "layout/fill" ],
+
         "pattern_win":
         [
             "layout/fill",
@@ -91,6 +93,14 @@
             "keep-ratio": true
 
         }],
+
+        "reward.draw":
+        [
+            "layout/fill",
+            {
+                "reference": "reward.win"
+            }
+        ],
 
         "reward.lose":
         [

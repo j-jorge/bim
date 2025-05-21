@@ -8,6 +8,14 @@
             "app/screen/part/menu-background",
             "app/screen/part/menu-stripe",
             {
+                "background.lose":
+                [{
+                    "instantiate": "ax::LayerColor",
+                    "color": "kashmir-blue",
+                    "z-order": -100,
+                    "opacity": 1
+                }],
+
                 "pattern":
                 [{
                     "widgets/sprite":
@@ -120,6 +128,12 @@
                     "frame": "sprites/menu/coins-pack-2.png"
                 }],
 
+                "reward.draw":
+                [{
+                    "instantiate": "ax::Sprite",
+                    "frame": "sprites/menu/coins-pack-1.png"
+                }],
+
                 "reward.lose":
                 [{
                     "instantiate": "ax::Sprite",
@@ -172,6 +186,9 @@
 
         "actions.draw":
         [{
+            "background": [{ "instantiate": "hide" }],
+            "background.lose": [{ "instantiate": "show" }],
+
             "pattern": [{ "instantiate": "show" }],
             "pattern_win": [{ "instantiate": "hide" }],
             "pattern_lose": [{ "instantiate": "hide" }],
@@ -187,11 +204,15 @@
             "rays": [ "action/rotate-forever-30s" ],
 
             "reward.win": [{ "instantiate": "hide" }],
+            "reward.draw": [{ "instantiate": "show" }],
             "reward.lose": [{ "instantiate": "hide" }]
         }],
 
         "actions.win":
         [{
+            "background": [{ "instantiate": "show" }],
+            "background.lose": [{ "instantiate": "hide" }],
+
             "pattern": [{ "instantiate": "hide" }],
             "pattern_win": [{ "instantiate": "show" }],
             "pattern_lose": [{ "instantiate": "hide" }],
@@ -207,11 +228,15 @@
             "rays": [ "action/rotate-forever-30s" ],
 
             "reward.win": [{ "instantiate": "show" }],
+            "reward.draw": [{ "instantiate": "hide" }],
             "reward.lose": [{ "instantiate": "hide" }]
         }],
 
         "actions.lose":
         [{
+            "background": [{ "instantiate": "hide" }],
+            "background.lose": [{ "instantiate": "show" }],
+
             "pattern": [{ "instantiate": "hide" }],
             "pattern_win": [{ "instantiate": "hide" }],
             "pattern_lose": [{ "instantiate": "show" }],
@@ -227,6 +252,7 @@
             "rays": [ "action/rotate-forever-30s" ],
 
             "reward.win": [{ "instantiate": "hide" }],
+            "reward.draw": [{ "instantiate": "hide" }],
             "reward.lose": [{ "instantiate": "show" }]
         }]
     }
