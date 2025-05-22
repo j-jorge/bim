@@ -65,5 +65,15 @@ namespace bim::server
      * in contest_timeline_folder.
      */
     bool enable_contest_timeline_recording;
+
+    /**
+     * How long we wait after a stat is changed to record it in the logs
+     */
+    std::chrono::minutes stats_dump_delay;
+
+    /**
+     * How long we wait after a stat is changed to record it in the logs
+     */
+    std::chrono::days log_rotation_interval;
   };
 }

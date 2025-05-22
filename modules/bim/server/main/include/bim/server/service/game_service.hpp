@@ -3,6 +3,7 @@
 
 #include <bim/game/constant/max_player_count.hpp>
 #include <bim/game/feature_flags_fwd.hpp>
+#include <bim/server/service/server_stats.hpp>
 
 #include <iscool/net/message_pool.hpp>
 #include <iscool/net/message_stream.hpp>
@@ -29,7 +30,8 @@ namespace bim::server
   class game_service
   {
   public:
-    game_service(const config& config, iscool::net::socket_stream& socket);
+    game_service(const config& config, iscool::net::socket_stream& socket,
+                 server_stats& stats);
     ~game_service();
 
     bool is_in_active_game(iscool::net::session_id session) const;
@@ -46,6 +48,7 @@ namespace bim::server
                  const iscool::net::message& message);
 
   private:
+    server_stats& m_server_stats;
     struct game;
     using game_map = boost::unordered_map<iscool::net::channel_id, game>;
     using session_to_channel_map =

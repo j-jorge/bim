@@ -153,7 +153,6 @@ int main(int argc, char* argv[])
 
           slice_duration -= update_ms;
           scheduler.update_interval(update_ms);
-          server.m_stats_scheduler.update_interval(update_ms);
         }
 
       const clock::time_point end = clock::now();

@@ -10,7 +10,8 @@
 #include <iscool/net/message/message.hpp>
 
 bim::server::server::server(const config& config)
-  : m_server_stats(m_stats_scheduler)
+  : m_server_stats(bim::server::server_stats(config.stats_dump_delay,
+                                             config.log_rotation_interval))
   , m_socket(config.port)
   , m_authentication_service(config, m_socket, m_server_stats)
   , m_game_service(config, m_socket, m_server_stats)

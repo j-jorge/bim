@@ -17,7 +17,6 @@ namespace bim::server
   {
   public:
     explicit server(const config& config);
-    iscool::schedule::manual_scheduler m_stats_scheduler;
 
   private:
     void dispatch(const iscool::net::endpoint& endpoint,

@@ -1,25 +1,20 @@
+// SPDX-License-Identifier: AGPL-3.0-only
 #pragma once
-#include "bits/chrono.h"
-#include <atomic>
 #include <chrono>
 #include <cstdint>
 #include <fstream>
-#include <iscool/schedule/manual_scheduler.hpp>
-#include <mutex>
+#include <iscool/schedule/delayed_call.hpp>
+#include <iscool/signals/connection.hpp>
+#include <iscool/signals/scoped_connection.hpp>
 
 namespace bim::server
 {
-  using hour_time =
-      std::chrono::time_point<std::chrono::system_clock, std::chrono::hours>;
-
-  using day_time =
-      std::chrono::time_point<std::chrono::system_clock, std::chrono::days>;
-
   class server_stats
   {
   public:
-    explicit server_stats(iscool::schedule::manual_scheduler& scheduler);
-
+    explicit server_stats(std::chrono::minutes file_dump_delay,
+                          std::chrono::days log_rotation_interval,
+                          bool skip_dumping = false);
     // Session tracking
     void record_session_connected();
     void record_session_disconnected();
@@ -29,26 +24,28 @@ namespace bim::server
     void record_game_end(uint8_t player_count);
 
   private:
-    // scheduler for data dumps & log rotation
-    iscool::schedule::manual_scheduler& m_scheduler;
+    // Tracked Stats counters
+    int m_active_sessions = 0;
+    int m_players_in_games = 0;
+    int m_current_games = 0;
 
     // Logging control
-    void schedule_next_hourly_dump();
-    void schedule_daily_rotation();
-    void rotate_log();
-    void dump_hourly_stats();
+    bool skip_file_dumping; // for testing without file operations
 
-    // Tracked Stats counters
-    std::atomic<int> m_active_sessions{ 0 };
-    std::atomic<int> m_players_in_games{ 0 };
-    std::atomic<int> m_current_games{ 0 };
-    std::atomic<int> m_games_this_hour{ 0 };
+    // scheduler for data dumps & log rotation
+    iscool::signals::scoped_connection m_file_dump_connection;
 
     // Logging state
-    std::mutex m_log_mutex;
+    std::chrono::year_month_day m_log_file_ymd;
+    std::chrono::minutes m_file_dump_delay;
+    std::chrono::days m_log_rotation_interval;
+
     std::ofstream m_log_file;
 
+    void schedule_file_dump();
+    void rotate_log();
     void write_header();
-    void write_current_stats();
+    void conditional_dump();
+    void dump_stats_to_file();
   };
 }

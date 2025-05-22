@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-only
+#include "bim/server/service/server_stats.hpp"
 #include <bim/server/service/authentication_service.hpp>
 
 #include <bim/server/config.hpp>
@@ -33,8 +34,10 @@ struct bim::server::authentication_service::client_info
 };
 
 bim::server::authentication_service::authentication_service(
-    const config& config, iscool::net::socket_stream& socket)
-  : m_message_stream(socket)
+    const config& config, iscool::net::socket_stream& socket,
+    server_stats& stats)
+  : m_server_stats(stats)
+  , m_message_stream(socket)
   , m_next_session_id(1)
   , m_clean_up_interval(config.authentication_clean_up_interval)
   , m_message_pool(64)
@@ -127,6 +130,7 @@ void bim::server::authentication_service::check_authentication(
                               authentication_date_for_next_release() };
 
       m_clients.emplace(session, std::move(client));
+      m_server_stats.record_session_connected();
     }
 
   const iscool::net::message_pool::slot s = m_message_pool.pick_available();
@@ -170,6 +174,7 @@ void bim::server::authentication_service::clean_up()
                it->first);
         m_sessions.erase(it->second.token);
         it = m_clients.erase(it);
+        m_server_stats.record_session_disconnected();
       }
     else
       ++it;

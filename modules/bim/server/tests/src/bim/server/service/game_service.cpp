@@ -4,6 +4,7 @@
 #include <bim/server/config.hpp>
 #include <bim/server/service/game_info.hpp>
 #include <bim/server/service/game_service.hpp>
+#include <bim/server/service/server_stats.hpp>
 
 #include <iscool/net/socket_stream.hpp>
 
@@ -12,9 +13,11 @@
 TEST(game_service, new_game)
 {
   bim::server::tests::fake_scheduler scheduler;
+  bim::server::server_stats server_stats(std::chrono::minutes(0),
+                                         std::chrono::days(0), true);
 
   iscool::net::socket_stream socket_stream(12345);
-  bim::server::game_service service({}, socket_stream);
+  bim::server::game_service service({}, socket_stream, server_stats);
   const bim::game::feature_flags features = (bim::game::feature_flags)42;
 
   const bim::server::game_info game =

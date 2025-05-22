@@ -1,120 +1,132 @@
+// SPDX-License-Identifier: AGPL-3.0-only
+#include "bits/chrono.h"
+#include <bim/server/config.hpp>
 #include <bim/server/service/server_stats.hpp>
+#include <chrono>
+#include <ctime>
+#include <iscool/time/now.hpp>
 
-namespace bim::server
+#include <filesystem>
+
+bim::server::server_stats::server_stats(
+    std::chrono::minutes file_dump_delay,
+    std::chrono::days log_rotation_interval, bool skip_dumping)
+  : skip_file_dumping(skip_dumping)
+  , m_file_dump_delay(file_dump_delay)
+  , m_log_rotation_interval(log_rotation_interval)
 {
-  server_stats::server_stats(iscool::schedule::manual_scheduler& schedular)
-    : m_scheduler(schedular)
-  {
-    schedule_next_hourly_dump();
-    schedule_daily_rotation();
-  }
+  if (!skip_file_dumping)
+    {
+      // Initialise and open log file
+      rotate_log();
+      // Schedule an initial dump
+      schedule_file_dump();
+    }
+}
 
-  void server_stats::record_session_connected()
-  {
-    m_active_sessions++;
-  }
+void bim::server::server_stats::record_session_connected()
+{
+  m_active_sessions++;
+  conditional_dump();
+}
 
-  void server_stats::record_session_disconnected()
-  {
-    m_active_sessions--;
-  }
+void bim::server::server_stats::record_session_disconnected()
+{
+  m_active_sessions--;
+  conditional_dump();
+}
 
-  void server_stats::record_game_start(uint8_t player_count)
-  {
-    m_current_games++;
-    m_players_in_games += player_count;
-    m_games_this_hour++;
-  }
+void bim::server::server_stats::record_game_start(uint8_t player_count)
+{
+  m_current_games++;
+  m_players_in_games += player_count;
+  conditional_dump();
+}
 
-  void server_stats::record_game_end(uint8_t player_count)
-  {
-    m_current_games--;
-    m_players_in_games -= player_count;
-  }
+void bim::server::server_stats::record_game_end(uint8_t player_count)
+{
+  m_current_games--;
+  m_players_in_games -= player_count;
+  conditional_dump();
+}
 
-  void server_stats::dump_hourly_stats()
-  {
-    std::lock_guard lock(m_log_mutex);
-    write_current_stats();
-  }
+void bim::server::server_stats::dump_stats_to_file()
+{
+  const std::chrono::system_clock::time_point now =
+      std::chrono::system_clock::now();
 
-  void server_stats::write_current_stats()
-  {
-    const std::chrono::system_clock::time_point now =
-        std::chrono::system_clock::now();
+  // Format time for logging
+  const std::time_t now_time_t = std::chrono::system_clock::to_time_t(now);
+  std::tm* gmt = std::gmtime(&now_time_t);
+  std::ostringstream oss;
+  oss << std::put_time(gmt, "%Y-%m-%d %H:%M:%S");
 
-    m_log_file << std::format("{:%T},", now) << m_active_sessions.load() << ","
-               << m_players_in_games.load() << "," << m_current_games.load()
-               << "," << m_games_this_hour.load() << "\n";
+  const std::chrono::sys_days current_date =
+      std::chrono::floor<std::chrono::days>(now);
 
-    // Reset hourly counter
-    m_games_this_hour = 0;
-  }
+  const std::chrono::sys_days log_file_start_date_as_sys_days =
+      std::chrono::sys_days{ m_log_file_ymd };
 
-  void server_stats::write_header()
-  {
-    m_log_file << "Time, active_sessions , players_in_game, current_games, "
-                  "games_this_hour"
-               << "\n";
-  }
+  const std::chrono::sys_days next_rotation_date =
+      log_file_start_date_as_sys_days + m_log_rotation_interval;
 
-  void server_stats::schedule_next_hourly_dump()
-  {
-    const std::chrono::system_clock::time_point now =
-        std::chrono::system_clock::now();
-    hour_time current_hour = std::chrono::floor<std::chrono::hours>(now);
-    hour_time next_hour = current_hour + std::chrono::hours(1);
+  if (current_date >= next_rotation_date)
+    {
+      rotate_log();
+    }
 
-    std::chrono::system_clock::duration delay = next_hour - now;
+  m_log_file << oss.str() << " " << " " << m_active_sessions << " "
+             << m_players_in_games << " " << m_current_games << "\n";
+  m_log_file.flush();
+}
 
-    // Convert delay to nanoseconds (as expected by the scheduler)
-    const std::chrono::nanoseconds delay_ns =
-        std::chrono::duration_cast<std::chrono::nanoseconds>(delay);
+void bim::server::server_stats::write_header()
+{
+  m_log_file << "Time active_sessions players_in_game current_games" << "\n";
+}
 
-    // Schedule the next hourly dump
-    m_scheduler.get_delayed_call_delegate()(
-        [this]()
+void bim::server::server_stats::rotate_log()
+{
+  std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
+
+  m_log_file_ymd = std::chrono::floor<std::chrono::days>(now);
+
+  if (m_log_file.is_open())
+    m_log_file.close();
+
+  std::time_t t = std::chrono::system_clock::to_time_t(now);
+  std::ostringstream filename_stream;
+  filename_stream << "stats_" << std::put_time(std::gmtime(&t), "%Y-%m-%d")
+                  << ".log";
+  const std::string filename = filename_stream.str();
+
+  bool file_already_exists = std::filesystem::exists(filename);
+
+  m_log_file.open(filename, std::ios::out | std::ios::app);
+
+  if (!file_already_exists)
+    {
+      write_header();
+    }
+}
+
+void bim::server::server_stats::conditional_dump()
+{
+  if (!skip_file_dumping)
+    schedule_file_dump();
+}
+
+void bim::server::server_stats::schedule_file_dump()
+{
+  if (!m_file_dump_connection.connected())
+    m_file_dump_connection = iscool::schedule::delayed_call(
+        [this]() -> void
         {
-          dump_hourly_stats();
-          schedule_next_hourly_dump(); // Schedule the next data dump
+          dump_stats_to_file();
+          if (m_file_dump_connection.connected())
+            {
+              m_file_dump_connection.disconnect();
+            }
         },
-        delay_ns);
-  }
-
-  void server_stats::schedule_daily_rotation()
-  {
-    const std::chrono::system_clock::time_point now =
-        std::chrono::system_clock::now();
-    day_time current_day = std::chrono::floor<std::chrono::days>(now);
-    day_time next_day = current_day + std::chrono::days(1);
-
-    std::chrono::system_clock::duration delay = next_day - now;
-    const std::chrono::nanoseconds delay_ns =
-        std::chrono::duration_cast<std::chrono::nanoseconds>(delay);
-
-    m_scheduler.get_delayed_call_delegate()(
-        [this]()
-        {
-          rotate_log();
-          schedule_daily_rotation(); // Schedule the next rotation
-        },
-        delay_ns);
-  }
-
-  void server_stats::rotate_log()
-  {
-    std::lock_guard lock(m_log_mutex);
-    if (m_log_file.is_open())
-      m_log_file.close();
-
-    auto now = std::chrono::system_clock::now();
-    std::time_t t = std::chrono::system_clock::to_time_t(now);
-    std::ostringstream filename;
-    filename << "stats_" << std::put_time(std::localtime(&t), "%Y-%m-%d")
-             << ".log";
-
-    m_log_file.open(filename.str(), std::ios::out | std::ios::app);
-    write_header();
-  }
-
+        m_file_dump_delay);
 }

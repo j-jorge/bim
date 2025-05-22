@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #pragma once
 
+#include "bim/server/service/server_stats.hpp"
 #include <bim/net/message/client_token.hpp>
 
 #include <iscool/net/message_pool.hpp>
@@ -25,10 +26,12 @@ namespace bim::server
 
   public:
     authentication_service(const config& config,
-                           iscool::net::socket_stream& socket);
+                           iscool::net::socket_stream& socket,
+                           server_stats& stats);
     ~authentication_service();
 
   private:
+    server_stats& m_server_stats;
     using session_map =
         boost::unordered_map<bim::net::client_token, iscool::net::session_id>;
 
