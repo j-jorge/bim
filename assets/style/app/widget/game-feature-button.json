@@ -25,7 +25,7 @@
                 {
                     "anchor-point.x": 0.5,
                     "anchor-point.y": 0.5,
-                    "text.i18n": "0",
+                    "text": "0",
                     "parent": "price-tag",
                     "font.size": 42,
                     "font.italics": true

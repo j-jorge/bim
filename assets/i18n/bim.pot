@@ -144,10 +144,7 @@ msgid ""
 "ONLINE"
 msgstr ""
 
-msgid "VERSION ALPHA"
-msgstr ""
-
-msgid "0"
+msgid "ALPHA VERSION"
 msgstr ""
 
 msgid ""
