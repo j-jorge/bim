@@ -54,24 +54,29 @@ if ((CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     # symbols in the debugger.
     add_compile_options(-g)
 
-    set(post_build_strip_defined ON)
-    function(post_build_strip target)
-      add_custom_command(
-        TARGET ${target}
-        POST_BUILD
-        COMMAND
-          ${CMAKE_OBJCOPY}
-          --only-keep-debug
-          $<TARGET_FILE:${target}>
-          $<TARGET_FILE:${target}>.dbg
-        COMMAND
-          ${CMAKE_STRIP} --strip-debug --strip-unneeded $<TARGET_FILE:${target}>
-        COMMAND
-          ${CMAKE_OBJCOPY}
-          --add-gnu-debuglink=$<TARGET_FILE:${target}>.dbg
-          $<TARGET_FILE:${target}>
-      )
-    endfunction()
+    # The .gnu_debuglink section is different between what is built on
+    # GitHub and the output of F-Droid, so we can't use this section
+    # if we want reproducible builds.
+    if (NOT BIM_BUILDING_FOR_ANDROID)
+      set(post_build_strip_defined ON)
+      function(post_build_strip target)
+        add_custom_command(
+          TARGET ${target}
+          POST_BUILD
+          COMMAND
+            ${CMAKE_OBJCOPY}
+            --only-keep-debug
+            $<TARGET_FILE:${target}>
+            $<TARGET_FILE:${target}>.dbg
+          COMMAND
+            ${CMAKE_STRIP} --strip-debug --strip-unneeded $<TARGET_FILE:${target}>
+          COMMAND
+            ${CMAKE_OBJCOPY}
+            --add-gnu-debuglink=$<TARGET_FILE:${target}>.dbg
+            $<TARGET_FILE:${target}>
+        )
+      endfunction()
+    endif()
   endif()
 endif()
 
