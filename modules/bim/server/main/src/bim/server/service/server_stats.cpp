@@ -1,15 +1,15 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-#include "bits/chrono.h"
 #include <bim/server/config.hpp>
 #include <bim/server/service/server_stats.hpp>
-#include <chrono>
-#include <ctime>
+
+#include <iscool/schedule/delayed_call.hpp>
 #include <iscool/time/now.hpp>
 
-#include <filesystem>
+#include <chrono>
+#include <ctime>
 
 bim::server::server_stats::server_stats(
-    std::chrono::minutes file_dump_delay,
+    std::chrono::seconds file_dump_delay,
     std::chrono::days log_rotation_interval, bool skip_dumping)
   : skip_file_dumping(skip_dumping)
   , m_file_dump_delay(file_dump_delay)
@@ -18,7 +18,7 @@ bim::server::server_stats::server_stats(
   if (!skip_file_dumping)
     {
       // Initialise and open log file
-      rotate_log();
+      rotate_log(std::chrono::system_clock::now());
       // Schedule an initial dump
       schedule_file_dump();
     }
@@ -58,53 +58,50 @@ void bim::server::server_stats::dump_stats_to_file()
   // Format time for logging
   const std::time_t now_time_t = std::chrono::system_clock::to_time_t(now);
   std::tm* gmt = std::gmtime(&now_time_t);
-  std::ostringstream oss;
-  oss << std::put_time(gmt, "%Y-%m-%d %H:%M:%S");
 
-  const std::chrono::sys_days current_date =
-      std::chrono::floor<std::chrono::days>(now);
-
-  const std::chrono::sys_days log_file_start_date_as_sys_days =
-      std::chrono::sys_days{ m_log_file_ymd };
-
-  const std::chrono::sys_days next_rotation_date =
-      log_file_start_date_as_sys_days + m_log_rotation_interval;
-
-  if (current_date >= next_rotation_date)
+  if (m_log_rotation_interval != std::chrono::days(0))
     {
-      rotate_log();
-    }
 
-  m_log_file << oss.str() << " " << " " << m_active_sessions << " "
-             << m_players_in_games << " " << m_current_games << "\n";
-  m_log_file.flush();
+      const std::chrono::sys_days current_date =
+          std::chrono::floor<std::chrono::days>(now);
+
+      const std::chrono::sys_days log_file_start_date_as_sys_days =
+          std::chrono::sys_days{ m_log_file_ymd };
+
+      const std::chrono::sys_days next_rotation_date =
+          log_file_start_date_as_sys_days + m_log_rotation_interval;
+
+      if (current_date >= next_rotation_date)
+        {
+          rotate_log(now);
+        }
+    }
+  m_log_file << std::put_time(gmt, "%Y-%m-%d %H:%M:%S") << ' '
+             << m_active_sessions << ' ' << m_players_in_games << ' '
+             << m_current_games << '\n';
 }
 
 void bim::server::server_stats::write_header()
 {
-  m_log_file << "Time active_sessions players_in_game current_games" << "\n";
+  m_log_file << "Time active_sessions players_in_game current_games\n";
 }
 
-void bim::server::server_stats::rotate_log()
+void bim::server::server_stats::rotate_log(
+    std::chrono::system_clock::time_point now)
 {
-  std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
-
   m_log_file_ymd = std::chrono::floor<std::chrono::days>(now);
-
-  if (m_log_file.is_open())
-    m_log_file.close();
+  m_log_file.close();
 
   std::time_t t = std::chrono::system_clock::to_time_t(now);
   std::ostringstream filename_stream;
   filename_stream << "stats_" << std::put_time(std::gmtime(&t), "%Y-%m-%d")
                   << ".log";
-  const std::string filename = filename_stream.str();
-
-  bool file_already_exists = std::filesystem::exists(filename);
+  const std::string filename = std::move(filename_stream).str();
 
   m_log_file.open(filename, std::ios::out | std::ios::app);
-
-  if (!file_already_exists)
+  // Explicitly seek to end and check position
+  m_log_file.seekp(0, std::ios::end);
+  if (m_log_file.tellp() == 0)
     {
       write_header();
     }
@@ -123,10 +120,6 @@ void bim::server::server_stats::schedule_file_dump()
         [this]() -> void
         {
           dump_stats_to_file();
-          if (m_file_dump_connection.connected())
-            {
-              m_file_dump_connection.disconnect();
-            }
         },
         m_file_dump_delay);
 }

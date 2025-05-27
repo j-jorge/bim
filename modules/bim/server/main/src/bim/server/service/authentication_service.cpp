@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-#include "bim/server/service/server_stats.hpp"
 #include <bim/server/service/authentication_service.hpp>
+#include <bim/server/service/server_stats.hpp>
 
 #include <bim/server/config.hpp>
 

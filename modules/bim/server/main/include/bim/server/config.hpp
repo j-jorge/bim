@@ -67,13 +67,17 @@ namespace bim::server
     bool enable_contest_timeline_recording;
 
     /**
-     * How long we wait after a stat is changed to record it in the logs
+     * Tells if we record stats logs. Logs saved in server_stats_folder
      */
-    std::chrono::minutes stats_dump_delay;
+    bool enable_server_stats;
 
-    /**
-     * How long we wait after a stat is changed to record it in the logs
-     */
-    std::chrono::days log_rotation_interval;
+    /** How long we wait after a stat is changed to record it in the logs */
+    std::chrono::seconds stats_dump_delay;
+
+    /** How long we wait to create a new log file */
+    std::chrono::days stats_log_rotation_interval;
+
+    /** Path to the folder where to store the server stats */
+    std::string server_stats_folder;
   };
 }

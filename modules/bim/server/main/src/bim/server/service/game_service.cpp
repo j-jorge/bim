@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-#include "bim/server/service/server_stats.hpp"
 #include <bim/server/service/game_service.hpp>
 
 #include <bim/server/config.hpp>
 #include <bim/server/service/contest_timeline_service.hpp>
 #include <bim/server/service/game_info.hpp>
+#include <bim/server/service/server_stats.hpp>
 
 #include <bim/net/message/game_over.hpp>
 #include <bim/net/message/game_update_from_client.hpp>

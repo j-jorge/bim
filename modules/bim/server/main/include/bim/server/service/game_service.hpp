@@ -1,9 +1,10 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #pragma once
 
+#include <bim/server/service/server_stats.hpp>
+
 #include <bim/game/constant/max_player_count.hpp>
 #include <bim/game/feature_flags_fwd.hpp>
-#include <bim/server/service/server_stats.hpp>
 
 #include <iscool/net/message_pool.hpp>
 #include <iscool/net/message_stream.hpp>
@@ -48,7 +49,6 @@ namespace bim::server
                  const iscool::net::message& message);
 
   private:
-    server_stats& m_server_stats;
     struct game;
     using game_map = boost::unordered_map<iscool::net::channel_id, game>;
     using session_to_channel_map =
@@ -87,6 +87,7 @@ namespace bim::server
     void clean_up(iscool::net::channel_id channel, const game& g);
 
   private:
+    server_stats& m_server_stats;
     iscool::net::message_stream m_message_stream;
     iscool::net::channel_id m_next_game_channel;
     game_map m_games;

@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #pragma once
 
-#include "bim/server/service/server_stats.hpp"
 #include <bim/server/service/authentication_service.hpp>
 #include <bim/server/service/game_service.hpp>
 #include <bim/server/service/lobby_service.hpp>
 #include <bim/server/service/matchmaking_service.hpp>
+#include <bim/server/service/server_stats.hpp>
 
 #include <iscool/net/socket_stream.hpp>
 
