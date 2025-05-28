@@ -69,7 +69,7 @@ namespace bim::server
     /**
      * Tells if we record stats logs. Logs saved in server_stats_folder
      */
-    bool enable_server_stats;
+    bool enable_server_stats_recording;
 
     /** How long we wait after a stat is changed to record it in the logs */
     std::chrono::seconds stats_dump_delay;

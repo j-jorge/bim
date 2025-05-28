@@ -69,6 +69,11 @@ static command_line parse_command_line(int argc, char* argv[])
       "contest-timeline-folder", boost::program_options::value<std::string>(),
       "Enable the recording of the contests and save them in this folder.");
 
+  options.add_options()("server-stats-folder",
+                        boost::program_options::value<std::string>(),
+                        "Enable the recording of the server stats and save "
+                        "them in this folder.");
+
   boost::program_options::variables_map variables;
   boost::program_options::store(
       boost::program_options::command_line_parser(argc, argv)
@@ -95,6 +100,13 @@ static command_line parse_command_line(int argc, char* argv[])
   if (result.config.enable_contest_timeline_recording)
     result.config.contest_timeline_folder =
         variables["contest-timeline-folder"].as<std::string>();
+
+  result.config.enable_server_stats_recording =
+      variables.count("server-stats-folder") != 0;
+
+  if (result.config.enable_server_stats_recording)
+    result.config.server_stats_folder =
+        variables["server-stats-folder"].as<std::string>();
 
   if (variables.count("log-file") != 0)
     result.log_to_file = variables["log-file"].as<std::string>();

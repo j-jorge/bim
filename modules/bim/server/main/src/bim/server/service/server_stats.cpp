@@ -8,15 +8,19 @@
 #include <chrono>
 #include <ctime>
 
-bim::server::server_stats::server_stats(
-    std::chrono::seconds file_dump_delay,
-    std::chrono::days log_rotation_interval, bool skip_dumping)
-  : skip_file_dumping(skip_dumping)
-  , m_file_dump_delay(file_dump_delay)
-  , m_log_rotation_interval(log_rotation_interval)
+bim::server::server_stats::server_stats(const config& config)
+  : m_enable_stats_recording(config.enable_contest_timeline_recording)
+  , m_file_dump_delay(config.stats_dump_delay)
+  , m_log_rotation_interval(config.stats_log_rotation_interval)
+  , m_server_stats_folder(config.server_stats_folder)
 {
-  if (!skip_file_dumping)
+  if (m_enable_stats_recording)
     {
+      if (!m_server_stats_folder.is_directory())
+        {
+          std::filesystem::create_directory(m_server_stats_folder);
+        }
+
       // Initialise and open log file
       rotate_log(std::chrono::system_clock::now());
       // Schedule an initial dump
@@ -94,8 +98,8 @@ void bim::server::server_stats::rotate_log(
 
   std::time_t t = std::chrono::system_clock::to_time_t(now);
   std::ostringstream filename_stream;
-  filename_stream << "stats_" << std::put_time(std::gmtime(&t), "%Y-%m-%d")
-                  << ".log";
+  filename_stream << m_server_stats_folder
+                  << std::put_time(std::gmtime(&t), "%Y-%m-%d") << ".log";
   const std::string filename = std::move(filename_stream).str();
 
   m_log_file.open(filename, std::ios::out | std::ios::app);
@@ -109,7 +113,7 @@ void bim::server::server_stats::rotate_log(
 
 void bim::server::server_stats::conditional_dump()
 {
-  if (!skip_file_dumping)
+  if (m_enable_stats_recording)
     schedule_file_dump();
 }
 

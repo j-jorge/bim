@@ -14,6 +14,7 @@ bim::server::config::config()
   , game_service_disconnection_earliness_threshold_in_ticks(75)
   , game_service_disconnection_inactivity_delay(std::chrono::seconds(10))
   , enable_contest_timeline_recording(false)
+  , enable_server_stats_recording(false)
   , stats_dump_delay(std::chrono::seconds(60))
   , stats_log_rotation_interval(std::chrono::days(1))
 {}
