@@ -9,7 +9,7 @@
 #include <ctime>
 
 bim::server::server_stats::server_stats(const config& config)
-  : m_enable_stats_recording(config.enable_contest_timeline_recording)
+  : m_enable_stats_recording(config.enable_server_stats_recording)
   , m_file_dump_delay(config.stats_dump_delay)
   , m_log_rotation_interval(config.stats_log_rotation_interval)
   , m_server_stats_folder(config.server_stats_folder)
@@ -87,7 +87,8 @@ void bim::server::server_stats::dump_stats_to_file()
 
 void bim::server::server_stats::write_header()
 {
-  m_log_file << "Time active_sessions players_in_game current_games\n";
+  m_log_file << "YYYY-MM-DD HH:MM:SS active_sessions players_in_game "
+                "current_games\n";
 }
 
 void bim::server::server_stats::rotate_log(
@@ -97,13 +98,13 @@ void bim::server::server_stats::rotate_log(
   m_log_file.close();
 
   std::time_t t = std::chrono::system_clock::to_time_t(now);
-  std::ostringstream filename_stream;
-  filename_stream << m_server_stats_folder
-                  << std::put_time(std::gmtime(&t), "%Y-%m-%d") << ".log";
-  const std::string filename = std::move(filename_stream).str();
+  std::ostringstream date_stream;
+  date_stream << std::put_time(std::gmtime(&t), "%Y-%m-%d") << ".log";
+  std::filesystem::path log_path =
+      m_server_stats_folder.path() / date_stream.str();
 
-  m_log_file.open(filename, std::ios::out | std::ios::app);
-  // Explicitly seek to end and check position
+  m_log_file.open(log_path, std::ios::out | std::ios::app);
+
   m_log_file.seekp(0, std::ios::end);
   if (m_log_file.tellp() == 0)
     {

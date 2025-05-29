@@ -68,7 +68,6 @@ static command_line parse_command_line(int argc, char* argv[])
   options.add_options()(
       "contest-timeline-folder", boost::program_options::value<std::string>(),
       "Enable the recording of the contests and save them in this folder.");
-
   options.add_options()("server-stats-folder",
                         boost::program_options::value<std::string>(),
                         "Enable the recording of the server stats and save "
