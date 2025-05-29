@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #pragma once
 
-#include <bim/server/service/server_stats.hpp>
-
 #include <bim/game/constant/max_player_count.hpp>
 #include <bim/game/feature_flags_fwd.hpp>
 
@@ -24,6 +22,8 @@ namespace bim::net
 namespace bim::server
 {
   class contest_timeline_service;
+  class authentication_service;
+  class server_stats;
 
   struct config;
   struct game_info;
@@ -32,7 +32,7 @@ namespace bim::server
   {
   public:
     game_service(const config& config, iscool::net::socket_stream& socket,
-                 server_stats& stats);
+                 server_stats& stats, authentication_service& authentication);
     ~game_service();
 
     bool is_in_active_game(iscool::net::session_id session) const;
@@ -98,6 +98,7 @@ namespace bim::server
     std::chrono::seconds m_clean_up_interval;
 
     std::unique_ptr<contest_timeline_service> m_contest_timeline_service;
+    authentication_service& m_authentication_service;
     const int m_disconnection_lateness_threshold_in_ticks;
     const int m_disconnection_earliness_threshold_in_ticks;
     const std::chrono::seconds m_disconnection_inactivity_delay;

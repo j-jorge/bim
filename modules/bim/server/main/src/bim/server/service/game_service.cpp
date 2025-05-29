@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/server/service/game_service.hpp>
 
+#include "bim/server/service/authentication_service.hpp"
 #include <bim/server/config.hpp>
 #include <bim/server/service/contest_timeline_service.hpp>
 #include <bim/server/service/game_info.hpp>
@@ -268,12 +269,14 @@ public:
 
 bim::server::game_service::game_service(const config& config,
                                         iscool::net::socket_stream& socket,
-                                        server_stats& stats)
+                                        server_stats& stats,
+                                        authentication_service& authentication)
   : m_server_stats(stats)
   , m_message_stream(socket)
   , m_next_game_channel(1)
   , m_random(config.random_seed)
   , m_clean_up_interval(config.game_service_clean_up_interval)
+  , m_authentication_service(authentication)
   , m_disconnection_lateness_threshold_in_ticks(
         config.game_service_disconnection_lateness_threshold_in_ticks)
   , m_disconnection_earliness_threshold_in_ticks(
