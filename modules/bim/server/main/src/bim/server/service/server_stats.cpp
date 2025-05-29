@@ -22,7 +22,8 @@ bim::server::server_stats::server_stats(const config& config)
         }
 
       // Initialise and open log file
-      rotate_log(std::chrono::system_clock::now());
+      rotate_log(std::chrono::system_clock::time_point(
+          iscool::time::now<std::chrono::seconds>()));
       // Schedule an initial dump
       schedule_file_dump();
     }
@@ -54,31 +55,39 @@ void bim::server::server_stats::record_game_end(uint8_t player_count)
   conditional_dump();
 }
 
+void bim::server::server_stats::flush_for_testing()
+{
+  if (m_log_file.is_open())
+    {
+      m_log_file.flush();
+    }
+}
+
 void bim::server::server_stats::dump_stats_to_file()
 {
+
+  const std::chrono::seconds now_duration =
+      iscool::time::now<std::chrono::seconds>();
+
   const std::chrono::system_clock::time_point now =
-      std::chrono::system_clock::now();
+      std::chrono::system_clock::time_point(now_duration);
 
   // Format time for logging
   const std::time_t now_time_t = std::chrono::system_clock::to_time_t(now);
   std::tm* gmt = std::gmtime(&now_time_t);
 
-  if (m_log_rotation_interval != std::chrono::days(0))
+  const std::chrono::sys_days current_date =
+      std::chrono::floor<std::chrono::days>(now);
+
+  const std::chrono::sys_days log_file_start_date_as_sys_days =
+      std::chrono::sys_days{ m_log_file_ymd };
+
+  const std::chrono::sys_days next_rotation_date =
+      log_file_start_date_as_sys_days + m_log_rotation_interval;
+
+  if (current_date >= next_rotation_date)
     {
-
-      const std::chrono::sys_days current_date =
-          std::chrono::floor<std::chrono::days>(now);
-
-      const std::chrono::sys_days log_file_start_date_as_sys_days =
-          std::chrono::sys_days{ m_log_file_ymd };
-
-      const std::chrono::sys_days next_rotation_date =
-          log_file_start_date_as_sys_days + m_log_rotation_interval;
-
-      if (current_date >= next_rotation_date)
-        {
-          rotate_log(now);
-        }
+      rotate_log(now);
     }
   m_log_file << std::put_time(gmt, "%Y-%m-%d %H:%M:%S") << ' '
              << m_active_sessions << ' ' << m_players_in_games << ' '

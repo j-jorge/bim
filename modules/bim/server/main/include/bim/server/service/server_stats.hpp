@@ -23,6 +23,7 @@ namespace bim::server
     // Game tracking
     void record_game_start(uint8_t player_count);
     void record_game_end(uint8_t player_count);
+    void flush_for_testing();
 
   private:
     void schedule_file_dump();
@@ -38,7 +39,7 @@ namespace bim::server
     int m_current_games = 0;
 
     // Logging control
-    bool m_enable_stats_recording; // for testing without file operations
+    bool m_enable_stats_recording;
 
     // scheduler for data dumps & log rotation
     iscool::signals::scoped_connection m_file_dump_connection;
