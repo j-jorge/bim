@@ -10,10 +10,13 @@ add_library(bim_app
   src/bim/axmol/app/feature_deck.cpp
   src/bim/axmol/app/fog_display.cpp
   src/bim/axmol/app/main_scene.cpp
+  src/bim/axmol/app/matchmaking_wait_message.cpp
   src/bim/axmol/app/player_progress_tracker.cpp
   src/bim/axmol/app/root_scene.cpp
   src/bim/axmol/app/scene_lock.cpp
   src/bim/axmol/app/screen_wheel.cpp
+
+  src/bim/axmol/app/part/wallet.cpp
 
   src/bim/axmol/app/popup/debug_popup.cpp
   src/bim/axmol/app/popup/message.cpp
@@ -27,7 +30,8 @@ add_library(bim_app
   src/bim/axmol/app/preference/date_of_next_version_update_message.cpp
   src/bim/axmol/app/preference/feature_flags.cpp
   src/bim/axmol/app/preference/haptic.cpp
-  src/bim/axmol/app/preference/network.cpp
+  src/bim/axmol/app/preference/update_preferences.cpp
+  src/bim/axmol/app/preference/wallet.cpp
 
   src/bim/axmol/app/screen/end_game.cpp
   src/bim/axmol/app/screen/lobby.cpp
@@ -36,6 +40,7 @@ add_library(bim_app
 
   src/bim/axmol/app/task/main_task.cpp
 
+  src/bim/axmol/app/widget/game_feature_button.cpp
   src/bim/axmol/app/widget/player.cpp
 )
 target_include_directories(bim_app PUBLIC include)

@@ -1,0 +1,3 @@
+- The players are animated.
+- New power up: invisibility.
+- Messages are displayed on the matchmaking screen to keep the player entertained.

@@ -51,6 +51,21 @@ bim::server::authentication_service::authentication_service(
 
 bim::server::authentication_service::~authentication_service() = default;
 
+void bim::server::authentication_service::disconnect(
+    iscool::net::session_id session)
+{
+  const client_map::iterator it = m_clients.find(session);
+
+  if (it == m_clients.end())
+    return;
+
+  ic_log(iscool::log::nature::info(), "authentication_service",
+         "Internal disconnection for session={}.", session);
+
+  m_sessions.erase(it->second.token);
+  m_clients.erase(it);
+}
+
 void bim::server::authentication_service::check_session(
     const iscool::net::endpoint& endpoint, const iscool::net::message& message)
 {
@@ -85,6 +100,11 @@ void bim::server::authentication_service::check_authentication(
 {
   const std::optional<bim::net::authentication> message =
       bim::net::try_deserialize_message<bim::net::authentication>(m);
+
+  if (!message)
+    {
+      return;
+    }
 
   const bim::net::client_token token = message->get_request_token();
 

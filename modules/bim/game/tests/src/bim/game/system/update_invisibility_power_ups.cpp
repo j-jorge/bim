@@ -5,12 +5,17 @@
 
 #include <bim/game/component/dead.hpp>
 #include <bim/game/component/invisibility_state.hpp>
-#include <bim/game/factory/invisibility_power_up.hpp>
 #include <bim/game/factory/player.hpp>
+#include <bim/game/factory/power_up.hpp>
 
 #include <entt/entity/registry.hpp>
 
 #include <gtest/gtest.h>
+
+namespace bim::game
+{
+  class invisibility_power_up;
+}
 
 TEST(update_invisibility_power_ups, player_collision)
 {
@@ -20,7 +25,8 @@ TEST(update_invisibility_power_ups, player_collision)
   const int y = 1;
 
   const entt::entity power_up_entity =
-      invisibility_power_up_factory(registry, arena, x, y);
+      power_up_factory<bim::game::invisibility_power_up>(registry, arena, x,
+                                                         y);
   const entt::entity player_entity =
       bim::game::player_factory(registry, 0, x, y, bim::game::animation_id{});
 
@@ -37,7 +43,7 @@ TEST(update_invisibility_power_ups, two_players_only_one_gets_the_power_up)
   const int x = 1;
   const int y = 1;
 
-  invisibility_power_up_factory(registry, arena, x, y);
+  power_up_factory<bim::game::invisibility_power_up>(registry, arena, x, y);
 
   const entt::entity player_entity[2] = {
     bim::game::player_factory(registry, 0, x, y, bim::game::animation_id{}),

@@ -19,6 +19,7 @@ target_link_libraries(
 )
 
 add_executable(core-tests
+  tests/src/bim/core/bit_map.cpp
   tests/src/bim/core/table_2d.cpp
 )
 target_link_libraries(

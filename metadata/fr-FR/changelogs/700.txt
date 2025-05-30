@@ -1,0 +1,3 @@
+- Les joueurs sont animés.
+- Nouveau bonus : l'invisibilité.
+- Des messages s'affichent pour faire patienter le joueur sur la recherche d'adversaire.

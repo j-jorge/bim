@@ -9,7 +9,6 @@
 
 #include <entt/entity/entity.hpp>
 
-
 bim::game::arena::arena() = default;
 
 bim::game::arena::arena(std::uint8_t width, std::uint8_t height)

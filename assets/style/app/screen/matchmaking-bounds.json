@@ -5,7 +5,8 @@
         [
             "app/screen/part/menu-background-bounds",
             "app/screen/part/menu-stripe-bounds",
-            "app/screen/part/feature-deck-bounds"
+            "app/screen/part/feature-deck-bounds",
+            "app/screen/part/wallet-bounds"
         ]
     },
 
@@ -93,6 +94,15 @@
             "anchor.reference.y": 0.48,
             "height.percents": 21,
             "width-ratio": 0.39
+        }],
+
+        "wait_message":
+        [{
+            "anchor.x": 0.5,
+            "anchor.y": 1,
+            "anchor.reference.x": 0.5,
+            "anchor.reference.y": 0.17,
+            "width.percents": 98
         }],
 
         "label-2":

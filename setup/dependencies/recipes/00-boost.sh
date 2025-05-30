@@ -6,7 +6,7 @@ set -euo pipefail
 
 boost_version=1.87.0
 boost_version_underscore="${boost_version//./_}"
-package_revision=1
+package_revision=2
 version="$boost_version"-"$package_revision"
 build_type=release
 
@@ -67,9 +67,6 @@ build_android()
         rm --force --recursive "$arch_build_dir"
         mkdir --parents "$arch_build_dir"
 
-        local abi
-        abi="$(bim-android-config --abi "$arch")"
-
         local triplet
         triplet="$(bim-android-config --triplet "$arch")"
 
@@ -77,7 +74,7 @@ build_android()
         cat > "$user_config" <<EOF
 using clang : android
   : ccache $ndk_root/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++
-    --target=$triplet-android$abi
+    --target=$triplet
     --sysroot=$ndk_root/toolchains/llvm/prebuilt/linux-x86_64/sysroot ;
 EOF
 

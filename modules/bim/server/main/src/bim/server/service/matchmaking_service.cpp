@@ -37,12 +37,12 @@ struct bim::server::matchmaking_service::encounter_info
   std::array<bool, bim::game::g_max_player_count> ready;
   std::optional<iscool::net::channel_id> channel;
 
-  bim::game::feature_flags common_features() const
+  bim::game::feature_flags combine_features() const
   {
     bim::game::feature_flags result = features[0];
 
     for (std::uint8_t i = 1; i != player_count; ++i)
-      result &= features[i];
+      result |= features[i];
 
     return result;
   }
@@ -246,7 +246,7 @@ void bim::server::matchmaking_service::mark_as_ready(
                    m_random);
 
       game = m_game_service.new_game(encounter.player_count,
-                                     encounter.common_features(), sessions);
+                                     encounter.combine_features(), sessions);
       encounter.channel = game->channel;
 
       ic_log(iscool::log::nature::info(), "matchmaking_service",

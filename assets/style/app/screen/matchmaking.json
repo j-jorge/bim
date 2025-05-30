@@ -1,6 +1,7 @@
 {
     "style":
     {
+        "wallet": [ "app/screen/part/wallet" ],
         "feature-deck": [ "app/screen/part/feature-deck" ],
 
         "widgets":
@@ -92,6 +93,20 @@
                     "z-order": 10
                 }],
 
+                "wait_message":
+                [
+                    "font/bold-center-normal-size",
+                    {
+                        "text": "Placeholder to have a size.",
+                        "anchor-point.x": 0.5,
+                        "anchor-point.y": 1,
+                        "align.vertical": "top",
+                        "overflow": "resize-height",
+                        "wrap": true,
+                        "z-order": 5
+                    }
+                ],
+
                 "label-2":
                 [
                     "app/screen/part/matchmaking-player-label",
@@ -147,7 +162,7 @@
 
         "display.displaying":
         [{
-            "label-background": [{ "visible": false }],
+            "wait_message": [{ "visible": false }],
             "player-2": [{ "visible": false }],
             "player-3": [{ "visible": false }],
             "player-4": [{ "visible": false }],
@@ -158,24 +173,14 @@
 
         "actions.displaying":
         [{
-            "rays":
-            [{
-                "instantiate": "repeat",
-                "forever": true,
-                "action":
-                [{
-                    "instantiate": "rotate",
-                    "by": -360,
-                    "duration": 30
-                }]
-            }]
+            "rays": [ "action/rotate-forever-30s" ]
         }],
 
         "actions.wait":
         [{
             "ready_button": [{ "instantiate": "hide" }],
             "back_button": [{ "instantiate": "show" }],
-            "label-background": [{ "instantiate": "hide" }],
+            "wait_message": [{ "instantiate": "show" }],
             "player-2": [{ "instantiate": "hide" }],
             "player-3": [{ "instantiate": "hide" }],
             "player-4": [{ "instantiate": "hide" }],
@@ -188,7 +193,7 @@
         [{
             "ready_button": [{ "instantiate": "show" }],
             "back_button": [{ "instantiate": "hide" }],
-            "label-background": [{ "instantiate": "show" }],
+            "wait_message": [{ "instantiate": "hide" }],
             "player-2": [{ "instantiate": "show" }],
             "player-3": [{ "instantiate": "hide" }],
             "player-4": [{ "instantiate": "hide" }],
@@ -201,7 +206,7 @@
         [{
             "ready_button": [{ "instantiate": "show" }],
             "back_button": [{ "instantiate": "hide" }],
-            "label-background": [{ "instantiate": "show" }],
+            "wait_message": [{ "instantiate": "hide" }],
             "player-2": [{ "instantiate": "show" }],
             "player-3": [{ "instantiate": "show" }],
             "player-4": [{ "instantiate": "hide" }],
@@ -214,7 +219,7 @@
         [{
             "ready_button": [{ "instantiate": "show" }],
             "back_button": [{ "instantiate": "hide" }],
-            "label-background": [{ "instantiate": "show" }],
+            "wait_message": [{ "instantiate": "hide" }],
             "player-2": [{ "instantiate": "show" }],
             "player-3": [{ "instantiate": "show" }],
             "player-4": [{ "instantiate": "show" }],

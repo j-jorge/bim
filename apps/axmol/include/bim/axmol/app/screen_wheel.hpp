@@ -69,6 +69,7 @@ namespace bim::axmol::app
   class online_game;
   class player_progress_tracker;
   class scene_lock;
+  struct config;
 
   class screen_wheel
   {
@@ -80,6 +81,7 @@ namespace bim::axmol::app
             ((iscool::preferences::local_preferences*)(local_preferences)) //
             ((const bim::axmol::widget::context&)(widget_context))         //
             ((main_scene*)(main_scene))                                    //
+            ((const config*)(config))                                      //
             ((bim::net::session_handler*)(session_handler))                //
             ((iscool::audio::mixer*)(audio))                               //
             ((iscool::social::service*)(social))                           //

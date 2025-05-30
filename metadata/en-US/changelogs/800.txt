@@ -1,0 +1,4 @@
+- The player gets coins for every game played.
+- Game features can be bought with coins.
+- All features selected by the players are activated in the games.
+- Miscellaneous graphic improvements.

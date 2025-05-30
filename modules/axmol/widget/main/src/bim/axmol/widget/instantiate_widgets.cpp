@@ -10,6 +10,19 @@
 
 #include <algorithm>
 
+bim::axmol::ref_ptr<ax::Node> bim::axmol::widget::instantiate_widget(
+    const bim::axmol::widget::context& context,
+    const iscool::style::declaration& style)
+{
+  const iscool::optional<const std::string&> type =
+      style.get_string("instantiate");
+
+  if (!type)
+    return {};
+
+  return context.factory.create(*type, context, style);
+}
+
 void bim::axmol::widget::instantiate_widgets(
     named_node_group& nodes, std::span<const std::string_view> excluded,
     const bim::axmol::widget::context& context,

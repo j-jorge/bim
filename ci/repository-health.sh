@@ -102,6 +102,7 @@ custom_command_test()
 run_test "Validating C++ source code formatting." \
          clang-format \
          --dry-run \
+         --Werror \
          -- \
          -name "*.[cht]pp"
 
@@ -125,6 +126,9 @@ run_test "Validating YAML files." \
 
 custom_command_test "Validating assets attributions." \
                     "$script_dir"/check-authors.sh
+
+custom_command_test "Validating metadata." \
+                    "$script_dir"/check-metadata.sh
 
 echo "Passes: $pass_count/$test_count"
 

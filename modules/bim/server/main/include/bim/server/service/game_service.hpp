@@ -21,6 +21,7 @@ namespace bim::net
 
 namespace bim::server
 {
+  class authentication_service;
   class contest_timeline_service;
   class authentication_service;
   class server_stats;
@@ -95,7 +96,7 @@ namespace bim::server
     std::mt19937_64 m_random;
 
     iscool::signals::scoped_connection m_clean_up_connection;
-    std::chrono::seconds m_clean_up_interval;
+    const std::chrono::seconds m_clean_up_interval;
 
     std::unique_ptr<contest_timeline_service> m_contest_timeline_service;
     authentication_service& m_authentication_service;

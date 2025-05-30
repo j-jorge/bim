@@ -7,6 +7,8 @@ set(common_style_files
 set(main_task_style_files
   ${CMAKE_CURRENT_LIST_DIR}/main-task.json
 
+  ${CMAKE_CURRENT_LIST_DIR}/action/rotate-forever-30s.json
+
   ${CMAKE_CURRENT_LIST_DIR}/app/screen-wheel.json
   ${CMAKE_CURRENT_LIST_DIR}/app/screen/bomb-button.json
   ${CMAKE_CURRENT_LIST_DIR}/app/screen/directional-pad.json
@@ -38,6 +40,9 @@ set(main_task_style_files
   ${CMAKE_CURRENT_LIST_DIR}/app/screen/part/menu-stripe.json
   ${CMAKE_CURRENT_LIST_DIR}/app/screen/part/menu-stripe-bounds.json
   ${CMAKE_CURRENT_LIST_DIR}/app/screen/part/player.json
+  ${CMAKE_CURRENT_LIST_DIR}/app/screen/part/wallet.json
+
+  ${CMAKE_CURRENT_LIST_DIR}/app/widget/game-feature-button.json
 
   ${CMAKE_CURRENT_LIST_DIR}/button/base.json
   ${CMAKE_CURRENT_LIST_DIR}/button/feature-unavailable.json
@@ -62,6 +67,7 @@ set(main_task_style_files
   ${CMAKE_CURRENT_LIST_DIR}/layout/fill.json
   ${CMAKE_CURRENT_LIST_DIR}/layout/fit.json
 
+  ${CMAKE_CURRENT_LIST_DIR}/nine-slice/price-tag.json
   ${CMAKE_CURRENT_LIST_DIR}/nine-slice/rounded-rectangle.json
   ${CMAKE_CURRENT_LIST_DIR}/nine-slice/stripe.json
 
@@ -78,9 +84,9 @@ set(main_task_style_files
   ${CMAKE_CURRENT_LIST_DIR}/popup/debug/font/main.json
 
   ${CMAKE_CURRENT_LIST_DIR}/toggle/base.json
-  ${CMAKE_CURRENT_LIST_DIR}/toggle/feature.json
   ${CMAKE_CURRENT_LIST_DIR}/toggle/flat.json
   ${CMAKE_CURRENT_LIST_DIR}/toggle/flat-empty.json
+  ${CMAKE_CURRENT_LIST_DIR}/toggle/game-feature.json
 
   ${common_style_files}
 )

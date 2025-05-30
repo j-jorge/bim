@@ -1,11 +1,13 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/axmol/app/popup/debug_popup.hpp>
 
+#include <bim/axmol/app/part/wallet.hpp>
 #include <bim/axmol/app/popup/popup.hpp>
 #include <bim/axmol/app/preference/arena_stats.hpp>
 #include <bim/axmol/app/preference/date_of_next_config_update.hpp>
 #include <bim/axmol/app/preference/date_of_next_version_update_message.hpp>
 #include <bim/axmol/app/preference/feature_flags.hpp>
+#include <bim/axmol/app/preference/wallet.hpp>
 
 #include <bim/axmol/widget/factory/label.hpp>
 #include <bim/axmol/widget/implement_widget.hpp>
@@ -21,6 +23,9 @@
       x_widget(bim::axmol::widget::list, list)
 
 #include <bim/axmol/widget/implement_controls_struct.hpp>
+
+#include <bim/axmol/input/key_observer_handle.impl.hpp>
+#include <bim/axmol/input/observer/single_key_observer.hpp>
 
 #include <bim/game/feature_flags.hpp>
 
@@ -69,7 +74,8 @@ namespace
 }
 
 bim::axmol::app::debug_popup::debug_popup(
-    const context& context, const iscool::style::declaration& style)
+    const context& context, const iscool::style::declaration& style,
+    wallet& wallet)
   : m_context(context)
   , m_controls(context.get_widget_context(), *style.get_declaration("widgets"))
   , m_style_bounds(*style.get_declaration("bounds"))
@@ -83,8 +89,15 @@ bim::axmol::app::debug_popup::debug_popup(
   , m_button_item_controls(*style.get_declaration("button-item-controls"))
   , m_button_item_bounds(*style.get_declaration("button-item-bounds"))
   , m_popup(new popup(context, *style.get_declaration("popup")))
+  , m_wallet(wallet)
+  , m_escape(ax::EventKeyboard::KeyCode::KEY_BACK)
 {
   m_controls->close_button->connect_to_clicked(
+      [this]()
+      {
+        m_popup->hide();
+      });
+  m_escape->connect_to_released(
       [this]()
       {
         m_popup->hide();
@@ -100,9 +113,30 @@ void bim::axmol::app::debug_popup::show()
   m_inputs.clear();
   m_inputs.push_back(m_controls->close_button->input_node());
   m_inputs.push_back(m_controls->list->input_node());
+  m_inputs.push_back(m_escape);
 
   add_title("FEATURES");
   add_feature_item("Falling blocks", bim::game::feature_flags::falling_blocks);
+  add_feature_item("Fog of war", bim::game::feature_flags::fog_of_war);
+  add_feature_item("Invisibility", bim::game::feature_flags::invisibility);
+
+  add_title("WALLET");
+  add_button_item("Get 10 coins.",
+                  [this]() -> void
+                  {
+                    coin_transaction(10);
+                  });
+  add_button_item("Get 100 coins.",
+                  [this]() -> void
+                  {
+                    coin_transaction(100);
+                  });
+  add_button_item("Lose 100 coins.",
+                  [this]() -> void
+                  {
+                    coin_transaction(-100);
+                  });
+
   add_feature_item("Fog of war", bim::game::feature_flags::fog_of_war);
   add_feature_item("Invisibility", bim::game::feature_flags::invisibility);
 
@@ -249,4 +283,16 @@ void bim::axmol::app::debug_popup::add_item(
 
   item->fill(nodes, bounds);
   m_controls->list->push_back(*item);
+}
+
+void bim::axmol::app::debug_popup::coin_transaction(int amount) const
+{
+  if (amount >= 0)
+    add_coins(*m_context.get_local_preferences(), amount);
+  else
+    consume_coins(*m_context.get_local_preferences(), -amount);
+
+  const ax::Node& n = *m_controls->close_button;
+
+  m_wallet.animate_cash_flow(n.convertToWorldSpace(n.getContentSize() / 2));
 }

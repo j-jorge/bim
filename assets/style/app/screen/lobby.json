@@ -3,18 +3,23 @@
     {
         "debug": [ "popup/debug" ],
         "settings": [ "popup/settings" ],
+        "wallet": [ "app/screen/part/wallet" ],
 
         "widgets":
         [
             "app/screen/part/menu-background",
             {
-                "stripe-reference": [{ "instantiate": "ax::Node" }],
-
                 "stripe-background":
                 [{
-                    "instantiate": "ax::Sprite",
-                    "frame": "sprites/menu/serrated-stripe.png",
-                    "rotation": -45,
+                    "instantiate": "nine_slices",
+                    "widgets/sprite":
+                    [{
+                        "frame": "sprites/menu/red-stripe-1-7-1-136.png",
+                        "insets.left": 1,
+                        "insets.top": 7,
+                        "insets.width": 1,
+                        "insets.height": 136
+                    }],
                     "z-order": -10
                 }],
 
@@ -31,15 +36,16 @@
                         "outline.color": "cod-gray",
                         "outline.size": 5,
                         "align.horizontal": "center",
-                        "text.i18n": "ALPHA\nVERSION"
+                        "text.i18n": "ALPHA VERSION"
                     }
                 ],
 
                 "settings_button":
                 [
-                    "button/yellow-with-icon",
+                    "button/white-with-icon",
                     {
                         "widgets/icon/frame": "sprites/menu/gear.png",
+                        "bounds/icon/height.percents": 50,
                         "z-order": 20
                     }
                 ],

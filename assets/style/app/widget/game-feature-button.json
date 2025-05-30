@@ -1,0 +1,76 @@
+{
+    "style":
+    {
+        "color.affordable": "cod-gray",
+        "color.unaffordable": "monza",
+
+        "widgets":
+        [{
+            "toggle": [ "toggle/game-feature" ],
+
+            "price-tag":
+            [
+                "nine-slice/price-tag",
+                {
+                    "instantiate": "nine_slices",
+                    "anchor-point.x": 0.5,
+                    "anchor-point.y": 0.5,
+                    "rotation": -10
+                }
+            ],
+
+            "price_label":
+            [
+                "font/fancy-regular",
+                {
+                    "anchor-point.x": 0.5,
+                    "anchor-point.y": 0.5,
+                    "text": "0",
+                    "parent": "price-tag",
+                    "font.size": 42,
+                    "font.italics": true
+                }
+            ]
+        }],
+
+        "bounds":
+        [{
+            "toggle":
+            [
+                "layout/center",
+                {
+                    "width.percents": 100,
+                    "height.percents": 100
+                }
+            ],
+
+            "price-tag":
+            [{
+                "anchor.x": 0.5,
+                "anchor.y": 0.5,
+                "anchor.reference.x": 0.5,
+                "anchor.reference.y": 0.14,
+                "width.percents": 100,
+                "height.percents": 20
+            }],
+
+            "price_label":
+            [{
+                "anchor.x": 0.5,
+                "anchor.y": 0.5,
+                "anchor.reference.x": 0.66,
+                "anchor.reference.y": 0.5
+            }]
+        }],
+
+        "display.available":
+        [{
+            "price-tag/visible": false
+        }],
+
+        "display.unavailable":
+        [{
+            "price-tag/visible": true
+        }]
+    }
+}

@@ -9,23 +9,7 @@
             }
         ],
 
-        "feature_extra_0":
-        [
-            "app/screen/part/feature-deck-button-bounds",
-            {
-                "anchor.reference.x": 0.24
-            }
-        ],
-
         "feature_invisibility":
-        [
-            "app/screen/part/feature-deck-button-bounds",
-            {
-                "anchor.reference.x": 0.5
-            }
-        ],
-
-        "feature_extra_1":
         [
             "app/screen/part/feature-deck-button-bounds",
             {
@@ -38,22 +22,6 @@
             "app/screen/part/feature-deck-button-bounds",
             {
                 "anchor.reference.x": 0.76
-            }
-        ],
-
-        "feature_extra_2":
-        [
-            "app/screen/part/feature-deck-button-bounds",
-            {
-                "anchor.reference.x": 0.76
-            }
-        ],
-
-        "feature_extra_3":
-        [
-            "app/screen/part/feature-deck-button-bounds",
-            {
-                "anchor.reference.x": 0.84
             }
         ]
     }

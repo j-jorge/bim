@@ -1,0 +1,13 @@
+{
+    "style":
+    {
+        "instantiate": "repeat",
+        "forever": true,
+        "action":
+        [{
+            "instantiate": "rotate",
+            "by": -360,
+            "duration": 30
+        }]
+    }
+}

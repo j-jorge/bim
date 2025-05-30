@@ -11,6 +11,7 @@
 #include <iscool/signals/shared_connection_set.hpp>
 #include <iscool/style/declaration.hpp>
 
+#include <cstdint>
 #include <memory>
 
 namespace iscool
@@ -34,6 +35,11 @@ namespace iscool
   {
     class haptic_feedback;
   }
+}
+
+namespace bim::net
+{
+  enum class authentication_error_code : std::uint8_t;
 }
 
 namespace bim::axmol::widget
@@ -77,12 +83,15 @@ namespace bim::axmol::app
   private:
     void load_config();
     void fetch_remote_config();
-    void validate_remote_config(const std::string_view& str) const;
+    void validate_remote_config(const std::string_view& str);
 
     void read_translations();
 
     bool display_version_update_message();
     void connect_to_game_server();
+
+    void game_server_connection_error(
+        bim::net::authentication_error_code error_code);
 
   private:
     iscool::style::declaration m_style;
@@ -97,5 +106,7 @@ namespace bim::axmol::app
     iscool::signals::shared_connection_set m_config_request_connections;
 
     config m_config;
+
+    bool m_is_forcing_config_update;
   };
 }

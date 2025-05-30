@@ -3,6 +3,7 @@
 
 #include "bim/server/service/authentication_service.hpp"
 #include <bim/server/config.hpp>
+#include <bim/server/service/authentication_service.hpp>
 #include <bim/server/service/contest_timeline_service.hpp>
 #include <bim/server/service/game_info.hpp>
 #include <bim/server/service/server_stats.hpp>
@@ -694,6 +695,7 @@ void bim::server::game_service::check_drop_desynchronized_player(
                "lateness. No news since {}.",
                i, game.sessions[i], channel, m_disconnection_inactivity_delay);
         game.active[i] = false;
+        m_authentication_service.disconnect(game.sessions[i]);
       }
 
   std::array<int, bim::game::g_max_player_count> player_tick;
@@ -737,6 +739,7 @@ void bim::server::game_service::check_drop_desynchronized_player(
              second_slowest_tick - slowest_tick, second_slowest_tick,
              m_disconnection_lateness_threshold_in_ticks);
       game.active[i] = false;
+      m_authentication_service.disconnect(game.sessions[i]);
       return;
     }
 
@@ -756,6 +759,7 @@ void bim::server::game_service::check_drop_desynchronized_player(
              fastest_tick - second_fastest_tick, second_fastest_tick,
              m_disconnection_earliness_threshold_in_ticks);
       game.active[i] = false;
+      m_authentication_service.disconnect(game.sessions[i]);
     }
 }
 

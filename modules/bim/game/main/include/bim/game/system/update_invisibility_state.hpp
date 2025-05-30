@@ -7,5 +7,6 @@ namespace bim::game
 {
   class context;
 
-  void update_invisibility_state(const context& context, entt::registry& registry);
+  void update_invisibility_state(const context& context,
+                                 entt::registry& registry);
 }

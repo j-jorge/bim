@@ -68,9 +68,11 @@ bim::axmol::app::screen_wheel::screen_wheel(
   // nodes are set up to their basic position and size. From then on we will
   // just handle their container.
   map_nodes(*m_controls->lobby, m_lobby->nodes(), style, "lobby-bounds");
+  m_lobby->attached();
 
   map_nodes(*m_controls->matchmaking, m_matchmaking->nodes(), style,
             "matchmaking-bounds");
+  m_matchmaking->attached();
   m_controls->matchmaking->removeFromParent();
 
   map_nodes(*m_controls->online_game, m_online_game->nodes(), style,
@@ -78,7 +80,7 @@ bim::axmol::app::screen_wheel::screen_wheel(
   m_online_game->attached();
   m_controls->online_game->removeFromParent();
 
-  map_nodes(*m_controls->end_game, m_end_game->nodes(), style,
+  map_nodes(*m_controls->end_game, m_end_game->display_nodes(), style,
             "end-game-bounds");
   m_controls->end_game->removeFromParent();
 

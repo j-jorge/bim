@@ -286,7 +286,8 @@ configure()
             cmake_options=(-DCMAKE_BUILD_TYPE=Debug)
             ;;
         release)
-            cmake_options=(-DCMAKE_BUILD_TYPE=Release)
+            cmake_options=(-DCMAKE_BUILD_TYPE=Release
+                           -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON)
             ;;
         tsan)
             cmake_options=(-DCMAKE_BUILD_TYPE=RelWithDebInfo

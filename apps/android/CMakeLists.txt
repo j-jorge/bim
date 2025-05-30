@@ -4,3 +4,4 @@ target_link_libraries(bim
   bim_app
   bim_axmol_jni
 )
+post_build_strip(bim)

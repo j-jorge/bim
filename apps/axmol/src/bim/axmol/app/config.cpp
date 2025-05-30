@@ -3,30 +3,32 @@
 
 #include <bim/net/message/protocol_version.hpp>
 
+#include <bim/game/feature_flags.hpp>
+
+#include <bim/bit_map.impl.hpp>
 #include <bim/version.hpp>
 
+#include <iscool/json/cast_int.hpp>
 #include <iscool/json/cast_string.hpp>
 #include <iscool/json/cast_uint.hpp>
 #include <iscool/json/is_member.hpp>
+#include <iscool/json/is_of_type_int16.hpp>
 #include <iscool/json/is_of_type_string.hpp>
 #include <iscool/json/is_of_type_uint.hpp>
+#include <iscool/log/log.hpp>
+#include <iscool/log/nature/warning.hpp>
 
 #include <type_traits>
-
-bim::axmol::app::config::config()
-  : most_recent_version(bim::version_major)
-  , game_server("bim.jorge.st:"
-                + std::to_string(20000 + bim::version_major * 100
-                                 + bim::net::protocol_version))
-  , remote_config_update_interval(std::chrono::hours(1))
-  , version_update_interval(std::chrono::days(1))
-{}
 
 static bool parse_server_list(bim::axmol::app::config& result,
                               const Json::Value& servers)
 {
   if (!servers.isArray())
-    return false;
+    {
+      ic_log(iscool::log::nature::warning(), "config",
+             "Server list is not an array.");
+      return false;
+    }
 
   std::string app_version_host;
   std::string protocol_version_host;
@@ -83,9 +85,82 @@ static bool parse_server_list(bim::axmol::app::config& result,
   else if (!default_host.empty())
     result.game_server = std::move(default_host);
   else
+    {
+      ic_log(iscool::log::nature::warning(), "config",
+             "No game server configured.");
+      return false;
+    }
+
+  return true;
+}
+
+template <typename T>
+static bool read_value(T& r, const Json::Value& json, const char* n)
+{
+  if (!iscool::json::is_member(n, json))
+    return true;
+
+  const Json::Value& v = json[n];
+
+  if (!iscool::json::is_of_type<T>(v))
+    {
+      ic_log(iscool::log::nature::warning(), "config",
+             "Incorrect type for '%s'.", n);
+      return false;
+    }
+
+  r = iscool::json::cast<T>(v);
+
+  return true;
+}
+
+static bool parse_game_feature_prices(bim::axmol::app::config& result,
+                                      const Json::Value& json, const char* n)
+{
+  if (!iscool::json::is_member(n, json))
+    return true;
+
+  const Json::Value& prices = json[n];
+
+  if (!prices.isObject())
+    {
+      ic_log(iscool::log::nature::warning(), "config",
+             "Game feature prices is not an object.");
+      return false;
+    }
+
+  if (!read_value(
+          result.game_feature_price[bim::game::feature_flags::falling_blocks],
+          prices, "fb"))
+    return false;
+
+  if (!read_value(
+          result.game_feature_price[bim::game::feature_flags::invisibility],
+          prices, "i"))
+    return false;
+
+  if (!read_value(
+          result.game_feature_price[bim::game::feature_flags::fog_of_war],
+          prices, "fow"))
     return false;
 
   return true;
+}
+
+bim::axmol::app::config::config()
+  : most_recent_version(bim::version_major)
+  , game_server("bim.jorge.st:"
+                + std::to_string(20000 + bim::version_major * 100
+                                 + bim::net::protocol_version))
+  , remote_config_update_interval(std::chrono::hours(1))
+  , version_update_interval(std::chrono::days(1))
+  , coins_per_victory(50)
+  , coins_per_defeat(10)
+  , coins_per_draw(10)
+{
+  game_feature_price[bim::game::feature_flags::falling_blocks] = 50;
+  game_feature_price[bim::game::feature_flags::invisibility] = 250;
+  game_feature_price[bim::game::feature_flags::fog_of_war] = 1000;
 }
 
 std::optional<bim::axmol::app::config>
@@ -101,17 +176,15 @@ bim::axmol::app::load_config(const Json::Value& json)
 
   const auto read_hours = [&json](std::chrono::hours& r, const char* n) -> bool
   {
-    if (!iscool::json::is_member(n, json))
-      return true;
+    std::uint64_t h = r.count();
 
-    const Json::Value& v = json[n];
+    if (read_value(h, json, n))
+      {
+        r = std::chrono::hours(h);
+        return true;
+      }
 
-    if (!iscool::json::is_of_type<std::uint64_t>(v))
-      return false;
-
-    r = std::chrono::hours(iscool::json::cast<std::uint64_t>(v));
-
-    return true;
+    return false;
   };
 
   if (!read_hours(result.remote_config_update_interval, "rcui"))
@@ -121,6 +194,18 @@ bim::axmol::app::load_config(const Json::Value& json)
     return std::nullopt;
 
   if (!parse_server_list(result, json["gs"]))
+    return std::nullopt;
+
+  if (!read_value(result.coins_per_victory, json, "cpv"))
+    return std::nullopt;
+
+  if (!read_value(result.coins_per_defeat, json, "cpde"))
+    return std::nullopt;
+
+  if (!read_value(result.coins_per_draw, json, "cpdr"))
+    return std::nullopt;
+
+  if (!parse_game_feature_prices(result, json, "gfp"))
     return std::nullopt;
 
   return result;

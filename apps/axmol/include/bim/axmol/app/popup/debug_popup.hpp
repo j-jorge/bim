@@ -3,6 +3,7 @@
 
 #include <bim/axmol/widget/declare_controls_struct.hpp>
 
+#include <bim/axmol/input/observer/single_key_observer_handle.hpp>
 #include <bim/axmol/input/tree.hpp>
 
 #include <bim/game/feature_flags_fwd.hpp>
@@ -30,6 +31,7 @@ namespace bim::axmol::app
 {
   class main_scene;
   class popup;
+  class wallet;
 
   class debug_popup
   {
@@ -43,7 +45,7 @@ namespace bim::axmol::app
 
   public:
     debug_popup(const context& context,
-                const iscool::style::declaration& style);
+                const iscool::style::declaration& style, wallet& wallet);
     ~debug_popup();
 
     void show();
@@ -62,6 +64,8 @@ namespace bim::axmol::app
     void add_item(const bim::axmol::widget::named_node_group& nodes,
                   const iscool::style::declaration& bounds);
 
+    void coin_transaction(int amount) const;
+
   private:
     bim_declare_controls_struct(controls, m_controls, 2);
     const iscool::style::declaration& m_style_bounds;
@@ -78,7 +82,9 @@ namespace bim::axmol::app
     const iscool::style::declaration& m_button_item_bounds;
 
     std::unique_ptr<popup> m_popup;
+    wallet& m_wallet;
 
+    bim::axmol::input::single_key_observer_handle m_escape;
     bim::axmol::input::tree m_inputs;
   };
 }

@@ -1,11 +1,21 @@
 {
     "style":
     {
+        "wallet": [ "app/screen/part/wallet" ],
+
         "widgets":
         [
             "app/screen/part/menu-background",
             "app/screen/part/menu-stripe",
             {
+                "background.lose":
+                [{
+                    "instantiate": "ax::LayerColor",
+                    "color": "kashmir-blue",
+                    "z-order": -100,
+                    "opacity": 1
+                }],
+
                 "pattern":
                 [{
                     "widgets/sprite":
@@ -94,67 +104,156 @@
                     }
                 ],
 
+                "reward_reference": [],
+
+                "rays":
+                [{
+                    "instantiate": "ax::Sprite",
+                    "frame": "sprites/menu/rays.png",
+                    "z-order": -20,
+                    "opacity": 0.1
+                }],
+
+                "glow":
+                [{
+                    "instantiate": "ax::Sprite",
+                    "frame": "sprites/menu/glow.png",
+                    "color": "danube",
+                    "z-order": -19
+                }],
+
+                "reward.win":
+                [{
+                    "instantiate": "ax::Sprite",
+                    "frame": "sprites/menu/coins-pack-2.png"
+                }],
+
+                "reward.draw":
+                [{
+                    "instantiate": "ax::Sprite",
+                    "frame": "sprites/menu/coins-pack-1.png"
+                }],
+
+                "reward.lose":
+                [{
+                    "instantiate": "ax::Sprite",
+                    "frame": "sprites/menu/coins-pack-1.png"
+                }],
+
+                "reward-label-icon":
+                [{
+                    "instantiate": "ax::Sprite",
+                    "frame": "sprites/menu/wallet-coin.png",
+                    "z-order": 10
+                }],
+
+                "reward_label":
+                [
+                    "font/bold-italic",
+                    {
+                        "instantiate": "ax::Label",
+                        "anchor-point.x": 0,
+                        "anchor-point.y": 0,
+                        "font.size": 72,
+                        "font.color": "white",
+                        "outline.color": "cod-gray",
+                        "outline.size": 7,
+                        "z-order": 20,
+                        "rotation": -10,
+                        "text": "0"
+                    }
+                ],
+
                 "revenge_button":
                 [
-                    "button/green-with-label",
+                    "button/yellow-with-label",
                     {
-                        "widgets/label/text.i18n": "NEW\nGAME"
+                        "widgets/label/text.i18n": "NEW\nGAME",
+                        "z-order": 20
                     }
                 ],
 
                 "quit_button":
                 [
-                    "button/red-with-label",
+                    "button/yellow-with-icon",
                     {
-                        "widgets/label/text.i18n": "BACK"
+                        "widgets/icon/frame": "sprites/menu/back.png",
+                        "z-order": 20
                     }
                 ]
             }
         ],
 
-        "display.draw":
+        "actions.draw":
         [{
-            "pattern/visible": true,
-            "pattern_win/visible": false,
-            "pattern_lose/visible": false,
+            "background": [{ "instantiate": "hide" }],
+            "background.lose": [{ "instantiate": "show" }],
 
-            "stripe_title/visible": true,
-            "stripe_title_win/visible": false,
-            "stripe_title_lose/visible": false,
+            "pattern": [{ "instantiate": "show" }],
+            "pattern_win": [{ "instantiate": "hide" }],
+            "pattern_lose": [{ "instantiate": "hide" }],
 
-            "stripe_message/visible": true,
-            "stripe_message_win/visible": false,
-            "stripe_message_lose/visible": false
+            "stripe_title": [{ "instantiate": "show" }],
+            "stripe_title_win": [{ "instantiate": "hide" }],
+            "stripe_title_lose": [{ "instantiate": "hide" }],
+
+            "stripe_message": [{ "instantiate": "show" }],
+            "stripe_message_win": [{ "instantiate": "hide" }],
+            "stripe_message_lose": [{ "instantiate": "hide" }],
+
+            "rays": [ "action/rotate-forever-30s" ],
+
+            "reward.win": [{ "instantiate": "hide" }],
+            "reward.draw": [{ "instantiate": "show" }],
+            "reward.lose": [{ "instantiate": "hide" }]
         }],
 
-        "display.win":
+        "actions.win":
         [{
-            "pattern/visible": false,
-            "pattern_win/visible": true,
-            "pattern_lose/visible": false,
+            "background": [{ "instantiate": "show" }],
+            "background.lose": [{ "instantiate": "hide" }],
 
-            "stripe_title/visible": false,
-            "stripe_title_win/visible": true,
-            "stripe_title_lose/visible": false,
+            "pattern": [{ "instantiate": "hide" }],
+            "pattern_win": [{ "instantiate": "show" }],
+            "pattern_lose": [{ "instantiate": "hide" }],
 
-            "stripe_message/visible": false,
-            "stripe_message_win/visible": true,
-            "stripe_message_lose/visible": false
+            "stripe_title": [{ "instantiate": "hide" }],
+            "stripe_title_win": [{ "instantiate": "show" }],
+            "stripe_title_lose": [{ "instantiate": "hide" }],
+
+            "stripe_message": [{ "instantiate": "hide" }],
+            "stripe_message_win": [{ "instantiate": "show" }],
+            "stripe_message_lose": [{ "instantiate": "hide" }],
+
+            "rays": [ "action/rotate-forever-30s" ],
+
+            "reward.win": [{ "instantiate": "show" }],
+            "reward.draw": [{ "instantiate": "hide" }],
+            "reward.lose": [{ "instantiate": "hide" }]
         }],
 
-        "display.lose":
+        "actions.lose":
         [{
-            "pattern/visible": false,
-            "pattern_win/visible": false,
-            "pattern_lose/visible": true,
+            "background": [{ "instantiate": "hide" }],
+            "background.lose": [{ "instantiate": "show" }],
 
-            "stripe_title/visible": false,
-            "stripe_title_win/visible": false,
-            "stripe_title_lose/visible": true,
+            "pattern": [{ "instantiate": "hide" }],
+            "pattern_win": [{ "instantiate": "hide" }],
+            "pattern_lose": [{ "instantiate": "show" }],
 
-            "stripe_message/visible": false,
-            "stripe_message_win/visible": false,
-            "stripe_message_lose/visible": true
+            "stripe_title": [{ "instantiate": "hide" }],
+            "stripe_title_win": [{ "instantiate": "hide" }],
+            "stripe_title_lose": [{ "instantiate": "show" }],
+
+            "stripe_message": [{ "instantiate": "hide" }],
+            "stripe_message_win": [{ "instantiate": "hide" }],
+            "stripe_message_lose": [{ "instantiate": "show" }],
+
+            "rays": [ "action/rotate-forever-30s" ],
+
+            "reward.win": [{ "instantiate": "hide" }],
+            "reward.draw": [{ "instantiate": "hide" }],
+            "reward.lose": [{ "instantiate": "show" }]
         }]
     }
 }

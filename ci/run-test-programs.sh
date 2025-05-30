@@ -90,6 +90,11 @@ do
     fi
 done < <(find "${search_directories[@]}" -name "*-tests" -type f -executable)
 
-echo "Passes: $pass_count/$test_count"
+if ((test_count == 0))
+then
+    echo "No test program to run."
+else
+    echo "Test programs: $pass_count/$test_count"
+fi
 
 ((pass_count == test_count))

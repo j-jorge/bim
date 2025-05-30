@@ -42,6 +42,7 @@ bim::axmol::widget::button::button(const bim::axmol::widget::context& context,
   , m_display_dirty(true)
   , m_is_pressed(false)
 {
+  m_container->setName("container");
   m_container->setAnchorPoint(ax::Vec2(0.5, 0.5));
   m_container->setCascadeColorEnabled(true);
   m_container->setCascadeOpacityEnabled(true);

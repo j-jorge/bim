@@ -1,8 +1,12 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/axmol/app/screen/matchmaking.hpp>
 
+#include <bim/axmol/app/config.hpp>
 #include <bim/axmol/app/feature_deck.hpp>
+#include <bim/axmol/app/matchmaking_wait_message.hpp>
+#include <bim/axmol/app/part/wallet.hpp>
 #include <bim/axmol/app/preference/feature_flags.hpp>
+#include <bim/axmol/app/preference/wallet.hpp>
 
 #include <bim/axmol/widget/apply_actions.hpp>
 #include <bim/axmol/widget/apply_display.hpp>
@@ -17,8 +21,13 @@
 #include <bim/net/exchange/new_game_exchange.hpp>
 #include <bim/net/session_handler.hpp>
 
+#include <bim/game/feature_flags.hpp>
+
+#include <bim/bit_map.impl.hpp>
+
 #include <iscool/i18n/gettext.hpp>
 #include <iscool/monitoring/implement_state_monitor.hpp>
+#include <iscool/preferences/local_preferences.hpp>
 #include <iscool/signals/implement_signal.hpp>
 
 #include <axmol/2d/Label.h>
@@ -31,7 +40,8 @@
 #define x_widget_controls                                                     \
   x_widget(bim::axmol::widget::button, ready_button)                          \
       x_widget(bim::axmol::widget::button, back_button)                       \
-          x_widget(ax::Label, feature_description)
+          x_widget(ax::Label, feature_description)                            \
+              x_widget(ax::Label, wait_message)
 #include <bim/axmol/widget/implement_controls_struct.hpp>
 
 IMPLEMENT_SIGNAL(bim::axmol::app::matchmaking, start_game, m_start_game);
@@ -53,10 +63,12 @@ bim::axmol::app::matchmaking::matchmaking(
   : m_context(context)
   , m_escape(ax::EventKeyboard::KeyCode::KEY_BACK)
   , m_controls(context.get_widget_context(), *style.get_declaration("widgets"))
+  , m_wallet(new wallet(context, *style.get_declaration("wallet")))
   , m_new_game(new bim::net::new_game_exchange(
         m_context.get_session_handler()->message_stream()))
   , m_feature_deck(
         new feature_deck(m_context, *style.get_declaration("feature-deck")))
+  , m_wait_message(new matchmaking_wait_message())
   , m_style_displaying(*style.get_declaration("display.displaying"))
   , m_action_displaying(*style.get_declaration("actions.displaying"))
   , m_action_wait(*style.get_declaration("actions.wait"))
@@ -67,9 +79,12 @@ bim::axmol::app::matchmaking::matchmaking(
   m_all_nodes = m_controls->all_nodes;
   bim::axmol::widget::merge_named_node_groups(m_all_nodes,
                                               m_feature_deck->display_nodes());
+  bim::axmol::widget::merge_named_node_groups(m_all_nodes,
+                                              m_wallet->display_nodes());
 
   m_inputs.push_back(m_feature_deck->input_node());
   m_inputs.push_back(m_controls->ready_button->input_node());
+  m_inputs.push_back(m_wallet->input_node());
   m_inputs.push_back(m_escape);
   m_inputs.push_back(m_controls->back_button->input_node());
 
@@ -90,23 +105,16 @@ bim::axmol::app::matchmaking::matchmaking(
         dispatch_back();
       });
 
-  m_feature_deck->connect_to_enabled(
+  m_feature_deck->connect_to_clicked(
       [this](bim::game::feature_flags f) -> void
       {
-        show_feature_on_message(f);
+        feature_flag_clicked(f);
       });
 
-  m_feature_deck->connect_to_disabled(
-      [this](bim::game::feature_flags f) -> void
+  m_wait_message->connect_to_updated(
+      [this](std::string_view m) -> void
       {
-        show_feature_off_message(f);
-      });
-
-  m_feature_deck->connect_to_unavailable(
-      [this]() -> void
-      {
-        m_controls->feature_description->setString(
-            ic_gettext("Keep playing to unlock new game features!"));
+        m_controls->wait_message->setString(m);
       });
 }
 
@@ -124,23 +132,28 @@ bim::axmol::app::matchmaking::nodes() const
   return m_all_nodes;
 }
 
+void bim::axmol::app::matchmaking::attached()
+{
+  m_wallet->attached();
+}
+
 void bim::axmol::app::matchmaking::displaying()
 {
+  m_wallet->enter();
+
   m_player_count_monitor->set_waiting_state();
 
   bim::axmol::widget::apply_display(m_context.get_widget_context().style_cache,
                                     m_controls->all_nodes, m_style_displaying);
 
-  m_feature_deck->displaying(
-      enabled_feature_flags(*m_context.get_local_preferences()),
-      available_feature_flags(*m_context.get_local_preferences()));
+  m_feature_deck->displaying();
 
   run_actions(m_main_actions, m_action_displaying);
   run_actions(m_state_actions, m_action_wait);
 
-  m_controls->feature_description->setString(
-      ic_gettext("Customize your experience below!"));
+  show_default_feature_message();
   m_controls->ready_button->enable(true);
+  m_controls->wait_message->setString("");
 }
 
 void bim::axmol::app::matchmaking::displayed()
@@ -162,6 +175,10 @@ void bim::axmol::app::matchmaking::displayed()
 
 void bim::axmol::app::matchmaking::closing()
 {
+  m_main_actions.stop();
+  m_state_actions.stop();
+
+  m_wait_message->stop();
   m_player_count_monitor->set_off_state();
   m_launch_monitor->set_off_state();
 
@@ -185,6 +202,11 @@ void bim::axmol::app::matchmaking::update_display_with_game_proposal(
 
   const iscool::style::declaration* action;
 
+  if (player_count == 1)
+    m_wait_message->start();
+  else
+    m_wait_message->pause();
+
   switch (player_count)
     {
     case 1:
@@ -198,6 +220,7 @@ void bim::axmol::app::matchmaking::update_display_with_game_proposal(
         return;
       m_player_count_monitor->set_match_2_state();
       action = &m_action_2_players;
+      m_wait_message->pause();
       break;
     case 3:
       if (m_player_count_monitor->is_match_3_state())
@@ -231,8 +254,8 @@ void bim::axmol::app::matchmaking::accept_game()
   m_launch_monitor->set_launch_state();
   m_controls->ready_button->enable(false);
 
-  const bim::game::feature_flags features = m_feature_deck->features();
-  enabled_feature_flags(*m_context.get_local_preferences(), features);
+  const bim::game::feature_flags features =
+      enabled_feature_flags(*m_context.get_local_preferences());
   m_new_game->accept(features);
 }
 
@@ -252,7 +275,67 @@ void bim::axmol::app::matchmaking::dispatch_back() const
   m_back();
 }
 
-void bim::axmol::app::matchmaking::show_feature_on_message(
+void bim::axmol::app::matchmaking::feature_flag_clicked(
+    bim::game::feature_flags f) const
+{
+  iscool::preferences::local_preferences& preferences =
+      *m_context.get_local_preferences();
+
+  bim::game::feature_flags available_features =
+      available_feature_flags(preferences);
+  bim::game::feature_flags enabled_features =
+      enabled_feature_flags(preferences);
+
+  if (!(available_features & f))
+    {
+      const std::int64_t coins = coins_balance(preferences);
+      const std::int16_t price = m_context.get_config()->game_feature_price[f];
+
+      if (price <= coins)
+        {
+          consume_coins(preferences, price);
+          m_wallet->animate_cash_flow();
+
+          available_features |= f;
+          available_feature_flags(preferences, available_features);
+
+          enabled_features |= f;
+          enabled_feature_flags(preferences, enabled_features);
+
+          m_feature_deck->purchased(f);
+          m_feature_deck->activated(f);
+
+          show_feature_message(f);
+        }
+      else
+        m_controls->feature_description->setString(
+            ic_gettext("You need more coins to purchase this item!"));
+    }
+  else
+    {
+      enabled_features = enabled_features ^ f;
+      enabled_feature_flags(preferences, enabled_features);
+
+      if (!(enabled_features & f))
+        {
+          m_feature_deck->deactivated(f);
+          show_default_feature_message();
+        }
+      else
+        {
+          m_feature_deck->activated(f);
+          show_feature_message(f);
+        }
+    }
+}
+
+void bim::axmol::app::matchmaking::show_default_feature_message() const
+{
+  m_controls->feature_description->setString(
+      ic_gettext("Customize your experience below!"));
+}
+
+void bim::axmol::app::matchmaking::show_feature_message(
     bim::game::feature_flags f) const
 {
   const char* message = "";
@@ -270,29 +353,6 @@ void bim::axmol::app::matchmaking::show_feature_on_message(
     case bim::game::feature_flags::invisibility:
       message = ic_gettext("Find the invisibility power up to disappear from "
                            "the screen of all other players!");
-      break;
-    }
-
-  m_controls->feature_description->setString(message);
-}
-
-void bim::axmol::app::matchmaking::show_feature_off_message(
-    bim::game::feature_flags f) const
-{
-  const char* message = "";
-
-  switch (f)
-    {
-    case bim::game::feature_flags::falling_blocks:
-      message = ic_gettext("No falling blocks! The game ends after 3 minutes "
-                           "if the players are still alive.");
-      break;
-    case bim::game::feature_flags::fog_of_war:
-      message = ic_gettext("Immediate forcast: Clear sky during the game, you "
-                           "can see the whole arena!");
-      break;
-    case bim::game::feature_flags::invisibility:
-      message = ic_gettext("You can see everyone, and they can see you too!");
       break;
     }
 

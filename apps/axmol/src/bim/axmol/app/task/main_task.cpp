@@ -4,6 +4,7 @@
 #include <bim/axmol/app/popup/message.hpp>
 #include <bim/axmol/app/preference/date_of_next_config_update.hpp>
 #include <bim/axmol/app/preference/date_of_next_version_update_message.hpp>
+#include <bim/axmol/app/preference/update_preferences.hpp>
 #include <bim/axmol/app/screen_wheel.hpp>
 
 #include <bim/net/message/authentication_error_code.hpp>
@@ -56,10 +57,16 @@ bim::axmol::app::main_task::~main_task() = default;
 
 void bim::axmol::app::main_task::start()
 {
+  m_is_forcing_config_update = false;
   m_context.get_audio()->play_music("menu", iscool::audio::loop_mode::forever);
 
   load_config();
-  fetch_remote_config();
+  update_preferences(*m_context.get_local_preferences(), m_config);
+
+  if (iscool::time::now<std::chrono::hours>()
+      >= date_of_next_config_update(*m_context.get_local_preferences()))
+    fetch_remote_config();
+
   read_translations();
 
   m_message_popup.reset(
@@ -93,22 +100,27 @@ void bim::axmol::app::main_task::load_config()
 
 void bim::axmol::app::main_task::fetch_remote_config()
 {
-  if (iscool::time::now<std::chrono::hours>()
-      < date_of_next_config_update(*m_context.get_local_preferences()))
-    return;
-
   ic_log(iscool::log::nature::info(), "main_task", "Updating config.");
 
   auto on_result = [this](const std::vector<char>& response) -> void
   {
     validate_remote_config(std::string_view(response.begin(), response.end()));
+
+    if (m_is_forcing_config_update)
+      connect_to_game_server();
   };
 
-  auto on_error = [](const std::vector<char>& response) -> void
+  auto on_error = [this](const std::vector<char>& response) -> void
   {
     ic_log(iscool::log::nature::warning(), "main_task",
            "Failed to fetch remote config {}.",
            std::string(response.begin(), response.end()));
+
+    if (m_is_forcing_config_update)
+      {
+        load_config();
+        connect_to_game_server();
+      }
   };
 
   m_config_request_connections = iscool::http::get(
@@ -116,7 +128,7 @@ void bim::axmol::app::main_task::fetch_remote_config()
 }
 
 void bim::axmol::app::main_task::validate_remote_config(
-    const std::string_view& str) const
+    const std::string_view& str)
 {
   const Json::Value json_config = iscool::json::parse_string(std::string(str));
 
@@ -136,6 +148,9 @@ void bim::axmol::app::main_task::validate_remote_config(
              "Failed to load remote config from Json {}.", str);
       return;
     }
+
+  if (m_is_forcing_config_update)
+    m_config = *config;
 
   const std::string tmp_path =
       iscool::files::get_writable_path() + "/remote-config.json.tmp";
@@ -212,11 +227,7 @@ void bim::axmol::app::main_task::connect_to_game_server()
       m_session_handler.connect_to_authentication_error(
           [this](bim::net::authentication_error_code error_code)
           {
-            m_message_popup->show(fmt::format(
-                fmt::runtime(ic_gettext("Failed to authenticate with the "
-                                        "game server. Error code {}.")),
-                std::underlying_type_t<bim::net::authentication_error_code>(
-                    error_code)));
+            game_server_connection_error(error_code);
           });
 
   const char* const env_server = std::getenv("BIM_GAME_SERVER_HOST");
@@ -228,4 +239,24 @@ void bim::axmol::app::main_task::connect_to_game_server()
     server_host = m_config.game_server;
 
   m_session_handler.connect(server_host);
+}
+
+void bim::axmol::app::main_task::game_server_connection_error(
+    bim::net::authentication_error_code error_code)
+{
+  if ((error_code == bim::net::authentication_error_code::bad_protocol)
+      && !m_is_forcing_config_update)
+    {
+      ic_log(iscool::log::nature::info(), "main_task",
+             "Bad protocol. Forcing a config update.");
+
+      m_is_forcing_config_update = true;
+      fetch_remote_config();
+    }
+  else
+    m_message_popup->show(fmt::format(
+        fmt::runtime(ic_gettext("Failed to authenticate with the "
+                                "game server. Error code {}.")),
+        std::underlying_type_t<bim::net::authentication_error_code>(
+            error_code)));
 }

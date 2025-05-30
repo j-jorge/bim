@@ -144,7 +144,7 @@ bim::axmol::app::detail::persistent_systems::root_scene()
 
 void bim::axmol::app::detail::persistent_systems::start_log_system()
 {
-  iscool::log::initialize();
+  iscool::log::initialize("Bim");
 
   const std::string log_file_path(iscool::files::get_writable_path()
                                   + "log.txt");

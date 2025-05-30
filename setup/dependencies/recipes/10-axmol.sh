@@ -8,7 +8,7 @@ set -euo pipefail
 
 : "${axmol_repository:=https://github.com/j-jorge/axmol/}"
 : "${axmol_version:=2.5.0j}"
-package_revision=1
+package_revision=3
 version="$axmol_version"-"$package_revision"
 
 if [[ "$bim_build_type" = "release" ]]
@@ -121,6 +121,11 @@ build()
     do
         cmake_options+=("--cmake" "-D$definition")
     done
+
+    # Axmol's dependency management tool, 1k, is implemented in .Net,
+    # which requires libicu unless told not to. This environment variable
+    # turns this requerement off.
+    export DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1
 
     bim-cmake-build \
         --build-dir "$build_dir" \

@@ -61,6 +61,16 @@ void bim::axmol::action::runner::stop()
     unschedule_update();
 }
 
+std::size_t bim::axmol::action::runner::running_action_count() const
+{
+  return m_target->getNumberOfRunningActions();
+}
+
+bool bim::axmol::action::runner::running() const
+{
+  return m_target->getNumberOfRunningActions() != 0;
+}
+
 void bim::axmol::action::runner::update(float elapsed_time)
 {
   if (m_action_manager->getNumberOfRunningActionsInTarget(m_target.get()) == 0)

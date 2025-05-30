@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #pragma once
 
+#include <array>
 #include <cstdint>
 
 namespace bim::game
@@ -16,4 +17,6 @@ namespace bim::game
   feature_flags operator~(feature_flags f);
 
   bool operator!(feature_flags f);
+
+  extern const std::array<feature_flags, 3> g_all_game_feature_flags;
 }

@@ -5,14 +5,14 @@
         [{
             "feature_falling_blocks":
             [
-                "toggle/feature",
+                "app/widget/game-feature-button",
                 {
-                    "widgets/off":
+                    "widgets/toggle/widgets/off":
                     [{
                         "frame": "sprites/features/falling-block-off.png"
                     }],
 
-                    "widgets/on":
+                    "widgets/toggle/widgets/on":
                     [{
                         "frame": "sprites/features/falling-block-on.png"
                     }]
@@ -21,14 +21,14 @@
 
             "feature_invisibility":
             [
-                "toggle/feature",
+                "app/widget/game-feature-button",
                 {
-                    "widgets/off":
+                    "widgets/toggle/widgets/off":
                     [{
                         "frame": "sprites/features/invisibility-off.png"
                     }],
 
-                    "widgets/on":
+                    "widgets/toggle/widgets/on":
                     [{
                         "frame": "sprites/features/invisibility-on.png"
                     }]
@@ -37,29 +37,17 @@
 
             "feature_fog_of_war":
             [
-                "toggle/feature",
+                "app/widget/game-feature-button",
                 {
-                    "widgets/off":
+                    "widgets/toggle/widgets/off":
                     [{
                         "frame": "sprites/features/fog-of-war-off.png"
                     }],
 
-                    "widgets/on":
+                    "widgets/toggle/widgets/on":
                     [{
                         "frame": "sprites/features/fog-of-war-on.png"
                     }]
-                }
-            ],
-
-            "feature_extra_0": [ "button/feature-unavailable" ],
-            "feature_extra_1": [ "button/feature-unavailable" ],
-            "feature_extra_2": [ "button/feature-unavailable" ],
-
-            "feature_extra_3":
-            [
-                "button/feature-unavailable",
-                {
-                    "visible": false
                 }
             ]
         }]

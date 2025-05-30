@@ -7,12 +7,15 @@
     "science-blue": "#076ed5",
     "blue-zodiac": "#12204a",
     "golf-blue": "#031c56",
+    "kashmir-blue": "#466e96",
     "sail": "#b4dffb",
     "danube": "#6ea5d5",
 
     "bunker": "#142224",
     "gable-green": "#193135",
     "plantation": "#274347",
+
+    "monza": "#d40209",
 
     "amber": "#febd00",
     "west-side": "#fc9711",
@@ -23,5 +26,5 @@
     "player-1": "#107dbc",
     "player-2": "#bc1610",
     "player-3": "#a510bc",
-    "player-4": "#ccc200"
+    "player-4": "#10bc16"
 }

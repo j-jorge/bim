@@ -17,12 +17,15 @@ namespace iscool::preferences
 
 namespace bim::axmol::app
 {
+  struct config;
+
   class player_progress_tracker
   {
     ic_declare_context(
         m_context,
-        ic_context_declare_parent_properties( //
-            ((iscool::preferences::local_preferences*)(local_preferences))),
+        ic_context_declare_parent_properties(                              //
+            ((iscool::preferences::local_preferences*)(local_preferences)) //
+            ((const config*)(config))),
         ic_context_no_properties);
 
   public:

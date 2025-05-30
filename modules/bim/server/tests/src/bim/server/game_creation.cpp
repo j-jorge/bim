@@ -184,9 +184,8 @@ TEST_F(game_creation_test, two_named_games)
     m_clients[i].authenticate();
 
   for (int i = 0; i != 4; ++i)
-    m_clients[i].new_game_auto_accept(
-        { 'g', 'a', 'm', 'e', '1' },
-        bim::game::feature_flags(0b1110 | (1 << i)));
+    m_clients[i].new_game_auto_accept({ 'g', 'a', 'm', 'e', '1' },
+                                      bim::game::feature_flags(1 << i));
 
   // Let the time pass such that the messages can move between the clients and
   // the server.
@@ -194,9 +193,8 @@ TEST_F(game_creation_test, two_named_games)
     m_scheduler.tick(std::chrono::seconds(1));
 
   for (int i = 4; i != 7; ++i)
-    m_clients[i].new_game_auto_accept(
-        { 'g', 'a', 'm', 'e', '2' },
-        bim::game::feature_flags(0b1110'0000 | (1 << i)));
+    m_clients[i].new_game_auto_accept({ 'g', 'a', 'm', 'e', '2' },
+                                      bim::game::feature_flags(1 << i));
 
   // Time passes again…
   for (int i = 0; i != 10; ++i)
@@ -232,7 +230,7 @@ TEST_F(game_creation_test, two_named_games)
             m_clients[3].m_game_launch_event->channel);
 
   // The features must be the same.
-  EXPECT_EQ(bim::game::feature_flags(0b1110),
+  EXPECT_EQ(bim::game::feature_flags(0b1111),
             m_clients[0].m_game_launch_event->fingerprint.features);
   EXPECT_EQ(m_clients[0].m_game_launch_event->fingerprint.features,
             m_clients[1].m_game_launch_event->fingerprint.features);
@@ -263,7 +261,7 @@ TEST_F(game_creation_test, two_named_games)
             m_clients[6].m_game_launch_event->channel);
 
   // The features must be the same.
-  EXPECT_EQ(bim::game::feature_flags(0b1110'0000),
+  EXPECT_EQ(bim::game::feature_flags(0b0111'0000),
             m_clients[4].m_game_launch_event->fingerprint.features);
   EXPECT_EQ(m_clients[4].m_game_launch_event->fingerprint.features,
             m_clients[5].m_game_launch_event->fingerprint.features);
@@ -285,8 +283,7 @@ TEST_F(game_creation_test, two_random_games)
     m_clients[i].authenticate();
 
   for (int i = 0; i != 4; ++i)
-    m_clients[i].new_game_auto_accept(
-        bim::game::feature_flags(0b11 | (1 << i)));
+    m_clients[i].new_game_auto_accept(bim::game::feature_flags(i << (2 * i)));
 
   // Let the time pass such that the messages can move between the clients and
   // the server.
@@ -324,7 +321,7 @@ TEST_F(game_creation_test, two_random_games)
             m_clients[3].m_game_launch_event->channel);
 
   // The features must be the same.
-  EXPECT_EQ(bim::game::feature_flags(0b11),
+  EXPECT_EQ(bim::game::feature_flags(0b1110'0100),
             m_clients[0].m_game_launch_event->fingerprint.features);
   EXPECT_EQ(m_clients[0].m_game_launch_event->fingerprint.features,
             m_clients[1].m_game_launch_event->fingerprint.features);
@@ -335,8 +332,7 @@ TEST_F(game_creation_test, two_random_games)
 
   // Second group as for a random game
   for (int i = 4; i != 7; ++i)
-    m_clients[i].new_game_auto_accept(
-        bim::game::feature_flags(0b1100'0000 | (1 << i)));
+    m_clients[i].new_game_auto_accept(bim::game::feature_flags(1 << i));
 
   // Time passes again…
   for (int i = 0; i != 10; ++i)
@@ -364,7 +360,7 @@ TEST_F(game_creation_test, two_random_games)
             m_clients[6].m_game_launch_event->channel);
 
   // The features must be the same.
-  EXPECT_EQ(bim::game::feature_flags(0b1100'0000),
+  EXPECT_EQ(bim::game::feature_flags(0b0111'0000),
             m_clients[4].m_game_launch_event->fingerprint.features);
   EXPECT_EQ(m_clients[4].m_game_launch_event->fingerprint.features,
             m_clients[5].m_game_launch_event->fingerprint.features);
@@ -425,12 +421,11 @@ TEST_F(game_creation_test, mix_random_and_named_games)
 
   for (int i = 0; i != 4; ++i)
     m_clients[i].new_game_auto_accept(
-        bim::game::feature_flags(0b1010 | (1 << i)));
+        bim::game::feature_flags(0b10 << (2 * i)));
 
   for (int i = 4; i != 7; ++i)
     m_clients[i].new_game_auto_accept(
-        { 'g', 'a', 'm', 'e' },
-        bim::game::feature_flags(0b110'0000 | (1 << (i - 4))));
+        { 'g', 'a', 'm', 'e' }, bim::game::feature_flags(1 << (2 * (i - 4))));
 
   // Let the time pass such that the messages can move between the clients and
   // the server.
@@ -471,7 +466,7 @@ TEST_F(game_creation_test, mix_random_and_named_games)
             m_clients[3].m_game_launch_event->channel);
 
   // The features must be the same.
-  EXPECT_EQ(bim::game::feature_flags(0b1010),
+  EXPECT_EQ(bim::game::feature_flags(0b1010'1010),
             m_clients[0].m_game_launch_event->fingerprint.features);
   EXPECT_EQ(m_clients[0].m_game_launch_event->fingerprint.features,
             m_clients[1].m_game_launch_event->fingerprint.features);
@@ -502,7 +497,7 @@ TEST_F(game_creation_test, mix_random_and_named_games)
             m_clients[6].m_game_launch_event->channel);
 
   // The features must be the same.
-  EXPECT_EQ(bim::game::feature_flags(0b110'0000),
+  EXPECT_EQ(bim::game::feature_flags(0b0001'0101),
             m_clients[4].m_game_launch_event->fingerprint.features);
   EXPECT_EQ(m_clients[4].m_game_launch_event->fingerprint.features,
             m_clients[5].m_game_launch_event->fingerprint.features);

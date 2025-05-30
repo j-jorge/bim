@@ -23,6 +23,9 @@ namespace bim::axmol::action
     void run_complete(ax::Action& action);
     void stop();
 
+    std::size_t running_action_count() const;
+    bool running() const;
+
   private:
     void update(float elapsed_time);
 
