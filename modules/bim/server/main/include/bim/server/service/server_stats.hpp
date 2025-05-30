@@ -1,0 +1,55 @@
+// SPDX-License-Identifier: AGPL-3.0-only
+#pragma once
+
+#include <bim/server/config.hpp>
+
+#include <iscool/schedule/delayed_call.hpp>
+#include <iscool/signals/scoped_connection.hpp>
+
+#include <cstdint>
+#include <filesystem>
+#include <fstream>
+
+namespace bim::server
+{
+  class server_stats
+  {
+  public:
+    explicit server_stats(const config& config);
+    // Session tracking
+    void record_session_connected();
+    void record_session_disconnected();
+
+    // Game tracking
+    void record_game_start(uint8_t player_count);
+    void record_game_end(uint8_t player_count);
+    void flush_for_testing();
+
+  private:
+    void schedule_file_dump();
+    void rotate_log(std::chrono::system_clock::time_point now);
+    void write_header();
+    void conditional_dump();
+    void dump_stats_to_file();
+
+  private:
+    // Tracked Stats counters
+    int m_active_sessions = 0;
+    int m_players_in_games = 0;
+    int m_current_games = 0;
+
+    // Logging control
+    bool m_enable_stats_recording;
+
+    // scheduler for data dumps & log rotation
+    iscool::signals::scoped_connection m_file_dump_connection;
+
+    // Logging state
+    std::chrono::year_month_day m_log_file_ymd;
+    std::chrono::seconds m_file_dump_delay;
+    std::chrono::days m_log_rotation_interval;
+
+    std::ofstream m_log_file;
+    std::filesystem::directory_entry m_server_stats_folder;
+  };
+}

@@ -16,6 +16,7 @@ namespace bim::net
 namespace bim::server
 {
   struct config;
+  class server_stats;
 
   class authentication_service
   {
@@ -25,7 +26,8 @@ namespace bim::server
 
   public:
     authentication_service(const config& config,
-                           iscool::net::socket_stream& socket);
+                           iscool::net::socket_stream& socket,
+                           server_stats& stats);
     ~authentication_service();
 
     void disconnect(iscool::net::session_id session);
@@ -54,6 +56,7 @@ namespace bim::server
     void clean_up();
 
   private:
+    server_stats& m_server_stats;
     iscool::net::message_stream m_message_stream;
     iscool::net::session_id m_next_session_id;
 

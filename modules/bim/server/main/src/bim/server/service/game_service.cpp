@@ -1,10 +1,12 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/server/service/game_service.hpp>
 
+#include "bim/server/service/authentication_service.hpp"
 #include <bim/server/config.hpp>
 #include <bim/server/service/authentication_service.hpp>
 #include <bim/server/service/contest_timeline_service.hpp>
 #include <bim/server/service/game_info.hpp>
+#include <bim/server/service/server_stats.hpp>
 
 #include <bim/net/message/game_over.hpp>
 #include <bim/net/message/game_update_from_client.hpp>
@@ -268,8 +270,10 @@ public:
 
 bim::server::game_service::game_service(const config& config,
                                         iscool::net::socket_stream& socket,
+                                        server_stats& stats,
                                         authentication_service& authentication)
-  : m_message_stream(socket)
+  : m_server_stats(stats)
+  , m_message_stream(socket)
   , m_next_game_channel(1)
   , m_random(config.random_seed)
   , m_clean_up_interval(config.game_service_clean_up_interval)
@@ -359,6 +363,8 @@ bim::server::game_info bim::server::game_service::new_game(
   if (m_contest_timeline_service)
     game.timeline_writer =
         m_contest_timeline_service->open(channel, contest_fingerprint);
+
+  m_server_stats.record_game_start(player_count);
 
   return game_info{ .fingerprint = contest_fingerprint,
                     .channel = channel,
@@ -789,6 +795,8 @@ void bim::server::game_service::clean_up(iscool::net::channel_id channel,
 {
   ic_log(iscool::log::nature::info(), "game_service", "Cleaning up game {}.",
          channel);
+
+  m_server_stats.record_game_end(g.player_count);
 
   const session_to_channel_map::const_iterator eit =
       m_session_to_channel.end();

@@ -5,6 +5,7 @@
 #include <bim/server/service/game_service.hpp>
 #include <bim/server/service/lobby_service.hpp>
 #include <bim/server/service/matchmaking_service.hpp>
+#include <bim/server/service/server_stats.hpp>
 
 #include <iscool/net/socket_stream.hpp>
 
@@ -22,6 +23,7 @@ namespace bim::server
                   const iscool::net::message& message);
 
   private:
+    server_stats m_server_stats;
     iscool::net::socket_stream m_socket;
     authentication_service m_authentication_service;
     game_service m_game_service;
