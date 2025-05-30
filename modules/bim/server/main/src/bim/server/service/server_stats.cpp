@@ -65,7 +65,6 @@ void bim::server::server_stats::flush_for_testing()
 
 void bim::server::server_stats::dump_stats_to_file()
 {
-
   const std::chrono::seconds now_duration =
       iscool::time::now<std::chrono::seconds>();
 

@@ -2,7 +2,6 @@
 #pragma once
 
 #include <bim/net/message/client_token.hpp>
-#include <bim/server/service/server_stats.hpp>
 
 #include <iscool/net/message_pool.hpp>
 #include <iscool/net/message_stream.hpp>
@@ -17,6 +16,7 @@ namespace bim::net
 namespace bim::server
 {
   struct config;
+  class server_stats;
 
   class authentication_service
   {
