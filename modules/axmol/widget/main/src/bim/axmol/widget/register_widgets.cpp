@@ -11,6 +11,7 @@
 #include <bim/axmol/widget/factory/sprite.hpp>
 #include <bim/axmol/widget/ui/clipping_node.hpp>
 #include <bim/axmol/widget/ui/nine_slices.hpp>
+#include <bim/axmol/widget/ui/passive_node.hpp>
 #include <bim/axmol/widget/ui/texture.hpp>
 
 #include <axmol/2d/ClippingNode.h>
@@ -32,6 +33,7 @@ void bim::axmol::widget::register_widgets(dynamic_factory& factory)
 
   register_type(clipping_node);
   register_type(nine_slices);
+  register_type(passive_node);
   register_type(texture);
 
 #undef register_type

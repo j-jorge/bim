@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #pragma once
 
+#include <bim/axmol/widget/declare_controls_struct.hpp>
 #include <bim/axmol/widget/declare_widget_create_function.hpp>
 #include <bim/axmol/widget/named_node_group.hpp>
 
@@ -28,6 +29,7 @@ namespace bim::axmol::widget
 
   private:
     const bim::axmol::widget::context& m_context;
+    bim_declare_controls_struct(controls, m_controls, 0);
 
     named_node_group m_nodes;
     const iscool::style::declaration* m_style_bounds;
