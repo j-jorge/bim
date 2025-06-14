@@ -422,8 +422,6 @@ void bim::axmol::app::application::applicationDidEnterBackground()
   m_context.get_audio()->pause();
 
   ax::Director::getInstance()->stopAnimation();
-
-  m_date_enter_background = iscool::time::now<std::chrono::seconds>();
 }
 
 void bim::axmol::app::application::applicationWillEnterForeground()
@@ -431,11 +429,6 @@ void bim::axmol::app::application::applicationWillEnterForeground()
   ax::Director::getInstance()->startAnimation();
 
   m_context.get_audio()->resume();
-
-  const std::chrono::seconds now = iscool::time::now<std::chrono::seconds>();
-
-  if ((now - m_date_enter_background).count() >= 15)
-    reset();
 }
 
 void bim::axmol::app::application::complete_launch()
@@ -462,8 +455,6 @@ void bim::axmol::app::application::clean_up()
 
 void bim::axmol::app::application::reset()
 {
-  m_date_enter_background = {};
-
   stop_game();
 
   tear_down_local_preferences();

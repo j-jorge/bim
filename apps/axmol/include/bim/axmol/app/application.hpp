@@ -139,7 +139,5 @@ namespace bim::axmol::app
     bim::axmol::input::node m_input_root;
 
     screen_config m_screen_config;
-
-    std::chrono::seconds m_date_enter_background;
   };
 }
