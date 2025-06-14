@@ -9,6 +9,7 @@
 
 #include <optional>
 #include <string>
+#include <string_view>
 
 namespace bim::net
 {
@@ -23,6 +24,7 @@ namespace bim::net
     ~session_handler();
 
     void connect(std::string_view host);
+    void reconnect();
 
     const iscool::net::message_stream& message_stream() const;
 
@@ -30,6 +32,7 @@ namespace bim::net
     iscool::net::session_id session_id() const;
 
   private:
+    std::string m_host;
     iscool::net::socket_stream m_socket_stream;
     iscool::net::message_stream m_message_stream;
     bim::net::authentication_exchange m_authentication;

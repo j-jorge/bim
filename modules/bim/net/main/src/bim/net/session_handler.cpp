@@ -33,12 +33,20 @@ bim::net::session_handler::~session_handler() = default;
 
 void bim::net::session_handler::connect(std::string_view host)
 {
+  m_host = host;
+  reconnect();
+}
+
+void bim::net::session_handler::reconnect()
+{
+  assert(!m_host.empty());
+
   m_authentication.stop();
   m_session_id = std::nullopt;
 
   try
     {
-      m_socket_stream.connect(std::string(host));
+      m_socket_stream.connect(m_host);
     }
   catch (const std::exception& e)
     {

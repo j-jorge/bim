@@ -17,6 +17,8 @@
 #include <bim/net/session_handler.hpp>
 
 #include <iscool/i18n/gettext.hpp>
+#include <iscool/log/log.hpp>
+#include <iscool/log/nature/info.hpp>
 #include <iscool/signals/implement_signal.hpp>
 
 #define x_widget_scope bim::axmol::app::screen_wheel::
@@ -154,12 +156,6 @@ void bim::axmol::app::screen_wheel::wire_permanent_connections()
       {
         animate_end_game_to_matchmaking();
       });
-
-  m_keep_alive->connect_to_disconnected(
-      [this]()
-      {
-        disconnected();
-      });
 }
 
 void bim::axmol::app::screen_wheel::connect_keep_alive()
@@ -170,6 +166,7 @@ void bim::axmol::app::screen_wheel::connect_keep_alive()
   if (!session_handler.connected())
     return;
 
+  m_silently_reconnect = true;
   m_keep_alive_connection = m_keep_alive->connect_to_disconnected(
       [this]() -> void
       {
@@ -286,8 +283,18 @@ void bim::axmol::app::screen_wheel::end_game_displayed()
 
 void bim::axmol::app::screen_wheel::disconnected()
 {
-  m_online_game->closing();
   m_keep_alive->stop();
 
-  m_message_popup->show(ic_gettext("You have been disconnected."));
+  if ((m_active_view == m_controls->online_game) || !m_silently_reconnect)
+    {
+      m_online_game->closing();
+      m_message_popup->show(ic_gettext("You have been disconnected."));
+    }
+  else
+    {
+      ic_log(iscool::log::nature::info(), "screen_wheel",
+             "Disconnected, reconnecting.");
+      m_silently_reconnect = false;
+      m_context.get_session_handler()->reconnect();
+    }
 }
