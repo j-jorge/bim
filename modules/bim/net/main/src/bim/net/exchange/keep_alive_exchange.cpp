@@ -61,5 +61,5 @@ void bim::net::keep_alive_exchange::tick()
 void bim::net::keep_alive_exchange::interpret_received_message(
     const iscool::net::message& message)
 {
-  m_retry_count = std::min(m_retry_count + 1, g_max_retry_count);
+  m_retry_count = g_max_retry_count;
 }
