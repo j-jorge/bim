@@ -1,0 +1,17 @@
+{
+    "meta":
+    {
+        "overrides": [ "button/yellow-with-label" ]
+    },
+
+    "style":
+    {
+        "widgets/label":
+        [{
+            "text": "$10.00",
+            "font.size": 80
+        }],
+
+        "z-order": 100
+    }
+}

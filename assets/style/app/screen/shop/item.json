@@ -1,0 +1,155 @@
+{
+    "style":
+    {
+        "instantiate": "passive_node",
+
+        "widgets":
+        [{
+            "border":
+            [{
+                "instantiate": "nine_slices",
+                "widgets/sprite":
+                [{
+                    "frame": "sprites/menu/shop-item-border-107-109.png",
+                    "insets.left": 107,
+                    "insets.top": 109,
+                    "insets.width": 1,
+                    "insets.height": 1
+                }],
+                "z-order": 100
+            }],
+
+            "content":
+            [{
+                "instantiate": "clipping_node",
+                "cascade-color": true,
+                "z-order": 5,
+                "widgets":
+                [{
+                    "clipping_node":
+                    [{
+                        "cascade-color": true
+                    }],
+
+                    "stencil":
+                    [{
+                        "instantiate": "nine_slices",
+                        "anchor-point.x": 0,
+                        "anchor-point.y": 0,
+                        "widgets/sprite":
+                        [{
+                            "frame": "sprites/menu/shop-item-mask-107-109.png",
+                            "insets.left": 107,
+                            "insets.top": 109,
+                            "insets.width": 1,
+                            "insets.height": 1
+                        }]
+                    }],
+
+                    "background":
+                    [{
+                        "instantiate": "texture",
+                        "parent": "clipping_node",
+                        "widgets/sprite/frame": "texture/carbon.png",
+                        "rotation": -10,
+                        "z-order": -200
+                    }],
+
+                    "glow":
+                    [{
+                        "instantiate": "ax::Sprite",
+                        "parent": "clipping_node",
+                        "frame": "sprites/menu/glow.png",
+                        "color": "#fff4c3",
+                        "opacity": 0.58,
+                        "z-order": -10
+                    }],
+
+                    "rays":
+                    [{
+                        "instantiate": "ax::Sprite",
+                        "parent": "clipping_node",
+                        "frame": "sprites/menu/rays.png",
+                        "color": "#fff4c3",
+                        "opacity": 0.25,
+                        "z-order": -5
+                    }],
+
+                    "stripe":
+                    [{
+                        "instantiate": "nine_slices",
+                        "parent": "clipping_node",
+                        "widgets/sprite":
+                        [{
+                            "frame": "sprites/menu/shop-item-stripe-1-1.png",
+                            "insets.left": 1,
+                            "insets.top": 1,
+                            "insets.width": 1,
+                            "insets.height": 1
+                        }],
+                        "z-order": 10
+                    }],
+
+                    "coins":
+                    [{
+                        "instantiate": "ax::Sprite",
+                        "parent": "clipping_node",
+                        "frame": "sprites/menu/coins-pack-1.png",
+                        "z-order": 0
+                    }]
+                }],
+
+                "bounds":
+                [{
+                    "clipping_node": [ "layout/fill" ],
+                    "stencil": [ "layout/fill" ],
+                    "background": [ "layout/fill" ],
+
+                    "glow":
+                    [
+                        "layout/center",
+                        {
+                            "width.percents": 100,
+                            "keep-ratio": true
+                        }
+                    ],
+
+                    "rays":
+                    [
+                        "layout/center",
+                        {
+                            "width.percents": 100,
+                            "keep-ratio": true
+                        }
+                    ],
+
+                    "stripe":
+                    [{
+                        "anchor.x": 0.5,
+                        "anchor.y": 1,
+                        "anchor.reference.x": 0.5,
+                        "anchor.reference.y": 1,
+                        "width.percents": 100,
+                        "height.percents": 30
+                    }],
+
+                    "coins":
+                    [
+                        "layout/center",
+                        {
+                            "anchor.reference.y": 0.45,
+                            "height.percents": 50,
+                            "keep-ratio": true
+                        }
+                    ]
+                }]
+            }]
+        }],
+
+        "bounds":
+        [{
+            "border": [ "layout/fill" ],
+            "content": [ "layout/fill" ]
+        }]
+    }
+}

@@ -15,6 +15,7 @@ target_platform=linux
 tag=
 build_steps=()
 all_build_steps=(dependencies configure build test)
+foss_only=0
 
 export bim_host_prefix="$host_prefix"
 export PATH="$script_dir/setup/bin/:$PATH"
@@ -49,6 +50,9 @@ Where OPTIONS is
      The build steps to execute (dependencies, configure, build,
      test). The order does not matter. By default, all steps are
      executed.
+  --foss-only
+     Build with free and open source libraries only (i.e. disable the
+     shop in the Android build).
   --help, -h
      Display this message and exit.
   --incremental
@@ -103,6 +107,9 @@ do
 
             build_type="$1"
             shift
+            ;;
+        --foss-only)
+            foss_only=1
             ;;
         --help|-h)
             usage
@@ -301,6 +308,11 @@ configure()
           -DCMAKE_UNITY_BUILD=ON
           -DCMAKE_UNITY_BUILD_BATCH_SIZE=65535
         )
+    fi
+
+    if (( foss_only == 1 ))
+    then
+        cmake_options+=(-DBIM_PURE_FOSS=ON)
     fi
 
     cd "$build_dir"

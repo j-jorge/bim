@@ -1,10 +1,9 @@
 # Next
 
-- Add the base billing features in the Android app.
+- Always wait for the remote configuration on the first launch.
 
 # Client
 
-- Add a shop to buy coins, PlayStore build only.
 - Shield feature.
 - At most three enabled features per game.
 - Display the frame duration (without the sleep) in addition to the FPS.
@@ -31,7 +30,6 @@
 - Display some stats about the server in the client (e.g. active player
   count).
 - Factorize online_game::display_bomb/flame_power_up
-- Factorize flame/bomb_power_up_factory
 - Factorize flame/bomb_power_up_spawners
 - Room full for named games?
 - Tests for contest::arena setters.

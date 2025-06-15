@@ -29,5 +29,32 @@
         "fb": 111,
         "i": 222,
         "fow": 333
-    }
+    },
+    "shop":
+    [
+        {
+            "product-id": "coins-1",
+            "coins": 100
+        },
+        {
+            "product-id": "coins-4",
+            "coins": 200
+        },
+        {
+            "product-id": "gems-1",
+            "gems": 0
+        },
+        {
+            "product-id": "coins-2",
+            "coins": 300
+        },
+        {
+            "product-id": "coins-5",
+            "coins": 400
+        },
+        {
+            "product-id": "coins-3",
+            "coins": 500
+        }
+    ]
 }

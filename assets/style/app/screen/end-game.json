@@ -173,14 +173,7 @@
                     }
                 ],
 
-                "quit_button":
-                [
-                    "button/yellow-with-icon",
-                    {
-                        "widgets/icon/frame": "sprites/menu/back.png",
-                        "z-order": 20
-                    }
-                ]
+                "quit_button": [ "app/screen/part/back-button" ]
             }
         ],
 

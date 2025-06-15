@@ -25,7 +25,13 @@ android {
     }
 
     sourceSets.main {
-        java.srcDirs '@this_file_directory@/src'
+        java.srcDirs = [ '@this_file_directory@/main' ]
+
+        if (@bim_pure_foss@)
+            java.srcDirs += [ '@this_file_directory@/free' ]
+        else
+            java.srcDirs += [ '@this_file_directory@/non-free' ]
+
         res.srcDirs = [
             '@this_file_directory@/res',
             '@BIM_ANDROID_GENERATED_RES_DIR@'
@@ -46,7 +52,7 @@ android {
                     '@this_file_directory@/keystore.properties'
                 ).newDataInputStream())
 
-            keyAlias 'bim-release'
+            keyAlias '@bim_android_signing_key_alias@'
             keyPassword properties['keyPassword']
             storeFile file('@this_file_directory@/release.keystore')
             storePassword properties['storePassword']
@@ -115,5 +121,9 @@ android {
         implementation 'iscool:social:@iscool_core_version@'
         implementation 'iscool:system:@iscool_core_version@'
         implementation 'iscool:jni:@iscool_core_version@'
+        implementation 'iscool:log:@iscool_core_version@'
+
+        if (!@bim_pure_foss@)
+            implementation 'com.android.billingclient:billing:7.0.0'
     }
 }

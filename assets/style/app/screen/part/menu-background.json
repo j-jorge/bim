@@ -27,9 +27,9 @@
         "top-shadow":
         [{
             "instantiate": "ax::Sprite",
-            "frame": "sprites/menu/vertical-gradient.png",
+            "frame": "sprites/menu/glow.png",
             "color": "sail",
-            "opacity": 0.3,
+            "opacity": 0.4,
             "z-order": -25
         }],
 
@@ -38,7 +38,7 @@
             "instantiate": "ax::Sprite",
             "frame": "sprites/menu/horizontal-gradient.png",
             "color": "blue-zodiac",
-            "opacity": 0.5,
+            "opacity": 0.6,
             "z-order": -50
         }],
 
@@ -47,7 +47,7 @@
             "instantiate": "ax::Sprite",
             "frame": "sprites/menu/horizontal-gradient.png",
             "color": "blue-zodiac",
-            "opacity": 0.5,
+            "opacity": 0.6,
             "flip.x": true,
             "z-order": -50
         }],
@@ -55,10 +55,9 @@
         "bottom-shadow":
         [{
             "instantiate": "ax::Sprite",
-            "frame": "sprites/menu/vertical-gradient.png",
+            "frame": "sprites/menu/glow.png",
             "color": "golf-blue",
-            "opacity": 0.4,
-            "flip.y": true,
+            "opacity": 0.6,
             "z-order": -25
         }]
     }

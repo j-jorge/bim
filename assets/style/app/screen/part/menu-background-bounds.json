@@ -14,11 +14,11 @@
         "top-shadow":
         [{
             "anchor.x": 0.5,
-            "anchor.y": 1,
+            "anchor.y": 0.5,
             "anchor.reference.x": 0.5,
             "anchor.reference.y": 1,
-            "width.percents": 100,
-            "height.percents": 25
+            "width.percents": 200,
+            "keep-ratio": true
         }],
 
         "left-shadow":
@@ -44,11 +44,11 @@
         "bottom-shadow":
         [{
             "anchor.x": 0.5,
-            "anchor.y": 0,
+            "anchor.y": 0.5,
             "anchor.reference.x": 0.5,
             "anchor.reference.y": 0,
-            "width.percents": 100,
-            "height.percents": 30
+            "width.percents": 200,
+            "keep-ratio": true
         }]
     }
 }

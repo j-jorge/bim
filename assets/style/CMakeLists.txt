@@ -21,6 +21,8 @@ set(main_task_style_files
   ${CMAKE_CURRENT_LIST_DIR}/app/screen/matchmaking-bounds.json
   ${CMAKE_CURRENT_LIST_DIR}/app/screen/online-game.json
   ${CMAKE_CURRENT_LIST_DIR}/app/screen/online-game-bounds.json
+  ${CMAKE_CURRENT_LIST_DIR}/app/screen/shop.json
+  ${CMAKE_CURRENT_LIST_DIR}/app/screen/shop-bounds.json
 
   ${CMAKE_CURRENT_LIST_DIR}/app/screen/font/stripe-message.json
   ${CMAKE_CURRENT_LIST_DIR}/app/screen/font/stripe-title.json
@@ -29,6 +31,8 @@ set(main_task_style_files
   ${CMAKE_CURRENT_LIST_DIR}/app/screen/online-game/control-panel-edging.json
   ${CMAKE_CURRENT_LIST_DIR}/app/screen/online-game/fog-display.json
 
+  ${CMAKE_CURRENT_LIST_DIR}/app/screen/part/back-button.json
+  ${CMAKE_CURRENT_LIST_DIR}/app/screen/part/back-button-bounds.json
   ${CMAKE_CURRENT_LIST_DIR}/app/screen/part/feature-deck.json
   ${CMAKE_CURRENT_LIST_DIR}/app/screen/part/feature-deck-bounds.json
   ${CMAKE_CURRENT_LIST_DIR}/app/screen/part/feature-deck-button-bounds.json
@@ -41,6 +45,13 @@ set(main_task_style_files
   ${CMAKE_CURRENT_LIST_DIR}/app/screen/part/menu-stripe-bounds.json
   ${CMAKE_CURRENT_LIST_DIR}/app/screen/part/player.json
   ${CMAKE_CURRENT_LIST_DIR}/app/screen/part/wallet.json
+
+  ${CMAKE_CURRENT_LIST_DIR}/app/screen/shop/amount-label.json
+  ${CMAKE_CURRENT_LIST_DIR}/app/screen/shop/amount-label-bounds.json
+  ${CMAKE_CURRENT_LIST_DIR}/app/screen/shop/item.json
+  ${CMAKE_CURRENT_LIST_DIR}/app/screen/shop/item-bounds.json
+  ${CMAKE_CURRENT_LIST_DIR}/app/screen/shop/price-button.json
+  ${CMAKE_CURRENT_LIST_DIR}/app/screen/shop/price-button-bounds.json
 
   ${CMAKE_CURRENT_LIST_DIR}/app/widget/game-feature-button.json
 
@@ -61,6 +72,7 @@ set(main_task_style_files
   ${CMAKE_CURRENT_LIST_DIR}/font/center-normal-size.json
   ${CMAKE_CURRENT_LIST_DIR}/font/regular.json
   ${CMAKE_CURRENT_LIST_DIR}/font/fancy-regular.json
+  ${CMAKE_CURRENT_LIST_DIR}/font/fancy-center-with-outline-and-shadow.json
 
   ${CMAKE_CURRENT_LIST_DIR}/layout/left-center.json
   ${CMAKE_CURRENT_LIST_DIR}/layout/right-center.json

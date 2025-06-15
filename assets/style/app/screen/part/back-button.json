@@ -1,0 +1,12 @@
+{
+    "meta":
+    {
+        "overrides": [ "button/yellow-with-icon" ]
+    },
+
+    "style":
+    {
+        "widgets/icon/frame": "sprites/menu/back.png",
+        "z-order": 20
+    }
+}

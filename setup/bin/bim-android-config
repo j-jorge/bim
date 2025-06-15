@@ -58,7 +58,7 @@ do
             echo "$android_root"/maven
             ;;
         --min-sdk-version)
-            echo 17
+            echo 21
             ;;
         --modules-root)
             echo "$android_root"/modules

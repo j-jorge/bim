@@ -193,6 +193,8 @@ assets/sprites/menu/back.png
 assets/sprites/menu/coin.png
 assets/sprites/menu/coins-pack-1.png
 assets/sprites/menu/coins-pack-2.png
+assets/sprites/menu/coins-pack-3.png
+assets/sprites/menu/coins-pack-4.png
 assets/sprites/menu/dot-100.png
 assets/sprites/menu/gamepad-d-pad-left.png
 assets/sprites/menu/gamepad-d-pad-right.png
@@ -207,6 +209,10 @@ assets/sprites/menu/rounded-button-fill-54-66.png
 assets/sprites/menu/rounded-rectangle-33-33.png
 assets/sprites/menu/rounded-rectangle-spike.png
 assets/sprites/menu/share.png
+assets/sprites/menu/shop-item-border-107-109.png
+assets/sprites/menu/shop-item-mask-107-109.png
+assets/sprites/menu/shop-item-stripe-1-1.png
+assets/sprites/menu/shop-ribbon-227.png
 assets/sprites/menu/stripe-1-79-1-258.png
 assets/sprites/menu/vertical-gradient.png
 assets/sprites/menu/vertical-gray-gradient.png
@@ -248,12 +254,13 @@ assets/sprites/ui/line-7-4.png
 assets/texture/bomb-stencil.png
 assets/texture/defeat-background-pattern.png
 assets/texture/draw-background-pattern.png
+assets/texture/gifts-background-pattern.png
 assets/texture/menu-background-pattern.png
 assets/texture/popup-background-pattern.png
 assets/texture/search-background-pattern.png
-assets/texture/victory-background-pattern.png
 assets/texture/squares.png
 assets/texture/stars.png
+assets/texture/victory-background-pattern.png
 metadata/en-US/images/icon.png
 static-assets/audio/tick.ogg
 static-assets/texture/carbon.png
