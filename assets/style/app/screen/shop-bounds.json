@@ -1,0 +1,141 @@
+{
+    "meta":
+    {
+        "overrides":
+        [
+            "app/screen/part/menu-background-bounds",
+            "app/screen/part/wallet-bounds"
+        ]
+    },
+
+    "style":
+    {
+        "ribbon":
+        [{
+            "anchor.x": 0.5,
+            "anchor.y": 0.5,
+            "anchor.reference.x": 0.5,
+            "anchor.reference.y": 0.85,
+            "width.percents": 90,
+            "height.percents": 1
+        }],
+
+        "title":
+        [{
+            "anchor.x": 0.5,
+            "anchor.y": 0.5,
+            "anchor.reference.x": 0.5,
+            "anchor.reference.y": 0.85
+        }],
+
+        "loading":
+        [{
+            "anchor.x": 0.5,
+            "anchor.y": 0.5,
+            "anchor.reference.x": 0.5,
+            "anchor.reference.y": 0.45
+        }],
+
+        "item-1":
+        [
+            "app/screen/shop/item-bounds",
+            {
+                "anchor.reference.x": 0.28,
+                "anchor.reference.y": 0.61
+            }
+        ],
+
+        "item-2":
+        [
+            "app/screen/shop/item-bounds",
+            {
+                "anchor.reference.x": 0.72,
+                "anchor.reference.y": 0.61
+            }
+        ],
+
+        "item-3":
+        [
+            "app/screen/shop/item-bounds",
+            {
+                "anchor.reference.x": 0.28,
+                "anchor.reference.y": 0.3
+            }
+        ],
+
+        "item-4":
+        [
+            "app/screen/shop/item-bounds",
+            {
+                "anchor.reference.x": 0.72,
+                "anchor.reference.y": 0.3
+            }
+        ],
+
+        "coins_1_button":
+        [
+            "app/screen/shop/price-button-bounds",
+            {
+                "reference": "item-1"
+            }
+        ],
+
+        "coins_2_button":
+        [
+            "app/screen/shop/price-button-bounds",
+            {
+                "reference": "item-2"
+            }
+        ],
+
+        "coins_3_button":
+        [
+            "app/screen/shop/price-button-bounds",
+            {
+                "reference": "item-3"
+            }
+        ],
+
+        "coins_4_button":
+        [
+            "app/screen/shop/price-button-bounds",
+            {
+                "reference": "item-4"
+            }
+        ],
+
+        "coins_1_label":
+        [
+            "app/screen/shop/amount-label-bounds",
+            {
+                "reference": "item-1"
+            }
+        ],
+
+        "coins_2_label":
+        [
+            "app/screen/shop/amount-label-bounds",
+            {
+                "reference": "item-2"
+            }
+        ],
+
+        "coins_3_label":
+        [
+            "app/screen/shop/amount-label-bounds",
+            {
+                "reference": "item-3"
+            }
+        ],
+
+        "coins_4_label":
+        [
+            "app/screen/shop/amount-label-bounds",
+            {
+                "reference": "item-4"
+            }
+        ],
+
+        "back_button": [ "app/screen/part/back-button-bounds" ]
+    }
+}

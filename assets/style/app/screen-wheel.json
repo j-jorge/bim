@@ -8,7 +8,8 @@
             "lobby": [],
             "matchmaking": [],
             "online_game": [],
-            "end_game": []
+            "end_game": [],
+            "shop": []
         }],
 
         "lobby": ["app/screen/lobby"],
@@ -23,12 +24,16 @@
         "end-game": ["app/screen/end-game"],
         "end-game-bounds": ["app/screen/end-game-bounds"],
 
+        "shop": ["app/screen/shop"],
+        "shop-bounds": ["app/screen/shop-bounds"],
+
         "bounds":
         [{
             "lobby": ["layout/fill"],
             "matchmaking": ["layout/fill"],
             "online_game": ["layout/fill"],
-            "end_game": ["layout/fill"]
+            "end_game": ["layout/fill"],
+            "shop": ["layout/fill"]
         }]
     }
 }

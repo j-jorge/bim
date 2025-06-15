@@ -15,9 +15,23 @@ option(
 if(BIM_ANDROID_DEV)
   set(bim_android_app_id "bim.app.dev")
   set(bim_android_app_name "Bim! (dev)")
+  set(bim_android_signing_key_alias "bim-dev-release")
 else()
   set(bim_android_app_id "bim.app")
   set(bim_android_app_name "Bim!")
+  set(bim_android_signing_key_alias "bim-release")
+endif()
+
+option(
+  BIM_PURE_FOSS
+  "Use free software libraries exclusively."
+  OFF
+)
+
+if(BIM_PURE_FOSS)
+  set(bim_pure_foss true)
+else()
+  set(bim_pure_foss false)
 endif()
 
 # Where the static part of the Android project is located (e.g. the

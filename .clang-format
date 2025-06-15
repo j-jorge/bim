@@ -41,6 +41,42 @@ Standard: c++20
 # all params on next line if overflow
 # arguments: bin pack (configuration_file)
 ---
+Language: Java
+BasedOnStyle: GNU
+SpaceBeforeParens: true
+AllowShortEnumsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: false
+AllowShortLambdasOnASingleLine: false
+AlwaysBreakAfterReturnType: None
+AlwaysBreakAfterDefinitionReturnType: None
+AlwaysBreakTemplateDeclarations: Yes
+BreakConstructorInitializersBeforeComma: true
+ConstructorInitializerIndentWidth: 2
+BraceWrapping:
+  AfterCaseLabel:  true
+  AfterClass:      true
+  AfterControlStatement: Always
+  AfterEnum:       true
+  AfterFunction:   true
+  AfterNamespace:  true
+  AfterObjCDeclaration: true
+  AfterStruct:     true
+  AfterUnion:      true
+  AfterExternBlock: true
+  BeforeCatch:     true
+  BeforeElse:      true
+  BeforeLambdaBody: true
+  BeforeWhile:     true
+  IndentBraces: true
+  SplitEmptyFunction: false
+  SplitEmptyRecord: false
+  SplitEmptyNamespace: false
+BreakBeforeBinaryOperators: NonAssignment
+BreakBeforeBraces: Custom
+NamespaceIndentation: All
+BreakInheritanceList: BeforeComma
+BreakAfterJavaFieldAnnotations: true
+---
 Language: Json
 BasedOnStyle: GNU
 ...

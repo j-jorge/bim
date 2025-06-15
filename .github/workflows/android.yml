@@ -20,6 +20,10 @@ jobs:
     strategy:
       matrix:
         build_type: [debug, release]
+        maybe_foss_only: [--foss-only, ""]
+        exclude:
+          - build_type: debug
+            maybe_foss_only: "--foss-only"
 
     steps:
       - name: Checkout repository
@@ -60,10 +64,18 @@ jobs:
         run: >
           ./setup.sh
           --target-platform ${{steps.strings.outputs.target_platform}}
-          --build-type ${{matrix.build_type}}
+          --build-type ${{matrix.build_type}} ${{matrix.maybe_foss_only}}
 
       - name: Archive artifacts
+        if: matrix.maybe_foss_only == ''
         uses: actions/upload-artifact@v4
         with:
-          name: android-${{matrix.build_type}}-packages
+          name: android-${{matrix.build_type}}
+          path: build/android/**/*.apk
+
+      - name: Archive artifacts
+        if: matrix.maybe_foss_only == '--foss-only'
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-${{matrix.build_type}}-foss
           path: build/android/**/*.apk
