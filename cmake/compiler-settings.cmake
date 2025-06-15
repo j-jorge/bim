@@ -69,7 +69,8 @@ if ((CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
             $<TARGET_FILE:${target}>
             $<TARGET_FILE:${target}>.dbg
           COMMAND
-            ${CMAKE_STRIP} --strip-debug --strip-unneeded $<TARGET_FILE:${target}>
+            ${CMAKE_STRIP} --strip-debug --strip-unneeded
+            $<TARGET_FILE:${target}>
           COMMAND
             ${CMAKE_OBJCOPY}
             --add-gnu-debuglink=$<TARGET_FILE:${target}>.dbg
