@@ -57,18 +57,43 @@ bim::axmol::app::main_task::~main_task() = default;
 
 void bim::axmol::app::main_task::start()
 {
-  m_is_forcing_config_update = false;
   m_context.get_audio()->play_music("menu", iscool::audio::loop_mode::forever);
+  read_translations();
 
-  load_config();
+  if (load_config())
+    start_optimistic();
+  else
+    start_fresh();
+}
+
+/// Set up the game by considering that the configuration is in a good state.
+void bim::axmol::app::main_task::start_optimistic()
+{
+  m_is_forcing_config_update = false;
   update_preferences(*m_context.get_local_preferences(), m_config);
 
   if (iscool::time::now<std::chrono::hours>()
       >= date_of_next_config_update(*m_context.get_local_preferences()))
     fetch_remote_config();
 
-  read_translations();
+  create_ui();
 
+  if (!display_version_update_message())
+    connect_to_game_server();
+}
+
+/**
+ * Fetch the remote config and wait for it before going on with the
+ * initialization.
+ */
+void bim::axmol::app::main_task::start_fresh()
+{
+  m_is_forcing_config_update = true;
+  fetch_remote_config();
+}
+
+void bim::axmol::app::main_task::create_ui()
+{
   m_message_popup.reset(
       new message_popup(m_context, *m_style.get_declaration("message-popup")));
 
@@ -79,12 +104,9 @@ void bim::axmol::app::main_task::start()
       {
         m_reset();
       });
-
-  if (!display_version_update_message())
-    connect_to_game_server();
 }
 
-void bim::axmol::app::main_task::load_config()
+bool bim::axmol::app::main_task::load_config()
 {
   const std::string remote_config_file = cached_remote_config_file();
 
@@ -94,8 +116,24 @@ void bim::axmol::app::main_task::load_config()
           iscool::json::from_file(remote_config_file));
 
       if (config)
-        m_config = std::move(*config);
+        {
+          m_config = std::move(*config);
+          return true;
+        }
     }
+
+  return false;
+}
+
+void bim::axmol::app::main_task::config_ready()
+{
+  assert(m_is_forcing_config_update);
+  update_preferences(*m_context.get_local_preferences(), m_config);
+
+  create_ui();
+
+  if (!display_version_update_message())
+    connect_to_game_server();
 }
 
 void bim::axmol::app::main_task::fetch_remote_config()
@@ -107,7 +145,7 @@ void bim::axmol::app::main_task::fetch_remote_config()
     validate_remote_config(std::string_view(response.begin(), response.end()));
 
     if (m_is_forcing_config_update)
-      connect_to_game_server();
+      config_ready();
   };
 
   auto on_error = [this](const std::vector<char>& response) -> void
@@ -117,10 +155,7 @@ void bim::axmol::app::main_task::fetch_remote_config()
            std::string(response.begin(), response.end()));
 
     if (m_is_forcing_config_update)
-      {
-        load_config();
-        connect_to_game_server();
-      }
+      config_ready();
   };
 
   m_config_request_connections = iscool::http::get(
@@ -250,8 +285,7 @@ void bim::axmol::app::main_task::game_server_connection_error(
       ic_log(iscool::log::nature::info(), "main_task",
              "Bad protocol. Forcing a config update.");
 
-      m_is_forcing_config_update = true;
-      fetch_remote_config();
+      start_fresh();
     }
   else
     m_message_popup->show(fmt::format(

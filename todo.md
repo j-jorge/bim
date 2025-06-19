@@ -1,7 +1,5 @@
 # Next
 
-- Always wait for the remote configuration on the first launch.
-
 # Client
 
 - Shield feature.

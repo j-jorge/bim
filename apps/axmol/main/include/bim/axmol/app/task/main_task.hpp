@@ -81,7 +81,12 @@ namespace bim::axmol::app
     void start();
 
   private:
-    void load_config();
+    void start_optimistic();
+    void start_fresh();
+    void create_ui();
+
+    bool load_config();
+    void config_ready();
     void fetch_remote_config();
     void validate_remote_config(const std::string_view& str);
 
