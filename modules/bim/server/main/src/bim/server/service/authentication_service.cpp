@@ -34,7 +34,8 @@ struct bim::server::authentication_service::client_info
 
 bim::server::authentication_service::authentication_service(
     const config& config, iscool::net::socket_stream& socket)
-  : m_message_stream(socket)
+  : m_geoloc(config)
+  , m_message_stream(socket)
   , m_next_session_id(1)
   , m_clean_up_interval(config.authentication_clean_up_interval)
   , m_message_pool(64)
@@ -111,9 +112,8 @@ void bim::server::authentication_service::check_authentication(
   if (message->get_protocol_version() != bim::net::protocol_version)
     {
       ic_log(iscool::log::nature::info(), "server",
-             "Authentication request from token {}, ip={}: bad protocol {}.",
-             token, endpoint.address().to_string(),
-             message->get_protocol_version());
+             "Authentication request from token {}: bad protocol {}.", token,
+             endpoint.address().to_string(), message->get_protocol_version());
 
       const iscool::net::message_pool::slot s =
           m_message_pool.pick_available();
@@ -134,9 +134,14 @@ void bim::server::authentication_service::check_authentication(
 
   std::tie(it, inserted) = m_sessions.emplace(token, session);
 
-  ic_log(iscool::log::nature::info(), "server",
-         "Attach session {} to token {} from ip={}.", it->second, token,
-         endpoint.address().to_string());
+  const geolocation_service::address_info address_info =
+      m_geoloc.lookup(endpoint.address().to_string());
+
+  ic_log(
+      iscool::log::nature::info(), "server",
+      "Attach session {} to token {}, id={}, country_code={}, country='{}'.",
+      it->second, token, address_info.id, address_info.country_code,
+      address_info.country);
 
   if (inserted)
     {

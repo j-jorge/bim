@@ -6,6 +6,8 @@ if (NOT BIM_BUILD_SERVER)
   return()
 endif()
 
+find_package(maxminddb REQUIRED)
+
 add_library(bim_server
   STATIC
   main/src/bim/server/config.cpp
@@ -14,6 +16,7 @@ add_library(bim_server
   main/src/bim/server/service/contest_timeline_service.cpp
   main/src/bim/server/service/game_info.cpp
   main/src/bim/server/service/game_service.cpp
+  main/src/bim/server/service/geolocation_service.cpp
   main/src/bim/server/service/lobby_service.cpp
   main/src/bim/server/service/matchmaking_service.cpp
   main/src/bim/server/service/named_game_encounter_service.cpp
@@ -21,7 +24,7 @@ add_library(bim_server
 )
 
 target_include_directories(bim_server PUBLIC main/include)
-target_link_libraries(bim_server PUBLIC bim_net)
+target_link_libraries(bim_server PUBLIC bim_net maxminddb::maxminddb)
 
 if (NOT BIM_BUILD_TESTS)
   return()

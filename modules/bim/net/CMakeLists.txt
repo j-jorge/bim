@@ -18,7 +18,6 @@ target_link_libraries(
   bim_net
   PUBLIC
   bim_game
-  iscool_http
   iscool_net
   iscool_random
 )

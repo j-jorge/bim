@@ -65,5 +65,27 @@ namespace bim::server
      * in contest_timeline_folder.
      */
     bool enable_contest_timeline_recording;
+
+    /**
+     * How many seconds after the last request for a given IP to be removed
+     * from the geolocation service. The IP will receive a new ID on the next
+     * request.
+     */
+    std::chrono::seconds geolocation_clean_up_interval;
+
+    /**
+     * Interval at which we reopen the GeoIP database, to get fresh data.
+     */
+    std::chrono::minutes geolocation_update_interval;
+
+    /**
+     * The path to the GeoIP database.
+     */
+    std::string geolocation_database_path;
+
+    /**
+     * Whether or not we use IP geolocation.
+     */
+    bool enable_geolocation;
   };
 }

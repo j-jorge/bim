@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #pragma once
 
+#include <bim/server/service/geolocation_service.hpp>
+
 #include <bim/net/message/client_token.hpp>
 
 #include <iscool/net/message_pool.hpp>
@@ -54,6 +56,7 @@ namespace bim::server
     void clean_up();
 
   private:
+    geolocation_service m_geoloc;
     iscool::net::message_stream m_message_stream;
     iscool::net::session_id m_next_session_id;
 

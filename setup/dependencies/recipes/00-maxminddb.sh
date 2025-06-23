@@ -27,6 +27,6 @@ bim-cmake-build \
         --install-dir "$install_dir" \
         --source-dir "$source_dir" \
         --cmake -DBUILD_TESTING=OFF \
-        --cmake -DMAXMIND_BUILD_BINARIES=OFF
+        --cmake -DMAXMINDDB_BUILD_BINARIES=OFF
 
 bim-package-and-install "$install_dir" maxminddb "$version" "$build_type"
