@@ -5,6 +5,7 @@ target_link_libraries(
   bim-server
   PRIVATE
   bim_server
+  iscool_json
   Boost::program_options
 )
 post_build_strip(bim-server)
