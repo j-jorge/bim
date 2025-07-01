@@ -1,0 +1,9 @@
+{
+    "enable-contest-timeline-recording": true,
+    "contest-timeline-folder": "/opt/bim/contest/",
+
+    "enable-geolocation": true,
+    "geolocation-clean-up-interval": 86400,
+    "geolocation-update-interval": 1080,
+    "geolocation-database-path": "/opt/bim/GeoLite2-Country.mmdb"
+}

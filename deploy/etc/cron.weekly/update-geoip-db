@@ -1,0 +1,40 @@
+#!/bin/bash
+
+set -euo pipefail
+
+exec >> /opt/bim/log/update-geoip-db.log
+exec 2>&1
+
+if [[ ! -f /opt/bim/etc/maxminddb.credentials ]]
+then
+    echo "No credentials. Aborting."
+    exit 0
+fi
+
+. /opt/bim/etc/maxminddb.credentials
+
+output="$(mktemp --directory)"
+
+clean_up()
+{
+    rm --force --recursive "$output"
+}
+
+trap clean_up EXIT
+
+download_url='https://download.maxmind.com/geoip/databases/GeoLite2-Country/download'
+auth="$MAXMINDDB_ACCOUNT_ID:$MAXMINDDB_LICENCE_KEY"
+
+cd "$output"
+
+echo "Downloading database archive."
+curl_command=(curl --silent --show-error --location --user "$auth")
+
+"${curl_command[@]}" --remote-name "$download_url?suffix=tar.gz"
+
+"${curl_command[@]}" --output sha256sum.txt \
+     "$download_url?suffix=tar.gz.sha256"
+
+sha256sum --check sha256sum.txt
+
+find . -name "*.mmdb" -exec mv --backup '{}' /opt/bim/GeoLite2-Country.mmdb ';'

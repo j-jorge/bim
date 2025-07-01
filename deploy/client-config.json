@@ -4,7 +4,11 @@
   "vui": 24,
   "gs": [
     {
+      "v": 9,
       "h": "bim.jorge.st:PORT"
+    },
+    {
+      "h": "bim.jorge.st:20808"
     },
     {
       "v": 7,

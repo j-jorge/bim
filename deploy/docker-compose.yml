@@ -1,7 +1,9 @@
 version: "3.8"
 services:
   gs:
-    image: ubuntu:24.04
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
       - ${PORT}:${PORT}/udp
     volumes:
@@ -12,11 +14,4 @@ services:
     deploy:
       restart_policy:
         condition: on-failure
-    command: >
-        bash -c "cp /opt/bim/etc/logrotate.d/* /etc/logrotate.d/
-        && /opt/bim/bin/bim-server
-        --contest-timeline-folder /opt/bim/contest/
-        --log-file /opt/bim/log/bim-server.txt
-        --port ${PORT}
-        >> /opt/bim/log/bim-server.stdout.txt
-        2>> /opt/bim/log/bim-server.stderr.txt"
+    command: /opt/bim/bin/bim-server-launcher.sh "${PORT}"

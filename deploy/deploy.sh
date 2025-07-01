@@ -138,7 +138,9 @@ rsync "$build_dir"/apps/server/bim-server "$login_at_host":bim/"$port"/bin/
 rsync "$temp_config" "$login_at_host":./
 
 rsync --recursive \
+      "$script_dir"/bin \
       "$script_dir"/docker-compose.yml \
+      "$script_dir"/Dockerfile \
       "$script_dir"/etc \
       "$login_at_host":bim/"$port"/
 
@@ -147,4 +149,4 @@ ssh "$login_at_host" \
     "$(basename "$temp_config")" /srv/www/bim/client-config.json \
     '&&' chmod a+r /srv/www/bim/client-config.json \
     '&&' cd bim/"$port"/  \
-    '&&' PORT="$port" docker-compose up --detach
+    '&&' PORT="$port" docker-compose up --build --detach
