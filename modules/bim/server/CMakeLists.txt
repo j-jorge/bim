@@ -1,3 +1,11 @@
+option(BIM_BUILD_SERVER
+  "Whether the standalone server should be built or not."
+  ON)
+
+if (NOT BIM_BUILD_SERVER)
+  return()
+endif()
+
 add_library(bim_server
   STATIC
   main/src/bim/server/config.cpp
@@ -14,6 +22,10 @@ add_library(bim_server
 
 target_include_directories(bim_server PUBLIC main/include)
 target_link_libraries(bim_server PUBLIC bim_net)
+
+if (NOT BIM_BUILD_TESTS)
+  return()
+endif()
 
 add_executable(server-tests
   tests/src/bim/server/authentication.cpp

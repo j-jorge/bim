@@ -15,6 +15,10 @@ if(NOT DEFINED BIM_BUILDING_FOR_ANDROID)
   set(BIM_BUILDING_FOR_ANDROID FALSE)
 endif()
 
+option(BIM_BUILD_TESTS
+  "Whether test programs should be compiled or not."
+  ON)
+
 if(BIM_TARGET STREQUAL "android")
   set(BIM_ANDROID_GENERATED_RES_DIR
     "${CMAKE_BINARY_DIR}/android/app/res"

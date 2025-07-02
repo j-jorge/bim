@@ -23,6 +23,10 @@ target_link_libraries(
   iscool_random
 )
 
+if (NOT BIM_BUILD_TESTS)
+  return()
+endif()
+
 add_executable(net-tests
   tests/src/bim/net/message/fuzzing.cpp
   tests/src/bim/net/message/game_update_from_client.cpp

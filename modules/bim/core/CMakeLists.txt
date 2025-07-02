@@ -8,6 +8,10 @@ target_include_directories(
   ${CMAKE_CURRENT_BINARY_DIR}/include
 )
 
+if (NOT BIM_BUILD_TESTS)
+  return()
+endif()
+
 add_library(bim_gtest_main
   tests/src/gtest-main/gtest_main.cpp
 )

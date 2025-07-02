@@ -20,6 +20,10 @@ target_link_libraries(
   axmol::axmol
 )
 
+if (NOT BIM_BUILD_TESTS)
+  return()
+endif()
+
 add_executable(axmol-style-tests
   tests/src/bim/axmol/style/apply_display.cpp
 )

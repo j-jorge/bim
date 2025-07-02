@@ -52,6 +52,10 @@ target_link_libraries(
   iscool_i18n
 )
 
+if (NOT BIM_BUILD_TESTS)
+  return()
+endif()
+
 add_executable(axmol-widget-tests
   tests/src/bim/axmol/widget/animation/animation_cache.cpp
   tests/src/bim/axmol/widget/factory/node.cpp

@@ -27,6 +27,10 @@ target_link_libraries(
   iscool_schedule
 )
 
+if (NOT BIM_BUILD_TESTS)
+  return()
+endif()
+
 add_executable(axmol-input-tests
   tests/src/bim/axmol/input/backend_event_view.cpp
   tests/src/bim/axmol/input/node_key_observer.cpp

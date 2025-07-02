@@ -19,6 +19,10 @@ target_link_libraries(
   iscool_memory
 )
 
+if (NOT BIM_BUILD_TESTS)
+  return()
+endif()
+
 add_executable(axmol-core-tests
   tests/src/bim/axmol/colour_chart.cpp
   tests/src/bim/axmol/displayed.cpp
