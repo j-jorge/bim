@@ -1,4 +1,5 @@
 00-boost.sh
+00-cpptrace.sh
 00-entt.sh
 00-fpm.sh
 00-googletest.sh
