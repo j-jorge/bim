@@ -134,7 +134,9 @@ ssh "$login_at_host" \
     '&&' /tmp/bim-set-up.sh \
     '&&' rm --force /tmp/bim-set-up.sh
 
-rsync "$build_dir"/apps/server/bim-server "$login_at_host":bim/"$port"/bin/
+rsync "$build_dir"/apps/server/bim-server{,.dbg} \
+      "$build_dir"/apps/server/bim-stack-dump \
+      "$login_at_host":bim/"$port"/bin/
 rsync "$temp_config" "$login_at_host":./
 
 rsync --recursive \

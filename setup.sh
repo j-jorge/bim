@@ -344,8 +344,15 @@ launch_tests()
     "$script_dir"/ci/no-metadata-in-png.sh "$build_dir" \
         || result=$((result + 1))
 
-    if [[ "$target_platform" == android ]] \
-           && [[ "$build_type" == release ]]
+    if [[ "$target_platform" == linux
+              && ( "$build_type" == release || "$build_type" == debug ) ]]
+    then
+        "$script_dir"/ci/run-server-crash-test.sh "$build_dir" \
+            || result=$((result + 1))
+    fi
+
+    if [[ "$target_platform" == android \
+              && "$build_type" == release ]]
     then
         "$script_dir"/ci/no-path-in-apk.sh "$build_dir" \
             || result=$((result + 1))

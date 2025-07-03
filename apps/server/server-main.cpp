@@ -27,6 +27,8 @@
 #include <iostream>
 #include <random>
 #include <stdexcept>
+#include <string_view>
+#include <sys/wait.h>
 #include <thread>
 #include <unistd.h>
 
@@ -58,6 +60,12 @@ static void interrupt_handler(int)
   g_keep_running = false;
 }
 
+static void print_error_safe(const char* message)
+{
+  const int ignore = write(STDERR_FILENO, message, strlen(message));
+  (void)ignore;
+}
+
 static void do_signal_safe_trace(cpptrace::frame_ptr* buffer,
                                  std::size_t count)
 {
@@ -65,14 +73,17 @@ static void do_signal_safe_trace(cpptrace::frame_ptr* buffer,
   constexpr int w = 1;
 
   int pipe_in[2];
-  pipe(pipe_in);
+  if (pipe(pipe_in) != 0)
+    {
+      print_error_safe("Failed to create pipe.\n");
+      return;
+    }
 
   const pid_t pid = fork();
 
   if (pid == -1)
     {
-      const char* const failure_message = "Failed to fork the process.\n";
-      write(STDERR_FILENO, failure_message.data(), strlen(failure_message));
+      print_error_safe("Failed to fork the process.\n");
       return;
     }
 
@@ -83,19 +94,26 @@ static void do_signal_safe_trace(cpptrace::frame_ptr* buffer,
       close(pipe_in[r]);
       close(pipe_in[w]);
 
-      execl(g_stack_trace_dumper.c_str(), g_stack_trace_dumper, nullptr);
-      const std::string_view failure_message =
-          "Failed to run bim-stack-dump on crash.\n";
-      write(STDERR_FILENO, failure_message.data(), failure_message.size());
+      execl(g_stack_trace_dumper.c_str(), g_stack_trace_dumper.c_str(),
+            nullptr);
+      print_error_safe("Failed to run bim-stack-dump on crash.\n");
+
+      // Consume the data piped by the parent, otherwise its calls to write()
+      // will hang.
+      char buffer[4096];
+      while (read(STDIN_FILENO, buffer, sizeof(buffer) > 0))
+        ;
+
       _exit(1);
     }
 
-  // Resolve to safe_object_frames and write those to the pipe
   for (std::size_t i = 0; i != count; i++)
     {
       cpptrace::safe_object_frame frame;
       cpptrace::get_safe_object_frame(buffer[i], &frame);
-      write(pipe_in[w], &frame, sizeof(frame));
+
+      if (write(pipe_in[w], &frame, sizeof(frame)) != sizeof(frame))
+        break;
     }
 
   close(pipe_in[r]);
@@ -379,10 +397,7 @@ static void do_crash()
 
 static void force_crash()
 {
-  std::thread t(do_crash);
-
-  if (t.joinable())
-    t.join();
+  std::thread(do_crash).join();
 }
 
 static void force_throw()
@@ -393,7 +408,10 @@ static void force_throw()
 int main(int argc, char* argv[])
 {
   g_stack_trace_dumper =
-      (std::filesystem::absolute(argv[0]) / ".." / "bim-stack-trace").string();
+      std::filesystem::canonical(
+          std::filesystem::absolute(argv[0]).remove_filename()
+          / "bim-stack-dump")
+          .string();
 
   cpptrace::register_terminate_handler();
 

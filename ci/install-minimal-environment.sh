@@ -60,7 +60,9 @@ done
 [[ -n "${target_platform:-}" ]] \
     || (echo "Option --target-platform is required." >&2; exit 1)
 
-packages=(bzip2
+packages=(autoconf
+          automake
+          bzip2
           ccache
           cmake
           curl
@@ -69,11 +71,18 @@ packages=(bzip2
           git
           libjpeg-dev
           libpng-dev
+          libtool
           make
           ninja-build
           pkg-config
           python3-venv
           "$compiler")
+
+if [[ "$compiler" == clang-* ]]
+then
+    clang_version="${compiler/*-/}"
+    packages+=("llvm-$clang_version")
+fi
 
 case "$target_platform" in
     linux)
@@ -86,12 +95,10 @@ case "$target_platform" in
 esac
 
 apt-get update
-apt-get install --yes "${packages[@]}"
+apt-get install --no-install-recommends --yes "${packages[@]}"
 
 if [[ "$compiler" == clang-* ]]
 then
-    clang_version="${compiler/*-/}"
-
     update-alternatives \
         --install /usr/bin/clang clang \
         /usr/bin/clang-"$clang_version" 60
