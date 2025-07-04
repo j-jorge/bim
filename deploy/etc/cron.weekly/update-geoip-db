@@ -35,11 +35,15 @@ cd "$output"
 echo "$(log_prefix) Downloading database archive."
 curl_command=(curl --silent --show-error --location --user "$auth")
 
-"${curl_command[@]}" --remote-name "$download_url?suffix=tar.gz"
-
 "${curl_command[@]}" --output sha256sum.txt \
-     "$download_url?suffix=tar.gz.sha256"
+                     "$download_url?suffix=tar.gz.sha256"
+
+filename="$(head -n 1 sha256sum.txt | awk '{print $2}')"
+"${curl_command[@]}" --output "$filename" "$download_url?suffix=tar.gz"
 
 sha256sum --check sha256sum.txt
+
+tar xf "$filename"
+rm --force "$filename"
 
 find . -name "*.mmdb" -exec mv --backup '{}' /opt/bim/GeoLite2-Country.mmdb ';'
