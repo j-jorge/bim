@@ -4,7 +4,7 @@ set -euo pipefail
 
 : "${pack_my_sprites_repository:=https://github.com/j-jorge/pack-my-sprites/}"
 : "${pack_my_sprites_version:=1.3.0}"
-package_revision=2
+package_revision=3
 version="$pack_my_sprites_version"-"$package_revision"
 build_type=release
 

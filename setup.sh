@@ -20,7 +20,7 @@ foss_only=0
 export bim_host_prefix="$host_prefix"
 export PATH="$script_dir/setup/bin/:$PATH"
 
-custom_cflags="-fvisibility=hidden"
+custom_cflags="-fvisibility=hidden -fno-omit-frame-pointer"
 custom_cflags+=" -fmacro-prefix-map=$script_dir/=./"
 export CFLAGS="$custom_cflags ${CFLAGS:-}"
 export CXXFLAGS="$custom_cflags ${CXXFLAGS:-}"
