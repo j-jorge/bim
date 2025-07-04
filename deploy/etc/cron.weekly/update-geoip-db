@@ -5,9 +5,14 @@ set -euo pipefail
 exec >> /opt/bim/log/update-geoip-db.log
 exec 2>&1
 
+function log_prefix()
+{
+    echo "[$(date --iso-8601=seconds)]"
+}
+
 if [[ ! -f /opt/bim/etc/maxminddb.credentials ]]
 then
-    echo "No credentials. Aborting."
+    echo "$(log_prefix) No credentials. Aborting."
     exit 0
 fi
 
@@ -27,7 +32,7 @@ auth="$MAXMINDDB_ACCOUNT_ID:$MAXMINDDB_LICENCE_KEY"
 
 cd "$output"
 
-echo "Downloading database archive."
+echo "$(log_prefix) Downloading database archive."
 curl_command=(curl --silent --show-error --location --user "$auth")
 
 "${curl_command[@]}" --remote-name "$download_url?suffix=tar.gz"
