@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-exec >> /opt/bim/log/update-geoip-db.log
+exec >> /opt/bim/persistent/log/update-geoip-db.log
 exec 2>&1
 
 function log_prefix()
@@ -46,4 +46,4 @@ sha256sum --check sha256sum.txt
 tar xf "$filename"
 rm --force "$filename"
 
-find . -name "*.mmdb" -exec mv --backup '{}' /opt/bim/GeoLite2-Country.mmdb ';'
+find . -name "*.mmdb" -exec mv --backup '{}' /opt/bim/persistent/GeoLite2-Country.mmdb ';'

@@ -13,13 +13,14 @@ do
     chmod a+x /etc/cron.weekly/"$(basename "$f")"
 done
 
-[[ -f /opt/bim/GeoLite2-Country.mmdb ]] \
+[[ -f /opt/bim/persistent/GeoLite2-Country.mmdb ]] \
     || run-parts /etc/cron.weekly/ 2>&1 \
     || true
 
 /opt/bim/bin/bim-server \
+    --testing-throw \
     --config /opt/bim/etc/bim/server-config.json \
-    --log-file /opt/bim/log/bim-server.txt \
+    --log-file /opt/bim/persistent/log/bim-server.txt \
     --port "$1" \
-    >> /opt/bim/log/bim-server.stdout.txt \
-    2>> /opt/bim/log/bim-server.stderr.txt
+    >> /opt/bim/persistent/log/bim-server.stdout.txt \
+    2>> /opt/bim/persistent/log/bim-server.stderr.txt

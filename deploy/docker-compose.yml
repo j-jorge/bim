@@ -9,8 +9,7 @@ services:
     volumes:
       - ./bin:/opt/bim/bin:ro
       - ./etc:/opt/bim/etc:ro
-      - ./log:/opt/bim/log
-      - ./contest:/opt/bim/contest/
+      - ./persistent:/opt/bim/persistent
     deploy:
       restart_policy:
         condition: on-failure
