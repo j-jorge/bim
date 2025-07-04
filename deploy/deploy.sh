@@ -121,7 +121,8 @@ then
     exit 1
 fi
 
-mkdir --parents bim/"$port"/{bin,etc,log}
+mkdir --parents bim/"$port"/{bin,etc} \
+      bim/"$port"/persistent/{log,contest}
 
 cd bim/"$port"/
 [[ ! -f docker-compose.yml ]] || PORT="$port" docker-compose down
