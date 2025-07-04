@@ -9,6 +9,7 @@ if ((CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     -Werror
     -fvisibility=hidden
     "-fmacro-prefix-map=${BIM_PROJECT_ROOT}/=./"
+    -fno-omit-frame-pointer
   )
 
   # F-Droid requires identical binaries between its build and the
@@ -32,7 +33,7 @@ if ((CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 
   if(BIM_ADDRESS_SANITIZER)
     add_compile_options(
-      -fsanitize=address -fsanitize=undefined -fno-omit-frame-pointer
+      -fsanitize=address -fsanitize=undefined
     )
     add_link_options(
       -fsanitize=address
@@ -45,7 +46,7 @@ if ((CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
   option(BIM_THREAD_SANITIZER "Compile with ThreadSanitizer enabled" OFF)
 
   if(BIM_THREAD_SANITIZER)
-    add_compile_options(-fsanitize=thread -fno-omit-frame-pointer)
+    add_compile_options(-fsanitize=thread)
     add_link_options(-fsanitize=thread -static-libtsan)
   endif()
 
