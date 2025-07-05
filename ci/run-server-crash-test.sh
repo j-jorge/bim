@@ -53,6 +53,7 @@ test_crash()
         echo "test_crash: OK"
         pass_count=$((pass_count + 1))
     else
+        "$bim_server" --testing-crash || true
         echo "test_crash: FAIL"
     fi
 }
