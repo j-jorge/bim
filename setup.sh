@@ -245,7 +245,23 @@ install_dependencies()
 
         if [[ -f "$script" ]] && [[ -x "$script" ]]
         then
+            local start
+            start="$(date +%s)"
+
             "$script"
+
+            local end
+            end="$(date +%s)"
+
+            local minutes=$(((end - start) / 60))
+            local seconds=$((end - start - 60 * minutes))
+
+            if ((minutes > 0))
+            then
+                echo "Took $minutes m. $seconds s."
+            else
+                echo "Took $seconds s."
+            fi
         else
             echo "Missing dependency script: '$script'." >&2
             exit 1
