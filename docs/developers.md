@@ -13,7 +13,7 @@ can run `./setup.sh --help` for additional pre-configured builds.
 
 The project handles most of its dependencies via the `setup.sh`
 script, but it still needs some tools available on the system.  You'll
-need CMake, a C++ compiler, and more. See
+need CMake, a C++20 compiler, and more. See
 `ci/install-minimal-environment.sh` for a complete list. If you are
 using Debian or Ubuntu you can run this script directly.
 
