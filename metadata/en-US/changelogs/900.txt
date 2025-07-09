@@ -1,0 +1,4 @@
+- Add a shop where the user can buy coins.
+- Fetch the client config on the first launch.
+- Fix spurious disconnection messages.
+- Silently reconnect the client if it has been disconnected from outside a game.

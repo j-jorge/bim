@@ -1,0 +1,4 @@
+- Ajout d'une boutique où l'utilisateur peut acheter des pièces.
+- La configuration du client est récupérée lors du premier lancement.
+- Correction de l'apparition de messages de déconnexion erronés.
+- Le client se reconnecte silencieusement s'il a été déconnecté en dehors d'une partie.
