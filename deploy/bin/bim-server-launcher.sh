@@ -18,7 +18,6 @@ done
     || true
 
 /opt/bim/bin/bim-server \
-    --testing-throw \
     --config /opt/bim/etc/bim/server-config.json \
     --log-file /opt/bim/persistent/log/bim-server.txt \
     --port "$1" \
