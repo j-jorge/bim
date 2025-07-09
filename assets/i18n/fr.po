@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-03-09 22:26+0100\n"
-"PO-Revision-Date: 2025-05-23 18:35+0200\n"
+"PO-Revision-Date: 2025-07-09 21:25+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -63,6 +63,9 @@ msgid ""
 msgstr ""
 "Trouve le bonus d'invisibilité pour disparaître de l'écran de tes "
 "adversaires !"
+
+msgid "An error occurred. The purchase could not be completed."
+msgstr "Une erreur s'est produite, l'achat n'a pu se conclure."
 
 msgid "A new version of Bim! is available! Please update as soon as possible."
 msgstr ""
@@ -194,6 +197,15 @@ msgstr ""
 
 msgid "Online Game"
 msgstr "Jeu en ligne"
+
+msgid "×1000"
+msgstr "×1000"
+
+msgid "LOADING…"
+msgstr "CHARGEMENT…"
+
+msgid "SHOP"
+msgstr "BOUTIQUE"
 
 #~ msgid "Keep playing to unlock new game features!"
 #~ msgstr "Continue de jouer pour débloquer de nouvelles fonctionnalités !"

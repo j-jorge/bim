@@ -57,6 +57,9 @@ msgid ""
 "players!"
 msgstr ""
 
+msgid "An error occurred. The purchase could not be completed."
+msgstr ""
+
 msgid "A new version of Bim! is available! Please update as soon as possible."
 msgstr ""
 
@@ -169,4 +172,13 @@ msgid ""
 msgstr ""
 
 msgid "Online Game"
+msgstr ""
+
+msgid "×1000"
+msgstr ""
+
+msgid "LOADING…"
+msgstr ""
+
+msgid "SHOP"
 msgstr ""
