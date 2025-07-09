@@ -1,6 +1,7 @@
 FROM ubuntu:24.04
 
-RUN apt-get update \
+RUN DEBIAN_FRONTEND=noninteractive \
+    apt-get update \
     && apt-get install --assume-yes --no-install-recommends \
     ca-certificates \
     cron \

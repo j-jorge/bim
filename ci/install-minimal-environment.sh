@@ -95,7 +95,8 @@ case "$target_platform" in
 esac
 
 apt-get update
-apt-get install --no-install-recommends --yes "${packages[@]}"
+DEBIAN_FRONTEND=noninteractive \
+    apt-get install --no-install-recommends --yes "${packages[@]}"
 
 if [[ "$compiler" == clang-* ]]
 then
