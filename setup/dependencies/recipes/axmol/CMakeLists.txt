@@ -326,7 +326,7 @@ macro(assign_common_sources)
   set(
     axmol_individual_sources
     ${source_root}/audio/AudioDecoderManager.cpp
-    ${source_root}/audio/AudioDecoderOgg.cpp
+    ${source_root}/audio/AudioDecoderVorbis.cpp
     ${source_root}/base/astc.cpp
    )
 endmacro()
