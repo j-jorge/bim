@@ -2,6 +2,11 @@ cmake_minimum_required(VERSION 3.22)
 
 project(axmol)
 
+if (CMAKE_VERSION VERSION_GREATER_EQUAL 3.31)
+  # Normalize DESTINATION values given in the install() command.
+  cmake_policy(SET CMP0177 NEW)
+endif()
+
 set(CMAKE_CXX_STANDARD 20)
 
 execute_process(
@@ -64,6 +69,7 @@ macro(include_axmol)
 
   include(${axmol_root}/cmake/Modules/AXLinkHelpers.cmake)
   include(${axmol_root}/cmake/Modules/AXBuildSet.cmake)
+  include(${axmol_root}/cmake/Modules/AXConfigSIMD.cmake)
 endmacro()
 
 macro(include_platform_modules)
@@ -326,7 +332,7 @@ macro(assign_common_sources)
   set(
     axmol_individual_sources
     ${source_root}/audio/AudioDecoderManager.cpp
-    ${source_root}/audio/AudioDecoderOgg.cpp
+    ${source_root}/audio/AudioDecoderVorbis.cpp
     ${source_root}/base/astc.cpp
    )
 endmacro()
