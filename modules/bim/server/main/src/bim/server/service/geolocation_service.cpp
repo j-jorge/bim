@@ -73,6 +73,7 @@ bim::server::geolocation_service::lookup(const std::string& ip)
       || (internal.country != info->country))
     {
       // The country has changed, we'll need a new id.
+      m_release_date.erase(it_id->second);
       m_address_info.erase(it_info);
 
       const std::uint64_t id = m_next_id;
