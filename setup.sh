@@ -259,7 +259,8 @@ install_dependencies()
             if ((minutes > 0))
             then
                 echo "Took $minutes m. $seconds s."
-            else
+            elif ((seconds >= 10))
+            then
                 echo "Took $seconds s."
             fi
         else
