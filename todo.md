@@ -1,16 +1,17 @@
 # Next
 
+- Shield feature.
+- Local stats on the lobby.
+- Game feature submenu.
+
 # Client
 
-- Shield feature.
 - At most three enabled features per game.
 - Display the frame duration (without the sleep) in addition to the FPS.
 - Close the settings when the back button is pressed.
 
 # Server
 
-- Load the config from a Json file.
-- Accept config parameters as command line arguments.
 - Collect some stats about the games and clients.
 - Web services
   - Hot reload of the config.
