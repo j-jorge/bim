@@ -22,18 +22,19 @@
 #include <bim/game/system/fog_of_war_updater.hpp>
 #include <bim/game/system/refresh_bomb_inventory.hpp>
 #include <bim/game/system/remove_dead_objects.hpp>
-#include <bim/game/system/update_bomb_power_up_spawners.hpp>
 #include <bim/game/system/update_bomb_power_ups.hpp>
 #include <bim/game/system/update_bombs.hpp>
 #include <bim/game/system/update_brick_walls.hpp>
 #include <bim/game/system/update_falling_blocks.hpp>
-#include <bim/game/system/update_flame_power_up_spawners.hpp>
 #include <bim/game/system/update_flame_power_ups.hpp>
 #include <bim/game/system/update_flames.hpp>
-#include <bim/game/system/update_invisibility_power_up_spawners.hpp>
+#include <bim/game/system/update_invincibility_state.hpp>
 #include <bim/game/system/update_invisibility_power_ups.hpp>
 #include <bim/game/system/update_invisibility_state.hpp>
 #include <bim/game/system/update_players.hpp>
+#include <bim/game/system/update_power_up_spawners.hpp>
+#include <bim/game/system/update_shield_power_ups.hpp>
+#include <bim/game/system/update_shields.hpp>
 #include <bim/game/system/update_timers.hpp>
 
 #include <bim/game/level_generation.hpp>
@@ -44,6 +45,14 @@
 #include <entt/entity/registry.hpp>
 
 #include <boost/random/uniform_int_distribution.hpp>
+
+namespace bim::game
+{
+  class bomb_power_up_spawner;
+  class flame_power_up_spawner;
+  class invisibility_power_up_spawner;
+  class shield_power_up_spawner;
+}
 
 constexpr std::chrono::milliseconds bim::game::contest::tick_interval;
 
@@ -190,15 +199,26 @@ bim::game::contest_result bim::game::contest::tick()
   m_arena_reduction->update(*m_registry, *m_arena);
   update_falling_blocks(*m_context, *m_registry, *m_arena);
   update_bombs(*m_registry, *m_arena);
+
   update_flames(*m_registry, *m_arena);
+  update_invincibility_state(*m_registry);
+  update_shields(*m_registry);
+
+  // update_burning(*m_registry, *m_arena);
   update_brick_walls(*m_registry, *m_arena);
-  update_bomb_power_up_spawners(*m_registry, *m_arena);
-  update_bomb_power_ups(*m_registry, *m_arena);
-  update_flame_power_up_spawners(*m_registry, *m_arena);
-  update_flame_power_ups(*m_registry, *m_arena);
-  update_invisibility_power_up_spawners(*m_registry, *m_arena);
-  update_invisibility_power_ups(*m_registry, *m_arena);
   update_invisibility_state(*m_context, *m_registry);
+
+  update_power_up_spawners<bomb_power_up_spawner>(*m_registry, *m_arena);
+  update_power_up_spawners<flame_power_up_spawner>(*m_registry, *m_arena);
+  update_power_up_spawners<invisibility_power_up_spawner>(*m_registry,
+                                                          *m_arena);
+  update_power_up_spawners<shield_power_up_spawner>(*m_registry, *m_arena);
+
+  update_bomb_power_ups(*m_registry, *m_arena);
+  update_flame_power_ups(*m_registry, *m_arena);
+  update_invisibility_power_ups(*m_registry, *m_arena);
+  update_shield_power_ups(*m_registry, *m_arena);
+
   update_players(*m_context, *m_registry);
   m_fog_of_war->update(*m_registry);
 

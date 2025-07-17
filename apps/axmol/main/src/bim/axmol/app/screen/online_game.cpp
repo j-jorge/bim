@@ -36,12 +36,15 @@
 #include <bim/game/component/flame_power_up.hpp>
 #include <bim/game/component/fractional_position_on_grid.hpp>
 #include <bim/game/component/game_timer.hpp>
+#include <bim/game/component/invincibility_state.hpp>
 #include <bim/game/component/invisibility_power_up.hpp>
 #include <bim/game/component/invisibility_state.hpp>
 #include <bim/game/component/player.hpp>
 #include <bim/game/component/player_action_queue.hpp>
 #include <bim/game/component/player_movement.hpp>
 #include <bim/game/component/position_on_grid.hpp>
+#include <bim/game/component/shield.hpp>
+#include <bim/game/component/shield_power_up.hpp>
 #include <bim/game/component/timer.hpp>
 #include <bim/game/constant/default_arena_size.hpp>
 #include <bim/game/constant/falling_block_duration.hpp>
@@ -247,6 +250,10 @@ bim::axmol::app::online_game::online_game(
                  bim::game::g_invisibility_power_up_count_in_level,
                  *style.get_declaration("power-up-invisibility"),
                  *m_controls->arena);
+  ::alloc_assets(m_shield_power_ups, widget_context,
+                 bim::game::g_shield_power_up_count_in_level,
+                 *style.get_declaration("power-up-shield"),
+                 *m_controls->arena);
 }
 
 bim::axmol::app::online_game::~online_game() = default;
@@ -294,6 +301,7 @@ void bim::axmol::app::online_game::attached()
   resize_to_block_width(m_bomb_power_ups);
   resize_to_block_width(m_flame_power_ups);
   resize_to_block_width(m_invisibility_power_ups);
+  resize_to_block_width(m_shield_power_ups);
 
   m_fog->attached(m_display_config);
 }
@@ -352,6 +360,7 @@ void bim::axmol::app::online_game::displaying(
   hide_all(m_bomb_power_ups);
   hide_all(m_flame_power_ups);
   hide_all(m_invisibility_power_ups);
+  hide_all(m_shield_power_ups);
   m_fog->displaying(m_local_player_index);
 
   reset_z_order();
@@ -536,9 +545,11 @@ void bim::axmol::app::online_game::refresh_display()
   display_brick_walls();
   display_bombs();
   display_flames();
-  display_bomb_power_ups();
-  display_flame_power_ups();
-  display_invisibility_power_ups();
+  display_power_ups<bim::game::bomb_power_up>(m_bomb_power_ups);
+  display_power_ups<bim::game::flame_power_up>(m_flame_power_ups);
+  display_power_ups<bim::game::invisibility_power_up>(
+      m_invisibility_power_ups);
+  display_power_ups<bim::game::shield_power_up>(m_shield_power_ups);
   display_players();
 
   display_static_walls();
@@ -667,13 +678,31 @@ void bim::axmol::app::online_game::display_player(
   display_at(
       p.grid_aligned_y(), w,
       m_display_config.grid_position_to_display(p.x_float(), p.y_float()));
-  w.set_animation(a);
+
+  w.set_animation(bim::game::has_shield(registry, e), a);
+
+  std::uint8_t opacity;
 
   const bool is_invisible = bim::game::is_invisible(registry, e);
-  const std::uint8_t opacity =
-      is_invisible
-          ? 127 * (player.index == m_local_player_index || !local_still_alive)
-          : 255;
+
+  if (is_invisible)
+    opacity =
+        127 * (player.index == m_local_player_index || !local_still_alive);
+  else
+    {
+      const bim::game::invincibility_state* const invincibility =
+          registry.try_get<bim::game::invincibility_state>(e);
+
+      if (invincibility)
+        {
+          const std::size_t ms = registry.storage<bim::game::timer>()
+                                     ->get(invincibility->entity)
+                                     .duration.count();
+          opacity = (255 >> ((ms & (1 << 7)) >> 6));
+        }
+      else
+        opacity = 255;
+    }
 
   w.setOpacity(opacity);
 }
@@ -773,59 +802,24 @@ void bim::axmol::app::online_game::display_flames()
   bim::axmol::widget::hide_while_visible(m_flames, asset_index);
 }
 
-void bim::axmol::app::online_game::display_bomb_power_ups()
+template <typename T>
+void bim::axmol::app::online_game::display_power_ups(
+    const std::vector<ax::Sprite*>& assets)
 {
   const entt::registry& registry = m_contest->registry();
   std::size_t asset_index = 0;
 
-  registry.view<bim::game::position_on_grid, bim::game::bomb_power_up>().each(
-      [this, &asset_index](const bim::game::position_on_grid& p) -> void
+  registry.view<bim::game::position_on_grid, T>().each(
+      [this, &assets,
+       &asset_index](const bim::game::position_on_grid& p) -> void
       {
-        display_at(p.y, *m_bomb_power_ups[asset_index],
+        display_at(p.y, *assets[asset_index],
                    m_display_config.grid_position_to_displayed_block_center(
                        p.x, p.y));
         ++asset_index;
       });
 
-  bim::axmol::widget::hide_while_visible(m_bomb_power_ups, asset_index);
-}
-
-void bim::axmol::app::online_game::display_flame_power_ups()
-{
-  const entt::registry& registry = m_contest->registry();
-  std::size_t asset_index = 0;
-
-  registry.view<bim::game::position_on_grid, bim::game::flame_power_up>().each(
-      [this, &asset_index](const bim::game::position_on_grid& p) -> void
-      {
-        display_at(p.y, *m_flame_power_ups[asset_index],
-                   m_display_config.grid_position_to_displayed_block_center(
-                       p.x, p.y));
-        ++asset_index;
-      });
-
-  bim::axmol::widget::hide_while_visible(m_flame_power_ups, asset_index);
-}
-
-void bim::axmol::app::online_game::display_invisibility_power_ups()
-{
-  const entt::registry& registry = m_contest->registry();
-  std::size_t asset_index = 0;
-
-  registry
-      .view<bim::game::position_on_grid, bim::game::invisibility_power_up>()
-      .each(
-          [this, &asset_index](const bim::game::position_on_grid& p) -> void
-          {
-            display_at(
-                p.y, *m_invisibility_power_ups[asset_index],
-                m_display_config.grid_position_to_displayed_block_center(p.x,
-                                                                         p.y));
-            ++asset_index;
-          });
-
-  bim::axmol::widget::hide_while_visible(m_invisibility_power_ups,
-                                         asset_index);
+  bim::axmol::widget::hide_while_visible(assets, asset_index);
 }
 
 void bim::axmol::app::online_game::display_main_timer()

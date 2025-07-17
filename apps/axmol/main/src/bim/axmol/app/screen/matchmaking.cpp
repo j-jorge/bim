@@ -345,6 +345,10 @@ void bim::axmol::app::matchmaking::show_feature_message(
       message =
           ic_gettext("Falling blocks reduce the arena after two minutes!");
       break;
+    case bim::game::feature_flags::shield:
+      message = ic_gettext("Find this incredibly strong barrel, it will save "
+                           "you from one hit!");
+      break;
     case bim::game::feature_flags::fog_of_war:
       message = ic_gettext(
           "A thick fog covers the arena. You can't see were you did not go!");

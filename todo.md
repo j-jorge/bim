@@ -1,6 +1,5 @@
 # Next
 
-- Shield feature.
 - Local stats on the lobby.
 - Game feature submenu.
 

@@ -117,6 +117,7 @@ void bim::axmol::app::debug_popup::show()
 
   add_title("FEATURES");
   add_feature_item("Falling blocks", bim::game::feature_flags::falling_blocks);
+  add_feature_item("Shield", bim::game::feature_flags::shield);
   add_feature_item("Fog of war", bim::game::feature_flags::fog_of_war);
   add_feature_item("Invisibility", bim::game::feature_flags::invisibility);
 
@@ -136,9 +137,6 @@ void bim::axmol::app::debug_popup::show()
                   {
                     coin_transaction(-100);
                   });
-
-  add_feature_item("Fog of war", bim::game::feature_flags::fog_of_war);
-  add_feature_item("Invisibility", bim::game::feature_flags::invisibility);
 
   add_title("PREFERENCES");
   iscool::preferences::local_preferences& preferences =
