@@ -8,6 +8,7 @@
 #include <bim/game/component/invisibility_power_up_spawner.hpp>
 #include <bim/game/component/player.hpp>
 #include <bim/game/component/position_on_grid.hpp>
+#include <bim/game/component/shield_power_up_spawner.hpp>
 #include <bim/game/constant/default_arena_size.hpp>
 #include <bim/game/contest_fingerprint.hpp>
 #include <bim/game/feature_flags.hpp>
@@ -175,6 +176,22 @@ TEST_F(bim_game_contest_power_up_distribution, bomb_power_up_with_invisibility)
       bim::game::g_bomb_power_up_count_in_level);
 }
 
+TEST_F(bim_game_contest_power_up_distribution, bomb_power_up_with_shield)
+{
+  run_test<bim::game::bomb_power_up_spawner>(
+      bim::game::feature_flags::shield, 3000,
+      bim::game::g_bomb_power_up_count_in_level);
+}
+
+TEST_F(bim_game_contest_power_up_distribution,
+       bomb_power_up_with_shield_and_invisibility)
+{
+  run_test<bim::game::bomb_power_up_spawner>(
+      bim::game::feature_flags::shield
+          | bim::game::feature_flags::invisibility,
+      3000, bim::game::g_bomb_power_up_count_in_level);
+}
+
 TEST_F(bim_game_contest_power_up_distribution, flame_power_up)
 {
   run_test<bim::game::flame_power_up_spawner>(
@@ -189,6 +206,22 @@ TEST_F(bim_game_contest_power_up_distribution,
       bim::game::g_flame_power_up_count_in_level);
 }
 
+TEST_F(bim_game_contest_power_up_distribution, flame_power_up_with_shield)
+{
+  run_test<bim::game::flame_power_up_spawner>(
+      bim::game::feature_flags::shield, 4000,
+      bim::game::g_flame_power_up_count_in_level);
+}
+
+TEST_F(bim_game_contest_power_up_distribution,
+       flame_power_up_with_shield_and_invisibility)
+{
+  run_test<bim::game::flame_power_up_spawner>(
+      bim::game::feature_flags::shield
+          | bim::game::feature_flags::invisibility,
+      4000, bim::game::g_flame_power_up_count_in_level);
+}
+
 TEST_F(bim_game_contest_power_up_distribution, invisibility_power_up)
 {
   bim::table_2d<bool> usable_cells(arena_width, arena_height);
@@ -201,4 +234,37 @@ TEST_F(bim_game_contest_power_up_distribution, invisibility_power_up)
   run_test<bim::game::invisibility_power_up_spawner>(
       usable_cells, bim::game::feature_flags::invisibility, 6000,
       bim::game::g_invisibility_power_up_count_in_level);
+}
+
+TEST_F(bim_game_contest_power_up_distribution,
+       invisibility_power_up_with_shield)
+{
+  bim::table_2d<bool> usable_cells(arena_width, arena_height);
+
+  for (int y = 0; y != arena_height; ++y)
+    for (int x = 0; x != arena_width; ++x)
+      usable_cells(x, y) = bim::game::valid_invisibility_power_up_position(
+          x, y, arena_width, arena_height);
+
+  run_test<bim::game::invisibility_power_up_spawner>(
+      usable_cells,
+      bim::game::feature_flags::invisibility
+          | bim::game::feature_flags::shield,
+      6000, bim::game::g_invisibility_power_up_count_in_level);
+}
+
+TEST_F(bim_game_contest_power_up_distribution, shield_power_up)
+{
+  run_test<bim::game::shield_power_up_spawner>(
+      bim::game::feature_flags::shield, 6000,
+      bim::game::g_shield_power_up_count_in_level);
+}
+
+TEST_F(bim_game_contest_power_up_distribution,
+       shield_power_up_and_invisibility)
+{
+  run_test<bim::game::shield_power_up_spawner>(
+      bim::game::feature_flags::shield
+          | bim::game::feature_flags::invisibility,
+      6000, bim::game::g_shield_power_up_count_in_level);
 }

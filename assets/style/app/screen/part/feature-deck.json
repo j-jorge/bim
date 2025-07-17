@@ -19,6 +19,22 @@
                 }
             ],
 
+            "feature_shield":
+            [
+                "app/widget/game-feature-button",
+                {
+                    "widgets/toggle/widgets/off":
+                    [{
+                        "frame": "sprites/features/shield-off.png"
+                    }],
+
+                    "widgets/toggle/widgets/on":
+                    [{
+                        "frame": "sprites/features/shield-on.png"
+                    }]
+                }
+            ],
+
             "feature_invisibility":
             [
                 "app/widget/game-feature-button",

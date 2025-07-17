@@ -6,6 +6,8 @@
 namespace bim::game
 {
   class arena;
+  class context;
 
-  void dump_arena(const arena& arena, const entt::registry& registry);
+  void dump_arena(const arena& arena, const context& context,
+                  const entt::registry& registry);
 }

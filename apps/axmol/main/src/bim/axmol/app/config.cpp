@@ -178,6 +178,10 @@ static bool parse_game_feature_prices(bim::axmol::app::config& result,
           prices, "fb"))
     return false;
 
+  if (!read_value(result.game_feature_price[bim::game::feature_flags::shield],
+                  prices, "s"))
+    return false;
+
   if (!read_value(
           result.game_feature_price[bim::game::feature_flags::invisibility],
           prices, "i"))
@@ -203,6 +207,7 @@ bim::axmol::app::config::config()
   , coins_per_draw(10)
 {
   game_feature_price[bim::game::feature_flags::falling_blocks] = 50;
+  game_feature_price[bim::game::feature_flags::shield] = 250;
   game_feature_price[bim::game::feature_flags::invisibility] = 250;
   game_feature_price[bim::game::feature_flags::fog_of_war] = 1000;
 }

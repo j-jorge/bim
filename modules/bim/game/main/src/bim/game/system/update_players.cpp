@@ -2,6 +2,7 @@
 #include <bim/game/system/update_players.hpp>
 
 #include <bim/game/component/animation_state.hpp>
+#include <bim/game/component/burning.hpp>
 #include <bim/game/component/dead.hpp>
 #include <bim/game/component/fractional_position_on_grid.hpp>
 #include <bim/game/component/kicked.hpp>

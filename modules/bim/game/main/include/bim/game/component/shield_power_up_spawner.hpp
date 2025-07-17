@@ -3,11 +3,11 @@
 
 namespace bim::game
 {
-  class bomb_power_up;
+  class shield_power_up;
 
-  class bomb_power_up_spawner
+  class shield_power_up_spawner
   {
   public:
-    using power_up_type = bomb_power_up;
+    using power_up_type = shield_power_up;
   };
 }

@@ -20,6 +20,7 @@ set(sprites_crop
   "sprites/power-up-bomb.png"
   "sprites/power-up-flame.png"
   "sprites/power-up-invisibility.png"
+  "sprites/power-up-shield.png"
   "sprites/solid-wall.png"
   "sprites/transparent.png"
 
@@ -29,6 +30,8 @@ set(sprites_crop
   "sprites/features/fog-of-war-on.png"
   "sprites/features/invisibility-off.png"
   "sprites/features/invisibility-on.png"
+  "sprites/features/shield-off.png"
+  "sprites/features/shield-on.png"
 
   "sprites/menu/audio.png"
   "sprites/menu/back.png"

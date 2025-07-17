@@ -24,7 +24,9 @@ add_library(bim_game
   main/src/bim/game/component/flame_direction.cpp
   main/src/bim/game/component/fractional_position_on_grid.cpp
   main/src/bim/game/component/invisibility_state.cpp
+  main/src/bim/game/component/invincibility_state.cpp
   main/src/bim/game/component/player_action_queue.cpp
+  main/src/bim/game/component/shield.cpp
 
   main/src/bim/game/context/fill_context.cpp
   main/src/bim/game/context/player_animations.cpp
@@ -36,6 +38,7 @@ add_library(bim_game
   main/src/bim/game/factory/falling_block.cpp
   main/src/bim/game/factory/flame.cpp
   main/src/bim/game/factory/fog_of_war.cpp
+  main/src/bim/game/factory/invincibility_state.cpp
   main/src/bim/game/factory/invisibility_state.cpp
   main/src/bim/game/factory/main_timer.cpp
   main/src/bim/game/factory/player.cpp
@@ -47,18 +50,19 @@ add_library(bim_game
   main/src/bim/game/system/fog_of_war_updater.cpp
   main/src/bim/game/system/refresh_bomb_inventory.cpp
   main/src/bim/game/system/remove_dead_objects.cpp
-  main/src/bim/game/system/update_bomb_power_up_spawners.cpp
   main/src/bim/game/system/update_bomb_power_ups.cpp
   main/src/bim/game/system/update_bombs.cpp
   main/src/bim/game/system/update_brick_walls.cpp
   main/src/bim/game/system/update_falling_blocks.cpp
-  main/src/bim/game/system/update_flame_power_up_spawners.cpp
   main/src/bim/game/system/update_flame_power_ups.cpp
   main/src/bim/game/system/update_flames.cpp
-  main/src/bim/game/system/update_invisibility_power_up_spawners.cpp
+  main/src/bim/game/system/update_invincibility_state.cpp
   main/src/bim/game/system/update_invisibility_power_ups.cpp
   main/src/bim/game/system/update_invisibility_state.cpp
   main/src/bim/game/system/update_players.cpp
+  main/src/bim/game/system/update_power_up_spawners.cpp
+  main/src/bim/game/system/update_shields.cpp
+  main/src/bim/game/system/update_shield_power_ups.cpp
   main/src/bim/game/system/update_timers.cpp
 )
 target_include_directories(bim_game PUBLIC main/include)
@@ -87,17 +91,17 @@ add_executable(game-tests
   tests/src/bim/game/system/apply_player_action.cpp
   tests/src/bim/game/system/arena_reduction.cpp
   tests/src/bim/game/system/fog_of_war.cpp
-  tests/src/bim/game/system/update_bomb_power_up_spawners.cpp
   tests/src/bim/game/system/update_bomb_power_ups.cpp
   tests/src/bim/game/system/update_bombs.cpp
   tests/src/bim/game/system/update_brick_walls.cpp
   tests/src/bim/game/system/update_falling_blocks.cpp
-  tests/src/bim/game/system/update_flame_power_up_spawners.cpp
   tests/src/bim/game/system/update_flame_power_ups.cpp
-  tests/src/bim/game/system/update_invisibility_power_up_spawners.cpp
+  tests/src/bim/game/system/update_invincibility_state.cpp
   tests/src/bim/game/system/update_invisibility_power_ups.cpp
   tests/src/bim/game/system/update_invisibility_state.cpp
   tests/src/bim/game/system/update_players.cpp
+  tests/src/bim/game/system/update_power_up_spawners.cpp
+  tests/src/bim/game/system/update_shields.cpp
   tests/src/bim/game/system/update_timers.cpp
 )
 target_link_libraries(

@@ -3,6 +3,11 @@
 
 namespace bim::game
 {
+  class invisibility_power_up;
+
   class invisibility_power_up_spawner
-  {};
+  {
+  public:
+    using power_up_type = invisibility_power_up;
+  };
 }

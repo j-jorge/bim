@@ -130,9 +130,8 @@ namespace bim::axmol::app
                         const bim::game::animation_state& a);
     void display_bombs();
     void display_flames();
-    void display_bomb_power_ups();
-    void display_flame_power_ups();
-    void display_invisibility_power_ups();
+    template <typename T>
+    void display_power_ups(const std::vector<ax::Sprite*>& assets);
     void display_main_timer();
 
     void display_at(std::size_t arena_y, ax::Node& node,
@@ -175,6 +174,7 @@ namespace bim::axmol::app
     std::vector<ax::Sprite*> m_bomb_power_ups;
     std::vector<ax::Sprite*> m_flame_power_ups;
     std::vector<ax::Sprite*> m_invisibility_power_ups;
+    std::vector<ax::Sprite*> m_shield_power_ups;
 
     std::unique_ptr<fog_display> m_fog;
 

@@ -2,12 +2,14 @@
 #include <bim/game/dump_arena.hpp>
 
 #include <bim/game/arena.hpp>
+#include <bim/game/component/animation_state.hpp>
 #include <bim/game/component/bomb.hpp>
 #include <bim/game/component/bomb_power_up.hpp>
 #include <bim/game/component/flame.hpp>
 #include <bim/game/component/flame_direction.hpp>
 #include <bim/game/component/flame_power_up.hpp>
 #include <bim/game/component/fractional_position_on_grid.hpp>
+#include <bim/game/component/invincibility_state.hpp>
 #include <bim/game/component/invisibility_power_up.hpp>
 #include <bim/game/component/invisibility_state.hpp>
 #include <bim/game/component/kicked.hpp>
@@ -16,7 +18,11 @@
 #include <bim/game/component/player_action_queue.hpp>
 #include <bim/game/component/player_movement.hpp>
 #include <bim/game/component/position_on_grid.hpp>
+#include <bim/game/component/shield.hpp>
+#include <bim/game/component/shield_power_up.hpp>
 #include <bim/game/constant/max_player_count.hpp>
+#include <bim/game/context/context.hpp>
+#include <bim/game/context/player_animations.hpp>
 
 #include <entt/entity/registry.hpp>
 
@@ -27,28 +33,83 @@
 static void dump_column(bool valid, float value)
 {
   if (valid)
-    printf("%9.4f", value);
+    printf("%10.4f", value);
   else
-    printf("        x");
+    printf("         x");
 }
 
 static void dump_column(bool valid, int value)
 {
   if (valid)
-    printf("%9d", value);
+    printf("%10d", value);
   else
-    printf("        x");
+    printf("         x");
 }
 
 static void dump_column_hex(bool valid, int value)
 {
   if (valid)
-    printf("%9x", value);
+    printf("%10x", value);
   else
-    printf("        x");
+    printf("         x");
 }
 
-void bim::game::dump_arena(const arena& arena, const entt::registry& registry)
+static void dump_column(bool valid, const char* value)
+{
+  if (valid)
+    printf("%10s", value);
+  else
+    printf("         x");
+}
+
+static const char* animation_name(const bim::game::context& context,
+                                  entt::entity e,
+                                  const entt::registry& registry)
+{
+  const bim::game::player_animations& animations =
+      context.get<const bim::game::player_animations>();
+
+  const bim::game::animation_state* const animation =
+      registry.try_get<bim::game::animation_state>(e);
+
+  if (!animation)
+    return "none";
+
+  if (animation->model == animations.idle_down)
+    return "idle_down";
+
+  if (animation->model == animations.idle_left)
+    return "idle_left";
+
+  if (animation->model == animations.idle_right)
+    return "idle_right";
+
+  if (animation->model == animations.idle_up)
+    return "idle_up";
+
+  if (animation->model == animations.walk_down)
+    return "walk_down";
+
+  if (animation->model == animations.walk_left)
+    return "walk_deft";
+
+  if (animation->model == animations.walk_right)
+    return "walk_right";
+
+  if (animation->model == animations.walk_up)
+    return "walk_up";
+
+  if (animation->model == animations.burn)
+    return "burn";
+
+  if (animation->model == animations.die)
+    return "die";
+
+  return "unknown";
+}
+
+void bim::game::dump_arena(const arena& arena, const context& context,
+                           const entt::registry& registry)
 {
   const int w = arena.width();
   const int h = arena.height();
@@ -156,6 +217,12 @@ void bim::game::dump_arena(const arena& arena, const entt::registry& registry)
         arena_str[pos.y][pos.x] = "I";
       });
 
+  registry.view<shield_power_up, position_on_grid>().each(
+      [&](position_on_grid pos) -> void
+      {
+        arena_str[pos.y][pos.x] = "S";
+      });
+
   struct bomb_state
   {
     std::uint8_t strength;
@@ -219,6 +286,13 @@ void bim::game::dump_arena(const arena& arena, const entt::registry& registry)
   printf("\n");
 
   print_arena_line(' ');
+  printf("%-15s", "animation");
+  for (int i = 0; i != player_count; ++i)
+    dump_column(valid[i],
+                animation_name(context, player_entities[i], registry));
+  printf("\n");
+
+  print_arena_line(' ');
   printf("%-15s", "bomb_capacity");
   for (int i = 0; i != player_count; ++i)
     dump_column(valid[i], (int)players[i].bomb_capacity);
@@ -240,6 +314,18 @@ void bim::game::dump_arena(const arena& arena, const entt::registry& registry)
   printf("%-15s", "invisible");
   for (int i = 0; i != player_count; ++i)
     dump_column(valid[i], (int)is_invisible(registry, player_entities[i]));
+  printf("\n");
+
+  print_arena_line(' ');
+  printf("%-15s", "shield");
+  for (int i = 0; i != player_count; ++i)
+    dump_column(valid[i], (int)has_shield(registry, player_entities[i]));
+  printf("\n");
+
+  print_arena_line(' ');
+  printf("%-15s", "invincible");
+  for (int i = 0; i != player_count; ++i)
+    dump_column(valid[i], (int)is_invincible(registry, player_entities[i]));
   printf("\n");
 
   print_arena_line(' ');

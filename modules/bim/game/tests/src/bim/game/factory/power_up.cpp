@@ -5,6 +5,7 @@
 #include <bim/game/component/flame_power_up.hpp>
 #include <bim/game/component/invisibility_power_up.hpp>
 #include <bim/game/component/position_on_grid.hpp>
+#include <bim/game/component/shield_power_up.hpp>
 
 #include <bim/game/factory/power_up.hpp>
 
@@ -16,13 +17,14 @@ template <typename T>
 class power_up_factory_test : public testing::Test
 {};
 
-using PowerUpTypes =
+using power_up_types =
     testing::Types<bim::game::bomb_power_up, bim::game::flame_power_up,
-                   bim::game::invisibility_power_up>;
+                   bim::game::invisibility_power_up,
+                   bim::game::shield_power_up>;
 
-TYPED_TEST_SUITE(power_up_factory_test, PowerUpTypes);
+TYPED_TEST_SUITE(power_up_factory_test, power_up_types);
 
-TYPED_TEST(power_up_factory_test, CreatesAtCorrectPosition)
+TYPED_TEST(power_up_factory_test, creates_at_correct_position)
 {
   constexpr std::uint8_t x = 1;
   constexpr std::uint8_t y = 0;
@@ -34,7 +36,6 @@ TYPED_TEST(power_up_factory_test, CreatesAtCorrectPosition)
   const entt::entity entity =
       bim::game::power_up_factory<TypeParam>(registry, arena, x, y);
 
-  // Verifications
   EXPECT_NE(entity, static_cast<entt::entity>(entt::null));
   EXPECT_TRUE(registry.valid(entity));
 

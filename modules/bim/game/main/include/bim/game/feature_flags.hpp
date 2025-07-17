@@ -9,6 +9,7 @@ namespace bim::game
   {
     falling_blocks = (1 << 0),
     fog_of_war = (1 << 1),
-    invisibility = (1 << 2)
+    invisibility = (1 << 2),
+    shield = (1 << 3)
   };
 }
