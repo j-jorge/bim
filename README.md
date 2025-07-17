@@ -62,3 +62,5 @@ terms.
 
 Want to take part in the project? Let's begin with [the developer's
 guide](docs/developers.md).
+
+Translations can be worked on using Weblate.
