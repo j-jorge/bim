@@ -199,7 +199,7 @@ bim::game::contest_result bim::game::contest::tick()
   update_invisibility_power_up_spawners(*m_registry, *m_arena);
   update_invisibility_power_ups(*m_registry, *m_arena);
   update_invisibility_state(*m_context, *m_registry);
-  update_players(*m_context, *m_registry, *m_arena);
+  update_players(*m_context, *m_registry);
   m_fog_of_war->update(*m_registry);
 
   remove_dead_objects(*m_registry);
