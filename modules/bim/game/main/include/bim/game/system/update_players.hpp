@@ -5,9 +5,7 @@
 
 namespace bim::game
 {
-  class arena;
   class context;
 
-  void update_players(const context& context, entt::registry& registry,
-                      const arena& arena);
+  void update_players(const context& context, entt::registry& registry);
 }

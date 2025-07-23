@@ -14,6 +14,7 @@
 #include <bim/game/context/player_animations.hpp>
 #include <bim/game/factory/flame.hpp>
 #include <bim/game/factory/player.hpp>
+#include <bim/game/system/update_flames.hpp>
 
 #include <entt/entity/registry.hpp>
 
@@ -54,7 +55,8 @@ TEST(bim_game_update_players, death_on_flame_collision)
           bim::game::player_factory(registry, 2, 0, 1,
                                     player_animations.idle_down));
 
-  bim::game::update_players(context, registry, arena);
+  bim::game::update_flames(registry, arena);
+  bim::game::update_players(context, registry);
 
   EXPECT_EQ(player_animations.burn, player_on_flame.model);
   EXPECT_EQ(player_animations.burn, other_player_on_flame.model);
