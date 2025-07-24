@@ -123,6 +123,8 @@ assets/sprites/player/burned-9.png
 Julien Jorge, based on the work of Aryeom
 CC-BY-SA 4.0
 
+assets/i18n/en.po
+assets/i18n/fr.po
 assets/sprites/arena-border.png
 assets/sprites/arena-corner.png
 assets/sprites/pixel.png

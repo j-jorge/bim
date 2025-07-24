@@ -12,6 +12,7 @@ function list_assets_in_repository()
          -name "*.png" \
          -o -name "*.jpg" \
          -o -name "*.ogg" \
+         -o -name "*.po" \
          -o -name "*.ttf"
 }
 
