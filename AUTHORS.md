@@ -8,6 +8,9 @@ static-assets/font/OpenSans-Regular.ttf
 Steve Matteson
 Open Font License 1.1
 
+assets/i18n/pt_BR.po
+CC-BY-SA 4.0 OlliesGudh, via Weblate.
+
 assets/sprites/menu/silhouette-1.png
 assets/sprites/menu/silhouette-3.png
 From https://commons.wikimedia.org/wiki/File:Silhouette_of_Woman_with_Short_Hair_and_Jeans.svg

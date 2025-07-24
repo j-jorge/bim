@@ -1,6 +1,6 @@
 find_package(Gettext REQUIRED)
 
-set(languages en fr)
+set(languages en fr pt_BR)
 
 # When building the Android app we use the .po files as they are. On
 # the other hand, for Linux builds we generate the .pot file and
