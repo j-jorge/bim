@@ -214,11 +214,25 @@ void bim::axmol::app::main_task::validate_remote_config(
 
 void bim::axmol::app::main_task::read_translations()
 {
-  const std::string language_code = iscool::system::get_language_code();
-  std::string translations_file = "i18n/" + language_code + ".mo";
+  std::string translations_file;
 
-  if (!iscool::files::file_exists(translations_file))
-    translations_file = "i18n/en.mo";
+  const auto check_language_code = [&](const std::string& c) -> bool
+  {
+    translations_file = "i18n/" + c + ".mo";
+    return iscool::files::file_exists(translations_file);
+  };
+
+  const std::string language_code = iscool::system::get_language_code();
+
+  if (!check_language_code(language_code))
+    {
+      // Try with the language without the country code: en_US -> en.
+      const std::string::size_type p = language_code.find_first_of('_');
+
+      if (p == std::string::npos
+          || !check_language_code(language_code.substr(0, p)))
+        translations_file = "i18n/en.mo";
+    }
 
   const std::unique_ptr<std::istream> mo_file =
       iscool::files::read_file(translations_file);

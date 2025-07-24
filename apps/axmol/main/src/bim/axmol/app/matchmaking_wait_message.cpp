@@ -26,9 +26,6 @@ bim::axmol::app::matchmaking_wait_message::matchmaking_wait_message()
         ic_gettext("Please wait..."), ic_gettext("Please wait..") }));
 
   load_messages(iscool::system::get_language_code());
-
-  if (m_scripts.size() == 1)
-    load_messages("en");
 }
 
 bim::axmol::app::matchmaking_wait_message::~matchmaking_wait_message() =
