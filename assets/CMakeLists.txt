@@ -23,6 +23,16 @@ endif()
 
 include(jsonlint)
 
+foreach(file animations.json colors.json resources.json)
+  json_minify(
+    "${CMAKE_CURRENT_LIST_DIR}/${file}"
+    "${BIM_GENERATED_ASSETS_DIR}/${file}"
+    minified_json_files
+  )
+endforeach()
+
+add_custom_target(minified_json DEPENDS ${minified_json_files})
+
 add_subdirectory(sprites)
 add_subdirectory(style)
 add_subdirectory(texture)
@@ -31,5 +41,12 @@ add_subdirectory(texture)
 add_subdirectory(i18n)
 
 add_custom_target(
-  assets ALL DEPENDS styles sprite-sheets textures translations
+  assets
+  ALL
+  DEPENDS
+  ${minified_json_files}
+  styles
+  sprite-sheets
+  textures
+  translations
 )
