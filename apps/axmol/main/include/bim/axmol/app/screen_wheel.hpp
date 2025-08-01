@@ -144,6 +144,7 @@ namespace bim::axmol::app
 
     std::unique_ptr<bim::net::keep_alive_exchange> m_keep_alive;
     iscool::signals::scoped_connection m_keep_alive_connection;
+    iscool::signals::scoped_connection m_session_handler_connection;
 
     bool m_silently_reconnect;
   };

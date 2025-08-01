@@ -101,11 +101,12 @@ bim::axmol::app::screen_wheel::screen_wheel(
         m_reset();
       });
 
-  m_context.get_session_handler()->connect_to_connected(
-      [this]()
-      {
-        connect_keep_alive();
-      });
+  m_session_handler_connection =
+      m_context.get_session_handler()->connect_to_connected(
+          [this]()
+          {
+            connect_keep_alive();
+          });
 
   connect_keep_alive();
 
