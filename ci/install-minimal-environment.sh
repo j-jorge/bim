@@ -87,6 +87,7 @@ fi
 case "$target_platform" in
     linux)
         packages+=(libgtk-3-dev
+                   mold
                    valgrind)
         ;;
     android)
