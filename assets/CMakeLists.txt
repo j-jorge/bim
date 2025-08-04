@@ -12,6 +12,8 @@ if (BIM_INSTALL_AXMOL_SHADERS OR BIM_TARGET STREQUAL "linux")
     get_filename_component(basename ${shader} NAME)
     configure_file(${shader} ${BIM_GENERATED_ASSETS_DIR}/${basename} COPYONLY)
   endforeach()
+
+  add_subdirectory(shaders)
 endif()
 
 # The variable is not set in the recursive invocation for a specific
@@ -45,6 +47,7 @@ add_custom_target(
   ALL
   DEPENDS
   ${minified_json_files}
+  shaders
   styles
   sprite-sheets
   textures

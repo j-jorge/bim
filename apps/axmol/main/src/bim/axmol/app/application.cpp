@@ -46,6 +46,8 @@
 #include <axmol/base/Utils.h>
 #include <axmol/platform/FileUtils.h>
 #include <axmol/platform/Image.h>
+#include <axmol/renderer/Shaders.h>
+#include <axmol/renderer/backend/ProgramManager.h>
 
 #include <ctime>
 #include <iomanip>
@@ -277,6 +279,15 @@ void bim::axmol::app::detail::persistent_systems::stop_root_scene()
 bim::axmol::app::detail::session_systems::session_systems(application& app)
   : m_application(app)
 {
+  // TODO: in a loader.
+  ax::SpriteFrameCache::getInstance()->addSpriteFramesWithFile(
+      "sprite-sheet-1.plist");
+  ax::SpriteFrameCache::getInstance()->addSpriteFramesWithFile(
+      "sprite-sheet-2.plist");
+  ax::backend::ProgramManager::getInstance()->registerCustomProgram(
+      ax::positionTextureColor_vert, "shaders/shine_fs",
+      ax::VertexLayoutType::Sprite);
+
   start_styles();
   start_main_scene();
   start_inputs();
@@ -289,6 +300,9 @@ bim::axmol::app::detail::session_systems::~session_systems()
   stop_inputs();
   stop_main_scene();
   stop_styles();
+
+  ax::SpriteFrameCache::getInstance()->removeSpriteFrames();
+  ax::backend::ProgramManager::getInstance()->unloadAllPrograms();
 }
 
 void bim::axmol::app::detail::session_systems::start_styles()
@@ -400,11 +414,6 @@ bool bim::axmol::app::application::applicationDidFinishLaunching()
       m_colors, m_style_cache, m_widget_factory, m_action_factory,
       bim::axmol::display::device_scale(1080, 2220) });
 
-  // TODO: in a loader.
-  ax::SpriteFrameCache::getInstance()->addSpriteFramesWithFile(
-      "sprite-sheet-1.plist");
-  ax::SpriteFrameCache::getInstance()->addSpriteFramesWithFile(
-      "sprite-sheet-2.plist");
   m_session_systems.reset(new detail::session_systems(*this));
 
   m_context.get_scene_lock()->instant_lock();

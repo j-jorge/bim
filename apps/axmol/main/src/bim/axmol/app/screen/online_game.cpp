@@ -58,6 +58,8 @@
 #include <bim/game/player_action.hpp>
 #include <bim/game/static_wall.hpp>
 
+#include <bim/assume.hpp>
+
 #include <iscool/log/log.hpp>
 #include <iscool/log/nature/info.hpp>
 #include <iscool/schedule/delayed_call.hpp>
@@ -81,6 +83,9 @@
 
 #include <axmol/2d/Sprite.h>
 #include <axmol/base/Director.h>
+#include <axmol/renderer/Shaders.h>
+#include <axmol/renderer/backend/ProgramManager.h>
+#include <axmol/renderer/backend/ProgramState.h>
 
 #include <entt/entity/registry.hpp>
 
@@ -254,6 +259,15 @@ bim::axmol::app::online_game::online_game(
                  bim::game::g_shield_power_up_count_in_level,
                  *style.get_declaration("power-up-shield"),
                  *m_controls->arena);
+
+  ax::backend::Program* const shine =
+      ax::backend::ProgramManager::getInstance()->loadProgram(
+          ax::positionTextureColor_vert, "shaders/shine_fs");
+
+  create_power_up_shader(m_bomb_power_ups, *shine);
+  create_power_up_shader(m_flame_power_ups, *shine);
+  create_power_up_shader(m_invisibility_power_ups, *shine);
+  create_power_up_shader(m_shield_power_ups, *shine);
 }
 
 bim::axmol::app::online_game::~online_game() = default;
@@ -341,6 +355,7 @@ void bim::axmol::app::online_game::displaying(
         m_controls->bomb_button->enable(true);
         m_last_tick_date =
             iscool::time::monotonic_now<std::chrono::nanoseconds>();
+        m_game_start_date = m_last_tick_date;
         schedule_tick();
       });
   m_contest_runner.reset(new bim::net::contest_runner(
@@ -408,6 +423,41 @@ void bim::axmol::app::online_game::configure_direction_pad()
       m_use_stick ? m_style_use_joystick : m_style_use_d_pad);
 }
 
+void bim::axmol::app::online_game::create_power_up_shader(
+    std::vector<ax::Sprite*>& sprites, ax::backend::Program& p)
+{
+  bim_assume(!sprites.empty());
+
+  ax::backend::ProgramState* ps = new ax::backend::ProgramState(&p);
+  ps->autorelease();
+
+  const ax::Sprite& ref = *sprites[0];
+
+  {
+    const ax::backend::UniformLocation location =
+        ps->getUniformLocation("sprite_rect");
+    const ax::Rect sprite_rect = ref.getTextureRect();
+    const ax::Vec4 v4(sprite_rect.origin.x, sprite_rect.origin.y,
+                      sprite_rect.size.width, sprite_rect.size.height);
+    ps->setUniform(location, &v4, sizeof(v4));
+  }
+
+  {
+    const ax::backend::UniformLocation location =
+        ps->getUniformLocation("texture_size");
+    const ax::Vec2 texture_size = ref.getTexture()->getContentSize();
+    ps->setUniform(location, &texture_size, sizeof(texture_size));
+  }
+
+  ps->updateBatchId();
+
+  for (ax::Sprite* s : sprites)
+    s->setProgramState(ps);
+
+  m_shader_programs.push_back(ps);
+  m_time_uniform.push_back(ps->getUniformLocation("time"));
+}
+
 void bim::axmol::app::online_game::schedule_tick()
 {
   const std::chrono::nanoseconds update_interval =
@@ -428,6 +478,8 @@ void bim::axmol::app::online_game::tick()
   const std::chrono::nanoseconds now =
       iscool::time::monotonic_now<std::chrono::nanoseconds>();
   const std::chrono::nanoseconds runner_step = now - m_last_tick_date;
+
+  update_shader_time(now);
 
   std::chrono::nanoseconds final_step;
 
@@ -465,6 +517,17 @@ void bim::axmol::app::online_game::tick()
           result, m_local_player_index);
       m_game_over(result);
     }
+}
+
+void bim::axmol::app::online_game::update_shader_time(
+    std::chrono::nanoseconds now) const
+{
+  const std::chrono::nanoseconds dt = now - m_game_start_date;
+  const float t =
+      std::chrono::duration_cast<std::chrono::duration<float>>(dt).count();
+
+  for (size_t i = 0, n = m_shader_programs.size(); i != n; ++i)
+    m_shader_programs[i]->setUniform(m_time_uniform[i], &t, sizeof(t));
 }
 
 template <typename T>

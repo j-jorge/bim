@@ -8,7 +8,7 @@ set -euo pipefail
 
 : "${axmol_repository:=https://github.com/j-jorge/axmol/}"
 : "${axmol_version:=2.7.0j}"
-package_revision=1
+package_revision=2
 version="$axmol_version"-"$package_revision"
 
 if [[ "$bim_build_type" = "release" ]]
@@ -58,9 +58,12 @@ axmol_link_libraries=(
 
 if [[ "$bim_package_install_platform" = "android" ]]
 then
+    ax_gles_profile=200
+    ax_use_gl=0
+
     axmol_definitions+=(
         "ANDROID=1"
-        "AX_GLES_PROFILE=200"
+        "AX_GLES_PROFILE=$ax_gles_profile"
         "AL_LIBTYPE_STATIC=1"
     )
     axmol_link_libraries+=(
@@ -71,6 +74,9 @@ then
         "OpenSLES"
     )
 else
+    ax_gles_profile=""
+    ax_use_gl=1
+
     axmol_definitions+=("LINUX=1")
     declare -a gtk_libs < <(pkg-config --libs gtk+-3.0 | sed 's/-l//g')
     axmol_link_libraries+=(
@@ -181,10 +187,16 @@ install_cmake_file()
 
     mkdir --parents "$cmake_module_dir"
 
+    cp "$source_dir"/cmake/Modules/AXSLCC.cmake "$cmake_module_dir"
+
     cat > "$cmake_module_dir"/axmol-config.cmake <<EOF
 if(TARGET axmol::axmol)
   return()
 endif()
+
+set(AX_GLES_PROFILE $ax_gles_profile)
+set(AX_USE_GL $ax_use_gl)
+include(\${CMAKE_CURRENT_LIST_DIR}/AXSLCC.cmake)
 
 find_path(
   axmol_include_dir
