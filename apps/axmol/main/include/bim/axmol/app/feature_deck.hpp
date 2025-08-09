@@ -70,7 +70,7 @@ namespace bim::axmol::app
 
   private:
     bim::axmol::input::tree m_inputs;
-    bim_declare_controls_struct(controls, m_controls, 3);
+    bim_declare_controls_struct(controls, m_controls, 4);
     bim::bit_map<bim::game::feature_flags, game_feature_button*> m_buttons;
   };
 }

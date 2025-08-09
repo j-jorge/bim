@@ -79,6 +79,32 @@ if ((CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
         )
       endfunction()
     endif()
+
+    set(use_mold_default OFF)
+  else()
+    try_compile(
+      use_mold_default
+      SOURCE_FROM_CONTENT main.cpp "int main(){return 0;}"
+      LINK_OPTIONS -fuse-ld=mold
+    )
+  endif()
+
+  option(BIM_USE_MOLD "Link with mold linker" ${use_mold_default})
+
+  if(BIM_USE_MOLD)
+    message(STATUS "Using mold linker.")
+    add_link_options(-fuse-ld=mold)
+  else()
+    message(STATUS "Using default linker.")
+  endif()
+
+  # Since the dependency scripts always enable LTO to build the
+  # dependencies, the compiler may decide to use LTO at link time even
+  # if not asked to (e.g. debug build). Consequently, we force it not
+  # to use LTO if it is not enabled at the app level.
+  if (NOT CMAKE_INTERPROCEDURAL_OPTIMIZATION)
+    message(STATUS "Disabling LTO explicitly.")
+    add_link_options(-fno-lto)
   endif()
 endif()
 

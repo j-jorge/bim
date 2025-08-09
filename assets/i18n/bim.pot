@@ -49,6 +49,9 @@ msgstr ""
 msgid "Falling blocks reduce the arena after two minutes!"
 msgstr ""
 
+msgid "Find this incredibly strong barrel, it will save you from one hit!"
+msgstr ""
+
 msgid "A thick fog covers the arena. You can't see were you did not go!"
 msgstr ""
 

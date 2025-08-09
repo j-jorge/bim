@@ -3,11 +3,12 @@
 
 #include <bim/to_underlying.hpp>
 
-const std::array<bim::game::feature_flags, 3>
+const std::array<bim::game::feature_flags, 4>
     bim::game::g_all_game_feature_flags = {
       bim::game::feature_flags::falling_blocks,
       bim::game::feature_flags::invisibility,
-      bim::game::feature_flags::fog_of_war
+      bim::game::feature_flags::fog_of_war,
+      bim::game::feature_flags::shield,
     };
 
 bim::game::feature_flags& bim::game::operator|=(feature_flags& lhs,

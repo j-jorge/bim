@@ -5,7 +5,15 @@
         [
             "app/screen/part/feature-deck-button-bounds",
             {
-                "anchor.reference.x": 0.24
+                "anchor.reference.x": 0.2
+            }
+        ],
+
+        "feature_shield":
+        [
+            "app/screen/part/feature-deck-button-bounds",
+            {
+                "anchor.reference.x": 0.4
             }
         ],
 
@@ -13,7 +21,7 @@
         [
             "app/screen/part/feature-deck-button-bounds",
             {
-                "anchor.reference.x": 0.5
+                "anchor.reference.x": 0.6
             }
         ],
 
@@ -21,7 +29,7 @@
         [
             "app/screen/part/feature-deck-button-bounds",
             {
-                "anchor.reference.x": 0.76
+                "anchor.reference.x": 0.8
             }
         ]
     }

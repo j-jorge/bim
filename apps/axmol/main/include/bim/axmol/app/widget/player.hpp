@@ -39,9 +39,14 @@ namespace bim::axmol::app
                    const bim::game::player_animations& player_animations,
                    std::uint8_t player_index);
 
-    void set_animation(const bim::game::animation_state& state);
+    void set_animation(bool shield, const bim::game::animation_state& state);
 
     void setContentSize(const ax::Size& size) override;
+
+  private:
+    using animation_map =
+        std::unordered_map<bim::game::animation_id,
+                           const bim::axmol::widget::animation*>;
 
   private:
     bool init() override;
@@ -52,8 +57,7 @@ namespace bim::axmol::app
 
     const iscool::style::declaration& m_style_bounds;
 
-    std::unordered_map<bim::game::animation_id,
-                       const bim::axmol::widget::animation*>
-        m_animations;
+    animation_map m_animations;
+    animation_map m_shield_animations;
   };
 }

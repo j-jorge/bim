@@ -49,6 +49,13 @@ namespace bim::net
 namespace ax
 {
   class Sprite;
+
+  namespace backend
+  {
+    class Program;
+    class ProgramState;
+    struct UniformLocation;
+  }
 }
 
 namespace iscool::net
@@ -106,10 +113,14 @@ namespace bim::axmol::app
     void closing();
 
   private:
+    void create_power_up_shader(std::vector<ax::Sprite*>& sprites,
+                                ax::backend::Program& p);
     void configure_direction_pad();
 
     void schedule_tick();
     void tick();
+
+    void update_shader_time(std::chrono::nanoseconds now) const;
 
     template <typename T>
     void resize_to_block_width(const std::vector<T*>& nodes) const;
@@ -130,9 +141,8 @@ namespace bim::axmol::app
                         const bim::game::animation_state& a);
     void display_bombs();
     void display_flames();
-    void display_bomb_power_ups();
-    void display_flame_power_ups();
-    void display_invisibility_power_ups();
+    template <typename T>
+    void display_power_ups(const std::vector<ax::Sprite*>& assets);
     void display_main_timer();
 
     void display_at(std::size_t arena_y, ax::Node& node,
@@ -175,6 +185,11 @@ namespace bim::axmol::app
     std::vector<ax::Sprite*> m_bomb_power_ups;
     std::vector<ax::Sprite*> m_flame_power_ups;
     std::vector<ax::Sprite*> m_invisibility_power_ups;
+    std::vector<ax::Sprite*> m_shield_power_ups;
+
+    std::vector<ax::backend::ProgramState*> m_shader_programs;
+    std::vector<ax::backend::UniformLocation> m_time_uniform;
+    std::chrono::nanoseconds m_game_start_date;
 
     std::unique_ptr<fog_display> m_fog;
 

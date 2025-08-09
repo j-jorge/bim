@@ -25,7 +25,8 @@ static void dump_timeline(const bim::game::contest_timeline& timeline)
   bim::game::contest contest(fingerprint);
 
   std::cout << "Initial state\n";
-  bim::game::dump_arena(contest.arena(), contest.registry());
+  bim::game::dump_arena(contest.arena(), contest.context(),
+                        contest.registry());
   std::cout << page_separator << '\n';
 
   bim::game::contest_result contest_result;
@@ -36,14 +37,16 @@ static void dump_timeline(const bim::game::contest_timeline& timeline)
 
       std::cout << "When tick #" << t << " begins.\n";
 
-      bim::game::dump_arena(contest.arena(), contest.registry());
+      bim::game::dump_arena(contest.arena(), contest.context(),
+                            contest.registry());
       std::cout << page_separator << '\n';
 
       contest_result = contest.tick();
     }
 
   std::cout << "Final state.\n";
-  bim::game::dump_arena(contest.arena(), contest.registry());
+  bim::game::dump_arena(contest.arena(), contest.context(),
+                        contest.registry());
   std::cout << page_separator << '\n';
 
   if (contest_result.still_running())

@@ -19,8 +19,9 @@
 #define x_widget_type_name controls
 #define x_widget_controls                                                     \
   x_widget(game_feature_button, feature_falling_blocks)                       \
-      x_widget(game_feature_button, feature_invisibility)                     \
-          x_widget(game_feature_button, feature_fog_of_war)
+      x_widget(game_feature_button, feature_shield)                           \
+          x_widget(game_feature_button, feature_invisibility)                 \
+              x_widget(game_feature_button, feature_fog_of_war)
 #include <bim/axmol/widget/implement_controls_struct.hpp>
 
 IMPLEMENT_SIGNAL(bim::axmol::app::feature_deck, clicked, m_clicked);
@@ -45,6 +46,8 @@ bim::axmol::app::feature_deck::feature_deck(
 
   configure_button(*m_controls->feature_falling_blocks,
                    bim::game::feature_flags::falling_blocks);
+  configure_button(*m_controls->feature_shield,
+                   bim::game::feature_flags::shield);
   configure_button(*m_controls->feature_invisibility,
                    bim::game::feature_flags::invisibility);
   configure_button(*m_controls->feature_fog_of_war,

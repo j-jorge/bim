@@ -42,6 +42,15 @@ void bim::axmol::app::player::configure(
   const std::string suffix = '_' + std::to_string(player_index + 1);
   std::string name;
 
+  auto add_shield_animation = [&](bim::game::animation_id id,
+                                  std::string_view n) mutable -> void
+  {
+    name = "shield_";
+    name += n;
+    name += suffix;
+    m_shield_animations[id] = &animation_cache.get(name);
+  };
+
   auto add_animation = [&](bim::game::animation_id id,
                            std::string_view n) mutable -> void
   {
@@ -51,26 +60,42 @@ void bim::axmol::app::player::configure(
   };
 
 #define add_animation_n(n) add_animation(player_animations.n, #n)
+#define add_shield_animation_n(n)                                             \
+  add_animation(player_animations.n, #n);                                     \
+  add_shield_animation(player_animations.n, #n)
 
-  add_animation_n(idle_down);
-  add_animation_n(idle_left);
-  add_animation_n(idle_right);
-  add_animation_n(idle_up);
+  add_shield_animation_n(idle_down);
+  add_shield_animation_n(idle_left);
+  add_shield_animation_n(idle_right);
+  add_shield_animation_n(idle_up);
 
-  add_animation_n(walk_down);
-  add_animation_n(walk_left);
-  add_animation_n(walk_right);
-  add_animation_n(walk_up);
+  add_shield_animation_n(walk_down);
+  add_shield_animation_n(walk_left);
+  add_shield_animation_n(walk_right);
+  add_shield_animation_n(walk_up);
 
   add_animation_n(die);
+#undef add_shield_animation_n
 #undef add_animation_n
 
   m_animations[player_animations.burn] = &animation_cache.get("burn");
 }
 
 void bim::axmol::app::player::set_animation(
-    const bim::game::animation_state& state)
+    bool shield, const bim::game::animation_state& state)
 {
+  if (shield)
+    {
+      const animation_map::const_iterator it =
+          m_shield_animations.find(state.model);
+
+      if (it != m_shield_animations.end())
+        {
+          it->second->apply(*m_controls->body, state);
+          return;
+        }
+    }
+
   assert(m_animations.find(state.model) != m_animations.end());
 
   m_animations.find(state.model)->second->apply(*m_controls->body, state);

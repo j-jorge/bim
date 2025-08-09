@@ -9,6 +9,7 @@
 #include <bim/game/component/invisibility_power_up_spawner.hpp>
 #include <bim/game/component/player.hpp>
 #include <bim/game/component/position_on_grid.hpp>
+#include <bim/game/component/shield_power_up_spawner.hpp>
 #include <bim/game/constant/max_player_count.hpp>
 #include <bim/game/factory/brick_wall.hpp>
 
@@ -187,6 +188,12 @@ void bim::game::insert_random_brick_walls(arena& arena,
 
           return valid_invisibility_power_up_position(p.x, p.y, width, height);
         });
+
+  // The shield power-ups.
+  if (!!(features & feature_flags::shield))
+    generate_power_up_spawners<shield_power_up_spawner>(
+        registry, brick_walls, brick_wall_count,
+        g_shield_power_up_count_in_level, random_generator);
 
   // The bomb power-ups.
   generate_power_up_spawners<bomb_power_up_spawner>(

@@ -15,6 +15,7 @@ namespace bim::game
   constexpr std::uint8_t g_flame_power_up_count_in_level = 8;
   constexpr std::uint8_t g_bomb_power_up_count_in_level = 10;
   constexpr std::uint8_t g_invisibility_power_up_count_in_level = 4;
+  constexpr std::uint8_t g_shield_power_up_count_in_level = 4;
 
   void generate_basic_level_structure(arena& arena);
   void insert_random_brick_walls(arena& arena, entt::registry& registry,

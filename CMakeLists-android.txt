@@ -6,6 +6,10 @@ find_program(identify identify REQUIRED)
 find_program(magick magick REQUIRED)
 find_program(paco_info_bin paco-info REQUIRED)
 
+# The directory with the binaries from the host, needed to get axslcc
+# in Android builds below.
+cmake_path(GET magick PARENT_PATH host_bin)
+
 option(
   BIM_ANDROID_DEV
   "Create an Android build for developers, with a different app ID."
@@ -137,6 +141,7 @@ function(recursive_android_build)
       -DCMAKE_PREFIX_PATH="${BIM_TARGET_PREFIX}"
       -DCMAKE_UNITY_BUILD=${CMAKE_UNITY_BUILD}
       -DCMAKE_UNITY_BUILD_BATCH_SIZE=${CMAKE_UNITY_BUILD_BATCH_SIZE}
+      -DBIM_HOST_BIN="${host_bin}"
       -DBIM_BUILDING_FOR_ANDROID=TRUE
       -DBIM_BUILD_TESTS=FALSE
       -DBIM_BUILD_SERVER=FALSE
@@ -145,10 +150,16 @@ function(recursive_android_build)
       -DBIM_GENERATED_ASSETS_DIR="${BIM_GENERATED_ASSETS_DIR}"
     )
 
+  set(bim_targets bim)
+
+  if(ARG_AXMOL_SHADERS)
+    set(bim_targets ${bim_targets} shaders)
+  endif()
+
   add_custom_target("${ARG_ARCH}"
     COMMAND
       "${CMAKE_COMMAND}"
-      --build "${CMAKE_CURRENT_BINARY_DIR}/${ARG_ARCH}" --target bim
+      --build "${CMAKE_CURRENT_BINARY_DIR}/${ARG_ARCH}" --target ${bim_targets}
     COMMAND
       "${CMAKE_COMMAND}" -E make_directory "${lib_install_dir}"
     COMMAND

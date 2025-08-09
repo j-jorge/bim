@@ -12,6 +12,8 @@ if (BIM_INSTALL_AXMOL_SHADERS OR BIM_TARGET STREQUAL "linux")
     get_filename_component(basename ${shader} NAME)
     configure_file(${shader} ${BIM_GENERATED_ASSETS_DIR}/${basename} COPYONLY)
   endforeach()
+
+  add_subdirectory(shaders)
 endif()
 
 # The variable is not set in the recursive invocation for a specific
@@ -23,6 +25,16 @@ endif()
 
 include(jsonlint)
 
+foreach(file animations.json colors.json resources.json)
+  json_minify(
+    "${CMAKE_CURRENT_LIST_DIR}/${file}"
+    "${BIM_GENERATED_ASSETS_DIR}/${file}"
+    minified_json_files
+  )
+endforeach()
+
+add_custom_target(minified_json DEPENDS ${minified_json_files})
+
 add_subdirectory(sprites)
 add_subdirectory(style)
 add_subdirectory(texture)
@@ -31,5 +43,13 @@ add_subdirectory(texture)
 add_subdirectory(i18n)
 
 add_custom_target(
-  assets ALL DEPENDS styles sprite-sheets textures translations
+  assets
+  ALL
+  DEPENDS
+  ${minified_json_files}
+  shaders
+  styles
+  sprite-sheets
+  textures
+  translations
 )
