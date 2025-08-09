@@ -73,7 +73,6 @@ namespace bim::axmol::app
   private:
     bim::axmol::input::single_key_observer_handle m_escape;
 
-    
     bim_declare_controls_struct(controls, m_controls, 11);
     const iscool::style::declaration& m_style_bounds;
 
