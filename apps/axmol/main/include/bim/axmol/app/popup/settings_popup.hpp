@@ -3,11 +3,10 @@
 
 #include <bim/axmol/widget/declare_controls_struct.hpp>
 
+#include <bim/axmol/input/observer/single_key_observer_handle.hpp>
 #include <bim/axmol/input/tree.hpp>
 
 #include <iscool/context.hpp>
-
-#include <bim/axmol/input/observer/single_key_observer_handle.hpp>
 
 #include <memory>
 
