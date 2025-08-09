@@ -7,6 +7,9 @@
 #include <bim/axmol/app/preference/controls.hpp>
 #include <bim/axmol/app/preference/haptic.hpp>
 
+#include <bim/axmol/input/key_observer_handle.impl.hpp>
+#include <bim/axmol/input/observer/single_key_observer.hpp>
+
 #include <bim/axmol/widget/apply_display.hpp>
 #include <bim/axmol/widget/factory/label.hpp>
 #include <bim/axmol/widget/implement_widget.hpp>
@@ -21,6 +24,7 @@
 #include <iscool/system/send_mail.hpp>
 
 #include <axmol/2d/Label.h>
+#include <axmol/base/EventKeyboard.h>
 
 #define x_widget_scope bim::axmol::app::settings_popup::
 #define x_widget_type_name controls
@@ -48,6 +52,7 @@
 bim::axmol::app::settings_popup::settings_popup(
     const context& context, const iscool::style::declaration& style)
   : m_context(context)
+  , m_escape(ax::EventKeyboard::KeyCode::KEY_BACK)
   , m_controls(context.get_widget_context(), *style.get_declaration("widgets"))
   , m_style_bounds(*style.get_declaration("bounds"))
   , m_style_pad_on_the_left(
@@ -58,6 +63,7 @@ bim::axmol::app::settings_popup::settings_popup(
   , m_style_directions_pad(*style.get_declaration("display.d-pad-pad"))
   , m_popup(new popup(context, *style.get_declaration("popup")))
 {
+  m_inputs.push_back(m_escape);
   m_inputs.push_back(m_controls->close_button->input_node());
   m_inputs.push_back(m_controls->bluesky_button->input_node());
   m_inputs.push_back(m_controls->github_button->input_node());
@@ -73,6 +79,12 @@ bim::axmol::app::settings_popup::settings_popup(
       fmt::format(fmt::runtime(ic_gettext("Version {}")), bim::version));
 
   m_controls->close_button->connect_to_clicked(
+      [this]()
+      {
+        m_popup->hide();
+      });
+
+  m_escape->connect_to_released(
       [this]()
       {
         m_popup->hide();
