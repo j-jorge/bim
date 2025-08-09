@@ -7,6 +7,8 @@
 
 #include <iscool/context.hpp>
 
+#include <bim/axmol/input/observer/single_key_observer_handle.hpp>
+
 #include <memory>
 
 namespace iscool::audio
@@ -69,6 +71,9 @@ namespace bim::axmol::app
     void set_stick_or_pad_display(bool use_stick);
 
   private:
+    bim::axmol::input::single_key_observer_handle m_escape;
+
+    
     bim_declare_controls_struct(controls, m_controls, 11);
     const iscool::style::declaration& m_style_bounds;
 

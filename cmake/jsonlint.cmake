@@ -15,7 +15,7 @@ function(jsonlint file target_var)
   add_custom_command(
     OUTPUT "${relative}"
     COMMAND "${CMAKE_COMMAND}" -E make_directory "${target_dir}"
-    COMMAND "${Python3_EXECUTABLE}" -m json.tool --compact "${input}" "${target}"
+    COMMAND "${Python3_EXECUTABLE}" -m json.tool "${input}" "${target}"
     DEPENDS "${input}"
     WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
   )
