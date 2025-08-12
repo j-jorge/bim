@@ -112,6 +112,7 @@ bim::axmol::app::screen_wheel::screen_wheel(
 
   // Start on the lobby, In the initial state
   m_active_view = m_controls->lobby;
+  m_lobby->displaying();
   lobby_displayed();
 }
 
@@ -234,9 +235,8 @@ void bim::axmol::app::screen_wheel::animate_matchmaking_to_lobby()
 
   m_inputs.erase(m_matchmaking->input_node());
   m_matchmaking->closing();
-
+  m_lobby->displaying();
   switch_view(*m_controls->lobby);
-
   lobby_displayed();
 }
 
@@ -258,9 +258,8 @@ void bim::axmol::app::screen_wheel::animate_end_game_to_lobby()
 {
   m_inputs.erase(m_end_game->input_node());
   m_end_game->closing();
-
+  m_lobby->displaying();
   switch_view(*m_controls->lobby);
-
   lobby_displayed();
 }
 
@@ -289,9 +288,8 @@ void bim::axmol::app::screen_wheel::animate_lobby_to_shop()
 void bim::axmol::app::screen_wheel::animate_shop_to_lobby()
 {
   m_inputs.erase(m_shop->input_node());
-
+  m_lobby->displaying();
   switch_view(*m_controls->lobby);
-
   lobby_displayed();
 }
 

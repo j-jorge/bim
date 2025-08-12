@@ -4,17 +4,23 @@
 #include <bim/axmol/app/part/wallet.hpp>
 #include <bim/axmol/app/popup/debug_popup.hpp>
 #include <bim/axmol/app/popup/settings_popup.hpp>
+#include <bim/axmol/app/preference/arena_stats.hpp>
 #include <bim/axmol/app/shop_support.hpp>
 
 #include <bim/axmol/input/observer/tap_observer.hpp>
 #include <bim/axmol/input/touch_observer_handle.impl.hpp>
+#include <bim/axmol/widget/factory/label.hpp>
 #include <bim/axmol/widget/merge_named_node_groups.hpp>
 #include <bim/axmol/widget/named_node_group.hpp>
 #include <bim/axmol/widget/ui/button.hpp>
 
 #include <bim/net/session_handler.hpp>
 
+#include <iscool/i18n/gettext.hpp>
+#include <iscool/i18n/numeric.hpp>
 #include <iscool/signals/implement_signal.hpp>
+
+#include <axmol/2d/Label.h>
 
 #define x_widget_scope bim::axmol::app::lobby::
 #define x_widget_type_name controls
@@ -22,7 +28,12 @@
   x_widget(bim::axmol::widget::button, settings_button)                       \
       x_widget(bim::axmol::widget::button, play_button)                       \
           x_widget(bim::axmol::widget::button, debug_button)                  \
-              x_widget(ax::Node, debug_activator)
+              x_widget(ax::Node, debug_activator)                             \
+                  x_widget(ax::Label, arena_games_total)                      \
+                      x_widget(ax::Label, arena_victories)                    \
+                          x_widget(ax::Label, arena_defeats)                  \
+                              x_widget(ax::Label, arena_draws)
+
 #include <bim/axmol/widget/implement_controls_struct.hpp>
 
 IMPLEMENT_SIGNAL(bim::axmol::app::lobby, play, m_play);
@@ -106,7 +117,6 @@ void bim::axmol::app::lobby::attached()
 void bim::axmol::app::lobby::displayed()
 {
   m_wallet->enter();
-
   bim::net::session_handler& session_handler =
       *m_context.get_session_handler();
 
@@ -115,8 +125,31 @@ void bim::axmol::app::lobby::displayed()
       {
         apply_connected_state();
       });
-
   apply_connected_state();
+}
+
+void bim::axmol::app::lobby::displaying()
+{
+  const iscool::preferences::local_preferences& preferences =
+      *m_context.get_local_preferences();
+  std::int64_t total_games = bim::axmol::app::games_in_arena(preferences);
+  std::int64_t games_win = bim::axmol::app::victories_in_arena(preferences);
+  std::int64_t games_defeat = bim::axmol::app::defeats_in_arena(preferences);
+  std::int64_t games_draw = total_games - games_win - games_defeat;
+  m_controls->arena_games_total->setString(
+      fmt::format(fmt::runtime(ic_ngettext("{} game played", "{} games played",
+                                           total_games)),
+                  total_games));
+  m_controls->arena_victories->setString(fmt::format(
+      fmt::runtime(ic_ngettext("{} game won", "{} games won", games_win)),
+      games_win));
+  m_controls->arena_defeats->setString(
+      fmt::format(fmt::runtime(ic_ngettext("{} game defeat", "{} games defeat",
+                                           games_defeat)),
+                  games_defeat));
+  m_controls->arena_draws->setString(fmt::format(
+      fmt::runtime(ic_ngettext("{} game draw", "{} games draw", games_draw)),
+      games_draw));
 }
 
 void bim::axmol::app::lobby::closing()
