@@ -22,6 +22,38 @@
 
         "stripe-message": [ "layout/center" ],
 
+        "arena_games_total":
+        [{
+            "anchor.x": 0.5,
+            "anchor.y": 0.5,
+            "anchor.reference.x": 0.5,
+            "anchor.reference.y": 0.7
+        }],
+
+        "arena_victories":
+        [{
+            "anchor.x": 0.5,
+            "anchor.y": 0.5,
+            "anchor.reference.x": 0.5,
+            "anchor.reference.y": 0.6
+        }],
+
+        "arena_defeats":
+        [{
+            "anchor.x": 0.5,
+            "anchor.y": 0.5,
+            "anchor.reference.x": 0.5,
+            "anchor.reference.y": 0.5
+        }],
+
+        "arena_draws":
+        [{
+            "anchor.x": 0.5,
+            "anchor.y": 0.5,
+            "anchor.reference.x": 0.5,
+            "anchor.reference.y": 0.4
+        }],
+
         "settings_button":
         [{
             "anchor.x": 0.5,

@@ -77,6 +77,7 @@ namespace bim::axmol::app
     const bim::axmol::widget::named_node_group& nodes() const;
 
     void attached();
+    void displaying();
     void displayed();
     void closing();
 
@@ -88,7 +89,7 @@ namespace bim::axmol::app
 
   private:
     bim::axmol::input::tree m_inputs;
-    bim_declare_controls_struct(controls, m_controls, 4);
+    bim_declare_controls_struct(controls, m_controls, 8);
 
     const std::unique_ptr<wallet> m_wallet;
 

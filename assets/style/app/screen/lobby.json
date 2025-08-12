@@ -40,6 +40,66 @@
                     }
                 ],
 
+                "arena_games_total":
+                [
+                    "font/fancy-regular",
+                    {
+                        "font.size": 48,
+                        "font.color": "white",
+                        "shadow.color": "cod-gray",
+                        "shadow.offset.y": -4,
+                        "outline.color": "cod-gray",
+                        "outline.size": 5,
+                        "align.horizontal": "center",
+                        "font.italics": true
+                    }
+                ],
+
+                "arena_victories":
+                [
+                    "font/fancy-regular",
+                    {
+                        "font.size": 48,
+                        "font.color": "white",
+                        "shadow.color": "cod-gray",
+                        "shadow.offset.y": -4,
+                        "outline.color": "cod-gray",
+                        "outline.size": 5,
+                        "align.horizontal": "center",
+                        "font.italics": true
+                    }
+                ],
+        
+                "arena_defeats": 
+                [
+                    "font/fancy-regular",
+                    {
+                        "font.size": 48,
+                        "font.color": "white",
+                        "shadow.color": "cod-gray",
+                        "shadow.offset.y": -4,
+                        "outline.color": "cod-gray",
+                        "outline.size": 5,
+                        "align.horizontal": "center",
+                        "font.italics": true
+                    }
+                ],
+
+                "arena_draws":
+                [
+                    "font/fancy-regular",
+                    {
+                        "font.size": 48,
+                        "font.color": "white",
+                        "shadow.color": "cod-gray",
+                        "shadow.offset.y": -4,
+                        "outline.color": "cod-gray",
+                        "outline.size": 5,
+                        "align.horizontal": "center",
+                        "font.italics": true
+                    }
+                ],
+
                 "settings_button":
                 [
                     "button/white-with-icon",
