@@ -1,471 +1,503 @@
 {
-    "style":
-    {
-        "popup": [ "popup/full-screen" ],
+  "style": {
+    "popup": [
+      "popup/full-screen"
+    ],
 
-        "widgets":
-        [{
-            "title":
-            [
-                "font/bold",
-                {
-                    "instantiate": "ax::Label",
-                    "text.i18n": "Settings",
-                    "font.color": "desert-storm",
-                    "font.size": 90
-                }
+    "widgets": [
+      {
+        "title": [
+          "font/bold",
+          {
+            "instantiate": "ax::Label",
+            "text.i18n": "Settings",
+            "font.color": "desert-storm",
+            "font.size": 90
+          }
+        ],
+
+        "music-icon": [
+          {
+            "instantiate": "ax::Sprite",
+            "frame": "sprites/menu/music.png",
+            "color": "desert-storm"
+          }
+        ],
+
+        "music-label": [
+          "popup/settings/font/main",
+          {
+            "text.i18n": "Music"
+          }
+        ],
+
+        "music": [
+          "toggle/flat"
+        ],
+
+        "sound-effects-icon": [
+          {
+            "instantiate": "ax::Sprite",
+            "frame": "sprites/menu/audio.png",
+            "color": "desert-storm"
+          }
+        ],
+
+        "sound-effects-label": [
+          "popup/settings/font/main",
+          {
+            "text.i18n": "Sound effects"
+          }
+        ],
+
+        "sound_effects": [
+          "toggle/flat"
+        ],
+
+        "vibrations-icon": [
+          {
+            "instantiate": "ax::Sprite",
+            "frame": "sprites/menu/vibration.png",
+            "color": "desert-storm"
+          }
+        ],
+
+        "vibrations-label": [
+          "popup/settings/font/main",
+          {
+            "text.i18n": "Vibrations"
+          }
+        ],
+
+        "vibrations": [
+          "toggle/flat"
+        ],
+
+        "d-pad-position-icon": [
+          {
+            "instantiate": "ax::Sprite",
+            "frame": "sprites/menu/gamepad.png",
+            "color": "desert-storm"
+          }
+        ],
+
+        "d-pad-position-label": [
+          "popup/settings/font/main",
+          {
+            "text.i18n": "Controls"
+          }
+        ],
+
+        "d-pad-position-label-description-right": [
+          "popup/settings/font/small",
+          {
+            "wrap": true,
+            "text.i18n": "Directions on the right, actions on the left."
+          }
+        ],
+
+        "d-pad-position-label-description-left": [
+          "popup/settings/font/small",
+          {
+            "wrap": true,
+            "text.i18n": "Directions on the left, actions on the right."
+          }
+        ],
+
+        "d_pad_position": [
+          "popup/settings/toggle/controls"
+        ],
+
+        "d-pad-kind-icon": [
+          {
+            "instantiate": "ax::Sprite",
+            "frame": "sprites/menu/joystick.png",
+            "color": "desert-storm"
+          }
+        ],
+
+        "d-pad-kind-label": [
+          "popup/settings/font/main",
+          {
+            "text.i18n": "Directions kind"
+          }
+        ],
+
+        "d-pad-kind-label-description-stick": [
+          "popup/settings/font/small",
+          {
+            "wrap": true,
+            "text.i18n":
+                "Analog stick, it pops where you tap and follows the drag."
+          }
+        ],
+
+        "d-pad-kind-label-description-pad": [
+          "popup/settings/font/small",
+          {
+            "wrap": true,
+            "text.i18n": "Directional pad, at a fixed position on the screen."
+          }
+        ],
+
+        "d_pad_kind": [
+          "toggle/flat",
+          {
+            "widgets/label-off/text.i18n": "D-pad",
+            "widgets/label-on/text.i18n": "Stick"
+          }
+        ],
+
+        "bluesky_button": [
+          "button/white-with-icon",
+          {
+            "widgets/icon": [
+              {
+                "frame": "sprites/menu/bluesky.png",
+                "color": "white"
+              }
             ],
 
-            "music-icon":
-            [{
-                "instantiate": "ax::Sprite",
-                "frame": "sprites/menu/music.png",
-                "color": "desert-storm"
-            }],
+            "bounds/icon/height.percents": 50
+          }
+        ],
 
-            "music-label":
-            [
-                "popup/settings/font/main",
-                {
-                    "text.i18n": "Music"
-                }
-            ],
+        "github_button": [
+          "button/white-with-icon",
+          {
+            "widgets/icon/frame": "sprites/menu/github.png",
+            "bounds/icon/height.percents": 50
+          }
+        ],
 
-            "music": [ "toggle/flat" ],
+        "mail_button": [
+          "button/white-with-icon",
+          {
+            "widgets/icon/frame": "sprites/menu/mail.png",
+            "bounds/icon/height.percents": 40
+          }
+        ],
 
-            "sound-effects-icon":
-            [{
-                "instantiate": "ax::Sprite",
-                "frame": "sprites/menu/audio.png",
-                "color": "desert-storm"
-            }],
+        "share_button": [
+          "button/white-with-icon",
+          {
+            "widgets/icon/frame": "sprites/menu/share.png",
+            "bounds/icon/height.percents": 50
+          }
+        ],
 
-            "sound-effects-label":
-            [
-                "popup/settings/font/main",
-                {
-                    "text.i18n": "Sound effects"
-                }
-            ],
+        "close_button": [
+          "button/yellow-with-label",
+          {
+            "widgets/label/text.i18n": "OK",
+            "z-order": 0
+          }
+        ],
 
-            "sound_effects": [ "toggle/flat" ],
+        "version": [
+          "popup/settings/font/small"
+        ]
+      }
+    ],
 
-            "vibrations-icon":
-            [{
-                "instantiate": "ax::Sprite",
-                "frame": "sprites/menu/vibration.png",
-                "color": "desert-storm"
-            }],
+    "bounds": [
+      {
+        "title": [
+          {
+            "anchor.x": 0.5,
+            "anchor.y": 0.5,
+            "anchor.reference.x": 0.5,
+            "anchor.reference.y": 0.95
+          }
+        ],
 
-            "vibrations-label":
-            [
-                "popup/settings/font/main",
-                {
-                    "text.i18n": "Vibrations"
-                }
-            ],
+        "music-icon": [
+          {
+            "anchor.x": 0.5,
+            "anchor.y": 0.5,
+            "anchor.reference.x": 0.1,
+            "anchor.reference.y": 0.8,
+            "keep-ratio": true,
+            "height.percents": 5
+          }
+        ],
 
-            "vibrations": [ "toggle/flat" ],
+        "music-label": [
+          {
+            "anchor.x": 0,
+            "anchor.y": 0.5,
+            "anchor.reference.x": 0.16,
+            "anchor.reference.y": 0.8
+          }
+        ],
 
-            "d-pad-position-icon":
-            [{
-                "instantiate": "ax::Sprite",
-                "frame": "sprites/menu/gamepad.png",
-                "color": "desert-storm"
-            }],
+        "music": [
+          {
+            "anchor.x": 0.5,
+            "anchor.y": 0.5,
+            "anchor.reference.x": 0.8,
+            "anchor.reference.y": 0.8,
+            "width.percents": 30,
+            "height.percents": 10
+          }
+        ],
 
-            "d-pad-position-label":
-            [
-                "popup/settings/font/main",
-                {
-                    "text.i18n": "Controls"
-                }
-            ],
+        "sound-effects-icon": [
+          {
+            "anchor.x": 0.5,
+            "anchor.y": 0.5,
+            "anchor.reference.x": 0.1,
+            "anchor.reference.y": 0.71,
+            "keep-ratio": true,
+            "height.percents": 5
+          }
+        ],
 
-            "d-pad-position-label-description-right":
-            [
-                "popup/settings/font/small",
-                {
-                    "wrap": true,
-                    "text.i18n": "Directions on the right, actions on the left."
-                }
-            ],
+        "sound-effects-label": [
+          {
+            "anchor.x": 0,
+            "anchor.y": 0.5,
+            "anchor.reference.x": 0.16,
+            "anchor.reference.y": 0.71
+          }
+        ],
 
+        "sound_effects": [
+          {
+            "anchor.x": 0.5,
+            "anchor.y": 0.5,
+            "anchor.reference.x": 0.8,
+            "anchor.reference.y": 0.71,
+            "width.percents": 30,
+            "height.percents": 10
+          }
+        ],
 
-            "d-pad-position-label-description-left":
-            [
-                "popup/settings/font/small",
-                {
-                    "wrap": true,
-                    "text.i18n": "Directions on the left, actions on the right."
-                }
-            ],
+        "vibrations-icon": [
+          {
+            "anchor.x": 0.5,
+            "anchor.y": 0.5,
+            "anchor.reference.x": 0.1,
+            "anchor.reference.y": 0.62,
+            "keep-ratio": true,
+            "height.percents": 5
+          }
+        ],
 
-            "d_pad_position": [ "popup/settings/toggle/controls" ],
+        "vibrations-label": [
+          {
+            "anchor.x": 0,
+            "anchor.y": 0.5,
+            "anchor.reference.x": 0.16,
+            "anchor.reference.y": 0.62
+          }
+        ],
 
-            "d-pad-kind-icon":
-            [{
-                "instantiate": "ax::Sprite",
-                "frame": "sprites/menu/joystick.png",
-                "color": "desert-storm"
-            }],
+        "vibrations": [
+          {
+            "anchor.x": 0.5,
+            "anchor.y": 0.5,
+            "anchor.reference.x": 0.8,
+            "anchor.reference.y": 0.62,
+            "width.percents": 30,
+            "height.percents": 10
+          }
+        ],
 
-            "d-pad-kind-label":
-            [
-                "popup/settings/font/main",
-                {
-                    "text.i18n": "Directions kind"
-                }
-            ],
+        "d-pad-position-icon": [
+          {
+            "anchor.x": 0.5,
+            "anchor.y": 0.5,
+            "anchor.reference.x": 0.1,
+            "anchor.reference.y": 0.53,
+            "keep-ratio": true,
+            "height.percents": 5
+          }
+        ],
 
-            "d-pad-kind-label-description-stick":
-            [
-                "popup/settings/font/small",
-                {
-                    "wrap": true,
-                    "text.i18n": "Analog stick, it pops where you tap and follows the drag."
-                }
-            ],
+        "d-pad-position-label": [
+          {
+            "anchor.x": 0,
+            "anchor.y": 0.5,
+            "anchor.reference.x": 0.16,
+            "anchor.reference.y": 0.53
+          }
+        ],
 
+        "d-pad-position-label-description-left": [
+          {
+            "anchor.x": 0,
+            "anchor.y": 1,
+            "anchor.reference.x": 0.16,
+            "anchor.reference.y": 0.515,
+            "width.percents": 50
+          }
+        ],
 
-            "d-pad-kind-label-description-pad":
-            [
-                "popup/settings/font/small",
-                {
-                    "wrap": true,
-                    "text.i18n": "Directional pad, at a fixed position on the screen."
-                }
-            ],
+        "d-pad-position-label-description-right": [
+          {
+            "anchor.x": 0,
+            "anchor.y": 1,
+            "anchor.reference.x": 0.16,
+            "anchor.reference.y": 0.515,
+            "width.percents": 50
+          }
+        ],
 
-            "d_pad_kind":
-            [
-                "toggle/flat",
-                {
-                    "widgets/label-off/text.i18n": "D-pad",
-                    "widgets/label-on/text.i18n": "Stick"
-                }
-            ],
+        "d_pad_position": [
+          {
+            "anchor.x": 0.5,
+            "anchor.y": 0.5,
+            "anchor.reference.x": 0.8,
+            "anchor.reference.y": 0.53,
+            "width.percents": 30,
+            "height.percents": 10
+          }
+        ],
 
-            "bluesky_button":
-            [
-                "button/white-with-icon",
-                {
-                    "widgets/icon":
-                    [{
-                        "frame": "sprites/menu/bluesky.png",
-                        "color": "white"
-                    }],
+        "d-pad-kind-icon": [
+          {
+            "anchor.x": 0.5,
+            "anchor.y": 0.5,
+            "anchor.reference.x": 0.1,
+            "anchor.reference.y": 0.44,
+            "keep-ratio": true,
+            "height.percents": 5
+          }
+        ],
 
-                    "bounds/icon/height.percents": 50
-                }
-            ],
+        "d-pad-kind-label": [
+          {
+            "anchor.x": 0,
+            "anchor.y": 0.5,
+            "anchor.reference.x": 0.16,
+            "anchor.reference.y": 0.44
+          }
+        ],
 
-            "github_button":
-            [
-                "button/white-with-icon",
-                {
-                    "widgets/icon/frame": "sprites/menu/github.png",
-                    "bounds/icon/height.percents": 50
-                }
-            ],
+        "d-pad-kind-label-description-stick": [
+          {
+            "anchor.x": 0,
+            "anchor.y": 1,
+            "anchor.reference.x": 0.16,
+            "anchor.reference.y": 0.425,
+            "width.percents": 50
+          }
+        ],
 
-            "mail_button":
-            [
-                "button/white-with-icon",
-                {
-                    "widgets/icon/frame": "sprites/menu/mail.png",
-                    "bounds/icon/height.percents": 40
-                }
-            ],
+        "d-pad-kind-label-description-pad": [
+          {
+            "anchor.x": 0,
+            "anchor.y": 1,
+            "anchor.reference.x": 0.16,
+            "anchor.reference.y": 0.425,
+            "width.percents": 50
+          }
+        ],
 
-            "share_button":
-            [
-                "button/white-with-icon",
-                {
-                    "widgets/icon/frame": "sprites/menu/share.png",
-                    "bounds/icon/height.percents": 50
-                }
-            ],
+        "d_pad_kind": [
+          {
+            "anchor.x": 0.5,
+            "anchor.y": 0.5,
+            "anchor.reference.x": 0.8,
+            "anchor.reference.y": 0.44,
+            "width.percents": 30,
+            "height.percents": 10
+          }
+        ],
 
-            "close_button":
-            [
-                "button/yellow-with-label",
-                {
-                    "widgets/label/text.i18n": "OK",
-                    "z-order": 0
-                }
-            ],
+        "bluesky_button": [
+          {
+            "anchor.x": 0.5,
+            "anchor.y": 0.5,
+            "anchor.reference.x": 0.19,
+            "anchor.reference.y": 0.3,
+            "height.percents": 8,
+            "width-ratio": 0.95
+          }
+        ],
 
-            "version": [ "popup/settings/font/small" ]
-        }],
+        "github_button": [
+          {
+            "anchor.x": 0.5,
+            "anchor.y": 0.5,
+            "anchor.reference.x": 0.4,
+            "anchor.reference.y": 0.3,
+            "height.percents": 8,
+            "width-ratio": 0.95
+          }
+        ],
 
-        "bounds":
-        [{
-            "title":
-            [{
-                "anchor.x": 0.5,
-                "anchor.y": 0.5,
-                "anchor.reference.x": 0.5,
-                "anchor.reference.y": 0.95
-            }],
+        "mail_button": [
+          {
+            "anchor.x": 0.5,
+            "anchor.y": 0.5,
+            "anchor.reference.x": 0.6,
+            "anchor.reference.y": 0.3,
+            "height.percents": 8,
+            "width-ratio": 0.95
+          }
+        ],
 
-            "music-icon":
-            [{
-                "anchor.x": 0.5,
-                "anchor.y": 0.5,
-                "anchor.reference.x": 0.1,
-                "anchor.reference.y": 0.8,
-                "keep-ratio": true,
-                "height.percents": 5
-            }],
+        "share_button": [
+          {
+            "anchor.x": 0.5,
+            "anchor.y": 0.5,
+            "anchor.reference.x": 0.81,
+            "anchor.reference.y": 0.3,
+            "height.percents": 8,
+            "width-ratio": 0.95
+          }
+        ],
 
-            "music-label":
-            [{
-                "anchor.x": 0,
-                "anchor.y": 0.5,
-                "anchor.reference.x": 0.16,
-                "anchor.reference.y": 0.8
-            }],
+        "close_button": [
+          {
+            "anchor.x": 0.5,
+            "anchor.y": 0.5,
+            "anchor.reference.x": 0.5,
+            "anchor.reference.y": 0.15,
+            "width.percents": 50,
+            "height.percents": 12
+          }
+        ],
 
-            "music":
-            [{
-                "anchor.x": 0.5,
-                "anchor.y": 0.5,
-                "anchor.reference.x": 0.8,
-                "anchor.reference.y": 0.8,
-                "width.percents": 30,
-                "height.percents": 10
-            }],
+        "version": [
+          {
+            "anchor.x": 0.5,
+            "anchor.y": 0.5,
+            "anchor.reference.x": 0.5,
+            "anchor.reference.y": 0.05
+          }
+        ]
+      }
+    ],
 
-            "sound-effects-icon":
-            [{
-                "anchor.x": 0.5,
-                "anchor.y": 0.5,
-                "anchor.reference.x": 0.1,
-                "anchor.reference.y": 0.71,
-                "keep-ratio": true,
-                "height.percents": 5
-            }],
+    "display.d-pad-on-the-left": [
+      {
+        "d-pad-position-label-description-left/visible": true,
+        "d-pad-position-label-description-right/visible": false
+      }
+    ],
 
-            "sound-effects-label":
-            [{
-                "anchor.x": 0,
-                "anchor.y": 0.5,
-                "anchor.reference.x": 0.16,
-                "anchor.reference.y": 0.71
-            }],
+    "display.d-pad-on-the-right": [
+      {
+        "d-pad-position-label-description-left/visible": false,
+        "d-pad-position-label-description-right/visible": true
+      }
+    ],
 
-            "sound_effects":
-            [{
-                "anchor.x": 0.5,
-                "anchor.y": 0.5,
-                "anchor.reference.x": 0.8,
-                "anchor.reference.y": 0.71,
-                "width.percents": 30,
-                "height.percents": 10
-            }],
+    "display.d-pad-pad": [
+      {
+        "d-pad-kind-label-description-pad/visible": true,
+        "d-pad-kind-label-description-stick/visible": false
+      }
+    ],
 
-            "vibrations-icon":
-            [{
-                "anchor.x": 0.5,
-                "anchor.y": 0.5,
-                "anchor.reference.x": 0.1,
-                "anchor.reference.y": 0.62,
-                "keep-ratio": true,
-                "height.percents": 5
-            }],
-
-            "vibrations-label":
-            [{
-                "anchor.x": 0,
-                "anchor.y": 0.5,
-                "anchor.reference.x": 0.16,
-                "anchor.reference.y": 0.62
-            }],
-
-            "vibrations":
-            [{
-                "anchor.x": 0.5,
-                "anchor.y": 0.5,
-                "anchor.reference.x": 0.8,
-                "anchor.reference.y": 0.62,
-                "width.percents": 30,
-                "height.percents": 10
-            }],
-
-            "d-pad-position-icon":
-            [{
-                "anchor.x": 0.5,
-                "anchor.y": 0.5,
-                "anchor.reference.x": 0.1,
-                "anchor.reference.y": 0.53,
-                "keep-ratio": true,
-                "height.percents": 5
-            }],
-
-            "d-pad-position-label":
-            [{
-                "anchor.x": 0,
-                "anchor.y": 0.5,
-                "anchor.reference.x": 0.16,
-                "anchor.reference.y": 0.53
-            }],
-
-            "d-pad-position-label-description-left":
-            [{
-                "anchor.x": 0,
-                "anchor.y": 1,
-                "anchor.reference.x": 0.16,
-                "anchor.reference.y": 0.515,
-                "width.percents": 50
-            }],
-
-            "d-pad-position-label-description-right":
-            [{
-                "anchor.x": 0,
-                "anchor.y": 1,
-                "anchor.reference.x": 0.16,
-                "anchor.reference.y": 0.515,
-                "width.percents": 50
-            }],
-
-            "d_pad_position":
-            [{
-                "anchor.x": 0.5,
-                "anchor.y": 0.5,
-                "anchor.reference.x": 0.8,
-                "anchor.reference.y": 0.53,
-                "width.percents": 30,
-                "height.percents": 10
-            }],
-
-            "d-pad-kind-icon":
-            [{
-                "anchor.x": 0.5,
-                "anchor.y": 0.5,
-                "anchor.reference.x": 0.1,
-                "anchor.reference.y": 0.44,
-                "keep-ratio": true,
-                "height.percents": 5
-            }],
-
-            "d-pad-kind-label":
-            [{
-                "anchor.x": 0,
-                "anchor.y": 0.5,
-                "anchor.reference.x": 0.16,
-                "anchor.reference.y": 0.44
-            }],
-
-            "d-pad-kind-label-description-stick":
-            [{
-                "anchor.x": 0,
-                "anchor.y": 1,
-                "anchor.reference.x": 0.16,
-                "anchor.reference.y": 0.425,
-                "width.percents": 50
-            }],
-
-            "d-pad-kind-label-description-pad":
-            [{
-                "anchor.x": 0,
-                "anchor.y": 1,
-                "anchor.reference.x": 0.16,
-                "anchor.reference.y": 0.425,
-                "width.percents": 50
-            }],
-
-            "d_pad_kind":
-            [{
-                "anchor.x": 0.5,
-                "anchor.y": 0.5,
-                "anchor.reference.x": 0.8,
-                "anchor.reference.y": 0.44,
-                "width.percents": 30,
-                "height.percents": 10
-            }],
-
-            "bluesky_button":
-            [{
-                "anchor.x": 0.5,
-                "anchor.y": 0.5,
-                "anchor.reference.x": 0.19,
-                "anchor.reference.y": 0.3,
-                "height.percents": 8,
-                "width-ratio": 0.95
-            }],
-
-            "github_button":
-            [{
-                "anchor.x": 0.5,
-                "anchor.y": 0.5,
-                "anchor.reference.x": 0.4,
-                "anchor.reference.y": 0.3,
-                "height.percents": 8,
-                "width-ratio": 0.95
-            }],
-
-            "mail_button":
-            [{
-                "anchor.x": 0.5,
-                "anchor.y": 0.5,
-                "anchor.reference.x": 0.6,
-                "anchor.reference.y": 0.3,
-                "height.percents": 8,
-                "width-ratio": 0.95
-            }],
-
-            "share_button":
-            [{
-                "anchor.x": 0.5,
-                "anchor.y": 0.5,
-                "anchor.reference.x": 0.81,
-                "anchor.reference.y": 0.3,
-                "height.percents": 8,
-                "width-ratio": 0.95
-            }],
-
-            "close_button":
-            [{
-                "anchor.x": 0.5,
-                "anchor.y": 0.5,
-                "anchor.reference.x": 0.5,
-                "anchor.reference.y": 0.15,
-                "width.percents": 50,
-                "height.percents": 12
-            }],
-
-            "version":
-            [{
-                "anchor.x": 0.5,
-                "anchor.y": 0.5,
-                "anchor.reference.x": 0.5,
-                "anchor.reference.y": 0.05
-            }]
-        }],
-
-        "display.d-pad-on-the-left":
-        [{
-            "d-pad-position-label-description-left/visible": true,
-            "d-pad-position-label-description-right/visible": false
-        }],
-
-        "display.d-pad-on-the-right":
-        [{
-            "d-pad-position-label-description-left/visible": false,
-            "d-pad-position-label-description-right/visible": true
-        }],
-
-        "display.d-pad-pad":
-        [{
-            "d-pad-kind-label-description-pad/visible": true,
-            "d-pad-kind-label-description-stick/visible": false
-        }],
-
-        "display.d-pad-stick":
-        [{
-            "d-pad-kind-label-description-pad/visible": false,
-            "d-pad-kind-label-description-stick/visible": true
-        }]
-    }
+    "display.d-pad-stick": [
+      {
+        "d-pad-kind-label-description-pad/visible": false,
+        "d-pad-kind-label-description-stick/visible": true
+      }
+    ]
+  }
 }

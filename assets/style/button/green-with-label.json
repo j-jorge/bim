@@ -1,42 +1,43 @@
 {
-    "meta":
-    {
-        "overrides": [ "button/thick-base" ]
-    },
+  "meta": {
+    "overrides": [
+      "button/thick-base"
+    ]
+  },
 
-    "style":
-    {
-        "widgets":
-        [{
-            "decorum-on/widgets/fill":
-            [{
-                "frame": "sprites/menu/vertical-green-gradient.png"
-            }],
+  "style": {
+    "widgets": [
+      {
+        "decorum-on/widgets/fill": [
+          {
+            "frame": "sprites/menu/vertical-green-gradient.png"
+          }
+        ],
 
-            "label":
-            [
-                "font/fancy-regular",
-                {
-                    "instantiate": "ax::Label",
-                    "font.size": 106,
-                    "font.color": "white",
-                    "shadow.color": "cod-gray",
-                    "shadow.offset.y": -8,
-                    "outline.color": "cod-gray",
-                    "outline.size": 5,
-                    "align.horizontal": "center",
-                    "z-order": 10
-                }
-            ]
-        }],
+        "label": [
+          "font/fancy-regular",
+          {
+            "instantiate": "ax::Label",
+            "font.size": 106,
+            "font.color": "white",
+            "shadow.color": "cod-gray",
+            "shadow.offset.y": -8,
+            "outline.color": "cod-gray",
+            "outline.size": 5,
+            "align.horizontal": "center",
+            "z-order": 10
+          }
+        ]
+      }
+    ],
 
-        "bounds/label":
-        [{
-            "anchor.x": 0.5,
-            "anchor.y": 0.5,
-            "anchor.reference.x": 0.5,
-            "anchor.reference.y": 0.5
-        }]
-    }
+    "bounds/label": [
+      {
+        "anchor.x": 0.5,
+        "anchor.y": 0.5,
+        "anchor.reference.x": 0.5,
+        "anchor.reference.y": 0.5
+      }
+    ]
+  }
 }
-

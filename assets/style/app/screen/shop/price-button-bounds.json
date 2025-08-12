@@ -1,11 +1,10 @@
 {
-    "style":
-    {
-        "anchor.x": 0.5,
-        "anchor.y": 0.5,
-        "anchor.reference.x": 0.5,
-        "anchor.reference.y": 0.1,
-        "width.percents": 66,
-        "height.percents": 30
-    }
+  "style": {
+    "anchor.x": 0.5,
+    "anchor.y": 0.5,
+    "anchor.reference.x": 0.5,
+    "anchor.reference.y": 0.1,
+    "width.percents": 66,
+    "height.percents": 30
+  }
 }

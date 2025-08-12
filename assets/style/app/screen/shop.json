@@ -1,185 +1,189 @@
 {
-    "style":
-    {
-        "coins-button-price-label-path": "container/label",
+  "style": {
+    "coins-button-price-label-path": "container/label",
 
-        "wallet": [ "app/screen/part/wallet" ],
-        "message-popup": [ "popup/message" ],
+    "wallet": [
+      "app/screen/part/wallet"
+    ],
+    "message-popup": [
+      "popup/message"
+    ],
 
-        "widgets":
-        [
-            "app/screen/part/menu-background",
-            {
-                "background/color": "#105888",
-                "pattern":
-                [{
-                    "widgets/sprite":
-                    [{
-                        "frame": "texture/gifts-background-pattern.png",
-                        "color": "#10b9c8"
-                    }]
-                }],
-
-                "top-shadow/color": "#4eb1bf",
-                "left-shadow/color": "#093a52",
-                "right-shadow/color": "#093a52",
-                "bottom-shadow/color": "#093a52",
-
-                "ribbon":
-                [{
-                    "instantiate": "nine_slices",
-                    "stretch-direction.vertical": false,
-                    "widgets/sprite":
-                    [{
-                        "frame": "sprites/menu/shop-ribbon-227.png",
-                        "insets.left": 227,
-                        "insets.top": 1,
-                        "insets.width": 1,
-                        "insets.height": 1
-                    }]
-                }],
-
-                "title":
-                [
-                    "font/fancy-center-with-outline-and-shadow",
-                    {
-                        "instantiate": "ax::Label",
-                        "font.size": 106,
-                        "text.i18n": "SHOP",
-                        "z-order": 10
-                    }
-                ],
-
-                "loading":
-                [
-                    "font/fancy-center-with-outline-and-shadow",
-                    {
-                        "instantiate": "ax::Label",
-                        "font.size": 80,
-                        "text.i18n": "LOADING…",
-                        "z-order": 10
-                    }
-                ],
-
-                "item-1":
-                [
-                    "app/screen/shop/item",
-                    {
-                        "widgets/content/widgets/coins/frame":
-                        "sprites/menu/coins-pack-1.png"
-                    }
-                ],
-
-                "item-2":
-                [
-                    "app/screen/shop/item",
-                    {
-                        "widgets/content/widgets/coins/frame":
-                        "sprites/menu/coins-pack-2.png"
-                    }
-                ],
-
-                "item-3":
-                [
-                    "app/screen/shop/item",
-                    {
-                        "widgets/content/widgets/coins/frame":
-                        "sprites/menu/coins-pack-3.png"
-                    }
-                ],
-
-                "item-4":
-                [
-                    "app/screen/shop/item",
-                    {
-                        "widgets/content":
-                        [{
-                            "widgets/coins/frame":
-                            "sprites/menu/coins-pack-4.png"
-                        }]
-                    }
-                ],
-
-
-                "coins_1_button":
-                [
-                    "app/screen/shop/price-button",
-                    {
-                        "parent": "item-1"
-                    }
-                ],
-                "coins_2_button": [ "app/screen/shop/price-button" ],
-                "coins_3_button": [ "app/screen/shop/price-button" ],
-                "coins_4_button": [ "app/screen/shop/price-button" ],
-
-                "coins_1_label":
-                [
-                    "app/screen/shop/amount-label",
-                    {
-                        "parent": "item-1"
-                    }
-                ],
-
-                "coins_2_label":
-                [
-                    "app/screen/shop/amount-label",
-                    {
-                        "parent": "item-2"
-                    }
-                ],
-
-                "coins_3_label":
-                [
-                    "app/screen/shop/amount-label",
-                    {
-                        "parent": "item-3"
-                    }
-                ],
-
-                "coins_4_label":
-                [
-                    "app/screen/shop/amount-label",
-                    {
-                        "parent": "item-4"
-                    }
-                ],
-
-                "back_button": [ "app/screen/part/back-button" ]
-            }
+    "widgets": [
+      "app/screen/part/menu-background",
+      {
+        "background/color": "#105888",
+        "pattern": [
+          {
+            "widgets/sprite": [
+              {
+                "frame": "texture/gifts-background-pattern.png",
+                "color": "#10b9c8"
+              }
+            ]
+          }
         ],
 
-        "display.loading":
-        [{
-            "loading/visible": true,
-            "item-1/visible": false,
-            "item-2/visible": false,
-            "item-3/visible": false,
-            "item-4/visible": false,
-            "coins_1_button/visible": false,
-            "coins_2_button/visible": false,
-            "coins_3_button/visible": false,
-            "coins_4_button/visible": false,
-            "coins_1_label/visible": false,
-            "coins_2_label/visible": false,
-            "coins_3_label/visible": false,
-            "coins_4_label/visible": false
-        }],
+        "top-shadow/color": "#4eb1bf",
+        "left-shadow/color": "#093a52",
+        "right-shadow/color": "#093a52",
+        "bottom-shadow/color": "#093a52",
 
-        "display.ready":
-        [{
-            "loading/visible": false,
-            "item-1/visible": true,
-            "item-2/visible": true,
-            "item-3/visible": true,
-            "item-4/visible": true,
-            "coins_1_button/visible": true,
-            "coins_2_button/visible": true,
-            "coins_3_button/visible": true,
-            "coins_4_button/visible": true,
-            "coins_1_label/visible": true,
-            "coins_2_label/visible": true,
-            "coins_3_label/visible": true,
-            "coins_4_label/visible": true
-        }]
-    }
+        "ribbon": [
+          {
+            "instantiate": "nine_slices",
+            "stretch-direction.vertical": false,
+            "widgets/sprite": [
+              {
+                "frame": "sprites/menu/shop-ribbon-227.png",
+                "insets.left": 227,
+                "insets.top": 1,
+                "insets.width": 1,
+                "insets.height": 1
+              }
+            ]
+          }
+        ],
+
+        "title": [
+          "font/fancy-center-with-outline-and-shadow",
+          {
+            "instantiate": "ax::Label",
+            "font.size": 106,
+            "text.i18n": "SHOP",
+            "z-order": 10
+          }
+        ],
+
+        "loading": [
+          "font/fancy-center-with-outline-and-shadow",
+          {
+            "instantiate": "ax::Label",
+            "font.size": 80,
+            "text.i18n": "LOADING…",
+            "z-order": 10
+          }
+        ],
+
+        "item-1": [
+          "app/screen/shop/item",
+          {
+            "widgets/content/widgets/coins/frame":
+                "sprites/menu/coins-pack-1.png"
+          }
+        ],
+
+        "item-2": [
+          "app/screen/shop/item",
+          {
+            "widgets/content/widgets/coins/frame":
+                "sprites/menu/coins-pack-2.png"
+          }
+        ],
+
+        "item-3": [
+          "app/screen/shop/item",
+          {
+            "widgets/content/widgets/coins/frame":
+                "sprites/menu/coins-pack-3.png"
+          }
+        ],
+
+        "item-4": [
+          "app/screen/shop/item",
+          {
+            "widgets/content": [
+              {
+                "widgets/coins/frame": "sprites/menu/coins-pack-4.png"
+              }
+            ]
+          }
+        ],
+
+        "coins_1_button": [
+          "app/screen/shop/price-button",
+          {
+            "parent": "item-1"
+          }
+        ],
+        "coins_2_button": [
+          "app/screen/shop/price-button"
+        ],
+        "coins_3_button": [
+          "app/screen/shop/price-button"
+        ],
+        "coins_4_button": [
+          "app/screen/shop/price-button"
+        ],
+
+        "coins_1_label": [
+          "app/screen/shop/amount-label",
+          {
+            "parent": "item-1"
+          }
+        ],
+
+        "coins_2_label": [
+          "app/screen/shop/amount-label",
+          {
+            "parent": "item-2"
+          }
+        ],
+
+        "coins_3_label": [
+          "app/screen/shop/amount-label",
+          {
+            "parent": "item-3"
+          }
+        ],
+
+        "coins_4_label": [
+          "app/screen/shop/amount-label",
+          {
+            "parent": "item-4"
+          }
+        ],
+
+        "back_button": [
+          "app/screen/part/back-button"
+        ]
+      }
+    ],
+
+    "display.loading": [
+      {
+        "loading/visible": true,
+        "item-1/visible": false,
+        "item-2/visible": false,
+        "item-3/visible": false,
+        "item-4/visible": false,
+        "coins_1_button/visible": false,
+        "coins_2_button/visible": false,
+        "coins_3_button/visible": false,
+        "coins_4_button/visible": false,
+        "coins_1_label/visible": false,
+        "coins_2_label/visible": false,
+        "coins_3_label/visible": false,
+        "coins_4_label/visible": false
+      }
+    ],
+
+    "display.ready": [
+      {
+        "loading/visible": false,
+        "item-1/visible": true,
+        "item-2/visible": true,
+        "item-3/visible": true,
+        "item-4/visible": true,
+        "coins_1_button/visible": true,
+        "coins_2_button/visible": true,
+        "coins_3_button/visible": true,
+        "coins_4_button/visible": true,
+        "coins_1_label/visible": true,
+        "coins_2_label/visible": true,
+        "coins_3_label/visible": true,
+        "coins_4_label/visible": true
+      }
+    ]
+  }
 }

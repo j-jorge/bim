@@ -1,252 +1,439 @@
 {
-    "style":
-    {
-        "wallet": [ "app/screen/part/wallet" ],
+  "style": {
+    "wallet": [
+      "app/screen/part/wallet"
+    ],
 
-        "widgets":
-        [
-            "app/screen/part/menu-background",
-            "app/screen/part/menu-stripe",
-            {
-                "background.lose":
-                [{
-                    "instantiate": "ax::LayerColor",
-                    "color": "kashmir-blue",
-                    "z-order": -100,
-                    "opacity": 1
-                }],
-
-                "pattern":
-                [{
-                    "widgets/sprite":
-                    [{
-                        "frame": "texture/draw-background-pattern.png"
-                    }],
-                    "rotation": 0,
-                    "scroll-per-second.x": 0,
-                    "scroll-per-second.y": -20
-                }],
-
-                "pattern_win":
-                [{
-                    "instantiate": "texture",
-                    "widgets/sprite":
-                    [{
-                        "frame": "texture/victory-background-pattern.png",
-                        "color": "danube",
-                        "opacity": 0.35
-                    }],
-                    "rotation": 5,
-                    "scroll-per-second.x": 5,
-                    "scroll-per-second.y": 20,
-                    "z-order": -75
-                }],
-
-                "pattern_lose":
-                [{
-                    "instantiate": "texture",
-                    "widgets/sprite":
-                    [{
-                        "frame": "texture/defeat-background-pattern.png",
-                        "color": "danube",
-                        "opacity": 0.35
-                    }],
-                    "rotation": -5,
-                    "scroll-per-second.x": -5,
-                    "scroll-per-second.y": 20,
-                    "z-order": -75
-                }],
-
-                "stripe_title/text.i18n": "Draw game!",
-                "stripe_message/text.i18n": "Start a new game\nand get your revenge!",
-
-                "stripe_title_win":
-                [
-                    "app/screen/font/stripe-title",
-                    {
-                        "instantiate": "ax::Label",
-                        "text.i18n": "You won!",
-                        "parent": "stripe",
-                        "z-order": 30
-                    }
-                ],
-
-                "stripe_message_win":
-                [
-                    "app/screen/font/stripe-message",
-                    {
-                        "instantiate": "ax::Label",
-                        "parent": "stripe",
-                        "text.i18n": "Was it pure luck?\nConfirm your skills in a new game!",
-                        "z-order": 30
-                    }
-                ],
-
-                "stripe_title_lose":
-                [
-                    "app/screen/font/stripe-title",
-                    {
-                        "instantiate": "ax::Label",
-                        "parent": "stripe",
-                        "text.i18n": "You lost!",
-                        "z-order": 30
-                    }
-                ],
-
-                "stripe_message_lose":
-                [
-                    "app/screen/font/stripe-message",
-                    {
-                        "instantiate": "ax::Label",
-                        "parent": "stripe",
-                        "text.i18n": "Start a new game\nand get your revenge!",
-                        "z-order": 30
-                    }
-                ],
-
-                "reward_reference": [],
-
-                "rays":
-                [{
-                    "instantiate": "ax::Sprite",
-                    "frame": "sprites/menu/rays.png",
-                    "z-order": -20,
-                    "opacity": 0.1
-                }],
-
-                "glow":
-                [{
-                    "instantiate": "ax::Sprite",
-                    "frame": "sprites/menu/glow.png",
-                    "color": "danube",
-                    "z-order": -19
-                }],
-
-                "reward.win":
-                [{
-                    "instantiate": "ax::Sprite",
-                    "frame": "sprites/menu/coins-pack-2.png"
-                }],
-
-                "reward.draw":
-                [{
-                    "instantiate": "ax::Sprite",
-                    "frame": "sprites/menu/coins-pack-1.png"
-                }],
-
-                "reward.lose":
-                [{
-                    "instantiate": "ax::Sprite",
-                    "frame": "sprites/menu/coins-pack-1.png"
-                }],
-
-                "reward-label-icon":
-                [{
-                    "instantiate": "ax::Sprite",
-                    "frame": "sprites/menu/wallet-coin.png",
-                    "z-order": 10
-                }],
-
-                "reward_label":
-                [
-                    "font/bold-italic",
-                    {
-                        "instantiate": "ax::Label",
-                        "anchor-point.x": 0,
-                        "anchor-point.y": 0,
-                        "font.size": 72,
-                        "font.color": "white",
-                        "outline.color": "cod-gray",
-                        "outline.size": 7,
-                        "z-order": 20,
-                        "rotation": -10,
-                        "text": "0"
-                    }
-                ],
-
-                "revenge_button":
-                [
-                    "button/yellow-with-label",
-                    {
-                        "widgets/label/text.i18n": "NEW\nGAME",
-                        "z-order": 20
-                    }
-                ],
-
-                "quit_button": [ "app/screen/part/back-button" ]
-            }
+    "widgets": [
+      "app/screen/part/menu-background",
+      "app/screen/part/menu-stripe",
+      {
+        "background.lose": [
+          {
+            "instantiate": "ax::LayerColor",
+            "color": "kashmir-blue",
+            "z-order": -100,
+            "opacity": 1
+          }
         ],
 
-        "actions.draw":
-        [{
-            "background": [{ "instantiate": "hide" }],
-            "background.lose": [{ "instantiate": "show" }],
+        "pattern": [
+          {
+            "widgets/sprite": [
+              {
+                "frame": "texture/draw-background-pattern.png"
+              }
+            ],
+            "rotation": 0,
+            "scroll-per-second.x": 0,
+            "scroll-per-second.y": -20
+          }
+        ],
 
-            "pattern": [{ "instantiate": "show" }],
-            "pattern_win": [{ "instantiate": "hide" }],
-            "pattern_lose": [{ "instantiate": "hide" }],
+        "pattern_win": [
+          {
+            "instantiate": "texture",
+            "widgets/sprite": [
+              {
+                "frame": "texture/victory-background-pattern.png",
+                "color": "danube",
+                "opacity": 0.35
+              }
+            ],
+            "rotation": 5,
+            "scroll-per-second.x": 5,
+            "scroll-per-second.y": 20,
+            "z-order": -75
+          }
+        ],
 
-            "stripe_title": [{ "instantiate": "show" }],
-            "stripe_title_win": [{ "instantiate": "hide" }],
-            "stripe_title_lose": [{ "instantiate": "hide" }],
+        "pattern_lose": [
+          {
+            "instantiate": "texture",
+            "widgets/sprite": [
+              {
+                "frame": "texture/defeat-background-pattern.png",
+                "color": "danube",
+                "opacity": 0.35
+              }
+            ],
+            "rotation": -5,
+            "scroll-per-second.x": -5,
+            "scroll-per-second.y": 20,
+            "z-order": -75
+          }
+        ],
 
-            "stripe_message": [{ "instantiate": "show" }],
-            "stripe_message_win": [{ "instantiate": "hide" }],
-            "stripe_message_lose": [{ "instantiate": "hide" }],
+        "stripe_title/text.i18n": "Draw game!",
+        "stripe_message/text.i18n": "Start a new game\nand get your revenge!",
 
-            "rays": [ "action/rotate-forever-30s" ],
+        "stripe_title_win": [
+          "app/screen/font/stripe-title",
+          {
+            "instantiate": "ax::Label",
+            "text.i18n": "You won!",
+            "parent": "stripe",
+            "z-order": 30
+          }
+        ],
 
-            "reward.win": [{ "instantiate": "hide" }],
-            "reward.draw": [{ "instantiate": "show" }],
-            "reward.lose": [{ "instantiate": "hide" }]
-        }],
+        "stripe_message_win": [
+          "app/screen/font/stripe-message",
+          {
+            "instantiate": "ax::Label",
+            "parent": "stripe",
+            "text.i18n":
+                "Was it pure luck?\nConfirm your skills in a new game!",
+            "z-order": 30
+          }
+        ],
 
-        "actions.win":
-        [{
-            "background": [{ "instantiate": "show" }],
-            "background.lose": [{ "instantiate": "hide" }],
+        "stripe_title_lose": [
+          "app/screen/font/stripe-title",
+          {
+            "instantiate": "ax::Label",
+            "parent": "stripe",
+            "text.i18n": "You lost!",
+            "z-order": 30
+          }
+        ],
 
-            "pattern": [{ "instantiate": "hide" }],
-            "pattern_win": [{ "instantiate": "show" }],
-            "pattern_lose": [{ "instantiate": "hide" }],
+        "stripe_message_lose": [
+          "app/screen/font/stripe-message",
+          {
+            "instantiate": "ax::Label",
+            "parent": "stripe",
+            "text.i18n": "Start a new game\nand get your revenge!",
+            "z-order": 30
+          }
+        ],
 
-            "stripe_title": [{ "instantiate": "hide" }],
-            "stripe_title_win": [{ "instantiate": "show" }],
-            "stripe_title_lose": [{ "instantiate": "hide" }],
+        "reward_reference": [],
 
-            "stripe_message": [{ "instantiate": "hide" }],
-            "stripe_message_win": [{ "instantiate": "show" }],
-            "stripe_message_lose": [{ "instantiate": "hide" }],
+        "rays": [
+          {
+            "instantiate": "ax::Sprite",
+            "frame": "sprites/menu/rays.png",
+            "z-order": -20,
+            "opacity": 0.1
+          }
+        ],
 
-            "rays": [ "action/rotate-forever-30s" ],
+        "glow": [
+          {
+            "instantiate": "ax::Sprite",
+            "frame": "sprites/menu/glow.png",
+            "color": "danube",
+            "z-order": -19
+          }
+        ],
 
-            "reward.win": [{ "instantiate": "show" }],
-            "reward.draw": [{ "instantiate": "hide" }],
-            "reward.lose": [{ "instantiate": "hide" }]
-        }],
+        "reward.win": [
+          {
+            "instantiate": "ax::Sprite",
+            "frame": "sprites/menu/coins-pack-2.png"
+          }
+        ],
 
-        "actions.lose":
-        [{
-            "background": [{ "instantiate": "hide" }],
-            "background.lose": [{ "instantiate": "show" }],
+        "reward.draw": [
+          {
+            "instantiate": "ax::Sprite",
+            "frame": "sprites/menu/coins-pack-1.png"
+          }
+        ],
 
-            "pattern": [{ "instantiate": "hide" }],
-            "pattern_win": [{ "instantiate": "hide" }],
-            "pattern_lose": [{ "instantiate": "show" }],
+        "reward.lose": [
+          {
+            "instantiate": "ax::Sprite",
+            "frame": "sprites/menu/coins-pack-1.png"
+          }
+        ],
 
-            "stripe_title": [{ "instantiate": "hide" }],
-            "stripe_title_win": [{ "instantiate": "hide" }],
-            "stripe_title_lose": [{ "instantiate": "show" }],
+        "reward-label-icon": [
+          {
+            "instantiate": "ax::Sprite",
+            "frame": "sprites/menu/wallet-coin.png",
+            "z-order": 10
+          }
+        ],
 
-            "stripe_message": [{ "instantiate": "hide" }],
-            "stripe_message_win": [{ "instantiate": "hide" }],
-            "stripe_message_lose": [{ "instantiate": "show" }],
+        "reward_label": [
+          "font/bold-italic",
+          {
+            "instantiate": "ax::Label",
+            "anchor-point.x": 0,
+            "anchor-point.y": 0,
+            "font.size": 72,
+            "font.color": "white",
+            "outline.color": "cod-gray",
+            "outline.size": 7,
+            "z-order": 20,
+            "rotation": -10,
+            "text": "0"
+          }
+        ],
 
-            "rays": [ "action/rotate-forever-30s" ],
+        "revenge_button": [
+          "button/yellow-with-label",
+          {
+            "widgets/label/text.i18n": "NEW\nGAME",
+            "z-order": 20
+          }
+        ],
 
-            "reward.win": [{ "instantiate": "hide" }],
-            "reward.draw": [{ "instantiate": "hide" }],
-            "reward.lose": [{ "instantiate": "show" }]
-        }]
-    }
+        "quit_button": [
+          "app/screen/part/back-button"
+        ]
+      }
+    ],
+
+    "actions.draw": [
+      {
+        "background": [
+          {
+            "instantiate": "hide"
+          }
+        ],
+        "background.lose": [
+          {
+            "instantiate": "show"
+          }
+        ],
+
+        "pattern": [
+          {
+            "instantiate": "show"
+          }
+        ],
+        "pattern_win": [
+          {
+            "instantiate": "hide"
+          }
+        ],
+        "pattern_lose": [
+          {
+            "instantiate": "hide"
+          }
+        ],
+
+        "stripe_title": [
+          {
+            "instantiate": "show"
+          }
+        ],
+        "stripe_title_win": [
+          {
+            "instantiate": "hide"
+          }
+        ],
+        "stripe_title_lose": [
+          {
+            "instantiate": "hide"
+          }
+        ],
+
+        "stripe_message": [
+          {
+            "instantiate": "show"
+          }
+        ],
+        "stripe_message_win": [
+          {
+            "instantiate": "hide"
+          }
+        ],
+        "stripe_message_lose": [
+          {
+            "instantiate": "hide"
+          }
+        ],
+
+        "rays": [
+          "action/rotate-forever-30s"
+        ],
+
+        "reward.win": [
+          {
+            "instantiate": "hide"
+          }
+        ],
+        "reward.draw": [
+          {
+            "instantiate": "show"
+          }
+        ],
+        "reward.lose": [
+          {
+            "instantiate": "hide"
+          }
+        ]
+      }
+    ],
+
+    "actions.win": [
+      {
+        "background": [
+          {
+            "instantiate": "show"
+          }
+        ],
+        "background.lose": [
+          {
+            "instantiate": "hide"
+          }
+        ],
+
+        "pattern": [
+          {
+            "instantiate": "hide"
+          }
+        ],
+        "pattern_win": [
+          {
+            "instantiate": "show"
+          }
+        ],
+        "pattern_lose": [
+          {
+            "instantiate": "hide"
+          }
+        ],
+
+        "stripe_title": [
+          {
+            "instantiate": "hide"
+          }
+        ],
+        "stripe_title_win": [
+          {
+            "instantiate": "show"
+          }
+        ],
+        "stripe_title_lose": [
+          {
+            "instantiate": "hide"
+          }
+        ],
+
+        "stripe_message": [
+          {
+            "instantiate": "hide"
+          }
+        ],
+        "stripe_message_win": [
+          {
+            "instantiate": "show"
+          }
+        ],
+        "stripe_message_lose": [
+          {
+            "instantiate": "hide"
+          }
+        ],
+
+        "rays": [
+          "action/rotate-forever-30s"
+        ],
+
+        "reward.win": [
+          {
+            "instantiate": "show"
+          }
+        ],
+        "reward.draw": [
+          {
+            "instantiate": "hide"
+          }
+        ],
+        "reward.lose": [
+          {
+            "instantiate": "hide"
+          }
+        ]
+      }
+    ],
+
+    "actions.lose": [
+      {
+        "background": [
+          {
+            "instantiate": "hide"
+          }
+        ],
+        "background.lose": [
+          {
+            "instantiate": "show"
+          }
+        ],
+
+        "pattern": [
+          {
+            "instantiate": "hide"
+          }
+        ],
+        "pattern_win": [
+          {
+            "instantiate": "hide"
+          }
+        ],
+        "pattern_lose": [
+          {
+            "instantiate": "show"
+          }
+        ],
+
+        "stripe_title": [
+          {
+            "instantiate": "hide"
+          }
+        ],
+        "stripe_title_win": [
+          {
+            "instantiate": "hide"
+          }
+        ],
+        "stripe_title_lose": [
+          {
+            "instantiate": "show"
+          }
+        ],
+
+        "stripe_message": [
+          {
+            "instantiate": "hide"
+          }
+        ],
+        "stripe_message_win": [
+          {
+            "instantiate": "hide"
+          }
+        ],
+        "stripe_message_lose": [
+          {
+            "instantiate": "show"
+          }
+        ],
+
+        "rays": [
+          "action/rotate-forever-30s"
+        ],
+
+        "reward.win": [
+          {
+            "instantiate": "hide"
+          }
+        ],
+        "reward.draw": [
+          {
+            "instantiate": "hide"
+          }
+        ],
+        "reward.lose": [
+          {
+            "instantiate": "show"
+          }
+        ]
+      }
+    ]
+  }
 }

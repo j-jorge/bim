@@ -1,9 +1,8 @@
 {
-    "style":
-    {
-        "anchor.x": 1,
-        "anchor.y": 0.5,
-        "anchor.reference.x": 1,
-        "anchor.reference.y": 0.5
-    }
+  "style": {
+    "anchor.x": 1,
+    "anchor.y": 0.5,
+    "anchor.reference.x": 1,
+    "anchor.reference.y": 0.5
+  }
 }

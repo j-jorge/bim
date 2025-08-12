@@ -1,7 +1,6 @@
 {
-    "styles":
-    [
-        "app/screen-wheel",
-        "popup/message"
-    ]
+  "styles": [
+    "app/screen-wheel",
+    "popup/message"
+  ]
 }

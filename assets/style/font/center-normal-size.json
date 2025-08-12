@@ -1,13 +1,13 @@
 {
-    "meta":
-    {
-        "overrides": [ "font/regular" ]
-    },
+  "meta": {
+    "overrides": [
+      "font/regular"
+    ]
+  },
 
-    "style":
-    {
-        "font.size": 52,
-        "font.color": "white",
-        "align.horizontal": "center"
-    }
+  "style": {
+    "font.size": 52,
+    "font.color": "white",
+    "align.horizontal": "center"
+  }
 }

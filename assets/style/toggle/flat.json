@@ -1,69 +1,69 @@
 {
-    "meta":
-    {
-        "overrides": [ "toggle/flat-empty" ]
-    },
+  "meta": {
+    "overrides": [
+      "toggle/flat-empty"
+    ]
+  },
 
-    "style":
-    {
-        "widgets":
-        [{
-            "label-off":
-            [
-                "font/bold",
-                {
-                    "instantiate": "ax::Label",
-                    "font.size": 52,
-                    "font.color": "cod-gray",
-                    "align.horizontal": "center",
-                    "text.i18n": "Off",
-                    "z-order": 10
-                }
-            ],
+  "style": {
+    "widgets": [
+      {
+        "label-off": [
+          "font/bold",
+          {
+            "instantiate": "ax::Label",
+            "font.size": 52,
+            "font.color": "cod-gray",
+            "align.horizontal": "center",
+            "text.i18n": "Off",
+            "z-order": 10
+          }
+        ],
 
-            "label-on":
-            [
-                "font/bold",
-                {
-                    "instantiate": "ax::Label",
-                    "font.size": 52,
-                    "font.color": "cod-gray",
-                    "align.horizontal": "center",
-                    "text.i18n": "On",
-                    "z-order": 10
-                }
-            ]
-        }],
+        "label-on": [
+          "font/bold",
+          {
+            "instantiate": "ax::Label",
+            "font.size": 52,
+            "font.color": "cod-gray",
+            "align.horizontal": "center",
+            "text.i18n": "On",
+            "z-order": 10
+          }
+        ]
+      }
+    ],
 
-        "bounds":
-        [{
-            "label-off":
-            [
-                "layout/center",
-                {
-                    "reference": "background"
-                }
-            ],
+    "bounds": [
+      {
+        "label-off": [
+          "layout/center",
+          {
+            "reference": "background"
+          }
+        ],
 
-            "label-on":
-            [
-                "layout/center",
-                {
-                    "reference": "background"
-                }
-            ]
-        }],
+        "label-on": [
+          "layout/center",
+          {
+            "reference": "background"
+          }
+        ]
+      }
+    ],
 
-        "display.off":
-        [{
-            "label-off/visible": true,
-            "label-on/visible": false
-        }],
+    "display.off": [
+      {
+        "label-off/visible": true,
+        "label-on/visible": false
+      }
+    ],
 
-        "display.on":
-        [{
-            "label-off/visible": false,
-            "label-on/visible": true
-        }]
-    }
+    "display.on": [
+      {
+        "label-off/visible": false,
+        "label-on/visible": true
+      }
+    ]
+  }
 }

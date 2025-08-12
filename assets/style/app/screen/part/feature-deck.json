@@ -1,71 +1,75 @@
 {
-    "style":
-    {
-        "widgets":
-        [{
-            "feature_falling_blocks":
-            [
-                "app/widget/game-feature-button",
-                {
-                    "widgets/toggle/widgets/off":
-                    [{
-                        "frame": "sprites/features/falling-block-off.png"
-                    }],
-
-                    "widgets/toggle/widgets/on":
-                    [{
-                        "frame": "sprites/features/falling-block-on.png"
-                    }]
-                }
+  "style": {
+    "widgets": [
+      {
+        "feature_falling_blocks": [
+          "app/widget/game-feature-button",
+          {
+            "widgets/toggle/widgets/off": [
+              {
+                "frame": "sprites/features/falling-block-off.png"
+              }
             ],
 
-            "feature_shield":
-            [
-                "app/widget/game-feature-button",
-                {
-                    "widgets/toggle/widgets/off":
-                    [{
-                        "frame": "sprites/features/shield-off.png"
-                    }],
-
-                    "widgets/toggle/widgets/on":
-                    [{
-                        "frame": "sprites/features/shield-on.png"
-                    }]
-                }
-            ],
-
-            "feature_invisibility":
-            [
-                "app/widget/game-feature-button",
-                {
-                    "widgets/toggle/widgets/off":
-                    [{
-                        "frame": "sprites/features/invisibility-off.png"
-                    }],
-
-                    "widgets/toggle/widgets/on":
-                    [{
-                        "frame": "sprites/features/invisibility-on.png"
-                    }]
-                }
-            ],
-
-            "feature_fog_of_war":
-            [
-                "app/widget/game-feature-button",
-                {
-                    "widgets/toggle/widgets/off":
-                    [{
-                        "frame": "sprites/features/fog-of-war-off.png"
-                    }],
-
-                    "widgets/toggle/widgets/on":
-                    [{
-                        "frame": "sprites/features/fog-of-war-on.png"
-                    }]
-                }
+            "widgets/toggle/widgets/on": [
+              {
+                "frame": "sprites/features/falling-block-on.png"
+              }
             ]
-        }]
-    }
+          }
+        ],
+
+        "feature_shield": [
+          "app/widget/game-feature-button",
+          {
+            "widgets/toggle/widgets/off": [
+              {
+                "frame": "sprites/features/shield-off.png"
+              }
+            ],
+
+            "widgets/toggle/widgets/on": [
+              {
+                "frame": "sprites/features/shield-on.png"
+              }
+            ]
+          }
+        ],
+
+        "feature_invisibility": [
+          "app/widget/game-feature-button",
+          {
+            "widgets/toggle/widgets/off": [
+              {
+                "frame": "sprites/features/invisibility-off.png"
+              }
+            ],
+
+            "widgets/toggle/widgets/on": [
+              {
+                "frame": "sprites/features/invisibility-on.png"
+              }
+            ]
+          }
+        ],
+
+        "feature_fog_of_war": [
+          "app/widget/game-feature-button",
+          {
+            "widgets/toggle/widgets/off": [
+              {
+                "frame": "sprites/features/fog-of-war-off.png"
+              }
+            ],
+
+            "widgets/toggle/widgets/on": [
+              {
+                "frame": "sprites/features/fog-of-war-on.png"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
 }

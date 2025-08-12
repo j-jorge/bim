@@ -1,154 +1,166 @@
 {
-    "meta":
-    {
-        "overrides":
-        [
-            "app/screen/part/menu-background-bounds",
-            "app/screen/part/menu-stripe-bounds",
-            "app/screen/part/feature-deck-bounds",
-            "app/screen/part/wallet-bounds"
-        ]
-    },
+  "meta": {
+    "overrides": [
+      "app/screen/part/menu-background-bounds",
+      "app/screen/part/menu-stripe-bounds",
+      "app/screen/part/feature-deck-bounds",
+      "app/screen/part/wallet-bounds"
+    ]
+  },
 
-    "style":
-    {
-        "rays":
-        [{
-            "anchor.x": 0.5,
-            "anchor.y": 0.5,
-            "anchor.reference.x": 0.5,
-            "anchor.reference.y": 0.57,
-            "width.percents": 200,
-            "height-ratio": 1
-        }],
+  "style": {
+    "rays": [
+      {
+        "anchor.x": 0.5,
+        "anchor.y": 0.5,
+        "anchor.reference.x": 0.5,
+        "anchor.reference.y": 0.57,
+        "width.percents": 200,
+        "height-ratio": 1
+      }
+    ],
 
-        "glow":
-        [{
-            "anchor.x": 0.5,
-            "anchor.y": 0.5,
-            "anchor.reference.x": 0.5,
-            "anchor.reference.y": 0.57,
-            "width.percents": 200,
-            "height-ratio": 1
-        }],
+    "glow": [
+      {
+        "anchor.x": 0.5,
+        "anchor.y": 0.5,
+        "anchor.reference.x": 0.5,
+        "anchor.reference.y": 0.57,
+        "width.percents": 200,
+        "height-ratio": 1
+      }
+    ],
 
-        "player-1":
-        [{
-            "anchor.x": 0.5,
-            "anchor.y": 0,
-            "anchor.reference.x": 0.57,
-            "anchor.reference.y": 0.48,
-            "height.percents": 23,
-            "width-ratio": 0.3
-        }],
+    "player-1": [
+      {
+        "anchor.x": 0.5,
+        "anchor.y": 0,
+        "anchor.reference.x": 0.57,
+        "anchor.reference.y": 0.48,
+        "height.percents": 23,
+        "width-ratio": 0.3
+      }
+    ],
 
-        "player-2":
-        [{
-            "anchor.x": 0.5,
-            "anchor.y": 0,
-            "anchor.reference.x": 0.41,
-            "anchor.reference.y": 0.48,
-            "height.percents": 22,
-            "width-ratio": 0.36
-        }],
+    "player-2": [
+      {
+        "anchor.x": 0.5,
+        "anchor.y": 0,
+        "anchor.reference.x": 0.41,
+        "anchor.reference.y": 0.48,
+        "height.percents": 22,
+        "width-ratio": 0.36
+      }
+    ],
 
-        "player-3":
-        [{
-            "anchor.x": 0.5,
-            "anchor.y": 0,
-            "anchor.reference.x": 0.27,
-            "anchor.reference.y": 0.48,
-            "height.percents": 21,
-            "width-ratio": 0.3
-        }],
+    "player-3": [
+      {
+        "anchor.x": 0.5,
+        "anchor.y": 0,
+        "anchor.reference.x": 0.27,
+        "anchor.reference.y": 0.48,
+        "height.percents": 21,
+        "width-ratio": 0.3
+      }
+    ],
 
-        "feature-description-background":
-        [{
-            "anchor.x": 0.5,
-            "anchor.y": 0.5,
-            "anchor.reference.x": 0.5,
-            "anchor.reference.y": 0.41,
-            "height.percents": 8,
-            "width.percents": 85
-        }],
+    "feature-description-background": [
+      {
+        "anchor.x": 0.5,
+        "anchor.y": 0.5,
+        "anchor.reference.x": 0.5,
+        "anchor.reference.y": 0.41,
+        "height.percents": 8,
+        "width.percents": 85
+      }
+    ],
 
-        "feature-description-background-spike":
-        [{
-            "anchor.x": 0.5,
-            "anchor.y": 0.7,
-            "anchor.reference.x": 0.5,
-            "anchor.reference.y": 0,
-            "scale-mode": "device"
-        }],
+    "feature-description-background-spike": [
+      {
+        "anchor.x": 0.5,
+        "anchor.y": 0.7,
+        "anchor.reference.x": 0.5,
+        "anchor.reference.y": 0,
+        "scale-mode": "device"
+      }
+    ],
 
-        "feature_description":
-        [
-            "app/screen/part/matchmaking-feature-label-bounds"
-        ],
+    "feature_description": [
+      "app/screen/part/matchmaking-feature-label-bounds"
+    ],
 
-        "player-4":
-        [{
-            "anchor.x": 0.5,
-            "anchor.y": 0,
-            "anchor.reference.x": 0.71,
-            "anchor.reference.y": 0.48,
-            "height.percents": 21,
-            "width-ratio": 0.39
-        }],
+    "player-4": [
+      {
+        "anchor.x": 0.5,
+        "anchor.y": 0,
+        "anchor.reference.x": 0.71,
+        "anchor.reference.y": 0.48,
+        "height.percents": 21,
+        "width-ratio": 0.39
+      }
+    ],
 
-        "wait_message":
-        [{
-            "anchor.x": 0.5,
-            "anchor.y": 1,
-            "anchor.reference.x": 0.5,
-            "anchor.reference.y": 0.17,
-            "width.percents": 98
-        }],
+    "wait_message": [
+      {
+        "anchor.x": 0.5,
+        "anchor.y": 1,
+        "anchor.reference.x": 0.5,
+        "anchor.reference.y": 0.17,
+        "width.percents": 98
+      }
+    ],
 
-        "label-2":
-        [{
-            "anchor.x": 0.5,
-            "anchor.y": 0.5,
-            "anchor.reference.x": 0.5,
-            "anchor.reference.y": 0.08
-        }],
+    "label-2": [
+      {
+        "anchor.x": 0.5,
+        "anchor.y": 0.5,
+        "anchor.reference.x": 0.5,
+        "anchor.reference.y": 0.08
+      }
+    ],
 
-        "label-3":
-        [{
-            "anchor.x": 0.5,
-            "anchor.y": 0.5,
-            "anchor.reference.x": 0.5,
-            "anchor.reference.y": 0.08
-        }],
+    "label-3": [
+      {
+        "anchor.x": 0.5,
+        "anchor.y": 0.5,
+        "anchor.reference.x": 0.5,
+        "anchor.reference.y": 0.08
+      }
+    ],
 
-        "label-4":
-        [{
-            "anchor.x": 0.5,
-            "anchor.y": 0.5,
-            "anchor.reference.x": 0.5,
-            "anchor.reference.y": 0.08
-        }],
+    "label-4": [
+      {
+        "anchor.x": 0.5,
+        "anchor.y": 0.5,
+        "anchor.reference.x": 0.5,
+        "anchor.reference.y": 0.08
+      }
+    ],
 
-        "label-background":
-        [{
-            "anchor.x": 0.5,
-            "anchor.y": 1,
-            "anchor.reference.x": 0.5,
-            "anchor.reference.y": 0.215,
-            "width.percents": 100,
-            "height.percents": 100
-        }],
+    "label-background": [
+      {
+        "anchor.x": 0.5,
+        "anchor.y": 1,
+        "anchor.reference.x": 0.5,
+        "anchor.reference.y": 0.215,
+        "width.percents": 100,
+        "height.percents": 100
+      }
+    ],
 
-        "ready_button":
-        [{
-            "anchor.x": 0.5,
-            "anchor.y": 0.5,
-            "anchor.reference.x": 0.5,
-            "anchor.reference.y": 0.18,
-            "width.percents": 50,
-            "height.percents": 10
-        }],
+    "ready_button": [
+      {
+        "anchor.x": 0.5,
+        "anchor.y": 0.5,
+        "anchor.reference.x": 0.5,
+        "anchor.reference.y": 0.18,
+        "width.percents": 50,
+        "height.percents": 10
+      }
+    ],
 
-        "back_button": [ "app/screen/part/back-button-bounds" ]
-    }
+    "back_button": [
+      "app/screen/part/back-button-bounds"
+    ]
+  }
 }

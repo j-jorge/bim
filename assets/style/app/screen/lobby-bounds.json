@@ -1,95 +1,101 @@
 {
-    "meta":
-    {
-        "overrides":
-        [
-            "app/screen/part/menu-background-bounds",
-            "app/screen/part/wallet-bounds"
-        ]
-    },
+  "meta": {
+    "overrides": [
+      "app/screen/part/menu-background-bounds",
+      "app/screen/part/wallet-bounds"
+    ]
+  },
 
-    "style":
-    {
-        "stripe-background":
-        [{
-            "anchor.x": 0.5,
-            "anchor.y": 0.5,
-            "anchor.reference.x": 0.5,
-            "anchor.reference.y": 0.85,
-            "width.percents": 100,
-            "height.percents": 6
-        }],
+  "style": {
+    "stripe-background": [
+      {
+        "anchor.x": 0.5,
+        "anchor.y": 0.5,
+        "anchor.reference.x": 0.5,
+        "anchor.reference.y": 0.85,
+        "width.percents": 100,
+        "height.percents": 6
+      }
+    ],
 
-        "stripe-message": [ "layout/center" ],
+    "stripe-message": [
+      "layout/center"
+    ],
 
-        "arena_games_total":
-        [{
-            "anchor.x": 0.5,
-            "anchor.y": 0.5,
-            "anchor.reference.x": 0.5,
-            "anchor.reference.y": 0.7
-        }],
+    "arena_games_total": [
+      {
+        "anchor.x": 0.5,
+        "anchor.y": 0.5,
+        "anchor.reference.x": 0.5,
+        "anchor.reference.y": 0.7
+      }
+    ],
 
-        "arena_victories":
-        [{
-            "anchor.x": 0.5,
-            "anchor.y": 0.5,
-            "anchor.reference.x": 0.5,
-            "anchor.reference.y": 0.6
-        }],
+    "arena_victories": [
+      {
+        "anchor.x": 0.5,
+        "anchor.y": 0.5,
+        "anchor.reference.x": 0.5,
+        "anchor.reference.y": 0.6
+      }
+    ],
 
-        "arena_defeats":
-        [{
-            "anchor.x": 0.5,
-            "anchor.y": 0.5,
-            "anchor.reference.x": 0.5,
-            "anchor.reference.y": 0.5
-        }],
+    "arena_defeats": [
+      {
+        "anchor.x": 0.5,
+        "anchor.y": 0.5,
+        "anchor.reference.x": 0.5,
+        "anchor.reference.y": 0.5
+      }
+    ],
 
-        "arena_draws":
-        [{
-            "anchor.x": 0.5,
-            "anchor.y": 0.5,
-            "anchor.reference.x": 0.5,
-            "anchor.reference.y": 0.4
-        }],
+    "arena_draws": [
+      {
+        "anchor.x": 0.5,
+        "anchor.y": 0.5,
+        "anchor.reference.x": 0.5,
+        "anchor.reference.y": 0.4
+      }
+    ],
 
-        "settings_button":
-        [{
-            "anchor.x": 0.5,
-            "anchor.y": 0.5,
-            "anchor.reference.x": 0.9,
-            "anchor.reference.y": 0.95,
-            "height.percents": 7,
-            "width-ratio": 1
-        }],
+    "settings_button": [
+      {
+        "anchor.x": 0.5,
+        "anchor.y": 0.5,
+        "anchor.reference.x": 0.9,
+        "anchor.reference.y": 0.95,
+        "height.percents": 7,
+        "width-ratio": 1
+      }
+    ],
 
-        "play_button":
-        [{
-            "anchor.x": 0.5,
-            "anchor.y": 0.5,
-            "anchor.reference.x": 0.5,
-            "anchor.reference.y": 0.25,
-            "width.percents": 50,
-            "height.percents": 15
-        }],
+    "play_button": [
+      {
+        "anchor.x": 0.5,
+        "anchor.y": 0.5,
+        "anchor.reference.x": 0.5,
+        "anchor.reference.y": 0.25,
+        "width.percents": 50,
+        "height.percents": 15
+      }
+    ],
 
-        "debug_button":
-        [{
-            "anchor.x": 0.5,
-            "anchor.y": 0.5,
-            "anchor.reference.x": 0.5,
-            "anchor.reference.y": 0.12,
-            "width.percents": 50,
-            "height.percents": 10
-        }],
+    "debug_button": [
+      {
+        "anchor.x": 0.5,
+        "anchor.y": 0.5,
+        "anchor.reference.x": 0.5,
+        "anchor.reference.y": 0.12,
+        "width.percents": 50,
+        "height.percents": 10
+      }
+    ],
 
-        "debug_activator":
-        [
-            "layout/fill",
-            {
-                "reference": "debug_button"
-            }
-        ]
-    }
+    "debug_activator": [
+      "layout/fill",
+      {
+        "reference": "debug_button"
+      }
+    ]
+  }
 }

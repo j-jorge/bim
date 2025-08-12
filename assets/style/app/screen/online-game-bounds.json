@@ -1,91 +1,93 @@
 {
-    "style":
-    {
-        "top-edge":
-        [{
-            "anchor.x": 0.5,
-            "anchor.y": 0.5,
-            "anchor.reference.x": 0.5,
-            "anchor.reference.y": 0.99,
-            "width.percents": 96,
-            "height.percents": 2
-        }],
+  "style": {
+    "top-edge": [
+      {
+        "anchor.x": 0.5,
+        "anchor.y": 0.5,
+        "anchor.reference.x": 0.5,
+        "anchor.reference.y": 0.99,
+        "width.percents": 96,
+        "height.percents": 2
+      }
+    ],
 
-        "arena-shadow.top":
-        [{
-            "reference": "arena",
-            "anchor.x": 0.5,
-            "anchor.y": 0,
-            "anchor.reference.x": 0.5,
-            "anchor.reference.y": 1,
-            "width.percents": 100,
-            "height.percents": 4
-        }],
+    "arena-shadow.top": [
+      {
+        "reference": "arena",
+        "anchor.x": 0.5,
+        "anchor.y": 0,
+        "anchor.reference.x": 0.5,
+        "anchor.reference.y": 1,
+        "width.percents": 100,
+        "height.percents": 4
+      }
+    ],
 
-        "arena-shadow.bottom":
-        [{
-            "reference": "arena",
-            "anchor.x": 0.5,
-            "anchor.y": 1,
-            "anchor.reference.x": 0.5,
-            "anchor.reference.y": 0,
-            "width.percents": 100,
-            "height.percents": 10
-        }],
+    "arena-shadow.bottom": [
+      {
+        "reference": "arena",
+        "anchor.x": 0.5,
+        "anchor.y": 1,
+        "anchor.reference.x": 0.5,
+        "anchor.reference.y": 0,
+        "width.percents": 100,
+        "height.percents": 10
+      }
+    ],
 
-        "arena":
-        [{
-            "anchor.x": 0.5,
-            "anchor.y": 1,
-            "anchor.reference.x": 0.5,
-            "anchor.reference.y": 0.98,
-            "height.percents": 69,
-            "width-ratio": 0.866,
-            "width.max-percents": 100
-        }],
+    "arena": [
+      {
+        "anchor.x": 0.5,
+        "anchor.y": 1,
+        "anchor.reference.x": 0.5,
+        "anchor.reference.y": 0.98,
+        "height.percents": 69,
+        "width-ratio": 0.866,
+        "width.max-percents": 100
+      }
+    ],
 
-        "fog_container":
-        [
-            "layout/fill",
-            {
-                "reference": "arena"
-            }
-        ],
+    "fog_container": [
+      "layout/fill",
+      {
+        "reference": "arena"
+      }
+    ],
 
-        "background":
-        [
-            "layout/fill",
-            {
-                "reference": "arena"
-            }
-        ],
+    "background": [
+      "layout/fill",
+      {
+        "reference": "arena"
+      }
+    ],
 
-        "control-panel.background":
-        [{
-            "anchor.x": 0.5,
-            "anchor.y": 0.5,
-            "anchor.reference.x": 0.5,
-            "anchor.reference.y": 0.5,
-            "width.percents": 150,
-            "height.percents": 120
-        }],
+    "control-panel.background": [
+      {
+        "anchor.x": 0.5,
+        "anchor.y": 0.5,
+        "anchor.reference.x": 0.5,
+        "anchor.reference.y": 0.5,
+        "width.percents": 150,
+        "height.percents": 120
+      }
+    ],
 
-        "control-panel.shadow":
-        [{
-            "anchor.x": 0.5,
-            "anchor.y": 0,
-            "anchor.reference.x": 0.5,
-            "anchor.reference.y": 0,
-            "width.percents": 100,
-            "height.percents": 10
-        }],
+    "control-panel.shadow": [
+      {
+        "anchor.x": 0.5,
+        "anchor.y": 0,
+        "anchor.reference.x": 0.5,
+        "anchor.reference.y": 0,
+        "width.percents": 100,
+        "height.percents": 10
+      }
+    ],
 
-        "peephole":
-        [
-            "layout/fill",
-            {
-                "reference": "arena"
-            }
-        ]
-    }
+    "peephole": [
+      "layout/fill",
+      {
+        "reference": "arena"
+      }
+    ]
+  }
 }

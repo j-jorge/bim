@@ -1,224 +1,410 @@
 {
-    "style":
-    {
-        "wallet": [ "app/screen/part/wallet" ],
-        "feature-deck": [ "app/screen/part/feature-deck" ],
+  "style": {
+    "wallet": [
+      "app/screen/part/wallet"
+    ],
+    "feature-deck": [
+      "app/screen/part/feature-deck"
+    ],
 
-        "widgets":
-        [
-            "app/screen/part/menu-background",
-            "app/screen/part/menu-stripe",
-            {
-                "stripe_title/text.i18n": "Online Game",
-                "stripe_message/text.i18n": "Waiting for your opponents…\nTell your friends to join!",
+    "widgets": [
+      "app/screen/part/menu-background",
+      "app/screen/part/menu-stripe",
+      {
+        "stripe_title/text.i18n": "Online Game",
+        "stripe_message/text.i18n":
+            "Waiting for your opponents…\nTell your friends to join!",
 
-                "pattern":
-                [{
-                    "widgets/sprite/frame":
-                    "texture/search-background-pattern.png",
-                    "scroll-per-second.x": -10,
-                    "scale": 0.75
-                }],
-
-                "rays":
-                [{
-                    "instantiate": "ax::Sprite",
-                    "frame": "sprites/menu/rays.png",
-                    "z-order": -20,
-                    "opacity": 0.1
-                }],
-
-                "glow":
-                [{
-                    "instantiate": "ax::Sprite",
-                    "frame": "sprites/menu/glow.png",
-                    "color": "danube",
-                    "z-order": -19
-                }],
-
-                "player-1":
-                [{
-                    "instantiate": "ax::Sprite",
-                    "frame": "sprites/menu/silhouette-1.png",
-                    "color": "black",
-                    "z-order": 2
-                }],
-
-                "player-2":
-                [{
-                    "instantiate": "ax::Sprite",
-                    "frame": "sprites/menu/silhouette-2.png",
-                    "color": "black",
-                    "z-order": 2
-                }],
-
-                "player-3":
-                [{
-                    "instantiate": "ax::Sprite",
-                    "frame": "sprites/menu/silhouette-3.png",
-                    "color": "black",
-                    "z-order": 2
-                }],
-
-                "player-4":
-                [{
-                    "instantiate": "ax::Sprite",
-                    "frame": "sprites/menu/silhouette-4.png",
-                    "color": "black",
-                    "z-order": 2
-                }],
-
-                "feature-description-background":
-                [
-                    "nine-slice/rounded-rectangle",
-                    {
-                        "instantiate": "nine_slices",
-                        "z-order": 5
-                    }
-                ],
-
-                "feature_description":
-                [
-                    "app/screen/part/matchmaking-feature-label",
-                    {
-                        "parent": "feature-description-background"
-                    }
-                ],
-
-                "feature-description-background-spike":
-                [{
-                    "instantiate": "ax::Sprite",
-                    "frame": "sprites/menu/rounded-rectangle-spike.png",
-                    "parent": "feature-description-background",
-                    "z-order": 10
-                }],
-
-                "wait_message":
-                [
-                    "font/bold-center-normal-size",
-                    {
-                        "text": "Placeholder to have a size.",
-                        "anchor-point.x": 0.5,
-                        "anchor-point.y": 1,
-                        "align.vertical": "top",
-                        "overflow": "resize-height",
-                        "wrap": true,
-                        "z-order": 5
-                    }
-                ],
-
-                "label-2":
-                [
-                    "app/screen/part/matchmaking-player-label",
-                    {
-                        "text.i18n": "You can start a two-players game\nnow or wait for more players!"
-                    }
-                ],
-
-                "label-3":
-                [
-                    "app/screen/part/matchmaking-player-label",
-                    {
-                        "text.i18n": "You can start a three-players game\nnow or wait for more players!"
-                    }
-                ],
-
-                "label-4":
-                [
-                    "app/screen/part/matchmaking-player-label",
-                    {
-                        "text.i18n": "Start the game now!"
-                    }
-                ],
-
-                "label-background":
-                [
-                    "nine-slice/stripe",
-                    {
-                        "instantiate": "nine_slices",
-                        "z-order": -10
-                    }
-                ],
-
-                "ready_button":
-                [
-                    "button/yellow-with-label",
-                    {
-                        "widgets/label/text.i18n": "FIGHT!",
-                        "z-order": 20
-                    }
-                ],
-
-                "back_button": [ "app/screen/part/back-button" ]
-            }
+        "pattern": [
+          {
+            "widgets/sprite/frame": "texture/search-background-pattern.png",
+            "scroll-per-second.x": -10,
+            "scale": 0.75
+          }
         ],
 
-        "display.displaying":
-        [{
-            "wait_message": [{ "visible": false }],
-            "player-2": [{ "visible": false }],
-            "player-3": [{ "visible": false }],
-            "player-4": [{ "visible": false }],
-            "label-2": [{ "visible": false }],
-            "label-3": [{ "visible": false }],
-            "label-4": [{ "visible": false }]
-        }],
+        "rays": [
+          {
+            "instantiate": "ax::Sprite",
+            "frame": "sprites/menu/rays.png",
+            "z-order": -20,
+            "opacity": 0.1
+          }
+        ],
 
-        "actions.displaying":
-        [{
-            "rays": [ "action/rotate-forever-30s" ]
-        }],
+        "glow": [
+          {
+            "instantiate": "ax::Sprite",
+            "frame": "sprites/menu/glow.png",
+            "color": "danube",
+            "z-order": -19
+          }
+        ],
 
-        "actions.wait":
-        [{
-            "ready_button": [{ "instantiate": "hide" }],
-            "back_button": [{ "instantiate": "show" }],
-            "wait_message": [{ "instantiate": "show" }],
-            "player-2": [{ "instantiate": "hide" }],
-            "player-3": [{ "instantiate": "hide" }],
-            "player-4": [{ "instantiate": "hide" }],
-            "label-2": [{ "instantiate": "hide" }],
-            "label-3": [{ "instantiate": "hide" }],
-            "label-4": [{ "instantiate": "hide" }]
-        }],
+        "player-1": [
+          {
+            "instantiate": "ax::Sprite",
+            "frame": "sprites/menu/silhouette-1.png",
+            "color": "black",
+            "z-order": 2
+          }
+        ],
 
-        "actions.2-players":
-        [{
-            "ready_button": [{ "instantiate": "show" }],
-            "back_button": [{ "instantiate": "hide" }],
-            "wait_message": [{ "instantiate": "hide" }],
-            "player-2": [{ "instantiate": "show" }],
-            "player-3": [{ "instantiate": "hide" }],
-            "player-4": [{ "instantiate": "hide" }],
-            "label-2": [{ "instantiate": "show" }],
-            "label-3": [{ "instantiate": "hide" }],
-            "label-4": [{ "instantiate": "hide" }]
-        }],
+        "player-2": [
+          {
+            "instantiate": "ax::Sprite",
+            "frame": "sprites/menu/silhouette-2.png",
+            "color": "black",
+            "z-order": 2
+          }
+        ],
 
-        "actions.3-players":
-        [{
-            "ready_button": [{ "instantiate": "show" }],
-            "back_button": [{ "instantiate": "hide" }],
-            "wait_message": [{ "instantiate": "hide" }],
-            "player-2": [{ "instantiate": "show" }],
-            "player-3": [{ "instantiate": "show" }],
-            "player-4": [{ "instantiate": "hide" }],
-            "label-2": [{ "instantiate": "hide" }],
-            "label-3": [{ "instantiate": "show" }],
-            "label-4": [{ "instantiate": "hide" }]
-        }],
+        "player-3": [
+          {
+            "instantiate": "ax::Sprite",
+            "frame": "sprites/menu/silhouette-3.png",
+            "color": "black",
+            "z-order": 2
+          }
+        ],
 
-        "actions.4-players":
-        [{
-            "ready_button": [{ "instantiate": "show" }],
-            "back_button": [{ "instantiate": "hide" }],
-            "wait_message": [{ "instantiate": "hide" }],
-            "player-2": [{ "instantiate": "show" }],
-            "player-3": [{ "instantiate": "show" }],
-            "player-4": [{ "instantiate": "show" }],
-            "label-2": [{ "instantiate": "hide" }],
-            "label-3": [{ "instantiate": "hide" }],
-            "label-4": [{ "instantiate": "show" }]
-        }]
-    }
+        "player-4": [
+          {
+            "instantiate": "ax::Sprite",
+            "frame": "sprites/menu/silhouette-4.png",
+            "color": "black",
+            "z-order": 2
+          }
+        ],
+
+        "feature-description-background": [
+          "nine-slice/rounded-rectangle",
+          {
+            "instantiate": "nine_slices",
+            "z-order": 5
+          }
+        ],
+
+        "feature_description": [
+          "app/screen/part/matchmaking-feature-label",
+          {
+            "parent": "feature-description-background"
+          }
+        ],
+
+        "feature-description-background-spike": [
+          {
+            "instantiate": "ax::Sprite",
+            "frame": "sprites/menu/rounded-rectangle-spike.png",
+            "parent": "feature-description-background",
+            "z-order": 10
+          }
+        ],
+
+        "wait_message": [
+          "font/bold-center-normal-size",
+          {
+            "text": "Placeholder to have a size.",
+            "anchor-point.x": 0.5,
+            "anchor-point.y": 1,
+            "align.vertical": "top",
+            "overflow": "resize-height",
+            "wrap": true,
+            "z-order": 5
+          }
+        ],
+
+        "label-2": [
+          "app/screen/part/matchmaking-player-label",
+          {
+            "text.i18n":
+                "You can start a two-players game\nnow or wait for more players!"
+          }
+        ],
+
+        "label-3": [
+          "app/screen/part/matchmaking-player-label",
+          {
+            "text.i18n":
+                "You can start a three-players game\nnow or wait for more players!"
+          }
+        ],
+
+        "label-4": [
+          "app/screen/part/matchmaking-player-label",
+          {
+            "text.i18n": "Start the game now!"
+          }
+        ],
+
+        "label-background": [
+          "nine-slice/stripe",
+          {
+            "instantiate": "nine_slices",
+            "z-order": -10
+          }
+        ],
+
+        "ready_button": [
+          "button/yellow-with-label",
+          {
+            "widgets/label/text.i18n": "FIGHT!",
+            "z-order": 20
+          }
+        ],
+
+        "back_button": [
+          "app/screen/part/back-button"
+        ]
+      }
+    ],
+
+    "display.displaying": [
+      {
+        "wait_message": [
+          {
+            "visible": false
+          }
+        ],
+        "player-2": [
+          {
+            "visible": false
+          }
+        ],
+        "player-3": [
+          {
+            "visible": false
+          }
+        ],
+        "player-4": [
+          {
+            "visible": false
+          }
+        ],
+        "label-2": [
+          {
+            "visible": false
+          }
+        ],
+        "label-3": [
+          {
+            "visible": false
+          }
+        ],
+        "label-4": [
+          {
+            "visible": false
+          }
+        ]
+      }
+    ],
+
+    "actions.displaying": [
+      {
+        "rays": [
+          "action/rotate-forever-30s"
+        ]
+      }
+    ],
+
+    "actions.wait": [
+      {
+        "ready_button": [
+          {
+            "instantiate": "hide"
+          }
+        ],
+        "back_button": [
+          {
+            "instantiate": "show"
+          }
+        ],
+        "wait_message": [
+          {
+            "instantiate": "show"
+          }
+        ],
+        "player-2": [
+          {
+            "instantiate": "hide"
+          }
+        ],
+        "player-3": [
+          {
+            "instantiate": "hide"
+          }
+        ],
+        "player-4": [
+          {
+            "instantiate": "hide"
+          }
+        ],
+        "label-2": [
+          {
+            "instantiate": "hide"
+          }
+        ],
+        "label-3": [
+          {
+            "instantiate": "hide"
+          }
+        ],
+        "label-4": [
+          {
+            "instantiate": "hide"
+          }
+        ]
+      }
+    ],
+
+    "actions.2-players": [
+      {
+        "ready_button": [
+          {
+            "instantiate": "show"
+          }
+        ],
+        "back_button": [
+          {
+            "instantiate": "hide"
+          }
+        ],
+        "wait_message": [
+          {
+            "instantiate": "hide"
+          }
+        ],
+        "player-2": [
+          {
+            "instantiate": "show"
+          }
+        ],
+        "player-3": [
+          {
+            "instantiate": "hide"
+          }
+        ],
+        "player-4": [
+          {
+            "instantiate": "hide"
+          }
+        ],
+        "label-2": [
+          {
+            "instantiate": "show"
+          }
+        ],
+        "label-3": [
+          {
+            "instantiate": "hide"
+          }
+        ],
+        "label-4": [
+          {
+            "instantiate": "hide"
+          }
+        ]
+      }
+    ],
+
+    "actions.3-players": [
+      {
+        "ready_button": [
+          {
+            "instantiate": "show"
+          }
+        ],
+        "back_button": [
+          {
+            "instantiate": "hide"
+          }
+        ],
+        "wait_message": [
+          {
+            "instantiate": "hide"
+          }
+        ],
+        "player-2": [
+          {
+            "instantiate": "show"
+          }
+        ],
+        "player-3": [
+          {
+            "instantiate": "show"
+          }
+        ],
+        "player-4": [
+          {
+            "instantiate": "hide"
+          }
+        ],
+        "label-2": [
+          {
+            "instantiate": "hide"
+          }
+        ],
+        "label-3": [
+          {
+            "instantiate": "show"
+          }
+        ],
+        "label-4": [
+          {
+            "instantiate": "hide"
+          }
+        ]
+      }
+    ],
+
+    "actions.4-players": [
+      {
+        "ready_button": [
+          {
+            "instantiate": "show"
+          }
+        ],
+        "back_button": [
+          {
+            "instantiate": "hide"
+          }
+        ],
+        "wait_message": [
+          {
+            "instantiate": "hide"
+          }
+        ],
+        "player-2": [
+          {
+            "instantiate": "show"
+          }
+        ],
+        "player-3": [
+          {
+            "instantiate": "show"
+          }
+        ],
+        "player-4": [
+          {
+            "instantiate": "show"
+          }
+        ],
+        "label-2": [
+          {
+            "instantiate": "hide"
+          }
+        ],
+        "label-3": [
+          {
+            "instantiate": "hide"
+          }
+        ],
+        "label-4": [
+          {
+            "instantiate": "show"
+          }
+        ]
+      }
+    ]
+  }
 }

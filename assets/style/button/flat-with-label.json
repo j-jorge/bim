@@ -1,53 +1,56 @@
 {
-    "meta":
-    {
-        "overrides": [ "button/base" ]
-    },
+  "meta": {
+    "overrides": [
+      "button/base"
+    ]
+  },
 
-    "style":
-    {
-        "widgets":
-        [{
-            "background":
-            [{
-                "instantiate": "nine_slices",
-                "widgets/sprite":
-                [{
-                    "frame": "sprites/menu/dot-100.png",
-                    "insets.left": 49,
-                    "insets.top": 49,
-                    "insets.width": 1,
-                    "insets.height": 1
-                }],
-                "stretch-direction.vertical": false,
-                "color": "desert-storm"
-            }],
+  "style": {
+    "widgets": [
+      {
+        "background": [
+          {
+            "instantiate": "nine_slices",
+            "widgets/sprite": [
+              {
+                "frame": "sprites/menu/dot-100.png",
+                "insets.left": 49,
+                "insets.top": 49,
+                "insets.width": 1,
+                "insets.height": 1
+              }
+            ],
+            "stretch-direction.vertical": false,
+            "color": "desert-storm"
+          }
+        ],
 
-            "label":
-            [
-                "font/bold",
-                {
-                    "instantiate": "ax::Label",
-                    "font.size": 52,
-                    "font.color": "cod-gray",
-                    "align.horizontal": "center",
-                    "z-order": 10
-                }
-            ]
-        }],
+        "label": [
+          "font/bold",
+          {
+            "instantiate": "ax::Label",
+            "font.size": 52,
+            "font.color": "cod-gray",
+            "align.horizontal": "center",
+            "z-order": 10
+          }
+        ]
+      }
+    ],
 
-        "bounds":
-        [{
-            "background": [ "layout/fill" ],
+    "bounds": [
+      {
+        "background": [
+          "layout/fill"
+        ],
 
-            "label":
-            [
-                "layout/center",
-                {
-                    "reference": "background"
-                }
-            ]
-        }]
-    }
+        "label": [
+          "layout/center",
+          {
+            "reference": "background"
+          }
+        ]
+      }
+    ]
+  }
 }
-

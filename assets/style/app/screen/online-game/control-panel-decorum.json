@@ -1,72 +1,74 @@
 {
-    "style":
-    {
-        "timer":
-        [{
-            "reference": "control_panel",
-            "anchor.x": 0.5,
-            "anchor.y": 1,
-            "anchor.reference.x": 0.5,
-            "anchor.reference.y": 0.97
-        }],
+  "style": {
+    "timer": [
+      {
+        "reference": "control_panel",
+        "anchor.x": 0.5,
+        "anchor.y": 1,
+        "anchor.reference.x": 0.5,
+        "anchor.reference.y": 0.97
+      }
+    ],
 
-        "bim":
-        [{
-            "reference": "control_panel",
-            "anchor.x": 0.5,
-            "anchor.y": 1,
-            "anchor.reference.x": 0.5,
-            "anchor.reference.y": 0.97
-        }],
+    "bim": [
+      {
+        "reference": "control_panel",
+        "anchor.x": 0.5,
+        "anchor.y": 1,
+        "anchor.reference.x": 0.5,
+        "anchor.reference.y": 0.97
+      }
+    ],
 
-        "control-panel.left-edging":
-        [
-            "app/screen/online-game/control-panel-edging",
-            {
-                "anchor.x": 1
-            }
-        ],
+    "control-panel.left-edging": [
+      "app/screen/online-game/control-panel-edging",
+      {
+        "anchor.x": 1
+      }
+    ],
 
-        "control-panel.right-edging":
-        [
-            "app/screen/online-game/control-panel-edging",
-            {
-                "anchor.x": 0
-            }
-        ],
+    "control-panel.right-edging": [
+      "app/screen/online-game/control-panel-edging",
+      {
+        "anchor.x": 0
+      }
+    ],
 
-        "bomb_button":
-        [{
-            "reference": "control_panel",
-            "anchor.x": 0.5,
-            "anchor.y": 0.5,
-            "anchor.reference.x": 0.5,
-            "anchor.reference.y": 0.5,
-            "width.percents": 32,
-            "height-ratio": 1.08
-        }],
+    "bomb_button": [
+      {
+        "reference": "control_panel",
+        "anchor.x": 0.5,
+        "anchor.y": 0.5,
+        "anchor.reference.x": 0.5,
+        "anchor.reference.y": 0.5,
+        "width.percents": 32,
+        "height-ratio": 1.08
+      }
+    ],
 
-        "directional_pad":
-        [{
-            "reference": "control_panel",
-            "anchor.x": 0.5,
-            "anchor.y": 0.5,
-            "anchor.reference.x": 0.5,
-            "anchor.reference.y": 0.5,
-            "width.percents": 45,
-            "height-ratio": 1,
-            "height.max-percents": 80
-        }],
+    "directional_pad": [
+      {
+        "reference": "control_panel",
+        "anchor.x": 0.5,
+        "anchor.y": 0.5,
+        "anchor.reference.x": 0.5,
+        "anchor.reference.y": 0.5,
+        "width.percents": 45,
+        "height-ratio": 1,
+        "height.max-percents": 80
+      }
+    ],
 
-        "joystick":
-        [{
-            "reference": "control_panel",
-            "anchor.x": 0.5,
-            "anchor.y": 0.5,
-            "anchor.reference.x": 0.5,
-            "anchor.reference.y": 0.5,
-            "width.percents": 90,
-            "height.percents": 90
-        }]
-    }
+    "joystick": [
+      {
+        "reference": "control_panel",
+        "anchor.x": 0.5,
+        "anchor.y": 0.5,
+        "anchor.reference.x": 0.5,
+        "anchor.reference.y": 0.5,
+        "width.percents": 90,
+        "height.percents": 90
+      }
+    ]
+  }
 }

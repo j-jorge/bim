@@ -1,14 +1,14 @@
 {
-    "meta":
-    {
-        "overrides": [ "font/bold" ]
-    },
+  "meta": {
+    "overrides": [
+      "font/bold"
+    ]
+  },
 
-    "style":
-    {
-        "font.size": 52,
-        "font.italics": true,
-        "font.color": "white",
-        "align.horizontal": "center"
-    }
+  "style": {
+    "font.size": 52,
+    "font.italics": true,
+    "font.color": "white",
+    "align.horizontal": "center"
+  }
 }

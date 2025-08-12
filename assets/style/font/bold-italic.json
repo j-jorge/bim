@@ -1,6 +1,5 @@
 {
-    "style":
-    {
-        "font.file": "font/OpenSans-ExtraBoldItalic.ttf"
-    }
+  "style": {
+    "font.file": "font/OpenSans-ExtraBoldItalic.ttf"
+  }
 }

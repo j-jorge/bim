@@ -1,42 +1,39 @@
 {
-    "style":
-    {
-        "stripe":
-        [{
-            "instantiate": "ax::Node",
-            "anchor-point.x": 0.5,
-            "anchor-point.y": 0.5,
-            "rotation": -10
-        }],
+  "style": {
+    "stripe": [
+      {
+        "instantiate": "ax::Node",
+        "anchor-point.x": 0.5,
+        "anchor-point.y": 0.5,
+        "rotation": -10
+      }
+    ],
 
-        "stripe_background":
-        [
-            "nine-slice/stripe",
-            {
-                "instantiate": "nine_slices",
-                "parent": "stripe",
-                "z-order": -10
-            }
-        ],
+    "stripe_background": [
+      "nine-slice/stripe",
+      {
+        "instantiate": "nine_slices",
+        "parent": "stripe",
+        "z-order": -10
+      }
+    ],
 
-        "stripe_title":
-        [
-            "app/screen/font/stripe-title",
-            {
-                "instantiate": "ax::Label",
-                "parent": "stripe",
-                "z-order": 30
-            }
-        ],
+    "stripe_title": [
+      "app/screen/font/stripe-title",
+      {
+        "instantiate": "ax::Label",
+        "parent": "stripe",
+        "z-order": 30
+      }
+    ],
 
-        "stripe_message":
-        [
-            "app/screen/font/stripe-message",
-            {
-                "instantiate": "ax::Label",
-                "parent": "stripe",
-                "z-order": 30
-            }
-        ]
-    }
+    "stripe_message": [
+      "app/screen/font/stripe-message",
+      {
+        "instantiate": "ax::Label",
+        "parent": "stripe",
+        "z-order": 30
+      }
+    ]
+  }
 }

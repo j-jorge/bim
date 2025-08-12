@@ -1,14 +1,14 @@
 {
-    "style":
-    {
-        "widgets/sprite":
-        [{
-            "frame": "sprites/menu/price-tag-88-40.png",
-            "insets.left": 88,
-            "insets.top": 40,
-            "insets.width": 1,
-            "insets.height": 1,
-            "stretch-direction.vertical": false
-        }]
-    }
+  "style": {
+    "widgets/sprite": [
+      {
+        "frame": "sprites/menu/price-tag-88-40.png",
+        "insets.left": 88,
+        "insets.top": 40,
+        "insets.width": 1,
+        "insets.height": 1,
+        "stretch-direction.vertical": false
+      }
+    ]
+  }
 }

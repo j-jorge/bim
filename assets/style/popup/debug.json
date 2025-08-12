@@ -1,156 +1,185 @@
 {
-    "style":
-    {
-        "popup": [ "popup/full-screen" ],
+  "style": {
+    "popup": [
+      "popup/full-screen"
+    ],
 
-        "list-item": [],
+    "list-item": [],
 
-        "title-item-controls":
-        [{
-            "background":
-            [{
-                "instantiate": "ax::LayerColor",
-                "color": "desert-storm",
-                "opacity": 1,
-                "z-order": -10
-            }],
+    "title-item-controls": [
+      {
+        "background": [
+          {
+            "instantiate": "ax::LayerColor",
+            "color": "desert-storm",
+            "opacity": 1,
+            "z-order": -10
+          }
+        ],
 
-            "label":
-            [
-                "font/fancy-regular",
-                {
-                    "font.color": "cod-gray",
-                    "font.size": 72
-                }
-            ]
-        }],
+        "label": [
+          "font/fancy-regular",
+          {
+            "font.color": "cod-gray",
+            "font.size": 72
+          }
+        ]
+      }
+    ],
 
-        "title-item-bounds":
-        [{
-            "background": [ "layout/fill" ],
-            "label": [ "layout/center" ]
-        }],
+    "title-item-bounds": [
+      {
+        "background": [
+          "layout/fill"
+        ],
+        "label": [
+          "layout/center"
+        ]
+      }
+    ],
 
-        "text-item-controls":
-        [{
-            "label": [ "popup/debug/font/main" ],
-            "value":
-            [
-                "popup/debug/font/main",
-                {
-                    "align.horizontal": "right"
-                }
-            ]
-        }],
+    "text-item-controls": [
+      {
+        "label": [
+          "popup/debug/font/main"
+        ],
+        "value": [
+          "popup/debug/font/main",
+          {
+            "align.horizontal": "right"
+          }
+        ]
+      }
+    ],
 
-        "text-item-bounds":
-        [{
-            "label": [ "layout/left-center" ],
-            "value": [ "layout/right-center" ]
-        }],
+    "text-item-bounds": [
+      {
+        "label": [
+          "layout/left-center"
+        ],
+        "value": [
+          "layout/right-center"
+        ]
+      }
+    ],
 
-        "toggle-item-controls":
-        [{
-            "label": [ "popup/debug/font/main" ],
-            "toggle": [ "toggle/flat" ]
-        }],
+    "toggle-item-controls": [
+      {
+        "label": [
+          "popup/debug/font/main"
+        ],
+        "toggle": [
+          "toggle/flat"
+        ]
+      }
+    ],
 
-        "toggle-item-bounds":
-        [{
-            "label": [ "layout/left-center" ],
-            "toggle":
-            [
-                "layout/right-center",
-                {
-                    "width.percents": 20,
-                    "height.percents": 90
-                }
-            ]
-        }],
+    "toggle-item-bounds": [
+      {
+        "label": [
+          "layout/left-center"
+        ],
+        "toggle": [
+          "layout/right-center",
+          {
+            "width.percents": 20,
+            "height.percents": 90
+          }
+        ]
+      }
+    ],
 
-        "button-item-controls":
-        [{
-            "label": [ "popup/debug/font/main" ],
-            "button":
-            [
-                "button/flat-with-label",
-                {
-                    "widgets/label/text": "Go"
-                }
-            ]
-        }],
+    "button-item-controls": [
+      {
+        "label": [
+          "popup/debug/font/main"
+        ],
+        "button": [
+          "button/flat-with-label",
+          {
+            "widgets/label/text": "Go"
+          }
+        ]
+      }
+    ],
 
-        "button-item-bounds":
-        [{
-            "label": [ "layout/left-center" ],
-            "button":
-            [
-                "layout/right-center",
-                {
-                    "width.percents": 20,
-                    "height.percents": 90
-                }
-            ]
-        }],
+    "button-item-bounds": [
+      {
+        "label": [
+          "layout/left-center"
+        ],
+        "button": [
+          "layout/right-center",
+          {
+            "width.percents": 20,
+            "height.percents": 90
+          }
+        ]
+      }
+    ],
 
-        "widgets":
-        [{
-            "title":
-            [
-                "font/bold",
-                {
-                    "instantiate": "ax::Label",
-                    "text.i18n": "Debug",
-                    "font.color": "desert-storm",
-                    "font.size": 90
-                }
-            ],
+    "widgets": [
+      {
+        "title": [
+          "font/bold",
+          {
+            "instantiate": "ax::Label",
+            "text.i18n": "Debug",
+            "font.color": "desert-storm",
+            "font.size": 90
+          }
+        ],
 
-            "list/item-size":
-            [{
-                "width.percents": 100,
-                "height-ratio": 0.1
-            }],
+        "list/item-size": [
+          {
+            "width.percents": 100,
+            "height-ratio": 0.1
+          }
+        ],
 
-            "close_button":
-            [
-                "button/yellow-with-label",
-                {
-                    "widgets/label/text.i18n": "OK",
-                    "z-order": 0
-                }
-            ]
-        }],
+        "close_button": [
+          "button/yellow-with-label",
+          {
+            "widgets/label/text.i18n": "OK",
+            "z-order": 0
+          }
+        ]
+      }
+    ],
 
-        "bounds":
-        [{
-            "title":
-            [{
-                "anchor.x": 0.5,
-                "anchor.y": 0.5,
-                "anchor.reference.x": 0.5,
-                "anchor.reference.y": 0.95
-            }],
+    "bounds": [
+      {
+        "title": [
+          {
+            "anchor.x": 0.5,
+            "anchor.y": 0.5,
+            "anchor.reference.x": 0.5,
+            "anchor.reference.y": 0.95
+          }
+        ],
 
-            "list":
-            [{
-                "anchor.x": 0.5,
-                "anchor.y": 0,
-                "anchor.reference.x": 0.5,
-                "anchor.reference.y": 0.18,
-                "width.percents": 95,
-                "height.percents": 70
-            }],
+        "list": [
+          {
+            "anchor.x": 0.5,
+            "anchor.y": 0,
+            "anchor.reference.x": 0.5,
+            "anchor.reference.y": 0.18,
+            "width.percents": 95,
+            "height.percents": 70
+          }
+        ],
 
-            "close_button":
-            [{
-                "anchor.x": 0.5,
-                "anchor.y": 0.5,
-                "anchor.reference.x": 0.5,
-                "anchor.reference.y": 0.1,
-                "width.percents": 50,
-                "height.percents": 12
-            }]
-        }]
-    }
+        "close_button": [
+          {
+            "anchor.x": 0.5,
+            "anchor.y": 0.5,
+            "anchor.reference.x": 0.5,
+            "anchor.reference.y": 0.1,
+            "width.percents": 50,
+            "height.percents": 12
+          }
+        ]
+      }
+    ]
+  }
 }

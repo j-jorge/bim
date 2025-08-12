@@ -1,15 +1,15 @@
 {
-    "meta":
-    {
-        "overrides": [ "button/green-with-label" ]
-    },
+  "meta": {
+    "overrides": [
+      "button/green-with-label"
+    ]
+  },
 
-    "style":
-    {
-        "widgets/decorum-on/widgets/fill":
-        [{
-            "frame": "sprites/menu/vertical-red-gradient.png"
-        }]
-    }
+  "style": {
+    "widgets/decorum-on/widgets/fill": [
+      {
+        "frame": "sprites/menu/vertical-red-gradient.png"
+      }
+    ]
+  }
 }
-

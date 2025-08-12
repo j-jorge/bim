@@ -1,16 +1,16 @@
 {
-    "meta":
-    {
-        "overrides": [ "font/fancy-regular" ]
-    },
+  "meta": {
+    "overrides": [
+      "font/fancy-regular"
+    ]
+  },
 
-    "style":
-    {
-        "font.color": "white",
-        "shadow.color": "cod-gray",
-        "shadow.offset.y": -8,
-        "outline.color": "cod-gray",
-        "outline.size": 5,
-        "align.horizontal": "center"
-    }
+  "style": {
+    "font.color": "white",
+    "shadow.color": "cod-gray",
+    "shadow.offset.y": -8,
+    "outline.color": "cod-gray",
+    "outline.size": 5,
+    "align.horizontal": "center"
+  }
 }

@@ -1,53 +1,56 @@
 {
-    "style":
-    {
-        "popup": [ "popup/small" ],
+  "style": {
+    "popup": [
+      "popup/small"
+    ],
 
-        "widgets":
-        [{
-            "message":
-            [
-                "font/bold",
-                {
-                    "font.size": 50,
-                    "font.color": "white",
-                    "align.horizontal": "center",
-                    "wrap": true,
-                    "z-order": -10
-                }
-            ],
+    "widgets": [
+      {
+        "message": [
+          "font/bold",
+          {
+            "font.size": 50,
+            "font.color": "white",
+            "align.horizontal": "center",
+            "wrap": true,
+            "z-order": -10
+          }
+        ],
 
-            "yes_button":
-            [
-                "button/yellow-with-label",
-                {
-                    "widgets/label/text.i18n": "OK",
-                    "z-order": 0
-                }
-            ]
-        }],
+        "yes_button": [
+          "button/yellow-with-label",
+          {
+            "widgets/label/text.i18n": "OK",
+            "z-order": 0
+          }
+        ]
+      }
+    ],
 
-        "bounds":
-        [{
-            "message":
-            [{
-                "anchor.x": 0.5,
-                "anchor.y": 0.5,
-                "anchor.reference.x": 0.5,
-                "anchor.reference.y": 0.6,
-                "width.percents": 75,
-                "height.percents": 90
-            }],
+    "bounds": [
+      {
+        "message": [
+          {
+            "anchor.x": 0.5,
+            "anchor.y": 0.5,
+            "anchor.reference.x": 0.5,
+            "anchor.reference.y": 0.6,
+            "width.percents": 75,
+            "height.percents": 90
+          }
+        ],
 
-            "yes_button":
-            [{
-                "anchor.x": 0.5,
-                "anchor.y": 0.5,
-                "anchor.reference.x": 0.5,
-                "anchor.reference.y": 0.2,
-                "width.percents": 35,
-                "height.percents": 25
-            }]
-        }]
-    }
+        "yes_button": [
+          {
+            "anchor.x": 0.5,
+            "anchor.y": 0.5,
+            "anchor.reference.x": 0.5,
+            "anchor.reference.y": 0.2,
+            "width.percents": 35,
+            "height.percents": 25
+          }
+        ]
+      }
+    ]
+  }
 }

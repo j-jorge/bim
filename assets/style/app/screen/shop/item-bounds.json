@@ -1,9 +1,8 @@
 {
-    "style":
-    {
-        "anchor.x": 0.5,
-        "anchor.y": 0.5,
-        "width.percents": 47,
-        "height.percents": 26
-    }
+  "style": {
+    "anchor.x": 0.5,
+    "anchor.y": 0.5,
+    "width.percents": 47,
+    "height.percents": 26
+  }
 }

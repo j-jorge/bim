@@ -1,6 +1,5 @@
 {
-    "style":
-    {
-        "font.file": "font/OpenSans-Regular.ttf"
-    }
+  "style": {
+    "font.file": "font/OpenSans-Regular.ttf"
+  }
 }

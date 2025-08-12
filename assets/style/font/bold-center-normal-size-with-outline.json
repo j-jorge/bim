@@ -1,13 +1,13 @@
 {
-    "meta":
-    {
-        "overrides": [ "font/bold-center-normal-size" ]
-    },
+  "meta": {
+    "overrides": [
+      "font/bold-center-normal-size"
+    ]
+  },
 
-    "style":
-    {
-        "outline.color": "cod-gray",
-        "outline.size": 5,
-        "align.horizontal": "center"
-    }
+  "style": {
+    "outline.color": "cod-gray",
+    "outline.size": 5,
+    "align.horizontal": "center"
+  }
 }

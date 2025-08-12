@@ -1,16 +1,21 @@
 {
-    "style":
-    {
-        "widgets":
-        [{
-            "main/z-order": 0,
-            "overlay/z-order": 10
-        }],
+  "style": {
+    "widgets": [
+      {
+        "main/z-order": 0,
+        "overlay/z-order": 10
+      }
+    ],
 
-        "bounds":
-        [{
-            "main": [ "layout/fill" ],
-            "overlay": [ "layout/fill" ]
-        }]
-    }
+    "bounds": [
+      {
+        "main": [
+          "layout/fill"
+        ],
+        "overlay": [
+          "layout/fill"
+        ]
+      }
+    ]
+  }
 }

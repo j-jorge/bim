@@ -1,39 +1,72 @@
 {
-    "style":
-    {
-        "message-popup": [ "popup/message" ],
+  "style": {
+    "message-popup": [
+      "popup/message"
+    ],
 
-        "widgets":
-        [{
-            "lobby": [],
-            "matchmaking": [],
-            "online_game": [],
-            "end_game": [],
-            "shop": []
-        }],
+    "widgets": [
+      {
+        "lobby": [],
+        "matchmaking": [],
+        "online_game": [],
+        "end_game": [],
+        "shop": []
+      }
+    ],
 
-        "lobby": ["app/screen/lobby"],
-        "lobby-bounds": ["app/screen/lobby-bounds"],
+    "lobby": [
+      "app/screen/lobby"
+    ],
+    "lobby-bounds": [
+      "app/screen/lobby-bounds"
+    ],
 
-        "matchmaking": ["app/screen/matchmaking"],
-        "matchmaking-bounds": ["app/screen/matchmaking-bounds"],
+    "matchmaking": [
+      "app/screen/matchmaking"
+    ],
+    "matchmaking-bounds": [
+      "app/screen/matchmaking-bounds"
+    ],
 
-        "online-game": ["app/screen/online-game"],
-        "online-game-bounds": ["app/screen/online-game-bounds"],
+    "online-game": [
+      "app/screen/online-game"
+    ],
+    "online-game-bounds": [
+      "app/screen/online-game-bounds"
+    ],
 
-        "end-game": ["app/screen/end-game"],
-        "end-game-bounds": ["app/screen/end-game-bounds"],
+    "end-game": [
+      "app/screen/end-game"
+    ],
+    "end-game-bounds": [
+      "app/screen/end-game-bounds"
+    ],
 
-        "shop": ["app/screen/shop"],
-        "shop-bounds": ["app/screen/shop-bounds"],
+    "shop": [
+      "app/screen/shop"
+    ],
+    "shop-bounds": [
+      "app/screen/shop-bounds"
+    ],
 
-        "bounds":
-        [{
-            "lobby": ["layout/fill"],
-            "matchmaking": ["layout/fill"],
-            "online_game": ["layout/fill"],
-            "end_game": ["layout/fill"],
-            "shop": ["layout/fill"]
-        }]
-    }
+    "bounds": [
+      {
+        "lobby": [
+          "layout/fill"
+        ],
+        "matchmaking": [
+          "layout/fill"
+        ],
+        "online_game": [
+          "layout/fill"
+        ],
+        "end_game": [
+          "layout/fill"
+        ],
+        "shop": [
+          "layout/fill"
+        ]
+      }
+    ]
+  }
 }

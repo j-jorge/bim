@@ -99,12 +99,14 @@ custom_command_test()
     echo
 }
 
-run_test "Validating C++ source code formatting." \
+run_test "Validating C++/Java/JSON formatting." \
          clang-format \
          --dry-run \
          --Werror \
          -- \
-         -name "*.[cht]pp"
+         -name "*.[cht]pp" \
+         -o -name "*.java" \
+         -o -name "*.json"
 
 run_test "Validating Python files." \
          black \

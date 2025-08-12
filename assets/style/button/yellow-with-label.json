@@ -1,41 +1,48 @@
 {
-    "meta":
-    {
-        "overrides": [ "button/green-with-label" ]
-    },
+  "meta": {
+    "overrides": [
+      "button/green-with-label"
+    ]
+  },
 
-    "style":
-    {
-        "widgets":
-        [{
-            "decorum-on":
-            [{
-                "widgets":
-                [{
-                    "fill":
-                    [{
-                        "frame": "sprites/menu/vertical-yellow-gradient.png"
-                    }],
+  "style": {
+    "widgets": [
+      {
+        "decorum-on": [
+          {
+            "widgets": [
+              {
+                "fill": [
+                  {
+                    "frame": "sprites/menu/vertical-yellow-gradient.png"
+                  }
+                ],
 
-                    "stars":
-                    [{
-                        "instantiate": "texture",
-                        "parent": "clipping_node",
-                        "widgets/sprite/frame": "texture/stars.png",
-                        "scroll-per-second.x": 20,
-                        "scroll-per-second.y": 10,
-                        "rotation": -2,
-                        "color": "dandelion",
-                        "z-order": 10
-                    }]
-                }],
+                "stars": [
+                  {
+                    "instantiate": "texture",
+                    "parent": "clipping_node",
+                    "widgets/sprite/frame": "texture/stars.png",
+                    "scroll-per-second.x": 20,
+                    "scroll-per-second.y": 10,
+                    "rotation": -2,
+                    "color": "dandelion",
+                    "z-order": 10
+                  }
+                ]
+              }
+            ],
 
-                "bounds":
-                [{
-                    "stars": [ "layout/fill" ]
-                }]
-            }]
-        }]
-    }
+            "bounds": [
+              {
+                "stars": [
+                  "layout/fill"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
 }
-

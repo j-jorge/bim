@@ -1,198 +1,372 @@
 {
-    "style":
-    {
-        "widgets":
-        [{
-            "up.off":
-            [{
-                "instantiate": "ax::Sprite",
-                "frame": "sprites/ui/directional-pad-up.png"
-            }],
+  "style": {
+    "widgets": [
+      {
+        "up.off": [
+          {
+            "instantiate": "ax::Sprite",
+            "frame": "sprites/ui/directional-pad-up.png"
+          }
+        ],
 
-            "up.on":
-            [{
-                "instantiate": "ax::Sprite",
-                "frame": "sprites/ui/directional-pad-up.png"
-            }],
+        "up.on": [
+          {
+            "instantiate": "ax::Sprite",
+            "frame": "sprites/ui/directional-pad-up.png"
+          }
+        ],
 
-            "down.off":
-            [{
-                "instantiate": "ax::Sprite",
-                "frame": "sprites/ui/directional-pad-down.png"
-            }],
+        "down.off": [
+          {
+            "instantiate": "ax::Sprite",
+            "frame": "sprites/ui/directional-pad-down.png"
+          }
+        ],
 
-            "down.on":
-            [{
-                "instantiate": "ax::Sprite",
-                "frame": "sprites/ui/directional-pad-down.png"
-            }],
+        "down.on": [
+          {
+            "instantiate": "ax::Sprite",
+            "frame": "sprites/ui/directional-pad-down.png"
+          }
+        ],
 
-            "left.off":
-            [{
-                "instantiate": "ax::Sprite",
-                "frame": "sprites/ui/directional-pad-left.png"
-            }],
+        "left.off": [
+          {
+            "instantiate": "ax::Sprite",
+            "frame": "sprites/ui/directional-pad-left.png"
+          }
+        ],
 
-            "left.on":
-            [{
-                "instantiate": "ax::Sprite",
-                "frame": "sprites/ui/directional-pad-left.png"
-            }],
+        "left.on": [
+          {
+            "instantiate": "ax::Sprite",
+            "frame": "sprites/ui/directional-pad-left.png"
+          }
+        ],
 
-            "right.off":
-            [{
-                "instantiate": "ax::Sprite",
-                "frame": "sprites/ui/directional-pad-right.png"
-            }],
+        "right.off": [
+          {
+            "instantiate": "ax::Sprite",
+            "frame": "sprites/ui/directional-pad-right.png"
+          }
+        ],
 
-            "right.on":
-            [{
-                "instantiate": "ax::Sprite",
-                "frame": "sprites/ui/directional-pad-right.png"
-            }]
-        }],
+        "right.on": [
+          {
+            "instantiate": "ax::Sprite",
+            "frame": "sprites/ui/directional-pad-right.png"
+          }
+        ]
+      }
+    ],
 
-        "bounds":
-        [{
-            "up.off":
-            [{
-                "anchor.x": 0.5,
-                "anchor.y": 0.5,
-                "anchor.reference.x": 0.5,
-                "anchor.reference.y": 0.77,
-                "keep-ratio": true,
-                "width.percents": 66
-            }],
+    "bounds": [
+      {
+        "up.off": [
+          {
+            "anchor.x": 0.5,
+            "anchor.y": 0.5,
+            "anchor.reference.x": 0.5,
+            "anchor.reference.y": 0.77,
+            "keep-ratio": true,
+            "width.percents": 66
+          }
+        ],
 
-            "up.on":
-            [
-                "layout/center",
-                {
-                    "reference": "up.off",
-                    "width.percents": 90,
-                    "keep-ratio": true
-                }
-            ],
+        "up.on": [
+          "layout/center",
+          {
+            "reference": "up.off",
+            "width.percents": 90,
+            "keep-ratio": true
+          }
+        ],
 
-            "down.off":
-            [{
-                "anchor.x": 0.5,
-                "anchor.y": 0.5,
-                "anchor.reference.x": 0.5,
-                "anchor.reference.y": 0.23,
-                "keep-ratio": true,
-                "width.percents": 66
-            }],
+        "down.off": [
+          {
+            "anchor.x": 0.5,
+            "anchor.y": 0.5,
+            "anchor.reference.x": 0.5,
+            "anchor.reference.y": 0.23,
+            "keep-ratio": true,
+            "width.percents": 66
+          }
+        ],
 
-            "down.on":
-            [
-                "layout/center",
-                {
-                    "reference": "down.off",
-                    "width.percents": 90,
-                    "keep-ratio": true
-                }
-            ],
+        "down.on": [
+          "layout/center",
+          {
+            "reference": "down.off",
+            "width.percents": 90,
+            "keep-ratio": true
+          }
+        ],
 
-            "left.off":
-            [{
-                "anchor.x": 0.5,
-                "anchor.y": 0.5,
-                "anchor.reference.x": 0.23,
-                "anchor.reference.y": 0.5,
-                "height.percents": 66,
-                "keep-ratio": true
-            }],
+        "left.off": [
+          {
+            "anchor.x": 0.5,
+            "anchor.y": 0.5,
+            "anchor.reference.x": 0.23,
+            "anchor.reference.y": 0.5,
+            "height.percents": 66,
+            "keep-ratio": true
+          }
+        ],
 
-            "left.on":
-            [
-                "layout/center",
-                {
-                    "reference": "left.off",
-                    "height.percents": 90,
-                    "keep-ratio": true
-                }
-            ],
+        "left.on": [
+          "layout/center",
+          {
+            "reference": "left.off",
+            "height.percents": 90,
+            "keep-ratio": true
+          }
+        ],
 
-            "right.off":
-            [{
-                "anchor.x": 0.5,
-                "anchor.y": 0.5,
-                "anchor.reference.x": 0.77,
-                "anchor.reference.y": 0.5,
-                "height.percents": 66,
-                "keep-ratio": true
-            }],
+        "right.off": [
+          {
+            "anchor.x": 0.5,
+            "anchor.y": 0.5,
+            "anchor.reference.x": 0.77,
+            "anchor.reference.y": 0.5,
+            "height.percents": 66,
+            "keep-ratio": true
+          }
+        ],
 
-            "right.on":
-            [
-                "layout/center",
-                {
-                    "reference": "right.off",
-                    "height.percents": 90,
-                    "keep-ratio": true
-                }
-            ]
-        }],
+        "right.on": [
+          "layout/center",
+          {
+            "reference": "right.off",
+            "height.percents": 90,
+            "keep-ratio": true
+          }
+        ]
+      }
+    ],
 
-        "display.up":
-        [{
-            "up.on": [{ "visible": true }],
-            "up.off": [{ "visible": false }],
-            "down.on": [{ "visible": false }],
-            "down.off": [{ "visible": true }],
-            "left.on": [{ "visible": false }],
-            "left.off": [{ "visible": true }],
-            "right.on": [{ "visible": false }],
-            "right.off": [{ "visible": true }]
-        }],
+    "display.up": [
+      {
+        "up.on": [
+          {
+            "visible": true
+          }
+        ],
+        "up.off": [
+          {
+            "visible": false
+          }
+        ],
+        "down.on": [
+          {
+            "visible": false
+          }
+        ],
+        "down.off": [
+          {
+            "visible": true
+          }
+        ],
+        "left.on": [
+          {
+            "visible": false
+          }
+        ],
+        "left.off": [
+          {
+            "visible": true
+          }
+        ],
+        "right.on": [
+          {
+            "visible": false
+          }
+        ],
+        "right.off": [
+          {
+            "visible": true
+          }
+        ]
+      }
+    ],
 
-        "display.down":
-        [{
-            "up.on": [{ "visible": false }],
-            "up.off": [{ "visible": true }],
-            "down.on": [{ "visible": true }],
-            "down.off": [{ "visible": false }],
-            "left.on": [{ "visible": false }],
-            "left.off": [{ "visible": true }],
-            "right.on": [{ "visible": false }],
-            "right.off": [{ "visible": true }]
-        }],
+    "display.down": [
+      {
+        "up.on": [
+          {
+            "visible": false
+          }
+        ],
+        "up.off": [
+          {
+            "visible": true
+          }
+        ],
+        "down.on": [
+          {
+            "visible": true
+          }
+        ],
+        "down.off": [
+          {
+            "visible": false
+          }
+        ],
+        "left.on": [
+          {
+            "visible": false
+          }
+        ],
+        "left.off": [
+          {
+            "visible": true
+          }
+        ],
+        "right.on": [
+          {
+            "visible": false
+          }
+        ],
+        "right.off": [
+          {
+            "visible": true
+          }
+        ]
+      }
+    ],
 
-        "display.left":
-        [{
-            "up.on": [{ "visible": false }],
-            "up.off": [{ "visible": true }],
-            "down.on": [{ "visible": false }],
-            "down.off": [{ "visible": true }],
-            "left.on": [{ "visible": true }],
-            "left.off": [{ "visible": false }],
-            "right.on": [{ "visible": false }],
-            "right.off": [{ "visible": true }]
-        }],
+    "display.left": [
+      {
+        "up.on": [
+          {
+            "visible": false
+          }
+        ],
+        "up.off": [
+          {
+            "visible": true
+          }
+        ],
+        "down.on": [
+          {
+            "visible": false
+          }
+        ],
+        "down.off": [
+          {
+            "visible": true
+          }
+        ],
+        "left.on": [
+          {
+            "visible": true
+          }
+        ],
+        "left.off": [
+          {
+            "visible": false
+          }
+        ],
+        "right.on": [
+          {
+            "visible": false
+          }
+        ],
+        "right.off": [
+          {
+            "visible": true
+          }
+        ]
+      }
+    ],
 
-        "display.right":
-        [{
-            "up.on": [{ "visible": false }],
-            "up.off": [{ "visible": true }],
-            "down.on": [{ "visible": false }],
-            "down.off": [{ "visible": true }],
-            "left.on": [{ "visible": false }],
-            "left.off": [{ "visible": true }],
-            "right.on": [{ "visible": true }],
-            "right.off": [{ "visible": false }]
-        }],
+    "display.right": [
+      {
+        "up.on": [
+          {
+            "visible": false
+          }
+        ],
+        "up.off": [
+          {
+            "visible": true
+          }
+        ],
+        "down.on": [
+          {
+            "visible": false
+          }
+        ],
+        "down.off": [
+          {
+            "visible": true
+          }
+        ],
+        "left.on": [
+          {
+            "visible": false
+          }
+        ],
+        "left.off": [
+          {
+            "visible": true
+          }
+        ],
+        "right.on": [
+          {
+            "visible": true
+          }
+        ],
+        "right.off": [
+          {
+            "visible": false
+          }
+        ]
+      }
+    ],
 
-        "display.off":
-        [{
-            "up.on": [{ "visible": false }],
-            "up.off": [{ "visible": true }],
-            "down.on": [{ "visible": false }],
-            "down.off": [{ "visible": true }],
-            "left.on": [{ "visible": false }],
-            "left.off": [{ "visible": true }],
-            "right.on": [{ "visible": false }],
-            "right.off": [{ "visible": true }]
-        }]
-    }
+    "display.off": [
+      {
+        "up.on": [
+          {
+            "visible": false
+          }
+        ],
+        "up.off": [
+          {
+            "visible": true
+          }
+        ],
+        "down.on": [
+          {
+            "visible": false
+          }
+        ],
+        "down.off": [
+          {
+            "visible": true
+          }
+        ],
+        "left.on": [
+          {
+            "visible": false
+          }
+        ],
+        "left.off": [
+          {
+            "visible": true
+          }
+        ],
+        "right.on": [
+          {
+            "visible": false
+          }
+        ],
+        "right.off": [
+          {
+            "visible": true
+          }
+        ]
+      }
+    ]
+  }
 }

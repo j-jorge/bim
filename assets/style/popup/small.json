@@ -1,120 +1,151 @@
 {
-    "style":
-    {
-        "widgets":
-        [{
-            "container": [],
+  "style": {
+    "widgets": [
+      {
+        "container": [],
 
-            "background":
-            [{
-                "instantiate": "ax::LayerColor",
-                "parent": "container",
-                "color": "black",
-                "opacity": 0.6,
-                "z-order": -2000
-            }],
+        "background": [
+          {
+            "instantiate": "ax::LayerColor",
+            "parent": "container",
+            "color": "black",
+            "opacity": 0.6,
+            "z-order": -2000
+          }
+        ],
 
-            "client_container/parent": "container",
+        "client_container/parent": "container",
 
-            "frame-background":
-            [{
-                "instantiate": "nine_slices",
-                "parent": "client_container",
-                "widgets/sprite":
-                [{
-                    "frame": "sprites/popup/popup-fill-146-146.png",
-                    "color": "gable-green",
-                    "insets.left": 146,
-                    "insets.top": 146,
-                    "insets.width": 1,
-                    "insets.height": 1
-                }],
-                "z-order": -1000
-            }],
+        "frame-background": [
+          {
+            "instantiate": "nine_slices",
+            "parent": "client_container",
+            "widgets/sprite": [
+              {
+                "frame": "sprites/popup/popup-fill-146-146.png",
+                "color": "gable-green",
+                "insets.left": 146,
+                "insets.top": 146,
+                "insets.width": 1,
+                "insets.height": 1
+              }
+            ],
+            "z-order": -1000
+          }
+        ],
 
-            "frame-clipping-node":
-            [{
-                "instantiate": "clipping_node",
-                "parent": "client_container",
-                "z-order": -999,
-                "widgets":
-                [{
-                    "clipping_node":
-                    [{
-                        "cascade-color": true
-                    }],
+        "frame-clipping-node": [
+          {
+            "instantiate": "clipping_node",
+            "parent": "client_container",
+            "z-order": -999,
+            "widgets": [
+              {
+                "clipping_node": [
+                  {
+                    "cascade-color": true
+                  }
+                ],
 
-                    "stencil":
-                    [{
-                        "instantiate": "nine_slices",
-                        "anchor-point.x": 0,
-                        "anchor-point.y": 0,
-                        "widgets/sprite":
-                        [{
-                            "frame": "sprites/popup/popup-fill-146-146.png",
-                            "insets.left": 146,
-                            "insets.top": 146,
-                            "insets.width": 1,
-                            "insets.height": 1
-                        }]
-                    }],
+                "stencil": [
+                  {
+                    "instantiate": "nine_slices",
+                    "anchor-point.x": 0,
+                    "anchor-point.y": 0,
+                    "widgets/sprite": [
+                      {
+                        "frame": "sprites/popup/popup-fill-146-146.png",
+                        "insets.left": 146,
+                        "insets.top": 146,
+                        "insets.width": 1,
+                        "insets.height": 1
+                      }
+                    ]
+                  }
+                ],
 
-                    "pattern":
-                    [{
-                        "instantiate": "texture",
-                        "parent": "clipping_node",
-                        "widgets/sprite/frame": "texture/popup-background-pattern.png",
-                        "scroll-per-second.x": 20,
-                        "scroll-per-second.y": 10,
-                        "rotation": -2,
-                        "color": "plantation",
-                        "z-order": 10
-                    }]
-                }],
+                "pattern": [
+                  {
+                    "instantiate": "texture",
+                    "parent": "clipping_node",
+                    "widgets/sprite/frame":
+                        "texture/popup-background-pattern.png",
+                    "scroll-per-second.x": 20,
+                    "scroll-per-second.y": 10,
+                    "rotation": -2,
+                    "color": "plantation",
+                    "z-order": 10
+                  }
+                ]
+              }
+            ],
 
-                "bounds":
-                [{
-                    "clipping_node": [ "layout/fill" ],
-                    "stencil": [ "layout/fill" ],
-                    "pattern": [ "layout/fill" ]
-                }]
-            }],
+            "bounds": [
+              {
+                "clipping_node": [
+                  "layout/fill"
+                ],
+                "stencil": [
+                  "layout/fill"
+                ],
+                "pattern": [
+                  "layout/fill"
+                ]
+              }
+            ]
+          }
+        ],
 
-            "frame-border":
-            [{
-                "instantiate": "nine_slices",
-                "parent": "client_container",
-                "widgets/sprite":
-                [{
-                    "frame": "sprites/popup/popup-border-146-146.png",
-                    "color": "gable-green",
-                    "insets.left": 146,
-                    "insets.top": 146,
-                    "insets.width": 1,
-                    "insets.height": 1
-                }],
-                "z-order": -998
-            }]
-        }],
+        "frame-border": [
+          {
+            "instantiate": "nine_slices",
+            "parent": "client_container",
+            "widgets/sprite": [
+              {
+                "frame": "sprites/popup/popup-border-146-146.png",
+                "color": "gable-green",
+                "insets.left": 146,
+                "insets.top": 146,
+                "insets.width": 1,
+                "insets.height": 1
+              }
+            ],
+            "z-order": -998
+          }
+        ]
+      }
+    ],
 
-        "bounds":
-        [{
-            "background": [ "layout/fill" ],
-            "container": [ "layout/fill" ],
+    "bounds": [
+      {
+        "background": [
+          "layout/fill"
+        ],
+        "container": [
+          "layout/fill"
+        ],
 
-            "client_container":
-            [{
-                "anchor.x": 0.5,
-                "anchor.y": 0.5,
-                "anchor-reference.x": 0.5,
-                "anchor-reference.y": 0.5,
-                "width.percents": 95,
-                "height.percents": 35
-            }],
+        "client_container": [
+          {
+            "anchor.x": 0.5,
+            "anchor.y": 0.5,
+            "anchor-reference.x": 0.5,
+            "anchor-reference.y": 0.5,
+            "width.percents": 95,
+            "height.percents": 35
+          }
+        ],
 
-            "frame-background": [ "layout/fill" ],
-            "frame-clipping-node": [ "layout/fill" ],
-            "frame-border": [ "layout/fill" ]
-        }]
-    }
+        "frame-background": [
+          "layout/fill"
+        ],
+        "frame-clipping-node": [
+          "layout/fill"
+        ],
+        "frame-border": [
+          "layout/fill"
+        ]
+      }
+    ]
+  }
 }

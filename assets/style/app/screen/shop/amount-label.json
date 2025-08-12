@@ -1,14 +1,14 @@
 {
-    "meta":
-    {
-        "overrides": [ "font/fancy-center-with-outline-and-shadow" ]
-    },
+  "meta": {
+    "overrides": [
+      "font/fancy-center-with-outline-and-shadow"
+    ]
+  },
 
-    "style":
-    {
-        "font.size": 80,
-        "text.i18n": "×1000",
-        "z-order": 10
-    }
+  "style": {
+    "font.size": 80,
+    "text.i18n": "×1000",
+    "z-order": 10
+  }
 
 }

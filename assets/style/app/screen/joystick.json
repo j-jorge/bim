@@ -1,70 +1,83 @@
 {
-    "style":
-    {
-        "widgets":
-        [{
-            "container":
-            [{
-                "instantiate": "ax::Node",
-                "anchor-point.x": 0.5,
-                "anchor-point.y": 0.5
-            }],
+  "style": {
+    "widgets": [
+      {
+        "container": [
+          {
+            "instantiate": "ax::Node",
+            "anchor-point.x": 0.5,
+            "anchor-point.y": 0.5
+          }
+        ],
 
-            "stick":
-            [{
-                "parent": "container",
-                "frame": "sprites/ui/joystick-stick.png"
-            }],
+        "stick": [
+          {
+            "parent": "container",
+            "frame": "sprites/ui/joystick-stick.png"
+          }
+        ],
 
-            "background":
-            [{
-                "parent": "container",
-                "instantiate": "ax::Sprite",
-                "frame": "sprites/ui/joystick-background.png",
-                "z-order": -10
-            }]
-        }],
+        "background": [
+          {
+            "parent": "container",
+            "instantiate": "ax::Sprite",
+            "frame": "sprites/ui/joystick-background.png",
+            "z-order": -10
+          }
+        ]
+      }
+    ],
 
-        "bounds.left":
-        [{
-            "container":
-            [{
-                "anchor.x": 0.5,
-                "anchor.y": 0.5,
-                "anchor.reference.x": 0.26,
-                "anchor.reference.y": 0.5,
-                "width.percents": 43,
-                "height-ratio": 1
-            }],
+    "bounds.left": [
+      {
+        "container": [
+          {
+            "anchor.x": 0.5,
+            "anchor.y": 0.5,
+            "anchor.reference.x": 0.26,
+            "anchor.reference.y": 0.5,
+            "width.percents": 43,
+            "height-ratio": 1
+          }
+        ],
 
-            "stick":
-            [{
-                "keep-ratio": true,
-                "height.percents": 57
-            }],
+        "stick": [
+          {
+            "keep-ratio": true,
+            "height.percents": 57
+          }
+        ],
 
-            "background": [ "layout/fill" ]
-        }],
+        "background": [
+          "layout/fill"
+        ]
+      }
+    ],
 
-        "bounds.right":
-        [{
-            "container":
-            [{
-                "anchor.x": 0.5,
-                "anchor.y": 0.5,
-                "anchor.reference.x": 0.74,
-                "anchor.reference.y": 0.5,
-                "width.percents": 43,
-                "height-ratio": 1
-            }],
+    "bounds.right": [
+      {
+        "container": [
+          {
+            "anchor.x": 0.5,
+            "anchor.y": 0.5,
+            "anchor.reference.x": 0.74,
+            "anchor.reference.y": 0.5,
+            "width.percents": 43,
+            "height-ratio": 1
+          }
+        ],
 
-            "stick":
-            [{
-                "keep-ratio": true,
-                "height.percents": 57
-            }],
+        "stick": [
+          {
+            "keep-ratio": true,
+            "height.percents": 57
+          }
+        ],
 
-            "background": [ "layout/fill" ]
-        }]
-    }
+        "background": [
+          "layout/fill"
+        ]
+      }
+    ]
+  }
 }

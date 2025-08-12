@@ -1,297 +1,318 @@
 {
-    "style":
-    {
-        "fog-display": [ "app/screen/online-game/fog-display" ],
+  "style": {
+    "fog-display": [
+      "app/screen/online-game/fog-display"
+    ],
 
-        "widgets":
-        [{
-            "arena": [],
-            "control_panel": [],
+    "widgets": [
+      {
+        "arena": [],
+        "control_panel": [],
 
-            "arena-shadow.top":
-            [{
-                "instantiate": "ax::Sprite",
-                "frame": "sprites/menu/vertical-gradient.png",
-                "color": "black",
-                "opacity": 0.3,
-                "flip.y": true,
-                "z-order": -150
-            }],
-
-            "arena-shadow.bottom":
-            [{
-                "instantiate": "ax::Sprite",
-                "frame": "sprites/menu/vertical-gradient.png",
-                "color": "black",
-                "opacity": 0.3,
-                "z-order": -150
-            }],
-
-            "background":
-            [{
-                "widgets/sprite/frame": "texture/grass.png",
-                "width-in-tiles": 4,
-                "z-order": -100
-            }],
-
-            "control-panel.background":
-            [{
-                "instantiate": "texture",
-                "widgets/sprite/frame": "texture/carbon.png",
-                "rotation": -10,
-                "z-order": -200
-            }],
-
-            "control-panel.shadow":
-            [{
-                "instantiate": "ax::Sprite",
-                "frame": "sprites/menu/vertical-gradient.png",
-                "color": "black",
-                "opacity": 0.3,
-                "flip.y": true,
-                "z-order": -150
-            }],
-
-            "top-edge":
-            [{
-                "instantiate": "nine_slices",
-                "widgets/sprite":
-                [{
-                    "frame": "sprites/ui/line-7-4.png",
-                    "insets.left": 7,
-                    "insets.top": 4,
-                    "insets.width": 1,
-                    "insets.height": 1
-                }],
-                "cascade-color": true,
-                "stretch-direction.vertical": false,
-                "z-order": -130
-            }],
-
-            "control-panel.left-edging":
-            [{
-                "instantiate": "nine_slices",
-                "widgets/sprite":
-                [{
-                    "frame": "sprites/ui/edging-60-88.png",
-                    "insets.left": 60,
-                    "insets.top": 88,
-                    "insets.width": 1,
-                    "insets.height": 1
-                }],
-                "cascade-color": true,
-                "z-order": -130
-            }],
-
-            "control-panel.right-edging":
-            [{
-                "instantiate": "nine_slices",
-                "widgets/sprite":
-                [{
-                    "frame": "sprites/ui/edging-216-88.png",
-                    "insets.left": 216,
-                    "insets.top": 88,
-                    "insets.width": 1,
-                    "insets.height": 1
-                }],
-                "cascade-color": true,
-                "z-order": -130
-            }],
-
-            "bomb_button":
-            [
-                "app/screen/bomb-button",
-                {
-                    "z-order": -50
-                }
-            ],
-
-            "directional_pad":
-            [
-                "app/screen/directional-pad",
-                {
-                    "z-order": -100
-                }
-            ],
-
-            "joystick":
-            [
-                "app/screen/joystick",
-                {
-                    "z-order": -100
-                }
-            ],
-
-            "timer":
-            [
-                "font/fancy-regular",
-                {
-                    "anchor-point.x": 0.5,
-                    "anchor-point.y": 1,
-                    "font.size": 60,
-                    "font.color": "desert-storm",
-                    "text": "00:00"
-                }
-            ],
-
-            "bim":
-            [
-                "font/fancy-regular",
-                {
-                    "instantiate": "ax::Label",
-                    "anchor-point.x": 0,
-                    "anchor-point.y": 1,
-                    "font.size": 60,
-                    "font.color": "desert-storm",
-                    "text": "BIM!",
-                    "visible": false
-                }
-            ],
-
-            "peephole":
-            [{
-                "widgets/sprite":
-                [{
-                    "auto-size": true,
-                    "frame": "texture/bomb-stencil.png"
-                }],
-
-                "initial-scale": 0,
-                "wait-scale": 1.5,
-                "final-scale": 20,
-                "scale-in-seconds": 0.8,
-                "wait-seconds": 0.2,
-                "fade-out-seconds": 0.5,
-                "z-order": 1000
-            }]
-        }],
-
-        "arena-width-in-blocks": 13,
-
-        "player": [ "app/screen/part/player" ],
-
-        "arena-border.top/frame": "sprites/arena-border.png",
-
-        "arena-border.left":
-        [{
-            "frame": "sprites/arena-border.png",
-            "rotation": -90
-        }],
-
-        "arena-border.right":
-        [{
-            "frame": "sprites/arena-border.png",
-            "rotation": 90
-        }],
-
-        "arena-border.bottom":
-        [{
-            "frame": "sprites/arena-border.png",
-            "rotation": 180
-        }],
-
-        "arena-border.top-left/frame": "sprites/arena-corner.png",
-
-        "arena-border.top-right":
-        [{
-            "frame": "sprites/arena-corner.png",
-            "rotation": 90
-        }],
-
-
-        "arena-border.bottom-left":
-        [{
-            "frame": "sprites/arena-corner.png",
-            "rotation": -90
-        }],
-
-
-        "arena-border.bottom-right":
-        [{
-            "frame": "sprites/arena-corner.png",
-            "rotation": -180
-        }],
-
-        "bomb/frame": "sprites/bomb.png",
-        "wall/frame": "sprites/solid-wall.png",
-
-        "falling-block/frame": "sprites/solid-wall.png",
-
-        "falling-block-shadow":
-        [{
-            "frame": "sprites/pixel.png",
+        "arena-shadow.top": [
+          {
+            "instantiate": "ax::Sprite",
+            "frame": "sprites/menu/vertical-gradient.png",
             "color": "black",
-            "opacity": 0.4
-        }],
-
-        "brick-wall/frame": "sprites/crate.png",
-        "flame/frame": "sprites/flame-center.png",
-        "flame-center-asset-name": "sprites/flame-center.png",
-        "flame-arm-asset-name": "sprites/flame-arm.png",
-        "flame-end-asset-name": "sprites/flame-end.png",
-        "fog-of-war/frame": "sprites/fog/00000000.png",
-
-        "power-up-bomb/frame": "sprites/power-up-bomb.png",
-        "power-up-flame/frame": "sprites/power-up-flame.png",
-        "power-up-shield/frame": "sprites/power-up-shield.png",
-        "power-up-invisibility/frame": "sprites/power-up-invisibility.png",
-
-        "bounds.d-pad-on-the-right":
-        [
-            "app/screen/online-game/control-panel-decorum",
-            {
-                "bomb_button/anchor.reference.x": 0.28,
-                "directional_pad/anchor.reference.x": 0.72
-            }
+            "opacity": 0.3,
+            "flip.y": true,
+            "z-order": -150
+          }
         ],
 
-        "bounds.d-pad-on-the-left":
-        [
-            "app/screen/online-game/control-panel-decorum",
-            {
-                "bomb_button/anchor.reference.x": 0.72,
-                "directional_pad/anchor.reference.x": 0.28
-            }
+        "arena-shadow.bottom": [
+          {
+            "instantiate": "ax::Sprite",
+            "frame": "sprites/menu/vertical-gradient.png",
+            "color": "black",
+            "opacity": 0.3,
+            "z-order": -150
+          }
         ],
 
-        "display.use-joystick":
-        [{
-            "joystick/visible": true,
-            "directional_pad/visible": false
-        }],
+        "background": [
+          {
+            "widgets/sprite/frame": "texture/grass.png",
+            "width-in-tiles": 4,
+            "z-order": -100
+          }
+        ],
 
-        "display.use-d-pad":
-        [{
-            "joystick/visible": false,
-            "directional_pad/visible": true
-        }],
+        "control-panel.background": [
+          {
+            "instantiate": "texture",
+            "widgets/sprite/frame": "texture/carbon.png",
+            "rotation": -10,
+            "z-order": -200
+          }
+        ],
 
-        "display.player-1":
-        [{
-            "top-edge/color": "player-1",
-            "control-panel.left-edging/color": "player-1",
-            "control-panel.right-edging/color": "player-1"
-        }],
+        "control-panel.shadow": [
+          {
+            "instantiate": "ax::Sprite",
+            "frame": "sprites/menu/vertical-gradient.png",
+            "color": "black",
+            "opacity": 0.3,
+            "flip.y": true,
+            "z-order": -150
+          }
+        ],
 
-        "display.player-2":
-        [{
-            "top-edge/color": "player-2",
-            "control-panel.left-edging/color": "player-2",
-            "control-panel.right-edging/color": "player-2"
-        }],
+        "top-edge": [
+          {
+            "instantiate": "nine_slices",
+            "widgets/sprite": [
+              {
+                "frame": "sprites/ui/line-7-4.png",
+                "insets.left": 7,
+                "insets.top": 4,
+                "insets.width": 1,
+                "insets.height": 1
+              }
+            ],
+            "cascade-color": true,
+            "stretch-direction.vertical": false,
+            "z-order": -130
+          }
+        ],
 
-        "display.player-3":
-        [{
-            "top-edge/color": "player-3",
-            "control-panel.left-edging/color": "player-3",
-            "control-panel.right-edging/color": "player-3"
-        }],
+        "control-panel.left-edging": [
+          {
+            "instantiate": "nine_slices",
+            "widgets/sprite": [
+              {
+                "frame": "sprites/ui/edging-60-88.png",
+                "insets.left": 60,
+                "insets.top": 88,
+                "insets.width": 1,
+                "insets.height": 1
+              }
+            ],
+            "cascade-color": true,
+            "z-order": -130
+          }
+        ],
 
-        "display.player-4":
-        [{
-            "top-edge/color": "player-4",
-            "control-panel.left-edging/color": "player-4",
-            "control-panel.right-edging/color": "player-4"
-        }]
-    }
+        "control-panel.right-edging": [
+          {
+            "instantiate": "nine_slices",
+            "widgets/sprite": [
+              {
+                "frame": "sprites/ui/edging-216-88.png",
+                "insets.left": 216,
+                "insets.top": 88,
+                "insets.width": 1,
+                "insets.height": 1
+              }
+            ],
+            "cascade-color": true,
+            "z-order": -130
+          }
+        ],
+
+        "bomb_button": [
+          "app/screen/bomb-button",
+          {
+            "z-order": -50
+          }
+        ],
+
+        "directional_pad": [
+          "app/screen/directional-pad",
+          {
+            "z-order": -100
+          }
+        ],
+
+        "joystick": [
+          "app/screen/joystick",
+          {
+            "z-order": -100
+          }
+        ],
+
+        "timer": [
+          "font/fancy-regular",
+          {
+            "anchor-point.x": 0.5,
+            "anchor-point.y": 1,
+            "font.size": 60,
+            "font.color": "desert-storm",
+            "text": "00:00"
+          }
+        ],
+
+        "bim": [
+          "font/fancy-regular",
+          {
+            "instantiate": "ax::Label",
+            "anchor-point.x": 0,
+            "anchor-point.y": 1,
+            "font.size": 60,
+            "font.color": "desert-storm",
+            "text": "BIM!",
+            "visible": false
+          }
+        ],
+
+        "peephole": [
+          {
+            "widgets/sprite": [
+              {
+                "auto-size": true,
+                "frame": "texture/bomb-stencil.png"
+              }
+            ],
+
+            "initial-scale": 0,
+            "wait-scale": 1.5,
+            "final-scale": 20,
+            "scale-in-seconds": 0.8,
+            "wait-seconds": 0.2,
+            "fade-out-seconds": 0.5,
+            "z-order": 1000
+          }
+        ]
+      }
+    ],
+
+    "arena-width-in-blocks": 13,
+
+    "player": [
+      "app/screen/part/player"
+    ],
+
+    "arena-border.top/frame": "sprites/arena-border.png",
+
+    "arena-border.left": [
+      {
+        "frame": "sprites/arena-border.png",
+        "rotation": -90
+      }
+    ],
+
+    "arena-border.right": [
+      {
+        "frame": "sprites/arena-border.png",
+        "rotation": 90
+      }
+    ],
+
+    "arena-border.bottom": [
+      {
+        "frame": "sprites/arena-border.png",
+        "rotation": 180
+      }
+    ],
+
+    "arena-border.top-left/frame": "sprites/arena-corner.png",
+
+    "arena-border.top-right": [
+      {
+        "frame": "sprites/arena-corner.png",
+        "rotation": 90
+      }
+    ],
+
+    "arena-border.bottom-left": [
+      {
+        "frame": "sprites/arena-corner.png",
+        "rotation": -90
+      }
+    ],
+
+    "arena-border.bottom-right": [
+      {
+        "frame": "sprites/arena-corner.png",
+        "rotation": -180
+      }
+    ],
+
+    "bomb/frame": "sprites/bomb.png",
+    "wall/frame": "sprites/solid-wall.png",
+
+    "falling-block/frame": "sprites/solid-wall.png",
+
+    "falling-block-shadow": [
+      {
+        "frame": "sprites/pixel.png",
+        "color": "black",
+        "opacity": 0.4
+      }
+    ],
+
+    "brick-wall/frame": "sprites/crate.png",
+    "flame/frame": "sprites/flame-center.png",
+    "flame-center-asset-name": "sprites/flame-center.png",
+    "flame-arm-asset-name": "sprites/flame-arm.png",
+    "flame-end-asset-name": "sprites/flame-end.png",
+    "fog-of-war/frame": "sprites/fog/00000000.png",
+
+    "power-up-bomb/frame": "sprites/power-up-bomb.png",
+    "power-up-flame/frame": "sprites/power-up-flame.png",
+    "power-up-shield/frame": "sprites/power-up-shield.png",
+    "power-up-invisibility/frame": "sprites/power-up-invisibility.png",
+
+    "bounds.d-pad-on-the-right": [
+      "app/screen/online-game/control-panel-decorum",
+      {
+        "bomb_button/anchor.reference.x": 0.28,
+        "directional_pad/anchor.reference.x": 0.72
+      }
+    ],
+
+    "bounds.d-pad-on-the-left": [
+      "app/screen/online-game/control-panel-decorum",
+      {
+        "bomb_button/anchor.reference.x": 0.72,
+        "directional_pad/anchor.reference.x": 0.28
+      }
+    ],
+
+    "display.use-joystick": [
+      {
+        "joystick/visible": true,
+        "directional_pad/visible": false
+      }
+    ],
+
+    "display.use-d-pad": [
+      {
+        "joystick/visible": false,
+        "directional_pad/visible": true
+      }
+    ],
+
+    "display.player-1": [
+      {
+        "top-edge/color": "player-1",
+        "control-panel.left-edging/color": "player-1",
+        "control-panel.right-edging/color": "player-1"
+      }
+    ],
+
+    "display.player-2": [
+      {
+        "top-edge/color": "player-2",
+        "control-panel.left-edging/color": "player-2",
+        "control-panel.right-edging/color": "player-2"
+      }
+    ],
+
+    "display.player-3": [
+      {
+        "top-edge/color": "player-3",
+        "control-panel.left-edging/color": "player-3",
+        "control-panel.right-edging/color": "player-3"
+      }
+    ],
+
+    "display.player-4": [
+      {
+        "top-edge/color": "player-4",
+        "control-panel.left-edging/color": "player-4",
+        "control-panel.right-edging/color": "player-4"
+      }
+    ]
+  }
 }

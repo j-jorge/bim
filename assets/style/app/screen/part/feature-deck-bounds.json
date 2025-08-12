@@ -1,36 +1,31 @@
 {
-    "style":
-    {
-        "feature_falling_blocks":
-        [
-            "app/screen/part/feature-deck-button-bounds",
-            {
-                "anchor.reference.x": 0.2
-            }
-        ],
+  "style": {
+    "feature_falling_blocks": [
+      "app/screen/part/feature-deck-button-bounds",
+      {
+        "anchor.reference.x": 0.2
+      }
+    ],
 
-        "feature_shield":
-        [
-            "app/screen/part/feature-deck-button-bounds",
-            {
-                "anchor.reference.x": 0.4
-            }
-        ],
+    "feature_shield": [
+      "app/screen/part/feature-deck-button-bounds",
+      {
+        "anchor.reference.x": 0.4
+      }
+    ],
 
-        "feature_invisibility":
-        [
-            "app/screen/part/feature-deck-button-bounds",
-            {
-                "anchor.reference.x": 0.6
-            }
-        ],
+    "feature_invisibility": [
+      "app/screen/part/feature-deck-button-bounds",
+      {
+        "anchor.reference.x": 0.6
+      }
+    ],
 
-        "feature_fog_of_war":
-        [
-            "app/screen/part/feature-deck-button-bounds",
-            {
-                "anchor.reference.x": 0.8
-            }
-        ]
-    }
+    "feature_fog_of_war": [
+      "app/screen/part/feature-deck-button-bounds",
+      {
+        "anchor.reference.x": 0.8
+      }
+    ]
+  }
 }

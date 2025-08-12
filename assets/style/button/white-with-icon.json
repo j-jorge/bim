@@ -1,24 +1,26 @@
 {
-    "meta":
-    {
-        "overrides": [ "button/yellow-with-icon" ]
-    },
+  "meta": {
+    "overrides": [
+      "button/yellow-with-icon"
+    ]
+  },
 
-    "style":
-    {
-        "widgets":
-        [{
-            "decorum-on/widgets/fill":
-            [{
-                "frame": "sprites/pixel.png",
-                "color": "desert-storm"
-            }],
+  "style": {
+    "widgets": [
+      {
+        "decorum-on/widgets/fill": [
+          {
+            "frame": "sprites/pixel.png",
+            "color": "desert-storm"
+          }
+        ],
 
-            "icon":
-            [{
-                "color": "cod-gray"
-            }]
-        }]
-    }
+        "icon": [
+          {
+            "color": "cod-gray"
+          }
+        ]
+      }
+    ]
+  }
 }
-

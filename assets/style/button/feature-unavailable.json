@@ -1,27 +1,32 @@
 {
-    "meta":
-    {
-        "overrides": [ "button/base" ]
-    },
+  "meta": {
+    "overrides": [
+      "button/base"
+    ]
+  },
 
-    "style":
-    {
-        "widgets":
-        [{
-            "icon":
-            [{
-                "instantiate": "ax::Sprite",
-                "frame": "sprites/features/unavailable.png"
-            }]
-        }],
+  "style": {
+    "widgets": [
+      {
+        "icon": [
+          {
+            "instantiate": "ax::Sprite",
+            "frame": "sprites/features/unavailable.png"
+          }
+        ]
+      }
+    ],
 
-        "bounds":
-        [{
-            "icon": [ "layout/fit" ]
-        }],
+    "bounds": [
+      {
+        "icon": [
+          "layout/fit"
+        ]
+      }
+    ],
 
-        "display.pressed": [],
-        "display.release": [],
-        "display.disabled": []
-    }
+    "display.pressed": [],
+    "display.release": [],
+    "display.disabled": []
+  }
 }

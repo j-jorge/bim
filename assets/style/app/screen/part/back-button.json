@@ -1,12 +1,12 @@
 {
-    "meta":
-    {
-        "overrides": [ "button/yellow-with-icon" ]
-    },
+  "meta": {
+    "overrides": [
+      "button/yellow-with-icon"
+    ]
+  },
 
-    "style":
-    {
-        "widgets/icon/frame": "sprites/menu/back.png",
-        "z-order": 20
-    }
+  "style": {
+    "widgets/icon/frame": "sprites/menu/back.png",
+    "z-order": 20
+  }
 }

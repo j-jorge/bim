@@ -1,136 +1,134 @@
 {
-    "style":
-    {
-        "debug": [ "popup/debug" ],
-        "settings": [ "popup/settings" ],
-        "wallet": [ "app/screen/part/wallet" ],
+  "style": {
+    "debug": [
+      "popup/debug"
+    ],
+    "settings": [
+      "popup/settings"
+    ],
+    "wallet": [
+      "app/screen/part/wallet"
+    ],
 
-        "widgets":
-        [
-            "app/screen/part/menu-background",
-            {
-                "stripe-background":
-                [{
-                    "instantiate": "nine_slices",
-                    "widgets/sprite":
-                    [{
-                        "frame": "sprites/menu/red-stripe-1-7-1-136.png",
-                        "insets.left": 1,
-                        "insets.top": 7,
-                        "insets.width": 1,
-                        "insets.height": 136
-                    }],
-                    "z-order": -10
-                }],
+    "widgets": [
+      "app/screen/part/menu-background",
+      {
+        "stripe-background": [
+          {
+            "instantiate": "nine_slices",
+            "widgets/sprite": [
+              {
+                "frame": "sprites/menu/red-stripe-1-7-1-136.png",
+                "insets.left": 1,
+                "insets.top": 7,
+                "insets.width": 1,
+                "insets.height": 136
+              }
+            ],
+            "z-order": -10
+          }
+        ],
 
-                "stripe-message":
-                [
-                    "font/fancy-regular",
-                    {
-                        "instantiate": "ax::Label",
-                        "font.size": 48,
-                        "parent": "stripe-background",
-                        "font.color": "white",
-                        "shadow.color": "cod-gray",
-                        "shadow.offset.y": -4,
-                        "outline.color": "cod-gray",
-                        "outline.size": 5,
-                        "align.horizontal": "center",
-                        "text.i18n": "ALPHA VERSION"
-                    }
-                ],
+        "stripe-message": [
+          "font/fancy-regular",
+          {
+            "instantiate": "ax::Label",
+            "font.size": 48,
+            "parent": "stripe-background",
+            "font.color": "white",
+            "shadow.color": "cod-gray",
+            "shadow.offset.y": -4,
+            "outline.color": "cod-gray",
+            "outline.size": 5,
+            "align.horizontal": "center",
+            "text.i18n": "ALPHA VERSION"
+          }
+        ],
 
-                "arena_games_total":
-                [
-                    "font/fancy-regular",
-                    {
-                        "font.size": 48,
-                        "font.color": "white",
-                        "shadow.color": "cod-gray",
-                        "shadow.offset.y": -4,
-                        "outline.color": "cod-gray",
-                        "outline.size": 5,
-                        "align.horizontal": "center",
-                        "font.italics": true
-                    }
-                ],
+        "arena_games_total": [
+          "font/fancy-regular",
+          {
+            "font.size": 48,
+            "font.color": "white",
+            "shadow.color": "cod-gray",
+            "shadow.offset.y": -4,
+            "outline.color": "cod-gray",
+            "outline.size": 5,
+            "align.horizontal": "center",
+            "font.italics": true
+          }
+        ],
 
-                "arena_victories":
-                [
-                    "font/fancy-regular",
-                    {
-                        "font.size": 48,
-                        "font.color": "white",
-                        "shadow.color": "cod-gray",
-                        "shadow.offset.y": -4,
-                        "outline.color": "cod-gray",
-                        "outline.size": 5,
-                        "align.horizontal": "center",
-                        "font.italics": true
-                    }
-                ],
-        
-                "arena_defeats": 
-                [
-                    "font/fancy-regular",
-                    {
-                        "font.size": 48,
-                        "font.color": "white",
-                        "shadow.color": "cod-gray",
-                        "shadow.offset.y": -4,
-                        "outline.color": "cod-gray",
-                        "outline.size": 5,
-                        "align.horizontal": "center",
-                        "font.italics": true
-                    }
-                ],
+        "arena_victories": [
+          "font/fancy-regular",
+          {
+            "font.size": 48,
+            "font.color": "white",
+            "shadow.color": "cod-gray",
+            "shadow.offset.y": -4,
+            "outline.color": "cod-gray",
+            "outline.size": 5,
+            "align.horizontal": "center",
+            "font.italics": true
+          }
+        ],
 
-                "arena_draws":
-                [
-                    "font/fancy-regular",
-                    {
-                        "font.size": 48,
-                        "font.color": "white",
-                        "shadow.color": "cod-gray",
-                        "shadow.offset.y": -4,
-                        "outline.color": "cod-gray",
-                        "outline.size": 5,
-                        "align.horizontal": "center",
-                        "font.italics": true
-                    }
-                ],
+        "arena_defeats": [
+          "font/fancy-regular",
+          {
+            "font.size": 48,
+            "font.color": "white",
+            "shadow.color": "cod-gray",
+            "shadow.offset.y": -4,
+            "outline.color": "cod-gray",
+            "outline.size": 5,
+            "align.horizontal": "center",
+            "font.italics": true
+          }
+        ],
 
-                "settings_button":
-                [
-                    "button/white-with-icon",
-                    {
-                        "widgets/icon/frame": "sprites/menu/gear.png",
-                        "bounds/icon/height.percents": 50,
-                        "z-order": 20
-                    }
-                ],
+        "arena_draws": [
+          "font/fancy-regular",
+          {
+            "font.size": 48,
+            "font.color": "white",
+            "shadow.color": "cod-gray",
+            "shadow.offset.y": -4,
+            "outline.color": "cod-gray",
+            "outline.size": 5,
+            "align.horizontal": "center",
+            "font.italics": true
+          }
+        ],
 
-                "play_button":
-                [
-                    "button/yellow-with-label",
-                    {
-                        "widgets/label/text.i18n": "PLAY\nONLINE",
-                        "z-order": 20
-                    }
-                ],
+        "settings_button": [
+          "button/white-with-icon",
+          {
+            "widgets/icon/frame": "sprites/menu/gear.png",
+            "bounds/icon/height.percents": 50,
+            "z-order": 20
+          }
+        ],
 
-                "debug_button":
-                [
-                    "button/green-with-label",
-                    {
-                        "widgets/label/text.i18n": "DEBUG",
-                        "z-order": 20,
-                        "visible": false
-                    }
-                ],
+        "play_button": [
+          "button/yellow-with-label",
+          {
+            "widgets/label/text.i18n": "PLAY\nONLINE",
+            "z-order": 20
+          }
+        ],
 
-                "debug_activator": []
-            }
-        ]
-    }
+        "debug_button": [
+          "button/green-with-label",
+          {
+            "widgets/label/text.i18n": "DEBUG",
+            "z-order": 20,
+            "visible": false
+          }
+        ],
+
+        "debug_activator": []
+      }
+    ]
+  }
 }

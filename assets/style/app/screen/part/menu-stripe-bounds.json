@@ -1,32 +1,36 @@
 {
-    "style":
-    {
-        "stripe":
-        [{
-            "anchor.x": 0.5,
-            "anchor.y": 0.5,
-            "anchor.reference.x": 0.5,
-            "anchor.reference.y": 0.85,
-            "width.percents": 120,
-            "height.percents": 20
-        }],
+  "style": {
+    "stripe": [
+      {
+        "anchor.x": 0.5,
+        "anchor.y": 0.5,
+        "anchor.reference.x": 0.5,
+        "anchor.reference.y": 0.85,
+        "width.percents": 120,
+        "height.percents": 20
+      }
+    ],
 
-        "stripe_background": [ "layout/fill" ],
+    "stripe_background": [
+      "layout/fill"
+    ],
 
-        "stripe_title":
-        [{
-            "anchor.x": 0,
-            "anchor.y": 0.5,
-            "anchor.reference.x": 0.12,
-            "anchor.reference.y": 0.83
-        }],
+    "stripe_title": [
+      {
+        "anchor.x": 0,
+        "anchor.y": 0.5,
+        "anchor.reference.x": 0.12,
+        "anchor.reference.y": 0.83
+      }
+    ],
 
-        "stripe_message":
-        [{
-            "anchor.x": 0.5,
-            "anchor.y": 0.5,
-            "anchor.reference.x": 0.5,
-            "anchor.reference.y": 0.5
-        }]
-    }
+    "stripe_message": [
+      {
+        "anchor.x": 0.5,
+        "anchor.y": 0.5,
+        "anchor.reference.x": 0.5,
+        "anchor.reference.y": 0.5
+      }
+    ]
+  }
 }

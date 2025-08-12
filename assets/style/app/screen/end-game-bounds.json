@@ -1,153 +1,161 @@
 {
-    "meta":
-    {
-        "overrides":
-        [
-            "app/screen/part/menu-background-bounds",
-            "app/screen/part/menu-stripe-bounds",
-            "app/screen/part/wallet-bounds"
-        ]
-    },
+  "meta": {
+    "overrides": [
+      "app/screen/part/menu-background-bounds",
+      "app/screen/part/menu-stripe-bounds",
+      "app/screen/part/wallet-bounds"
+    ]
+  },
 
-    "style":
-    {
-        "background.lose": [ "layout/fill" ],
+  "style": {
+    "background.lose": [
+      "layout/fill"
+    ],
 
-        "pattern_win":
-        [
-            "layout/fill",
-            {
-                "width.percents": 150,
-                "height.percents": 150
-            }
-        ],
+    "pattern_win": [
+      "layout/fill",
+      {
+        "width.percents": 150,
+        "height.percents": 150
+      }
+    ],
 
-        "pattern_lose":
-        [
-            "layout/fill",
-            {
-                "width.percents": 150,
-                "height.percents": 150
-            }
-        ],
+    "pattern_lose": [
+      "layout/fill",
+      {
+        "width.percents": 150,
+        "height.percents": 150
+      }
+    ],
 
-        "stripe_title_win":
-        [{
-            "anchor.x": 0,
-            "anchor.y": 0.5,
-            "anchor.reference.x": 0.12,
-            "anchor.reference.y": 0.83
-        }],
+    "stripe_title_win": [
+      {
+        "anchor.x": 0,
+        "anchor.y": 0.5,
+        "anchor.reference.x": 0.12,
+        "anchor.reference.y": 0.83
+      }
+    ],
 
-        "stripe_message_win":
-        [{
-            "anchor.x": 0.5,
-            "anchor.y": 0.5,
-            "anchor.reference.x": 0.5,
-            "anchor.reference.y": 0.5
-        }],
+    "stripe_message_win": [
+      {
+        "anchor.x": 0.5,
+        "anchor.y": 0.5,
+        "anchor.reference.x": 0.5,
+        "anchor.reference.y": 0.5
+      }
+    ],
 
-        "stripe_title_lose":
-        [{
-            "anchor.x": 0,
-            "anchor.y": 0.5,
-            "anchor.reference.x": 0.12,
-            "anchor.reference.y": 0.83
-        }],
+    "stripe_title_lose": [
+      {
+        "anchor.x": 0,
+        "anchor.y": 0.5,
+        "anchor.reference.x": 0.12,
+        "anchor.reference.y": 0.83
+      }
+    ],
 
-        "stripe_message_lose":
-        [{
-            "anchor.x": 0.5,
-            "anchor.y": 0.5,
-            "anchor.reference.x": 0.5,
-            "anchor.reference.y": 0.5
-        }],
+    "stripe_message_lose": [
+      {
+        "anchor.x": 0.5,
+        "anchor.y": 0.5,
+        "anchor.reference.x": 0.5,
+        "anchor.reference.y": 0.5
+      }
+    ],
 
-        "rays":
-        [{
-            "anchor.x": 0.5,
-            "anchor.y": 0.5,
-            "anchor.reference.x": 0.5,
-            "anchor.reference.y": 0.57,
-            "width.percents": 150,
-            "height-ratio": 1
-        }],
+    "rays": [
+      {
+        "anchor.x": 0.5,
+        "anchor.y": 0.5,
+        "anchor.reference.x": 0.5,
+        "anchor.reference.y": 0.57,
+        "width.percents": 150,
+        "height-ratio": 1
+      }
+    ],
 
-        "glow":
-        [{
-            "anchor.x": 0.5,
-            "anchor.y": 0.5,
-            "anchor.reference.x": 0.5,
-            "anchor.reference.y": 0.57,
-            "width.percents": 150,
-            "height-ratio": 1
-        }],
+    "glow": [
+      {
+        "anchor.x": 0.5,
+        "anchor.y": 0.5,
+        "anchor.reference.x": 0.5,
+        "anchor.reference.y": 0.57,
+        "width.percents": 150,
+        "height-ratio": 1
+      }
+    ],
 
-        "reward.win":
-        [{
-            "anchor.x": 0.5,
-            "anchor.y": 0.5,
-            "anchor.reference.x": 0.5,
-            "anchor.reference.y": 0.55,
-            "height.percents": 24,
-            "keep-ratio": true
+    "reward.win": [
+      {
+        "anchor.x": 0.5,
+        "anchor.y": 0.5,
+        "anchor.reference.x": 0.5,
+        "anchor.reference.y": 0.55,
+        "height.percents": 24,
+        "keep-ratio": true
 
-        }],
+      }
+    ],
 
-        "reward.draw":
-        [
-            "layout/fill",
-            {
-                "reference": "reward.win"
-            }
-        ],
+    "reward.draw": [
+      "layout/fill",
+      {
+        "reference": "reward.win"
+      }
+    ],
 
-        "reward.lose":
-        [
-            "layout/fill",
-            {
-                "reference": "reward.win"
-            }
-        ],
+    "reward.lose": [
+      "layout/fill",
+      {
+        "reference": "reward.win"
+      }
+    ],
 
-        "reward_reference":
-        [{
-            "reference": "reward.win",
-            "anchor.x": 0.5,
-            "anchor.y": 0.5,
-            "anchor.reference.x": 0.5,
-            "anchor.reference.y": 0.5
-        }],
+    "reward_reference": [
+      {
+        "reference": "reward.win",
+        "anchor.x": 0.5,
+        "anchor.y": 0.5,
+        "anchor.reference.x": 0.5,
+        "anchor.reference.y": 0.5
+      }
+    ],
 
-        "reward-label-icon":
-        [{
-            "reference": "reward_label",
-            "anchor.x": 0.95,
-            "anchor.y": 0,
-            "anchor.reference.x": 0,
-            "anchor.reference.y": 0.1,
-            "height.percents": 105,
-            "keep-ratio": true
-        }],
+    "reward-label-icon": [
+      {
+        "reference": "reward_label",
+        "anchor.x": 0.95,
+        "anchor.y": 0,
+        "anchor.reference.x": 0,
+        "anchor.reference.y": 0.1,
+        "height.percents": 105,
+        "keep-ratio": true
+      }
+    ],
 
-        "reward_label":
-        [{
-            "anchor.x": 0.5,
-            "anchor.y": 0.5,
-            "anchor.reference.x": 0.5,
-            "anchor.reference.y": 0.43
-        }],
+    "reward_label": [
+      {
+        "anchor.x": 0.5,
+        "anchor.y": 0.5,
+        "anchor.reference.x": 0.5,
+        "anchor.reference.y": 0.43
+      }
+    ],
 
-        "revenge_button":
-        [{
-            "anchor.x": 0.5,
-            "anchor.y": 0.5,
-            "anchor.reference.x": 0.5,
-            "anchor.reference.y": 0.25,
-            "width.percents": 50,
-            "height.percents": 15
-        }],
+    "revenge_button": [
+      {
+        "anchor.x": 0.5,
+        "anchor.y": 0.5,
+        "anchor.reference.x": 0.5,
+        "anchor.reference.y": 0.25,
+        "width.percents": 50,
+        "height.percents": 15
+      }
+    ],
 
-        "quit_button": [ "app/screen/part/back-button-bounds" ]
-    }
+    "quit_button": [
+      "app/screen/part/back-button-bounds"
+    ]
+  }
 }

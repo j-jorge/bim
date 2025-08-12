@@ -1,37 +1,41 @@
 {
-    "meta":
-    {
-        "overrides": [ "button/thick-base" ]
-    },
+  "meta": {
+    "overrides": [
+      "button/thick-base"
+    ]
+  },
 
-    "style":
-    {
-        "widgets":
-        [{
-            "decorum-on/widgets/fill":
-            [{
-                "frame": "sprites/menu/vertical-yellow-gradient.png"
-            }],
+  "style": {
+    "widgets": [
+      {
+        "decorum-on/widgets/fill": [
+          {
+            "frame": "sprites/menu/vertical-yellow-gradient.png"
+          }
+        ],
 
-            "icon":
-            [{
-                "instantiate": "ax::Sprite",
-                "z-order": 10
-            }]
-        }],
+        "icon": [
+          {
+            "instantiate": "ax::Sprite",
+            "z-order": 10
+          }
+        ]
+      }
+    ],
 
-        "bounds":
-        [{
-            "icon":
-            [{
-                "anchor.x": 0.5,
-                "anchor.y": 0.5,
-                "anchor.reference.x": 0.5,
-                "anchor.reference.y": 0.5,
-                "keep-ratio": true,
-                "height.percents": 60
-            }]
-        }]
-    }
+    "bounds": [
+      {
+        "icon": [
+          {
+            "anchor.x": 0.5,
+            "anchor.y": 0.5,
+            "anchor.reference.x": 0.5,
+            "anchor.reference.y": 0.5,
+            "keep-ratio": true,
+            "height.percents": 60
+          }
+        ]
+      }
+    ]
+  }
 }
-
