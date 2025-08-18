@@ -59,6 +59,7 @@
 #include <bim/game/static_wall.hpp>
 
 #include <bim/assume.hpp>
+#include <bim/tracy.hpp>
 
 #include <iscool/log/log.hpp>
 #include <iscool/log/nature/info.hpp>
@@ -279,6 +280,8 @@ bim::axmol::app::online_game::online_game(
   create_power_up_shader(m_flame_power_ups, *shine);
   create_power_up_shader(m_invisibility_power_ups, *shine);
   create_power_up_shader(m_shield_power_ups, *shine);
+
+  TracyPlotConfig("Entities", tracy::PlotFormatType::Number, true, false, 0);
 }
 
 bim::axmol::app::online_game::~online_game() = default;
@@ -488,6 +491,8 @@ void bim::axmol::app::online_game::schedule_tick()
 
 void bim::axmol::app::online_game::tick()
 {
+  ZoneScoped;
+
   const std::chrono::nanoseconds now =
       iscool::time::monotonic_now<std::chrono::nanoseconds>();
   const std::chrono::nanoseconds runner_step = now - m_last_tick_date;
@@ -520,6 +525,9 @@ void bim::axmol::app::online_game::tick()
 
   apply_inputs();
   refresh_display();
+
+  TracyPlot("Entities",
+            (std::int64_t)m_contest->registry().view<entt::entity>().size());
 
   if (result.still_running())
     schedule_tick();
@@ -621,12 +629,16 @@ void bim::axmol::app::online_game::apply_inputs()
 
 void bim::axmol::app::online_game::reset_z_order()
 {
+  ZoneScoped;
+
   for (std::size_t i = 0, n = m_z_order.size(); i != n; ++i)
     m_z_order[i] = i * 1000;
 }
 
 void bim::axmol::app::online_game::refresh_display()
 {
+  ZoneScopedC(0x3644a0);
+
   reset_z_order();
   display_brick_walls();
   display_bombs();
@@ -647,6 +659,8 @@ void bim::axmol::app::online_game::refresh_display()
 
 void bim::axmol::app::online_game::display_static_walls()
 {
+  ZoneScoped;
+
   const bim::game::arena& arena = m_contest->arena();
   std::array<std::size_t, bim::game::cell_neighborhood_layout_count>
       asset_index{};
@@ -671,6 +685,8 @@ void bim::axmol::app::online_game::display_static_walls()
 
 void bim::axmol::app::online_game::display_falling_blocks()
 {
+  ZoneScoped;
+
   const entt::registry& registry = m_contest->registry();
   std::size_t asset_index = 0;
 
@@ -709,6 +725,8 @@ void bim::axmol::app::online_game::display_falling_blocks()
 
 void bim::axmol::app::online_game::display_brick_walls()
 {
+  ZoneScoped;
+
   const entt::registry& registry = m_contest->registry();
   std::size_t asset_index = 0;
 
@@ -726,6 +744,8 @@ void bim::axmol::app::online_game::display_brick_walls()
 
 void bim::axmol::app::online_game::display_players()
 {
+  ZoneScoped;
+
   const entt::registry& registry = m_contest->registry();
 
   bool local_still_alive = false;
@@ -795,6 +815,8 @@ void bim::axmol::app::online_game::display_player(
 
 void bim::axmol::app::online_game::display_bombs()
 {
+  ZoneScoped;
+
   const entt::registry& registry = m_contest->registry();
   std::size_t asset_index = 0;
 
@@ -828,6 +850,8 @@ void bim::axmol::app::online_game::display_bombs()
 
 void bim::axmol::app::online_game::display_flames()
 {
+  ZoneScoped;
+
   const entt::registry& registry = m_contest->registry();
   std::size_t asset_index = 0;
 
@@ -892,6 +916,8 @@ template <typename T>
 void bim::axmol::app::online_game::display_power_ups(
     const std::vector<ax::Sprite*>& assets)
 {
+  ZoneScoped;
+
   const entt::registry& registry = m_contest->registry();
   std::size_t asset_index = 0;
 
@@ -910,6 +936,8 @@ void bim::axmol::app::online_game::display_power_ups(
 
 void bim::axmol::app::online_game::display_main_timer()
 {
+  ZoneScoped;
+
   const entt::registry& registry = m_contest->registry();
 
   registry.view<bim::game::timer, bim::game::game_timer>().each(
@@ -941,9 +969,9 @@ void bim::axmol::app::online_game::display_at(std::size_t arena_y,
 
 void bim::axmol::app::online_game::stop()
 {
+  m_tick_connection.disconnect();
   m_contest_runner.reset();
   m_update_exchange.reset();
   m_game_channel.reset();
   m_contest.reset();
-  m_tick_connection.disconnect();
 }

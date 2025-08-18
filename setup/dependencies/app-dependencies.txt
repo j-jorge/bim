@@ -6,6 +6,7 @@
 00-libunwind.sh
 00-maxminddb.sh
 00-mo-file-reader.sh
+00-tracy.sh
 10-axmol.sh
 10-cpptrace.sh
 10-iscool-core.sh

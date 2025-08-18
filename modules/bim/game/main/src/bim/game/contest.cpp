@@ -41,6 +41,7 @@
 #include <bim/game/random_generator.hpp>
 
 #include <bim/assume.hpp>
+#include <bim/tracy.hpp>
 
 #include <entt/entity/registry.hpp>
 
@@ -192,6 +193,8 @@ bim::game::contest::fog_map(std::size_t player_index) const
 
 bim::game::contest_result bim::game::contest::tick()
 {
+  ZoneScoped;
+
   refresh_bomb_inventory(*m_registry);
   update_timers(*m_registry, tick_interval);
   animator(*m_context, *m_registry, tick_interval);
@@ -204,7 +207,6 @@ bim::game::contest_result bim::game::contest::tick()
   update_invincibility_state(*m_registry);
   update_shields(*m_registry);
 
-  // update_burning(*m_registry, *m_arena);
   update_brick_walls(*m_registry, *m_arena);
   update_invisibility_state(*m_context, *m_registry);
 

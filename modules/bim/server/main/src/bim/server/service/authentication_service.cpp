@@ -12,6 +12,8 @@
 #include <bim/net/message/protocol_version.hpp>
 #include <bim/net/message/try_deserialize_message.hpp>
 
+#include <bim/tracy.hpp>
+
 #include <iscool/log/log.hpp>
 #include <iscool/log/nature/info.hpp>
 #include <iscool/net/socket_stream.hpp>
@@ -48,6 +50,18 @@ bim::server::authentication_service::authentication_service(
   m_message_stream.connect_to_message(
       std::bind(&authentication_service::check_session, this,
                 std::placeholders::_1, std::placeholders::_2));
+
+#if BIM_ENABLE_TRACY
+  TracyPlotConfig("Bytes in", tracy::PlotFormatType::Memory, true, false, 0);
+  TracyPlotConfig("Bytes out", tracy::PlotFormatType::Memory, true, false, 0);
+
+  socket.connect_to_received(
+      [this](const iscool::net::endpoint&, const iscool::net::byte_array&)
+      {
+        TracyPlot("Bytes in", (std::int64_t)m_socket.received_bytes());
+        TracyPlot("Bytes out", (std::int64_t)m_socket.sent_bytes());
+      });
+#endif
 
   schedule_clean_up();
 }

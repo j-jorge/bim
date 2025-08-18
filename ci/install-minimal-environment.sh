@@ -74,9 +74,20 @@ packages=(autoconf
           libtool
           make
           ninja-build
+          patch
           pkg-config
           python3-venv
           "$compiler")
+
+# Tracy
+packages+=(
+    libegl-dev
+    libdbus-1-dev
+    libxkbcommon-dev
+    libwayland-cursor++1
+    libwayland-dev
+    libwayland-egl++1
+)
 
 if [[ "$compiler" == clang-* ]]
 then
@@ -88,6 +99,7 @@ case "$target_platform" in
     linux)
         packages+=(libgtk-3-dev
                    mold
+                   patch
                    valgrind)
         ;;
     android)

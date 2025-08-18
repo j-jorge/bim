@@ -8,6 +8,7 @@ set(main_sources
   main/src/bim/axmol/app/config.cpp
   main/src/bim/axmol/app/feature_deck.cpp
   main/src/bim/axmol/app/fog_display.cpp
+  main/src/bim/axmol/app/frame_profiler.cpp
   main/src/bim/axmol/app/main_scene.cpp
   main/src/bim/axmol/app/matchmaking_wait_message.cpp
   main/src/bim/axmol/app/player_progress_tracker.cpp

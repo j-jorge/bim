@@ -1,6 +1,5 @@
 # Next
 
-- Plug Tracy and get some benchmarks.
 - Add PostHog analytics.
 
 # Client

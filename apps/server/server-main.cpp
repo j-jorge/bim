@@ -2,6 +2,8 @@
 #include <bim/server/config.hpp>
 #include <bim/server/server.hpp>
 
+#include <bim/tracy.hpp>
+
 #include <iscool/json/cast_bool.hpp>
 #include <iscool/json/cast_uint16.hpp>
 #include <iscool/json/cast_uint64.hpp>
@@ -492,6 +494,8 @@ int main(int argc, char* argv[])
           slice_duration -= update_ms;
           scheduler.update_interval(update_ms);
         }
+
+      FrameMark;
 
       const clock::time_point end = clock::now();
 

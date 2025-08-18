@@ -18,6 +18,7 @@
 #include <bim/axmol/widget/implement_controls_struct.hpp>
 
 #include <bim/table_2d.hpp>
+#include <bim/tracy.hpp>
 
 #include <axmol/2d/Sprite.h>
 #include <axmol/2d/SpriteFrameCache.h>
@@ -132,6 +133,8 @@ void bim::axmol::app::fog_display::displaying(
 
 void bim::axmol::app::fog_display::update(const bim::game::contest& contest)
 {
+  ZoneScoped;
+
   const entt::registry& registry = contest.registry();
 
   // Ensure that the displayed player is still there, and pick another player

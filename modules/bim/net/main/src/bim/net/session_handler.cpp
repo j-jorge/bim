@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/net/session_handler.hpp>
 
+#include <bim/tracy.hpp>
+
 #include <iscool/log/log.hpp>
 #include <iscool/log/nature/error.hpp>
 #include <iscool/signals/implement_signal.hpp>
@@ -27,6 +29,18 @@ bim::net::session_handler::session_handler()
         m_session_id = std::nullopt;
         m_authentication_error(c);
       });
+
+#if BIM_ENABLE_TRACY
+  TracyPlotConfig("Bytes in", tracy::PlotFormatType::Memory, true, false, 0);
+  TracyPlotConfig("Bytes out", tracy::PlotFormatType::Memory, true, false, 0);
+
+  m_socket_stream.connect_to_received(
+      [this](const iscool::net::endpoint&, const iscool::net::byte_array&)
+      {
+        TracyPlot("Bytes in", (std::int64_t)m_socket_stream.received_bytes());
+        TracyPlot("Bytes out", (std::int64_t)m_socket_stream.sent_bytes());
+      });
+#endif
 }
 
 bim::net::session_handler::~session_handler() = default;

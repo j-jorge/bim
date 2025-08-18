@@ -41,6 +41,7 @@
 #include <bim/game/player_action.hpp>
 
 #include <bim/assume.hpp>
+#include <bim/tracy.hpp>
 
 #include <entt/entity/registry.hpp>
 #include <entt/entity/snapshot.hpp>
@@ -89,6 +90,8 @@ std::uint32_t bim::net::contest_runner::confirmed_tick() const
 bim::game::contest_result
 bim::net::contest_runner::run(std::chrono::nanoseconds elapsed_wall_time)
 {
+  ZoneScopedC(0xa03636);
+
   if (m_contest_result)
     return *m_contest_result;
 
@@ -144,6 +147,8 @@ void bim::net::contest_runner::queue_updates(const server_update& updates)
 
 void bim::net::contest_runner::sync_with_server(entt::registry& registry)
 {
+  ZoneScoped;
+
   restore_last_confirmed_state(registry);
 
   bool has_action = false;

@@ -18,6 +18,10 @@ endif()
 option(BIM_BUILD_TESTS
   "Whether test programs should be compiled or not."
   ON)
+message(STATUS "Building tests: ${BIM_BUILD_TESTS}")
+
+option(BIM_ENABLE_TRACY "Enable Tracy profiler." OFF)
+message(STATUS "Profiling with Tracy: ${BIM_ENABLE_TRACY}")
 
 if(BIM_TARGET STREQUAL "android")
   set(BIM_ANDROID_GENERATED_RES_DIR
