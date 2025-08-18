@@ -88,6 +88,7 @@ case "$target_platform" in
     linux)
         packages+=(libgtk-3-dev
                    mold
+                   patch
                    valgrind)
         ;;
     android)

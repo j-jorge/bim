@@ -8,10 +8,12 @@
 #include <axmol/2d/Layer.h>
 #include <axmol/2d/Node.h>
 #include <axmol/2d/Sprite.h>
+#include <axmol/base/EventListenerCustom.h>
 
 template class bim::axmol::ref_ptr<ax::Action>;
 template class bim::axmol::ref_ptr<ax::ActionInterval>;
 template class bim::axmol::ref_ptr<ax::ClippingNode>;
+template class bim::axmol::ref_ptr<ax::EventListenerCustom>;
 template class bim::axmol::ref_ptr<ax::FiniteTimeAction>;
 template class bim::axmol::ref_ptr<ax::Label>;
 template class bim::axmol::ref_ptr<ax::Layer>;
