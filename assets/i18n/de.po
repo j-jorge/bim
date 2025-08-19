@@ -1,0 +1,216 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: 2025-08-22 19:02+0000\n"
+"Last-Translator: Julien Jorge <julien.jorge@gmx.fr>\n"
+"Language-Team: German <https://hosted.weblate.org/projects/bim/gettext-files/"
+"de/>\n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.13\n"
+
+msgid "Please wait."
+msgstr "Bitte warten."
+
+msgid "Please wait.."
+msgstr "Bitte warten.."
+
+msgid "Please wait..."
+msgstr "Bitte warten..."
+
+msgid "You have been disconnected."
+msgstr "Die Verbindung wurde unterbrochen."
+
+#, c++-format
+msgid "Version {}"
+msgstr "Version {}"
+
+msgid "Feedback about Bim!"
+msgstr "Feedback zu Bim!"
+
+msgid ""
+"Come play a game of Bim! https://play.google.com/store/apps/details?"
+"id=bim.app"
+msgstr ""
+"Komm und spiel eine Runde Bim! https://play.google.com/store/apps/"
+"details?id=bim.app"
+
+msgid "You need more coins to purchase this item!"
+msgstr "Sie benötigen mehr Münzen, um diesen Artikel zu kaufen!"
+
+msgid "Customize your experience below!"
+msgstr "Passen Sie Ihr Erlebnis unten an!"
+
+msgid "Falling blocks reduce the arena after two minutes!"
+msgstr "Fallende Blöcke verkleinern die Arena nach zwei Minuten!"
+
+msgid "Find this incredibly strong barrel, it will save you from one hit!"
+msgstr ""
+"Finden Sie diesen unglaublich stabilen Lauf, er wird Sie vor einem Treffer "
+"bewahren!"
+
+msgid "A thick fog covers the arena. You can't see were you did not go!"
+msgstr ""
+"Ein dichter Nebel bedeckt die Arena. Man kann nicht sehen, wo man nicht "
+"hingegangen ist!"
+
+msgid ""
+"Find the invisibility power up to disappear from the screen of all other "
+"players!"
+msgstr ""
+"Finde das Unsichtbarkeits-Power-Up, um vom Bildschirm aller anderen Spieler "
+"zu verschwinden!"
+
+msgid "An error occurred. The purchase could not be completed."
+msgstr "Ein Fehler ist aufgetreten. Der Kauf konnte nicht abgeschlossen werden."
+
+msgid "A new version of Bim! is available! Please update as soon as possible."
+msgstr ""
+"Eine neue Version von Bim! ist verfügbar! Bitte aktualisieren Sie so bald "
+"wie möglich."
+
+#, c++-format
+msgid "Failed to authenticate with the game server. Error code {}."
+msgstr ""
+"Die Authentifizierung beim Spielserver ist fehlgeschlagen. Fehlercode {}."
+
+msgid "OK"
+msgstr "OK"
+
+msgid ""
+"NEW\n"
+"GAME"
+msgstr ""
+"NEUES\n"
+"SPIEL"
+
+msgid ""
+"Start a new game\n"
+"and get your revenge!"
+msgstr ""
+"Ein neues Spiel starten\n"
+"und Rache nehmen!"
+
+msgid ""
+"Was it pure luck?\n"
+"Confirm your skills in a new game!"
+msgstr ""
+"War es reines Glück?\n"
+"Beweise deine Fähigkeiten in einem neuen Spiel!"
+
+msgid "Draw game!"
+msgstr "Unentschieden!"
+
+msgid "You lost!"
+msgstr "Du hast verloren!"
+
+msgid "You won!"
+msgstr "Du hast gewonnen!"
+
+msgid "Off"
+msgstr "Aus"
+
+msgid "On"
+msgstr "An"
+
+msgid "Debug"
+msgstr "Fehlerbehebung"
+
+msgid "Directions kind"
+msgstr "Wegbeschreibung"
+
+msgid "Directional pad, at a fixed position on the screen."
+msgstr "Steuerkreuz, an einer festen Position auf dem Bildschirm."
+
+msgid "Analog stick, it pops where you tap and follows the drag."
+msgstr ""
+"Analogstick: Er springt an der Stelle, an der Sie ihn antippen, und folgt "
+"der Bewegung."
+
+msgid "Controls"
+msgstr "Steuerung"
+
+msgid "Directions on the left, actions on the right."
+msgstr "Anweisungen links, Aktionen rechts."
+
+msgid "Directions on the right, actions on the left."
+msgstr "Anweisungen rechts, Aktionen links."
+
+msgid "D-pad"
+msgstr "Steuerkreuz"
+
+msgid "Stick"
+msgstr "Stick"
+
+msgid "Music"
+msgstr "Musik"
+
+msgid "Sound effects"
+msgstr "Soundeffekte"
+
+msgid "Settings"
+msgstr "Einstellungen"
+
+msgid "Vibrations"
+msgstr "Vibrationen"
+
+msgid "DEBUG"
+msgstr "DEBUG"
+
+msgid ""
+"PLAY\n"
+"ONLINE"
+msgstr ""
+"SPIEL\n"
+"ONLINE"
+
+msgid "ALPHA VERSION"
+msgstr "ALPHA VERSION"
+
+msgid ""
+"You can start a two-players game\n"
+"now or wait for more players!"
+msgstr ""
+"Sie können jetzt ein Spiel für zwei Spieler starten\n"
+"oder auf weitere Spieler warten!"
+
+msgid ""
+"You can start a three-players game\n"
+"now or wait for more players!"
+msgstr ""
+"Sie können jetzt ein Spiel mit drei-Spielern starten\n"
+"oder auf weitere Spieler warten!"
+
+msgid "Start the game now!"
+msgstr "Starte das Spiel jetzt!"
+
+msgid "FIGHT!"
+msgstr "KÄMPFT!"
+
+msgid ""
+"Waiting for your opponents…\n"
+"Tell your friends to join!"
+msgstr ""
+"Warten auf deine Gegner…\n"
+"Sag deinen Freunden, sie sollen mitmachen!"
+
+msgid "Online Game"
+msgstr "Online Spiel"
+
+msgid "×1000"
+msgstr "×1000"
+
+msgid "LOADING…"
+msgstr "LADEN…"
+
+msgid "SHOP"
+msgstr "SHOP"
