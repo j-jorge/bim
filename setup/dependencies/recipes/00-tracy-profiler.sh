@@ -8,7 +8,7 @@ package_revision=1
 version="$tracy_version"-"$package_revision"
 build_type=release
 
-! bim-install-package tracy "$version" "$build_type" 2>/dev/null \
+! bim-install-package tracy-profiler "$version" "$build_type" 2>/dev/null \
     || exit 0
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd)"
@@ -20,12 +20,11 @@ bim-git-clone-repository \
     "$tracy_repository" "v$tracy_version" "$source_dir"
 
 bim-cmake-build \
-        --build-dir "$build_dir" \
-        --build-type "${build_type^}" \
-        --install-dir "$install_dir" \
-        --source-dir "$source_dir" \
-        --cmake -DTRACY_STATIC=ON \
-        --cmake -DTRACY_LTO=OFF
+    --build-dir "$build_dir-profiler" \
+    --build-type "${build_type^}" \
+    --install-dir "$install_dir" \
+    --source-dir "$source_dir/profiler" \
+    --no-lto
 
 bim-package-and-install \
-    "$install_dir" tracy "$version" "$build_type"
+    "$install_dir" tracy-profiler "$version" "$build_type"

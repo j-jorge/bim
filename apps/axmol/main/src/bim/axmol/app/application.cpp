@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/axmol/app/application.hpp>
 
+#include <bim/axmol/app/frame_profiler.hpp>
 #include <bim/axmol/app/preference/audio.hpp>
 #include <bim/axmol/app/preference/haptic.hpp>
 #include <bim/axmol/app/task/main_task.hpp>
@@ -85,6 +86,7 @@ private:
 
 private:
   application& m_application;
+  bim::axmol::app::frame_profiler m_frame_profiler;
   bim::axmol::audio::mixer m_audio;
   bim::axmol::ref_ptr<bim::axmol::app::root_scene> m_root_scene;
   iscool::signals::scoped_connection m_clean_up_connection;

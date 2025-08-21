@@ -16,6 +16,7 @@ build_dir=
 build_type=
 install_dir=
 source_dir=
+enable_lto=1
 cmake_args=()
 
 set_build_dir() { build_dir="$1" ; }
@@ -33,6 +34,10 @@ register_option '--cmake=<str…>' add_cmake_arg \
 set_install_dir() { install_dir="$1" ; }
 register_option '--install-dir=<path>' set_install_dir \
                 "The directory where to install the program."
+
+set_no_lto() { enable_lto=0 ; }
+register_option '--no-lto' set_no_lto \
+                "Disable LTO."
 
 set_source_dir() { source_dir="$1" ; }
 register_option '--source-dir=<path>' set_source_dir \
@@ -122,9 +127,12 @@ then
     #
     # This is a problem because we mix release dependencies and
     # debug binaries.
-    export CFLAGS="-flto -ffat-lto-objects ${CFLAGS:-}"
-    export CXXFLAGS="-flto -ffat-lto-objects ${CXXFLAGS:-}"
-    export LDFLAGS="-flto -ffat-lto-objects ${LDFLAGS:-}"
+    if (( enable_lto == 1 ))
+    then
+        export CFLAGS="-flto -ffat-lto-objects ${CFLAGS:-}"
+        export CXXFLAGS="-flto -ffat-lto-objects ${CXXFLAGS:-}"
+        export LDFLAGS="-flto -ffat-lto-objects ${LDFLAGS:-}"
+    fi
 fi
 
 case "$bim_package_install_platform" in

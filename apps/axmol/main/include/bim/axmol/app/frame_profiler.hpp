@@ -1,13 +1,17 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #pragma once
 
-#include <bim/axmol/ref_ptr_fwd.hpp>
-
 #include <vector>
 
 namespace ax
 {
   class EventListenerCustom;
+}
+
+namespace bim::axmol
+{
+  template <typename T>
+  class ref_ptr;
 }
 
 namespace bim::axmol::app

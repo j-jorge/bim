@@ -19,6 +19,8 @@ option(BIM_BUILD_TESTS
   "Whether test programs should be compiled or not."
   ON)
 
+option(BIM_ENABLE_TRACY "Enable Tracy profiler." OFF)
+
 if(BIM_TARGET STREQUAL "android")
   set(BIM_ANDROID_GENERATED_RES_DIR
     "${CMAKE_BINARY_DIR}/android/app/res"

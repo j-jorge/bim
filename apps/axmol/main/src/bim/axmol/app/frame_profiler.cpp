@@ -1,8 +1,15 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/axmol/app/frame_profiler.hpp>
 
+#include <bim/axmol/ref_ptr.hpp>
+
 #include <axmol/base/Director.h>
+#include <axmol/base/EventDispatcher.h>
 #include <axmol/base/EventListenerCustom.h>
+
+#ifndef TRACY_ENABLE
+  #error "error"
+#endif
 
 #include <tracy/Tracy.hpp>
 
@@ -12,7 +19,7 @@ static const char* const g_tracy_tag_draw = "draw";
 bim::axmol::app::frame_profiler::frame_profiler()
 {
   ax::EventDispatcher& event_dispatcher =
-      ax::Director::getInstance()->getEventDispatcher();
+      *ax::Director::getInstance()->getEventDispatcher();
 
   m_event_listeners.push_back(
       event_dispatcher.addCustomEventListener(ax::Director::EVENT_AFTER_LOOP,
@@ -53,7 +60,7 @@ bim::axmol::app::frame_profiler::frame_profiler()
 bim::axmol::app::frame_profiler::~frame_profiler()
 {
   ax::EventDispatcher& event_dispatcher =
-      ax::Director::getInstance()->getEventDispatcher();
+      *ax::Director::getInstance()->getEventDispatcher();
 
   for (const bim::axmol::ref_ptr<ax::EventListenerCustom>& p :
        m_event_listeners)

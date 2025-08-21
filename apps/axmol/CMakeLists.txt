@@ -8,6 +8,7 @@ set(main_sources
   main/src/bim/axmol/app/config.cpp
   main/src/bim/axmol/app/feature_deck.cpp
   main/src/bim/axmol/app/fog_display.cpp
+  main/src/bim/axmol/app/frame_profiler.cpp
   main/src/bim/axmol/app/main_scene.cpp
   main/src/bim/axmol/app/matchmaking_wait_message.cpp
   main/src/bim/axmol/app/player_progress_tracker.cpp
@@ -58,6 +59,13 @@ else()
   set(platform_includes desktop/include)
 endif()
 
+if(BIM_ENABLE_TRACY)
+  set_property(
+    SOURCE main/src/bim/axmol/app/frame_profiler.cpp
+    APPEND PROPERTY COMPILE_DEFINITIONS TRACY_ENABLE
+  )
+endif()
+
 add_library(bim_app STATIC ${main_sources} ${platform_sources})
 target_include_directories(bim_app PUBLIC main/include ${platform_includes})
 
@@ -78,4 +86,5 @@ target_link_libraries(bim_app
   iscool_social
   iscool_system
   iscool_style
+  Tracy::TracyClient
 )
