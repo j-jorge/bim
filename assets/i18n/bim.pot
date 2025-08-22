@@ -25,7 +25,7 @@ msgstr ""
 msgid "Please wait..."
 msgstr ""
 
-msgid "You have been disconnected."
+msgid "You have been disconnected :("
 msgstr ""
 
 #, c++-format
@@ -142,6 +142,18 @@ msgstr ""
 msgid "Vibrations"
 msgstr ""
 
+msgid "Defeats"
+msgstr ""
+
+msgid "Draws"
+msgstr ""
+
+msgid "Games"
+msgstr ""
+
+msgid "Victories"
+msgstr ""
+
 msgid "DEBUG"
 msgstr ""
 
@@ -150,17 +162,19 @@ msgid ""
 "ONLINE"
 msgstr ""
 
+msgid "Your statistics"
+msgstr ""
+
 msgid "ALPHA VERSION"
 msgstr ""
 
-msgid ""
-"You can start a two-players game\n"
-"now or wait for more players!"
+msgid "Success rate"
 msgstr ""
 
-msgid ""
-"You can start a three-players game\n"
-"now or wait for more players!"
+msgid "You can start a two-players game now or wait for more players!"
+msgstr ""
+
+msgid "You can start a three-players game now or wait for more players!"
 msgstr ""
 
 msgid "Start the game now!"

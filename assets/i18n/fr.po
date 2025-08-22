@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-03-09 22:26+0100\n"
-"PO-Revision-Date: 2025-08-02 21:55+0200\n"
+"PO-Revision-Date: 2025-08-22 22:20+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -27,7 +27,7 @@ msgstr "Juste un instant.."
 msgid "Please wait..."
 msgstr "Juste un instant..."
 
-msgid "You have been disconnected."
+msgid "You have been disconnected :("
 msgstr "Tu as été déconnecté :("
 
 #, c++-format
@@ -159,6 +159,18 @@ msgstr "Paramètres"
 msgid "Vibrations"
 msgstr "Vibrations"
 
+msgid "Defeats"
+msgstr "Défaites"
+
+msgid "Draws"
+msgstr "Matchs nuls"
+
+msgid "Games"
+msgstr "Combats"
+
+msgid "Victories"
+msgstr "Victoires"
+
 msgid "DEBUG"
 msgstr "DEBUG"
 
@@ -169,22 +181,20 @@ msgstr ""
 "JOUER\n"
 "EN LIGNE"
 
+msgid "Your statistics"
+msgstr "Tes statistiques"
+
 msgid "ALPHA VERSION"
 msgstr "VERSION ALPHA"
 
-msgid ""
-"You can start a two-players game\n"
-"now or wait for more players!"
-msgstr ""
-"Tu peux lancer une partie à 2 joueurs\n"
-"ou attendre d'autres joueurs !"
+msgid "Success rate"
+msgstr "Taux de victoires"
 
-msgid ""
-"You can start a three-players game\n"
-"now or wait for more players!"
-msgstr ""
-"Tu peux lancer une partie à 3 joueurs\n"
-"ou attendre d'autres joueurs !"
+msgid "You can start a two-players game now or wait for more players!"
+msgstr "Tu peux lancer une partie à 2 joueurs ou attendre d'autres joueurs !"
+
+msgid "You can start a three-players game now or wait for more players!"
+msgstr "Tu peux lancer une partie à 3 joueurs ou attendre d'autres joueurs !"
 
 msgid "Start the game now!"
 msgstr "Lance le jeu maintenant !"

@@ -5,18 +5,19 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-08-04 14:02+0000\n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2025-08-22 22:21+0200\n"
 "Last-Translator: ssantos <ssantos@web.de>\n"
-"Language-Team: Portuguese <https://hosted.weblate.org/projects/bim/"
-"gettext-files/pt/>\n"
+"Language-Team: Portuguese <https://hosted.weblate.org/projects/bim/gettext-"
+"files/pt/>\n"
 "Language: pt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.13-dev\n"
+"X-Generator: Poedit 3.6\n"
 
 msgid "Please wait."
 msgstr "Aguarde."
@@ -27,8 +28,8 @@ msgstr "Aguarde.."
 msgid "Please wait..."
 msgstr "Aguarde..."
 
-msgid "You have been disconnected."
-msgstr "Foi desconectado."
+msgid "You have been disconnected :("
+msgstr "Foi desconectado :("
 
 #, c++-format
 msgid "Version {}"
@@ -53,7 +54,8 @@ msgid "Falling blocks reduce the arena after two minutes!"
 msgstr "Blocos a cair reduzem a arena depois de dois minutos!"
 
 msgid "Find this incredibly strong barrel, it will save you from one hit!"
-msgstr "Encontre este barril incrivelmente forte, que irá salvá-lo de um golpe!"
+msgstr ""
+"Encontre este barril incrivelmente forte, que irá salvá-lo de um golpe!"
 
 msgid "A thick fog covers the arena. You can't see were you did not go!"
 msgstr ""
@@ -154,6 +156,18 @@ msgstr "Configurações"
 msgid "Vibrations"
 msgstr "Vibrações"
 
+msgid "Defeats"
+msgstr ""
+
+msgid "Draws"
+msgstr ""
+
+msgid "Games"
+msgstr ""
+
+msgid "Victories"
+msgstr ""
+
 msgid "DEBUG"
 msgstr "DEBUG"
 
@@ -164,22 +178,20 @@ msgstr ""
 "JOGUE\n"
 "ONLINE"
 
+msgid "Your statistics"
+msgstr ""
+
 msgid "ALPHA VERSION"
 msgstr "VERSÃO ALFA"
 
-msgid ""
-"You can start a two-players game\n"
-"now or wait for more players!"
+msgid "Success rate"
 msgstr ""
-"Pode jogar com dois jogadores\n"
-"agora ou esperar por mais jogadores!"
 
-msgid ""
-"You can start a three-players game\n"
-"now or wait for more players!"
-msgstr ""
-"Pode jogar com três jogadores\n"
-"agora ou esperar por mais jogadores!"
+msgid "You can start a two-players game now or wait for more players!"
+msgstr "Pode jogar com dois jogadores agora ou esperar por mais jogadores!"
+
+msgid "You can start a three-players game now or wait for more players!"
+msgstr "Pode jogar com três jogadores agora ou esperar por mais jogadores!"
 
 msgid "Start the game now!"
 msgstr "Começar o jogo agora!"

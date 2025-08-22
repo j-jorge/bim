@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2025-08-06 16:01+0000\n"
+"PO-Revision-Date: 2025-08-22 22:20+0200\n"
 "Last-Translator: OlliesGudh <github@paulogomez.anonaddy.com>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/bim/"
 "gettext-files/pt_BR/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.13-dev\n"
+"X-Generator: Poedit 3.6\n"
 
 msgid "Please wait."
 msgstr "Aguarde."
@@ -28,8 +28,8 @@ msgstr "Aguarde.."
 msgid "Please wait..."
 msgstr "Aguarde..."
 
-msgid "You have been disconnected."
-msgstr "Você foi desconectado."
+msgid "You have been disconnected :("
+msgstr "Você foi desconectado :("
 
 #, c++-format
 msgid "Version {}"
@@ -156,6 +156,18 @@ msgstr "Configurações"
 msgid "Vibrations"
 msgstr "Vibrações"
 
+msgid "Defeats"
+msgstr ""
+
+msgid "Draws"
+msgstr ""
+
+msgid "Games"
+msgstr ""
+
+msgid "Victories"
+msgstr ""
+
 msgid "DEBUG"
 msgstr "DEBUG"
 
@@ -166,22 +178,22 @@ msgstr ""
 "JOGUE\n"
 "ONLINE"
 
+msgid "Your statistics"
+msgstr ""
+
 msgid "ALPHA VERSION"
 msgstr "VERSÃO ALFA"
 
-msgid ""
-"You can start a two-players game\n"
-"now or wait for more players!"
+msgid "Success rate"
 msgstr ""
-"Você pode jogar com dois jogadores\n"
-"agora ou esperar por mais jogadores!"
 
-msgid ""
-"You can start a three-players game\n"
-"now or wait for more players!"
+msgid "You can start a two-players game now or wait for more players!"
 msgstr ""
-"Você pode jogar com três jogadores\n"
-"agora ou esperar por mais jogadores!"
+"Você pode jogar com dois jogadores agora ou esperar por mais jogadores!"
+
+msgid "You can start a three-players game now or wait for more players!"
+msgstr ""
+"Você pode jogar com três jogadores agora ou esperar por mais jogadores!"
 
 msgid "Start the game now!"
 msgstr "Começar o jogo agora!"

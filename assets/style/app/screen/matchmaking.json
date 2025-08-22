@@ -118,7 +118,7 @@
           "app/screen/part/matchmaking-player-label",
           {
             "text.i18n":
-                "You can start a two-players game\nnow or wait for more players!"
+                "You can start a two-players game now or wait for more players!"
           }
         ],
 
@@ -126,7 +126,7 @@
           "app/screen/part/matchmaking-player-label",
           {
             "text.i18n":
-                "You can start a three-players game\nnow or wait for more players!"
+                "You can start a three-players game now or wait for more players!"
           }
         ],
 

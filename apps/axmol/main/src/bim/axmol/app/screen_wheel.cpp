@@ -332,7 +332,7 @@ void bim::axmol::app::screen_wheel::disconnected()
   if ((m_active_view == m_controls->online_game) || !m_silently_reconnect)
     {
       m_online_game->closing();
-      m_message_popup->show(ic_gettext("You have been disconnected."));
+      m_message_popup->show(ic_gettext("You have been disconnected :("));
     }
   else
     {
