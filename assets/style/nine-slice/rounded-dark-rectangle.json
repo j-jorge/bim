@@ -1,0 +1,13 @@
+{
+  "style": {
+    "widgets/sprite": [
+      {
+        "frame": "sprites/menu/rounded-dark-rectangle-93-93.png",
+        "insets.left": 93,
+        "insets.top": 93,
+        "insets.width": 1,
+        "insets.height": 1
+      }
+    ]
+  }
+}

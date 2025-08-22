@@ -89,7 +89,7 @@ namespace bim::axmol::app
 
   private:
     bim::axmol::input::tree m_inputs;
-    bim_declare_controls_struct(controls, m_controls, 8);
+    bim_declare_controls_struct(controls, m_controls, 10);
 
     const std::unique_ptr<wallet> m_wallet;
 

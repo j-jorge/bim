@@ -10,17 +10,18 @@
 #include <bim/axmol/input/observer/tap_observer.hpp>
 #include <bim/axmol/input/touch_observer_handle.impl.hpp>
 #include <bim/axmol/widget/factory/label.hpp>
+#include <bim/axmol/widget/factory/progress_timer.hpp>
 #include <bim/axmol/widget/merge_named_node_groups.hpp>
 #include <bim/axmol/widget/named_node_group.hpp>
 #include <bim/axmol/widget/ui/button.hpp>
 
 #include <bim/net/session_handler.hpp>
 
-#include <iscool/i18n/gettext.hpp>
 #include <iscool/i18n/numeric.hpp>
 #include <iscool/signals/implement_signal.hpp>
 
 #include <axmol/2d/Label.h>
+#include <axmol/2d/ProgressTimer.h>
 
 #define x_widget_scope bim::axmol::app::lobby::
 #define x_widget_type_name controls
@@ -32,7 +33,10 @@
                   x_widget(ax::Label, arena_games_total)                      \
                       x_widget(ax::Label, arena_victories)                    \
                           x_widget(ax::Label, arena_defeats)                  \
-                              x_widget(ax::Label, arena_draws)
+                              x_widget(ax::Label, arena_draws)                \
+                                  x_widget(ax::Label, success_rate_percents)  \
+                                      x_widget(ax::ProgressTimer,             \
+                                               success_rate_progress)
 
 #include <bim/axmol/widget/implement_controls_struct.hpp>
 
@@ -132,24 +136,38 @@ void bim::axmol::app::lobby::displaying()
 {
   const iscool::preferences::local_preferences& preferences =
       *m_context.get_local_preferences();
-  std::int64_t total_games = bim::axmol::app::games_in_arena(preferences);
-  std::int64_t games_win = bim::axmol::app::victories_in_arena(preferences);
-  std::int64_t games_defeat = bim::axmol::app::defeats_in_arena(preferences);
-  std::int64_t games_draw = total_games - games_win - games_defeat;
+
+  const std::int64_t total_games =
+      bim::axmol::app::games_in_arena(preferences);
+  const std::int64_t games_win =
+      bim::axmol::app::victories_in_arena(preferences);
+  const std::int64_t games_defeat =
+      bim::axmol::app::defeats_in_arena(preferences);
+  const std::int64_t games_draw = total_games - games_win - games_defeat;
+
   m_controls->arena_games_total->setString(
-      fmt::format(fmt::runtime(ic_ngettext("{} game played", "{} games played",
-                                           total_games)),
-                  total_games));
-  m_controls->arena_victories->setString(fmt::format(
-      fmt::runtime(ic_ngettext("{} game won", "{} games won", games_win)),
-      games_win));
+      iscool::i18n::numeric::to_string(total_games));
+
+  m_controls->arena_victories->setString(
+      iscool::i18n::numeric::to_string(games_win));
   m_controls->arena_defeats->setString(
-      fmt::format(fmt::runtime(ic_ngettext("{} game defeat", "{} games defeat",
-                                           games_defeat)),
-                  games_defeat));
-  m_controls->arena_draws->setString(fmt::format(
-      fmt::runtime(ic_ngettext("{} game draw", "{} games draw", games_draw)),
-      games_draw));
+      iscool::i18n::numeric::to_string(games_defeat));
+  m_controls->arena_draws->setString(
+      iscool::i18n::numeric::to_string(games_draw));
+
+  if (total_games == 0)
+    {
+      m_controls->success_rate_percents->setString("-");
+      m_controls->success_rate_progress->setPercentage(100);
+    }
+  else
+    {
+      const float percents = float(games_win * 100) / total_games;
+
+      m_controls->success_rate_percents->setString(
+          fmt::format("{}%", std::lround(percents)));
+      m_controls->success_rate_progress->setPercentage(percents);
+    }
 }
 
 void bim::axmol::app::lobby::closing()

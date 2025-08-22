@@ -2,12 +2,15 @@ set(sprites
   "sprites/menu/price-tag-88-40.png"
   "sprites/menu/rounded-button-border-54-66.png"
   "sprites/menu/rounded-button-fill-54-66.png"
+  "sprites/menu/rounded-dark-rectangle-93-93.png"
   "sprites/menu/rounded-rectangle-33-33.png"
   "sprites/menu/stripe-1-79-1-258.png"
   "sprites/menu/shop-item-border-107-109.png"
   "sprites/menu/shop-item-stripe-1-1.png"
   "sprites/menu/shop-item-mask-107-109.png"
   "sprites/menu/shop-ribbon-227.png"
+  "sprites/menu/success-rate-disc.png"
+  "sprites/menu/success-rate-disc-empty.png"
 
   "sprites/popup/popup-border-146-146.png"
   "sprites/popup/popup-fill-146-146.png"
@@ -42,6 +45,7 @@ set(sprites_crop
   "sprites/menu/coins-pack-3.png"
   "sprites/menu/coins-pack-4.png"
   "sprites/menu/dot-100.png"
+  "sprites/menu/dot-70.png"
   "sprites/menu/gamepad.png"
   "sprites/menu/gamepad-d-pad-left.png"
   "sprites/menu/gamepad-d-pad-right.png"
@@ -319,8 +323,10 @@ add_custom_command(
   OUTPUT
     ${BIM_GENERATED_ASSETS_DIR}/sprite-sheet-1.png
     ${BIM_GENERATED_ASSETS_DIR}/sprite-sheet-2.png
+    ${BIM_GENERATED_ASSETS_DIR}/sprite-sheet-3.png
     ${BIM_GENERATED_ASSETS_DIR}/sprite-sheet-1.plist
     ${BIM_GENERATED_ASSETS_DIR}/sprite-sheet-2.plist
+    ${BIM_GENERATED_ASSETS_DIR}/sprite-sheet-3.plist
   COMMAND ${auto_pack_my_sprites}
     --output sprite-sheet
     --no-rotation
@@ -342,4 +348,5 @@ add_custom_target(
   DEPENDS
   ${BIM_GENERATED_ASSETS_DIR}/sprite-sheet-1.png
   ${BIM_GENERATED_ASSETS_DIR}/sprite-sheet-2.png
+  ${BIM_GENERATED_ASSETS_DIR}/sprite-sheet-3.png
 )

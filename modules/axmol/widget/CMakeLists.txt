@@ -21,6 +21,7 @@ add_library(bim_axmol_widget
   main/src/bim/axmol/widget/factory/layer.cpp
   main/src/bim/axmol/widget/factory/layer_color.cpp
   main/src/bim/axmol/widget/factory/node.cpp
+  main/src/bim/axmol/widget/factory/progress_timer.cpp
   main/src/bim/axmol/widget/factory/sprite.cpp
   main/src/bim/axmol/widget/factory/scale_nine_sprite.cpp
 

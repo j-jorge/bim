@@ -1,110 +1,119 @@
 find_program(style_merger style-merger REQUIRED)
 
 set(common_style_files
-  ${CMAKE_CURRENT_LIST_DIR}/layout/center.json
+  layout/center.json
 )
 
 set(main_task_style_files
-  ${CMAKE_CURRENT_LIST_DIR}/main-task.json
 
-  ${CMAKE_CURRENT_LIST_DIR}/action/rotate-forever-30s.json
+  main-task.json
 
-  ${CMAKE_CURRENT_LIST_DIR}/app/screen-wheel.json
-  ${CMAKE_CURRENT_LIST_DIR}/app/screen/bomb-button.json
-  ${CMAKE_CURRENT_LIST_DIR}/app/screen/directional-pad.json
-  ${CMAKE_CURRENT_LIST_DIR}/app/screen/end-game.json
-  ${CMAKE_CURRENT_LIST_DIR}/app/screen/end-game-bounds.json
-  ${CMAKE_CURRENT_LIST_DIR}/app/screen/joystick.json
-  ${CMAKE_CURRENT_LIST_DIR}/app/screen/lobby.json
-  ${CMAKE_CURRENT_LIST_DIR}/app/screen/lobby-bounds.json
-  ${CMAKE_CURRENT_LIST_DIR}/app/screen/matchmaking.json
-  ${CMAKE_CURRENT_LIST_DIR}/app/screen/matchmaking-bounds.json
-  ${CMAKE_CURRENT_LIST_DIR}/app/screen/online-game.json
-  ${CMAKE_CURRENT_LIST_DIR}/app/screen/online-game-bounds.json
-  ${CMAKE_CURRENT_LIST_DIR}/app/screen/shop.json
-  ${CMAKE_CURRENT_LIST_DIR}/app/screen/shop-bounds.json
+  action/rotate-forever-30s.json
 
-  ${CMAKE_CURRENT_LIST_DIR}/app/screen/font/stripe-message.json
-  ${CMAKE_CURRENT_LIST_DIR}/app/screen/font/stripe-title.json
+  app/screen-wheel.json
+  app/screen/bomb-button.json
+  app/screen/directional-pad.json
+  app/screen/end-game.json
+  app/screen/end-game-bounds.json
+  app/screen/joystick.json
+  app/screen/lobby.json
+  app/screen/lobby-bounds.json
+  app/screen/matchmaking.json
+  app/screen/matchmaking-bounds.json
+  app/screen/online-game.json
+  app/screen/online-game-bounds.json
+  app/screen/shop.json
+  app/screen/shop-bounds.json
 
-  ${CMAKE_CURRENT_LIST_DIR}/app/screen/online-game/control-panel-decorum.json
-  ${CMAKE_CURRENT_LIST_DIR}/app/screen/online-game/control-panel-edging.json
-  ${CMAKE_CURRENT_LIST_DIR}/app/screen/online-game/fog-display.json
+  app/screen/font/stripe-message.json
+  app/screen/font/stripe-title.json
 
-  ${CMAKE_CURRENT_LIST_DIR}/app/screen/part/back-button.json
-  ${CMAKE_CURRENT_LIST_DIR}/app/screen/part/back-button-bounds.json
-  ${CMAKE_CURRENT_LIST_DIR}/app/screen/part/feature-deck.json
-  ${CMAKE_CURRENT_LIST_DIR}/app/screen/part/feature-deck-bounds.json
-  ${CMAKE_CURRENT_LIST_DIR}/app/screen/part/feature-deck-button-bounds.json
-  ${CMAKE_CURRENT_LIST_DIR}/app/screen/part/matchmaking-feature-label.json
-  ${CMAKE_CURRENT_LIST_DIR}/app/screen/part/matchmaking-feature-label-bounds.json
-  ${CMAKE_CURRENT_LIST_DIR}/app/screen/part/matchmaking-player-label.json
-  ${CMAKE_CURRENT_LIST_DIR}/app/screen/part/menu-background.json
-  ${CMAKE_CURRENT_LIST_DIR}/app/screen/part/menu-background-bounds.json
-  ${CMAKE_CURRENT_LIST_DIR}/app/screen/part/menu-stripe.json
-  ${CMAKE_CURRENT_LIST_DIR}/app/screen/part/menu-stripe-bounds.json
-  ${CMAKE_CURRENT_LIST_DIR}/app/screen/part/player.json
-  ${CMAKE_CURRENT_LIST_DIR}/app/screen/part/wallet.json
+  app/screen/lobby/stat-background.json
+  app/screen/lobby/stat-background-bounds.json
+  app/screen/lobby/stat-title.json
+  app/screen/lobby/stat-value-label.json
+  app/screen/lobby/stats-bounds.json
+  app/screen/lobby/stats.json
 
-  ${CMAKE_CURRENT_LIST_DIR}/app/screen/shop/amount-label.json
-  ${CMAKE_CURRENT_LIST_DIR}/app/screen/shop/amount-label-bounds.json
-  ${CMAKE_CURRENT_LIST_DIR}/app/screen/shop/item.json
-  ${CMAKE_CURRENT_LIST_DIR}/app/screen/shop/item-bounds.json
-  ${CMAKE_CURRENT_LIST_DIR}/app/screen/shop/price-button.json
-  ${CMAKE_CURRENT_LIST_DIR}/app/screen/shop/price-button-bounds.json
+  app/screen/online-game/control-panel-decorum.json
+  app/screen/online-game/control-panel-edging.json
+  app/screen/online-game/fog-display.json
 
-  ${CMAKE_CURRENT_LIST_DIR}/app/widget/game-feature-button.json
+  app/screen/part/back-button.json
+  app/screen/part/back-button-bounds.json
+  app/screen/part/feature-deck.json
+  app/screen/part/feature-deck-bounds.json
+  app/screen/part/feature-deck-button-bounds.json
+  app/screen/part/matchmaking-feature-label.json
+  app/screen/part/matchmaking-feature-label-bounds.json
+  app/screen/part/matchmaking-player-label.json
+  app/screen/part/menu-background.json
+  app/screen/part/menu-background-bounds.json
+  app/screen/part/menu-stripe.json
+  app/screen/part/menu-stripe-bounds.json
+  app/screen/part/player.json
+  app/screen/part/wallet.json
 
-  ${CMAKE_CURRENT_LIST_DIR}/button/base.json
-  ${CMAKE_CURRENT_LIST_DIR}/button/feature-unavailable.json
-  ${CMAKE_CURRENT_LIST_DIR}/button/flat-with-label.json
-  ${CMAKE_CURRENT_LIST_DIR}/button/green-with-label.json
-  ${CMAKE_CURRENT_LIST_DIR}/button/red-with-label.json
-  ${CMAKE_CURRENT_LIST_DIR}/button/sprite.json
-  ${CMAKE_CURRENT_LIST_DIR}/button/thick-base.json
-  ${CMAKE_CURRENT_LIST_DIR}/button/yellow-with-icon.json
-  ${CMAKE_CURRENT_LIST_DIR}/button/yellow-with-label.json
-  ${CMAKE_CURRENT_LIST_DIR}/button/white-with-icon.json
+  app/screen/shop/amount-label.json
+  app/screen/shop/amount-label-bounds.json
+  app/screen/shop/item.json
+  app/screen/shop/item-bounds.json
+  app/screen/shop/price-button.json
+  app/screen/shop/price-button-bounds.json
 
-  ${CMAKE_CURRENT_LIST_DIR}/font/bold.json
-  ${CMAKE_CURRENT_LIST_DIR}/font/bold-center-normal-size.json
-  ${CMAKE_CURRENT_LIST_DIR}/font/bold-center-normal-size-with-outline.json
-  ${CMAKE_CURRENT_LIST_DIR}/font/center-normal-size.json
-  ${CMAKE_CURRENT_LIST_DIR}/font/regular.json
-  ${CMAKE_CURRENT_LIST_DIR}/font/fancy-regular.json
-  ${CMAKE_CURRENT_LIST_DIR}/font/fancy-center-with-outline-and-shadow.json
+  app/widget/game-feature-button.json
 
-  ${CMAKE_CURRENT_LIST_DIR}/layout/left-center.json
-  ${CMAKE_CURRENT_LIST_DIR}/layout/right-center.json
-  ${CMAKE_CURRENT_LIST_DIR}/layout/fill.json
-  ${CMAKE_CURRENT_LIST_DIR}/layout/fit.json
+  button/base.json
+  button/feature-unavailable.json
+  button/flat-with-label.json
+  button/green-with-label.json
+  button/red-with-label.json
+  button/sprite.json
+  button/thick-base.json
+  button/yellow-with-icon.json
+  button/yellow-with-label.json
+  button/white-with-icon.json
 
-  ${CMAKE_CURRENT_LIST_DIR}/nine-slice/price-tag.json
-  ${CMAKE_CURRENT_LIST_DIR}/nine-slice/rounded-rectangle.json
-  ${CMAKE_CURRENT_LIST_DIR}/nine-slice/stripe.json
+  font/bold.json
+  font/bold-center-normal-size.json
+  font/bold-center-normal-size-with-outline.json
+  font/center-normal-size.json
+  font/regular.json
+  font/fancy-regular.json
+  font/fancy-center-with-outline-and-shadow.json
 
-  ${CMAKE_CURRENT_LIST_DIR}/popup/debug.json
-  ${CMAKE_CURRENT_LIST_DIR}/popup/full-screen.json
-  ${CMAKE_CURRENT_LIST_DIR}/popup/message.json
-  ${CMAKE_CURRENT_LIST_DIR}/popup/settings.json
-  ${CMAKE_CURRENT_LIST_DIR}/popup/small.json
+  layout/left-center.json
+  layout/right-center.json
+  layout/fill.json
+  layout/fit.json
 
-  ${CMAKE_CURRENT_LIST_DIR}/popup/settings/font/main.json
-  ${CMAKE_CURRENT_LIST_DIR}/popup/settings/font/small.json
-  ${CMAKE_CURRENT_LIST_DIR}/popup/settings/toggle/controls.json
+  nine-slice/price-tag.json
+  nine-slice/rounded-dark-rectangle.json
+  nine-slice/rounded-rectangle.json
+  nine-slice/stripe.json
 
-  ${CMAKE_CURRENT_LIST_DIR}/popup/debug/font/main.json
+  popup/debug.json
+  popup/full-screen.json
+  popup/message.json
+  popup/settings.json
+  popup/small.json
 
-  ${CMAKE_CURRENT_LIST_DIR}/toggle/base.json
-  ${CMAKE_CURRENT_LIST_DIR}/toggle/flat.json
-  ${CMAKE_CURRENT_LIST_DIR}/toggle/flat-empty.json
-  ${CMAKE_CURRENT_LIST_DIR}/toggle/game-feature.json
+  popup/settings/font/main.json
+  popup/settings/font/small.json
+  popup/settings/toggle/controls.json
+
+  popup/debug/font/main.json
+
+  toggle/base.json
+  toggle/flat.json
+  toggle/flat-empty.json
+  toggle/game-feature.json
 
   ${common_style_files}
 )
 
 set(main_scene_style_files
-  ${CMAKE_CURRENT_LIST_DIR}/launch/main-scene.json
+  launch/main-scene.json
 
   ${common_style_files}
 )
@@ -115,7 +124,7 @@ function(merge_styles main_style_id)
   jsonlint("${main_style_id}.json" linted_file_files)
 
   foreach(file ${ARGN})
-    jsonlint("${file}" linted_file)
+    jsonlint("${CMAKE_CURRENT_LIST_DIR}/${file}" linted_file)
     list(APPEND linted_style_files "${linted_file}")
   endforeach()
 

@@ -1,0 +1,9 @@
+{
+  "style": {
+    "reference": "stats-background",
+    "anchor.x": 0.5,
+    "anchor.y": 0.5,
+    "width.percents": 23,
+    "height.ratio": 0.33
+  }
+}

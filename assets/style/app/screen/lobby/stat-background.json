@@ -1,0 +1,17 @@
+{
+  "style": {
+    "instantiate": "nine_slices",
+    "widgets/sprite": [
+      {
+        "frame": "sprites/menu/dot-70.png",
+        "insets.left": 34,
+        "insets.top": 34,
+        "insets.width": 1,
+        "insets.height": 1
+      }
+    ],
+    "stretch-direction.vertical": false,
+    "color": "desert-storm",
+    "z-order": -5
+  }
+}

@@ -1,0 +1,180 @@
+{
+  "style": {
+    "stats-background": [
+      {
+        "anchor.x": 0.5,
+        "anchor.y": 0.5,
+        "anchor.reference.x": 0.5,
+        "anchor.reference.y": 0.7,
+        "width.percents": 100,
+        "height.percents": 20
+      }
+    ],
+
+    "stats-main-title": [
+      {
+        "reference": "stats-background",
+        "anchor.x": 0,
+        "anchor.y": 0.5,
+        "anchor.reference.x": 0.05,
+        "anchor.reference.y": 0.93
+      }
+    ],
+
+    "arena-games-total-title": [
+      {
+        "reference": "stats-background",
+        "anchor.x": 0.5,
+        "anchor.y": 0.5,
+        "anchor.reference.x": 0.2,
+        "anchor.reference.y": 0.78
+      }
+    ],
+
+    "arena-victories-title": [
+      {
+        "reference": "stats-background",
+        "anchor.x": 0.5,
+        "anchor.y": 0.5,
+        "anchor.reference.x": 0.5,
+        "anchor.reference.y": 0.78
+      }
+    ],
+
+    "arena-defeats-title": [
+      {
+        "reference": "stats-background",
+        "anchor.x": 0.5,
+        "anchor.y": 0.5,
+        "anchor.reference.x": 0.2,
+        "anchor.reference.y": 0.42
+      }
+    ],
+
+    "arena-draws-title": [
+      {
+        "reference": "stats-background",
+        "anchor.x": 0.5,
+        "anchor.y": 0.5,
+        "anchor.reference.x": 0.5,
+        "anchor.reference.y": 0.42
+      }
+    ],
+
+    "arena-games-total-background": [
+      "app/screen/lobby/stat-background-bounds",
+      {
+        "anchor.reference.x": 0.2,
+        "anchor.reference.y": 0.61
+      }
+    ],
+
+    "arena-victories-background": [
+      "app/screen/lobby/stat-background-bounds",
+      {
+        "anchor.reference.x": 0.5,
+        "anchor.reference.y": 0.61
+      }
+    ],
+
+    "arena-defeats-background": [
+      "app/screen/lobby/stat-background-bounds",
+      {
+        "anchor.reference.x": 0.2,
+        "anchor.reference.y": 0.25
+      }
+    ],
+
+    "arena-draws-background": [
+      "app/screen/lobby/stat-background-bounds",
+      {
+        "anchor.reference.x": 0.5,
+        "anchor.reference.y": 0.25
+      }
+    ],
+
+    "arena_games_total": [
+      {
+        "reference": "arena-games-total-background",
+        "anchor.x": 0.5,
+        "anchor.y": 0.5,
+        "anchor.reference.x": 0.5,
+        "anchor.reference.y": 0.5
+      }
+    ],
+
+    "arena_victories": [
+      {
+        "reference": "arena-victories-background",
+        "anchor.x": 0.5,
+        "anchor.y": 0.5,
+        "anchor.reference.x": 0.5,
+        "anchor.reference.y": 0.5
+      }
+    ],
+
+    "arena_defeats": [
+      {
+        "reference": "arena-defeats-background",
+        "anchor.x": 0.5,
+        "anchor.y": 0.5,
+        "anchor.reference.x": 0.5,
+        "anchor.reference.y": 0.5
+      }
+    ],
+
+    "arena_draws": [
+      {
+        "reference": "arena-draws-background",
+        "anchor.x": 0.5,
+        "anchor.y": 0.5,
+        "anchor.reference.x": 0.5,
+        "anchor.reference.y": 0.5
+      }
+    ],
+
+    "success-rate-title": [
+      {
+        "reference": "stats-background",
+        "anchor.x": 0.5,
+        "anchor.y": 0.5,
+        "anchor.reference.x": 0.8,
+        "anchor.reference.y": 0.78
+      }
+    ],
+
+    "success_rate_percents": [
+      {
+        "reference": "stats-background",
+        "anchor.x": 0.5,
+        "anchor.y": 0.5,
+        "anchor.reference.x": 0.8,
+        "anchor.reference.y": 0.43
+      }
+    ],
+
+    "success-rate-progress-background": [
+      {
+        "reference": "stats-background",
+        "anchor.x": 0.5,
+        "anchor.y": 0.5,
+        "anchor.reference.x": 0.8,
+        "anchor.reference.y": 0.43,
+        "height.percents": 50,
+        "width-ratio": 1
+      }
+    ],
+
+    "success_rate_progress": [
+      {
+        "reference": "stats-background",
+        "anchor.x": 0.5,
+        "anchor.y": 0.5,
+        "anchor.reference.x": 0.8,
+        "anchor.reference.y": 0.43,
+        "height.percents": 50,
+        "width-ratio": 1
+      }
+    ]
+  }
+}

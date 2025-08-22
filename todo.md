@@ -1,13 +1,13 @@
 # Next
 
-- Local stats on the lobby.
+- Bug fix: the player can walk behind falling blocks.
+- A menu to select the game language.
 - Game feature submenu.
 
 # Client
 
 - At most three enabled features per game.
 - Display the frame duration (without the sleep) in addition to the FPS.
-- Close the settings when the back button is pressed.
 
 # Server
 

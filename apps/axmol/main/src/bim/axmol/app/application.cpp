@@ -284,6 +284,8 @@ bim::axmol::app::detail::session_systems::session_systems(application& app)
       "sprite-sheet-1.plist");
   ax::SpriteFrameCache::getInstance()->addSpriteFramesWithFile(
       "sprite-sheet-2.plist");
+  ax::SpriteFrameCache::getInstance()->addSpriteFramesWithFile(
+      "sprite-sheet-3.plist");
   ax::backend::ProgramManager::getInstance()->registerCustomProgram(
       ax::positionTextureColor_vert, "shaders/shine_fs",
       ax::VertexLayoutType::Sprite);

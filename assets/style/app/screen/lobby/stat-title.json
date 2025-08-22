@@ -1,0 +1,14 @@
+{
+  "meta": {
+    "overrides": [
+      "font/bold"
+    ]
+  },
+
+  "style": {
+    "instantiate": "ax::Label",
+    "font.size": 38,
+    "font.color": "desert-storm",
+    "align.horizontal": "center"
+  }
+}

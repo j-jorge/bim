@@ -207,6 +207,7 @@ assets/sprites/menu/coins-pack-2.png
 assets/sprites/menu/coins-pack-3.png
 assets/sprites/menu/coins-pack-4.png
 assets/sprites/menu/dot-100.png
+assets/sprites/menu/dot-70.png
 assets/sprites/menu/gamepad-d-pad-left.png
 assets/sprites/menu/gamepad-d-pad-right.png
 assets/sprites/menu/glow.png
@@ -217,6 +218,7 @@ assets/sprites/menu/rays.png
 assets/sprites/menu/red-stripe-1-7-1-136.png
 assets/sprites/menu/rounded-button-border-54-66.png
 assets/sprites/menu/rounded-button-fill-54-66.png
+assets/sprites/menu/rounded-dark-rectangle-93-93.png
 assets/sprites/menu/rounded-rectangle-33-33.png
 assets/sprites/menu/rounded-rectangle-spike.png
 assets/sprites/menu/share.png
@@ -225,6 +227,8 @@ assets/sprites/menu/shop-item-mask-107-109.png
 assets/sprites/menu/shop-item-stripe-1-1.png
 assets/sprites/menu/shop-ribbon-227.png
 assets/sprites/menu/stripe-1-79-1-258.png
+assets/sprites/menu/success-rate-disc.png
+assets/sprites/menu/success-rate-disc-empty.png
 assets/sprites/menu/vertical-gradient.png
 assets/sprites/menu/vertical-gray-gradient.png
 assets/sprites/menu/vertical-green-gradient.png
