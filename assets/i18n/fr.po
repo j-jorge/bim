@@ -3,20 +3,21 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-03-09 22:26+0100\n"
-"PO-Revision-Date: 2025-08-22 22:20+0200\n"
-"Last-Translator: \n"
-"Language-Team: \n"
+"PO-Revision-Date: 2025-08-24 19:02+0000\n"
+"Last-Translator: Julien Jorge <julien.jorge@gmx.fr>\n"
+"Language-Team: French <https://hosted.weblate.org/projects/bim/gettext-files/"
+"fr/>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 3.6\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 5.13\n"
 
 msgid "Please wait."
 msgstr "Juste un instant."
@@ -59,7 +60,8 @@ msgstr ""
 
 msgid "A thick fog covers the arena. You can't see were you did not go!"
 msgstr ""
-"Un épais brouillard recouvre l'arène. Tu ne peux voir là où tu n'es pas allé!"
+"Un épais brouillard recouvre l'arène. Tu ne peux voir là où tu n'es pas allé "
+"!"
 
 msgid ""
 "Find the invisibility power up to disappear from the screen of all other "
@@ -200,7 +202,7 @@ msgid "Start the game now!"
 msgstr "Lance le jeu maintenant !"
 
 msgid "FIGHT!"
-msgstr "GO!"
+msgstr "GO !"
 
 msgid ""
 "Waiting for your opponents…\n"
