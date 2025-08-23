@@ -69,6 +69,9 @@
 
 #include <axmol/2d/Label.h>
 
+#include <bim/axmol/input/key_observer_handle.impl.hpp>
+#include <bim/axmol/input/observer/keyboard_gamepad.hpp>
+
 #define x_widget_scope bim::axmol::app::online_game::
 #define x_widget_type_name controls
 #define x_widget_controls                                                     \
@@ -116,6 +119,11 @@ bim::axmol::app::online_game::online_game(
     const context& context, const iscool::style::declaration& style)
   : m_context(context)
   , m_controls(context.get_widget_context(), *style.get_declaration("widgets"))
+  , m_keyboard_gamepad(ax::EventKeyboard::KeyCode::KEY_UP_ARROW,
+                       ax::EventKeyboard::KeyCode::KEY_DOWN_ARROW,
+                       ax::EventKeyboard::KeyCode::KEY_RIGHT_ARROW,
+                       ax::EventKeyboard::KeyCode::KEY_LEFT_ARROW,
+                       ax::EventKeyboard::KeyCode::KEY_SPACE)
   , m_style_pad_on_the_left(*style.get_declaration("bounds.d-pad-on-the-left"))
   , m_style_pad_on_the_right(
         *style.get_declaration("bounds.d-pad-on-the-right"))
@@ -158,6 +166,9 @@ bim::axmol::app::online_game::online_game(
   m_inputs.push_back(m_controls->bomb_button->input_node());
   m_inputs.push_back(m_controls->joystick->input_node());
   m_inputs.push_back(m_controls->directional_pad->input_node());
+  m_inputs.push_back(m_keyboard_gamepad);
+
+  m_keyboard_gamepad->connect_to_action(request_drop_bomb);
 
   m_controls->directional_pad->connect_to_pressed(
       [haptic = context.get_haptic_feedback()]() -> void
@@ -325,6 +336,7 @@ void bim::axmol::app::online_game::displaying(
 {
   m_bomb_drop_requested = false;
   m_controls->bomb_button->enable(false);
+  m_keyboard_gamepad->enable(false);
 
   configure_direction_pad();
 
@@ -353,6 +365,7 @@ void bim::axmol::app::online_game::displaying(
       {
         m_controls->peephole->reveal();
         m_controls->bomb_button->enable(true);
+        m_keyboard_gamepad->enable(true);
         m_last_tick_date =
             iscool::time::monotonic_now<std::chrono::nanoseconds>();
         m_game_start_date = m_last_tick_date;
@@ -562,9 +575,19 @@ void bim::axmol::app::online_game::apply_inputs()
   if (player_action == nullptr)
     return;
 
-  const ax::Vec2& drag = m_use_stick
-                             ? m_controls->joystick->drag()
-                             : m_controls->directional_pad->direction();
+  const ax::Vec2 input_direction[] = {
+    m_controls->joystick->drag(), m_controls->directional_pad->direction(),
+    ax::Vec2(m_keyboard_gamepad->horizontal(), m_keyboard_gamepad->vertical())
+  };
+
+  ax::Vec2 drag = {};
+
+  for (const ax::Vec2& d : input_direction)
+    if (d != ax::Vec2::ZERO)
+      {
+        drag = d;
+        break;
+      }
 
   const float abs_x = std::abs(drag.x);
   const float abs_y = std::abs(drag.y);

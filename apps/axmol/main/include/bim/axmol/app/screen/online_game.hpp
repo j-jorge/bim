@@ -2,7 +2,7 @@
 #pragma once
 
 #include <bim/axmol/app/arena_display_config.hpp>
-
+#include <bim/axmol/input/observer/keyboard_gamepad_handle.hpp>
 #include <bim/axmol/input/tree.hpp>
 #include <bim/axmol/widget/declare_controls_struct.hpp>
 
@@ -156,6 +156,7 @@ namespace bim::axmol::app
   private:
     bim::axmol::input::tree m_inputs;
     bim_declare_controls_struct(controls, m_controls, 8);
+    bim::axmol::input::keyboard_gamepad_handle m_keyboard_gamepad;
 
     const iscool::style::declaration& m_style_pad_on_the_left;
     const iscool::style::declaration& m_style_pad_on_the_right;
