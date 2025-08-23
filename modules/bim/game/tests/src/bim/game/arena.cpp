@@ -53,16 +53,18 @@ INSTANTIATE_TEST_SUITE_P(bim_game_arena_suite, bim_game_arena_test,
                          ::testing::Combine(::testing::Range(1, 10),
                                             ::testing::Range(1, 10)));
 
-TEST(bim_game_arena, static_wall_is_solid)
+TEST(bim_game_arena, static_wall_is_blocker)
 {
   bim::game::arena arena(2, 2);
 
   arena.set_static_wall(0, 1, bim::game::cell_neighborhood::none);
 
-  EXPECT_FALSE(arena.is_solid(0, 0));
-  EXPECT_TRUE(arena.is_solid(0, 1));
-  EXPECT_FALSE(arena.is_solid(1, 0));
-  EXPECT_FALSE(arena.is_solid(1, 1));
+  EXPECT_FALSE(arena.is_blocker(0, 0));
+  EXPECT_TRUE(arena.is_blocker(0, 1));
+  EXPECT_FALSE(arena.is_blocker(1, 0));
+  EXPECT_FALSE(arena.is_blocker(1, 1));
+
+  EXPECT_FALSE(arena.is_solid(0, 1));
 }
 
 TEST(bim_game_arena, static_wall_view)
@@ -93,6 +95,8 @@ TEST(bim_game_arena, solid_not_static_wall)
   EXPECT_TRUE(arena.is_solid(0, 1));
   EXPECT_FALSE(arena.is_solid(1, 0));
   EXPECT_FALSE(arena.is_solid(1, 1));
+
+  EXPECT_TRUE(arena.is_blocker(0, 1));
 }
 
 TEST(bim_game_arena, put_entity)

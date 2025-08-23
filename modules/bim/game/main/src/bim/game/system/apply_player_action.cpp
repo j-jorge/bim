@@ -97,7 +97,7 @@ static void move_player(bim::game::player& player,
     case bim::game::player_movement::left:
       state.transition_to(animations.walk_left);
 
-      if ((x_decimal <= half + offset) && arena.is_solid(x_int - 1, y_int))
+      if ((x_decimal <= half + offset) && arena.is_blocker(x_int - 1, y_int))
         {
           position.x = x_floor + half;
 
@@ -105,15 +105,15 @@ static void move_player(bim::game::player& player,
           if (y_decimal < half)
             {
               // There is a path above: move up.
-              if (!arena.is_solid(x_int, y_int - 1)
-                  && !arena.is_solid(x_int - 1, y_int - 1))
+              if (!arena.is_blocker(x_int, y_int - 1)
+                  && !arena.is_blocker(x_int - 1, y_int - 1))
                 position.y -= offset;
             }
           else if (y_decimal > half)
             {
               // There is a path below: move down.
-              if (!arena.is_solid(x_int, y_int + 1)
-                  && !arena.is_solid(x_int - 1, y_int + 1))
+              if (!arena.is_blocker(x_int, y_int + 1)
+                  && !arena.is_blocker(x_int - 1, y_int + 1))
                 position.y += offset;
             }
         }
@@ -126,7 +126,7 @@ static void move_player(bim::game::player& player,
     case bim::game::player_movement::right:
       state.transition_to(animations.walk_right);
 
-      if ((x_decimal + offset >= half) && arena.is_solid(x_int + 1, y_int))
+      if ((x_decimal + offset >= half) && arena.is_blocker(x_int + 1, y_int))
         {
           position.x = x_floor + half;
 
@@ -134,15 +134,15 @@ static void move_player(bim::game::player& player,
           if (y_decimal < half)
             {
               // There is a path above: move up.
-              if (!arena.is_solid(x_int, y_int - 1)
-                  && !arena.is_solid(x_int + 1, y_int - 1))
+              if (!arena.is_blocker(x_int, y_int - 1)
+                  && !arena.is_blocker(x_int + 1, y_int - 1))
                 position.y -= offset;
             }
           else if (y_decimal > half)
             {
               // There is a path below: move down.
-              if (!arena.is_solid(x_int, y_int + 1)
-                  && !arena.is_solid(x_int + 1, y_int + 1))
+              if (!arena.is_blocker(x_int, y_int + 1)
+                  && !arena.is_blocker(x_int + 1, y_int + 1))
                 position.y += offset;
             }
         }
@@ -155,7 +155,7 @@ static void move_player(bim::game::player& player,
     case bim::game::player_movement::up:
       state.transition_to(animations.walk_up);
 
-      if ((y_decimal <= half + offset) && arena.is_solid(x_int, y_int - 1))
+      if ((y_decimal <= half + offset) && arena.is_blocker(x_int, y_int - 1))
         {
           position.y = y_floor + half;
 
@@ -163,15 +163,15 @@ static void move_player(bim::game::player& player,
           if (x_decimal < half)
             {
               // There is a path on the left: move left.
-              if (!arena.is_solid(x_int - 1, y_int)
-                  && !arena.is_solid(x_int - 1, y_int - 1))
+              if (!arena.is_blocker(x_int - 1, y_int)
+                  && !arena.is_blocker(x_int - 1, y_int - 1))
                 position.x -= offset;
             }
           else if (x_decimal > half)
             {
               // There is a path on the right: move right.
-              if (!arena.is_solid(x_int + 1, y_int)
-                  && !arena.is_solid(x_int + 1, y_int - 1))
+              if (!arena.is_blocker(x_int + 1, y_int)
+                  && !arena.is_blocker(x_int + 1, y_int - 1))
                 position.x += offset;
             }
         }
@@ -184,7 +184,7 @@ static void move_player(bim::game::player& player,
     case bim::game::player_movement::down:
       state.transition_to(animations.walk_down);
 
-      if ((y_decimal + offset >= half) && arena.is_solid(x_int, y_int + 1))
+      if ((y_decimal + offset >= half) && arena.is_blocker(x_int, y_int + 1))
         {
           position.y = y_floor + half;
 
@@ -192,15 +192,15 @@ static void move_player(bim::game::player& player,
           if (x_decimal < half)
             {
               // There is a path on the left: move left.
-              if (!arena.is_solid(x_int - 1, y_int)
-                  && !arena.is_solid(x_int - 1, y_int + 1))
+              if (!arena.is_blocker(x_int - 1, y_int)
+                  && !arena.is_blocker(x_int - 1, y_int + 1))
                 position.x -= offset;
             }
           else if (x_decimal > half)
             {
               // There is a path on the right: move right.
-              if (!arena.is_solid(x_int + 1, y_int)
-                  && !arena.is_solid(x_int + 1, y_int + 1))
+              if (!arena.is_blocker(x_int + 1, y_int)
+                  && !arena.is_blocker(x_int + 1, y_int + 1))
                 position.x += offset;
             }
         }
@@ -221,12 +221,12 @@ static void move_player(bim::game::player& player,
     {
       if (y_decimal > half)
         {
-          if (arena.is_solid(check_obstacle_x, y_int + 1))
+          if (arena.is_blocker(check_obstacle_x, y_int + 1))
             position.y -= std::min(offset, y_decimal - half);
         }
       else if (y_decimal < half)
         {
-          if (arena.is_solid(check_obstacle_x, y_int - 1))
+          if (arena.is_blocker(check_obstacle_x, y_int - 1))
             position.y += std::min(offset, half - y_decimal);
         }
     }
@@ -234,12 +234,12 @@ static void move_player(bim::game::player& player,
     {
       if (x_decimal > half)
         {
-          if (arena.is_solid(x_int + 1, check_obstacle_y))
+          if (arena.is_blocker(x_int + 1, check_obstacle_y))
             position.x -= std::min(offset, x_decimal - half);
         }
       else if (x_decimal < half)
         {
-          if (arena.is_solid(x_int - 1, check_obstacle_y))
+          if (arena.is_blocker(x_int - 1, check_obstacle_y))
             position.x += std::min(offset, half - x_decimal);
         }
     }

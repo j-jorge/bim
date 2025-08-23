@@ -1,6 +1,5 @@
 # Next
 
-- Bug fix: the player can walk behind falling blocks.
 - A menu to select the game language.
 - Game feature submenu.
 

@@ -59,6 +59,11 @@ void bim::game::arena::erase_entity(std::uint8_t x, std::uint8_t y)
   m_solids(x, y) = false;
 }
 
+bool bim::game::arena::is_blocker(std::uint8_t x, std::uint8_t y) const
+{
+  return m_solids(x, y) || m_is_static_wall(x, y);
+}
+
 bool bim::game::arena::is_solid(std::uint8_t x, std::uint8_t y) const
 {
   return m_solids(x, y);
@@ -84,5 +89,4 @@ void bim::game::arena::set_static_wall(std::uint8_t x, std::uint8_t y,
 {
   m_static_walls.emplace_back(static_wall{ x, y, n });
   m_is_static_wall(x, y) = true;
-  m_solids(x, y) = true;
 }
