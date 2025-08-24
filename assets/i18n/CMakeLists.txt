@@ -114,10 +114,6 @@ else()
 endif()
 
 set(generated_i18n_dir ${BIM_GENERATED_ASSETS_DIR}/i18n)
-add_custom_command(
-  OUTPUT ${generated_i18n_dir}
-  COMMAND ${CMAKE_COMMAND} -E make_directory ${generated_i18n_dir}
-)
 
 foreach(po_file ${po_files})
   cmake_path(GET po_file STEM basename)
@@ -127,10 +123,10 @@ foreach(po_file ${po_files})
   add_custom_command(
     OUTPUT ${mo_file}
     COMMAND
-      ${GETTEXT_MSGFMT_EXECUTABLE}
-      --output-file=${mo_file}
-      ${po_file}
-    DEPENDS ${po_file} ${generated_i18n_dir}
+      ${CMAKE_COMMAND} -E make_directory ${generated_i18n_dir}
+    COMMAND
+      ${GETTEXT_MSGFMT_EXECUTABLE} --output-file=${mo_file} ${po_file}
+    DEPENDS ${po_file}
   )
 endforeach()
 
