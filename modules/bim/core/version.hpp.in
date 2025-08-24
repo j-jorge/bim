@@ -6,4 +6,11 @@ namespace bim
 {
   constexpr std::string_view version = "@CMAKE_PROJECT_VERSION@";
   constexpr int version_major = @CMAKE_PROJECT_VERSION_MAJOR@;
+  constexpr bool pure_foss = std::string_view("@BIM_PURE_FOSS@") == "ON";
+  constexpr bool built_for_developers =
+#ifndef NDEBUG
+      true;
+#else
+      std::string_view("@BIM_ANDROID_DEV@") == "ON";
+#endif
 }

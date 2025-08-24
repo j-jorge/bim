@@ -29,6 +29,8 @@
 
 #include <bim/game/feature_flags.hpp>
 
+#include <bim/version.hpp>
+
 #include <iscool/preferences/local_preferences.hpp>
 #include <iscool/system/language_code.hpp>
 #include <iscool/time/now.hpp>
@@ -115,28 +117,32 @@ void bim::axmol::app::debug_popup::show()
   m_inputs.push_back(m_controls->list->input_node());
   m_inputs.push_back(m_escape);
 
-  add_title("FEATURES");
-  add_feature_item("Falling blocks", bim::game::feature_flags::falling_blocks);
-  add_feature_item("Shield", bim::game::feature_flags::shield);
-  add_feature_item("Fog of war", bim::game::feature_flags::fog_of_war);
-  add_feature_item("Invisibility", bim::game::feature_flags::invisibility);
+  if constexpr (bim::built_for_developers)
+    {
+      add_title("FEATURES");
+      add_feature_item("Falling blocks",
+                       bim::game::feature_flags::falling_blocks);
+      add_feature_item("Shield", bim::game::feature_flags::shield);
+      add_feature_item("Fog of war", bim::game::feature_flags::fog_of_war);
+      add_feature_item("Invisibility", bim::game::feature_flags::invisibility);
 
-  add_title("WALLET");
-  add_button_item("Get 10 coins.",
-                  [this]() -> void
-                  {
-                    coin_transaction(10);
-                  });
-  add_button_item("Get 100 coins.",
-                  [this]() -> void
-                  {
-                    coin_transaction(100);
-                  });
-  add_button_item("Lose 100 coins.",
-                  [this]() -> void
-                  {
-                    coin_transaction(-100);
-                  });
+      add_title("WALLET");
+      add_button_item("Get 10 coins.",
+                      [this]() -> void
+                      {
+                        coin_transaction(10);
+                      });
+      add_button_item("Get 100 coins.",
+                      [this]() -> void
+                      {
+                        coin_transaction(100);
+                      });
+      add_button_item("Lose 100 coins.",
+                      [this]() -> void
+                      {
+                        coin_transaction(-100);
+                      });
+    }
 
   add_title("PREFERENCES");
   iscool::preferences::local_preferences& preferences =
