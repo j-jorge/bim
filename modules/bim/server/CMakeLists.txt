@@ -21,6 +21,7 @@ add_library(bim_server
   main/src/bim/server/service/matchmaking_service.cpp
   main/src/bim/server/service/named_game_encounter_service.cpp
   main/src/bim/server/service/random_game_encounter_service.cpp
+  main/src/bim/server/service/statistics_service.cpp
 )
 
 target_include_directories(bim_server PUBLIC main/include)
@@ -40,11 +41,14 @@ add_executable(server-tests
 
   tests/src/bim/server/service/game_info.cpp
   tests/src/bim/server/service/game_service.cpp
+  tests/src/bim/server/service/statistics_service.cpp
 
   tests/src/bim/server/tests/client_server_simulator.cpp
   tests/src/bim/server/tests/fake_scheduler.cpp
   tests/src/bim/server/tests/new_test_config.cpp
+  tests/src/bim/server/tests/statistics_log.cpp
   tests/src/bim/server/tests/test_client.cpp
+
 )
 target_include_directories(server-tests PRIVATE tests/include)
 target_link_libraries(

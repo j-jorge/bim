@@ -2,6 +2,7 @@
 #include <bim/server/service/authentication_service.hpp>
 
 #include <bim/server/config.hpp>
+#include <bim/server/service/statistics_service.hpp>
 
 #include <bim/net/message/acknowledge_keep_alive.hpp>
 #include <bim/net/message/authentication.hpp>
@@ -33,8 +34,10 @@ struct bim::server::authentication_service::client_info
 };
 
 bim::server::authentication_service::authentication_service(
-    const config& config, iscool::net::socket_stream& socket)
+    const config& config, iscool::net::socket_stream& socket,
+    statistics_service& statistics)
   : m_geoloc(config)
+  , m_statistics(statistics)
   , m_message_stream(socket)
   , m_next_session_id(1)
   , m_clean_up_interval(config.authentication_clean_up_interval)
@@ -152,6 +155,7 @@ void bim::server::authentication_service::check_authentication(
                               authentication_date_for_next_release() };
 
       m_clients.emplace(session, std::move(client));
+      m_statistics.record_session_connected();
     }
 
   const iscool::net::message_pool::slot s = m_message_pool.pick_available();
@@ -195,6 +199,7 @@ void bim::server::authentication_service::clean_up()
                it->first);
         m_sessions.erase(it->second.token);
         it = m_clients.erase(it);
+        m_statistics.record_session_disconnected();
       }
     else
       ++it;

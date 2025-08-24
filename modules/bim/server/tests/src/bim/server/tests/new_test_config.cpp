@@ -9,5 +9,7 @@ bim::server::config bim::server::tests::new_test_config()
   config.port = port;
   ++port;
 
+  config.statistics_dump_delay = std::chrono::seconds(0);
+
   return config;
 }

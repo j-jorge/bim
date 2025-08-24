@@ -87,5 +87,14 @@ namespace bim::server
      * Whether or not we use IP geolocation.
      */
     bool enable_geolocation;
+
+    /** Tells if we log the statistics. */
+    bool enable_statistics_log;
+
+    /** How long we wait after a stat is changed to record it in the logs. */
+    std::chrono::seconds statistics_dump_delay;
+
+    /** Path to the folder where to store the server stats. */
+    std::string statistics_log_file;
   };
 }

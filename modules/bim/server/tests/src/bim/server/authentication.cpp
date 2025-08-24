@@ -2,6 +2,7 @@
 #include <bim/server/tests/fake_scheduler.hpp>
 
 #include <bim/server/tests/new_test_config.hpp>
+#include <bim/server/tests/statistics_log.hpp>
 
 #include <bim/server/server.hpp>
 
@@ -37,6 +38,7 @@ private:
 protected:
   iscool::log::scoped_initializer m_log;
   bim::server::tests::fake_scheduler m_scheduler;
+  bim::server::tests::statistics_log m_statistics;
 
   const bim::server::config m_config;
   bim::server::server m_server;
@@ -49,7 +51,15 @@ protected:
 };
 
 authentication_test::authentication_test()
-  : m_config(bim::server::tests::new_test_config())
+  : m_config(
+        [this]() -> bim::server::config
+        {
+          bim::server::config config = bim::server::tests::new_test_config();
+          config.enable_statistics_log = true;
+          config.statistics_log_file = m_statistics.log_file();
+
+          return config;
+        }())
   , m_server(m_config)
   , m_socket_stream("localhost:" + std::to_string(m_config.port),
                     iscool::net::socket_mode::client{})
@@ -116,6 +126,15 @@ TEST_F(authentication_test, ok)
   EXPECT_FALSE(!!m_answer_ko);
 
   EXPECT_EQ(token, m_answer_ok->get_request_token());
+
+  // Force statistics dump.
+  m_scheduler.tick(std::chrono::minutes(1));
+
+  const std::vector<bim::server::tests::statistics_log_line> statistics =
+      m_statistics.read_log_file();
+
+  ASSERT_EQ(1, statistics.size());
+  EXPECT_EQ(1, statistics[0].active_sessions);
 }
 
 TEST_F(authentication_test, bad_protocol)
@@ -133,6 +152,14 @@ TEST_F(authentication_test, bad_protocol)
   EXPECT_EQ(token, m_answer_ko->get_request_token());
   EXPECT_EQ(bim::net::authentication_error_code::bad_protocol,
             m_answer_ko->get_error_code());
+
+  // Force statistics dump.
+  m_scheduler.tick(std::chrono::minutes(1));
+
+  const std::vector<bim::server::tests::statistics_log_line> statistics =
+      m_statistics.read_log_file();
+
+  ASSERT_EQ(0, statistics.size());
 }
 
 TEST_F(authentication_test, same_token_same_session)
@@ -161,6 +188,15 @@ TEST_F(authentication_test, same_token_same_session)
 
   EXPECT_EQ(token, m_answer_ok->get_request_token());
   EXPECT_EQ(session, m_answer_ok->get_session_id());
+
+  // Force statistics dump.
+  m_scheduler.tick(std::chrono::minutes(1));
+
+  const std::vector<bim::server::tests::statistics_log_line> statistics =
+      m_statistics.read_log_file();
+
+  ASSERT_EQ(1, statistics.size());
+  EXPECT_EQ(1, statistics[0].active_sessions);
 }
 
 TEST_F(authentication_test, different_token_different_session)
@@ -180,6 +216,17 @@ TEST_F(authentication_test, different_token_different_session)
   const iscool::net::session_id session = m_answer_ok->get_session_id();
   m_answer_ok = std::nullopt;
 
+  {
+    // Force statistics dump.
+    m_scheduler.tick(std::chrono::minutes(1));
+
+    const std::vector<bim::server::tests::statistics_log_line> statistics =
+        m_statistics.read_log_file();
+
+    ASSERT_EQ(1, statistics.size());
+    EXPECT_EQ(1, statistics[0].active_sessions);
+  }
+
   // Log in with another token.
   const bim::net::client_token token_2 = 5;
   test_full_exchange(
@@ -190,6 +237,18 @@ TEST_F(authentication_test, different_token_different_session)
 
   EXPECT_EQ(token_2, m_answer_ok->get_request_token());
   EXPECT_NE(session, m_answer_ok->get_session_id());
+
+  {
+    // Force statistics dump.
+    m_scheduler.tick(std::chrono::minutes(1));
+
+    const std::vector<bim::server::tests::statistics_log_line> statistics =
+        m_statistics.read_log_file();
+
+    ASSERT_EQ(2, statistics.size());
+    EXPECT_EQ(1, statistics[0].active_sessions);
+    EXPECT_EQ(2, statistics[1].active_sessions);
+  }
 }
 
 TEST_F(authentication_test, client_disconnect)
@@ -209,12 +268,35 @@ TEST_F(authentication_test, client_disconnect)
   const iscool::net::session_id session = m_answer_ok->get_session_id();
   m_answer_ok = std::nullopt;
 
+  {
+    // Force statistics dump.
+    m_scheduler.tick(std::chrono::minutes(1));
+
+    const std::vector<bim::server::tests::statistics_log_line> statistics =
+        m_statistics.read_log_file();
+
+    ASSERT_EQ(1, statistics.size());
+    EXPECT_EQ(1, statistics[0].active_sessions);
+  }
+
   // Simulate inactivity. This is the default timeout on the server. There may
   // be pending UDP messages that will refresh the session, so we run many
   // times in the hope that all messages are consumed in the end *and* that
   // enough time elapses with no message to trigger the disconnection.
   for (int i = 0; i != 100; ++i)
     m_scheduler.tick(std::chrono::minutes(1));
+
+  {
+    // Force statistics dump.
+    m_scheduler.tick(std::chrono::minutes(1));
+
+    const std::vector<bim::server::tests::statistics_log_line> statistics =
+        m_statistics.read_log_file();
+
+    ASSERT_EQ(2, statistics.size());
+    EXPECT_EQ(1, statistics[0].active_sessions);
+    EXPECT_EQ(0, statistics[1].active_sessions);
+  }
 
   // Log in again with the same token.
   test_full_exchange(
@@ -225,4 +307,17 @@ TEST_F(authentication_test, client_disconnect)
 
   // The client has been disconnected, its session should be different.
   EXPECT_NE(session, m_answer_ok->get_session_id());
+
+  {
+    // Force statistics dump.
+    m_scheduler.tick(std::chrono::minutes(1));
+
+    const std::vector<bim::server::tests::statistics_log_line> statistics =
+        m_statistics.read_log_file();
+
+    ASSERT_EQ(3, statistics.size());
+    EXPECT_EQ(1, statistics[0].active_sessions);
+    EXPECT_EQ(0, statistics[1].active_sessions);
+    EXPECT_EQ(1, statistics[2].active_sessions);
+  }
 }

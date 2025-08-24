@@ -10,7 +10,6 @@
 
 # Server
 
-- Collect some stats about the games and clients.
 - Web services
   - Hot reload of the config.
   - Retrieve the stats.

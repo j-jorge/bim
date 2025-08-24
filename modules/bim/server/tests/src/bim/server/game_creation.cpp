@@ -2,6 +2,7 @@
 #include <bim/server/tests/fake_scheduler.hpp>
 
 #include <bim/server/tests/new_test_config.hpp>
+#include <bim/server/tests/statistics_log.hpp>
 
 #include <bim/server/server.hpp>
 
@@ -57,6 +58,7 @@ public:
 protected:
   iscool::log::scoped_initializer m_log;
   bim::server::tests::fake_scheduler m_scheduler;
+  bim::server::tests::statistics_log m_statistics;
 
   const bim::server::config m_config;
   bim::server::server m_server;
@@ -157,11 +159,15 @@ void game_creation_test::client::launch_game(
 
 game_creation_test::game_creation_test()
   : m_config(
-        []() -> bim::server::config
+        [this]() -> bim::server::config
         {
           bim::server::config config = bim::server::tests::new_test_config();
           // Short delay for the tests where one player never accept the game.
           config.random_game_auto_start_delay = std::chrono::seconds(10);
+
+          config.enable_statistics_log = true;
+          config.statistics_log_file = m_statistics.log_file();
+
           return config;
         }())
   , m_server(m_config)
@@ -191,6 +197,19 @@ TEST_F(game_creation_test, two_named_games)
   // the server.
   for (int i = 0; i != 10; ++i)
     m_scheduler.tick(std::chrono::seconds(1));
+
+  {
+    // Force statistics dump.
+    m_scheduler.tick(std::chrono::seconds(1));
+
+    const std::vector<bim::server::tests::statistics_log_line> statistics =
+        m_statistics.read_log_file();
+
+    ASSERT_LE(1, statistics.size());
+    EXPECT_EQ(7, statistics.back().active_sessions);
+    EXPECT_EQ(4, statistics.back().players_in_games);
+    EXPECT_EQ(1, statistics.back().games);
+  }
 
   for (int i = 4; i != 7; ++i)
     m_clients[i].new_game_auto_accept({ 'g', 'a', 'm', 'e', '2' },
@@ -271,6 +290,19 @@ TEST_F(game_creation_test, two_named_games)
   // The game channel of each group of players must be different.
   EXPECT_NE(m_clients[0].m_game_launch_event->channel,
             m_clients[4].m_game_launch_event->channel);
+
+  {
+    // Force statistics dump.
+    m_scheduler.tick(std::chrono::seconds(1));
+
+    const std::vector<bim::server::tests::statistics_log_line> statistics =
+        m_statistics.read_log_file();
+
+    ASSERT_LE(1, statistics.size());
+    EXPECT_EQ(7, statistics.back().active_sessions);
+    EXPECT_EQ(7, statistics.back().players_in_games);
+    EXPECT_EQ(2, statistics.back().games);
+  }
 }
 
 /**
@@ -289,6 +321,19 @@ TEST_F(game_creation_test, two_random_games)
   // the server.
   for (int i = 0; i != 10; ++i)
     m_scheduler.tick(std::chrono::seconds(1));
+
+  {
+    // Force statistics dump.
+    m_scheduler.tick(std::chrono::seconds(1));
+
+    const std::vector<bim::server::tests::statistics_log_line> statistics =
+        m_statistics.read_log_file();
+
+    ASSERT_LE(1, statistics.size());
+    EXPECT_EQ(7, statistics.back().active_sessions);
+    EXPECT_EQ(4, statistics.back().players_in_games);
+    EXPECT_EQ(1, statistics.back().games);
+  }
 
   // The first four players must be in the same game.
   for (int i = 0; i != 4; ++i)
@@ -370,6 +415,19 @@ TEST_F(game_creation_test, two_random_games)
   // The game channel of each group of players must be different.
   EXPECT_NE(m_clients[0].m_game_launch_event->channel,
             m_clients[4].m_game_launch_event->channel);
+
+  {
+    // Force statistics dump.
+    m_scheduler.tick(std::chrono::seconds(1));
+
+    const std::vector<bim::server::tests::statistics_log_line> statistics =
+        m_statistics.read_log_file();
+
+    ASSERT_LE(1, statistics.size());
+    EXPECT_EQ(7, statistics.back().active_sessions);
+    EXPECT_EQ(7, statistics.back().players_in_games);
+    EXPECT_EQ(2, statistics.back().games);
+  }
 }
 
 /**
@@ -408,6 +466,19 @@ TEST_F(game_creation_test, two_random_games_simultaneously)
       EXPECT_EQ(3, player_count_per_channel.begin()->second);
       EXPECT_EQ(4, std::next(player_count_per_channel.begin())->second);
     }
+
+  {
+    // Force statistics dump.
+    m_scheduler.tick(std::chrono::seconds(1));
+
+    const std::vector<bim::server::tests::statistics_log_line> statistics =
+        m_statistics.read_log_file();
+
+    ASSERT_LE(1, statistics.size());
+    EXPECT_EQ(7, statistics.back().active_sessions);
+    EXPECT_EQ(7, statistics.back().players_in_games);
+    EXPECT_EQ(2, statistics.back().games);
+  }
 }
 
 /**
@@ -507,6 +578,19 @@ TEST_F(game_creation_test, mix_random_and_named_games)
   // The game channel of each group of players must be different.
   EXPECT_NE(m_clients[0].m_game_launch_event->channel,
             m_clients[4].m_game_launch_event->channel);
+
+  {
+    // Force statistics dump.
+    m_scheduler.tick(std::chrono::seconds(1));
+
+    const std::vector<bim::server::tests::statistics_log_line> statistics =
+        m_statistics.read_log_file();
+
+    ASSERT_LE(1, statistics.size());
+    EXPECT_EQ(7, statistics.back().active_sessions);
+    EXPECT_EQ(7, statistics.back().players_in_games);
+    EXPECT_EQ(2, statistics.back().games);
+  }
 }
 
 /**
@@ -547,12 +631,25 @@ TEST_F(game_creation_test, random_game_ignore_never_accepting_player)
                   m_clients[i].m_game_launch_event->channel)
             << "i=" << i;
       }
+
+  {
+    // Force statistics dump.
+    m_scheduler.tick(std::chrono::seconds(1));
+
+    const std::vector<bim::server::tests::statistics_log_line> statistics =
+        m_statistics.read_log_file();
+
+    ASSERT_LE(1, statistics.size());
+    EXPECT_EQ(4, statistics.back().active_sessions);
+    EXPECT_EQ(3, statistics.back().players_in_games);
+    EXPECT_EQ(1, statistics.back().games);
+  }
 }
 
 /**
  * One player never accepts the named game, we should wait.
  */
-TEST_F(game_creation_test, named_game_ignore_never_accepting_player)
+TEST_F(game_creation_test, named_game_waits_never_accepting_player)
 {
   for (int i = 0; i != 4; ++i)
     m_clients[i].authenticate();
@@ -575,6 +672,19 @@ TEST_F(game_creation_test, named_game_ignore_never_accepting_player)
   for (int i = 0; i != 4; ++i)
     EXPECT_TRUE(!m_clients[i].m_game_launch_event) << "i=" << i;
 
+  {
+    // Force statistics dump.
+    m_scheduler.tick(std::chrono::seconds(1));
+
+    const std::vector<bim::server::tests::statistics_log_line> statistics =
+        m_statistics.read_log_file();
+
+    ASSERT_LE(1, statistics.size());
+    EXPECT_EQ(4, statistics.back().active_sessions);
+    EXPECT_EQ(0, statistics.back().players_in_games);
+    EXPECT_EQ(0, statistics.back().games);
+  }
+
   m_clients[inactive_player_index].accept_game({});
 
   for (int i = 0; i != 100; ++i)
@@ -588,4 +698,17 @@ TEST_F(game_creation_test, named_game_ignore_never_accepting_player)
     EXPECT_EQ(m_clients[0].m_game_launch_event->channel,
               m_clients[i].m_game_launch_event->channel)
         << "i=" << i;
+
+  {
+    // Force statistics dump.
+    m_scheduler.tick(std::chrono::seconds(1));
+
+    const std::vector<bim::server::tests::statistics_log_line> statistics =
+        m_statistics.read_log_file();
+
+    ASSERT_LE(1, statistics.size());
+    EXPECT_EQ(4, statistics.back().active_sessions);
+    EXPECT_EQ(4, statistics.back().players_in_games);
+    EXPECT_EQ(1, statistics.back().games);
+  }
 }

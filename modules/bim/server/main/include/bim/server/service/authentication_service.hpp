@@ -18,6 +18,7 @@ namespace bim::net
 namespace bim::server
 {
   struct config;
+  class statistics_service;
 
   class authentication_service
   {
@@ -27,7 +28,8 @@ namespace bim::server
 
   public:
     authentication_service(const config& config,
-                           iscool::net::socket_stream& socket);
+                           iscool::net::socket_stream& socket,
+                           statistics_service& statistics);
     ~authentication_service();
 
     void disconnect(iscool::net::session_id session);
@@ -57,6 +59,8 @@ namespace bim::server
 
   private:
     geolocation_service m_geoloc;
+    statistics_service& m_statistics;
+
     iscool::net::message_stream m_message_stream;
     iscool::net::session_id m_next_session_id;
 

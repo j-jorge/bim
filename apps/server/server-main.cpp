@@ -302,6 +302,16 @@ static command_line parse_command_line(int argc, char* argv[])
                                boost::program_options::value<std::string>(),
                                "The path to the GeoIP database.");
 
+  config_options.add_options()(
+      "enable-statistics-log",
+      "Whether or not we dump statistics about the players and the games.");
+  config_options.add_options()(
+      "statistics-dump-delay", boost::program_options::value<std::uint64_t>(),
+      "How long we wait after a stat is changed to record it in the logs.");
+  config_options.add_options()(
+      "statistics-log-file", boost::program_options::value<std::string>(),
+      "Path to the folder where to store the server stats.");
+
   boost::program_options::options_description all_options;
   all_options.add(general_options).add(config_options).add(hidden_options);
   boost::program_options::variables_map variables;
@@ -383,6 +393,14 @@ static command_line parse_command_line(int argc, char* argv[])
       parse_config_option(geolocation_clean_up_interval);
       parse_config_option(geolocation_update_interval);
       parse_config_option(geolocation_database_path);
+    }
+
+  parse_config_option(enable_statistics_log);
+
+  if (result.config.enable_statistics_log)
+    {
+      parse_config_option(statistics_dump_delay);
+      parse_config_option(statistics_log_file);
     }
 
 #undef parse_config_option

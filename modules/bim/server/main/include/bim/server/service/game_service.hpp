@@ -23,6 +23,7 @@ namespace bim::server
 {
   class authentication_service;
   class contest_timeline_service;
+  class statistics_service;
 
   struct config;
   struct game_info;
@@ -31,7 +32,8 @@ namespace bim::server
   {
   public:
     game_service(const config& config, iscool::net::socket_stream& socket,
-                 authentication_service& authentication);
+                 authentication_service& authentication,
+                 statistics_service& statistics);
     ~game_service();
 
     bool is_in_active_game(iscool::net::session_id session) const;
@@ -86,6 +88,7 @@ namespace bim::server
     void clean_up(iscool::net::channel_id channel, const game& g);
 
   private:
+    statistics_service& m_statistics;
     iscool::net::message_stream m_message_stream;
     iscool::net::channel_id m_next_game_channel;
     game_map m_games;

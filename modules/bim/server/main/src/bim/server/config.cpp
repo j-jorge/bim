@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/server/config.hpp>
 
-#include <random>
-
 bim::server::config::config()
   : port(65535)
   , random_seed(0)
@@ -17,4 +15,6 @@ bim::server::config::config()
   , geolocation_clean_up_interval(std::chrono::days(7))
   , geolocation_update_interval(std::chrono::days(7))
   , enable_geolocation(false)
+  , enable_statistics_log(false)
+  , statistics_dump_delay(std::chrono::seconds(60))
 {}

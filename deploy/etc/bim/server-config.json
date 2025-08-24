@@ -5,5 +5,8 @@
   "enable-geolocation": true,
   "geolocation-clean-up-interval": 86400,
   "geolocation-update-interval": 1080,
-  "geolocation-database-path": "/opt/bim/persistent/GeoLite2-Country.mmdb"
+  "geolocation-database-path": "/opt/bim/persistent/GeoLite2-Country.mmdb",
+
+  "enable-statistics-log": true,
+  "statistics-log-file": "/opt/bim/persistent/log/statistics.txt"
 }
