@@ -7,7 +7,7 @@
 #include <iscool/random/rand.hpp>
 #include <iscool/schedule/delayed_call.hpp>
 #include <iscool/signals/implement_signal.hpp>
-#include <iscool/system/language_code.hpp>
+#include <iscool/system/language_name.hpp>
 
 ic_implement_state_monitor(bim::axmol::app::matchmaking_wait_message,
                            m_monitor, stopped,
@@ -25,7 +25,7 @@ bim::axmol::app::matchmaking_wait_message::matchmaking_wait_message()
       { ic_gettext("Please wait."), ic_gettext("Please wait.."),
         ic_gettext("Please wait..."), ic_gettext("Please wait..") }));
 
-  load_messages(iscool::system::get_language_code());
+  load_messages(iscool::system::get_language_name());
 }
 
 bim::axmol::app::matchmaking_wait_message::~matchmaking_wait_message() =
@@ -73,10 +73,10 @@ void bim::axmol::app::matchmaking_wait_message::stop()
 }
 
 void bim::axmol::app::matchmaking_wait_message::load_messages(
-    std::string_view language_code)
+    iscool::language_name language)
 {
   std::string base_name = "matchmaking/";
-  base_name += language_code;
+  base_name += iscool::to_string(iscool::to_language_code(language));
   base_name += '-';
 
   const std::string extension = ".txt";

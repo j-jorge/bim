@@ -5,6 +5,8 @@
 #include <iscool/signals/declare_signal.hpp>
 #include <iscool/signals/scoped_connection.hpp>
 
+#include <iscool/language_name_fwd.hpp>
+
 #include <string>
 #include <string_view>
 #include <vector>
@@ -27,7 +29,7 @@ namespace bim::axmol::app
     using vector_of_strings = std::vector<std::string>;
 
   private:
-    void load_messages(std::string_view language_code);
+    void load_messages(iscool::language_name language);
 
     void start_default_script();
     void next_script();

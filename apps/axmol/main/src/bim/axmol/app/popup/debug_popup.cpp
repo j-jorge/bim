@@ -32,7 +32,7 @@
 #include <bim/version.hpp>
 
 #include <iscool/preferences/local_preferences.hpp>
-#include <iscool/system/language_code.hpp>
+#include <iscool/system/language_name.hpp>
 #include <iscool/time/now.hpp>
 
 #include <axmol/2d/Label.h>
@@ -184,7 +184,8 @@ void bim::axmol::app::debug_popup::show()
 
   add_title("SYSTEM");
   add_fps_entry();
-  add_text_item("Language", iscool::system::get_language_code());
+  add_text_item("Language",
+                iscool::to_string(iscool::system::get_language_name()));
 
   m_popup->show(m_controls->all_nodes, m_style_bounds, m_inputs.root());
 }

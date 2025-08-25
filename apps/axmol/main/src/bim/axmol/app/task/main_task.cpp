@@ -29,7 +29,7 @@
 #include <iscool/log/nature/warning.hpp>
 #include <iscool/signals/implement_signal.hpp>
 #include <iscool/style/loader.hpp>
-#include <iscool/system/language_code.hpp>
+#include <iscool/system/language_name.hpp>
 #include <iscool/time/now.hpp>
 
 #include <fmt/format.h>
@@ -216,28 +216,25 @@ void bim::axmol::app::main_task::read_translations()
 {
   std::string translations_file;
 
-  const auto check_language_code = [&](const std::string& c) -> bool
+  const auto check_language_code = [&](std::string_view c) -> bool
   {
-    translations_file = "i18n/" + c + ".mo";
+    translations_file = "i18n/";
+    translations_file += c;
+    translations_file += ".mo";
     return iscool::files::file_exists(translations_file);
   };
 
-  const std::string language_code = iscool::system::get_language_code();
+  const iscool::language_name language = iscool::system::get_language_name();
 
-  if (!check_language_code(language_code))
-    {
-      // Try with the language without the country code: en_US -> en.
-      const std::string::size_type p = language_code.find_first_of('_');
-
-      if (p == std::string::npos
-          || !check_language_code(language_code.substr(0, p)))
-        translations_file = "i18n/en.mo";
-    }
+  if (!check_language_code(iscool::to_string(language))
+      && !check_language_code(
+          iscool::to_string(iscool::to_language_code(language))))
+    translations_file = "i18n/en.mo";
 
   const std::unique_ptr<std::istream> mo_file =
       iscool::files::read_file(translations_file);
 
-  if (!iscool::i18n::load_translations(language_code, *mo_file))
+  if (!iscool::i18n::load_translations(language, *mo_file))
     ic_log(iscool::log::nature::warning(), "main_task",
            "Could not read translations from {}.", translations_file);
 }
