@@ -7,6 +7,7 @@
 #include <bim/axmol/input/tree.hpp>
 
 #include <iscool/context.hpp>
+#include <iscool/signals/declare_signal.hpp>
 
 #include <memory>
 
@@ -42,11 +43,14 @@ namespace bim::axmol::widget
 
 namespace bim::axmol::app
 {
+  class language_popup;
   class main_scene;
   class popup;
 
   class settings_popup
   {
+    DECLARE_VOID_SIGNAL(reset, m_reset)
+
     ic_declare_context(
         m_context,
         ic_context_declare_parent_properties(                              //
@@ -72,7 +76,7 @@ namespace bim::axmol::app
   private:
     bim::axmol::input::single_key_observer_handle m_escape;
 
-    bim_declare_controls_struct(controls, m_controls, 11);
+    bim_declare_controls_struct(controls, m_controls, 12);
     const iscool::style::declaration& m_style_bounds;
 
     const iscool::style::declaration& m_style_pad_on_the_left;
@@ -82,6 +86,7 @@ namespace bim::axmol::app
     const iscool::style::declaration& m_style_directions_pad;
 
     std::unique_ptr<popup> m_popup;
+    std::unique_ptr<language_popup> m_language_popup;
 
     bim::axmol::input::tree m_inputs;
   };

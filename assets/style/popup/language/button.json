@@ -1,0 +1,45 @@
+{
+  "meta": {
+    "overrides": [
+      "button/flat-with-label"
+    ]
+  },
+
+  "style": {
+    "widgets/checkmark": [
+      {
+        "instantiate": "ax::Sprite",
+        "frame": "sprites/menu/checkmark.png",
+        "color": "cod-gray",
+        "z-order": 10
+      }
+    ],
+
+    "bounds": [
+      {
+        "checkmark": [
+          {
+            "anchor.x": 0.5,
+            "anchor.y": 0.5,
+            "anchor.reference.x": 0.1,
+            "anchor.reference.y": 0.5,
+            "height.percents": 30,
+            "keep-ratio": true
+          }
+        ]
+      }
+    ],
+
+    "display.release": [
+      {
+        "checkmark/visible": false
+      }
+    ],
+
+    "display.disabled": [
+      {
+        "checkmark/visible": true
+      }
+    ]
+  }
+}

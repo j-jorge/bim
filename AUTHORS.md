@@ -17,6 +17,10 @@ CC-BY-SA 4.0 Silvério Santos, via Weblate.
 assets/i18n/pt_BR.po
 CC-BY-SA 4.0 OlliesGudh, via Weblate.
 
+assets/sprites/menu/language.png
+From https://commons.wikimedia.org/wiki/File:Codex_icon_language.svg
+CC-BY 4.0 Wikimedia Design & OOUI team and other contributors
+
 assets/sprites/menu/silhouette-1.png
 assets/sprites/menu/silhouette-3.png
 From https://commons.wikimedia.org/wiki/File:Silhouette_of_Woman_with_Short_Hair_and_Jeans.svg
@@ -204,6 +208,7 @@ assets/sprites/fog/roll-in-4.png
 assets/sprites/fog/roll-in-5.png
 assets/sprites/fog/roll-in-6.png
 assets/sprites/menu/back.png
+assets/sprites/menu/checkmark.png
 assets/sprites/menu/coin.png
 assets/sprites/menu/coins-pack-1.png
 assets/sprites/menu/coins-pack-2.png

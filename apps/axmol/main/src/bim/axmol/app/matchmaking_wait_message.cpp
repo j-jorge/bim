@@ -7,7 +7,6 @@
 #include <iscool/random/rand.hpp>
 #include <iscool/schedule/delayed_call.hpp>
 #include <iscool/signals/implement_signal.hpp>
-#include <iscool/system/language_name.hpp>
 
 ic_implement_state_monitor(bim::axmol::app::matchmaking_wait_message,
                            m_monitor, stopped,
@@ -17,15 +16,18 @@ ic_implement_state_monitor(bim::axmol::app::matchmaking_wait_message,
 
 IMPLEMENT_SIGNAL(bim::axmol::app::matchmaking_wait_message, updated, m_updated)
 
-bim::axmol::app::matchmaking_wait_message::matchmaking_wait_message()
+bim::axmol::app::matchmaking_wait_message::matchmaking_wait_message(
+    iscool::language_name language)
   : m_current_script(0)
   , m_current_line(0)
 {
-  m_scripts.push_back(vector_of_strings(
-      { ic_gettext("Please wait."), ic_gettext("Please wait.."),
-        ic_gettext("Please wait..."), ic_gettext("Please wait..") }));
+  const std::string wait_message = ic_gettext("Please wait");
 
-  load_messages(iscool::system::get_language_name());
+  m_scripts.push_back(
+      vector_of_strings({ wait_message + '.', wait_message + "..",
+                          wait_message + "...", wait_message + ".." }));
+
+  load_messages(language);
 }
 
 bim::axmol::app::matchmaking_wait_message::~matchmaking_wait_message() =

@@ -124,7 +124,7 @@
           "font/bold",
           {
             "instantiate": "ax::Label",
-            "text.i18n": "Debug",
+            "text": "Debug",
             "font.color": "desert-storm",
             "font.size": 90
           }

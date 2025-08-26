@@ -3,6 +3,8 @@
 
 #include <bim/axmol/widget/declare_controls_struct.hpp>
 
+#include <bim/axmol/input/tree.hpp>
+
 #include <iscool/context.hpp>
 #include <iscool/signals/declare_signal.hpp>
 
@@ -41,11 +43,23 @@ namespace bim::axmol::app
     ~message_popup();
 
     void show(std::string_view message);
+    void show_yes_no(std::string_view message);
 
   private:
-    bim_declare_controls_struct(controls, m_controls, 2);
-    const iscool::style::declaration& m_style_bounds;
+    void show(std::string_view message,
+              const iscool::style::declaration& display,
+              const iscool::style::declaration& bounds) const;
+
+  private:
+    bim_declare_controls_struct(controls, m_controls, 3);
+    const iscool::style::declaration& m_yes_only_bounds;
+    const iscool::style::declaration& m_yes_no_bounds;
+
+    const iscool::style::declaration& m_yes_only_display;
+    const iscool::style::declaration& m_yes_no_display;
 
     std::unique_ptr<popup> m_popup;
+
+    bim::axmol::input::tree m_inputs;
   };
 }

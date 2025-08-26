@@ -1,4 +1,5 @@
 set(sprites
+  "sprites/menu/checkmark.png"
   "sprites/menu/price-tag-88-40.png"
   "sprites/menu/rounded-button-border-54-66.png"
   "sprites/menu/rounded-button-fill-54-66.png"
@@ -53,6 +54,7 @@ set(sprites_crop
   "sprites/menu/github.png"
   "sprites/menu/glow.png"
   "sprites/menu/joystick.png"
+  "sprites/menu/language.png"
   "sprites/menu/mail.png"
   "sprites/menu/music.png"
   "sprites/menu/rays.png"

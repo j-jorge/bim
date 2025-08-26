@@ -6,6 +6,7 @@
 #include <bim/axmol/app/matchmaking_wait_message.hpp>
 #include <bim/axmol/app/part/wallet.hpp>
 #include <bim/axmol/app/preference/feature_flags.hpp>
+#include <bim/axmol/app/preference/user_language.hpp>
 #include <bim/axmol/app/preference/wallet.hpp>
 
 #include <bim/axmol/widget/apply_actions.hpp>
@@ -68,7 +69,8 @@ bim::axmol::app::matchmaking::matchmaking(
         m_context.get_session_handler()->message_stream()))
   , m_feature_deck(
         new feature_deck(m_context, *style.get_declaration("feature-deck")))
-  , m_wait_message(new matchmaking_wait_message())
+  , m_wait_message(new matchmaking_wait_message(
+        user_language(*context.get_local_preferences())))
   , m_style_displaying(*style.get_declaration("display.displaying"))
   , m_action_displaying(*style.get_declaration("actions.displaying"))
   , m_action_wait(*style.get_declaration("actions.wait"))

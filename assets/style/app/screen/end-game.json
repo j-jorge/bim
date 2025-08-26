@@ -182,7 +182,7 @@
         ],
 
         "quit_button": [
-          "app/screen/part/back-button"
+          "button/back"
         ]
       }
     ],

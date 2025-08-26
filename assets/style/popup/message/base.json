@@ -1,0 +1,46 @@
+{
+  "style": {
+    "popup": [
+      "popup/small"
+    ],
+
+    "widgets": [
+      {
+        "message": [
+          "font/bold",
+          {
+            "font.size": 50,
+            "font.color": "white",
+            "align.horizontal": "center",
+            "wrap": true,
+            "z-order": -10
+          }
+        ],
+
+        "no_button": [
+          "button/red-with-label",
+          {
+            "widgets/label/text.i18n": "Cancel",
+            "z-order": 0
+          }
+        ]
+      }
+    ],
+
+    "yes-only-display": [
+      {
+        "no_button/visible": false
+      }
+    ],
+
+    "yes-no-display": [
+      {
+        "no_button/visible": true
+      }
+    ],
+
+    "yes-only-bounds": [],
+
+    "yes-no-bounds": []
+  }
+}

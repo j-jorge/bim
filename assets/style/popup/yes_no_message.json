@@ -12,35 +12,47 @@
 
     "widgets": [
       {
+        "no_button/widgets/label/text.i18n": "No",
         "yes_button": [
-          "button/yellow-with-label",
+          "button/green-with-label",
           {
-            "widgets/label/text.i18n": "OK",
+            "widgets/label/text.i18n": "Yes",
             "z-order": 0
           }
         ]
       }
     ],
 
-    "yes-only-bounds": [
+    "yes-only-bounds": [],
+
+    "yes-no-bounds": [
       {
         "message": [
           "popup/message/message-bounds"
+        ],
+
+        "no_button": [
+          {
+            "anchor.x": 0.5,
+            "anchor.y": 0.5,
+            "anchor.reference.x": 0.3,
+            "anchor.reference.y": 0.2,
+            "width.percents": 37,
+            "height.percents": 25
+          }
         ],
 
         "yes_button": [
           {
             "anchor.x": 0.5,
             "anchor.y": 0.5,
-            "anchor.reference.x": 0.5,
+            "anchor.reference.x": 0.7,
             "anchor.reference.y": 0.2,
-            "width.percents": 35,
+            "width.percents": 37,
             "height.percents": 25
           }
         ]
       }
-    ],
-
-    "yes-no-bounds": []
+    ]
   }
 }

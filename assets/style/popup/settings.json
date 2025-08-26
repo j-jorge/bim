@@ -1,7 +1,13 @@
 {
   "style": {
+    "language-button-label-path": "container/label",
+
     "popup": [
       "popup/full-screen"
+    ],
+
+    "language-popup": [
+      "popup/language"
     ],
 
     "widgets": [
@@ -146,6 +152,25 @@
             "widgets/label-off/text.i18n": "D-pad",
             "widgets/label-on/text.i18n": "Stick"
           }
+        ],
+
+        "language-icon": [
+          {
+            "instantiate": "ax::Sprite",
+            "frame": "sprites/menu/language.png",
+            "color": "desert-storm"
+          }
+        ],
+
+        "language-label": [
+          "popup/settings/font/main",
+          {
+            "text.i18n": "Language"
+          }
+        ],
+
+        "language_button": [
+          "button/flat-with-label"
         ],
 
         "bluesky_button": [
@@ -406,12 +431,43 @@
           }
         ],
 
+        "language-icon": [
+          {
+            "anchor.x": 0.5,
+            "anchor.y": 0.5,
+            "anchor.reference.x": 0.1,
+            "anchor.reference.y": 0.35,
+            "keep-ratio": true,
+            "height.percents": 4
+          }
+        ],
+
+        "language-label": [
+          {
+            "anchor.x": 0,
+            "anchor.y": 0.5,
+            "anchor.reference.x": 0.16,
+            "anchor.reference.y": 0.35
+          }
+        ],
+
+        "language_button": [
+          {
+            "anchor.x": 0.5,
+            "anchor.y": 0.5,
+            "anchor.reference.x": 0.8,
+            "anchor.reference.y": 0.35,
+            "width.percents": 30,
+            "height.percents": 10
+          }
+        ],
+
         "bluesky_button": [
           {
             "anchor.x": 0.5,
             "anchor.y": 0.5,
             "anchor.reference.x": 0.19,
-            "anchor.reference.y": 0.3,
+            "anchor.reference.y": 0.25,
             "height.percents": 8,
             "width-ratio": 0.95
           }
@@ -422,7 +478,7 @@
             "anchor.x": 0.5,
             "anchor.y": 0.5,
             "anchor.reference.x": 0.4,
-            "anchor.reference.y": 0.3,
+            "anchor.reference.y": 0.25,
             "height.percents": 8,
             "width-ratio": 0.95
           }
@@ -433,7 +489,7 @@
             "anchor.x": 0.5,
             "anchor.y": 0.5,
             "anchor.reference.x": 0.6,
-            "anchor.reference.y": 0.3,
+            "anchor.reference.y": 0.25,
             "height.percents": 8,
             "width-ratio": 0.95
           }
@@ -444,7 +500,7 @@
             "anchor.x": 0.5,
             "anchor.y": 0.5,
             "anchor.reference.x": 0.81,
-            "anchor.reference.y": 0.3,
+            "anchor.reference.y": 0.25,
             "height.percents": 8,
             "width-ratio": 0.95
           }
@@ -455,9 +511,9 @@
             "anchor.x": 0.5,
             "anchor.y": 0.5,
             "anchor.reference.x": 0.5,
-            "anchor.reference.y": 0.15,
-            "width.percents": 50,
-            "height.percents": 12
+            "anchor.reference.y": 0.13,
+            "width.percents": 48,
+            "height.percents": 10
           }
         ],
 
@@ -466,7 +522,7 @@
             "anchor.x": 0.5,
             "anchor.y": 0.5,
             "anchor.reference.x": 0.5,
-            "anchor.reference.y": 0.05
+            "anchor.reference.y": 0.04
           }
         ]
       }

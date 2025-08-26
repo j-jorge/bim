@@ -39,8 +39,6 @@ set(main_task_style_files
   app/screen/online-game/control-panel-edging.json
   app/screen/online-game/fog-display.json
 
-  app/screen/part/back-button.json
-  app/screen/part/back-button-bounds.json
   app/screen/part/feature-deck.json
   app/screen/part/feature-deck-bounds.json
   app/screen/part/feature-deck-button-bounds.json
@@ -63,6 +61,7 @@ set(main_task_style_files
 
   app/widget/game-feature-button.json
 
+  button/back.json
   button/base.json
   button/feature-unavailable.json
   button/flat-with-label.json
@@ -82,6 +81,7 @@ set(main_task_style_files
   font/fancy-regular.json
   font/fancy-center-with-outline-and-shadow.json
 
+  layout/back-button.json
   layout/left-center.json
   layout/right-center.json
   layout/fill.json
@@ -94,15 +94,22 @@ set(main_task_style_files
 
   popup/debug.json
   popup/full-screen.json
+  popup/language.json
   popup/message.json
   popup/settings.json
   popup/small.json
+  popup/yes_no_message.json
+
+  popup/debug/font/main.json
+
+  popup/language/button.json
+
+  popup/message/base.json
+  popup/message/message-bounds.json
 
   popup/settings/font/main.json
   popup/settings/font/small.json
   popup/settings/toggle/controls.json
-
-  popup/debug/font/main.json
 
   toggle/base.json
   toggle/flat.json

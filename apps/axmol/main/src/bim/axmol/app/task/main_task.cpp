@@ -5,6 +5,7 @@
 #include <bim/axmol/app/preference/date_of_next_config_update.hpp>
 #include <bim/axmol/app/preference/date_of_next_version_update_message.hpp>
 #include <bim/axmol/app/preference/update_preferences.hpp>
+#include <bim/axmol/app/preference/user_language.hpp>
 #include <bim/axmol/app/screen_wheel.hpp>
 
 #include <bim/net/message/authentication_error_code.hpp>
@@ -29,7 +30,6 @@
 #include <iscool/log/nature/warning.hpp>
 #include <iscool/signals/implement_signal.hpp>
 #include <iscool/style/loader.hpp>
-#include <iscool/system/language_name.hpp>
 #include <iscool/time/now.hpp>
 
 #include <fmt/format.h>
@@ -224,7 +224,8 @@ void bim::axmol::app::main_task::read_translations()
     return iscool::files::file_exists(translations_file);
   };
 
-  const iscool::language_name language = iscool::system::get_language_name();
+  const iscool::language_name language =
+      user_language(*m_context.get_local_preferences());
 
   if (!check_language_code(iscool::to_string(language))
       && !check_language_code(

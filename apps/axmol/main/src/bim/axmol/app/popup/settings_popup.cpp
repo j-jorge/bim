@@ -1,11 +1,13 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/axmol/app/popup/settings_popup.hpp>
 
+#include <bim/axmol/app/popup/language_popup.hpp>
 #include <bim/axmol/app/popup/popup.hpp>
 
 #include <bim/axmol/app/preference/audio.hpp>
 #include <bim/axmol/app/preference/controls.hpp>
 #include <bim/axmol/app/preference/haptic.hpp>
+#include <bim/axmol/app/preference/user_language.hpp>
 
 #include <bim/axmol/input/key_observer_handle.impl.hpp>
 #include <bim/axmol/input/observer/single_key_observer.hpp>
@@ -15,6 +17,8 @@
 #include <bim/axmol/widget/implement_widget.hpp>
 #include <bim/axmol/widget/ui/button.hpp>
 #include <bim/axmol/widget/ui/toggle.hpp>
+
+#include <bim/axmol/find_child_by_path.hpp>
 
 #include <bim/version.hpp>
 
@@ -39,15 +43,20 @@
                   x_widget(bim::axmol::widget::toggle, vibrations)            \
                       x_widget(bim::axmol::widget::toggle, d_pad_position)    \
                           x_widget(bim::axmol::widget::toggle, d_pad_kind)    \
-                              x_widget(ax::Label, version)
+                              x_widget(bim::axmol::widget::button,            \
+                                       language_button)                       \
+                                  x_widget(ax::Label, version)
 
 #include <bim/axmol/widget/implement_controls_struct.hpp>
 
 #include <iscool/audio/mixer.hpp>
 #include <iscool/preferences/local_preferences.hpp>
+#include <iscool/signals/implement_signal.hpp>
 #include <iscool/system/haptic_feedback.hpp>
 
 #include <fmt/format.h>
+
+IMPLEMENT_SIGNAL(bim::axmol::app::settings_popup, reset, m_reset);
 
 bim::axmol::app::settings_popup::settings_popup(
     const context& context, const iscool::style::declaration& style)
@@ -62,7 +71,15 @@ bim::axmol::app::settings_popup::settings_popup(
   , m_style_directions_stick(*style.get_declaration("display.d-pad-stick"))
   , m_style_directions_pad(*style.get_declaration("display.d-pad-pad"))
   , m_popup(new popup(context, *style.get_declaration("popup")))
+  , m_language_popup(
+        new language_popup(context, *style.get_declaration("language-popup")))
 {
+  ax::Label* const language_label = (ax::Label*)find_child_by_path(
+      *m_controls->language_button,
+      *style.get_string("language-button-label-path"));
+  language_label->setString(iscool::to_human_string(
+      user_language(*context.get_local_preferences())));
+
   m_inputs.push_back(m_escape);
   m_inputs.push_back(m_controls->close_button->input_node());
   m_inputs.push_back(m_controls->bluesky_button->input_node());
@@ -74,6 +91,7 @@ bim::axmol::app::settings_popup::settings_popup(
   m_inputs.push_back(m_controls->vibrations->input_node());
   m_inputs.push_back(m_controls->d_pad_position->input_node());
   m_inputs.push_back(m_controls->d_pad_kind->input_node());
+  m_inputs.push_back(m_controls->language_button->input_node());
 
   std::string version =
       fmt::format(fmt::runtime(ic_gettext("Version {}")), bim::version);
@@ -96,6 +114,17 @@ bim::axmol::app::settings_popup::settings_popup(
       [this]()
       {
         m_popup->hide();
+      });
+
+  m_controls->language_button->connect_to_clicked(
+      [this]()
+      {
+        m_language_popup->show();
+      });
+  m_language_popup->connect_to_reset(
+      [this]()
+      {
+        m_reset();
       });
 
   m_controls->bluesky_button->connect_to_clicked(

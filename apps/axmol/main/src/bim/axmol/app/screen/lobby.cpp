@@ -42,6 +42,7 @@
 
 IMPLEMENT_SIGNAL(bim::axmol::app::lobby, play, m_play);
 IMPLEMENT_SIGNAL(bim::axmol::app::lobby, shop, m_shop);
+IMPLEMENT_SIGNAL(bim::axmol::app::lobby, reset, m_reset);
 
 bim::axmol::app::lobby::lobby(const context& context,
                               const iscool::style::declaration& style)
@@ -90,6 +91,11 @@ bim::axmol::app::lobby::lobby(const context& context,
       [this]()
       {
         m_settings->show();
+      });
+  m_settings->connect_to_reset(
+      [this]()
+      {
+        m_reset();
       });
 
   m_inputs.push_back(m_controls->play_button->input_node());

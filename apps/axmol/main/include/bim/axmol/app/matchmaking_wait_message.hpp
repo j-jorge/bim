@@ -18,7 +18,7 @@ namespace bim::axmol::app
     DECLARE_SIGNAL(void(std::string_view), updated, m_updated)
 
   public:
-    matchmaking_wait_message();
+    explicit matchmaking_wait_message(iscool::language_name language);
     ~matchmaking_wait_message();
 
     void start();

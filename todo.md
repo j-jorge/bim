@@ -1,6 +1,5 @@
 # Next
 
-- A menu to select the game language.
 - Game feature submenu.
 
 # Client

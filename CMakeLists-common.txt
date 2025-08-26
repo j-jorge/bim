@@ -27,7 +27,6 @@ set(iscool_components
   random
   style
   system
-  wish
 )
 
 if(BIM_BUILDING_FOR_ANDROID)

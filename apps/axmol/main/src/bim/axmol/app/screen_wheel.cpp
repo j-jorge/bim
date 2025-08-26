@@ -101,6 +101,12 @@ bim::axmol::app::screen_wheel::screen_wheel(
         m_reset();
       });
 
+  m_lobby->connect_to_reset(
+      [this]() -> void
+      {
+        m_reset();
+      });
+
   m_session_handler_connection =
       m_context.get_session_handler()->connect_to_connected(
           [this]()

@@ -55,6 +55,7 @@ namespace bim::axmol::app
   {
     DECLARE_VOID_SIGNAL(play, m_play)
     DECLARE_VOID_SIGNAL(shop, m_shop)
+    DECLARE_VOID_SIGNAL(reset, m_reset)
 
     ic_declare_context(
         m_context,
