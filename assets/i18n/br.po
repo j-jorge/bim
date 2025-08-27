@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "PO-Revision-Date: 2025-08-27 13:41+0000\n"
-"Last-Translator: Fulup Travers <fulup.travers@opab.bzh>\n"
+"Last-Translator: Anna Al Lae <anna.allae@opab.bzh>\n"
 "Language-Team: Breton <https://hosted.weblate.org/projects/bim/gettext-files/"
 "br/>\n"
 "Language: br\n"
@@ -77,7 +77,7 @@ msgstr "Ur fazi zo bet. N'eo ket bet posupl mont betek penn ar brenadenn."
 
 msgid "A new version of Bim! is available! Please update as soon as possible."
 msgstr ""
-"Un doare nevez eus Bim ! zo da gaout ! Hizivait an abretañ ar gwellañ mar "
+"Un doare nevez eus Bim! zo da gaout ! Hizivait an abretañ ar gwellañ mar "
 "plij."
 
 #, c++-format
@@ -130,7 +130,7 @@ msgid "Directions kind"
 msgstr "Doareoù urzhierez"
 
 msgid "Directional pad, at a fixed position on the screen."
-msgstr "Kroaz tuañ, en ul lec'h difñv war ar skramm."
+msgstr "Kroaz tuañ, en ul lec'h difiñv war ar skramm."
 
 msgid "Analog stick, it pops where you tap and follows the drag."
 msgstr ""
@@ -215,7 +215,7 @@ msgstr ""
 "Pedit ho mignoned !"
 
 msgid "Online Game"
-msgstr "C'hoari enlinenn"
+msgstr "C'hoari Enlinenn"
 
 msgid "×1000"
 msgstr "×1000"
