@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-08-27 13:41+0000\n"
+"PO-Revision-Date: 2025-08-28 14:01+0000\n"
 "Last-Translator: Anna Al Lae <anna.allae@opab.bzh>\n"
 "Language-Team: Breton <https://hosted.weblate.org/projects/bim/gettext-files/"
 "br/>\n"
@@ -20,7 +20,7 @@ msgstr ""
 "&& n % 100 != 92) ? 1 : ((((n % 10 == 3 || n % 10 == 4) || n % 10 == 9) && ("
 "n % 100 < 10 || n % 100 > 19) && (n % 100 < 70 || n % 100 > 79) && (n % 100 "
 "< 90 || n % 100 > 99)) ? 2 : ((n != 0 && n % 1000000 == 0) ? 3 : 4)));\n"
-"X-Generator: Weblate 5.13\n"
+"X-Generator: Weblate 5.13.1-dev\n"
 
 msgid "Please wait."
 msgstr "Gortozit mar plij."
@@ -36,16 +36,16 @@ msgstr "Digevreet oc'h bet :("
 
 #, c++-format
 msgid "Version {}"
-msgstr "Doare {}"
+msgstr "Stumm {}"
 
 msgid "Feedback about Bim!"
-msgstr "Evezhiadennoù diwar-benn Bim !"
+msgstr "Evezhiadennoù diwar-benn Bim!"
 
 msgid ""
 "Come play a game of Bim! https://play.google.com/store/apps/details?"
 "id=bim.app"
 msgstr ""
-"Deuit da c'hoari ur bartiad Bim ! https://play.google.com/store/apps/"
+"Deuit da c'hoari ur bartiad Bim! https://play.google.com/store/apps/"
 "details?id=bim.app"
 
 msgid "You need more coins to purchase this item!"
@@ -58,12 +58,13 @@ msgid "Falling blocks reduce the arena after two minutes!"
 msgstr "Ar bloc'hoù a gouezh a strisha an emgannlec'h goude daou vunut !"
 
 msgid "Find this incredibly strong barrel, it will save you from one hit!"
-msgstr "Kavit an donell solut-solut-mañ, gwarezet e viot diouzh un dagadenn !"
+msgstr ""
+"Kavit an donell solut ha kalet-mañ, gwarezet e viot diouzh un dagadenn !"
 
 msgid "A thick fog covers the arena. You can't see were you did not go!"
 msgstr ""
-"Latar stank zo en emgannlec'h. Ne c'hallit ket gwelet al lec'hioù n'oc'h bet "
-"enno !"
+"Latar stank zo en emgannlec'h. Ne c'hallit ket gwelet al lec'hioù n'oc'h ket "
+"bet enno !"
 
 msgid ""
 "Find the invisibility power up to disappear from the screen of all other "
@@ -77,7 +78,7 @@ msgstr "Ur fazi zo bet. N'eo ket bet posupl mont betek penn ar brenadenn."
 
 msgid "A new version of Bim! is available! Please update as soon as possible."
 msgstr ""
-"Un doare nevez eus Bim! zo da gaout ! Hizivait an abretañ ar gwellañ mar "
+"Ur stumm nevez eus Bim! zo da gaout ! Hizivait an abretañ ar gwellañ mar "
 "plij."
 
 #, c++-format
@@ -99,7 +100,7 @@ msgid ""
 "and get your revenge!"
 msgstr ""
 "Krogit gant ur bartiad nevez\n"
-"evit an digoll !"
+"evit un dro digoll !"
 
 msgid ""
 "Was it pure luck?\n"
@@ -118,10 +119,10 @@ msgid "You won!"
 msgstr "Aet eo ar maout ganeoc'h !"
 
 msgid "Off"
-msgstr "Lazhet"
+msgstr "Lazh."
 
 msgid "On"
-msgstr "Enaouet"
+msgstr "Enaou."
 
 msgid "Debug"
 msgstr "Dizreinañ"
@@ -174,7 +175,7 @@ msgid "Games"
 msgstr "Partiadoù"
 
 msgid "Victories"
-msgstr "Trec'h"
+msgstr "Bet trec'h"
 
 msgid "DEBUG"
 msgstr "DIZREINAÑ"
@@ -205,7 +206,7 @@ msgid "Start the game now!"
 msgstr "Kregiñ gant ar bartiad bremañ !"
 
 msgid "FIGHT!"
-msgstr "TAN DEZHI !"
+msgstr "TAN DE'I !"
 
 msgid ""
 "Waiting for your opponents…\n"
