@@ -1,0 +1,228 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: 2025-08-28 14:01+0000\n"
+"Last-Translator: Anna Al Lae <anna.allae@opab.bzh>\n"
+"Language-Team: Breton <https://hosted.weblate.org/projects/bim/gettext-files/"
+"br/>\n"
+"Language: br\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=5; plural=(n % 10 == 1 && n % 100 != 11 && n % 100 != "
+"71 && n % 100 != 91) ? 0 : ((n % 10 == 2 && n % 100 != 12 && n % 100 != 72 "
+"&& n % 100 != 92) ? 1 : ((((n % 10 == 3 || n % 10 == 4) || n % 10 == 9) && ("
+"n % 100 < 10 || n % 100 > 19) && (n % 100 < 70 || n % 100 > 79) && (n % 100 "
+"< 90 || n % 100 > 99)) ? 2 : ((n != 0 && n % 1000000 == 0) ? 3 : 4)));\n"
+"X-Generator: Weblate 5.13.1-dev\n"
+
+msgid "Please wait."
+msgstr "Gortozit mar plij."
+
+msgid "Please wait.."
+msgstr "Gortozit mar plij.."
+
+msgid "Please wait..."
+msgstr "Gortozit mar plij..."
+
+msgid "You have been disconnected :("
+msgstr "Digevreet oc'h bet :("
+
+#, c++-format
+msgid "Version {}"
+msgstr "Stumm {}"
+
+msgid "Feedback about Bim!"
+msgstr "Evezhiadennoù diwar-benn Bim!"
+
+msgid ""
+"Come play a game of Bim! https://play.google.com/store/apps/details?"
+"id=bim.app"
+msgstr ""
+"Deuit da c'hoari ur bartiad Bim! https://play.google.com/store/apps/"
+"details?id=bim.app"
+
+msgid "You need more coins to purchase this item!"
+msgstr "Ezhomm ho peus eus muioc'h a bezhioù evit prenañ an dra-mañ !"
+
+msgid "Customize your experience below!"
+msgstr "Personelait ar bartiad amañ dindan !"
+
+msgid "Falling blocks reduce the arena after two minutes!"
+msgstr "Ar bloc'hoù a gouezh a strisha an emgannlec'h goude daou vunut !"
+
+msgid "Find this incredibly strong barrel, it will save you from one hit!"
+msgstr ""
+"Kavit an donell solut ha kalet-mañ, gwarezet e viot diouzh un dagadenn !"
+
+msgid "A thick fog covers the arena. You can't see were you did not go!"
+msgstr ""
+"Latar stank zo en emgannlec'h. Ne c'hallit ket gwelet al lec'hioù n'oc'h ket "
+"bet enno !"
+
+msgid ""
+"Find the invisibility power up to disappear from the screen of all other "
+"players!"
+msgstr ""
+"Kavit ar bonuz diwelusted evit mont diwar-wel diouzh skramm ar c'hoarierien "
+"all !"
+
+msgid "An error occurred. The purchase could not be completed."
+msgstr "Ur fazi zo bet. N'eo ket bet posupl mont betek penn ar brenadenn."
+
+msgid "A new version of Bim! is available! Please update as soon as possible."
+msgstr ""
+"Ur stumm nevez eus Bim! zo da gaout ! Hizivait an abretañ ar gwellañ mar "
+"plij."
+
+#, c++-format
+msgid "Failed to authenticate with the game server. Error code {}."
+msgstr "Ne c'haller ket bezañ anavezet gant servijer ar c'hoari. Kod fazi {}."
+
+msgid "OK"
+msgstr "Mat eo"
+
+msgid ""
+"NEW\n"
+"GAME"
+msgstr ""
+"PARTIAD\n"
+"NEVEZ"
+
+msgid ""
+"Start a new game\n"
+"and get your revenge!"
+msgstr ""
+"Krogit gant ur bartiad nevez\n"
+"evit un dro digoll !"
+
+msgid ""
+"Was it pure luck?\n"
+"Confirm your skills in a new game!"
+msgstr ""
+"Ha chañs ne oa ken ? Lañsit ur bartiad nevez\n"
+"evit kadarnaat ho parregezhioù !"
+
+msgid "Draw game!"
+msgstr "Rampo !"
+
+msgid "You lost!"
+msgstr "Kollet ho peus !"
+
+msgid "You won!"
+msgstr "Aet eo ar maout ganeoc'h !"
+
+msgid "Off"
+msgstr "Lazh."
+
+msgid "On"
+msgstr "Enaou."
+
+msgid "Debug"
+msgstr "Dizreinañ"
+
+msgid "Directions kind"
+msgstr "Doareoù urzhierez"
+
+msgid "Directional pad, at a fixed position on the screen."
+msgstr "Kroaz tuañ, en ul lec'h difiñv war ar skramm."
+
+msgid "Analog stick, it pops where you tap and follows the drag."
+msgstr ""
+"Lanker analogel, dont a ra war-wel el lec'h ma toucher ha heuliañ a ra ar "
+"biz."
+
+msgid "Controls"
+msgstr "Ren"
+
+msgid "Directions on the left, actions on the right."
+msgstr "Tuañ war an tu kleiz, oberoù war an tu dehoù."
+
+msgid "Directions on the right, actions on the left."
+msgstr "Tuañ war an tu dehoù, oberoù war an tu kleiz."
+
+msgid "D-pad"
+msgstr "Kroaz tuañ"
+
+msgid "Stick"
+msgstr "Lanker"
+
+msgid "Music"
+msgstr "Sonerezh"
+
+msgid "Sound effects"
+msgstr "Efedoù son"
+
+msgid "Settings"
+msgstr "Arventennoù"
+
+msgid "Vibrations"
+msgstr "Daskrenoù"
+
+msgid "Defeats"
+msgstr "Kollet"
+
+msgid "Draws"
+msgstr "Rampo"
+
+msgid "Games"
+msgstr "Partiadoù"
+
+msgid "Victories"
+msgstr "Bet trec'h"
+
+msgid "DEBUG"
+msgstr "DIZREINAÑ"
+
+msgid ""
+"PLAY\n"
+"ONLINE"
+msgstr ""
+"C'HOARI\n"
+"ENLINENN"
+
+msgid "Your statistics"
+msgstr "Ho stadegoù"
+
+msgid "ALPHA VERSION"
+msgstr "STUMM ALFA"
+
+msgid "Success rate"
+msgstr "Feur trec'hiñ"
+
+msgid "You can start a two-players game now or wait for more players!"
+msgstr "Gallout a rit lañsañ ur bartiad gant daou c'hoarier pe gortoz re all !"
+
+msgid "You can start a three-players game now or wait for more players!"
+msgstr "Gallout a rit lañsañ ur bartiad gant tri c'hoarier pe gortoz re all !"
+
+msgid "Start the game now!"
+msgstr "Kregiñ gant ar bartiad bremañ !"
+
+msgid "FIGHT!"
+msgstr "TAN DE'I !"
+
+msgid ""
+"Waiting for your opponents…\n"
+"Tell your friends to join!"
+msgstr ""
+"O c'hortoz an eneberien...\n"
+"Pedit ho mignoned !"
+
+msgid "Online Game"
+msgstr "C'hoari Enlinenn"
+
+msgid "×1000"
+msgstr "×1000"
+
+msgid "LOADING…"
+msgstr "O KARGAÑ…"
+
+msgid "SHOP"
+msgstr "STAL"
