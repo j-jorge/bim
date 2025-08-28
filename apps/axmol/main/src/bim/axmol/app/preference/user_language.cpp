@@ -23,6 +23,8 @@ bim::axmol::app::user_language(const iscool::preferences::local_preferences& p)
 
   switch (iscool::to_language_code(language_name))
     {
+    case iscool::iso_639_language_code::br:
+      return iscool::language_name::br_FR;
     case iscool::iso_639_language_code::de:
       return iscool::language_name::de_DE;
     case iscool::iso_639_language_code::en:

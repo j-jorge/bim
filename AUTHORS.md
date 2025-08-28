@@ -8,6 +8,9 @@ static-assets/font/OpenSans-Regular.ttf
 Steve Matteson
 Open Font License 1.1
 
+assets/i18n/br.po
+CC-BY-SA 4.0 Anna Al Lae, via Weblate.
+
 assets/i18n/de.po
 CC-BY-SA 4.0 Mirko P., via Weblate.
 
