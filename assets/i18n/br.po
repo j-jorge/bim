@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2025-08-28 22:01+0200\n"
+"PO-Revision-Date: 2025-08-28 22:03+0200\n"
 "Last-Translator: Anna Al Lae <anna.allae@opab.bzh>\n"
 "Language-Team: Breton <https://hosted.weblate.org/projects/bim/gettext-files/"
 "br/>\n"
@@ -23,17 +23,14 @@ msgstr ""
 "< 90 || n % 100 > 99)) ? 2 : ((n != 0 && n % 1000000 == 0) ? 3 : 4)));\n"
 "X-Generator: Poedit 3.6\n"
 
-msgid "Please wait."
-msgstr "Gortozit mar plij."
-
-msgid "Please wait.."
-msgstr "Gortozit mar plij.."
-
-msgid "Please wait..."
-msgstr "Gortozit mar plij..."
+msgid "Please wait"
+msgstr "Gortozit mar plij"
 
 msgid "You have been disconnected :("
 msgstr "Digevreet oc'h bet :("
+
+msgid "Do you really want to change the language setting?"
+msgstr ""
 
 #, c++-format
 msgid "Version {}"
@@ -86,6 +83,9 @@ msgstr ""
 msgid "Failed to authenticate with the game server. Error code {}."
 msgstr "Ne c'haller ket bezañ anavezet gant servijer ar c'hoari. Kod fazi {}."
 
+msgid "Cancel"
+msgstr ""
+
 msgid "OK"
 msgstr "Mat eo"
 
@@ -125,8 +125,14 @@ msgstr "Lazh"
 msgid "On"
 msgstr "Enaou"
 
-msgid "Debug"
-msgstr "Dizreinañ"
+msgid "No"
+msgstr ""
+
+msgid "Yes"
+msgstr ""
+
+msgid "Language"
+msgstr ""
 
 msgid "Directions kind"
 msgstr "Doareoù urzhierez"
@@ -227,3 +233,12 @@ msgstr "O KARGAÑ…"
 
 msgid "SHOP"
 msgstr "STAL"
+
+#~ msgid "Please wait.."
+#~ msgstr "Gortozit mar plij.."
+
+#~ msgid "Please wait..."
+#~ msgstr "Gortozit mar plij..."
+
+#~ msgid "Debug"
+#~ msgstr "Dizreinañ"

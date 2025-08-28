@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2025-08-22 22:19+0200\n"
+"PO-Revision-Date: 2025-08-28 22:03+0200\n"
 "Last-Translator: Julien Jorge <julien.jorge@gmx.fr>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/bim/gettext-files/"
 "de/>\n"
@@ -19,17 +19,14 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Poedit 3.6\n"
 
-msgid "Please wait."
-msgstr "Bitte warten."
-
-msgid "Please wait.."
-msgstr "Bitte warten.."
-
-msgid "Please wait..."
-msgstr "Bitte warten..."
+msgid "Please wait"
+msgstr "Bitte warten"
 
 msgid "You have been disconnected :("
 msgstr "Die Verbindung wurde unterbrochen :("
+
+msgid "Do you really want to change the language setting?"
+msgstr ""
 
 #, c++-format
 msgid "Version {}"
@@ -85,6 +82,9 @@ msgid "Failed to authenticate with the game server. Error code {}."
 msgstr ""
 "Die Authentifizierung beim Spielserver ist fehlgeschlagen. Fehlercode {}."
 
+msgid "Cancel"
+msgstr ""
+
 msgid "OK"
 msgstr "OK"
 
@@ -124,8 +124,14 @@ msgstr "Aus"
 msgid "On"
 msgstr "An"
 
-msgid "Debug"
-msgstr "Fehlerbehebung"
+msgid "No"
+msgstr ""
+
+msgid "Yes"
+msgstr ""
+
+msgid "Language"
+msgstr ""
 
 msgid "Directions kind"
 msgstr "Wegbeschreibung"
@@ -230,3 +236,12 @@ msgstr "LADEN…"
 
 msgid "SHOP"
 msgstr "SHOP"
+
+#~ msgid "Please wait.."
+#~ msgstr "Bitte warten.."
+
+#~ msgid "Please wait..."
+#~ msgstr "Bitte warten..."
+
+#~ msgid "Debug"
+#~ msgstr "Fehlerbehebung"

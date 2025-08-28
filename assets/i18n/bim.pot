@@ -16,16 +16,13 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-msgid "Please wait."
-msgstr ""
-
-msgid "Please wait.."
-msgstr ""
-
-msgid "Please wait..."
+msgid "Please wait"
 msgstr ""
 
 msgid "You have been disconnected :("
+msgstr ""
+
+msgid "Do you really want to change the language setting?"
 msgstr ""
 
 #, c++-format
@@ -70,6 +67,9 @@ msgstr ""
 msgid "Failed to authenticate with the game server. Error code {}."
 msgstr ""
 
+msgid "Cancel"
+msgstr ""
+
 msgid "OK"
 msgstr ""
 
@@ -103,7 +103,13 @@ msgstr ""
 msgid "On"
 msgstr ""
 
-msgid "Debug"
+msgid "No"
+msgstr ""
+
+msgid "Yes"
+msgstr ""
+
+msgid "Language"
 msgstr ""
 
 msgid "Directions kind"

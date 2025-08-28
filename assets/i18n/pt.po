@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2025-08-22 22:21+0200\n"
+"PO-Revision-Date: 2025-08-28 22:04+0200\n"
 "Last-Translator: ssantos <ssantos@web.de>\n"
 "Language-Team: Portuguese <https://hosted.weblate.org/projects/bim/gettext-"
 "files/pt/>\n"
@@ -19,17 +19,14 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
 "X-Generator: Poedit 3.6\n"
 
-msgid "Please wait."
-msgstr "Aguarde."
-
-msgid "Please wait.."
-msgstr "Aguarde.."
-
-msgid "Please wait..."
-msgstr "Aguarde..."
+msgid "Please wait"
+msgstr "Aguarde"
 
 msgid "You have been disconnected :("
 msgstr "Foi desconectado :("
+
+msgid "Do you really want to change the language setting?"
+msgstr ""
 
 #, c++-format
 msgid "Version {}"
@@ -78,6 +75,9 @@ msgstr "Uma nova versão de Bim! está disponível! Atualize o quanto antes."
 msgid "Failed to authenticate with the game server. Error code {}."
 msgstr "Erro ao autenticar com o servidor do jogo. Erro código {}."
 
+msgid "Cancel"
+msgstr ""
+
 msgid "OK"
 msgstr "OK"
 
@@ -117,8 +117,14 @@ msgstr "Desligado"
 msgid "On"
 msgstr "Ligado"
 
-msgid "Debug"
-msgstr "Debug"
+msgid "No"
+msgstr ""
+
+msgid "Yes"
+msgstr ""
+
+msgid "Language"
+msgstr ""
 
 msgid "Directions kind"
 msgstr "Tipo do controle"
@@ -217,3 +223,12 @@ msgstr "A CARREGAR…"
 
 msgid "SHOP"
 msgstr "LOJA"
+
+#~ msgid "Please wait.."
+#~ msgstr "Aguarde.."
+
+#~ msgid "Please wait..."
+#~ msgstr "Aguarde..."
+
+#~ msgid "Debug"
+#~ msgstr "Debug"
