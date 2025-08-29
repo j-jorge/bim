@@ -9,7 +9,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: 2025-08-29 09:46+0000\n"
-"Last-Translator: Fulup Travers <fulup.travers@opab.bzh>\n"
+"Last-Translator: Anna Al Lae <anna.allae@opab.bzh>\n"
 "Language-Team: Breton <https://hosted.weblate.org/projects/bim/gettext-files/"
 "br/>\n"
 "Language: br\n"
@@ -101,7 +101,7 @@ msgid ""
 "and get your revenge!"
 msgstr ""
 "Krogit gant ur bartiad nevez\n"
-"evit un dro digoll !"
+"evit un dro-digoll !"
 
 msgid ""
 "Was it pure luck?\n"
@@ -117,13 +117,13 @@ msgid "You lost!"
 msgstr "Kollet ho peus !"
 
 msgid "You won!"
-msgstr "Gounezet hoc'h eus !"
+msgstr "Aet eo ar maout ganeoc'h !"
 
 msgid "Off"
-msgstr "Lazh"
+msgstr "Lazhet"
 
 msgid "On"
-msgstr "Enaou"
+msgstr "Enaouet"
 
 msgid "No"
 msgstr "Ket"
@@ -135,27 +135,26 @@ msgid "Language"
 msgstr "Yezh"
 
 msgid "Directions kind"
-msgstr "Doareoù urzhierez"
+msgstr "Doareoù lankañ"
 
 msgid "Directional pad, at a fixed position on the screen."
-msgstr "Kroaz tuañ, en ul lec'h difiñv war ar skramm."
+msgstr "Kroaz dilec'hiañ, en ul lec'h difiñv war ar skramm."
 
 msgid "Analog stick, it pops where you tap and follows the drag."
 msgstr ""
-"Lanker analogel, dont a ra war-wel el lec'h ma toucher ha heuliañ a ra ar "
-"biz."
+"Stik analogel, dont a ra war-wel el lec'h ma toucher ha heuliañ a ra ar biz."
 
 msgid "Controls"
 msgstr "Lankerioù"
 
 msgid "Directions on the left, actions on the right."
-msgstr "Tuañ war an tu kleiz, oberoù war an tu dehoù."
+msgstr "Dilec'hiañ war an tu kleiz, oberoù war an tu dehoù."
 
 msgid "Directions on the right, actions on the left."
-msgstr "Tuañ war an tu dehoù, oberoù war an tu kleiz."
+msgstr "Dilec'hiañ war an tu dehoù, oberoù war an tu kleiz."
 
 msgid "D-pad"
-msgstr "Kroaz tuañ"
+msgstr "Kroaz dilec'hiañ"
 
 msgid "Stick"
 msgstr "Lanker"
