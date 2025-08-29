@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2025-08-28 22:03+0200\n"
+"PO-Revision-Date: 2025-08-29 09:46+0000\n"
 "Last-Translator: Anna Al Lae <anna.allae@opab.bzh>\n"
 "Language-Team: Breton <https://hosted.weblate.org/projects/bim/gettext-files/"
 "br/>\n"
@@ -18,10 +18,10 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=5; plural=(n % 10 == 1 && n % 100 != 11 && n % 100 != "
 "71 && n % 100 != 91) ? 0 : ((n % 10 == 2 && n % 100 != 12 && n % 100 != 72 "
-"&& n % 100 != 92) ? 1 : ((((n % 10 == 3 || n % 10 == 4) || n % 10 == 9) && "
-"(n % 100 < 10 || n % 100 > 19) && (n % 100 < 70 || n % 100 > 79) && (n % 100 "
+"&& n % 100 != 92) ? 1 : ((((n % 10 == 3 || n % 10 == 4) || n % 10 == 9) && ("
+"n % 100 < 10 || n % 100 > 19) && (n % 100 < 70 || n % 100 > 79) && (n % 100 "
 "< 90 || n % 100 > 99)) ? 2 : ((n != 0 && n % 1000000 == 0) ? 3 : 4)));\n"
-"X-Generator: Poedit 3.6\n"
+"X-Generator: Weblate 5.13.1-dev\n"
 
 msgid "Please wait"
 msgstr "Gortozit mar plij"
@@ -30,7 +30,7 @@ msgid "You have been disconnected :("
 msgstr "Digevreet oc'h bet :("
 
 msgid "Do you really want to change the language setting?"
-msgstr ""
+msgstr "Ha sur oc'h e fell deoc'h cheñch an arventennoù yezh ?"
 
 #, c++-format
 msgid "Version {}"
@@ -84,7 +84,7 @@ msgid "Failed to authenticate with the game server. Error code {}."
 msgstr "Ne c'haller ket bezañ anavezet gant servijer ar c'hoari. Kod fazi {}."
 
 msgid "Cancel"
-msgstr ""
+msgstr "Nullañ"
 
 msgid "OK"
 msgstr "Mat eo"
@@ -101,7 +101,7 @@ msgid ""
 "and get your revenge!"
 msgstr ""
 "Krogit gant ur bartiad nevez\n"
-"evit un dro digoll !"
+"evit un dro-digoll !"
 
 msgid ""
 "Was it pure luck?\n"
@@ -117,45 +117,44 @@ msgid "You lost!"
 msgstr "Kollet ho peus !"
 
 msgid "You won!"
-msgstr "Gounezet hoc'h eus !"
+msgstr "Aet eo ar maout ganeoc'h !"
 
 msgid "Off"
-msgstr "Lazh"
+msgstr "Lazhet"
 
 msgid "On"
-msgstr "Enaou"
+msgstr "Enaouet"
 
 msgid "No"
-msgstr ""
+msgstr "Ket"
 
 msgid "Yes"
-msgstr ""
+msgstr "Ya"
 
 msgid "Language"
-msgstr ""
+msgstr "Yezh"
 
 msgid "Directions kind"
-msgstr "Doareoù urzhierez"
+msgstr "Doareoù lankañ"
 
 msgid "Directional pad, at a fixed position on the screen."
-msgstr "Kroaz tuañ, en ul lec'h difiñv war ar skramm."
+msgstr "Kroaz dilec'hiañ, en ul lec'h difiñv war ar skramm."
 
 msgid "Analog stick, it pops where you tap and follows the drag."
 msgstr ""
-"Lanker analogel, dont a ra war-wel el lec'h ma toucher ha heuliañ a ra ar "
-"biz."
+"Stik analogel, dont a ra war-wel el lec'h ma toucher ha heuliañ a ra ar biz."
 
 msgid "Controls"
-msgstr "Ren"
+msgstr "Lankerioù"
 
 msgid "Directions on the left, actions on the right."
-msgstr "Tuañ war an tu kleiz, oberoù war an tu dehoù."
+msgstr "Dilec'hiañ war an tu kleiz, oberoù war an tu dehoù."
 
 msgid "Directions on the right, actions on the left."
-msgstr "Tuañ war an tu dehoù, oberoù war an tu kleiz."
+msgstr "Dilec'hiañ war an tu dehoù, oberoù war an tu kleiz."
 
 msgid "D-pad"
-msgstr "Kroaz tuañ"
+msgstr "Kroaz dilec'hiañ"
 
 msgid "Stick"
 msgstr "Lanker"
