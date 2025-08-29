@@ -1,0 +1,6 @@
+- Nouveau bonus : le bouclier.
+- Nouveaux dessins pour les bonus.
+- Affichage des statistiques du joueur sur l'écran principal.
+- Ajout d'un paramètre pour changer la langue.
+- Ajout des traducions en breton, allemand, portugais et brésilien.
+- Les paramètres se ferment quand le bouton « retour » est pressé.

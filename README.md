@@ -13,9 +13,9 @@ walls or, ultimately, attack another player. Sometimes the broken
 walls will expose a bonus such as extra bombs or an increase of the
 bombs' blast distance.
 
-The match features can be selected from the matchmaking
-screen. Features enabled by all participants will be used in the game,
-allowing players to customize their contest.
+The match features can be selected from the matchmaking screen. It is
+enough of one player enabling a feature for all players benefiting
+from it during the contest.
 
 <p align="center">
   <img src="docs/readme/title-screen.jpg" width="270px"/>

@@ -1,0 +1,7 @@
+- Add the shield game feature.
+- New assets for the power-ups.
+- Display the player's statistics on the lobby.
+- Added a way to change the language via the settings.
+- Added Breton, German, Portuguese, and Portuguese (Brasil)
+  translations of the game.
+- Close the settings when the back button is pressed.
