@@ -21,7 +21,7 @@ assets/i18n/pt_BR.po
 CC-BY-SA 4.0 OlliesGudh, via Weblate.
 
 assets/sprites/menu/language.png
-From https://commons.wikimedia.org/wiki/File:Codex_icon_language.svg
+Based on https://commons.wikimedia.org/wiki/File:Codex_icon_language.svg
 CC-BY 4.0 Wikimedia Design & OOUI team and other contributors
 
 assets/sprites/menu/silhouette-1.png
