@@ -73,6 +73,7 @@
             "instantiate": "ax::Label",
             "text.i18n": "You won!",
             "parent": "stripe",
+            "overflow": "shrink",
             "z-order": 30
           }
         ],

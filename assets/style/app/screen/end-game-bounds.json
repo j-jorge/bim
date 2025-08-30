@@ -33,7 +33,9 @@
         "anchor.x": 0,
         "anchor.y": 0.5,
         "anchor.reference.x": 0.12,
-        "anchor.reference.y": 0.83
+        "anchor.reference.y": 0.83,
+        "width.percents": 76,
+        "height.percents": 100
       }
     ],
 

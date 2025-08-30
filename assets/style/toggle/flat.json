@@ -15,6 +15,7 @@
             "font.size": 52,
             "font.color": "cod-gray",
             "align.horizontal": "center",
+            "overflow": "shrink",
             "text.i18n": "Off",
             "z-order": 10
           }
@@ -28,6 +29,7 @@
             "font.color": "cod-gray",
             "align.horizontal": "center",
             "text.i18n": "On",
+            "overflow": "shrink",
             "z-order": 10
           }
         ]
@@ -37,14 +39,14 @@
     "bounds": [
       {
         "label-off": [
-          "layout/center",
+          "layout/fill",
           {
             "reference": "background"
           }
         ],
 
         "label-on": [
-          "layout/center",
+          "layout/fill",
           {
             "reference": "background"
           }
