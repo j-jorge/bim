@@ -20,6 +20,12 @@ void bim::axmol::style::apply_size(
 {
   ax::Vec2 size = node.getContentSize();
 
+  // When a label is given an explicit size, and if it is in shrink mode, we
+  // also force its dimensions. These flags track the setting of both
+  // dimensions.
+  bool width_is_set = false;
+  bool height_is_set = false;
+
   if (bool(bounds.flags
            & bim::axmol::style::bounds_property_flags::width_ratio))
     {
@@ -73,11 +79,21 @@ void bim::axmol::style::apply_size(
               }
         }
 
-      if (apply_width(size.x, reference, bounds) && keep_ratio)
-        size.y = size.x / ratio;
+      if (apply_width(size.x, reference, bounds))
+        {
+          width_is_set = true;
 
-      if (apply_height(size.y, reference, bounds) && keep_ratio)
-        size.x = ratio * size.y;
+          if (keep_ratio)
+            size.y = size.x / ratio;
+        }
+
+      if (apply_height(size.y, reference, bounds))
+        {
+          height_is_set = true;
+
+          if (keep_ratio)
+            size.x = ratio * size.y;
+        }
     }
 
   if (size.x <= 0)
@@ -91,7 +107,13 @@ void bim::axmol::style::apply_size(
   ax::Label* const label = dynamic_cast<ax::Label*>(&node);
 
   if (label)
-    label->setMaxLineWidth(size.x);
+    {
+      label->setMaxLineWidth(size.x);
+
+      if (width_is_set && height_is_set
+          && (label->getOverflow() == ax::Label::Overflow::SHRINK))
+        label->setDimensions(size.x, size.y);
+    }
 }
 
 bool apply_width(float& width, const ax::Node& reference,
