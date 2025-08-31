@@ -396,7 +396,7 @@ bim::axmol::app::application::application(
   m_screen_capture_key_observer->connect_to_released(
       [this]()
       {
-        capture_scren();
+        capture_screen();
       });
 
   m_context.set_enable_debug(enable_debug);
@@ -615,7 +615,7 @@ void bim::axmol::app::application::tick()
   m_context.get_audio()->tick();
 }
 
-void bim::axmol::app::application::capture_scren() const
+void bim::axmol::app::application::capture_screen() const
 {
   ax::utils::captureScreen(
       [](ax::RefPtr<ax::Image> image) -> void

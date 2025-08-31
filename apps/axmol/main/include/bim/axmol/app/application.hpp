@@ -114,7 +114,7 @@ namespace bim::axmol::app
     void listen_to_frame_event();
     void tick();
 
-    void capture_scren() const;
+    void capture_screen() const;
 
   private:
     std::vector<std::string> m_asset_directories;
