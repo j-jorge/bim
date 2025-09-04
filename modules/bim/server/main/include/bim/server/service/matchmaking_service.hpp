@@ -8,7 +8,7 @@
 
 #include <iscool/net/message_pool.hpp>
 #include <iscool/net/message_stream.hpp>
-#include <iscool/signals/scoped_connection.hpp>
+#include <iscool/schedule/scoped_connection.hpp>
 
 #include <boost/unordered/unordered_map.hpp>
 
@@ -108,7 +108,7 @@ namespace bim::server
     encounter_map m_encounters;
     bim::net::encounter_id m_next_encounter_id;
 
-    iscool::signals::scoped_connection m_clean_up_connection;
+    iscool::schedule::scoped_connection m_clean_up_connection;
     std::chrono::seconds m_clean_up_interval;
 
     std::vector<kick_session_event> m_done_sessions;

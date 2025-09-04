@@ -1,11 +1,10 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #pragma once
 
-#include <iscool/monitoring/declare_state_monitor.hpp>
-#include <iscool/signals/declare_signal.hpp>
-#include <iscool/signals/scoped_connection.hpp>
-
 #include <iscool/language_name_fwd.hpp>
+#include <iscool/monitoring/declare_state_monitor.hpp>
+#include <iscool/schedule/scoped_connection.hpp>
+#include <iscool/signals/declare_signal.hpp>
 
 #include <string>
 #include <string_view>
@@ -47,6 +46,6 @@ namespace bim::axmol::app
     std::size_t m_remaining_loops_on_default_script;
     std::size_t m_next_script;
 
-    iscool::signals::scoped_connection m_connection;
+    iscool::schedule::scoped_connection m_connection;
   };
 }

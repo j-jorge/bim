@@ -1,6 +1,5 @@
 # Next
 
-- Fix the data race in iscool::net.
 - Collect some stats about the network usage on the client and the server.
 - Plug Tracy and get some benchmarks.
 - Add PostHog analytics.

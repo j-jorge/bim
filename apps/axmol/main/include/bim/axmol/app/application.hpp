@@ -11,9 +11,8 @@
 #include <bim/axmol/widget/context.hpp>
 #include <bim/axmol/widget/dynamic_factory.hpp>
 
-#include <iscool/signals/scoped_connection.hpp>
-
 #include <iscool/context.hpp>
+#include <iscool/schedule/scoped_connection.hpp>
 #include <iscool/schedule/worker.hpp>
 
 #include <axmol/platform/Application.h>
@@ -119,7 +118,7 @@ namespace bim::axmol::app
   private:
     std::vector<std::string> m_asset_directories;
 
-    iscool::signals::scoped_connection m_launch_connection;
+    iscool::schedule::scoped_connection m_launch_connection;
 
     std::unique_ptr<bim::axmol::display::main_view> m_main_view;
 

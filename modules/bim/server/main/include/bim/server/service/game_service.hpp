@@ -7,7 +7,7 @@
 #include <iscool/net/message_pool.hpp>
 #include <iscool/net/message_stream.hpp>
 
-#include <iscool/signals/scoped_connection.hpp>
+#include <iscool/schedule/scoped_connection.hpp>
 
 #include <boost/unordered/unordered_map.hpp>
 
@@ -95,7 +95,7 @@ namespace bim::server
     session_to_channel_map m_session_to_channel;
     std::mt19937_64 m_random;
 
-    iscool::signals::scoped_connection m_clean_up_connection;
+    iscool::schedule::scoped_connection m_clean_up_connection;
     const std::chrono::seconds m_clean_up_interval;
 
     std::unique_ptr<contest_timeline_service> m_contest_timeline_service;

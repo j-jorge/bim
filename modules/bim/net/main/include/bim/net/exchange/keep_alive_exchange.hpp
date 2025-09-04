@@ -3,6 +3,7 @@
 
 #include <iscool/net/message/message.hpp>
 #include <iscool/net/message_channel.hpp>
+#include <iscool/schedule/scoped_connection.hpp>
 #include <iscool/signals/declare_signal.hpp>
 #include <iscool/signals/scoped_connection.hpp>
 
@@ -28,7 +29,7 @@ namespace bim::net
     iscool::net::message_channel m_message_channel;
 
     iscool::signals::scoped_connection m_channel_signal_connection;
-    iscool::signals::scoped_connection m_update_connection;
+    iscool::schedule::scoped_connection m_update_connection;
 
     iscool::net::message m_client_message;
 

@@ -9,8 +9,8 @@
 #include <bim/game/cell_neighborhood.hpp>
 
 #include <iscool/context.hpp>
+#include <iscool/schedule/scoped_connection.hpp>
 #include <iscool/signals/declare_signal.hpp>
-#include <iscool/signals/scoped_connection.hpp>
 
 #include <axmol/base/Types.h>
 
@@ -164,7 +164,7 @@ namespace bim::axmol::app
     const iscool::style::declaration& m_style_use_d_pad;
     const std::array<const iscool::style::declaration*, 4> m_style_player;
 
-    iscool::signals::scoped_connection m_tick_connection;
+    iscool::schedule::scoped_connection m_tick_connection;
 
     std::chrono::nanoseconds m_last_tick_date;
     std::unique_ptr<bim::game::contest> m_contest;

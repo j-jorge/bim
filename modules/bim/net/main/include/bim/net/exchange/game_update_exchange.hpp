@@ -10,6 +10,7 @@
 
 #include <iscool/monitoring/declare_state_monitor.hpp>
 #include <iscool/net/message/message.hpp>
+#include <iscool/schedule/scoped_connection.hpp>
 #include <iscool/signals/declare_signal.hpp>
 #include <iscool/signals/scoped_connection.hpp>
 
@@ -65,7 +66,7 @@ namespace bim::net
   private:
     iscool::net::message_channel& m_message_channel;
     iscool::signals::scoped_connection m_channel_signal_connection;
-    iscool::signals::scoped_connection m_send_connection;
+    iscool::schedule::scoped_connection m_send_connection;
 
     std::vector<bim::game::player_action> m_action_queue;
     game_update_from_client m_current_update;

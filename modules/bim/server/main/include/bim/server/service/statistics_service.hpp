@@ -3,7 +3,7 @@
 
 #include <bim/server/config.hpp>
 
-#include <iscool/signals/scoped_connection.hpp>
+#include <iscool/schedule/scoped_connection.hpp>
 
 #include <cstdint>
 #include <cstdio>
@@ -38,7 +38,7 @@ namespace bim::server
 
     bool m_enabled;
 
-    iscool::signals::scoped_connection m_file_dump_connection;
+    iscool::schedule::scoped_connection m_file_dump_connection;
 
     std::chrono::seconds m_file_dump_delay;
 

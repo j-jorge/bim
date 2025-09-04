@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #pragma once
 
+#include <iscool/schedule/scoped_connection.hpp>
 #include <iscool/signals/declare_signal.hpp>
-#include <iscool/signals/scoped_connection.hpp>
 
 #include <span>
 #include <string>
@@ -39,9 +39,9 @@ namespace bim::axmol::app
     bool m_refresh_ok;
     bool m_purchase_ok;
 
-    iscool::signals::scoped_connection m_fetch_response;
-    iscool::signals::scoped_connection m_refresh_response;
-    iscool::signals::scoped_connection m_purchase_response;
+    iscool::schedule::scoped_connection m_fetch_response;
+    iscool::schedule::scoped_connection m_refresh_response;
+    iscool::schedule::scoped_connection m_purchase_response;
 
     std::vector<std::string> m_product_ids;
   };

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #pragma once
 
-#include <iscool/signals/scoped_connection.hpp>
+#include <iscool/schedule/scoped_connection.hpp>
 
 #include <boost/unordered/unordered_flat_map.hpp>
 
@@ -61,8 +61,8 @@ namespace bim::server
     std::uint64_t m_database_version;
 
     release_date_map m_release_date;
-    iscool::signals::scoped_connection m_clean_up_connection;
-    iscool::signals::scoped_connection m_update_connection;
+    iscool::schedule::scoped_connection m_clean_up_connection;
+    iscool::schedule::scoped_connection m_update_connection;
 
     const std::chrono::seconds m_clean_up_interval;
     const std::chrono::minutes m_update_interval;

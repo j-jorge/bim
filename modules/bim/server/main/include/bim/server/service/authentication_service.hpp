@@ -67,7 +67,7 @@ namespace bim::server
     session_map m_sessions;
     client_map m_clients;
 
-    iscool::signals::scoped_connection m_clean_up_connection;
+    iscool::schedule::scoped_connection m_clean_up_connection;
     std::chrono::seconds m_clean_up_interval;
 
     iscool::net::message_pool m_message_pool;
