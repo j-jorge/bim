@@ -1,9 +1,13 @@
 # Next
 
-- Game feature submenu.
+- Fix the data race in iscool::net.
+- Collect some stats about the network usage on the client and the server.
+- Plug Tracy and get some benchmarks.
+- Add PostHog analytics.
 
 # Client
 
+- Game feature submenu.
 - At most three enabled features per game.
 - Display the frame duration (without the sleep) in addition to the FPS.
 
