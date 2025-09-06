@@ -243,22 +243,22 @@ static command_line parse_command_line(int argc, char* argv[])
       "The port to listen on.");
   config_options.add_options()(
       "authentication-clean-up-interval",
-      boost::program_options::value<std::uint64_t>(),
+      boost::program_options::value<std::int64_t>(),
       "Time interval in seconds at which we remove the sessions from "
       "the authentication.");
   config_options.add_options()(
       "matchmaking-clean-up-interval",
-      boost::program_options::value<std::uint64_t>(),
+      boost::program_options::value<std::int64_t>(),
       "Time interval in seconds at which we remove the "
       "encounters from the matchmaking.");
   config_options.add_options()(
       "random-game-auto-start-delay",
-      boost::program_options::value<std::uint64_t>(),
+      boost::program_options::value<std::int64_t>(),
       "How long to wait for the players to be ready before automatically"
       " launching a random game, in seconds.");
   config_options.add_options()(
       "game_service_clean_up_interval",
-      boost::program_options::value<std::uint64_t>(),
+      boost::program_options::value<std::int64_t>(),
       "Time interval at which we remove the games for which no activity has"
       " been observed, in seconds.");
   config_options.add_options()(
@@ -273,7 +273,7 @@ static command_line parse_command_line(int argc, char* argv[])
       "client be before being disconnected.");
   config_options.add_options()(
       "game-service-disconnection-inactivity-delay",
-      boost::program_options::value<std::uint64_t>(),
+      boost::program_options::value<std::int64_t>(),
       "How many seconds of inactivity (i.e. no message from the client) do we "
       "tolerate before disconnecting a client.");
 
@@ -289,13 +289,13 @@ static command_line parse_command_line(int argc, char* argv[])
                                "Whether or not we use IP geolocation.");
   config_options.add_options()(
       "geolocation-clean-up-interval",
-      boost::program_options::value<std::uint64_t>(),
+      boost::program_options::value<std::int64_t>(),
       "How many seconds after the last request for a given "
       "IP to be removed from the geolocation service. The "
       "IP will receive a new ID on the next request.");
   config_options.add_options()(
       "geolocation-update-interval",
-      boost::program_options::value<std::uint64_t>(),
+      boost::program_options::value<std::int64_t>(),
       "Interval in seconds at which we reopen the GeoIP "
       "database, to get fresh data.");
   config_options.add_options()("geolocation-database-path",
@@ -306,7 +306,7 @@ static command_line parse_command_line(int argc, char* argv[])
       "enable-statistics-log",
       "Whether or not we dump statistics about the players and the games.");
   config_options.add_options()(
-      "statistics-dump-delay", boost::program_options::value<std::uint64_t>(),
+      "statistics-dump-delay", boost::program_options::value<std::int64_t>(),
       "How long we wait after a stat is changed to record it in the logs.");
   config_options.add_options()(
       "statistics-log-file", boost::program_options::value<std::string>(),
