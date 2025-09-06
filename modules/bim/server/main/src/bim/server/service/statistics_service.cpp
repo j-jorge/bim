@@ -13,7 +13,9 @@
 #include <ctime>
 
 bim::server::statistics_service::statistics_service(const config& config)
-  : m_active_sessions(0)
+  : m_network_bytes_in(0)
+  , m_network_bytes_out(0)
+  , m_active_sessions(0)
   , m_players_in_games(0)
   , m_games(0)
   , m_enabled(config.enable_statistics_log)
@@ -39,16 +41,25 @@ bim::server::statistics_service::~statistics_service()
     std::fclose(m_log_file);
 }
 
+void bim::server::statistics_service::network_traffic(std::uint64_t bytes_in,
+                                                      std::uint64_t bytes_out)
+{
+  m_network_bytes_in = bytes_in;
+  m_network_bytes_out = bytes_out;
+
+  schedule_file_dump();
+}
+
 void bim::server::statistics_service::record_session_connected()
 {
   ++m_active_sessions;
-  conditional_dump();
+  schedule_file_dump();
 }
 
 void bim::server::statistics_service::record_session_disconnected()
 {
   --m_active_sessions;
-  conditional_dump();
+  schedule_file_dump();
 }
 
 void bim::server::statistics_service::record_game_start(uint8_t player_count)
@@ -56,7 +67,7 @@ void bim::server::statistics_service::record_game_start(uint8_t player_count)
   ++m_games;
   m_players_in_games += player_count;
 
-  conditional_dump();
+  schedule_file_dump();
 }
 
 void bim::server::statistics_service::record_game_end(uint8_t player_count)
@@ -64,18 +75,12 @@ void bim::server::statistics_service::record_game_end(uint8_t player_count)
   --m_games;
   m_players_in_games -= player_count;
 
-  conditional_dump();
-}
-
-void bim::server::statistics_service::conditional_dump()
-{
-  if (m_enabled)
-    schedule_file_dump();
+  schedule_file_dump();
 }
 
 void bim::server::statistics_service::schedule_file_dump()
 {
-  if (m_file_dump_connection.connected())
+  if (!m_enabled || m_file_dump_connection.connected())
     return;
 
   m_file_dump_connection = iscool::schedule::delayed_call(
@@ -107,7 +112,8 @@ void bim::server::statistics_service::dump_stats_to_file()
       return;
     }
 
-  std::fprintf(m_log_file, "%s %d %d %d\n", date_string, m_active_sessions,
-               m_players_in_games, m_games);
+  std::fprintf(m_log_file, "%s %d %d %d %lu %lu\n", date_string,
+               m_active_sessions, m_players_in_games, m_games,
+               m_network_bytes_in, m_network_bytes_out);
   std::fflush(m_log_file);
 }

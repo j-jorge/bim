@@ -20,6 +20,8 @@ namespace bim::server
     statistics_service(const statistics_service&) = delete;
     statistics_service& operator=(const statistics_service&) = delete;
 
+    void network_traffic(std::uint64_t bytes_in, std::uint64_t bytes_out);
+
     void record_session_connected();
     void record_session_disconnected();
 
@@ -27,11 +29,13 @@ namespace bim::server
     void record_game_end(uint8_t player_count);
 
   private:
-    void conditional_dump();
     void schedule_file_dump();
     void dump_stats_to_file();
 
   private:
+    std::uint64_t m_network_bytes_in;
+    std::uint64_t m_network_bytes_out;
+
     int m_active_sessions;
     int m_players_in_games;
     int m_games;

@@ -61,6 +61,7 @@ namespace bim::server
     geolocation_service m_geoloc;
     statistics_service& m_statistics;
 
+    const iscool::net::socket_stream& m_socket;
     iscool::net::message_stream m_message_stream;
     iscool::net::session_id m_next_session_id;
 

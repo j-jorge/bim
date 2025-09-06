@@ -133,7 +133,7 @@ TEST_F(authentication_test, ok)
   const std::vector<bim::server::tests::statistics_log_line> statistics =
       m_statistics.read_log_file();
 
-  ASSERT_EQ(1, statistics.size());
+  ASSERT_LE(1, statistics.size());
   EXPECT_EQ(1, statistics[0].active_sessions);
 }
 
@@ -159,7 +159,8 @@ TEST_F(authentication_test, bad_protocol)
   const std::vector<bim::server::tests::statistics_log_line> statistics =
       m_statistics.read_log_file();
 
-  ASSERT_EQ(0, statistics.size());
+  ASSERT_LE(1, statistics.size());
+  EXPECT_EQ(0, statistics[0].active_sessions);
 }
 
 TEST_F(authentication_test, same_token_same_session)
@@ -195,7 +196,7 @@ TEST_F(authentication_test, same_token_same_session)
   const std::vector<bim::server::tests::statistics_log_line> statistics =
       m_statistics.read_log_file();
 
-  ASSERT_EQ(1, statistics.size());
+  ASSERT_LE(1, statistics.size());
   EXPECT_EQ(1, statistics[0].active_sessions);
 }
 
@@ -216,6 +217,8 @@ TEST_F(authentication_test, different_token_different_session)
   const iscool::net::session_id session = m_answer_ok->get_session_id();
   m_answer_ok = std::nullopt;
 
+  std::size_t next_stat_index;
+
   {
     // Force statistics dump.
     m_scheduler.tick(std::chrono::minutes(1));
@@ -223,8 +226,10 @@ TEST_F(authentication_test, different_token_different_session)
     const std::vector<bim::server::tests::statistics_log_line> statistics =
         m_statistics.read_log_file();
 
-    ASSERT_EQ(1, statistics.size());
+    ASSERT_LE(1, statistics.size());
     EXPECT_EQ(1, statistics[0].active_sessions);
+
+    next_stat_index = statistics.size();
   }
 
   // Log in with another token.
@@ -245,9 +250,9 @@ TEST_F(authentication_test, different_token_different_session)
     const std::vector<bim::server::tests::statistics_log_line> statistics =
         m_statistics.read_log_file();
 
-    ASSERT_EQ(2, statistics.size());
+    ASSERT_LT(next_stat_index, statistics.size());
     EXPECT_EQ(1, statistics[0].active_sessions);
-    EXPECT_EQ(2, statistics[1].active_sessions);
+    EXPECT_EQ(2, statistics[next_stat_index].active_sessions);
   }
 }
 
@@ -268,6 +273,8 @@ TEST_F(authentication_test, client_disconnect)
   const iscool::net::session_id session = m_answer_ok->get_session_id();
   m_answer_ok = std::nullopt;
 
+  std::size_t stat_index_1;
+
   {
     // Force statistics dump.
     m_scheduler.tick(std::chrono::minutes(1));
@@ -275,8 +282,10 @@ TEST_F(authentication_test, client_disconnect)
     const std::vector<bim::server::tests::statistics_log_line> statistics =
         m_statistics.read_log_file();
 
-    ASSERT_EQ(1, statistics.size());
+    ASSERT_LE(1, statistics.size());
     EXPECT_EQ(1, statistics[0].active_sessions);
+
+    stat_index_1 = statistics.size();
   }
 
   // Simulate inactivity. This is the default timeout on the server. There may
@@ -286,6 +295,8 @@ TEST_F(authentication_test, client_disconnect)
   for (int i = 0; i != 100; ++i)
     m_scheduler.tick(std::chrono::minutes(1));
 
+  std::size_t stat_index_2;
+
   {
     // Force statistics dump.
     m_scheduler.tick(std::chrono::minutes(1));
@@ -293,9 +304,11 @@ TEST_F(authentication_test, client_disconnect)
     const std::vector<bim::server::tests::statistics_log_line> statistics =
         m_statistics.read_log_file();
 
-    ASSERT_EQ(2, statistics.size());
+    ASSERT_LT(stat_index_1, statistics.size());
     EXPECT_EQ(1, statistics[0].active_sessions);
-    EXPECT_EQ(0, statistics[1].active_sessions);
+    EXPECT_EQ(0, statistics[stat_index_1].active_sessions);
+
+    stat_index_2 = statistics.size();
   }
 
   // Log in again with the same token.
@@ -315,9 +328,9 @@ TEST_F(authentication_test, client_disconnect)
     const std::vector<bim::server::tests::statistics_log_line> statistics =
         m_statistics.read_log_file();
 
-    ASSERT_EQ(3, statistics.size());
+    ASSERT_LT(stat_index_2, statistics.size());
     EXPECT_EQ(1, statistics[0].active_sessions);
-    EXPECT_EQ(0, statistics[1].active_sessions);
-    EXPECT_EQ(1, statistics[2].active_sessions);
+    EXPECT_EQ(0, statistics[stat_index_1].active_sessions);
+    EXPECT_EQ(1, statistics[stat_index_2].active_sessions);
   }
 }

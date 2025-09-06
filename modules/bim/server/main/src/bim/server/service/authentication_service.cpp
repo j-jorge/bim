@@ -14,6 +14,7 @@
 
 #include <iscool/log/log.hpp>
 #include <iscool/log/nature/info.hpp>
+#include <iscool/net/socket_stream.hpp>
 #include <iscool/schedule/delayed_call.hpp>
 #include <iscool/signals/implement_signal.hpp>
 #include <iscool/signals/scoped_connection.hpp>
@@ -38,6 +39,7 @@ bim::server::authentication_service::authentication_service(
     statistics_service& statistics)
   : m_geoloc(config)
   , m_statistics(statistics)
+  , m_socket(socket)
   , m_message_stream(socket)
   , m_next_session_id(1)
   , m_clean_up_interval(config.authentication_clean_up_interval)
@@ -76,24 +78,25 @@ void bim::server::authentication_service::check_session(
     {
       if (message.get_type() == bim::net::message_type::authentication)
         check_authentication(endpoint, message);
-
-      return;
     }
-
-  const client_map::iterator it = m_clients.find(session);
-
-  if (it == m_clients.end())
-    return;
-
-  it->second.release_at_this_date = authentication_date_for_next_release();
-
-  if (message.get_type() == bim::net::message_type::keep_alive)
+  else
     {
-      send_acknowledge_keep_alive(endpoint, session);
-      return;
+      const client_map::iterator it = m_clients.find(session);
+
+      if (it != m_clients.end())
+        {
+          it->second.release_at_this_date =
+              authentication_date_for_next_release();
+
+          if (message.get_type() == bim::net::message_type::keep_alive)
+            send_acknowledge_keep_alive(endpoint, session);
+          else
+            m_message(endpoint, message);
+        }
     }
 
-  m_message(endpoint, message);
+  m_statistics.network_traffic(m_socket.received_bytes(),
+                               m_socket.sent_bytes());
 }
 
 void bim::server::authentication_service::check_authentication(
@@ -103,9 +106,7 @@ void bim::server::authentication_service::check_authentication(
       bim::net::try_deserialize_message<bim::net::authentication>(m);
 
   if (!message)
-    {
-      return;
-    }
+    return;
 
   const bim::net::client_token token = message->get_request_token();
 
