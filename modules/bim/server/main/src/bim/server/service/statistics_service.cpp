@@ -9,6 +9,7 @@
 #include <iscool/schedule/delayed_call.hpp>
 #include <iscool/time/now.hpp>
 
+#include <cassert>
 #include <chrono>
 #include <ctime>
 
@@ -56,13 +57,20 @@ void bim::server::statistics_service::record_session_connected()
   schedule_file_dump();
 }
 
-void bim::server::statistics_service::record_session_disconnected()
+void bim::server::statistics_service::record_session_disconnected(
+    std::uint64_t count)
 {
-  --m_active_sessions;
+  if (count == 0)
+    return;
+
+  assert(count <= m_active_sessions);
+
+  m_active_sessions -= count;
   schedule_file_dump();
 }
 
-void bim::server::statistics_service::record_game_start(uint8_t player_count)
+void bim::server::statistics_service::record_game_start(
+    std::uint8_t player_count)
 {
   ++m_games;
   m_players_in_games += player_count;
@@ -70,8 +78,12 @@ void bim::server::statistics_service::record_game_start(uint8_t player_count)
   schedule_file_dump();
 }
 
-void bim::server::statistics_service::record_game_end(uint8_t player_count)
+void bim::server::statistics_service::record_game_end(
+    std::uint8_t player_count)
 {
+  assert(m_games > 0);
+  assert(player_count <= m_players_in_games);
+
   --m_games;
   m_players_in_games -= player_count;
 
@@ -112,7 +124,7 @@ void bim::server::statistics_service::dump_stats_to_file()
       return;
     }
 
-  std::fprintf(m_log_file, "%s %d %d %d %lu %lu\n", date_string,
+  std::fprintf(m_log_file, "%s %lu %lu %lu %lu %lu\n", date_string,
                m_active_sessions, m_players_in_games, m_games,
                m_network_bytes_in, m_network_bytes_out);
   std::fflush(m_log_file);

@@ -67,6 +67,8 @@ void bim::server::authentication_service::disconnect(
 
   m_sessions.erase(it->second.token);
   m_clients.erase(it);
+
+  m_statistics.record_session_disconnected(1);
 }
 
 void bim::server::authentication_service::check_session(
@@ -191,6 +193,7 @@ void bim::server::authentication_service::clean_up()
 {
   const std::chrono::nanoseconds now =
       iscool::time::now<std::chrono::nanoseconds>();
+  std::uint64_t disconnected_count = 0;
 
   for (client_map::iterator it = m_clients.begin(), eit = m_clients.end();
        it != eit;)
@@ -200,8 +203,10 @@ void bim::server::authentication_service::clean_up()
                it->first);
         m_sessions.erase(it->second.token);
         it = m_clients.erase(it);
-        m_statistics.record_session_disconnected();
+        ++disconnected_count;
       }
     else
       ++it;
+
+  m_statistics.record_session_disconnected(disconnected_count);
 }

@@ -23,10 +23,10 @@ namespace bim::server
     void network_traffic(std::uint64_t bytes_in, std::uint64_t bytes_out);
 
     void record_session_connected();
-    void record_session_disconnected();
+    void record_session_disconnected(std::uint64_t count);
 
-    void record_game_start(uint8_t player_count);
-    void record_game_end(uint8_t player_count);
+    void record_game_start(std::uint8_t player_count);
+    void record_game_end(std::uint8_t player_count);
 
   private:
     void schedule_file_dump();
@@ -36,9 +36,9 @@ namespace bim::server
     std::uint64_t m_network_bytes_in;
     std::uint64_t m_network_bytes_out;
 
-    int m_active_sessions;
-    int m_players_in_games;
-    int m_games;
+    std::uint64_t m_active_sessions;
+    std::uint64_t m_players_in_games;
+    std::uint64_t m_games;
 
     bool m_enabled;
 
