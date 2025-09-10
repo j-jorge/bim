@@ -1,7 +1,3 @@
-option(BIM_BUILD_SERVER
-  "Whether the standalone server should be built or not."
-  ON)
-
 if (NOT BIM_BUILD_SERVER)
   return()
 endif()

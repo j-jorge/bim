@@ -1,3 +1,7 @@
+if (NOT BIM_BUILD_SERVER)
+  return()
+endif()
+
 find_package(Boost REQUIRED COMPONENTS program_options)
 find_package(cpptrace REQUIRED)
 

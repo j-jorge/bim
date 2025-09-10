@@ -23,6 +23,10 @@ message(STATUS "Building tests: ${BIM_BUILD_TESTS}")
 option(BIM_ENABLE_TRACY "Enable Tracy profiler." OFF)
 message(STATUS "Profiling with Tracy: ${BIM_ENABLE_TRACY}")
 
+option(BIM_BUILD_SERVER
+  "Whether the standalone server should be built or not."
+  ON)
+
 if(BIM_TARGET STREQUAL "android")
   set(BIM_ANDROID_GENERATED_RES_DIR
     "${CMAKE_BINARY_DIR}/android/app/res"
