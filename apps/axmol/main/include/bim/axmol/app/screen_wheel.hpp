@@ -61,6 +61,7 @@ namespace iscool
 
 namespace bim::axmol::app
 {
+  class analytics_service;
   class end_game;
   class lobby;
   class main_scene;
@@ -82,6 +83,7 @@ namespace bim::axmol::app
             ((iscool::preferences::local_preferences*)(local_preferences)) //
             ((const bim::axmol::widget::context&)(widget_context))         //
             ((main_scene*)(main_scene))                                    //
+            ((analytics_service*)(analytics))                              //
             ((const config*)(config))                                      //
             ((bim::net::session_handler*)(session_handler))                //
             ((iscool::audio::mixer*)(audio))                               //
@@ -118,10 +120,19 @@ namespace bim::axmol::app
     void animate_lobby_to_shop();
     void animate_shop_to_lobby();
 
+    void display_lobby();
     void lobby_displayed();
+
+    void display_matchmaking();
     void matchmaking_displayed();
+
+    void display_online_game(const bim::net::game_launch_event& event);
     void online_game_displayed();
+
+    void display_end_game(const bim::game::contest_result& result);
     void end_game_displayed();
+
+    void display_shop();
     void shop_displayed();
 
     void disconnected();

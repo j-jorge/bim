@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/axmol/app/task/main_task.hpp>
 
+#include <bim/axmol/app/analytics_service.hpp>
 #include <bim/axmol/app/popup/message.hpp>
 #include <bim/axmol/app/preference/date_of_next_config_update.hpp>
 #include <bim/axmol/app/preference/date_of_next_version_update_message.hpp>
@@ -171,6 +172,9 @@ void bim::axmol::app::main_task::validate_remote_config(
     {
       ic_log(iscool::log::nature::warning(), "main_task",
              "Failed to parse remote config {}.", str);
+
+      m_context.get_analytics()->event("error",
+                                       { { "cause", "config-parse-error" } });
       return;
     }
 
@@ -181,6 +185,8 @@ void bim::axmol::app::main_task::validate_remote_config(
     {
       ic_log(iscool::log::nature::warning(), "main_task",
              "Failed to load remote config from Json {}.", str);
+      m_context.get_analytics()->event("error",
+                                       { { "cause", "config-load-error" } });
       return;
     }
 
@@ -274,6 +280,13 @@ void bim::axmol::app::main_task::connect_to_game_server()
       m_session_handler.connect_to_authentication_error(
           [this](bim::net::authentication_error_code error_code)
           {
+            const std::string error = std::to_string(
+                std::underlying_type_t<bim::net::authentication_error_code>(
+                    error_code));
+            m_context.get_analytics()->event(
+                "error", { { "cause", "authentication-error" },
+                           { "error-code", error } });
+
             game_server_connection_error(error_code);
           });
 
@@ -300,9 +313,11 @@ void bim::axmol::app::main_task::game_server_connection_error(
       start_fresh();
     }
   else
-    m_message_popup->show(fmt::format(
-        fmt::runtime(ic_gettext("Failed to authenticate with the "
-                                "game server. Error code {}.")),
-        std::underlying_type_t<bim::net::authentication_error_code>(
-            error_code)));
+    {
+      m_message_popup->show(fmt::format(
+          fmt::runtime(ic_gettext("Failed to authenticate with the "
+                                  "game server. Error code {}.")),
+          std::underlying_type_t<bim::net::authentication_error_code>(
+              error_code)));
+    }
 }

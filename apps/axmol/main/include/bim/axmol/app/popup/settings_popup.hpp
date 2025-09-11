@@ -43,6 +43,7 @@ namespace bim::axmol::widget
 
 namespace bim::axmol::app
 {
+  class analytics_service;
   class language_popup;
   class main_scene;
   class popup;
@@ -56,6 +57,7 @@ namespace bim::axmol::app
         ic_context_declare_parent_properties(                              //
             ((const bim::axmol::widget::context&)(widget_context))         //
             ((main_scene*)(main_scene))                                    //
+            ((analytics_service*)(analytics))                              //
             ((iscool::audio::mixer*)(audio))                               //
             ((iscool::preferences::local_preferences*)(local_preferences)) //
             ((iscool::social::service*)(social))                           //
@@ -72,6 +74,18 @@ namespace bim::axmol::app
   private:
     void set_direction_pad_display(bool pad_on_the_left);
     void set_stick_or_pad_display(bool use_stick);
+
+    void set_music_preference();
+    void set_sound_effects_preference();
+    void set_vibrations_preference();
+    void set_d_pad_position_preference();
+    void set_d_pad_kind_preference();
+
+    void show_language_selection();
+    void open_bluesky();
+    void open_github();
+    void open_mail();
+    void open_share();
 
   private:
     bim::axmol::input::single_key_observer_handle m_escape;

@@ -49,12 +49,14 @@ set(main_sources
 
 if (BIM_BUILDING_FOR_ANDROID)
   set(platform_sources
+    android/src/bim/axmol/app/analytics_service.cpp
     android/src/bim/axmol/app/shop_service.cpp
     android/src/bim/axmol/app/shop_support.cpp
   )
   set(platform_includes android/include)
 else()
   set(platform_sources
+    desktop/src/bim/axmol/app/analytics_service.cpp
     desktop/src/bim/axmol/app/shop_service.cpp
     desktop/src/bim/axmol/app/shop_support.cpp
   )

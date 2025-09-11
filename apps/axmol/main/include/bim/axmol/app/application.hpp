@@ -54,6 +54,7 @@ namespace bim::axmol::app
     struct session_systems;
   }
 
+  class analytics_service;
   class main_scene;
   class main_task;
   class scene_lock;
@@ -69,6 +70,7 @@ namespace bim::axmol::app
             ((bim::axmol::widget::context)(widget_context))                //
             ((main_scene*)(main_scene))                                    //
             ((scene_lock*)(scene_lock))                                    //
+            ((analytics_service*)(analytics))                              //
             ((iscool::audio::mixer*)(audio))                               //
             ((iscool::preferences::local_preferences*)(local_preferences)) //
             ((iscool::social::service*)(social))                           //

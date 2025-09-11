@@ -38,6 +38,7 @@ namespace iscool::style
 
 namespace bim::axmol::app
 {
+  class analytics_service;
   class wallet;
   struct config;
 
@@ -50,6 +51,7 @@ namespace bim::axmol::app
         m_context,
         ic_context_declare_parent_properties(                              //
             ((const bim::axmol::widget::context&)(widget_context))         //
+            ((analytics_service*)(analytics))                              //
             ((iscool::preferences::local_preferences*)(local_preferences)) //
             ((const config*)(config))                                      //
             ),
@@ -68,7 +70,8 @@ namespace bim::axmol::app
     void closing();
 
   private:
-    void apply_connected_state();
+    void dispatch_revenge();
+    void dispatch_quit();
 
   private:
     bim::axmol::input::tree m_inputs;

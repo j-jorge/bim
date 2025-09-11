@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/axmol/app/screen/shop.hpp>
 
+#include <bim/axmol/app/analytics_service.hpp>
 #include <bim/axmol/app/config.hpp>
 #include <bim/axmol/app/part/wallet.hpp>
 #include <bim/axmol/app/popup/message.hpp>
@@ -223,6 +224,9 @@ void bim::axmol::app::shop::products_ready(
 
 void bim::axmol::app::shop::products_error()
 {
+  m_context.get_analytics()->event("error",
+                                   { { "cause", "products-detail" } });
+
   ic_log(iscool::log::nature::error(), "shop",
          "Could not fetch the products detail.");
 }
@@ -232,8 +236,13 @@ void bim::axmol::app::shop::start_purchase(std::size_t product_index)
   if (product_index >= m_index_in_products.size())
     return;
 
-  m_shop->purchase(m_context.get_config()
-                       ->shop_products[m_index_in_products[product_index]]);
+  const std::string& product_id =
+      m_context.get_config()
+          ->shop_products[m_index_in_products[product_index]];
+
+  m_context.get_analytics()->event("purchase", { { "product", product_id } });
+
+  m_shop->purchase(product_id);
 }
 
 void bim::axmol::app::shop::purchase_completed(std::string_view product,
@@ -245,6 +254,11 @@ void bim::axmol::app::shop::purchase_completed(std::string_view product,
   for (std::size_t i : m_index_in_products)
     if (config.shop_products[i] == product)
       {
+        m_context.get_analytics()->event(
+            "purchase-completed",
+            { { "product", product },
+              { "quantity", std::to_string(quantity) } });
+
         add_coins(*m_context.get_local_preferences(),
                   quantity * config.shop_product_coins[i]);
         m_wallet->animate_cash_flow();
@@ -252,12 +266,18 @@ void bim::axmol::app::shop::purchase_completed(std::string_view product,
         return;
       }
 
+  m_context.get_analytics()->event(
+      "purchase-completed-error",
+      { { "product", product }, { "quantity", std::to_string(quantity) } });
+
   ic_log(iscool::log::nature::warning(), "shop",
          "Purchase completed on unknown product '{}'.", product);
 }
 
 void bim::axmol::app::shop::purchase_error()
 {
+  m_context.get_analytics()->event("error", { { "cause", "purchase" } });
+
   ic_log(iscool::log::nature::error(), "shop",
          "Could not perform the purchase.");
 

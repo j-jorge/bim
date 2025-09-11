@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/axmol/app/popup/settings_popup.hpp>
 
+#include <bim/axmol/app/analytics_service.hpp>
 #include <bim/axmol/app/popup/language_popup.hpp>
 #include <bim/axmol/app/popup/popup.hpp>
-
 #include <bim/axmol/app/preference/audio.hpp>
 #include <bim/axmol/app/preference/controls.hpp>
 #include <bim/axmol/app/preference/haptic.hpp>
@@ -119,7 +119,7 @@ bim::axmol::app::settings_popup::settings_popup(
   m_controls->language_button->connect_to_clicked(
       [this]()
       {
-        m_language_popup->show();
+        show_language_selection();
       });
   m_language_popup->connect_to_reset(
       [this]()
@@ -128,94 +128,57 @@ bim::axmol::app::settings_popup::settings_popup(
       });
 
   m_controls->bluesky_button->connect_to_clicked(
-      []()
+      [this]()
       {
-        iscool::system::open_url(
-            "https://bsky.app/profile/j-jorge.bsky.social");
+        open_bluesky();
       });
 
   m_controls->github_button->connect_to_clicked(
-      []()
+      [this]()
       {
-        iscool::system::open_url("https://github.com/j-jorge/bim/");
+        open_github();
       });
 
   m_controls->mail_button->connect_to_clicked(
-      []()
+      [this]()
       {
-        iscool::system::send_mail("bim-game@gmx.com",
-                                  ic_gettext("Feedback about Bim!"), "");
+        open_mail();
       });
 
   m_controls->share_button->connect_to_clicked(
       [this]()
       {
-        m_context.get_social()->share_message(ic_gettext(
-            "Come play a game of Bim! "
-            "https://play.google.com/store/apps/details?id=bim.app"));
+        open_share();
       });
 
   m_controls->music->connect_to_clicked(
       [this]()
       {
-        iscool::preferences::local_preferences& preferences =
-            *m_context.get_local_preferences();
-
-        const bool v = !music_enabled(preferences);
-        music_enabled(preferences, v);
-        m_controls->music->set_state(v);
-
-        m_context.get_audio()->set_music_muted(!v);
+        set_music_preference();
       });
 
   m_controls->sound_effects->connect_to_clicked(
       [this]()
       {
-        iscool::preferences::local_preferences& preferences =
-            *m_context.get_local_preferences();
-
-        const bool v = !effects_enabled(preferences);
-        effects_enabled(preferences, v);
-        m_controls->sound_effects->set_state(v);
-
-        m_context.get_audio()->set_effects_muted(!v);
+        set_sound_effects_preference();
       });
 
   m_controls->vibrations->connect_to_clicked(
       [this]()
       {
-        iscool::preferences::local_preferences& preferences =
-            *m_context.get_local_preferences();
-
-        const bool v = !haptic_feedback_enabled(preferences);
-        haptic_feedback_enabled(preferences, v);
-        m_controls->vibrations->set_state(v);
-
-        m_context.get_haptic_feedback()->set_enabled(v);
+        set_vibrations_preference();
       });
 
   m_controls->d_pad_position->connect_to_clicked(
       [this]()
       {
-        iscool::preferences::local_preferences& preferences =
-            *m_context.get_local_preferences();
-
-        const bool v = !direction_pad_on_the_left(preferences);
-        direction_pad_on_the_left(preferences, v);
-
-        set_direction_pad_display(v);
+        set_d_pad_position_preference();
       });
 
   m_controls->d_pad_kind->connect_to_clicked(
       [this]()
       {
-        iscool::preferences::local_preferences& preferences =
-            *m_context.get_local_preferences();
-
-        const bool use_stick = !direction_pad_kind_is_stick(preferences);
-        direction_pad_kind_is_stick(preferences, use_stick);
-
-        set_stick_or_pad_display(use_stick);
+        set_d_pad_kind_preference();
       });
 }
 
@@ -253,4 +216,115 @@ void bim::axmol::app::settings_popup::set_stick_or_pad_display(bool use_stick)
   bim::axmol::widget::apply_display(
       m_context.get_widget_context().style_cache, m_controls->all_nodes,
       use_stick ? m_style_directions_stick : m_style_directions_pad);
+}
+
+void bim::axmol::app::settings_popup::set_music_preference()
+{
+  iscool::preferences::local_preferences& preferences =
+      *m_context.get_local_preferences();
+
+  const bool v = !music_enabled(preferences);
+  music_enabled(preferences, v);
+  m_controls->music->set_state(v);
+
+  m_context.get_analytics()->event("preference",
+                                   { { "music", v ? "true" : "false" } });
+
+  m_context.get_audio()->set_music_muted(!v);
+}
+
+void bim::axmol::app::settings_popup::set_sound_effects_preference()
+{
+  iscool::preferences::local_preferences& preferences =
+      *m_context.get_local_preferences();
+
+  const bool v = !effects_enabled(preferences);
+  effects_enabled(preferences, v);
+  m_controls->sound_effects->set_state(v);
+
+  m_context.get_analytics()->event("preference",
+                                   { { "fx", v ? "true" : "false" } });
+
+  m_context.get_audio()->set_effects_muted(!v);
+}
+
+void bim::axmol::app::settings_popup::set_vibrations_preference()
+{
+  iscool::preferences::local_preferences& preferences =
+      *m_context.get_local_preferences();
+
+  const bool v = !haptic_feedback_enabled(preferences);
+  haptic_feedback_enabled(preferences, v);
+  m_controls->vibrations->set_state(v);
+
+  m_context.get_analytics()->event("preference",
+                                   { { "vibrations", v ? "true" : "false" } });
+
+  m_context.get_haptic_feedback()->set_enabled(v);
+}
+
+void bim::axmol::app::settings_popup::set_d_pad_position_preference()
+{
+  iscool::preferences::local_preferences& preferences =
+      *m_context.get_local_preferences();
+
+  const bool v = !direction_pad_on_the_left(preferences);
+  direction_pad_on_the_left(preferences, v);
+
+  m_context.get_analytics()->event(
+      "preference", { { "d-pad-position", v ? "left" : "right" } });
+
+  set_direction_pad_display(v);
+}
+
+void bim::axmol::app::settings_popup::set_d_pad_kind_preference()
+{
+  iscool::preferences::local_preferences& preferences =
+      *m_context.get_local_preferences();
+
+  const bool use_stick = !direction_pad_kind_is_stick(preferences);
+  direction_pad_kind_is_stick(preferences, use_stick);
+
+  m_context.get_analytics()->event(
+      "preference", { { "d-pad-kind", use_stick ? "stick" : "cross" } });
+
+  set_stick_or_pad_display(use_stick);
+}
+
+void bim::axmol::app::settings_popup::show_language_selection()
+{
+  m_context.get_analytics()->event(
+      "button", { { "id", "language" }, { "where", "settings" } });
+  m_language_popup->show();
+}
+
+void bim::axmol::app::settings_popup::open_bluesky()
+{
+  m_context.get_analytics()->event(
+      "button", { { "id", "bluesky" }, { "where", "settings" } });
+  iscool::system::open_url("https://bsky.app/profile/j-jorge.bsky.social");
+}
+
+void bim::axmol::app::settings_popup::open_github()
+{
+  m_context.get_analytics()->event(
+      "button", { { "id", "github" }, { "where", "settings" } });
+  iscool::system::open_url("https://github.com/j-jorge/bim/");
+}
+
+void bim::axmol::app::settings_popup::open_mail()
+{
+  m_context.get_analytics()->event(
+      "button", { { "id", "mail" }, { "where", "settings" } });
+  iscool::system::send_mail("bim-game@gmx.com",
+                            ic_gettext("Feedback about Bim!"), "");
+}
+
+void bim::axmol::app::settings_popup::open_share()
+{
+  m_context.get_analytics()->event(
+      "button", { { "id", "share" }, { "where", "settings" } });
+  m_context.get_social()->share_message(
+      ic_gettext("Come play a game of Bim! "
+                 "https://play.google.com/store/apps/details?id=bim.app"));
 }

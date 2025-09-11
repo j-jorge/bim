@@ -30,6 +30,7 @@ namespace bim::axmol::widget
 
 namespace bim::axmol::app
 {
+  class analytics_service;
   class main_scene;
   class message_popup;
   class popup;
@@ -43,6 +44,7 @@ namespace bim::axmol::app
         ic_context_declare_parent_properties(                      //
             ((const bim::axmol::widget::context&)(widget_context)) //
             ((main_scene*)(main_scene))                            //
+            ((analytics_service*)(analytics))                      //
             ((iscool::preferences::local_preferences*)(local_preferences))),
         ic_context_no_properties);
 

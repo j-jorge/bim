@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/axmol/app/application.hpp>
 
+#include <bim/axmol/app/analytics_service.hpp>
 #include <bim/axmol/app/frame_profiler.hpp>
 #include <bim/axmol/app/preference/audio.hpp>
 #include <bim/axmol/app/preference/haptic.hpp>
@@ -38,6 +39,7 @@
 #include <iscool/style/setup.hpp>
 #include <iscool/system/device_date.hpp>
 #include <iscool/system/haptic_feedback.hpp>
+#include <iscool/system/language_name.hpp>
 #include <iscool/time/now.hpp>
 
 #include <axmol/2d/Scene.h>
@@ -86,6 +88,7 @@ private:
 
 private:
   application& m_application;
+  bim::axmol::app::analytics_service m_analytics;
   bim::axmol::app::frame_profiler m_frame_profiler;
   bim::axmol::audio::mixer m_audio;
   bim::axmol::ref_ptr<bim::axmol::app::root_scene> m_root_scene;
@@ -122,6 +125,8 @@ bim::axmol::app::detail::persistent_systems::persistent_systems(
     application& app)
   : m_application(app)
 {
+  m_application.m_context.set_analytics(&m_analytics);
+
   start_log_system();
   start_display();
   start_social();
@@ -411,6 +416,11 @@ bool bim::axmol::app::application::applicationDidFinishLaunching()
   set_up_file_utils();
 
   m_persistent_systems.reset(new detail::persistent_systems(*this));
+
+  m_context.get_analytics()->event(
+      "launched",
+      { { "language",
+          iscool::to_string(iscool::system::get_language_name()) } });
 
   set_up_colour_chart();
 

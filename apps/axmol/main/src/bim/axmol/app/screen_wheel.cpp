@@ -1,9 +1,11 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/axmol/app/screen_wheel.hpp>
 
+#include <bim/axmol/app/analytics_service.hpp>
 #include <bim/axmol/app/main_scene.hpp>
 #include <bim/axmol/app/player_progress_tracker.hpp>
 #include <bim/axmol/app/popup/message.hpp>
+#include <bim/axmol/app/preference/wallet.hpp>
 #include <bim/axmol/app/screen/end_game.hpp>
 #include <bim/axmol/app/screen/lobby.hpp>
 #include <bim/axmol/app/screen/matchmaking.hpp>
@@ -14,8 +16,11 @@
 #include <bim/axmol/widget/apply_bounds.hpp>
 #include <bim/axmol/widget/context.hpp>
 
+#include <bim/net/exchange/game_launch_event.hpp>
 #include <bim/net/exchange/keep_alive_exchange.hpp>
 #include <bim/net/session_handler.hpp>
+
+#include <bim/game/contest_result.hpp>
 
 #include <iscool/i18n/gettext.hpp>
 #include <iscool/log/log.hpp>
@@ -214,25 +219,15 @@ void bim::axmol::app::screen_wheel::animate_lobby_to_matchmaking()
   m_inputs.erase(m_lobby->input_node());
 
   m_lobby->closing();
-  switch_view(*m_controls->matchmaking);
-  m_matchmaking->displaying();
-
-  matchmaking_displayed();
+  display_matchmaking();
 }
 
 void bim::axmol::app::screen_wheel::animate_matchmaking_to_game(
     const bim::net::game_launch_event& event)
 {
-  iscool::system::keep_screen_on(false);
-
   m_inputs.erase(m_matchmaking->input_node());
   m_matchmaking->closing();
-
-  switch_view(*m_controls->online_game);
-  m_online_game->displaying(event);
-  m_end_game->game_started(event);
-
-  online_game_displayed();
+  display_online_game(event);
 }
 
 void bim::axmol::app::screen_wheel::animate_matchmaking_to_lobby()
@@ -241,9 +236,7 @@ void bim::axmol::app::screen_wheel::animate_matchmaking_to_lobby()
 
   m_inputs.erase(m_matchmaking->input_node());
   m_matchmaking->closing();
-  m_lobby->displaying();
-  switch_view(*m_controls->lobby);
-  lobby_displayed();
+  display_lobby();
 }
 
 void bim::axmol::app::screen_wheel::animate_game_to_end_game(
@@ -253,31 +246,21 @@ void bim::axmol::app::screen_wheel::animate_game_to_end_game(
 
   m_inputs.erase(m_online_game->input_node());
   m_online_game->closing();
-
-  switch_view(*m_controls->end_game);
-  m_end_game->displaying(result);
-
-  end_game_displayed();
+  display_end_game(result);
 }
 
 void bim::axmol::app::screen_wheel::animate_end_game_to_lobby()
 {
   m_inputs.erase(m_end_game->input_node());
   m_end_game->closing();
-  m_lobby->displaying();
-  switch_view(*m_controls->lobby);
-  lobby_displayed();
+  display_lobby();
 }
 
 void bim::axmol::app::screen_wheel::animate_end_game_to_matchmaking()
 {
   m_inputs.erase(m_end_game->input_node());
   m_end_game->closing();
-
-  switch_view(*m_controls->matchmaking);
-  m_matchmaking->displaying();
-
-  matchmaking_displayed();
+  display_matchmaking();
 }
 
 void bim::axmol::app::screen_wheel::animate_lobby_to_shop()
@@ -285,15 +268,22 @@ void bim::axmol::app::screen_wheel::animate_lobby_to_shop()
   m_inputs.erase(m_lobby->input_node());
 
   m_lobby->closing();
-  switch_view(*m_controls->shop);
-  m_shop->displaying();
-
-  shop_displayed();
+  display_shop();
 }
 
 void bim::axmol::app::screen_wheel::animate_shop_to_lobby()
 {
   m_inputs.erase(m_shop->input_node());
+
+  display_lobby();
+}
+
+void bim::axmol::app::screen_wheel::display_lobby()
+{
+  m_context.get_analytics()->screen(
+      "lobby", { { "coins", std::to_string(coins_balance(
+                                *m_context.get_local_preferences())) } });
+
   m_lobby->displaying();
   switch_view(*m_controls->lobby);
   lobby_displayed();
@@ -305,11 +295,35 @@ void bim::axmol::app::screen_wheel::lobby_displayed()
   m_lobby->displayed();
 }
 
+void bim::axmol::app::screen_wheel::display_matchmaking()
+{
+  m_context.get_analytics()->screen("matchmaking");
+
+  switch_view(*m_controls->matchmaking);
+  m_matchmaking->displaying();
+
+  matchmaking_displayed();
+}
+
 void bim::axmol::app::screen_wheel::matchmaking_displayed()
 {
   iscool::system::keep_screen_on(true);
   m_inputs.push_back(m_matchmaking->input_node());
   m_matchmaking->displayed();
+}
+
+void bim::axmol::app::screen_wheel::display_online_game(
+    const bim::net::game_launch_event& event)
+{
+  m_context.get_analytics()->screen(
+      "online-game",
+      { { "player-count", std::to_string(event.fingerprint.player_count) } });
+
+  switch_view(*m_controls->online_game);
+  m_online_game->displaying(event);
+  m_end_game->game_started(event);
+
+  online_game_displayed();
 }
 
 void bim::axmol::app::screen_wheel::online_game_displayed()
@@ -319,14 +333,38 @@ void bim::axmol::app::screen_wheel::online_game_displayed()
   m_online_game->displayed();
 }
 
+void bim::axmol::app::screen_wheel::display_end_game(
+    const bim::game::contest_result& result)
+{
+  m_context.get_analytics()->screen(
+      "end-game", { { "coins", std::to_string(coins_balance(
+                                   *m_context.get_local_preferences())) } });
+
+  switch_view(*m_controls->end_game);
+  m_end_game->displaying(result);
+
+  end_game_displayed();
+}
+
 void bim::axmol::app::screen_wheel::end_game_displayed()
 {
+  iscool::system::keep_screen_on(false);
   m_inputs.push_back(m_end_game->input_node());
   m_end_game->displayed();
 }
 
+void bim::axmol::app::screen_wheel::display_shop()
+{
+  switch_view(*m_controls->shop);
+  m_shop->displaying();
+
+  shop_displayed();
+}
+
 void bim::axmol::app::screen_wheel::shop_displayed()
 {
+  m_context.get_analytics()->screen("shop");
+
   m_inputs.push_back(m_shop->input_node());
   m_shop->displayed();
 }
@@ -337,6 +375,9 @@ void bim::axmol::app::screen_wheel::disconnected()
 
   if ((m_active_view == m_controls->online_game) || !m_silently_reconnect)
     {
+      m_context.get_analytics()->event("error",
+                                       { { "cause", "disconnected" } });
+
       m_online_game->closing();
       m_message_popup->show(ic_gettext("You have been disconnected :("));
     }

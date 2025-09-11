@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/axmol/app/screen/end_game.hpp>
 
+#include <bim/axmol/app/analytics_service.hpp>
 #include <bim/axmol/app/config.hpp>
 #include <bim/axmol/app/part/wallet.hpp>
 
@@ -53,7 +54,7 @@ bim::axmol::app::end_game::end_game(const context& context,
   m_controls->revenge_button->connect_to_clicked(
       [this]()
       {
-        m_revenge();
+        dispatch_revenge();
       });
 
   m_inputs.push_back(m_controls->quit_button->input_node());
@@ -61,7 +62,7 @@ bim::axmol::app::end_game::end_game(const context& context,
   m_controls->quit_button->connect_to_clicked(
       [this]()
       {
-        m_quit();
+        dispatch_quit();
       });
 }
 
@@ -126,4 +127,18 @@ void bim::axmol::app::end_game::displayed()
 void bim::axmol::app::end_game::closing()
 {
   m_main_actions.stop();
+}
+
+void bim::axmol::app::end_game::dispatch_revenge()
+{
+  m_context.get_analytics()->event(
+      "button", { { "id", "revenge" }, { "where", "end-game" } });
+  m_revenge();
+}
+
+void bim::axmol::app::end_game::dispatch_quit()
+{
+  m_context.get_analytics()->event(
+      "button", { { "id", "quit" }, { "where", "end-game" } });
+  m_quit();
 }

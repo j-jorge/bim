@@ -21,6 +21,7 @@ public class AppActivity extends AxmolActivity
     super.setEnableVirtualButton(false);
     super.onCreate(savedInstanceState);
 
+    AnalyticsService.init(this);
     JniService.init(this);
     Log.registerDelegate(NativeLog.defaultInstance());
     LinkService.init(this);

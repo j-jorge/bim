@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/axmol/app/screen/lobby.hpp>
 
+#include <bim/axmol/app/analytics_service.hpp>
 #include <bim/axmol/app/part/wallet.hpp>
 #include <bim/axmol/app/popup/debug_popup.hpp>
 #include <bim/axmol/app/popup/settings_popup.hpp>
@@ -83,14 +84,14 @@ bim::axmol::app::lobby::lobby(const context& context,
   m_controls->debug_button->connect_to_clicked(
       [this]()
       {
-        m_debug->show();
+        show_debug();
       });
 
   m_inputs.push_back(m_controls->settings_button->input_node());
   m_controls->settings_button->connect_to_clicked(
       [this]()
       {
-        m_settings->show();
+        show_settings();
       });
   m_settings->connect_to_reset(
       [this]()
@@ -102,7 +103,7 @@ bim::axmol::app::lobby::lobby(const context& context,
   m_controls->play_button->connect_to_clicked(
       [this]()
       {
-        m_play();
+        play_online();
       });
 }
 
@@ -202,4 +203,25 @@ void bim::axmol::app::lobby::enable_debug()
 {
   m_controls->debug_button->setVisible(true);
   m_controls->debug_activator->setVisible(false);
+}
+
+void bim::axmol::app::lobby::show_debug()
+{
+  m_context.get_analytics()->event(
+      "button", { { "id", "debug" }, { "where", "lobby" } });
+  m_debug->show();
+}
+
+void bim::axmol::app::lobby::show_settings()
+{
+  m_context.get_analytics()->event(
+      "button", { { "id", "settings" }, { "where", "lobby" } });
+  m_settings->show();
+}
+
+void bim::axmol::app::lobby::play_online()
+{
+  m_context.get_analytics()->event("button",
+                                   { { "id", "play" }, { "where", "lobby" } });
+  m_play();
 }

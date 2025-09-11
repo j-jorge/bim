@@ -1,6 +1,6 @@
 # Next
 
-- Add PostHog analytics.
+- Add a link to tell people to contribute a new language.
 
 # Client
 

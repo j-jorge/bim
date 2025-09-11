@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/axmol/app/popup/language_popup.hpp>
 
+#include <bim/axmol/app/analytics_service.hpp>
 #include <bim/axmol/app/popup/message.hpp>
 #include <bim/axmol/app/popup/popup.hpp>
 #include <bim/axmol/app/preference/user_language.hpp>
@@ -131,5 +132,9 @@ void bim::axmol::app::language_popup::switch_to_language(
     iscool::language_name language) const
 {
   user_language(*m_context.get_local_preferences(), language);
+
+  m_context.get_analytics()->event(
+      "preference", { { "language", iscool::to_string(language) } });
+
   m_reset();
 }

@@ -46,6 +46,7 @@ namespace iscool::system
 
 namespace bim::axmol::app
 {
+  class analytics_service;
   class debug_popup;
   class main_scene;
   class settings_popup;
@@ -62,6 +63,7 @@ namespace bim::axmol::app
         ic_context_declare_parent_properties(                              //
             ((const bim::axmol::widget::context&)(widget_context))         //
             ((main_scene*)(main_scene))                                    //
+            ((analytics_service*)(analytics))                              //
             ((bim::net::session_handler*)(session_handler))                //
             ((iscool::audio::mixer*)(audio))                               //
             ((iscool::preferences::local_preferences*)(local_preferences)) //
@@ -87,6 +89,10 @@ namespace bim::axmol::app
 
     void increment_debug_activator_counter();
     void enable_debug();
+    void show_debug();
+
+    void show_settings();
+    void play_online();
 
   private:
     bim::axmol::input::tree m_inputs;

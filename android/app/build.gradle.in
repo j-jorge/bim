@@ -123,6 +123,9 @@ android {
         implementation 'iscool:jni:@iscool_core_version@'
         implementation 'iscool:log:@iscool_core_version@'
 
+        implementation 'com.posthog:posthog-android:3.21.1'
+        implementation "commons-codec:commons-codec:1.19.0"
+
         if (!@bim_pure_foss@)
             implementation 'com.android.billingclient:billing:7.0.0'
     }

@@ -49,6 +49,7 @@ namespace bim::axmol::widget
 
 namespace bim::axmol::app
 {
+  class analytics_service;
   class main_scene;
   class message_popup;
   class scene_lock;
@@ -65,6 +66,7 @@ namespace bim::axmol::app
             ((const bim::axmol::widget::context&)(widget_context))         //
             ((main_scene*)(main_scene))                                    //
             ((scene_lock*)(scene_lock))                                    //
+            ((analytics_service*)(analytics))                              //
             ((iscool::audio::mixer*)(audio))                               //
             ((iscool::preferences::local_preferences*)(local_preferences)) //
             ((iscool::social::service*)(social))                           //
