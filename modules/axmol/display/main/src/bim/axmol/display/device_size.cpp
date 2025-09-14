@@ -2,12 +2,12 @@
 #include <bim/axmol/display/device_size.hpp>
 
 #include <axmol/base/Director.h>
-#include <axmol/platform/GLView.h>
+#include <axmol/platform/RenderView.h>
 
 ax::Vec2 bim::axmol::display::device_size()
 {
   ax::Director* const director = ax::Director::getInstance();
-  ax::GLView* const view = director->getGLView();
+  ax::RenderView* const view = director->getRenderView();
 
   assert(view != nullptr);
 

@@ -4,9 +4,9 @@
 #include <axmol/base/Director.h>
 
 #ifdef __ANDROID__
-  #include <axmol/platform/android/GLViewImpl-android.h>
+  #include <axmol/platform/android/RenderViewImpl-android.h>
 #else
-  #include <axmol/platform/GLViewImpl.h>
+  #include <axmol/platform/RenderViewImpl.h>
 #endif
 
 bim::axmol::display::main_view::main_view(std::string_view title,
@@ -14,26 +14,26 @@ bim::axmol::display::main_view::main_view(std::string_view title,
 {
   ax::Director* const director(ax::Director::getInstance());
 
-  ax::GLView* view = director->getGLView();
+  ax::RenderView* view = director->getRenderView();
 
   if (view != nullptr)
     return;
 
   const ax::Rect view_rect(0, 0, size.width * scale, size.height * scale);
-  view = ax::GLViewImpl::createWithRect(title, view_rect);
+  view = ax::RenderViewImpl::createWithRect(title, view_rect);
 
-  director->setGLView(view);
+  director->setRenderView(view);
   view->setDesignResolutionSize(size.width, size.height,
                                 ResolutionPolicy::SHOW_ALL);
 
-  GLContextAttrs gl_context_attrs = { .redBits = 8,
-                                      .greenBits = 8,
-                                      .blueBits = 8,
-                                      .alphaBits = 8,
-                                      .depthBits = 24,
-                                      .stencilBits = 8,
-                                      .multisamplingCount = 0 };
-  ax::GLView::setGLContextAttrs(gl_context_attrs);
+  GfxContextAttrs gfx_context_attrs = { .redBits = 8,
+                                        .greenBits = 8,
+                                        .blueBits = 8,
+                                        .alphaBits = 8,
+                                        .depthBits = 24,
+                                        .stencilBits = 8,
+                                        .multisamplingCount = 0 };
+  ax::RenderView::setGfxContextAttrs(gfx_context_attrs);
 }
 
 bim::axmol::display::main_view::~main_view() = default;

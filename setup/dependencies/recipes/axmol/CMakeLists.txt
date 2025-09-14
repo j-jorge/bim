@@ -162,6 +162,7 @@ macro(assign_common_sources)
     ${source_root}/2d/Camera.cpp
     ${source_root}/2d/CameraBackgroundBrush.cpp
     ${source_root}/2d/ClippingNode.cpp
+    ${source_root}/2d/ClippingRectangleNode.cpp
     ${source_root}/2d/Component.cpp
     ${source_root}/2d/ComponentContainer.cpp
     ${source_root}/2d/DrawNode.cpp
@@ -264,8 +265,8 @@ macro(assign_common_sources)
     ${source_root}/platform/ApplicationBase.cpp
     ${source_root}/platform/FileStream.cpp
     ${source_root}/platform/FileUtils.cpp
-    ${source_root}/platform/GLView.cpp
     ${source_root}/platform/Image.cpp
+    ${source_root}/platform/RenderView.cpp
     ${source_root}/platform/SAXParser.cpp
     ${source_root}/renderer/CallbackCommand.cpp
     ${source_root}/renderer/CustomCommand.cpp
@@ -315,6 +316,7 @@ macro(assign_common_sources)
     ${source_root}/ui/UIListView.cpp
     ${source_root}/ui/UIPageView.cpp
     ${source_root}/ui/UIPageViewIndicator.cpp
+    ${source_root}/ui/UIRichText.cpp
     ${source_root}/ui/UIScale9Sprite.cpp
     ${source_root}/ui/UIScrollView.cpp
     ${source_root}/ui/UIScrollViewBar.cpp
@@ -341,12 +343,15 @@ macro(assign_platform_sources)
   if(target_linux)
     set(
       platform_sources
-      ${source_root}/platform/GLViewImpl.cpp
       ${source_root}/platform/linux/Application-linux.cpp
       ${source_root}/platform/linux/Common-linux.cpp
-      ${source_root}/platform/linux/Device-linux.cpp
       ${source_root}/platform/linux/FileUtils-linux.cpp
       ${source_root}/ui/UIEditBox/UIEditBoxImpl-linux.cpp
+    )
+    set(
+      axmol_platform_individual_sources
+      ${source_root}/platform/linux/Device-linux.cpp
+      ${source_root}/platform/RenderViewImpl.cpp
     )
   elseif(target_android)
     set(
@@ -354,9 +359,9 @@ macro(assign_platform_sources)
       ${source_root}/platform/android/Application-android.cpp
       ${source_root}/platform/android/Common-android.cpp
       ${source_root}/platform/android/Device-android.cpp
-      ${source_root}/platform/android/GLViewImpl-android.cpp
       ${source_root}/platform/android/FileUtils-android.cpp
       ${source_root}/platform/android/javaactivity-android.cpp
+      ${source_root}/platform/android/RenderViewImpl-android.cpp
       ${source_root}/platform/android/jni/JniHelper.cpp
       ${source_root}/platform/android/jni/Java_dev_axmol_lib_AxmolEngine.cpp
       ${source_root}/platform/android/jni/Java_dev_axmol_lib_AxmolRenderer.cpp
@@ -436,6 +441,9 @@ macro(compile_shaders)
     ${source_root}/renderer/shaders/label_normal.frag
     ${source_root}/renderer/shaders/label_outline.frag
     ${source_root}/renderer/shaders/positionColor.frag
+    ${source_root}/renderer/shaders/positionColorLengthTexture.frag
+    ${source_root}/renderer/shaders/positionColorLengthTexture.vert
+    ${source_root}/renderer/shaders/positionColorTextureAsPointsize.vert
     ${source_root}/renderer/shaders/positionTextureColor.frag
     ${source_root}/renderer/shaders/positionTextureColor.vert
     ${source_root}/renderer/shaders/positionTextureColorAlphaTest.frag
