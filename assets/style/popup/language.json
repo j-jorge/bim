@@ -51,6 +51,16 @@
           }
         ],
 
+        "add_language": [
+          "popup/settings/font/small",
+          {
+            "align.horizontal": "center",
+            "link.color": "amber",
+            "text.i18n":
+                "Is your language missing? Add it on <a href='https://hosted.weblate.org/projects/bim/gettext-files/'>Weblate</a>!"
+          }
+        ],
+
         "close_button": [
           "button/back"
         ]
@@ -76,6 +86,16 @@
             "anchor.reference.y": 0.18,
             "width.percents": 95,
             "height.percents": 70
+          }
+        ],
+
+        "add_language": [
+          {
+            "anchor.x": 0.5,
+            "anchor.y": 0.5,
+            "anchor.reference.x": 0.5,
+            "anchor.reference.y": 0.12,
+            "width.percents": 95
           }
         ],
 

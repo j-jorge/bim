@@ -7,21 +7,27 @@
 #include <bim/axmol/app/preference/user_language.hpp>
 
 #include <bim/axmol/widget/factory/label.hpp>
+#include <bim/axmol/widget/factory/rich_text.hpp>
 #include <bim/axmol/widget/implement_widget.hpp>
 #include <bim/axmol/widget/ui/button.hpp>
 #include <bim/axmol/widget/ui/list.hpp>
 #include <bim/axmol/widget/ui/passive_node.hpp>
 
+#include <axmol/ui/UIRichText.h>
+
 #define x_widget_scope bim::axmol::app::language_popup::
 #define x_widget_type_name controls
 #define x_widget_controls                                                     \
   x_widget(bim::axmol::widget::button, close_button)                          \
-      x_widget(bim::axmol::widget::list, list)
+      x_widget(bim::axmol::widget::list, list)                                \
+          x_widget(ax::ui::RichText, add_language)
 
 #include <bim/axmol/widget/implement_controls_struct.hpp>
 
 #include <bim/axmol/input/key_observer_handle.impl.hpp>
+#include <bim/axmol/input/observer/rich_text_glue.hpp>
 #include <bim/axmol/input/observer/single_key_observer.hpp>
+#include <bim/axmol/input/touch_observer_handle.impl.hpp>
 
 #include <bim/axmol/find_child_by_path.hpp>
 
@@ -29,6 +35,7 @@
 #include <iscool/language_name.hpp>
 #include <iscool/preferences/local_preferences.hpp>
 #include <iscool/signals/implement_signal.hpp>
+#include <iscool/system/open_url.hpp>
 
 #include <axmol/2d/Label.h>
 
@@ -55,6 +62,11 @@ bim::axmol::app::language_popup::language_popup(
         new message_popup(context, *style.get_declaration("message-popup")))
   , m_escape(ax::EventKeyboard::KeyCode::KEY_BACK)
 {
+  m_add_language_inputs.reset(
+      new bim::axmol::input::rich_text_glue_handle(*m_controls->add_language));
+
+  m_inputs.attach_to_root(*m_add_language_inputs);
+
   m_inputs.push_back(m_controls->list->input_node());
   m_inputs.push_back(m_controls->close_button->input_node());
   m_inputs.push_back(m_escape);
@@ -67,6 +79,12 @@ bim::axmol::app::language_popup::language_popup(
 
   m_controls->close_button->connect_to_clicked(close);
   m_escape->connect_to_released(close);
+
+  m_controls->add_language->setOpenUrlHandler(
+      [this](std::string_view url)
+      {
+        open_url(url);
+      });
 
   const iscool::style::declaration& list_item_container_style =
       *style.get_declaration("list-item");
@@ -137,4 +155,11 @@ void bim::axmol::app::language_popup::switch_to_language(
       "preference", { { "language", iscool::to_string(language) } });
 
   m_reset();
+}
+
+void bim::axmol::app::language_popup::open_url(std::string_view url)
+{
+  m_context.get_analytics()->event("button",
+                                   { { "id", url }, { "where", "language" } });
+  iscool::system::open_url(std::string(url));
 }

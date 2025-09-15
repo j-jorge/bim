@@ -3,6 +3,7 @@
 
 #include <bim/axmol/widget/declare_controls_struct.hpp>
 
+#include <bim/axmol/input/observer/rich_text_glue_handle.hpp>
 #include <bim/axmol/input/observer/single_key_observer_handle.hpp>
 #include <bim/axmol/input/tree.hpp>
 
@@ -41,11 +42,12 @@ namespace bim::axmol::app
 
     ic_declare_context(
         m_context,
-        ic_context_declare_parent_properties(                      //
-            ((const bim::axmol::widget::context&)(widget_context)) //
-            ((main_scene*)(main_scene))                            //
-            ((analytics_service*)(analytics))                      //
-            ((iscool::preferences::local_preferences*)(local_preferences))),
+        ic_context_declare_parent_properties(                              //
+            ((const bim::axmol::widget::context&)(widget_context))         //
+            ((main_scene*)(main_scene))                                    //
+            ((analytics_service*)(analytics))                              //
+            ((iscool::preferences::local_preferences*)(local_preferences)) //
+            ),
         ic_context_no_properties);
 
   public:
@@ -59,8 +61,10 @@ namespace bim::axmol::app
     void confirm_language(iscool::language_name language);
     void switch_to_language(iscool::language_name language) const;
 
+    void open_url(std::string_view url);
+
   private:
-    bim_declare_controls_struct(controls, m_controls, 2);
+    bim_declare_controls_struct(controls, m_controls, 3);
     const iscool::style::declaration& m_style_bounds;
 
     std::unique_ptr<popup> m_popup;
@@ -68,6 +72,9 @@ namespace bim::axmol::app
 
     bim::axmol::input::single_key_observer_handle m_escape;
     bim::axmol::input::tree m_inputs;
+
+    std::unique_ptr<bim::axmol::input::rich_text_glue_handle>
+        m_add_language_inputs;
 
     iscool::signals::scoped_connection m_message_connexion;
   };

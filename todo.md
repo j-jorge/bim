@@ -1,10 +1,10 @@
 # Next
 
-- Add a link to tell people to contribute a new language.
+- Screen transitions.
+- Game feature submenu.
 
 # Client
 
-- Game feature submenu.
 - At most three enabled features per game.
 - Display the frame duration (without the sleep) in addition to the FPS.
 
