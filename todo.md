@@ -1,6 +1,5 @@
 # Next
 
-- Screen transitions.
 - Game feature submenu.
 
 # Client

@@ -7,6 +7,7 @@ add_library(bim_axmol_core
   main/src/bim/axmol/displayed.cpp
   main/src/bim/axmol/find_child_by_path.cpp
   main/src/bim/axmol/ref_ptr.cpp
+  main/src/bim/axmol/table_2d.cpp
 )
 
 target_include_directories(bim_axmol_core PUBLIC main/include)
@@ -14,6 +15,7 @@ target_include_directories(bim_axmol_core PUBLIC main/include)
 target_link_libraries(
   bim_axmol_core
   PUBLIC
+  bim_core
   axmol::axmol
   iscool_log
   iscool_memory

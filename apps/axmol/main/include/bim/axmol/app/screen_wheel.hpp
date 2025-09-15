@@ -4,9 +4,15 @@
 #include <bim/axmol/input/tree.hpp>
 #include <bim/axmol/widget/declare_controls_struct.hpp>
 
+#include <bim/table_2d.hpp>
+
 #include <iscool/context.hpp>
 #include <iscool/signals/declare_signal.hpp>
 #include <iscool/signals/scoped_connection.hpp>
+
+#include <axmol/math/Vec2.h>
+
+#include <boost/container/flat_map.hpp>
 
 #include <memory>
 #include <string>
@@ -107,6 +113,8 @@ namespace bim::axmol::app
     void wire_permanent_connections();
     void connect_keep_alive();
 
+    void configure_screen_transitions();
+
     void switch_view(ax::Node& new_view);
 
     void animate_lobby_to_matchmaking();
@@ -150,6 +158,11 @@ namespace bim::axmol::app
     std::unique_ptr<online_game> m_online_game;
     std::unique_ptr<end_game> m_end_game;
     std::unique_ptr<shop> m_shop;
+
+    boost::container::flat_map<const ax::Node*, std::uint8_t> m_screen_index;
+    bim::table_2d<ax::Vec2> m_screen_to_screen_direction;
+    boost::container::flat_map<std::uint8_t, void (screen_wheel::*)()>
+        m_displayed;
 
     std::unique_ptr<message_popup> m_message_popup;
 

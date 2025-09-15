@@ -15,6 +15,7 @@
 #include <bim/axmol/widget/add_group_as_children.hpp>
 #include <bim/axmol/widget/apply_bounds.hpp>
 #include <bim/axmol/widget/context.hpp>
+#include <bim/axmol/widget/factory/clipping_rectangle_node.hpp>
 
 #include <bim/net/exchange/game_launch_event.hpp>
 #include <bim/net/exchange/keep_alive_exchange.hpp>
@@ -27,16 +28,23 @@
 #include <iscool/log/nature/info.hpp>
 #include <iscool/signals/implement_signal.hpp>
 
+#include <axmol/2d/ClippingRectangleNode.h>
+
 #define x_widget_scope bim::axmol::app::screen_wheel::
 #define x_widget_type_name controls
 #define x_widget_controls                                                     \
-  x_widget(ax::Node, lobby) x_widget(ax::Node, matchmaking)                   \
-      x_widget(ax::Node, online_game) x_widget(ax::Node, end_game)            \
-          x_widget(ax::Node, shop)
+  x_widget(ax::ClippingRectangleNode, lobby)                                  \
+      x_widget(ax::ClippingRectangleNode, matchmaking)                        \
+          x_widget(ax::ClippingRectangleNode, online_game)                    \
+              x_widget(ax::ClippingRectangleNode, end_game)                   \
+                  x_widget(ax::ClippingRectangleNode, shop)
 #include <bim/axmol/widget/implement_controls_struct.hpp>
 
 #include <iscool/system/keep_screen_on.hpp>
 
+#include <axmol/2d/ActionEase.h>
+#include <axmol/2d/ActionInstant.h>
+#include <axmol/2d/ActionInterval.h>
 #include <axmol/2d/Node.h>
 #include <axmol/base/Director.h>
 
@@ -120,6 +128,16 @@ bim::axmol::app::screen_wheel::screen_wheel(
           });
 
   connect_keep_alive();
+
+  configure_screen_transitions();
+
+  const ax::Rect clipping_region(ax::Vec2(0, 0),
+                                 m_main_container->getContentSize());
+  m_controls->lobby->setClippingRegion(clipping_region);
+  m_controls->shop->setClippingRegion(clipping_region);
+  m_controls->matchmaking->setClippingRegion(clipping_region);
+  m_controls->online_game->setClippingRegion(clipping_region);
+  m_controls->end_game->setClippingRegion(clipping_region);
 
   // Start on the lobby, In the initial state
   m_active_view = m_controls->lobby;
@@ -207,11 +225,85 @@ void bim::axmol::app::screen_wheel::connect_keep_alive()
   m_keep_alive->start(session_handler.session_id());
 }
 
+void bim::axmol::app::screen_wheel::configure_screen_transitions()
+{
+  const ax::Node* const lobby = m_controls->lobby;
+  const ax::Node* const shop = m_controls->shop;
+  const ax::Node* const matchmaking = m_controls->matchmaking;
+  const ax::Node* const online_game = m_controls->online_game;
+  const ax::Node* const end_game = m_controls->end_game;
+
+  m_screen_index[lobby] = m_screen_index.size();
+  m_screen_index[shop] = m_screen_index.size();
+  m_screen_index[matchmaking] = m_screen_index.size();
+  m_screen_index[online_game] = m_screen_index.size();
+  m_screen_index[end_game] = m_screen_index.size();
+
+  m_displayed[m_screen_index[lobby]] = &screen_wheel::lobby_displayed;
+  m_displayed[m_screen_index[shop]] = &screen_wheel::shop_displayed;
+  m_displayed[m_screen_index[matchmaking]] =
+      &screen_wheel::matchmaking_displayed;
+  m_displayed[m_screen_index[online_game]] =
+      &screen_wheel::online_game_displayed;
+  m_displayed[m_screen_index[end_game]] = &screen_wheel::end_game_displayed;
+
+  m_screen_to_screen_direction = bim::table_2d<ax::Vec2>(
+      m_screen_index.size(), m_screen_index.size(), ax::Vec2(1, 0));
+
+  const auto set_screen_direction =
+      [this](const ax::Node* from, const ax::Node* to, float dx, float dy)
+  {
+    m_screen_to_screen_direction(m_screen_index[from], m_screen_index[to]) =
+        ax::Vec2(dx, dy);
+    m_screen_to_screen_direction(m_screen_index[to], m_screen_index[from]) =
+        ax::Vec2(-dx, -dy);
+  };
+
+  set_screen_direction(lobby, shop, -1, 0);
+  set_screen_direction(lobby, matchmaking, 1, 0);
+  set_screen_direction(matchmaking, online_game, 0, 1);
+  set_screen_direction(online_game, lobby, 0, -1);
+  set_screen_direction(online_game, end_game, 0, -1);
+  set_screen_direction(end_game, matchmaking, -1, 0);
+  set_screen_direction(end_game, lobby, -1, 0);
+}
+
 void bim::axmol::app::screen_wheel::switch_view(ax::Node& new_view)
 {
-  m_active_view->removeFromParent();
-  m_active_view = &new_view;
-  m_main_container->addChild(m_active_view);
+  assert(&new_view != m_active_view);
+
+  m_main_container->addChild(&new_view);
+
+  const ax::Vec2& direction_to_initial_position = m_screen_to_screen_direction(
+      m_screen_index[m_active_view], m_screen_index[&new_view]);
+
+  const ax::Vec2 size = m_main_container->getContentSize();
+  assert(new_view.getContentSize() == size);
+
+  const ax::Vec2 half_size = size / 2;
+  const ax::Vec2 start_middle =
+      half_size + direction_to_initial_position * size;
+  const ax::Vec2 start_position =
+      start_middle - (half_size - size * new_view.getAnchorPoint());
+  const ax::Vec2 enter_translation = -direction_to_initial_position * size;
+  const float animation_duration = 0.4;
+
+  new_view.setPosition(start_position);
+
+  new_view.runAction(ax::EaseSineInOut::create(
+      ax::MoveBy::create(animation_duration, enter_translation)));
+
+  const auto remove_old_view = [this, &new_view]() -> void
+  {
+    m_active_view->removeFromParent();
+    m_active_view = &new_view;
+    (this->*m_displayed[m_screen_index[&new_view]])();
+  };
+
+  m_active_view->runAction(
+      ax::Sequence::create(ax::EaseSineInOut::create(ax::MoveBy::create(
+                               animation_duration, enter_translation)),
+                           ax::CallFunc::create(remove_old_view), nullptr));
 }
 
 void bim::axmol::app::screen_wheel::animate_lobby_to_matchmaking()
@@ -286,7 +378,6 @@ void bim::axmol::app::screen_wheel::display_lobby()
 
   m_lobby->displaying();
   switch_view(*m_controls->lobby);
-  lobby_displayed();
 }
 
 void bim::axmol::app::screen_wheel::lobby_displayed()
@@ -299,10 +390,8 @@ void bim::axmol::app::screen_wheel::display_matchmaking()
 {
   m_context.get_analytics()->screen("matchmaking");
 
-  switch_view(*m_controls->matchmaking);
   m_matchmaking->displaying();
-
-  matchmaking_displayed();
+  switch_view(*m_controls->matchmaking);
 }
 
 void bim::axmol::app::screen_wheel::matchmaking_displayed()
@@ -319,11 +408,9 @@ void bim::axmol::app::screen_wheel::display_online_game(
       "online-game",
       { { "player-count", std::to_string(event.fingerprint.player_count) } });
 
-  switch_view(*m_controls->online_game);
   m_online_game->displaying(event);
   m_end_game->game_started(event);
-
-  online_game_displayed();
+  switch_view(*m_controls->online_game);
 }
 
 void bim::axmol::app::screen_wheel::online_game_displayed()
@@ -340,10 +427,8 @@ void bim::axmol::app::screen_wheel::display_end_game(
       "end-game", { { "coins", std::to_string(coins_balance(
                                    *m_context.get_local_preferences())) } });
 
-  switch_view(*m_controls->end_game);
   m_end_game->displaying(result);
-
-  end_game_displayed();
+  switch_view(*m_controls->end_game);
 }
 
 void bim::axmol::app::screen_wheel::end_game_displayed()
@@ -355,10 +440,8 @@ void bim::axmol::app::screen_wheel::end_game_displayed()
 
 void bim::axmol::app::screen_wheel::display_shop()
 {
-  switch_view(*m_controls->shop);
   m_shop->displaying();
-
-  shop_displayed();
+  switch_view(*m_controls->shop);
 }
 
 void bim::axmol::app::screen_wheel::shop_displayed()

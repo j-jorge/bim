@@ -163,13 +163,14 @@ void bim::axmol::app::shop::attached()
 
 void bim::axmol::app::shop::displaying()
 {
+  m_wallet->enter();
+
   if (m_index_in_products.empty())
     fetch_products();
 }
 
 void bim::axmol::app::shop::displayed()
 {
-  m_wallet->enter();
   m_shop->refresh_purchases();
 }
 
