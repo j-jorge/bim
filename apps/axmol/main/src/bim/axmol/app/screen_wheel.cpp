@@ -46,10 +46,6 @@
 #include <axmol/2d/ActionInstant.h>
 #include <axmol/2d/ActionInterval.h>
 #include <axmol/2d/Node.h>
-#include <axmol/base/Director.h>
-
-static constexpr int g_fps_in_menus = 30;
-static constexpr int g_fps_in_game = 60;
 
 IMPLEMENT_SIGNAL(bim::axmol::app::screen_wheel, reset, m_reset)
 
@@ -73,8 +69,6 @@ bim::axmol::app::screen_wheel::screen_wheel(
 
   m_online_game.reset(
       new online_game(m_context, *style.get_declaration("online-game")));
-
-  ax::Director::getInstance()->setAnimationInterval(1.f / g_fps_in_menus);
 
   m_context.get_main_scene()->add_in_main_canvas(*m_main_container,
                                                  m_inputs.root());
@@ -286,11 +280,11 @@ void bim::axmol::app::screen_wheel::switch_view(ax::Node& new_view)
   const ax::Vec2 start_position =
       start_middle - (half_size - size * new_view.getAnchorPoint());
   const ax::Vec2 enter_translation = -direction_to_initial_position * size;
-  const float animation_duration = 0.4;
+  const float animation_duration = 0.5;
 
   new_view.setPosition(start_position);
 
-  new_view.runAction(ax::EaseSineInOut::create(
+  new_view.runAction(ax::EaseCircleActionOut::create(
       ax::MoveBy::create(animation_duration, enter_translation)));
 
   const auto remove_old_view = [this, &new_view]() -> void
@@ -301,7 +295,7 @@ void bim::axmol::app::screen_wheel::switch_view(ax::Node& new_view)
   };
 
   m_active_view->runAction(
-      ax::Sequence::create(ax::EaseSineInOut::create(ax::MoveBy::create(
+      ax::Sequence::create(ax::EaseCircleActionOut::create(ax::MoveBy::create(
                                animation_duration, enter_translation)),
                            ax::CallFunc::create(remove_old_view), nullptr));
 }
@@ -334,8 +328,6 @@ void bim::axmol::app::screen_wheel::animate_matchmaking_to_lobby()
 void bim::axmol::app::screen_wheel::animate_game_to_end_game(
     const bim::game::contest_result& result)
 {
-  ax::Director::getInstance()->setAnimationInterval(1.f / g_fps_in_menus);
-
   m_inputs.erase(m_online_game->input_node());
   m_online_game->closing();
   display_end_game(result);
@@ -415,7 +407,6 @@ void bim::axmol::app::screen_wheel::display_online_game(
 
 void bim::axmol::app::screen_wheel::online_game_displayed()
 {
-  ax::Director::getInstance()->setAnimationInterval(1.f / g_fps_in_game);
   m_inputs.push_back(m_online_game->input_node());
   m_online_game->displayed();
 }
