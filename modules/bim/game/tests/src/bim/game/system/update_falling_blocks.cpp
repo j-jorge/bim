@@ -95,10 +95,33 @@ TEST(bim_game_update_falling_blocks, triggers_the_bombs)
       registry.storage<bim::game::dead>().contains(falling_block_entity));
   EXPECT_TRUE(registry.storage<bim::game::dead>().contains(bomb_entity));
 
-  const entt::entity flame_entity =
-      arena.entity_at(position.x + 1, position.y);
-  ASSERT_TRUE(registry.valid(flame_entity));
-  EXPECT_TRUE(registry.storage<bim::game::flame>().contains(flame_entity));
+  bool flame_left = false;
+  bool flame_right = false;
+  bool flame_down = false;
+
+  registry.view<bim::game::flame, bim::game::position_on_grid>().each(
+      [&](const bim::game::flame&, const bim::game::position_on_grid& p)
+      {
+        if ((p.x == position.x + 1) && (p.y == position.y))
+          {
+            EXPECT_FALSE(flame_right);
+            flame_right = true;
+          }
+        else if ((p.x == position.x - 1) && (p.y == position.y))
+          {
+            EXPECT_FALSE(flame_left);
+            flame_left = true;
+          }
+        else if ((p.x == position.x) && (p.y == position.y + 1))
+          {
+            EXPECT_FALSE(flame_down);
+            flame_down = true;
+          }
+      });
+
+  EXPECT_TRUE(flame_left);
+  EXPECT_TRUE(flame_right);
+  EXPECT_TRUE(flame_down);
 }
 
 TEST(bim_game_update_falling_blocks, kills_the_players)

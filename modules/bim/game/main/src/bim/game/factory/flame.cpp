@@ -4,6 +4,7 @@
 #include <bim/game/component/flame.hpp>
 #include <bim/game/component/position_on_grid.hpp>
 #include <bim/game/component/timer.hpp>
+#include <bim/game/constant/flame_duration.hpp>
 
 #include <entt/entity/registry.hpp>
 
@@ -12,8 +13,7 @@ entt::entity bim::game::flame_factory(entt::registry& registry, std::uint8_t x,
                                       flame_direction direction,
                                       flame_segment segment)
 {
-  return flame_factory(registry, x, y, direction, segment,
-                       std::chrono::milliseconds(800));
+  return flame_factory(registry, x, y, direction, segment, g_flame_duration);
 }
 
 entt::entity bim::game::flame_factory(entt::registry& registry, std::uint8_t x,

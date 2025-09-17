@@ -1,25 +1,22 @@
 configure_file(version.hpp.in include/bim/version.hpp @ONLY)
 configure_file(tracy.hpp.in include/bim/tracy.hpp @ONLY)
 
+set(library_files "main/src/bim/template_instantiations.cpp")
+
 if (BIM_ENABLE_TRACY)
-  set(library_type STATIC)
-  set(visibility PUBLIC)
-  set(library_files "main/src/bim/new_delete.cpp")
-else()
-  set(library_type INTERFACE)
-  set(visibility INTERFACE)
+  set(library_files ${library_files} "main/src/bim/new_delete.cpp")
 endif()
 
-add_library(bim_core ${library_type} ${library_files})
+add_library(bim_core STATIC ${library_files})
 target_include_directories(
   bim_core
-  ${visibility}
+  PUBLIC
   main/include
   ${CMAKE_CURRENT_BINARY_DIR}/include
 )
 
 if (BIM_ENABLE_TRACY)
-  target_link_libraries(bim_core ${visibility} Tracy::TracyClient)
+  target_link_libraries(bim_core PUBLIC Tracy::TracyClient)
 endif()
 
 if (NOT BIM_BUILD_TESTS)

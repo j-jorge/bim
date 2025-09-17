@@ -17,6 +17,8 @@
 
 # Nice to have
 
+- Add a timed_to_death component: dead when timer is zero.
+- Build maps of entities instead of relying on the arena object.
 - Set UBSAN_OPTIONS and co. to stop the tests on failure.
 - Why does --console-log on server-tests only works for the first test?
 - Robots, for the tests.

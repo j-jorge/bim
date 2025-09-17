@@ -19,6 +19,7 @@
 #include <bim/game/system/animator.hpp>
 #include <bim/game/system/apply_player_action.hpp>
 #include <bim/game/system/arena_reduction.hpp>
+#include <bim/game/system/flame_updater.hpp>
 #include <bim/game/system/fog_of_war_updater.hpp>
 #include <bim/game/system/refresh_bomb_inventory.hpp>
 #include <bim/game/system/remove_dead_objects.hpp>
@@ -27,7 +28,6 @@
 #include <bim/game/system/update_brick_walls.hpp>
 #include <bim/game/system/update_falling_blocks.hpp>
 #include <bim/game/system/update_flame_power_ups.hpp>
-#include <bim/game/system/update_flames.hpp>
 #include <bim/game/system/update_invincibility_state.hpp>
 #include <bim/game/system/update_invisibility_power_ups.hpp>
 #include <bim/game/system/update_invisibility_state.hpp>
@@ -179,6 +179,8 @@ bim::game::contest::contest(const contest_fingerprint& fingerprint,
                    fingerprint.seed);
 
   m_arena_reduction.reset(new arena_reduction(*m_arena));
+  m_flame_updater.reset(
+      new flame_updater(fingerprint.arena_width, fingerprint.arena_height));
   m_fog_of_war.reset(
       new fog_of_war_updater(*m_registry, *m_arena, fingerprint.player_count));
 }
@@ -203,7 +205,7 @@ bim::game::contest_result bim::game::contest::tick()
   update_falling_blocks(*m_context, *m_registry, *m_arena);
   update_bombs(*m_registry, *m_arena);
 
-  update_flames(*m_registry, *m_arena);
+  m_flame_updater->update(*m_registry, *m_arena);
   update_invincibility_state(*m_registry);
   update_shields(*m_registry);
 

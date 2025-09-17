@@ -32,9 +32,6 @@ static std::vector<std::string> flames_map(const bim::game::arena& arena,
       [&](entt::entity e, bim::game::flame f,
           bim::game::position_on_grid p) -> void
       {
-        EXPECT_TRUE(arena.entity_at(p.x, p.y) == e);
-        EXPECT_EQ(' ', result[p.y][p.x]);
-
         if (f.segment == bim::game::flame_segment::origin)
           result[p.y][p.x] = 'B';
         else if (bim::game::is_horizontal(f.direction))
@@ -125,6 +122,55 @@ TEST(update_bombs, explode_strength_5)
   EXPECT_EQ("     v     ", flames[10]);
 }
 
+TEST(update_bombs, stop_at_old_bomb)
+{
+  entt::registry registry;
+  bim::game::arena arena(11, 11);
+  constexpr std::uint8_t player_index = 0;
+
+  bim::game::bomb_factory(registry, 2, 5, 1, player_index,
+                          std::chrono::milliseconds(1));
+  bim::game::bomb_factory(registry, 8, 5, 1, player_index,
+                          std::chrono::milliseconds(1));
+  bim::game::bomb_factory(registry, 5, 2, 1, player_index,
+                          std::chrono::milliseconds(1));
+  bim::game::bomb_factory(registry, 5, 8, 1, player_index,
+                          std::chrono::milliseconds(1));
+  bim::game::bomb_factory(registry, 5, 5, 11, player_index,
+                          std::chrono::milliseconds(2));
+
+  bim::game::update_timers(registry, std::chrono::milliseconds(1));
+  bim::game::update_bombs(registry, arena);
+
+  std::vector<std::string> flames = flames_map(arena, registry);
+  EXPECT_EQ("           ", flames[0]);
+  EXPECT_EQ("     v     ", flames[1]);
+  EXPECT_EQ("    hBh    ", flames[2]);
+  EXPECT_EQ("     v     ", flames[3]);
+  EXPECT_EQ("  v     v  ", flames[4]);
+  EXPECT_EQ(" hBh   hBh ", flames[5]);
+  EXPECT_EQ("  v     v  ", flames[6]);
+  EXPECT_EQ("     v     ", flames[7]);
+  EXPECT_EQ("    hBh    ", flames[8]);
+  EXPECT_EQ("     v     ", flames[9]);
+  EXPECT_EQ("           ", flames[10]);
+
+  bim::game::update_timers(registry, std::chrono::milliseconds(1));
+  bim::game::update_bombs(registry, arena);
+  flames = flames_map(arena, registry);
+  EXPECT_EQ("           ", flames[0]);
+  EXPECT_EQ("     v     ", flames[1]);
+  EXPECT_EQ("    hBh    ", flames[2]);
+  EXPECT_EQ("     v     ", flames[3]);
+  EXPECT_EQ("  v  V  v  ", flames[4]);
+  EXPECT_EQ(" hBhHBHhBh ", flames[5]);
+  EXPECT_EQ("  v  V  v  ", flames[6]);
+  EXPECT_EQ("     v     ", flames[7]);
+  EXPECT_EQ("    hBh    ", flames[8]);
+  EXPECT_EQ("     v     ", flames[9]);
+  EXPECT_EQ("           ", flames[10]);
+}
+
 TEST(update_bombs, chain_reaction)
 {
   entt::registry registry;
@@ -134,13 +180,13 @@ TEST(update_bombs, chain_reaction)
 
   /*
     Bombs:
-    .........
-    .........
-    .........
-    ...xx.x..
-    .........
-    ....x.x..
-    .........
+    ........
+    ........
+    ........
+    ...xx.x.
+    ........
+    ....x.x.
+    ........
   */
   arena.put_entity(3, 3,
                    bim::game::bomb_factory(registry, 3, 3, strength,
@@ -193,27 +239,186 @@ TEST(update_bombs, chain_reaction)
   bim::game::update_bombs(registry, arena);
   bim::game::remove_dead_objects(registry);
 
-  flames = flames_map(arena, registry);
-  EXPECT_EQ("        ", flames[0]);
-  EXPECT_EQ("   vv v ", flames[1]);
-  EXPECT_EQ("   VV V ", flames[2]);
-  EXPECT_EQ(" hHBBHBH", flames[3]);
-  EXPECT_EQ("   VV V ", flames[4]);
-  EXPECT_EQ("   vBH  ", flames[5]);
-  EXPECT_EQ("    V   ", flames[6]);
+  {
+    const char* const expected[] = { "        ", //
+                                     "   vv v ", //
+                                     "   VV V ", //
+                                     " hHBBHBH", //
+                                     "   VV V ", //
+                                     "  hvBH  ", //
+                                     "    V   " };
+    const char* const variant_5 = "  hHBH  ";
+
+    flames = flames_map(arena, registry);
+    EXPECT_EQ(expected[0], flames[0]);
+    EXPECT_EQ(expected[1], flames[1]);
+    EXPECT_EQ(expected[2], flames[2]);
+    EXPECT_EQ(expected[3], flames[3]);
+    EXPECT_EQ(expected[4], flames[4]);
+    EXPECT_TRUE((expected[5] == flames[5]) || (variant_5 == flames[5]))
+        << "expected='" << expected[5] << "', variant='" << variant_5
+        << "', flames='" << flames[5] << '\'';
+    EXPECT_EQ(expected[6], flames[6]);
+  }
 
   bim::game::update_timers(registry, std::chrono::milliseconds(10));
   bim::game::update_bombs(registry, arena);
   bim::game::remove_dead_objects(registry);
 
-  flames = flames_map(arena, registry);
-  EXPECT_EQ("        ", flames[0]);
-  EXPECT_EQ("   vv v ", flames[1]);
-  EXPECT_EQ("   VV V ", flames[2]);
-  EXPECT_EQ(" hHBBHBH", flames[3]);
-  EXPECT_EQ("   VV V ", flames[4]);
-  EXPECT_EQ("   vBHBH", flames[5]);
-  EXPECT_EQ("    V V ", flames[6]);
+  {
+    const char* const expected[] = { "        ", //
+                                     "   vv v ", //
+                                     "   VV V ", //
+                                     " hHBBHBH", //
+                                     "   VV V ", //
+                                     "  hvBHBH", //
+                                     "    V V " };
+    const char* const variant_5 = "  hHBHBH";
+
+    flames = flames_map(arena, registry);
+    EXPECT_EQ(expected[0], flames[0]);
+    EXPECT_EQ(expected[1], flames[1]);
+    EXPECT_EQ(expected[2], flames[2]);
+    EXPECT_EQ(expected[3], flames[3]);
+    EXPECT_EQ(expected[4], flames[4]);
+    EXPECT_TRUE((expected[5] == flames[5]) || (variant_5 == flames[5]))
+        << "expected='" << expected[5] << "', variant='" << variant_5
+        << "', flames='" << flames[5] << '\'';
+    EXPECT_EQ(expected[6], flames[6]);
+  }
+}
+
+TEST(update_bombs, flame_intersections_simultaneous)
+{
+  entt::registry registry;
+  bim::game::arena arena(9, 7);
+  constexpr std::uint8_t strength = 3;
+  constexpr std::uint8_t player_index = 0;
+
+  /*
+    Bombs:
+    .........
+    .........
+    .........
+    ....x....
+    .........
+    ......x..
+    .........
+  */
+  arena.put_entity(4, 3,
+                   bim::game::bomb_factory(registry, 4, 3, strength,
+                                           player_index,
+                                           std::chrono::milliseconds(20)));
+  arena.put_entity(6, 5,
+                   bim::game::bomb_factory(registry, 6, 5, strength,
+                                           player_index,
+                                           std::chrono::milliseconds(20)));
+
+  bim::game::update_timers(registry, std::chrono::milliseconds(20));
+  bim::game::update_bombs(registry, arena);
+  bim::game::remove_dead_objects(registry);
+
+  const char* const expected[7] = { "    v    ", //
+                                    "    V    ", //
+                                    "    V v  ", //
+                                    " hHHBHHh ", //
+                                    "    V V  ", //
+                                    "   hVHBHH", //
+                                    "    v V  " };
+  const char* const variant_3 = " hHHBHVh ";
+  const char* const variant_5 = "   hHHBHH";
+
+  const std::vector<std::string> flames = flames_map(arena, registry);
+  EXPECT_EQ(expected[0], flames[0]);
+  EXPECT_EQ(expected[1], flames[1]);
+  EXPECT_EQ(expected[2], flames[2]);
+  EXPECT_TRUE((expected[3] == flames[3]) || (variant_3 == flames[3]))
+      << "expected='" << expected[3] << "', variant=" << variant_3
+      << "', flames='" << flames[3] << '\'';
+  EXPECT_EQ(expected[4], flames[4]);
+  EXPECT_TRUE((expected[5] == flames[5]) || (variant_5 == flames[5]))
+      << "expected='" << expected[5] << "', variant='" << variant_5
+      << "', flames='" << flames[5] << '\'';
+  EXPECT_EQ(expected[6], flames[6]);
+}
+
+TEST(update_bombs, flame_intersections_sequential)
+{
+  entt::registry registry;
+  bim::game::arena arena(9, 7);
+  constexpr std::uint8_t strength = 3;
+  constexpr std::uint8_t player_index = 0;
+
+  /*
+    Bombs:
+    .........
+    .........
+    .........
+    ....x....
+    .........
+    ......x..
+    .........
+  */
+  arena.put_entity(4, 3,
+                   bim::game::bomb_factory(registry, 4, 3, strength,
+                                           player_index,
+                                           std::chrono::milliseconds(20)));
+  arena.put_entity(6, 5,
+                   bim::game::bomb_factory(registry, 6, 5, strength,
+                                           player_index,
+                                           std::chrono::milliseconds(21)));
+
+  bim::game::update_timers(registry, std::chrono::milliseconds(20));
+  bim::game::update_bombs(registry, arena);
+  bim::game::remove_dead_objects(registry);
+
+  {
+    const char* const expected[7] = { "    v    ", //
+                                      "    V    ", //
+                                      "    V    ", //
+                                      " hHHBHHh ", //
+                                      "    V    ", //
+                                      "    V    ", //
+                                      "    v    " };
+
+    const std::vector<std::string> flames = flames_map(arena, registry);
+    EXPECT_EQ(expected[0], flames[0]);
+    EXPECT_EQ(expected[1], flames[1]);
+    EXPECT_EQ(expected[2], flames[2]);
+    EXPECT_EQ(expected[3], flames[3]);
+    EXPECT_EQ(expected[4], flames[4]);
+    EXPECT_EQ(expected[5], flames[5]);
+    EXPECT_EQ(expected[6], flames[6]);
+  }
+
+  bim::game::update_timers(registry, std::chrono::milliseconds(1));
+  bim::game::update_bombs(registry, arena);
+  bim::game::remove_dead_objects(registry);
+
+  {
+    const char* const expected[7] = { "    v    ", //
+                                      "    V    ", //
+                                      "    V v  ", //
+                                      " hHHBHHh ", //
+                                      "    V V  ", //
+                                      "   hVHBHH", //
+                                      "    v V  " };
+    const char* const variant_3 = " hHHBHVh";
+    const char* const variant_5 = "   hHHBHH";
+
+    const std::vector<std::string> flames = flames_map(arena, registry);
+    EXPECT_EQ(expected[0], flames[0]);
+    EXPECT_EQ(expected[1], flames[1]);
+    EXPECT_EQ(expected[2], flames[2]);
+    EXPECT_TRUE((expected[3] == flames[3]) || (variant_3 == flames[3]))
+        << "expected='" << expected[3] << "', variant=" << variant_3
+        << "', flames='" << flames[3] << '\'';
+    EXPECT_EQ(expected[4], flames[4]);
+    EXPECT_TRUE((expected[5] == flames[5]) || (variant_5 == flames[5]))
+        << "expected='" << expected[5] << "', variant='" << variant_5
+        << "', flames='" << flames[5] << '\'';
+    EXPECT_EQ(expected[6], flames[6]);
+  }
 }
 
 TEST(update_bombs, burning_walls)

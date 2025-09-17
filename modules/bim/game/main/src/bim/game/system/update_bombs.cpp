@@ -6,9 +6,11 @@
 #include <bim/game/component/bomb.hpp>
 #include <bim/game/component/burning.hpp>
 #include <bim/game/component/dead.hpp>
+#include <bim/game/component/flame_blocker.hpp>
 #include <bim/game/component/flame_direction.hpp>
 #include <bim/game/component/position_on_grid.hpp>
 #include <bim/game/component/timer.hpp>
+#include <bim/game/constant/flame_duration.hpp>
 #include <bim/game/factory/flame.hpp>
 
 #include <entt/entity/registry.hpp>
@@ -31,8 +33,7 @@ static bool burn(entt::registry& registry, bim::game::arena& arena,
       return false;
     }
   else
-    arena.put_entity(
-        x, y, bim::game::flame_factory(registry, x, y, direction, segment));
+    bim::game::flame_factory(registry, x, y, direction, segment);
 
   return true;
 }
@@ -79,10 +80,17 @@ static void create_flames(entt::registry& registry, bim::game::arena& arena,
       break;
 
   // Starting point, the direction does not matter.
-  arena.put_entity(p.x, p.y,
-                   bim::game::flame_factory(registry, p.x, p.y,
-                                            bim::game::flame_direction::up,
-                                            bim::game::flame_segment::origin));
+  bim::game::flame_factory(registry, p.x, p.y, bim::game::flame_direction::up,
+                           bim::game::flame_segment::origin);
+
+  // Put something where the bomb was, in order to stop the propagation of the
+  // future flames until the current one is off.
+  const entt::entity e = registry.create();
+  registry.emplace<bim::game::position_on_grid>(e, p);
+  registry.emplace<bim::game::timer>(e, bim::game::g_flame_duration);
+  registry.emplace<bim::game::flame_blocker>(e);
+
+  arena.put_entity(p.x, p.y, e);
 }
 
 void bim::game::update_bombs(entt::registry& registry, arena& arena)

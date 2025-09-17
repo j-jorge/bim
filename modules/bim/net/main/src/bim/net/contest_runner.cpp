@@ -15,6 +15,7 @@
 #include <bim/game/component/dead.hpp>
 #include <bim/game/component/falling_block.hpp>
 #include <bim/game/component/flame.hpp>
+#include <bim/game/component/flame_blocker.hpp>
 #include <bim/game/component/flame_power_up.hpp>
 #include <bim/game/component/flame_power_up_spawner.hpp>
 #include <bim/game/component/fog_of_war.hpp>
@@ -309,6 +310,7 @@ void bim::net::contest_runner::archive_io(Snapshot&& snapshot,
       .template get<bim::game::dead>(archive)
       .template get<bim::game::falling_block>(archive)
       .template get<bim::game::flame>(archive)
+      .template get<bim::game::flame_blocker>(archive)
       .template get<bim::game::flame_power_up>(archive)
       .template get<bim::game::flame_power_up_spawner>(archive)
       .template get<bim::game::fog_of_war>(archive)

@@ -16,6 +16,7 @@ namespace bim::game
   class arena_reduction;
   class contest_result;
   class context;
+  class flame_updater;
   class fog_of_war_updater;
   struct contest_fingerprint;
   struct fog_of_war;
@@ -50,6 +51,7 @@ namespace bim::game
     std::unique_ptr<bim::game::arena> m_arena;
 
     std::unique_ptr<arena_reduction> m_arena_reduction;
+    std::unique_ptr<flame_updater> m_flame_updater;
     std::unique_ptr<fog_of_war_updater> m_fog_of_war;
   };
 }

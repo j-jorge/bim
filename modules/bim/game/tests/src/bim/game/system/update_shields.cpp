@@ -15,7 +15,7 @@
 #include <bim/game/context/player_animations.hpp>
 #include <bim/game/factory/flame.hpp>
 #include <bim/game/factory/player.hpp>
-#include <bim/game/system/update_flames.hpp>
+#include <bim/game/system/flame_updater.hpp>
 #include <bim/game/system/update_players.hpp>
 
 #include <entt/entity/registry.hpp>
@@ -53,7 +53,8 @@ TEST(bim_game_update_shields, save_player_from_first_hit)
   EXPECT_EQ(player_animations.idle_down, animations.model);
   EXPECT_TRUE(bim::game::has_shield(registry, player_entity));
 
-  bim::game::update_flames(registry, arena);
+  bim::game::flame_updater(arena.width(), arena.height())
+      .update(registry, arena);
   EXPECT_TRUE(registry.storage<bim::game::burning>().contains(player_entity));
   EXPECT_TRUE(bim::game::has_shield(registry, player_entity));
 
