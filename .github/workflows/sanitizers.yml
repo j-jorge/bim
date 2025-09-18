@@ -23,18 +23,13 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Set strings
-        id: strings
-        run: |
-          echo "target_platform=linux" >> "$GITHUB_OUTPUT"
+        uses: actions/checkout@v4
 
       - name: Install dependencies
         run: >
           ./ci/install-minimal-environment.sh
           --compiler g++
-          --target-platform ${{steps.strings.outputs.target_platform}}
+          --target-platform linux
 
       # Older versions of ThreadSanitizer are not compatible with ASLR
       # on some recent Linux distributions, thus we reduce the entropy
@@ -47,7 +42,7 @@ jobs:
       - name: Launch build
         run: >
           ./setup.sh
-          --target-platform ${{steps.strings.outputs.target_platform}}
+          --target-platform linux
           --build-type ${{matrix.build_type}}
 
       - name: Archive artifacts

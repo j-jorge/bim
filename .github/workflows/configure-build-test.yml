@@ -32,23 +32,18 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Set strings
-        id: strings
-        run: |
-          echo "target_platform=linux" >> "$GITHUB_OUTPUT"
+        uses: actions/checkout@v4
 
       - name: Install dependencies
         run: >
           ./ci/install-minimal-environment.sh
           --compiler ${{matrix.compiler}}
-          --target-platform ${{steps.strings.outputs.target_platform}}
+          --target-platform linux
 
       - name: Launch build
         run: >
           ./setup.sh
-          --target-platform ${{steps.strings.outputs.target_platform}}
+          --target-platform linux
           --build-type ${{matrix.build_type}} ${{matrix.maybe_incremental}}
 
       # Valgrind tests runs for a single configuration only because

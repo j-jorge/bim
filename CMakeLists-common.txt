@@ -17,7 +17,10 @@ find_package(Boost 1.82.0 REQUIRED)
 find_package(EnTT 3.11.1 REQUIRED)
 find_package(fmt 10.2.1 REQUIRED)
 find_package(GTest 1.13.0 REQUIRED)
-find_package(Tracy REQUIRED)
+
+if(BIM_ENABLE_TRACY)
+  find_package(Tracy REQUIRED)
+endif()
 
 set(iscool_components
   audio

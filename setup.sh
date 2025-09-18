@@ -16,6 +16,7 @@ tag=
 build_steps=()
 all_build_steps=(dependencies configure build test)
 foss_only=0
+product_mode=0
 
 export bim_host_prefix="$host_prefix"
 export PATH="$script_dir/setup/bin/:$PATH"
@@ -58,6 +59,8 @@ Where OPTIONS is
   --incremental
      Do an incremental build, i.e. disable the unity build. This is
      useful if you need your build to take longer than necessary.
+  --product
+     Do not build the developer's tools.
   --target-platform P
      Build for platform P (either linux or android).
   --tag T
@@ -117,6 +120,9 @@ do
             ;;
         --incremental)
             incremental_build=1
+            ;;
+        --product)
+            product_mode=1
             ;;
         --tag)
             if (( $# == 0 ))
@@ -227,6 +233,16 @@ set_up_host_prefix()
     . "$python_virtual_environment_path"/bin/activate
 }
 
+unset_android_environment_variables()
+{
+    # We use the SDK from our internal dependency scripts.
+    unset ANDROID_HOME
+    unset ANDROID_NDK
+    unset ANDROID_NDK_HOME
+    unset ANDROID_SDK
+    unset ANDROID_SDK_ROOT
+}
+
 install_dependencies()
 (
     export backroom
@@ -235,6 +251,7 @@ install_dependencies()
     export bim_package_install_platform="$3"
     export bim_packages_root="$backroom"/packages
     export bim_target_platform="$target_platform"
+    export bim_product_mode="$product_mode"
 
     grep --invert-match "^#" "$4" \
         | while read -r script
@@ -382,6 +399,11 @@ launch_tests()
 }
 
 set_up_host_prefix
+
+if [[ "$target_platform" = "android" ]]
+then
+    unset_android_environment_variables
+fi
 
 export bim_app_prefix="$backroom"/"$target_platform"-"$build_type"
 mkdir --parents "$bim_app_prefix"

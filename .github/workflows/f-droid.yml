@@ -1,5 +1,5 @@
 ---
-name: Android
+name: F-Droid Pre-Release
 
 on:
   push:
@@ -15,11 +15,7 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    container: "ubuntu:25.04"
-
-    strategy:
-      matrix:
-        build_type: [debug, release]
+    container: "registry.gitlab.com/fdroid/fdroidserver:buildserver-bookworm"
 
     steps:
       - name: Checkout repository
@@ -30,35 +26,27 @@ jobs:
           ./ci/install-minimal-environment.sh
           --compiler g++
           --target-platform android
-          ;
 
-      - if: ${{matrix.build_type == 'debug'}}
-        name: Initialize debug keystore
-        run: >
-          ./ci/initialize-android-keystore.sh
-          --build-type ${{matrix.build_type}}
-          --output-dir ./android/app/
-          ;
-
-      - if: ${{matrix.build_type == 'release'}}
-        name: Initialize release keystore
+      - name: Initialize release keystore
         env:
           BIM_KEYSTORE_PASSWORD: ${{secrets.BIM_KEYSTORE_PASSWORD}}
           BIM_RELEASE_KEYSTORE: ${{secrets.BIM_RELEASE_KEYSTORE}}
         run: >
           ./ci/initialize-android-keystore.sh
-          --build-type ${{matrix.build_type}}
+          --build-type release
           --output-dir ./android/app/
-          ;
 
       - name: Launch build
         run: >
           ./setup.sh
           --target-platform android
-          --build-type ${{matrix.build_type}}
+          --build-type release
+          --build-steps dependencies configure build
+          --foss-only
+          --product
 
       - name: Archive artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: android-${{matrix.build_type}}
+          name: android-release-foss
           path: build/android/**/*.apk
