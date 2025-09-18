@@ -22,6 +22,14 @@ jobs:
         build_type: [asan, tsan]
 
     steps:
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          key: dependencies-ubuntu:25.04-${{matrix.build_type}}-g++-linux
+          path: |
+            ~/.cache/ccache
+            ~/.cache/iscool
+
       - name: Checkout repository
         uses: actions/checkout@v4
 

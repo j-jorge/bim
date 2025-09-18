@@ -31,6 +31,22 @@ jobs:
             compiler: clang-18
 
     steps:
+      - name: Cache dependencies
+        if: |
+          (matrix.maybe_incremental != '')
+          || (matrix.container != 'ubuntu:25.04')
+          || (matrix.build_type != 'debug')
+          || (matrix.compiler != 'g++')
+        uses: actions/cache@v4
+        with:
+          key: "dependencies\
+          -${{matrix.container}}\
+          -${{matrix.build_type}}\
+          -${{matrix.compiler}}-linux"
+          path: |
+            ~/.cache/ccache
+            ~/.cache/iscool
+
       - name: Checkout repository
         uses: actions/checkout@v4
 
