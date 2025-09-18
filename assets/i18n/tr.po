@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-09-18 19:46+0000\n"
+"PO-Revision-Date: 2025-09-19 20:02+0000\n"
 "Last-Translator: AsetSiya <asetsiya@gmail.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/bim/"
 "gettext-files/tr/>\n"
@@ -48,164 +48,178 @@ msgid "Customize your experience below!"
 msgstr "Alttan deneyimini özelleştir!"
 
 msgid "Falling blocks reduce the arena after two minutes!"
-msgstr "İki dakika sonra, düşen bloklar arenayı daraltıyor!"
+msgstr "İkinci dakikadan sonra, düşen bloklar arenayı daraltıyor!"
 
 msgid "Find this incredibly strong barrel, it will save you from one hit!"
-msgstr "Bu inanılmaz güçlü varili bul, seni bir patlamadan kurtaracak!"
+msgstr "Bu inanılmaz güçlü varili bul, seni tek bir hasardan kurtaracak!"
 
 msgid "A thick fog covers the arena. You can't see were you did not go!"
-msgstr ""
+msgstr "Arenayı kalın bir sis kaplıyor. Gitmediğin yerleri göremiyorsun!"
 
 msgid ""
 "Find the invisibility power up to disappear from the screen of all other "
 "players!"
-msgstr ""
+msgstr "Diğer tüm oyuncuların ekranından kaybolmak için görünmezlik gücünü bul!"
 
 msgid "An error occurred. The purchase could not be completed."
-msgstr ""
+msgstr "Bir hata oluştu. Satın alma işlemi tamamlanamadı."
 
 msgid "A new version of Bim! is available! Please update as soon as possible."
-msgstr ""
+msgstr "Bim!'in yeni sürümü yayında! Lütfen en kısa sürede güncelle."
 
 #, c++-format
 msgid "Failed to authenticate with the game server. Error code {}."
-msgstr ""
+msgstr "Oyun sunucusuyla kimlik doğrulaması yapılamadı. Hata kodu {}."
 
 msgid "Cancel"
-msgstr ""
+msgstr "İptal"
 
 msgid "OK"
-msgstr ""
+msgstr "Tamam"
 
 msgid ""
 "NEW\n"
 "GAME"
 msgstr ""
+"YENİ\n"
+"OYUN"
 
 msgid ""
 "Start a new game\n"
 "and get your revenge!"
 msgstr ""
+"Yeni oyun başlat\n"
+"ve intikamını al!"
 
 msgid ""
 "Was it pure luck?\n"
 "Confirm your skills in a new game!"
 msgstr ""
+"Tamamen şans mıydı?\n"
+"Yeni oyunda yeteneklerini kanıtla!"
 
 msgid "Draw game!"
-msgstr ""
+msgstr "Oyun Berabere!"
 
 msgid "You lost!"
-msgstr ""
+msgstr "Kaybettin!"
 
 msgid "You won!"
-msgstr ""
+msgstr "Kazandın!"
 
 msgid "Off"
-msgstr ""
+msgstr "Kapalı"
 
 msgid "On"
-msgstr ""
+msgstr "Açık"
 
 msgid "No"
-msgstr ""
+msgstr "Hayır"
 
 msgid "Yes"
-msgstr ""
+msgstr "Evet"
 
 msgid "Language"
-msgstr ""
+msgstr "Dil"
 
 msgid "Directions kind"
-msgstr ""
+msgstr "Yönlendirme biçmi"
 
 msgid "Directional pad, at a fixed position on the screen."
-msgstr ""
+msgstr "Ekranın sabit bir noktasında bulunan yönlendirme tuşu."
 
 msgid "Analog stick, it pops where you tap and follows the drag."
-msgstr ""
+msgstr "Analog çubuk, dokunduğun yerde çıkıyor ve parmağını takip ediyor."
 
 msgid "Controls"
-msgstr ""
+msgstr "Kontroller"
 
 msgid "Directions on the left, actions on the right."
-msgstr ""
+msgstr "Sol tarafta hareket, sağ tarafta aksiyon."
 
 msgid "Directions on the right, actions on the left."
-msgstr ""
+msgstr "Sağ tarafta hareket, sol tarafta aksiyon."
 
 msgid "D-pad"
-msgstr ""
+msgstr "D-pad"
 
 msgid "Stick"
-msgstr ""
+msgstr "Çubuk"
 
 msgid "Music"
-msgstr ""
+msgstr "Müzik"
 
 msgid "Sound effects"
-msgstr ""
+msgstr "Ses efektleri"
 
 msgid "Settings"
-msgstr ""
+msgstr "Ayarlar"
 
 msgid "Vibrations"
-msgstr ""
+msgstr "Titreşimler"
 
 msgid "Defeats"
-msgstr ""
+msgstr "Yenilgiler"
 
 msgid "Draws"
-msgstr ""
+msgstr "Berabereler"
 
 msgid "Games"
-msgstr ""
+msgstr "Oyunlar"
 
 msgid "Victories"
-msgstr ""
+msgstr "Kazanmalar"
 
 msgid "DEBUG"
-msgstr ""
+msgstr "HATA AYIKLAMA"
 
 msgid ""
 "PLAY\n"
 "ONLINE"
 msgstr ""
+"ÇEVRİMİÇİ\n"
+"OYNA"
 
 msgid "Your statistics"
-msgstr ""
+msgstr "İstatistiklerin"
 
 msgid "ALPHA VERSION"
-msgstr ""
+msgstr "ALFA VERSİYON"
 
 msgid "Success rate"
-msgstr ""
+msgstr "Başarı oranı"
 
 msgid "You can start a two-players game now or wait for more players!"
 msgstr ""
+"İki kişilik oyuna başlayabilir veya daha fazla oyuncunun gelmesini "
+"bekleyebilirsin!"
 
 msgid "You can start a three-players game now or wait for more players!"
 msgstr ""
+"Üç kişilik oyuna başlayabilir veya daha fazla oyuncunun gelmesini "
+"bekleyebilirsin!"
 
 msgid "Start the game now!"
-msgstr ""
+msgstr "Şimdi oyuna başla!"
 
 msgid "FIGHT!"
-msgstr ""
+msgstr "DÖVÜŞ!"
 
 msgid ""
 "Waiting for your opponents…\n"
 "Tell your friends to join!"
 msgstr ""
+"Rakipler bekleniyor…\n"
+"Arkadaşlarına katılmalarını söyle!"
 
 msgid "Online Game"
-msgstr ""
+msgstr "Çevrimiçi oyun"
 
 msgid "×1000"
-msgstr ""
+msgstr "×1000"
 
 msgid "LOADING…"
-msgstr ""
+msgstr "YÜKLENİYOR…"
 
 msgid "SHOP"
-msgstr ""
+msgstr "MAĞAZA"
