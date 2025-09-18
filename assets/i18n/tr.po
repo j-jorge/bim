@@ -7,47 +7,51 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2025-09-18 19:46+0000\n"
+"Last-Translator: AsetSiya <asetsiya@gmail.com>\n"
+"Language-Team: Turkish <https://hosted.weblate.org/projects/bim/"
+"gettext-files/tr/>\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.14-dev\n"
 
 msgid "Please wait"
-msgstr ""
+msgstr "Bir saniye bekle"
 
 msgid "You have been disconnected :("
-msgstr ""
+msgstr "Bağlantın koptu :("
 
 msgid "Do you really want to change the language setting?"
-msgstr ""
+msgstr "Gerçekten dil ayarını değiştirmek istiyor musun?"
 
 #, c++-format
 msgid "Version {}"
-msgstr ""
+msgstr "Versiyon {}"
 
 msgid "Feedback about Bim!"
-msgstr ""
+msgstr "Bim! hakkında geri bildirim ver!"
 
 msgid ""
 "Come play a game of Bim! https://play.google.com/store/apps/details?"
 "id=bim.app"
 msgstr ""
+"Bim! oyununu oynamaya gel! https://play.google.com/store/apps/"
+"details?id=bim.app"
 
 msgid "You need more coins to purchase this item!"
-msgstr ""
+msgstr "Bu öğeyi almak için daha fazla altın gerekiyor!"
 
 msgid "Customize your experience below!"
-msgstr ""
+msgstr "Alttan deneyimini özelleştir!"
 
 msgid "Falling blocks reduce the arena after two minutes!"
-msgstr ""
+msgstr "İki dakika sonra, düşen bloklar arenayı daraltıyor!"
 
 msgid "Find this incredibly strong barrel, it will save you from one hit!"
-msgstr ""
+msgstr "Bu inanılmaz güçlü varili bul, seni bir patlamadan kurtaracak!"
 
 msgid "A thick fog covers the arena. You can't see were you did not go!"
 msgstr ""
