@@ -6,7 +6,7 @@ set -euo pipefail
 
 : "${cpptrace_repository:=https://github.com/j-jorge/cpptrace}"
 : "${cpptrace_version:=1.0.2}"
-package_revision=2
+package_revision=5
 version="$cpptrace_version"-"$package_revision"
 build_type=release
 
@@ -28,6 +28,22 @@ bim-cmake-build \
         --source-dir "$source_dir" \
         --cmake -DCPPTRACE_UNWIND_WITH_LIBUNWIND=ON \
         --cmake -DENABLE_DECOMPRESSION=OFF
+
+# The CMake scripts from cpptrace store the full path to the directory
+# containing libunwind, making it non-relocatable. We remove this path
+# here to fix that.
+
+# There's no substitution here.
+# shellcheck disable=SC2016
+sed 's,set_target_properties(cpptrace::.\+,find_library(libunwind_path unwind REQUIRED)\nmessage(STATUS "libunwind: ${libunwind_path}")\n&,' \
+    -i \
+    "${install_dir}/lib/cmake/cpptrace/cpptrace-targets.cmake"
+
+# There's no substitution here.
+# shellcheck disable=SC2016
+sed 's,;-L/[^>]\+unwind>,;\\$<LINK_ONLY:${libunwind_path}>,' \
+    -i \
+    "${install_dir}/lib/cmake/cpptrace/cpptrace-targets.cmake"
 
 bim-package-and-install \
     "$install_dir" cpptrace "$version" "$build_type" libunwind
