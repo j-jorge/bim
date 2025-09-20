@@ -20,6 +20,9 @@ CC-BY-SA 4.0 Silvério Santos, via Weblate.
 assets/i18n/pt_BR.po
 CC-BY-SA 4.0 OlliesGudh, via Weblate.
 
+assets/i18n/tr.po
+CC-BY-SA 4.0 AsetSiya, via Weblate.
+
 assets/sprites/menu/language.png
 Based on https://commons.wikimedia.org/wiki/File:Codex_icon_language.svg
 CC-BY 4.0 Wikimedia Design & OOUI team and other contributors
