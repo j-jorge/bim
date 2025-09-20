@@ -31,6 +31,7 @@
             "instantiate": "ax::Label",
             "font.size": 52,
             "font.color": "cod-gray",
+            "overflow": "shrink",
             "align.horizontal": "center",
             "z-order": 10
           }
@@ -45,7 +46,7 @@
         ],
 
         "label": [
-          "layout/center",
+          "layout/fill",
           {
             "reference": "background"
           }

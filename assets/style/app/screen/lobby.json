@@ -66,7 +66,7 @@
         "debug_button": [
           "button/green-with-label",
           {
-            "widgets/label/text.i18n": "DEBUG",
+            "widgets/label/text": "DEBUG",
             "z-order": 20,
             "visible": false
           }
