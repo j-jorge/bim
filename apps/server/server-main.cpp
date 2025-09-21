@@ -308,6 +308,9 @@ static command_line parse_command_line(int argc, char* argv[])
       "enable-statistics-log",
       "Whether or not we dump statistics about the players and the games.");
   config_options.add_options()(
+      "enable-rolling-statistics",
+      "Whether or not we should enable the statistics on a rolling window.");
+  config_options.add_options()(
       "statistics-dump-delay", boost::program_options::value<std::int64_t>(),
       "How long we wait after a stat is changed to record it in the logs.");
   config_options.add_options()(

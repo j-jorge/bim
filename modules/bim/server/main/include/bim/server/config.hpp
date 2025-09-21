@@ -91,6 +91,9 @@ namespace bim::server
     /** Tells if we log the statistics. */
     bool enable_statistics_log;
 
+    /** Whether or not we should enable the statistics on a rolling window. */
+    bool enable_rolling_statistics;
+
     /** How long we wait after a stat is changed to record it in the logs. */
     std::chrono::seconds statistics_dump_delay;
 

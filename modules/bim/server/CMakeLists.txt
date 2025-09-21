@@ -7,6 +7,7 @@ find_package(maxminddb REQUIRED)
 add_library(bim_server
   STATIC
   main/src/bim/server/config.cpp
+  main/src/bim/server/rolling_statistics.cpp
   main/src/bim/server/server.cpp
   main/src/bim/server/service/authentication_service.cpp
   main/src/bim/server/service/contest_timeline_service.cpp
@@ -34,6 +35,7 @@ add_executable(server-tests
   tests/src/bim/server/player_disconnection.cpp
   tests/src/bim/server/new_named_game.cpp
   tests/src/bim/server/new_game_after_game_over.cpp
+  tests/src/bim/server/rolling_statistics.cpp
 
   tests/src/bim/server/service/game_info.cpp
   tests/src/bim/server/service/game_service.cpp

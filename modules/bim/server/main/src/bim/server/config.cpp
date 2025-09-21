@@ -16,5 +16,6 @@ bim::server::config::config()
   , geolocation_update_interval(std::chrono::days(7))
   , enable_geolocation(false)
   , enable_statistics_log(false)
+  , enable_rolling_statistics(false)
   , statistics_dump_delay(std::chrono::seconds(60))
 {}
