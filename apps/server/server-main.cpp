@@ -244,6 +244,9 @@ static command_line parse_command_line(int argc, char* argv[])
       boost::program_options::value<unsigned short>()->default_value(23899),
       "The port to listen on.");
   config_options.add_options()(
+      "name", boost::program_options::value<std::string>(),
+      "The name of the server, as sent to the clients.");
+  config_options.add_options()(
       "authentication-clean-up-interval",
       boost::program_options::value<std::int64_t>(),
       "Time interval in seconds at which we remove the sessions from "
@@ -378,6 +381,7 @@ static command_line parse_command_line(int argc, char* argv[])
   while (false)
 
   parse_config_option(port);
+  parse_config_option(name);
   parse_config_option(authentication_clean_up_interval);
   parse_config_option(matchmaking_clean_up_interval);
   parse_config_option(random_game_auto_start_delay);

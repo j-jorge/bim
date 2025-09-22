@@ -66,6 +66,46 @@ bim::server::statistics_service::~statistics_service()
     std::fclose(m_log_file);
 }
 
+std::uint32_t bim::server::statistics_service::games_now() const
+{
+  return m_games_instant;
+}
+
+std::uint32_t bim::server::statistics_service::games_last_hour() const
+{
+  return m_games.last_hour.total();
+}
+
+std::uint32_t bim::server::statistics_service::games_last_day() const
+{
+  return m_games.last_day.total();
+}
+
+std::uint32_t bim::server::statistics_service::games_last_month() const
+{
+  return m_games.last_month.total();
+}
+
+std::uint32_t bim::server::statistics_service::sessions_now() const
+{
+  return m_active_sessions_instant;
+}
+
+std::uint32_t bim::server::statistics_service::sessions_last_hour() const
+{
+  return m_active_sessions.last_hour.total();
+}
+
+std::uint32_t bim::server::statistics_service::sessions_last_day() const
+{
+  return m_active_sessions.last_day.total();
+}
+
+std::uint32_t bim::server::statistics_service::sessions_last_month() const
+{
+  return m_active_sessions.last_month.total();
+}
+
 void bim::server::statistics_service::network_traffic(std::uint64_t bytes_in,
                                                       std::uint64_t bytes_out)
 {

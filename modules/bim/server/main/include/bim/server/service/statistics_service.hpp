@@ -21,6 +21,16 @@ namespace bim::server
     statistics_service(const statistics_service&) = delete;
     statistics_service& operator=(const statistics_service&) = delete;
 
+    std::uint32_t games_now() const;
+    std::uint32_t games_last_hour() const;
+    std::uint32_t games_last_day() const;
+    std::uint32_t games_last_month() const;
+
+    std::uint32_t sessions_now() const;
+    std::uint32_t sessions_last_hour() const;
+    std::uint32_t sessions_last_day() const;
+    std::uint32_t sessions_last_month() const;
+
     void network_traffic(std::uint64_t bytes_in, std::uint64_t bytes_out);
 
     void record_session_connected();

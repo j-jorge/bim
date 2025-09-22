@@ -8,6 +8,8 @@
 #include <bim/net/message/authentication.hpp>
 #include <bim/net/message/authentication_ko.hpp>
 #include <bim/net/message/authentication_ok.hpp>
+#include <bim/net/message/hello.hpp>
+#include <bim/net/message/hello_ok.hpp>
 #include <bim/net/message/keep_alive.hpp>
 #include <bim/net/message/protocol_version.hpp>
 #include <bim/net/message/try_deserialize_message.hpp>
@@ -47,6 +49,9 @@ bim::server::authentication_service::authentication_service(
   , m_clean_up_interval(config.authentication_clean_up_interval)
   , m_message_pool(64)
 {
+  m_hello_ok.version = bim::net::protocol_version;
+  m_hello_ok.name = config.name;
+
   m_message_stream.connect_to_message(
       std::bind(&authentication_service::check_session, this,
                 std::placeholders::_1, std::placeholders::_2));
@@ -92,8 +97,15 @@ void bim::server::authentication_service::check_session(
 
   if (session == 0)
     {
-      if (message.get_type() == bim::net::message_type::authentication)
-        check_authentication(endpoint, message);
+      switch (message.get_type())
+        {
+        case bim::net::message_type::authentication:
+          check_authentication(endpoint, message);
+          break;
+        case bim::net::message_type::hello:
+          check_hello(endpoint, message);
+          break;
+        }
     }
   else
     {
@@ -177,6 +189,39 @@ void bim::server::authentication_service::check_authentication(
 
   const iscool::net::message_pool::slot s = m_message_pool.pick_available();
   bim::net::authentication_ok(token, it->second).build_message(*s.value);
+
+  m_message_stream.send(endpoint, *s.value);
+  m_message_pool.release(s.id);
+}
+
+void bim::server::authentication_service::check_hello(
+    const iscool::net::endpoint& endpoint, const iscool::net::message& m)
+{
+  const std::optional<bim::net::hello> message =
+      bim::net::try_deserialize_message<bim::net::hello>(m);
+
+  if (!message)
+    return;
+
+  const bim::net::client_token token = message->get_request_token();
+
+  ic_log(iscool::log::nature::info(), "authentication_service",
+         "Received hello from token {}.", token);
+
+  m_hello_ok.request_token = token;
+
+  m_hello_ok.games_now = m_statistics.games_now();
+  m_hello_ok.games_last_hour = m_statistics.games_last_hour();
+  m_hello_ok.games_last_day = m_statistics.games_last_day();
+  m_hello_ok.games_last_month = m_statistics.games_last_month();
+
+  m_hello_ok.sessions_now = m_statistics.sessions_now();
+  m_hello_ok.sessions_last_hour = m_statistics.sessions_last_hour();
+  m_hello_ok.sessions_last_day = m_statistics.sessions_last_day();
+  m_hello_ok.sessions_last_month = m_statistics.sessions_last_month();
+
+  const iscool::net::message_pool::slot s = m_message_pool.pick_available();
+  m_hello_ok.build_message(*s.value);
 
   m_message_stream.send(endpoint, *s.value);
   m_message_pool.release(s.id);

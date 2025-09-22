@@ -99,5 +99,8 @@ namespace bim::server
 
     /** Path to the folder where to store the server stats. */
     std::string statistics_log_file;
+
+    /** The name of the server, as sent to the clients. */
+    std::string name;
   };
 }

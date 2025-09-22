@@ -4,6 +4,7 @@
 #include <bim/server/service/geolocation_service.hpp>
 
 #include <bim/net/message/client_token.hpp>
+#include <bim/net/message/hello_ok.hpp>
 
 #include <iscool/net/message_pool.hpp>
 #include <iscool/net/message_stream.hpp>
@@ -49,6 +50,8 @@ namespace bim::server
 
     void check_authentication(const iscool::net::endpoint& endpoint,
                               const iscool::net::message& m);
+    void check_hello(const iscool::net::endpoint& endpoint,
+                     const iscool::net::message& m);
 
     void send_acknowledge_keep_alive(const iscool::net::endpoint& endpoint,
                                      iscool::net::session_id session);
@@ -72,5 +75,7 @@ namespace bim::server
     std::chrono::seconds m_clean_up_interval;
 
     iscool::net::message_pool m_message_pool;
+
+    bim::net::hello_ok m_hello_ok;
   };
 }
