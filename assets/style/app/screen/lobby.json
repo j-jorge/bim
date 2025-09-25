@@ -1,5 +1,7 @@
 {
   "style": {
+    "play-button-server-stats-label-path": "container/server-statistics",
+
     "debug": [
       "popup/debug"
     ],
@@ -58,7 +60,55 @@
         "play_button": [
           "button/yellow-with-label",
           {
-            "widgets/label/text.i18n": "PLAY\nONLINE",
+            "widgets": [
+              {
+                "label": [
+                  {
+                    "text.i18n": "PLAY ONLINE",
+                    "align.horizontal": "left"
+                  }
+                ],
+
+                "server-statistics": [
+                  "font/bold",
+                  {
+                    "anchor-point.x": 0,
+                    "anchor-point.y": 1,
+                    "instantiate": "ax::Label",
+                    "font.size": 48,
+                    "line-spacing": -20,
+                    "font.color": "cod-gray",
+                    "align.horizontal": "left",
+                    "overflow": "resize-height",
+                    "wrap": true,
+                    "text": "12345 players connected right now.",
+                    "z-order": 10
+                  }
+                ]
+              }
+            ],
+            "bounds": [
+              {
+                "label": [
+                  {
+                    "anchor.x": 0,
+                    "anchor.y": 0.5,
+                    "anchor.reference.x": 0.05,
+                    "anchor.reference.y": 0.60
+                  }
+                ],
+
+                "server-statistics": [
+                  {
+                    "anchor.x": 0,
+                    "anchor.y": 1,
+                    "anchor.reference.x": 0.05,
+                    "anchor.reference.y": 0.45,
+                    "width.percents": 90
+                  }
+                ]
+              }
+            ],
             "z-order": 20
           }
         ],

@@ -16,8 +16,13 @@
 #include <bim/axmol/widget/named_node_group.hpp>
 #include <bim/axmol/widget/ui/button.hpp>
 
+#include <bim/axmol/find_child_by_path.hpp>
+
+#include <bim/net/exchange/hello_exchange.hpp>
+#include <bim/net/message/hello_ok.hpp>
 #include <bim/net/session_handler.hpp>
 
+#include <iscool/i18n/gettext.hpp>
 #include <iscool/i18n/numeric.hpp>
 #include <iscool/signals/implement_signal.hpp>
 
@@ -49,6 +54,12 @@ bim::axmol::app::lobby::lobby(const context& context,
                               const iscool::style::declaration& style)
   : m_context(context)
   , m_controls(context.get_widget_context(), *style.get_declaration("widgets"))
+  , m_server_statistics_label(
+        *dynamic_cast<ax::Label*>(bim::axmol::find_child_by_path(
+            *m_controls->play_button,
+            *style.get_string("play-button-server-stats-label-path"))))
+  , m_hello_exchange(new bim::net::hello_exchange(
+        context.get_session_handler()->message_stream()))
   , m_wallet(new wallet(context, *style.get_declaration("wallet")))
   , m_settings(new settings_popup(context, *style.get_declaration("settings")))
   , m_debug(
@@ -59,6 +70,12 @@ bim::axmol::app::lobby::lobby(const context& context,
   m_all_nodes = m_controls->all_nodes;
   bim::axmol::widget::merge_named_node_groups(m_all_nodes,
                                               m_wallet->display_nodes());
+
+  m_hello_exchange->connect_to_updated(
+      [this](const bim::net::hello_ok& message)
+      {
+        update_server_stats(message);
+      });
 
   if (m_context.get_enable_debug())
     enable_debug();
@@ -126,6 +143,9 @@ void bim::axmol::app::lobby::attached()
 }
 
 void bim::axmol::app::lobby::displayed()
+{}
+
+void bim::axmol::app::lobby::displaying()
 {
   m_wallet->enter();
   bim::net::session_handler& session_handler =
@@ -137,10 +157,7 @@ void bim::axmol::app::lobby::displayed()
         apply_connected_state();
       });
   apply_connected_state();
-}
 
-void bim::axmol::app::lobby::displaying()
-{
   const iscool::preferences::local_preferences& preferences =
       *m_context.get_local_preferences();
 
@@ -179,13 +196,107 @@ void bim::axmol::app::lobby::displaying()
 
 void bim::axmol::app::lobby::closing()
 {
+  m_hello_exchange->stop();
   m_session_connection.disconnect();
+}
+
+void bim::axmol::app::lobby::update_server_stats(
+    const bim::net::hello_ok& message)
+{
+  if (message.games_now >= 10)
+    {
+      m_server_statistics_label.setString(fmt::format(
+          fmt::runtime(ic_ngettext("{} game being played right now.",
+                                   "{} games being played right now.",
+                                   message.games_now)),
+          iscool::i18n::numeric::to_string(message.games_now)));
+      return;
+    }
+
+  if (message.sessions_now >= 10)
+    {
+      m_server_statistics_label.setString(fmt::format(
+          fmt::runtime(ic_ngettext("{} player connected right now.",
+                                   "{} players connected right now.",
+                                   message.sessions_now)),
+          iscool::i18n::numeric::to_string(message.sessions_now)));
+      return;
+    }
+
+  if (message.games_last_hour >= 10)
+    {
+      m_server_statistics_label.setString(fmt::format(
+          fmt::runtime(ic_ngettext("{} game played in the last hour.",
+                                   "{} games being played in the last hour.",
+                                   message.games_last_hour)),
+          iscool::i18n::numeric::to_string(message.games_last_hour)));
+      return;
+    }
+
+  if (message.sessions_last_hour >= 10)
+    {
+      m_server_statistics_label.setString(fmt::format(
+          fmt::runtime(ic_ngettext("{} player connected in the last hour.",
+                                   "{} players connected in the last hour.",
+                                   message.sessions_last_hour)),
+          iscool::i18n::numeric::to_string(message.sessions_last_hour)));
+      return;
+    }
+
+  if (message.games_last_day >= 10)
+    {
+      m_server_statistics_label.setString(fmt::format(
+          fmt::runtime(
+              ic_ngettext("{} game played in the last 24 hours.",
+                          "{} games being played in the last 24 hours.",
+                          message.games_last_day)),
+          iscool::i18n::numeric::to_string(message.games_last_day)));
+      return;
+    }
+
+  if (message.sessions_last_day >= 10)
+    {
+      m_server_statistics_label.setString(fmt::format(
+          fmt::runtime(
+              ic_ngettext("{} player connected in the last 24 hours.",
+                          "{} players connected in the last 24 hours.",
+                          message.sessions_last_day)),
+          iscool::i18n::numeric::to_string(message.sessions_last_day)));
+      return;
+    }
+
+  if (message.games_last_month >= 10)
+    {
+      m_server_statistics_label.setString(fmt::format(
+          fmt::runtime(ic_ngettext("{} game played in the last 30 days.",
+                                   "{} games being played in the 30 days.",
+                                   message.games_last_month)),
+          iscool::i18n::numeric::to_string(message.games_last_month)));
+      return;
+    }
+
+  if (message.sessions_last_month >= 10)
+    {
+      m_server_statistics_label.setString(fmt::format(
+          fmt::runtime(ic_ngettext("{} player connected in the last 30 days.",
+                                   "{} players connected in the last 30 days.",
+                                   message.sessions_last_month)),
+          iscool::i18n::numeric::to_string(message.sessions_last_month)));
+      return;
+    }
+
+  m_server_statistics_label.setString(
+      fmt::format(fmt::runtime(ic_gettext("Connected to {}.")), message.name));
 }
 
 void bim::axmol::app::lobby::apply_connected_state()
 {
-  m_controls->play_button->enable(
-      m_context.get_session_handler()->connected());
+  const bool connected = m_context.get_session_handler()->connected();
+
+  if (connected)
+    m_hello_exchange->start();
+
+  m_controls->play_button->enable(connected);
 }
 
 void bim::axmol::app::lobby::increment_debug_activator_counter()

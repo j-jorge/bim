@@ -16,6 +16,8 @@ namespace bim::axmol::widget
 
 namespace bim::net
 {
+  class hello_exchange;
+  class hello_ok;
   class session_handler;
 }
 
@@ -42,6 +44,11 @@ namespace iscool::style
 namespace iscool::system
 {
   class haptic_feedback;
+}
+
+namespace ax
+{
+  class Label;
 }
 
 namespace bim::axmol::app
@@ -85,6 +92,8 @@ namespace bim::axmol::app
     void closing();
 
   private:
+    void update_server_stats(const bim::net::hello_ok& message);
+
     void apply_connected_state();
 
     void increment_debug_activator_counter();
@@ -97,6 +106,9 @@ namespace bim::axmol::app
   private:
     bim::axmol::input::tree m_inputs;
     bim_declare_controls_struct(controls, m_controls, 10);
+    ax::Label& m_server_statistics_label;
+
+    std::unique_ptr<bim::net::hello_exchange> m_hello_exchange;
 
     const std::unique_ptr<wallet> m_wallet;
 

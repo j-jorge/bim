@@ -27,6 +27,7 @@
                     "scroll-per-second.y": 10,
                     "rotation": -2,
                     "color": "dandelion",
+                    "opacity": 127,
                     "z-order": 10
                   }
                 ]
