@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/axmol/app/screen/matchmaking.hpp>
 
+#include <bim/axmol/app/analytics_service.hpp>
 #include <bim/axmol/app/config.hpp>
 #include <bim/axmol/app/feature_deck.hpp>
 #include <bim/axmol/app/matchmaking_wait_message.hpp>
@@ -30,6 +31,7 @@
 #include <iscool/monitoring/implement_state_monitor.hpp>
 #include <iscool/preferences/local_preferences.hpp>
 #include <iscool/signals/implement_signal.hpp>
+#include <iscool/system/open_url.hpp>
 
 #include <axmol/2d/Label.h>
 #include <axmol/base/EventKeyboard.h>
@@ -40,9 +42,10 @@
 #define x_widget_type_name controls
 #define x_widget_controls                                                     \
   x_widget(bim::axmol::widget::button, ready_button)                          \
-      x_widget(bim::axmol::widget::button, back_button)                       \
-          x_widget(ax::Label, feature_description)                            \
-              x_widget(ax::Label, wait_message)
+      x_widget(bim::axmol::widget::button, discord_button)                    \
+          x_widget(bim::axmol::widget::button, back_button)                   \
+              x_widget(ax::Label, feature_description)                        \
+                  x_widget(ax::Label, wait_message)
 #include <bim/axmol/widget/implement_controls_struct.hpp>
 
 IMPLEMENT_SIGNAL(bim::axmol::app::matchmaking, start_game, m_start_game);
@@ -86,6 +89,7 @@ bim::axmol::app::matchmaking::matchmaking(
 
   m_inputs.push_back(m_feature_deck->input_node());
   m_inputs.push_back(m_controls->ready_button->input_node());
+  m_inputs.push_back(m_controls->discord_button->input_node());
   m_inputs.push_back(m_escape);
   m_inputs.push_back(m_controls->back_button->input_node());
 
@@ -93,6 +97,12 @@ bim::axmol::app::matchmaking::matchmaking(
       [this]()
       {
         accept_game();
+      });
+
+  m_controls->discord_button->connect_to_clicked(
+      [this]()
+      {
+        open_discord();
       });
 
   m_escape->connect_to_released(
@@ -128,7 +138,7 @@ bim::axmol::app::matchmaking::input_node() const
 }
 
 const bim::axmol::widget::named_node_group&
-bim::axmol::app::matchmaking::nodes() const
+bim::axmol::app::matchmaking::display_nodes() const
 {
   return m_all_nodes;
 }
@@ -266,6 +276,16 @@ void bim::axmol::app::matchmaking::launch_game(
   m_game_proposal_connection.disconnect();
   m_launch_connection.disconnect();
   m_start_game(event);
+}
+
+void bim::axmol::app::matchmaking::open_discord() const
+{
+  if (!m_player_count_monitor->is_waiting_state())
+    return;
+
+  m_context.get_analytics()->event(
+      "button", { { "id", "discord" }, { "where", "matchmaking" } });
+  iscool::system::open_url("https://discord.gg/nnjyMCm8");
 }
 
 void bim::axmol::app::matchmaking::dispatch_back() const

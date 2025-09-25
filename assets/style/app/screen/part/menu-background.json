@@ -32,7 +32,7 @@
         "frame": "sprites/menu/glow.png",
         "color": "sail",
         "opacity": 0.4,
-        "z-order": -25
+        "z-order": -40
       }
     ],
 
@@ -63,7 +63,7 @@
         "frame": "sprites/menu/glow.png",
         "color": "golf-blue",
         "opacity": 0.6,
-        "z-order": -25
+        "z-order": -40
       }
     ]
   }

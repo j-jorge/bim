@@ -9,6 +9,41 @@
   },
 
   "style": {
+    "discord-stripe": [
+      {
+        "anchor.x": 0.5,
+        "anchor.y": 0.5,
+        "anchor.reference.x": 0.5,
+        "anchor.reference.y": 0.70,
+        "width.percents": 120,
+        "height.percents": 10
+      }
+    ],
+
+    "discord-background": [
+      "layout/fill"
+    ],
+
+    "discord-label": [
+      {
+        "anchor.x": 0,
+        "anchor.y": 0.5,
+        "anchor.reference.x": 0.15,
+        "anchor.reference.y": 0.57
+      }
+    ],
+
+    "discord_button": [
+      {
+        "anchor.x": 0.5,
+        "anchor.y": 0.5,
+        "anchor.reference.x": 0.84,
+        "anchor.reference.y": 0.4,
+        "height.percents": 70,
+        "width-ratio": 1
+      }
+    ],
+
     "rays": [
       {
         "anchor.x": 0.5,
@@ -37,7 +72,7 @@
         "anchor.y": 0,
         "anchor.reference.x": 0.57,
         "anchor.reference.y": 0.48,
-        "height.percents": 23,
+        "height.percents": 20,
         "width-ratio": 0.3
       }
     ],
@@ -48,7 +83,7 @@
         "anchor.y": 0,
         "anchor.reference.x": 0.41,
         "anchor.reference.y": 0.48,
-        "height.percents": 22,
+        "height.percents": 19,
         "width-ratio": 0.36
       }
     ],
@@ -59,8 +94,19 @@
         "anchor.y": 0,
         "anchor.reference.x": 0.27,
         "anchor.reference.y": 0.48,
-        "height.percents": 21,
+        "height.percents": 18,
         "width-ratio": 0.3
+      }
+    ],
+
+    "player-4": [
+      {
+        "anchor.x": 0.5,
+        "anchor.y": 0,
+        "anchor.reference.x": 0.71,
+        "anchor.reference.y": 0.48,
+        "height.percents": 18,
+        "width-ratio": 0.39
       }
     ],
 
@@ -87,17 +133,6 @@
 
     "feature_description": [
       "app/screen/part/matchmaking-feature-label-bounds"
-    ],
-
-    "player-4": [
-      {
-        "anchor.x": 0.5,
-        "anchor.y": 0,
-        "anchor.reference.x": 0.71,
-        "anchor.reference.y": 0.48,
-        "height.percents": 21,
-        "width-ratio": 0.39
-      }
     ],
 
     "wait_message": [

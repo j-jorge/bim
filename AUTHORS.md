@@ -70,6 +70,11 @@ Eric Bailey
 From https://commons.wikimedia.org/wiki/File:Bluesky_Logo.svg
 Public domain
 
+assets/sprites/menu/discord.png
+Discord
+From https://discord.com/branding
+Proprietary
+
 assets/sprites/menu/github.png
 GitHub
 From https://commons.wikimedia.org/wiki/File:GitHub_Invertocat_Logo.svg
@@ -220,6 +225,7 @@ assets/sprites/menu/coins-pack-1.png
 assets/sprites/menu/coins-pack-2.png
 assets/sprites/menu/coins-pack-3.png
 assets/sprites/menu/coins-pack-4.png
+assets/sprites/menu/discord-background-1-1-1-1.png
 assets/sprites/menu/dot-100.png
 assets/sprites/menu/dot-70.png
 assets/sprites/menu/gamepad-d-pad-left.png

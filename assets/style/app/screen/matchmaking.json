@@ -15,6 +15,54 @@
         "stripe_message/text.i18n":
             "Waiting for your opponents…\nTell your friends to join!",
 
+        "discord-stripe": [
+          {
+            "instantiate": "ax::Node",
+            "rotation": -10,
+            "z-order": -15
+          }
+        ],
+
+        "discord-background": [
+          {
+            "parent": "discord-stripe",
+            "instantiate": "nine_slices",
+            "widgets/sprite": [
+              {
+                "frame": "sprites/menu/discord-background-1-1-1-1.png",
+                "insets.left": 1,
+                "insets.top": 1,
+                "insets.width": 1,
+                "insets.height": 1
+              }
+            ]
+
+          }
+        ],
+
+        "discord-label": [
+          "font/bold",
+          {
+            "instantiate": "ax::Label",
+            "parent": "discord-stripe",
+            "z-order": 10,
+            "font.size": 32,
+            "font.color": "desert-storm",
+            "text.i18n": "Join our Discord to meet other players."
+          }
+        ],
+
+        "discord_button": [
+          "button/white-with-icon",
+          {
+            "parent": "discord-stripe",
+            "widgets/icon/frame": "sprites/menu/discord.png",
+            "bounds/icon/height.percents": 45,
+            "z-order": 20,
+            "rotation": 10
+          }
+        ],
+
         "pattern": [
           {
             "widgets/sprite/frame": "texture/search-background-pattern.png",

@@ -38,6 +38,7 @@ namespace iscool::style
 
 namespace bim::axmol::app
 {
+  class analytics_service;
   class feature_deck;
   class matchmaking_wait_message;
   class wallet;
@@ -53,6 +54,7 @@ namespace bim::axmol::app
         m_context,
         ic_context_declare_parent_properties(                              //
             ((const bim::axmol::widget::context&)(widget_context))         //
+            ((analytics_service*)(analytics))                              //
             ((bim::net::session_handler*)(session_handler))                //
             ((iscool::preferences::local_preferences*)(local_preferences)) //
             ((const config*)(config))                                      //
@@ -65,8 +67,7 @@ namespace bim::axmol::app
     ~matchmaking();
 
     bim::axmol::input::node_reference input_node() const;
-    // TODO: rename display_nodes
-    const bim::axmol::widget::named_node_group& nodes() const;
+    const bim::axmol::widget::named_node_group& display_nodes() const;
 
     void attached();
     void displaying();
@@ -81,6 +82,8 @@ namespace bim::axmol::app
     void accept_game();
     void launch_game(const bim::net::game_launch_event& event);
 
+    void open_discord() const;
+
     void dispatch_back() const;
 
     void feature_flag_clicked(bim::game::feature_flags f) const;
@@ -94,7 +97,7 @@ namespace bim::axmol::app
 
     bim::axmol::input::single_key_observer_handle m_escape;
     bim::axmol::input::tree m_inputs;
-    bim_declare_controls_struct(controls, m_controls, 4);
+    bim_declare_controls_struct(controls, m_controls, 5);
 
     const std::unique_ptr<wallet> m_wallet;
 

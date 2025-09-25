@@ -1,5 +1,7 @@
 set(sprites
   "sprites/menu/checkmark.png"
+  "sprites/menu/discord.png"
+  "sprites/menu/discord-background-1-1-1-1.png"
   "sprites/menu/price-tag-88-40.png"
   "sprites/menu/rounded-button-border-54-66.png"
   "sprites/menu/rounded-button-fill-54-66.png"

@@ -82,7 +82,7 @@ bim::axmol::app::screen_wheel::screen_wheel(
   map_nodes(*m_controls->lobby, m_lobby->nodes(), style, "lobby-bounds");
   m_lobby->attached();
 
-  map_nodes(*m_controls->matchmaking, m_matchmaking->nodes(), style,
+  map_nodes(*m_controls->matchmaking, m_matchmaking->display_nodes(), style,
             "matchmaking-bounds");
   m_matchmaking->attached();
   m_controls->matchmaking->removeFromParent();
