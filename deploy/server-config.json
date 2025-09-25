@@ -9,5 +9,7 @@
 
   "enable-statistics-log": true,
   "enable-rolling-statistics": true,
-  "statistics-log-file": "/opt/bim/persistent/log/statistics.txt"
+  "statistics-log-file": "/opt/bim/persistent/log/statistics.txt",
+
+  "name": "{name}"
 }

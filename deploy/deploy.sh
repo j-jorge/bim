@@ -2,14 +2,22 @@
 
 set -euo pipefail
 
-temp_config=
+dev=0
+name="Bim! World's Server"
 set_up=
+temp_client_config=
+temp_server_config=
 
 function clean_up()
 {
-    if [[ -n "${temp_config:-}" ]]
+    if [[ -n "${temp_client_config:-}" ]]
     then
-        rm --force "$temp_config"
+        rm --force "$temp_client_config"
+    fi
+
+    if [[ -n "${temp_server_config:-}" ]]
+    then
+        rm --force "$temp_server_config"
     fi
 
     if [[ -n "${set_up:-}" ]]
@@ -38,6 +46,8 @@ Usage:
 Where OPTIONS is:
   --build-dir DIR
      Mandatory. The build directory from which bim-server will be copied.
+  --dev
+     Inform the script that this is a server for developers.
   -h, --help
      Display this message and exit.
   --port PORT
@@ -61,6 +71,10 @@ do
     case "$arg" in
         --build-dir)
             build_dir="${1:-}"
+            shift
+            ;;
+        --dev)
+            dev=1
             shift
             ;;
         -h|--help)
@@ -101,12 +115,20 @@ sleep 5
 
 echo "GO!"
 
+if (( dev == 1 ))
+then
+    name="Bim! Dev Server"
+fi
+
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd)"
 
-temp_config="$(mktemp)"
-sed "s/PORT/$port/" "$script_dir"/client-config.json > "$temp_config"
+temp_client_config="$(mktemp)"
+sed "s/PORT/$port/" "$script_dir"/client-config.json > "$temp_client_config"
+python3 -m json.tool --compact "$temp_client_config" "$temp_client_config"
 
-python3 -m json.tool --compact "$temp_config" "$temp_config"
+temp_server_config="$(mktemp)"
+sed "s/{name}/$name/" "$script_dir"/server-config.json > "$temp_server_config"
+python3 -m json.tool --compact "$temp_server_config" "$temp_server_config"
 
 set_up="$(mktemp)"
 
@@ -138,7 +160,7 @@ ssh "$login_at_host" \
 rsync "$build_dir"/apps/server/bim-server{,.dbg} \
       "$build_dir"/apps/server/bim-stack-dump \
       "$login_at_host":bim/"$port"/bin/
-rsync "$temp_config" "$login_at_host":./
+rsync "$temp_client_config" "$login_at_host":./
 
 rsync --recursive \
       "$script_dir"/bin \
@@ -147,9 +169,19 @@ rsync --recursive \
       "$script_dir"/etc \
       "$login_at_host":bim/"$port"/
 
+ssh "$login_at_host" mkdir --parents "$script_dir"/etc/bim
+rsync "$temp_server_config" \
+      "$login_at_host":bim/"$port"/etc/bim/server-config.json
+
 ssh "$login_at_host" \
     mv --backup \
-    "$(basename "$temp_config")" /srv/www/bim/client-config.json \
+    "$(basename "$temp_client_config")" /srv/www/bim/client-config.json \
     '&&' chmod a+r /srv/www/bim/client-config.json \
     '&&' cd bim/"$port"/  \
     '&&' PORT="$port" docker-compose up --build --detach
+
+if (( dev == 0 ))
+then
+    ssh "$login_at_host" \
+        touch bim/"$port"/lock
+fi
