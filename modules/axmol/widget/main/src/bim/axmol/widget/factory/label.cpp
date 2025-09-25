@@ -135,6 +135,9 @@ bim::axmol::ref_ptr<ax::Label> bim::axmol::widget::factory<ax::Label>::create(
                             outline_size * context.device_scale);
     }
 
+  result->setLineSpacing(style.get_number("line-spacing", 0)
+                         * context.device_scale);
+
   bim::axmol::style::apply_display(context.style_cache.get_display(style),
                                    *result);
 
