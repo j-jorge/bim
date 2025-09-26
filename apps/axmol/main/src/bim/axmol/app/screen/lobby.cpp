@@ -227,7 +227,7 @@ void bim::axmol::app::lobby::update_server_stats(
     {
       m_server_statistics_label.setString(fmt::format(
           fmt::runtime(ic_ngettext("{} game played in the last hour.",
-                                   "{} games being played in the last hour.",
+                                   "{} games played in the last hour.",
                                    message.games_last_hour)),
           iscool::i18n::numeric::to_string(message.games_last_hour)));
       return;
@@ -246,10 +246,9 @@ void bim::axmol::app::lobby::update_server_stats(
   if (message.games_last_day >= 10)
     {
       m_server_statistics_label.setString(fmt::format(
-          fmt::runtime(
-              ic_ngettext("{} game played in the last 24 hours.",
-                          "{} games being played in the last 24 hours.",
-                          message.games_last_day)),
+          fmt::runtime(ic_ngettext("{} game played in the last 24 hours.",
+                                   "{} games played in the last 24 hours.",
+                                   message.games_last_day)),
           iscool::i18n::numeric::to_string(message.games_last_day)));
       return;
     }
@@ -269,7 +268,7 @@ void bim::axmol::app::lobby::update_server_stats(
     {
       m_server_statistics_label.setString(fmt::format(
           fmt::runtime(ic_ngettext("{} game played in the last 30 days.",
-                                   "{} games being played in the 30 days.",
+                                   "{} games played in the last 30 days.",
                                    message.games_last_month)),
           iscool::i18n::numeric::to_string(message.games_last_month)));
       return;
