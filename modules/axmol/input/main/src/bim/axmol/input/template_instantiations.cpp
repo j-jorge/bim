@@ -13,6 +13,7 @@
 #include <bim/axmol/input/observer/scroll_view_glue.hpp>
 #include <bim/axmol/input/observer/single_key_observer.hpp>
 #include <bim/axmol/input/observer/tap_observer.hpp>
+#include <bim/axmol/input/observer/touch_anywhere.hpp>
 
 template class bim::axmol::input::backend_event<ax::EventKeyboard::KeyCode>;
 template class bim::axmol::input::backend_event<ax::Touch*>;
@@ -26,6 +27,8 @@ template class bim::axmol::input::key_observer_handle<
     bim::axmol::input::single_key_observer>;
 template class bim::axmol::input::touch_observer_handle<
     bim::axmol::input::tap_observer>;
+template class bim::axmol::input::touch_observer_handle<
+    bim::axmol::input::touch_anywhere>;
 template class bim::axmol::input::touch_observer_handle<
     bim::axmol::input::rich_text_glue>;
 template class bim::axmol::input::touch_observer_handle<

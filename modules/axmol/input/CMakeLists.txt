@@ -17,6 +17,7 @@ add_library(bim_axmol_input
   main/src/bim/axmol/input/observer/soft_pad.cpp
   main/src/bim/axmol/input/observer/soft_stick.cpp
   main/src/bim/axmol/input/observer/tap_observer.cpp
+  main/src/bim/axmol/input/observer/touch_anywhere.cpp
   main/src/bim/axmol/input/observer/touch_sink.cpp
 )
 
