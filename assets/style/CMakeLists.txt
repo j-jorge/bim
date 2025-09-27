@@ -32,8 +32,6 @@ set(main_task_style_files
   app/screen/lobby/stat-background-bounds.json
   app/screen/lobby/stat-title.json
   app/screen/lobby/stat-value-label.json
-  app/screen/lobby/stats-bounds.json
-  app/screen/lobby/stats.json
 
   app/screen/online-game/control-panel-decorum.json
   app/screen/online-game/control-panel-edging.json
@@ -71,6 +69,7 @@ set(main_task_style_files
   button/thick-base.json
   button/yellow-with-icon.json
   button/yellow-with-label.json
+  button/yellow-round-with-icon-and-label.json
   button/white-with-icon.json
 
   font/bold.json
@@ -92,10 +91,12 @@ set(main_task_style_files
   nine-slice/rounded-rectangle.json
   nine-slice/stripe.json
 
+  popup/base.json
   popup/debug.json
   popup/full-screen.json
   popup/language.json
   popup/message.json
+  popup/player-statistics.json
   popup/settings.json
   popup/small.json
   popup/yes_no_message.json

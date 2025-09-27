@@ -1,0 +1,78 @@
+{
+  "meta": {
+    "overrides": [
+      "button/base"
+    ]
+  },
+
+  "style": {
+    "widgets": [
+      {
+        "background": [
+          {
+            "instantiate": "ax::Sprite",
+            "frame": "sprites/menu/round-button-yellow.png",
+            "z-order": -1000
+          }
+        ],
+
+        "icon": [
+          {
+            "instantiate": "ax::Sprite",
+            "z-order": 0
+          }
+        ],
+
+        "label": [
+          "font/bold-italic",
+          {
+            "anchor-point.x": 0.5,
+            "anchor-point.y": 0.5,
+            "instantiate": "ax::Label",
+            "font.size": 60,
+            "font.color": "white",
+            "shadow.color": "cod-gray",
+            "shadow.offset.y": -8,
+            "outline.color": "cod-gray",
+            "outline.size": 5,
+            "align.horizontal": "center",
+            "overflow": "shrink",
+            "z-order": 10,
+            "rotation": -10
+          }
+        ]
+      }
+    ],
+
+    "bounds": [
+      {
+        "background": [
+          "layout/fill"
+        ],
+
+        "icon": [
+          {
+            "anchor.x": 0.5,
+            "anchor.y": 0.5,
+            "anchor.reference.x": 0.47,
+            "anchor.reference.y": 0.8
+          }
+        ],
+
+        "label": [
+          {
+            "anchor.x": 0.5,
+            "anchor.y": 0.5,
+            "anchor.reference.x": 0.53,
+            "anchor.reference.y": 0.25,
+            "width.percents": 120
+          }
+        ]
+      }
+    ],
+
+    "display.pressed": [],
+    "display.release": [],
+    "display.disabled": []
+  }
+}

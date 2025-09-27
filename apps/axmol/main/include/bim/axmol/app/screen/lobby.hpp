@@ -56,6 +56,7 @@ namespace bim::axmol::app
   class analytics_service;
   class debug_popup;
   class main_scene;
+  class player_statistics_popup;
   class settings_popup;
   class wallet;
 
@@ -103,9 +104,15 @@ namespace bim::axmol::app
     void show_settings();
     void play_online();
 
+    void open_shop_from_wallet() const;
+    void open_shop_from_button() const;
+    void open_shop() const;
+
+    void open_player_stats() const;
+
   private:
     bim::axmol::input::tree m_inputs;
-    bim_declare_controls_struct(controls, m_controls, 10);
+    bim_declare_controls_struct(controls, m_controls, 6);
     ax::Label& m_server_statistics_label;
 
     std::unique_ptr<bim::net::hello_exchange> m_hello_exchange;
@@ -113,6 +120,7 @@ namespace bim::axmol::app
     const std::unique_ptr<wallet> m_wallet;
 
     std::unique_ptr<settings_popup> m_settings;
+    std::unique_ptr<player_statistics_popup> m_player_statistics;
     std::unique_ptr<debug_popup> m_debug;
 
     iscool::signals::scoped_connection m_session_connection;

@@ -4,6 +4,7 @@
 #include <bim/axmol/app/analytics_service.hpp>
 #include <bim/axmol/app/part/wallet.hpp>
 #include <bim/axmol/app/popup/debug_popup.hpp>
+#include <bim/axmol/app/popup/player_statistics_popup.hpp>
 #include <bim/axmol/app/popup/settings_popup.hpp>
 #include <bim/axmol/app/preference/arena_stats.hpp>
 #include <bim/axmol/app/shop_support.hpp>
@@ -34,15 +35,10 @@
 #define x_widget_controls                                                     \
   x_widget(bim::axmol::widget::button, settings_button)                       \
       x_widget(bim::axmol::widget::button, play_button)                       \
-          x_widget(bim::axmol::widget::button, debug_button)                  \
-              x_widget(ax::Node, debug_activator)                             \
-                  x_widget(ax::Label, arena_games_total)                      \
-                      x_widget(ax::Label, arena_victories)                    \
-                          x_widget(ax::Label, arena_defeats)                  \
-                              x_widget(ax::Label, arena_draws)                \
-                                  x_widget(ax::Label, success_rate_percents)  \
-                                      x_widget(ax::ProgressTimer,             \
-                                               success_rate_progress)
+          x_widget(bim::axmol::widget::button, shop_button)                   \
+              x_widget(bim::axmol::widget::button, stats_button)              \
+                  x_widget(bim::axmol::widget::button, debug_button)          \
+                      x_widget(ax::Node, debug_activator)
 
 #include <bim/axmol/widget/implement_controls_struct.hpp>
 
@@ -62,6 +58,8 @@ bim::axmol::app::lobby::lobby(const context& context,
         context.get_session_handler()->message_stream()))
   , m_wallet(new wallet(context, *style.get_declaration("wallet")))
   , m_settings(new settings_popup(context, *style.get_declaration("settings")))
+  , m_player_statistics(new player_statistics_popup(
+        context, *style.get_declaration("player-statistics")))
   , m_debug(
         new debug_popup(context, *style.get_declaration("debug"), *m_wallet))
   , m_debug_tap(*m_controls->debug_activator)
@@ -80,15 +78,26 @@ bim::axmol::app::lobby::lobby(const context& context,
   if (m_context.get_enable_debug())
     enable_debug();
 
-  if (is_shop_supported())
-    {
-      m_inputs.push_back(m_wallet->input_node());
-      m_wallet->connect_to_clicked(
-          [this]()
-          {
-            m_shop();
-          });
-    }
+  m_inputs.push_back(m_wallet->input_node());
+  m_wallet->connect_to_clicked(
+      [this]()
+      {
+        open_shop_from_wallet();
+      });
+
+  m_inputs.push_back(m_controls->shop_button->input_node());
+  m_controls->shop_button->connect_to_clicked(
+      [this]()
+      {
+        open_shop_from_button();
+      });
+
+  m_inputs.push_back(m_controls->stats_button->input_node());
+  m_controls->stats_button->connect_to_clicked(
+      [this]()
+      {
+        open_player_stats();
+      });
 
   m_debug_tap->connect_to_release(
       [this]() -> void
@@ -157,41 +166,6 @@ void bim::axmol::app::lobby::displaying()
         apply_connected_state();
       });
   apply_connected_state();
-
-  const iscool::preferences::local_preferences& preferences =
-      *m_context.get_local_preferences();
-
-  const std::int64_t total_games =
-      bim::axmol::app::games_in_arena(preferences);
-  const std::int64_t games_win =
-      bim::axmol::app::victories_in_arena(preferences);
-  const std::int64_t games_defeat =
-      bim::axmol::app::defeats_in_arena(preferences);
-  const std::int64_t games_draw = total_games - games_win - games_defeat;
-
-  m_controls->arena_games_total->setString(
-      iscool::i18n::numeric::to_string(total_games));
-
-  m_controls->arena_victories->setString(
-      iscool::i18n::numeric::to_string(games_win));
-  m_controls->arena_defeats->setString(
-      iscool::i18n::numeric::to_string(games_defeat));
-  m_controls->arena_draws->setString(
-      iscool::i18n::numeric::to_string(games_draw));
-
-  if (total_games == 0)
-    {
-      m_controls->success_rate_percents->setString("-");
-      m_controls->success_rate_progress->setPercentage(100);
-    }
-  else
-    {
-      const float percents = float(games_win * 100) / total_games;
-
-      m_controls->success_rate_percents->setString(
-          fmt::format("{}%", std::lround(percents)));
-      m_controls->success_rate_progress->setPercentage(percents);
-    }
 }
 
 void bim::axmol::app::lobby::closing()
@@ -334,4 +308,31 @@ void bim::axmol::app::lobby::play_online()
   m_context.get_analytics()->event("button",
                                    { { "id", "play" }, { "where", "lobby" } });
   m_play();
+}
+
+void bim::axmol::app::lobby::open_shop_from_wallet() const
+{
+  m_context.get_analytics()->event(
+      "button", { { "id", "wallet" }, { "where", "lobby" } });
+  open_shop();
+}
+
+void bim::axmol::app::lobby::open_shop_from_button() const
+{
+  m_context.get_analytics()->event("button",
+                                   { { "id", "shop" }, { "where", "lobby" } });
+  open_shop();
+}
+
+void bim::axmol::app::lobby::open_shop() const
+{
+  if (is_shop_supported())
+    m_shop();
+}
+
+void bim::axmol::app::lobby::open_player_stats() const
+{
+  m_context.get_analytics()->event(
+      "button", { { "id", "player-stats" }, { "where", "lobby" } });
+  m_player_statistics->show();
 }

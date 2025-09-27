@@ -1,7 +1,6 @@
 # Next
 
 - Game feature submenu.
-- A shop button on the lobby.
 
 # Client
 

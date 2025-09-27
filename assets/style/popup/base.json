@@ -1,0 +1,27 @@
+{
+  "style": {
+    "widgets": [
+      {
+        "container": [],
+        "client_container/parent": "container"
+      }
+    ],
+
+    "bounds": [
+      {
+        "container": [
+          "layout/fill"
+        ],
+
+        "client_container": [
+          {
+            "anchor.x": 0.5,
+            "anchor.y": 0.5,
+            "anchor.reference.x": 0.5,
+            "anchor.reference.y": 0.5
+          }
+        ]
+      }
+    ]
+  }
+}

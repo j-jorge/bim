@@ -5,6 +5,9 @@
     "debug": [
       "popup/debug"
     ],
+    "player-statistics": [
+      "popup/player-statistics"
+    ],
     "settings": [
       "popup/settings"
     ],
@@ -14,7 +17,6 @@
 
     "widgets": [
       "app/screen/part/menu-background",
-      "app/screen/lobby/stats",
       {
         "stripe-background": [
           {
@@ -54,6 +56,34 @@
             "widgets/icon/frame": "sprites/menu/gear.png",
             "bounds/icon/height.percents": 50,
             "z-order": 20
+          }
+        ],
+
+        "shop_button": [
+          "button/yellow-round-with-icon-and-label",
+          {
+            "widgets/icon/frame": "sprites/menu/shop-icon.png",
+            "widgets/label/text.i18n": "SHOP",
+            "bounds/icon": [
+              {
+                "width.percents": 75,
+                "keep-ratio": true
+              }
+            ]
+          }
+        ],
+
+        "stats_button": [
+          "button/yellow-round-with-icon-and-label",
+          {
+            "widgets/icon/frame": "sprites/menu/stats-icon.png",
+            "widgets/label/text.i18n": "STATISTICS",
+            "bounds/icon": [
+              {
+                "width.percents": 75,
+                "keep-ratio": true
+              }
+            ]
           }
         ],
 

@@ -21,6 +21,7 @@ set(main_sources
   main/src/bim/axmol/app/popup/debug_popup.cpp
   main/src/bim/axmol/app/popup/language_popup.cpp
   main/src/bim/axmol/app/popup/message.cpp
+  main/src/bim/axmol/app/popup/player_statistics_popup.cpp
   main/src/bim/axmol/app/popup/popup.cpp
   main/src/bim/axmol/app/popup/settings_popup.cpp
 
