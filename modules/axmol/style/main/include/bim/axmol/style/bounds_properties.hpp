@@ -16,6 +16,8 @@ namespace bim::axmol::style
     float anchor_y;
     float anchor_in_reference_x;
     float anchor_in_reference_y;
+    float offset_x;
+    float offset_y;
 
     // size
     float percents_width;

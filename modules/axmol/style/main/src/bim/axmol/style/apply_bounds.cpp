@@ -15,11 +15,13 @@ static void apply_scale(ax::Node& node, const ax::Node& reference,
                         const bim::axmol::style::bounds_properties& bounds,
                         float device_scale);
 static void apply_position(ax::Node& node, const ax::Node& reference,
-                           const bim::axmol::style::bounds_properties& bounds);
+                           const bim::axmol::style::bounds_properties& bounds,
+                           float device_scale);
 static void set_bottom_left(ax::Node& node,
                             const bim::axmol::style::bounds_properties& bounds,
                             const ax::Vec2& reference_bottom_left,
-                            const ax::Vec2& reference_size);
+                            const ax::Vec2& reference_size,
+                            float device_scale);
 
 void bim::axmol::style::apply_bounds(const bounds_properties& bounds,
                                      ax::Node& node, const ax::Node& reference,
@@ -30,7 +32,7 @@ void bim::axmol::style::apply_bounds(const bounds_properties& bounds,
 
   apply_size(node, reference, bounds);
   apply_scale(node, reference, bounds, device_scale);
-  apply_position(node, reference, bounds);
+  apply_position(node, reference, bounds, device_scale);
 }
 
 void apply_scale(ax::Node& node, const ax::Node& reference,
@@ -105,22 +107,24 @@ void apply_scale(ax::Node& node, const ax::Node& reference,
 }
 
 void apply_position(ax::Node& node, const ax::Node& reference,
-                    const bim::axmol::style::bounds_properties& bounds)
+                    const bim::axmol::style::bounds_properties& bounds,
+                    float device_scale)
 {
   if (&reference == node.getParent())
-    set_bottom_left(node, bounds, ax::Vec2::ZERO, reference.getContentSize());
+    set_bottom_left(node, bounds, ax::Vec2::ZERO, reference.getContentSize(),
+                    device_scale);
   else
-    set_bottom_left(node, bounds,
-                    reference.getPosition()
-                        - reference.getContentSize()
-                              * reference.getAnchorPoint(),
-                    reference.getContentSize() * reference.getScale());
+    set_bottom_left(
+        node, bounds,
+        reference.getPosition()
+            - reference.getContentSize() * reference.getAnchorPoint(),
+        reference.getContentSize() * reference.getScale(), device_scale);
 }
 
 void set_bottom_left(ax::Node& node,
                      const bim::axmol::style::bounds_properties& bounds,
                      const ax::Vec2& reference_bottom_left,
-                     const ax::Vec2& reference_size)
+                     const ax::Vec2& reference_size, float device_scale)
 {
   const ax::Vec2 node_anchor(
       (bool(bounds.flags & bim::axmol::style::bounds_property_flags::anchor_x)
@@ -138,11 +142,18 @@ void set_bottom_left(ax::Node& node,
             & bim::axmol::style::bounds_property_flags::anchor_in_reference_y)
            ? bounds.anchor_in_reference_y
            : 0.5f));
+  const ax::Vec2 node_offset(
+      (bool(bounds.flags & bim::axmol::style::bounds_property_flags::offset_x)
+           ? (bounds.offset_x * device_scale)
+           : 0.f),
+      (bool(bounds.flags & bim::axmol::style::bounds_property_flags::offset_y)
+           ? (bounds.offset_y * device_scale)
+           : 0.f));
 
   const ax::Vec2 size = node.getContentSize();
   const ax::Vec2 scaled_size = size * node.getScale();
 
-  node.setPosition(reference_bottom_left + reference_anchor * reference_size
-                   - node_anchor * scaled_size
-                   + node.getAnchorPoint() * scaled_size);
+  node.setPosition(
+      node_offset + reference_bottom_left + reference_anchor * reference_size
+      - node_anchor * scaled_size + node.getAnchorPoint() * scaled_size);
 }

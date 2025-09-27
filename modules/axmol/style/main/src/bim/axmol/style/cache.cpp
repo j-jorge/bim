@@ -43,6 +43,18 @@ static void fill_position(bim::axmol::style::bounds_properties& properties,
           bim::axmol::style::bounds_property_flags::anchor_in_reference_y;
       properties.anchor_in_reference_y = *anchor_in_reference_y;
     }
+
+  if (const iscool::optional<float> offset_x = style.get_number("offset.x"))
+    {
+      properties.flags |= bim::axmol::style::bounds_property_flags::offset_x;
+      properties.offset_x = *offset_x;
+    }
+
+  if (const iscool::optional<float> offset_y = style.get_number("offset.y"))
+    {
+      properties.flags |= bim::axmol::style::bounds_property_flags::offset_y;
+      properties.offset_y = *offset_y;
+    }
 }
 
 static void fill_size(bim::axmol::style::bounds_properties& properties,
