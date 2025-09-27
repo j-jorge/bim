@@ -13,6 +13,7 @@
             "font.color": "white",
             "align.horizontal": "center",
             "wrap": true,
+            "overflow": "shrink",
             "z-order": -10
           }
         ],
