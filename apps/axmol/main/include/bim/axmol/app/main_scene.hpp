@@ -34,6 +34,8 @@ namespace bim::axmol::app
 
     void add_in_main_canvas(ax::Node& node,
                             const bim::axmol::input::node_reference& inputs);
+    void remove_from_main_canvas(ax::Node& node);
+
     void add_in_overlays(ax::Node& node,
                          const bim::axmol::input::node_reference& inputs);
     void remove_from_overlays(ax::Node& node);
@@ -51,6 +53,7 @@ namespace bim::axmol::app
     bim::axmol::input::tree m_main_canvas_inputs;
     bim::axmol::input::tree m_overlay_inputs;
 
+    node_to_inputs_map m_main_canvas_node_inputs;
     node_to_inputs_map m_overlay_node_inputs;
   };
 }

@@ -52,6 +52,20 @@ void bim::axmol::app::main_scene::add_in_main_canvas(
   node.setPosition(node.getAnchorPoint() * size);
 
   m_main_canvas_inputs.push_back(inputs);
+  m_main_canvas_node_inputs.insert(
+      node_to_inputs_map::value_type(&node, inputs));
+}
+
+void bim::axmol::app::main_scene::remove_from_main_canvas(ax::Node& node)
+{
+  const node_to_inputs_map::iterator it =
+      m_main_canvas_node_inputs.find(&node);
+  bim_assume(it != m_main_canvas_node_inputs.end());
+
+  m_main_canvas_inputs.erase(it->second);
+  m_main_canvas_node_inputs.erase(it);
+
+  m_controls->main->removeChild(&node);
 }
 
 void bim::axmol::app::main_scene::add_in_overlays(

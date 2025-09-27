@@ -139,7 +139,10 @@ bim::axmol::app::screen_wheel::screen_wheel(
   lobby_displayed();
 }
 
-bim::axmol::app::screen_wheel::~screen_wheel() = default;
+bim::axmol::app::screen_wheel::~screen_wheel()
+{
+  m_context.get_main_scene()->remove_from_main_canvas(*m_main_container);
+}
 
 void bim::axmol::app::screen_wheel::map_nodes(
     ax::Node& container, const bim::axmol::widget::named_node_group& nodes,
