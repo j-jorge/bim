@@ -1,4 +1,10 @@
 {
+  "meta": {
+    "overrides": [
+      "popup/base"
+    ]
+  },
+
   "style": {
     "widgets": [
       {

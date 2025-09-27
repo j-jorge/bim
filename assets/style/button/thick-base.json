@@ -28,12 +28,14 @@
           {
             "instantiate": "clipping_node",
             "cascade-color": true,
+            "cascade-opacity": true,
             "z-order": 5,
             "widgets": [
               {
                 "clipping_node": [
                   {
-                    "cascade-color": true
+                    "cascade-color": true,
+                    "cascade-opacity": true
                   }
                 ],
 
@@ -85,12 +87,14 @@
           {
             "instantiate": "clipping_node",
             "cascade-color": true,
+            "cascade-opacity": true,
             "z-order": 5,
             "widgets": [
               {
                 "clipping_node": [
                   {
-                    "cascade-color": true
+                    "cascade-color": true,
+                    "cascade-opacity": true
                   }
                 ],
 

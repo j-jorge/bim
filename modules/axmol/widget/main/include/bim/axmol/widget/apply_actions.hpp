@@ -3,6 +3,8 @@
 
 #include <bim/axmol/widget/named_node_group.hpp>
 
+#include <functional>
+
 namespace iscool::style
 {
   class declaration;
@@ -20,4 +22,8 @@ namespace bim::axmol::widget
   void apply_actions(bim::axmol::action::runner& runner,
                      const context& context, const named_node_group& nodes,
                      const iscool::style::declaration& style);
+  void apply_actions(bim::axmol::action::runner& runner,
+                     const context& context, const named_node_group& nodes,
+                     const iscool::style::declaration& style,
+                     std::function<void()> on_done);
 }

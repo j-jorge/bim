@@ -13,14 +13,20 @@
 #include <iscool/log/nature/error.hpp>
 #include <iscool/style/declaration.hpp>
 
+#include <axmol/2d/ActionInstant.h>
 #include <axmol/2d/ActionInterval.h>
 
-void bim::axmol::widget::apply_actions(bim::axmol::action::runner& runner,
-                                       const context& context,
-                                       const named_node_group& nodes,
-                                       const iscool::style::declaration& style)
+#include <cassert>
+
+static bim::axmol::ref_ptr<ax::Spawn>
+create_actions(const bim::axmol::widget::context& context,
+               const bim::axmol::widget::named_node_group& nodes,
+               const iscool::style::declaration& style)
 {
-  const named_node_group::const_iterator nodes_end = nodes.end();
+  ax::Vector<ax::FiniteTimeAction*> actions;
+
+  const bim::axmol::widget::named_node_group::const_iterator nodes_end =
+      nodes.end();
 
   for (const auto& e : style.get_declarations())
     {
@@ -51,7 +57,42 @@ void bim::axmol::widget::apply_actions(bim::axmol::action::runner& runner,
           continue;
         }
 
-      runner.run(
-          *ax::TargetedAction::create(node->second.get(), action.get()));
+      actions.pushBack(
+          ax::TargetedAction::create(node->second.get(), action.get()));
     }
+
+  if (actions.empty())
+    return {};
+
+  return ax::Spawn::create(actions);
+}
+
+void bim::axmol::widget::apply_actions(bim::axmol::action::runner& runner,
+                                       const context& context,
+                                       const named_node_group& nodes,
+                                       const iscool::style::declaration& style)
+{
+  bim::axmol::ref_ptr<ax::Spawn> action =
+      create_actions(context, nodes, style);
+
+  if (action)
+    runner.run(*action);
+}
+
+void bim::axmol::widget::apply_actions(bim::axmol::action::runner& runner,
+                                       const context& context,
+                                       const named_node_group& nodes,
+                                       const iscool::style::declaration& style,
+                                       std::function<void()> on_done)
+{
+  assert(on_done);
+
+  bim::axmol::ref_ptr<ax::Spawn> action =
+      create_actions(context, nodes, style);
+  bim::axmol::ref_ptr<ax::CallFunc> callback(ax::CallFunc::create(on_done));
+
+  if (action)
+    runner.run(*ax::Sequence::create(action.get(), callback.get(), nullptr));
+  else
+    runner.run(*callback);
 }

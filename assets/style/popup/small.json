@@ -1,4 +1,10 @@
 {
+  "meta": {
+    "overrides": [
+      "popup/base"
+    ]
+  },
+
   "style": {
     "widgets": [
       {
@@ -9,12 +15,15 @@
             "instantiate": "ax::LayerColor",
             "parent": "container",
             "color": "black",
-            "opacity": 0.6,
             "z-order": -2000
           }
         ],
 
-        "client_container/parent": "container",
+        "client_container": [
+          {
+            "cascade-opacity": true
+          }
+        ],
 
         "frame-background": [
           {
@@ -43,7 +52,8 @@
               {
                 "clipping_node": [
                   {
-                    "cascade-color": true
+                    "cascade-color": true,
+                    "cascade-opacity": true
                   }
                 ],
 
@@ -144,6 +154,33 @@
         ],
         "frame-border": [
           "layout/fill"
+        ]
+      }
+    ],
+
+    "display.show": [
+      {
+        "background/opacity": 0,
+        "client_container/opacity": 0
+      }
+    ],
+
+    "action.show": [
+      {
+        "background": [
+          {
+            "instantiate": "fade",
+            "to": 0.6,
+            "duration": 0.1
+          }
+        ],
+
+        "client_container": [
+          {
+            "instantiate": "fade",
+            "to": 1,
+            "duration": 0.1
+          }
         ]
       }
     ]

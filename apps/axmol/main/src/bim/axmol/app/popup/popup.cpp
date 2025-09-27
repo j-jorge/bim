@@ -4,7 +4,9 @@
 #include <bim/axmol/app/main_scene.hpp>
 
 #include <bim/axmol/widget/add_group_as_children.hpp>
+#include <bim/axmol/widget/apply_actions.hpp>
 #include <bim/axmol/widget/apply_bounds.hpp>
+#include <bim/axmol/widget/apply_display.hpp>
 #include <bim/axmol/widget/factory/node.hpp>
 #include <bim/axmol/widget/implement_widget.hpp>
 
@@ -27,6 +29,8 @@ bim::axmol::app::popup::popup(const context& context,
   : m_context(context)
   , m_controls(context.get_widget_context(), *style.get_declaration("widgets"))
   , m_style_bounds(*style.get_declaration("bounds"))
+  , m_style_display_show(*style.get_declaration("display.show"))
+  , m_style_action_show(*style.get_declaration("action.show"))
   , m_shown(false)
 {
   m_inputs.attach_to_root(m_key_sink);
@@ -44,7 +48,6 @@ void bim::axmol::app::popup::show(
     return;
 
   m_shown = true;
-  m_inputs.push_back(inputs);
 
   m_context.get_main_scene()->add_in_overlays(*m_controls->container,
                                               m_inputs.root());
@@ -60,12 +63,25 @@ void bim::axmol::app::popup::show(
 
   for (const bim::axmol::widget::named_node_group::value_type& e : nodes)
     m_client_nodes.push_back(e.second.get());
+
+  bim::axmol::widget::apply_display(m_context.get_widget_context().style_cache,
+                                    m_controls->all_nodes,
+                                    m_style_display_show);
+  bim::axmol::widget::apply_actions(m_action_runner,
+                                    m_context.get_widget_context(),
+                                    m_controls->all_nodes, m_style_action_show,
+                                    [this, inputs]()
+                                    {
+                                      m_inputs.push_back(inputs);
+                                    });
 }
 
 void bim::axmol::app::popup::hide()
 {
   if (!m_shown)
     return;
+
+  m_action_runner.stop();
 
   m_shown = false;
 

@@ -22,6 +22,9 @@
           }
         ]
       }
-    ]
+    ],
+
+    "display.show": [],
+    "action.show": []
   }
 }
