@@ -3,11 +3,46 @@
     "popup": [
       "popup/base",
       {
+        "widgets/client_container/cascade-opacity": true,
+
         "bounds/client_container": [
           {
             "anchor.reference.y": 0.6,
             "width.percents": 100,
             "height.percents": 20
+          }
+        ],
+
+        "display.show": [
+          {
+            "client_container/opacity": 0
+          }
+        ],
+
+        "action.show": [
+          {
+            "client_container": [
+              {
+                "instantiate": "spawn",
+
+                "fade": [
+                  {
+                    "instantiate": "fade",
+                    "to": 1,
+                    "duration": 0.2
+                  }
+                ],
+
+                "move": [
+                  {
+                    "instantiate": "move",
+                    "ease": "quadratic-out",
+                    "from.y": 0.45,
+                    "duration": 0.3
+                  }
+                ]
+              }
+            ]
           }
         ]
       }
