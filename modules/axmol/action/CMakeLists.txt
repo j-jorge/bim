@@ -1,6 +1,7 @@
 add_library(bim_axmol_action
   STATIC
   main/src/bim/axmol/action/dynamic_factory.cpp
+  main/src/bim/axmol/action/move.cpp
   main/src/bim/axmol/action/register_actions.cpp
   main/src/bim/axmol/action/runner.cpp
 

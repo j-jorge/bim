@@ -2,6 +2,7 @@
 #include <bim/axmol/action/register_actions.hpp>
 
 #include <bim/axmol/action/dynamic_factory.impl.hpp>
+#include <bim/axmol/action/move.hpp>
 
 #include <bim/axmol/action/factory/fade.hpp>
 #include <bim/axmol/action/factory/repeat.hpp>
@@ -9,6 +10,7 @@
 #include <bim/axmol/action/factory/scale.hpp>
 #include <bim/axmol/action/factory/spawn.hpp>
 #include <bim/axmol/action/factory/tint.hpp>
+#include <bim/axmol/action/factory/wrap_in_easing_function.hpp>
 
 #include <axmol/2d/ActionInstant.h>
 #include <axmol/2d/ActionInterval.h>
@@ -57,6 +59,13 @@ void bim::axmol::action::register_actions(dynamic_factory& factory)
       [](const colour_chart&, const iscool::style::declaration&)
       {
         return ax::Show::create();
+      });
+
+  factory.register_action(
+      "move",
+      [](const colour_chart&, const iscool::style::declaration& style)
+      {
+        return maybe_wrap_in_easing_function(*move::create(style), style);
       });
 
 #undef register_action_3
