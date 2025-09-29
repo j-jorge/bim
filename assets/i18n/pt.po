@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2025-08-28 22:04+0200\n"
+"PO-Revision-Date: 2025-09-29 22:07+0200\n"
 "Last-Translator: ssantos <ssantos@web.de>\n"
 "Language-Team: Portuguese <https://hosted.weblate.org/projects/bim/gettext-"
 "files/pt/>\n"
@@ -40,6 +40,63 @@ msgid ""
 "id=bim.app"
 msgstr ""
 "Venha jogar um Bim! https://play.google.com/store/apps/details?id=bim.app"
+
+#, c++-format
+msgid "{} game being played right now."
+msgid_plural "{} games being played right now."
+msgstr[0] ""
+msgstr[1] ""
+
+#, c++-format
+msgid "{} player connected right now."
+msgid_plural "{} players connected right now."
+msgstr[0] ""
+msgstr[1] ""
+
+#, c++-format
+msgid "{} game played in the last hour."
+msgid_plural "{} games played in the last hour."
+msgstr[0] ""
+msgstr[1] ""
+
+#, c++-format
+msgid "{} player connected in the last hour."
+msgid_plural "{} players connected in the last hour."
+msgstr[0] ""
+msgstr[1] ""
+
+#, c++-format
+msgid "{} game played in the last 24 hours."
+msgid_plural "{} games played in the last 24 hours."
+msgstr[0] ""
+msgstr[1] ""
+
+#, c++-format
+msgid "{} player connected in the last 24 hours."
+msgid_plural "{} players connected in the last 24 hours."
+msgstr[0] ""
+msgstr[1] ""
+
+#, c++-format
+msgid "{} game played in the last 30 days."
+msgid_plural "{} games played in the last 30 days."
+msgstr[0] ""
+msgstr[1] ""
+
+#, c++-format
+msgid "{} player connected in the last 30 days."
+msgid_plural "{} players connected in the last 30 days."
+msgstr[0] ""
+msgstr[1] ""
+
+#, c++-format
+msgid "Connected to {}."
+msgstr ""
+
+msgid ""
+"The shop is not available on this platform, yet you can support the "
+"developers with donations! Should I open the donations page?"
+msgstr ""
 
 msgid "You need more coins to purchase this item!"
 msgstr "Precisa de mais moedas para comprar este elemento!"
@@ -123,6 +180,29 @@ msgstr ""
 msgid "Yes"
 msgstr ""
 
+msgid "Defeats"
+msgstr ""
+
+msgid "Draws"
+msgstr ""
+
+msgid "Games"
+msgstr ""
+
+msgid "Victories"
+msgstr ""
+
+msgid "Your statistics"
+msgstr ""
+
+msgid "Success rate"
+msgstr ""
+
+msgid ""
+"Is your language missing? Add it on <a href='https://hosted.weblate.org/"
+"projects/bim/gettext-files/'>Weblate</a>!"
+msgstr ""
+
 msgid "Language"
 msgstr ""
 
@@ -162,35 +242,22 @@ msgstr "Configurações"
 msgid "Vibrations"
 msgstr "Vibrações"
 
-msgid "Defeats"
+msgid "PLAY ONLINE"
+msgstr "JOGUE ONLINE"
+
+msgid "Disconnected."
 msgstr ""
 
-msgid "Draws"
-msgstr ""
+msgid "SHOP"
+msgstr "LOJA"
 
-msgid "Games"
-msgstr ""
-
-msgid "Victories"
-msgstr ""
-
-msgid "DEBUG"
-msgstr "DEBUG"
-
-msgid ""
-"PLAY\n"
-"ONLINE"
-msgstr ""
-"JOGUE\n"
-"ONLINE"
-
-msgid "Your statistics"
+msgid "STATISTICS"
 msgstr ""
 
 msgid "ALPHA VERSION"
 msgstr "VERSÃO ALFA"
 
-msgid "Success rate"
+msgid "Join our Discord to meet other players."
 msgstr ""
 
 msgid "You can start a two-players game now or wait for more players!"
@@ -221,8 +288,8 @@ msgstr "x1000"
 msgid "LOADING…"
 msgstr "A CARREGAR…"
 
-msgid "SHOP"
-msgstr "LOJA"
+#~ msgid "DEBUG"
+#~ msgstr "DEBUG"
 
 #~ msgid "Please wait.."
 #~ msgstr "Aguarde.."

@@ -39,6 +39,63 @@ msgid ""
 "id=bim.app"
 msgstr ""
 
+#, c++-format
+msgid "{} game being played right now."
+msgid_plural "{} games being played right now."
+msgstr[0] ""
+msgstr[1] ""
+
+#, c++-format
+msgid "{} player connected right now."
+msgid_plural "{} players connected right now."
+msgstr[0] ""
+msgstr[1] ""
+
+#, c++-format
+msgid "{} game played in the last hour."
+msgid_plural "{} games played in the last hour."
+msgstr[0] ""
+msgstr[1] ""
+
+#, c++-format
+msgid "{} player connected in the last hour."
+msgid_plural "{} players connected in the last hour."
+msgstr[0] ""
+msgstr[1] ""
+
+#, c++-format
+msgid "{} game played in the last 24 hours."
+msgid_plural "{} games played in the last 24 hours."
+msgstr[0] ""
+msgstr[1] ""
+
+#, c++-format
+msgid "{} player connected in the last 24 hours."
+msgid_plural "{} players connected in the last 24 hours."
+msgstr[0] ""
+msgstr[1] ""
+
+#, c++-format
+msgid "{} game played in the last 30 days."
+msgid_plural "{} games played in the last 30 days."
+msgstr[0] ""
+msgstr[1] ""
+
+#, c++-format
+msgid "{} player connected in the last 30 days."
+msgid_plural "{} players connected in the last 30 days."
+msgstr[0] ""
+msgstr[1] ""
+
+#, c++-format
+msgid "Connected to {}."
+msgstr ""
+
+msgid ""
+"The shop is not available on this platform, yet you can support the "
+"developers with donations! Should I open the donations page?"
+msgstr ""
+
 msgid "You need more coins to purchase this item!"
 msgstr ""
 
@@ -111,6 +168,29 @@ msgstr ""
 msgid "Yes"
 msgstr ""
 
+msgid "Defeats"
+msgstr ""
+
+msgid "Draws"
+msgstr ""
+
+msgid "Games"
+msgstr ""
+
+msgid "Victories"
+msgstr ""
+
+msgid "Your statistics"
+msgstr ""
+
+msgid "Success rate"
+msgstr ""
+
+msgid ""
+"Is your language missing? Add it on <a href='https://hosted.weblate.org/"
+"projects/bim/gettext-files/'>Weblate</a>!"
+msgstr ""
+
 msgid "Language"
 msgstr ""
 
@@ -150,33 +230,22 @@ msgstr ""
 msgid "Vibrations"
 msgstr ""
 
-msgid "Defeats"
+msgid "PLAY ONLINE"
 msgstr ""
 
-msgid "Draws"
+msgid "Disconnected."
 msgstr ""
 
-msgid "Games"
+msgid "SHOP"
 msgstr ""
 
-msgid "Victories"
-msgstr ""
-
-msgid "DEBUG"
-msgstr ""
-
-msgid ""
-"PLAY\n"
-"ONLINE"
-msgstr ""
-
-msgid "Your statistics"
+msgid "STATISTICS"
 msgstr ""
 
 msgid "ALPHA VERSION"
 msgstr ""
 
-msgid "Success rate"
+msgid "Join our Discord to meet other players."
 msgstr ""
 
 msgid "You can start a two-players game now or wait for more players!"
@@ -203,9 +272,6 @@ msgid "×1000"
 msgstr ""
 
 msgid "LOADING…"
-msgstr ""
-
-msgid "SHOP"
 msgstr ""
 
 #~ msgid "Could not get the config from the server."

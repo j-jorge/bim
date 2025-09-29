@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2025-09-16 07:01+0000\n"
+"PO-Revision-Date: 2025-09-29 22:00+0200\n"
 "Last-Translator: Anna Al Lae <anna.allae@opab.bzh>\n"
 "Language-Team: Breton <https://hosted.weblate.org/projects/bim/gettext-files/"
 "br/>\n"
@@ -18,10 +18,10 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=5; plural=(n % 10 == 1 && n % 100 != 11 && n % 100 != "
 "71 && n % 100 != 91) ? 0 : ((n % 10 == 2 && n % 100 != 12 && n % 100 != 72 "
-"&& n % 100 != 92) ? 1 : ((((n % 10 == 3 || n % 10 == 4) || n % 10 == 9) && ("
-"n % 100 < 10 || n % 100 > 19) && (n % 100 < 70 || n % 100 > 79) && (n % 100 "
+"&& n % 100 != 92) ? 1 : ((((n % 10 == 3 || n % 10 == 4) || n % 10 == 9) && "
+"(n % 100 < 10 || n % 100 > 19) && (n % 100 < 70 || n % 100 > 79) && (n % 100 "
 "< 90 || n % 100 > 99)) ? 2 : ((n != 0 && n % 1000000 == 0) ? 3 : 4)));\n"
-"X-Generator: Weblate 5.14-dev\n"
+"X-Generator: Poedit 3.6\n"
 
 msgid "Please wait"
 msgstr "Gortozit mar plij"
@@ -45,6 +45,87 @@ msgid ""
 msgstr ""
 "Deuit da c'hoari ur bartiad Bim! https://play.google.com/store/apps/details?"
 "id=bim.app"
+
+#, c++-format
+msgid "{} game being played right now."
+msgid_plural "{} games being played right now."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+
+#, c++-format
+msgid "{} player connected right now."
+msgid_plural "{} players connected right now."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+
+#, c++-format
+msgid "{} game played in the last hour."
+msgid_plural "{} games played in the last hour."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+
+#, c++-format
+msgid "{} player connected in the last hour."
+msgid_plural "{} players connected in the last hour."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+
+#, c++-format
+msgid "{} game played in the last 24 hours."
+msgid_plural "{} games played in the last 24 hours."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+
+#, c++-format
+msgid "{} player connected in the last 24 hours."
+msgid_plural "{} players connected in the last 24 hours."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+
+#, c++-format
+msgid "{} game played in the last 30 days."
+msgid_plural "{} games played in the last 30 days."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+
+#, c++-format
+msgid "{} player connected in the last 30 days."
+msgid_plural "{} players connected in the last 30 days."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+
+#, c++-format
+msgid "Connected to {}."
+msgstr ""
+
+msgid ""
+"The shop is not available on this platform, yet you can support the "
+"developers with donations! Should I open the donations page?"
+msgstr ""
 
 msgid "You need more coins to purchase this item!"
 msgstr "Ezhomm ho peus eus muioc'h a bezhioù evit prenañ an dra-mañ !"
@@ -131,6 +212,29 @@ msgstr "Ket"
 msgid "Yes"
 msgstr "Ya"
 
+msgid "Defeats"
+msgstr "Kollet"
+
+msgid "Draws"
+msgstr "Rampo"
+
+msgid "Games"
+msgstr "Partiadoù"
+
+msgid "Victories"
+msgstr "Bet trec'h"
+
+msgid "Your statistics"
+msgstr "Ho stadegoù"
+
+msgid "Success rate"
+msgstr "Feur trec'hiñ"
+
+msgid ""
+"Is your language missing? Add it on <a href='https://hosted.weblate.org/"
+"projects/bim/gettext-files/'>Weblate</a>!"
+msgstr ""
+
 msgid "Language"
 msgstr "Yezh"
 
@@ -171,36 +275,23 @@ msgstr "Arventennoù"
 msgid "Vibrations"
 msgstr "Daskrenoù"
 
-msgid "Defeats"
-msgstr "Kollet"
+msgid "PLAY ONLINE"
+msgstr "C'HOARI ENLINENN"
 
-msgid "Draws"
-msgstr "Rampo"
-
-msgid "Games"
-msgstr "Partiadoù"
-
-msgid "Victories"
-msgstr "Bet trec'h"
-
-msgid "DEBUG"
-msgstr "DIZREINAÑ"
-
-msgid ""
-"PLAY\n"
-"ONLINE"
+msgid "Disconnected."
 msgstr ""
-"C'HOARI\n"
-"ENLINENN"
 
-msgid "Your statistics"
-msgstr "Ho stadegoù"
+msgid "SHOP"
+msgstr "STAL"
+
+msgid "STATISTICS"
+msgstr ""
 
 msgid "ALPHA VERSION"
 msgstr "STUMM ALFA"
 
-msgid "Success rate"
-msgstr "Feur trec'hiñ"
+msgid "Join our Discord to meet other players."
+msgstr ""
 
 msgid "You can start a two-players game now or wait for more players!"
 msgstr "Gallout a rit lañsañ ur bartiad gant daou c'hoarier pe gortoz re all !"
@@ -230,8 +321,8 @@ msgstr "×1000"
 msgid "LOADING…"
 msgstr "O KARGAÑ…"
 
-msgid "SHOP"
-msgstr "STAL"
+#~ msgid "DEBUG"
+#~ msgstr "DIZREINAÑ"
 
 #~ msgid "Please wait.."
 #~ msgstr "Gortozit mar plij.."

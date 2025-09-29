@@ -5,18 +5,19 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-09-19 20:02+0000\n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2025-09-29 22:07+0200\n"
 "Last-Translator: AsetSiya <asetsiya@gmail.com>\n"
-"Language-Team: Turkish <https://hosted.weblate.org/projects/bim/"
-"gettext-files/tr/>\n"
+"Language-Team: Turkish <https://hosted.weblate.org/projects/bim/gettext-"
+"files/tr/>\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14-dev\n"
+"X-Generator: Poedit 3.6\n"
 
 msgid "Please wait"
 msgstr "Bir saniye bekle"
@@ -38,8 +39,65 @@ msgid ""
 "Come play a game of Bim! https://play.google.com/store/apps/details?"
 "id=bim.app"
 msgstr ""
-"Bim! oyununu oynamaya gel! https://play.google.com/store/apps/"
-"details?id=bim.app"
+"Bim! oyununu oynamaya gel! https://play.google.com/store/apps/details?"
+"id=bim.app"
+
+#, c++-format
+msgid "{} game being played right now."
+msgid_plural "{} games being played right now."
+msgstr[0] ""
+msgstr[1] ""
+
+#, c++-format
+msgid "{} player connected right now."
+msgid_plural "{} players connected right now."
+msgstr[0] ""
+msgstr[1] ""
+
+#, c++-format
+msgid "{} game played in the last hour."
+msgid_plural "{} games played in the last hour."
+msgstr[0] ""
+msgstr[1] ""
+
+#, c++-format
+msgid "{} player connected in the last hour."
+msgid_plural "{} players connected in the last hour."
+msgstr[0] ""
+msgstr[1] ""
+
+#, c++-format
+msgid "{} game played in the last 24 hours."
+msgid_plural "{} games played in the last 24 hours."
+msgstr[0] ""
+msgstr[1] ""
+
+#, c++-format
+msgid "{} player connected in the last 24 hours."
+msgid_plural "{} players connected in the last 24 hours."
+msgstr[0] ""
+msgstr[1] ""
+
+#, c++-format
+msgid "{} game played in the last 30 days."
+msgid_plural "{} games played in the last 30 days."
+msgstr[0] ""
+msgstr[1] ""
+
+#, c++-format
+msgid "{} player connected in the last 30 days."
+msgid_plural "{} players connected in the last 30 days."
+msgstr[0] ""
+msgstr[1] ""
+
+#, c++-format
+msgid "Connected to {}."
+msgstr ""
+
+msgid ""
+"The shop is not available on this platform, yet you can support the "
+"developers with donations! Should I open the donations page?"
+msgstr ""
 
 msgid "You need more coins to purchase this item!"
 msgstr "Bu öğeyi almak için daha fazla altın gerekiyor!"
@@ -59,7 +117,8 @@ msgstr "Arenayı kalın bir sis kaplıyor. Gitmediğin yerleri göremiyorsun!"
 msgid ""
 "Find the invisibility power up to disappear from the screen of all other "
 "players!"
-msgstr "Diğer tüm oyuncuların ekranından kaybolmak için görünmezlik gücünü bul!"
+msgstr ""
+"Diğer tüm oyuncuların ekranından kaybolmak için görünmezlik gücünü bul!"
 
 msgid "An error occurred. The purchase could not be completed."
 msgstr "Bir hata oluştu. Satın alma işlemi tamamlanamadı."
@@ -119,6 +178,29 @@ msgstr "Hayır"
 msgid "Yes"
 msgstr "Evet"
 
+msgid "Defeats"
+msgstr "Yenilgiler"
+
+msgid "Draws"
+msgstr "Berabereler"
+
+msgid "Games"
+msgstr "Oyunlar"
+
+msgid "Victories"
+msgstr "Kazanmalar"
+
+msgid "Your statistics"
+msgstr "İstatistiklerin"
+
+msgid "Success rate"
+msgstr "Başarı oranı"
+
+msgid ""
+"Is your language missing? Add it on <a href='https://hosted.weblate.org/"
+"projects/bim/gettext-files/'>Weblate</a>!"
+msgstr ""
+
 msgid "Language"
 msgstr "Dil"
 
@@ -158,36 +240,23 @@ msgstr "Ayarlar"
 msgid "Vibrations"
 msgstr "Titreşimler"
 
-msgid "Defeats"
-msgstr "Yenilgiler"
+msgid "PLAY ONLINE"
+msgstr "ÇEVRİMİÇİ OYNA"
 
-msgid "Draws"
-msgstr "Berabereler"
-
-msgid "Games"
-msgstr "Oyunlar"
-
-msgid "Victories"
-msgstr "Kazanmalar"
-
-msgid "DEBUG"
-msgstr "HATA AYIKLAMA"
-
-msgid ""
-"PLAY\n"
-"ONLINE"
+msgid "Disconnected."
 msgstr ""
-"ÇEVRİMİÇİ\n"
-"OYNA"
 
-msgid "Your statistics"
-msgstr "İstatistiklerin"
+msgid "SHOP"
+msgstr "MAĞAZA"
+
+msgid "STATISTICS"
+msgstr ""
 
 msgid "ALPHA VERSION"
 msgstr "ALFA VERSİYON"
 
-msgid "Success rate"
-msgstr "Başarı oranı"
+msgid "Join our Discord to meet other players."
+msgstr ""
 
 msgid "You can start a two-players game now or wait for more players!"
 msgstr ""
@@ -221,5 +290,5 @@ msgstr "×1000"
 msgid "LOADING…"
 msgstr "YÜKLENİYOR…"
 
-msgid "SHOP"
-msgstr "MAĞAZA"
+#~ msgid "DEBUG"
+#~ msgstr "HATA AYIKLAMA"

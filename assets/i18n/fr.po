@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-03-09 22:26+0100\n"
-"PO-Revision-Date: 2025-08-28 22:04+0200\n"
+"PO-Revision-Date: 2025-09-29 22:11+0200\n"
 "Last-Translator: Julien Jorge <julien.jorge@gmx.fr>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/bim/gettext-files/"
 "fr/>\n"
@@ -41,6 +41,65 @@ msgid ""
 msgstr ""
 "Viens faire une partie de Bim! https://play.google.com/store/apps/details?"
 "id=bim.app"
+
+#, c++-format
+msgid "{} game being played right now."
+msgid_plural "{} games being played right now."
+msgstr[0] "{} partie jouée en ce moment."
+msgstr[1] "{} parties jouées en ce moment."
+
+#, c++-format
+msgid "{} player connected right now."
+msgid_plural "{} players connected right now."
+msgstr[0] "{} joueur connecté en ce moment."
+msgstr[1] "{} joueurs connectés en ce moment."
+
+#, c++-format
+msgid "{} game played in the last hour."
+msgid_plural "{} games played in the last hour."
+msgstr[0] "{} partie jouée dans la dernière heure."
+msgstr[1] "{} parties jouées dans la dernière heure."
+
+#, c++-format
+msgid "{} player connected in the last hour."
+msgid_plural "{} players connected in the last hour."
+msgstr[0] "{} joueur connecté dans la dernière heure."
+msgstr[1] "{} joueurs connectés dans la dernière heure."
+
+#, c++-format
+msgid "{} game played in the last 24 hours."
+msgid_plural "{} games played in the last 24 hours."
+msgstr[0] "{} partie jouée dans les dernières 24 heures."
+msgstr[1] "{} parties jouées dans les dernières 24 heures."
+
+#, c++-format
+msgid "{} player connected in the last 24 hours."
+msgid_plural "{} players connected in the last 24 hours."
+msgstr[0] "{} joueur connecté dans les dernières 24 heures."
+msgstr[1] "{} joueurs connectés dans les dernières 24 heures."
+
+#, c++-format
+msgid "{} game played in the last 30 days."
+msgid_plural "{} games played in the last 30 days."
+msgstr[0] "{} partie jouée dans les 30 derniers jours."
+msgstr[1] "{} parties jouées dans les 30 derniers jours."
+
+#, c++-format
+msgid "{} player connected in the last 30 days."
+msgid_plural "{} players connected in the last 30 days."
+msgstr[0] "{} joueur connecté dans les 30 derniers jours."
+msgstr[1] "{} joueurs connectés dans les 30 derniers jours."
+
+#, c++-format
+msgid "Connected to {}."
+msgstr "Connecté à {}."
+
+msgid ""
+"The shop is not available on this platform, yet you can support the "
+"developers with donations! Should I open the donations page?"
+msgstr ""
+"La boutique n'est pas disponible sur cette plateforme, cependant tu peux "
+"soutenir les développeurs avec des dons ! Dois-je ouvrir la page de dons ?"
 
 msgid "You need more coins to purchase this item!"
 msgstr "Il te faut d'avantage de pièces pour acheter cela !"
@@ -126,6 +185,31 @@ msgstr "Non"
 msgid "Yes"
 msgstr "Oui"
 
+msgid "Defeats"
+msgstr "Défaites"
+
+msgid "Draws"
+msgstr "Matchs nuls"
+
+msgid "Games"
+msgstr "Combats"
+
+msgid "Victories"
+msgstr "Victoires"
+
+msgid "Your statistics"
+msgstr "Tes statistiques"
+
+msgid "Success rate"
+msgstr "Taux de victoires"
+
+msgid ""
+"Is your language missing? Add it on <a href='https://hosted.weblate.org/"
+"projects/bim/gettext-files/'>Weblate</a>!"
+msgstr ""
+"Manque-t-il ta langue ? Ajoute-là sur <a href='https://hosted.weblate.org/"
+"projects/bim/gettext-files/'>Weblate</a>!"
+
 msgid "Language"
 msgstr "Langage"
 
@@ -167,36 +251,24 @@ msgstr "Paramètres"
 msgid "Vibrations"
 msgstr "Vibrations"
 
-msgid "Defeats"
-msgstr "Défaites"
+msgid "PLAY ONLINE"
+msgstr "JOUER EN LIGNE"
 
-msgid "Draws"
-msgstr "Matchs nuls"
+#, fuzzy
+msgid "Disconnected."
+msgstr "Connecté à {}."
 
-msgid "Games"
-msgstr "Combats"
+msgid "SHOP"
+msgstr "BOUTIQUE"
 
-msgid "Victories"
-msgstr "Victoires"
-
-msgid "DEBUG"
-msgstr "DEBUG"
-
-msgid ""
-"PLAY\n"
-"ONLINE"
-msgstr ""
-"JOUER\n"
-"EN LIGNE"
-
-msgid "Your statistics"
-msgstr "Tes statistiques"
+msgid "STATISTICS"
+msgstr "STATISTIQUES"
 
 msgid "ALPHA VERSION"
 msgstr "VERSION ALPHA"
 
-msgid "Success rate"
-msgstr "Taux de victoires"
+msgid "Join our Discord to meet other players."
+msgstr "Rejoins notre Discord pour trouver des joueurs."
 
 msgid "You can start a two-players game now or wait for more players!"
 msgstr "Tu peux lancer une partie à 2 joueurs ou attendre d'autres joueurs !"
@@ -226,8 +298,8 @@ msgstr "×1000"
 msgid "LOADING…"
 msgstr "CHARGEMENT…"
 
-msgid "SHOP"
-msgstr "BOUTIQUE"
+#~ msgid "DEBUG"
+#~ msgstr "DEBUG"
 
 #~ msgid "Please wait.."
 #~ msgstr "Juste un instant.."
