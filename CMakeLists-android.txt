@@ -10,12 +10,6 @@ find_program(paco_info_bin paco-info REQUIRED)
 # in Android builds below.
 cmake_path(GET magick PARENT_PATH host_bin)
 
-option(
-  BIM_ANDROID_DEV
-  "Create an Android build for developers, with a different app ID."
-  OFF
-)
-
 if(BIM_ANDROID_DEV)
   set(bim_android_app_id "bim.app.dev")
   set(bim_android_app_name "Bim! (dev)")
@@ -26,12 +20,8 @@ else()
   set(bim_android_signing_key_alias "bim-release")
 endif()
 
-option(
-  BIM_PURE_FOSS
-  "Use free software libraries exclusively."
-  OFF
-)
-
+# These variables will be injected in the Groovy scripts to build the
+# Android app.
 if(BIM_PURE_FOSS)
   set(bim_pure_foss true)
 else()

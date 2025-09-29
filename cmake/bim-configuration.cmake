@@ -27,6 +27,21 @@ option(BIM_BUILD_SERVER
   "Whether the standalone server should be built or not."
   ON)
 
+option(
+  BIM_ANDROID_DEV
+  "Create an Android build for developers, with a different app ID."
+  OFF
+)
+message(STATUS "Developer build is ${BIM_ANDROID_DEV}")
+
+option(
+  BIM_PURE_FOSS
+  "Use free software libraries exclusively."
+  OFF
+)
+message(STATUS "Building with FOSS software only: ${BIM_PURE_FOSS}")
+
+
 if(BIM_TARGET STREQUAL "android")
   set(BIM_ANDROID_GENERATED_RES_DIR
     "${CMAKE_BINARY_DIR}/android/app/res"
