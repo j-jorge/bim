@@ -57,7 +57,7 @@
             "align.horizontal": "center",
             "link.color": "amber",
             "text.i18n":
-                "Is your language missing or incomplete? Add it on <a href='https://hosted.weblate.org/projects/bim/gettext-files/'>Weblate</a>!"
+                "Is your language missing? Add it on <a href='https://hosted.weblate.org/projects/bim/gettext-files/'>Weblate</a>!"
           }
         ],
 

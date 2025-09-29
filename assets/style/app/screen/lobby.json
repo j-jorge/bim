@@ -114,7 +114,7 @@
                     "align.horizontal": "left",
                     "overflow": "resize-height",
                     "wrap": true,
-                    "text": "12345 players connected right now.",
+                    "text.i18n": "Disconnected.",
                     "z-order": 10
                   }
                 ]
