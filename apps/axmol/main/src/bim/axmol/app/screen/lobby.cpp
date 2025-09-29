@@ -4,6 +4,7 @@
 #include <bim/axmol/app/analytics_service.hpp>
 #include <bim/axmol/app/part/wallet.hpp>
 #include <bim/axmol/app/popup/debug_popup.hpp>
+#include <bim/axmol/app/popup/message.hpp>
 #include <bim/axmol/app/popup/player_statistics_popup.hpp>
 #include <bim/axmol/app/popup/settings_popup.hpp>
 #include <bim/axmol/app/preference/arena_stats.hpp>
@@ -26,6 +27,7 @@
 #include <iscool/i18n/gettext.hpp>
 #include <iscool/i18n/numeric.hpp>
 #include <iscool/signals/implement_signal.hpp>
+#include <iscool/system/open_url.hpp>
 
 #include <axmol/2d/Label.h>
 #include <axmol/2d/ProgressTimer.h>
@@ -60,6 +62,8 @@ bim::axmol::app::lobby::lobby(const context& context,
   , m_settings(new settings_popup(context, *style.get_declaration("settings")))
   , m_player_statistics(new player_statistics_popup(
         context, *style.get_declaration("player-statistics")))
+  , m_message(
+        new message_popup(context, *style.get_declaration("message-popup")))
   , m_debug(
         new debug_popup(context, *style.get_declaration("debug"), *m_wallet))
   , m_debug_tap(*m_controls->debug_activator)
@@ -172,6 +176,7 @@ void bim::axmol::app::lobby::closing()
 {
   m_hello_exchange->stop();
   m_session_connection.disconnect();
+  m_message_connection.disconnect();
 }
 
 void bim::axmol::app::lobby::update_server_stats(
@@ -310,24 +315,40 @@ void bim::axmol::app::lobby::play_online()
   m_play();
 }
 
-void bim::axmol::app::lobby::open_shop_from_wallet() const
+void bim::axmol::app::lobby::open_shop_from_wallet()
 {
   m_context.get_analytics()->event(
       "button", { { "id", "wallet" }, { "where", "lobby" } });
   open_shop();
 }
 
-void bim::axmol::app::lobby::open_shop_from_button() const
+void bim::axmol::app::lobby::open_shop_from_button()
 {
   m_context.get_analytics()->event("button",
                                    { { "id", "shop" }, { "where", "lobby" } });
   open_shop();
 }
 
-void bim::axmol::app::lobby::open_shop() const
+void bim::axmol::app::lobby::open_shop()
 {
   if (is_shop_supported())
     m_shop();
+#if BIM_PURE_FOSS
+  #define gettext_foss_only(s) ic_gettext(s)
+  else
+    {
+      m_message_connection = m_message->connect_to_ok(
+          []()
+          {
+            iscool::system::open_url("https://github.com/sponsors/j-jorge");
+          });
+
+      m_message->show_yes_no(gettext_foss_only(
+          "The shop is not available on this platform, yet you can support "
+          "the developers with donations! Should I open the donations page?"));
+    }
+  #undef ignore_when_non_foss
+#endif
 }
 
 void bim::axmol::app::lobby::open_player_stats() const

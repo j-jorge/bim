@@ -48,6 +48,19 @@ set(main_sources
   main/src/bim/axmol/app/widget/player.cpp
 )
 
+if (BIM_PURE_FOSS)
+  set(bim_pure_foss_value 1)
+else()
+  set(bim_pure_foss_value 0)
+endif()
+
+set_source_files_properties(
+  main/src/bim/axmol/app/screen/lobby.cpp
+  PROPERTIES
+  COMPILE_DEFINITIONS BIM_PURE_FOSS=${bim_pure_foss_value}
+)
+unset(bim_pure_foss_value)
+
 if (BIM_BUILDING_FOR_ANDROID)
   set(platform_sources
     android/src/bim/axmol/app/analytics_service.cpp

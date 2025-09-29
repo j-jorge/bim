@@ -99,7 +99,7 @@ set(main_task_style_files
   popup/player-statistics.json
   popup/settings.json
   popup/small.json
-  popup/yes_no_message.json
+  popup/yes-no-message.json
 
   popup/debug/font/main.json
 

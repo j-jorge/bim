@@ -56,6 +56,7 @@ namespace bim::axmol::app
   class analytics_service;
   class debug_popup;
   class main_scene;
+  class message_popup;
   class player_statistics_popup;
   class settings_popup;
   class wallet;
@@ -104,9 +105,9 @@ namespace bim::axmol::app
     void show_settings();
     void play_online();
 
-    void open_shop_from_wallet() const;
-    void open_shop_from_button() const;
-    void open_shop() const;
+    void open_shop_from_wallet();
+    void open_shop_from_button();
+    void open_shop();
 
     void open_player_stats() const;
 
@@ -121,9 +122,11 @@ namespace bim::axmol::app
 
     std::unique_ptr<settings_popup> m_settings;
     std::unique_ptr<player_statistics_popup> m_player_statistics;
+    std::unique_ptr<message_popup> m_message;
     std::unique_ptr<debug_popup> m_debug;
 
     iscool::signals::scoped_connection m_session_connection;
+    iscool::signals::scoped_connection m_message_connection;
 
     bim::axmol::input::tap_observer_handle m_debug_tap;
     std::uint8_t m_debug_activator_counter;

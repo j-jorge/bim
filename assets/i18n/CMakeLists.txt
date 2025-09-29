@@ -47,22 +47,30 @@ else()
   # Extract the strings from the sources.
   find_program(xgettext xgettext REQUIRED)
   set(pot_file ${CMAKE_CURRENT_BINARY_DIR}/bim.pot)
+  set(xgettext_args
+    --keyword=ic_gettext
+    --keyword=ic_ngettext:1,2
+    --from-code=utf-8
+    --no-location
+    --output=${pot_file}
+  )
+
+  if(BIM_PURE_FOSS)
+    set(xgettext_args ${xgettext_args} --keyword=gettext_foss_only)
+  endif()
+
   add_custom_command(
     OUTPUT ${pot_file}
     COMMAND
       ${xgettext}
-      --keyword=ic_gettext
-      --keyword=ic_ngettext:1,2
-      --from-code=utf-8
-      --no-location
-      --output=${pot_file}
+      ${xgettext_args}
       ${bim_app_sources}
       ${style_strings_source}
     COMMAND
-    # The .pot file may be copied in the repository by a custom
-    # command below. In order to avoid committing changes where only
-    # the creation date is modified, we simply remove the creation
-    # date from the .pot file.
+      # The .pot file may be copied in the repository by a custom
+      # command below. In order to avoid committing changes where only
+      # the creation date is modified, we simply remove the creation
+      # date from the .pot file.
       ${CMAKE_COMMAND}
       -DPOT_FILE=${pot_file}
       -P ${CMAKE_CURRENT_LIST_DIR}/erase-pot-creation-date.cmake

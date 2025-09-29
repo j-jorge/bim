@@ -5,7 +5,7 @@
     ],
 
     "message-popup": [
-      "popup/yes_no_message"
+      "popup/yes-no-message"
     ],
 
     "language-label-path": "container/label",
