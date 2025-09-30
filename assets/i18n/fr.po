@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-03-09 22:26+0100\n"
-"PO-Revision-Date: 2025-09-29 22:11+0200\n"
+"PO-Revision-Date: 2025-09-30 20:30+0200\n"
 "Last-Translator: Julien Jorge <julien.jorge@gmx.fr>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/bim/gettext-files/"
 "fr/>\n"
@@ -207,8 +207,8 @@ msgid ""
 "Is your language missing? Add it on <a href='https://hosted.weblate.org/"
 "projects/bim/gettext-files/'>Weblate</a>!"
 msgstr ""
-"Manque-t-il ta langue ? Ajoute-là sur <a href='https://hosted.weblate.org/"
-"projects/bim/gettext-files/'>Weblate</a>!"
+"Ta langue est-elle absente ? Ajoute-là sur <a href='https://"
+"hosted.weblate.org/projects/bim/gettext-files/'>Weblate</a> !"
 
 msgid "Language"
 msgstr "Langage"
@@ -254,10 +254,6 @@ msgstr "Vibrations"
 msgid "PLAY ONLINE"
 msgstr "JOUER EN LIGNE"
 
-#, fuzzy
-msgid "Disconnected."
-msgstr "Connecté à {}."
-
 msgid "SHOP"
 msgstr "BOUTIQUE"
 
@@ -297,6 +293,9 @@ msgstr "×1000"
 
 msgid "LOADING…"
 msgstr "CHARGEMENT…"
+
+#~ msgid "Disconnected."
+#~ msgstr "Déconnecté."
 
 #~ msgid "DEBUG"
 #~ msgstr "DEBUG"

@@ -232,9 +232,6 @@ msgstr ""
 msgid "PLAY ONLINE"
 msgstr ""
 
-msgid "Disconnected."
-msgstr ""
-
 msgid "SHOP"
 msgstr ""
 

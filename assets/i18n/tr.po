@@ -243,9 +243,6 @@ msgstr "Titreşimler"
 msgid "PLAY ONLINE"
 msgstr "ÇEVRİMİÇİ OYNA"
 
-msgid "Disconnected."
-msgstr ""
-
 msgid "SHOP"
 msgstr "MAĞAZA"
 

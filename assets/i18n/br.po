@@ -278,9 +278,6 @@ msgstr "Daskrenoù"
 msgid "PLAY ONLINE"
 msgstr "C'HOARI ENLINENN"
 
-msgid "Disconnected."
-msgstr ""
-
 msgid "SHOP"
 msgstr "STAL"
 

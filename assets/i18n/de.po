@@ -254,9 +254,6 @@ msgstr "Vibrationen"
 msgid "PLAY ONLINE"
 msgstr "SPIEL ONLINE"
 
-msgid "Disconnected."
-msgstr ""
-
 msgid "SHOP"
 msgstr "SHOP"
 
