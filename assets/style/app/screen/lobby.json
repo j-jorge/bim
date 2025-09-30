@@ -114,7 +114,6 @@
                     "align.horizontal": "left",
                     "overflow": "resize-height",
                     "wrap": true,
-                    "text.i18n": "Disconnected.",
                     "z-order": 10
                   }
                 ]
