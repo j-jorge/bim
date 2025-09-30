@@ -169,7 +169,7 @@ rsync --recursive \
       "$script_dir"/etc \
       "$login_at_host":bim/"$port"/
 
-ssh "$login_at_host" mkdir --parents "$script_dir"/etc/bim
+ssh "$login_at_host" mkdir --parents bim/"$port"/etc/bim
 rsync "$temp_server_config" \
       "$login_at_host":bim/"$port"/etc/bim/server-config.json
 
