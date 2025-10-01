@@ -34,6 +34,8 @@ namespace bim::axmol::app
 
     std::vector<std::string> shop_products;
     std::vector<int> shop_product_coins;
+
+    std::string discord_url;
   };
 
   std::optional<config> load_config(const Json::Value& json);

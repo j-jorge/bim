@@ -205,6 +205,7 @@ bim::axmol::app::config::config()
   , coins_per_victory(50)
   , coins_per_defeat(10)
   , coins_per_draw(10)
+  , discord_url("https://discord.gg/HqJtXB8Czy")
 {
   game_feature_price[bim::game::feature_flags::falling_blocks] = 50;
   game_feature_price[bim::game::feature_flags::shield] = 250;
@@ -258,6 +259,9 @@ bim::axmol::app::load_config(const Json::Value& json)
     return std::nullopt;
 
   if (!parse_shop_products(result, json["shop"]))
+    return std::nullopt;
+
+  if (!read_value(result.discord_url, json, "discord"))
     return std::nullopt;
 
   return result;

@@ -285,7 +285,7 @@ void bim::axmol::app::matchmaking::open_discord() const
 
   m_context.get_analytics()->event(
       "button", { { "id", "discord" }, { "where", "matchmaking" } });
-  iscool::system::open_url("https://discord.gg/nnjyMCm8");
+  iscool::system::open_url(m_context.get_config()->discord_url);
 }
 
 void bim::axmol::app::matchmaking::dispatch_back() const
