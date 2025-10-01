@@ -7,6 +7,7 @@ name="Bim! World's Server"
 set_up=
 temp_client_config=
 temp_server_config=
+client_config=0
 
 function clean_up()
 {
@@ -46,6 +47,8 @@ Usage:
 Where OPTIONS is:
   --build-dir DIR
      Mandatory. The build directory from which bim-server will be copied.
+  --client-config
+     Send the client config only.
   --dev
      Inform the script that this is a server for developers.
   -h, --help
@@ -73,6 +76,9 @@ do
             build_dir="${1:-}"
             shift
             ;;
+        --client-config)
+            client_config=1
+            ;;
         --dev)
             dev=1
             shift
@@ -92,12 +98,6 @@ do
     esac
 done
 
-if [[ -z "${build_dir:-}" ]]
-then
-    echo "Missing value for --build-dir. See --help for details." >&2
-    exit 1
-fi
-
 if [[ -z "${login_at_host:-}" ]]
 then
     echo "Missing value for --target. See --help for details." >&2
@@ -110,6 +110,38 @@ then
     exit 1
 fi
 
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd)"
+
+function send_client_config()
+{
+    echo "Sending client config."
+
+    local temp_client_config
+    temp_client_config="$(mktemp)"
+
+    sed "s/PORT/$port/" "$script_dir"/client-config.json \
+        > "$temp_client_config"
+    python3 -m json.tool \
+            --compact "$temp_client_config" "$temp_client_config"
+
+    rsync "$temp_client_config" "$login_at_host":./
+
+    local client_config_base_name
+    client_config_base_name="$(basename "$temp_client_config")"
+
+    ssh "$login_at_host" \
+        chmod a+r "$client_config_base_name" \
+        '&&' mv --backup \
+        "$client_config_base_name" /srv/www/bim/client-config.json
+}
+
+send_client_config
+
+if ((client_config == 1))
+then
+    exit
+fi
+
 echo "Replacing server listening on port $port in 5 seconds."
 sleep 5
 
@@ -120,11 +152,11 @@ then
     name="Bim! Dev Server"
 fi
 
-script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd)"
-
-temp_client_config="$(mktemp)"
-sed "s/PORT/$port/" "$script_dir"/client-config.json > "$temp_client_config"
-python3 -m json.tool --compact "$temp_client_config" "$temp_client_config"
+if [[ -z "${build_dir:-}" ]]
+then
+    echo "Missing value for --build-dir. See --help for details." >&2
+    exit 1
+fi
 
 temp_server_config="$(mktemp)"
 sed "s/{name}/$name/" "$script_dir"/server-config.json > "$temp_server_config"
@@ -160,7 +192,6 @@ ssh "$login_at_host" \
 rsync "$build_dir"/apps/server/bim-server{,.dbg} \
       "$build_dir"/apps/server/bim-stack-dump \
       "$login_at_host":bim/"$port"/bin/
-rsync "$temp_client_config" "$login_at_host":./
 
 rsync --recursive \
       "$script_dir"/bin \
@@ -174,10 +205,7 @@ rsync "$temp_server_config" \
       "$login_at_host":bim/"$port"/etc/bim/server-config.json
 
 ssh "$login_at_host" \
-    mv --backup \
-    "$(basename "$temp_client_config")" /srv/www/bim/client-config.json \
-    '&&' chmod a+r /srv/www/bim/client-config.json \
-    '&&' cd bim/"$port"/  \
+    cd bim/"$port"/  \
     '&&' PORT="$port" docker-compose up --build --detach
 
 if (( dev == 0 ))
