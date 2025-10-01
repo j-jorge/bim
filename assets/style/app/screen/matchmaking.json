@@ -48,6 +48,7 @@
             "z-order": 10,
             "font.size": 32,
             "font.color": "desert-storm",
+            "font.italics": true,
             "text.i18n": "Join our Discord to meet other players."
           }
         ],
