@@ -1,0 +1,7 @@
+- The flames intersect each other.
+- Added Turkish translation of the game.
+- Animate the transitions from one screen to the next.
+- Back to 60 fps in the menus.
+- Display the server statistics on the lobby.
+- Shop and stats buttons on the lobby.
+- Integrate PostHog to collect some insights about the game usage.

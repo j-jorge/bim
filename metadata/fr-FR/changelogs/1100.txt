@@ -1,0 +1,7 @@
+- Les flammes se croisent.
+- Ajout de la traduction du jeu en turc.
+- Animation des transitions d'un écran à l'autre.
+- Les menus sont de nouveau à 60 fps.
+- Affichage de statistiques du serveur sur l'écran d'accueil.
+- Ajout de boutons pour la boutique et les statistiques du joueur sur l'écran d'accueil.
+- Ajout de PostHog pour récupérer des statistiques d'utilisation du jeu.
