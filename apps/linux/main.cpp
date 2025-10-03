@@ -3,6 +3,10 @@
 
 #include <bim/axmol/app/bridge.hpp>
 
+#include <bim/net/message/protocol_version.hpp>
+
+#include <bim/version.hpp>
+
 #include <iscool/http/get_global_mockup.hpp>
 #include <iscool/http/mockup.hpp>
 #include <iscool/log/enable_console_log.hpp>
@@ -100,16 +104,6 @@ static void display_known_devices()
 static command_line parse_command_line(int argc, char* argv[])
 {
   boost::program_options::options_description options("Options");
-  options.add_options()("help,h", "Display this information.");
-  options.add_options()(
-      "screen",
-      boost::program_options::value<std::string>()->default_value("pixel3a"),
-      "The screen resolution, in pixels, of the targetted device. It can be "
-      "either WIDTHxHEIGHT (e.g. 720x1280) or the name of a device. Pass "
-      "--screen list to get a list of known devices.");
-  options.add_options()(
-      "scale", boost::program_options::value<float>()->default_value(1),
-      "The scale to apply to the game window.");
   options.add_options()(
       "assets",
       boost::program_options::value<std::vector<std::string>>()
@@ -119,12 +113,23 @@ static command_line parse_command_line(int argc, char* argv[])
       "in these directories, in the provided order.");
   options.add_options()("console-log", "Display logs in the terminal.");
   options.add_options()("debug", "Display the debug menu.");
+  options.add_options()("help,h", "Display this information.");
   options.add_options()(
       "http-mockup",
       boost::program_options::value<std::vector<std::string>>()
           ->value_name("path…")
           ->multitoken(),
       "Files from which the game can find fake responses to HTTP requests.");
+  options.add_options()(
+      "scale", boost::program_options::value<float>()->default_value(1),
+      "The scale to apply to the game window.");
+  options.add_options()(
+      "screen",
+      boost::program_options::value<std::string>()->default_value("pixel3a"),
+      "The screen resolution, in pixels, of the targetted device. It can be "
+      "either WIDTHxHEIGHT (e.g. 720x1280) or the name of a device. Pass "
+      "--screen list to get a list of known devices.");
+  options.add_options()("version", "Display the version number and exit.");
 
   boost::program_options::variables_map variables;
   boost::program_options::store(
@@ -138,6 +143,13 @@ static command_line parse_command_line(int argc, char* argv[])
   if (variables.count("help") != 0)
     {
       std::cout << "Usage: " << argv[0] << " OPTIONS\n\n" << options;
+      return command_line{ .options = std::nullopt, .valid = true };
+    }
+
+  if (variables.count("version") != 0)
+    {
+      std::cout << "Bim! " << bim::version << ".\n"
+                << "Protocol version " << bim::net::protocol_version << ".\n";
       return command_line{ .options = std::nullopt, .valid = true };
     }
 
