@@ -2,7 +2,10 @@
 #include <bim/server/config.hpp>
 #include <bim/server/server.hpp>
 
+#include <bim/net/message/protocol_version.hpp>
+
 #include <bim/tracy.hpp>
+#include <bim/version.hpp>
 
 #include <iscool/json/cast_bool.hpp>
 #include <iscool/json/cast_uint16.hpp>
@@ -230,6 +233,8 @@ static command_line parse_command_line(int argc, char* argv[])
   general_options.add_options()("config",
                                 boost::program_options::value<std::string>(),
                                 "Load the server config from this file.");
+  general_options.add_options()("version",
+                                "Display the version number and exit.");
 
   boost::program_options::options_description hidden_options("Options");
   hidden_options.add_options()(
@@ -336,6 +341,13 @@ static command_line parse_command_line(int argc, char* argv[])
       boost::program_options::options_description visible_options;
       visible_options.add(general_options).add(config_options);
       std::cout << "Usage: " << argv[0] << " OPTIONS\n" << visible_options;
+      return command_line{ .options = std::nullopt, .valid = true };
+    }
+
+  if (variables.count("version") != 0)
+    {
+      std::cout << "Bim! " << bim::version << ".\n"
+                << "Protocol version " << bim::net::protocol_version << ".\n";
       return command_line{ .options = std::nullopt, .valid = true };
     }
 
@@ -474,6 +486,7 @@ int main(int argc, char* argv[])
   iscool::schedule::initialize(scheduler.get_delayed_call_delegate());
 
   std::cout << "Press Ctrl+C to exit.\n";
+  ic_log(iscool::log::nature::info(), "server", "Bim! {}.", bim::version);
   ic_log(iscool::log::nature::info(), "server", "Running on port {}.",
          command_line.options->config.port);
 

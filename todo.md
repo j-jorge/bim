@@ -1,7 +1,5 @@
 # Next
 
-- Add a --version flag to bim-server.
-- Update the client config on each launch.
 - Game feature submenu.
 
 # Client

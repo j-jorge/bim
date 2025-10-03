@@ -93,14 +93,8 @@ bim::axmol::app::settings_popup::settings_popup(
   m_inputs.push_back(m_controls->d_pad_kind->input_node());
   m_inputs.push_back(m_controls->language_button->input_node());
 
-  std::string version =
+  const std::string version =
       fmt::format(fmt::runtime(ic_gettext("Version {}")), bim::version);
-
-  if (bim::pure_foss)
-    version += " FOSS";
-
-  if (bim::built_for_developers)
-    version += " (dev)";
 
   m_controls->version->setString(version);
 

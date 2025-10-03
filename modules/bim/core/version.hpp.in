@@ -4,13 +4,29 @@
 
 namespace bim
 {
-  constexpr std::string_view version = "@CMAKE_PROJECT_VERSION@";
-  constexpr int version_major = @CMAKE_PROJECT_VERSION_MAJOR@;
-  constexpr bool pure_foss = std::string_view("@BIM_PURE_FOSS@") == "ON";
-  constexpr bool built_for_developers =
-#ifndef NDEBUG
-      true;
+#cmakedefine01 BIM_PURE_FOSS
+#cmakedefine01 BIM_ANDROID_DEV
+
+#if BIM_ANDROID_DEV || !defined(NDEBUG)
+  #define BIM_DEV 1
 #else
-      std::string_view("@BIM_ANDROID_DEV@") == "ON";
+  #define BIM_DEV 0
 #endif
+
+  constexpr std::string_view version = "@CMAKE_PROJECT_VERSION@"
+#if BIM_PURE_FOSS
+                                       " FOSS"
+#endif
+#if BIM_DEV
+                                       " (dev)"
+#endif
+      ;
+
+  constexpr bool built_for_developers = BIM_DEV;
+
+#undef BIM_DEV
+#undef BIM_ANDROID_DEV
+#undef BIM_PURE_FOSS
+
+  constexpr int version_major = @CMAKE_PROJECT_VERSION_MAJOR@;
 }
