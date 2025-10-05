@@ -25,7 +25,7 @@ static void send_request(const iscool::http::request& request)
       break;
     }
 
-  ax_request->setResponseCallback(
+  ax_request->setCompleteCallback(
       [=](ax::network::HttpClient*,
           ax::network::HttpResponse* response) -> void
       {

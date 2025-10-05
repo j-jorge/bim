@@ -200,6 +200,7 @@ macro(assign_common_sources)
     ${source_root}/audio/AudioDecoder.cpp
     ${source_root}/audio/AudioDecoderMp3.cpp
     ${source_root}/audio/AudioDecoderWav.cpp
+    ${source_root}/audio/AudioEffectsExtension.cpp
     ${source_root}/audio/AudioEngine.cpp
     ${source_root}/audio/AudioEngineImpl.cpp
     ${source_root}/audio/AudioPlayer.cpp

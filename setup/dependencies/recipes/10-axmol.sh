@@ -7,8 +7,8 @@ set -euo pipefail
 : "${bim_packages_root:-}"
 
 : "${axmol_repository:=https://github.com/j-jorge/axmol/}"
-: "${axmol_version:=2.8.1j}"
-package_revision=1
+: "${axmol_version:=2.9.0j}"
+package_revision=2
 version="$axmol_version"-"$package_revision"
 
 if [[ "$bim_build_type" = "release" ]]
@@ -130,7 +130,7 @@ build()
 
     # Axmol's dependency management tool, 1k, is implemented in .Net,
     # which requires libicu unless told not to. This environment variable
-    # turns this requerement off.
+    # turns this requirement off.
     export DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1
 
     bim-cmake-build \
@@ -139,6 +139,21 @@ build()
         --install-dir "$install_dir" \
         --source-dir "$script_dir"/axmol \
         "${cmake_options[@]}"
+}
+
+fix_up_openal_headers()
+{
+    # Axmol explicitly includes OpenAL headers from its own 3rdparty
+    # directory, which won't work with our installed
+    # package. Consequently we adjust the source and the installation
+    # to make it independent from Axmol's source tree.
+    cp --recursive \
+       "$source_dir"/3rdparty/openal/include/AL \
+       "$install_dir"/include/
+
+    sed 's,3rdparty/openal/include/,,' \
+        -i \
+        "$install_dir"/include/axmol/audio/oal_port.h
 }
 
 clean_up_install()
@@ -269,6 +284,7 @@ EOF
 
 install_power_shell
 build
+fix_up_openal_headers
 clean_up_install
 
 if [[ "$bim_package_install_platform" = "android" ]]
