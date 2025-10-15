@@ -11,11 +11,16 @@
 
 #include <axmol/2d/Node.h>
 
-#include <boost/unordered/unordered_map.hpp>
+#include <boost/unordered/unordered_flat_map.hpp>
 
 namespace ax::extension
 {
   class TableView;
+}
+
+namespace bim::axmol::style
+{
+  class bounds_properties;
 }
 
 namespace bim::axmol::widget
@@ -36,11 +41,15 @@ namespace bim::axmol::widget
     bim::axmol::input::node_reference input_node() const;
 
     void push_back(ax::Node& node);
+    void push_back(ax::Node& node, const iscool::style::declaration& size);
 
     void clear();
 
   private:
     class table_view_bridge;
+    using custom_size_map =
+        boost::unordered_flat_map<ax::Node*,
+                                  const bim::axmol::style::bounds_properties*>;
 
   private:
     bool init() override;
@@ -59,7 +68,8 @@ namespace bim::axmol::widget
     bim::axmol::ref_ptr<ax::extension::TableView> m_table_view;
     const bim::axmol::ref_ptr<table_view_bridge> m_table_view_bridge;
 
-    const iscool::style::declaration& m_item_size;
+    const bim::axmol::style::bounds_properties& m_default_item_size;
+    custom_size_map m_item_size;
 
     std::unique_ptr<bim::axmol::input::scroll_view_glue_handle>
         m_scroll_view_inputs;

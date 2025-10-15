@@ -115,7 +115,9 @@ bim::axmol::widget::list::list(const bim::axmol::widget::context& context,
                                const iscool::style::declaration& style)
   : m_context(context)
   , m_table_view_bridge(new table_view_bridge())
-  , m_item_size(*style.get_declaration("item-size"))
+  , m_default_item_size(
+        m_context.style_cache.get_bounds(*style.get_declaration("item-size")))
+  , m_dirty(false)
 {
   m_table_view_bridge->autorelease();
 }
@@ -169,8 +171,16 @@ void bim::axmol::widget::list::push_back(ax::Node& node)
   set_dirty();
 }
 
+void bim::axmol::widget::list::push_back(
+    ax::Node& node, const iscool::style::declaration& size)
+{
+  m_item_size[&node] = &m_context.style_cache.get_bounds(size);
+  push_back(node);
+}
+
 void bim::axmol::widget::list::clear()
 {
+  m_item_size.clear();
   m_table_view_bridge->clear();
   reload_data();
 }
@@ -266,6 +276,10 @@ void bim::axmol::widget::list::reload_data()
 
 void bim::axmol::widget::list::set_item_size(ax::Node& node)
 {
-  bim::axmol::style::apply_size(node, *this,
-                                m_context.style_cache.get_bounds(m_item_size));
+  const custom_size_map::const_iterator it = m_item_size.find(&node);
+
+  if (it != m_item_size.end())
+    bim::axmol::style::apply_size(node, *this, *it->second);
+  else
+    bim::axmol::style::apply_size(node, *this, m_default_item_size);
 }
