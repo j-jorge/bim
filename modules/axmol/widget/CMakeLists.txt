@@ -6,6 +6,7 @@ add_library(bim_axmol_widget
   main/src/bim/axmol/widget/apply_actions.cpp
   main/src/bim/axmol/widget/apply_bounds.cpp
   main/src/bim/axmol/widget/apply_display.cpp
+  main/src/bim/axmol/widget/button_behavior.cpp
   main/src/bim/axmol/widget/dynamic_factory.cpp
   main/src/bim/axmol/widget/instantiate_widgets.cpp
   main/src/bim/axmol/widget/merge_named_node_groups.cpp
