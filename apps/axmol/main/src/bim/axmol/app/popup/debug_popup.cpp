@@ -3,11 +3,6 @@
 
 #include <bim/axmol/app/part/wallet.hpp>
 #include <bim/axmol/app/popup/popup.hpp>
-#include <bim/axmol/app/preference/arena_stats.hpp>
-#include <bim/axmol/app/preference/date_of_next_config_update.hpp>
-#include <bim/axmol/app/preference/date_of_next_version_update_message.hpp>
-#include <bim/axmol/app/preference/feature_flags.hpp>
-#include <bim/axmol/app/preference/wallet.hpp>
 
 #include <bim/axmol/widget/factory/label.hpp>
 #include <bim/axmol/widget/implement_widget.hpp>
@@ -26,6 +21,12 @@
 
 #include <bim/axmol/input/key_observer_handle.impl.hpp>
 #include <bim/axmol/input/observer/single_key_observer.hpp>
+
+#include <bim/app/preference/arena_stats.hpp>
+#include <bim/app/preference/date_of_next_config_update.hpp>
+#include <bim/app/preference/date_of_next_version_update_message.hpp>
+#include <bim/app/preference/feature_flags.hpp>
+#include <bim/app/preference/wallet.hpp>
 
 #include <bim/game/feature_flags.hpp>
 
@@ -149,34 +150,35 @@ void bim::axmol::app::debug_popup::show()
       *m_context.get_local_preferences();
 
   add_text_item("Game count in arena",
-                std::to_string(games_in_arena(preferences)));
+                std::to_string(bim::app::games_in_arena(preferences)));
   add_text_item("Victories in arena",
-                std::to_string(victories_in_arena(preferences)));
+                std::to_string(bim::app::victories_in_arena(preferences)));
   add_text_item("Defeats in arena",
-                std::to_string(defeats_in_arena(preferences)));
+                std::to_string(bim::app::defeats_in_arena(preferences)));
 
   const std::chrono::hours now = iscool::time::now<std::chrono::hours>();
   {
-    const std::chrono::hours d = date_of_next_config_update(preferences);
+    const std::chrono::hours d =
+        bim::app::date_of_next_config_update(preferences);
 
     add_button_item("Config update in " + std::to_string((d - now).count())
                         + " h.",
                     [&preferences, now]() -> void
                     {
-                      date_of_next_config_update(
+                      bim::app::date_of_next_config_update(
                           preferences,
                           std::chrono::duration_cast<std::chrono::hours>(now));
                     });
   }
   {
     const std::chrono::hours d =
-        date_of_next_version_update_message(preferences);
+        bim::app::date_of_next_version_update_message(preferences);
 
     add_button_item("Version check in " + std::to_string((d - now).count())
                         + " h.",
                     [&preferences, now]() -> void
                     {
-                      date_of_next_version_update_message(
+                      bim::app::date_of_next_version_update_message(
                           preferences,
                           std::chrono::duration_cast<std::chrono::hours>(now));
                     });
@@ -205,18 +207,17 @@ void bim::axmol::app::debug_popup::add_fps_entry()
 void bim::axmol::app::debug_popup::add_feature_item(
     std::string_view label, bim::game::feature_flags flag)
 {
-  const bool available = !!(bim::axmol::app::available_feature_flags(
-                                *m_context.get_local_preferences())
-                            & flag);
+  const bool available =
+      !!(bim::app::available_feature_flags(*m_context.get_local_preferences())
+         & flag);
 
   auto toggle_flag = [this, flag]() -> bool
   {
     const bim::game::feature_flags new_flags =
-        bim::axmol::app::available_feature_flags(
-            *m_context.get_local_preferences())
+        bim::app::available_feature_flags(*m_context.get_local_preferences())
         ^ flag;
-    bim::axmol::app::available_feature_flags(
-        *m_context.get_local_preferences(), new_flags);
+    bim::app::available_feature_flags(*m_context.get_local_preferences(),
+                                      new_flags);
     return !!(new_flags & flag);
   };
 
@@ -293,9 +294,9 @@ void bim::axmol::app::debug_popup::add_item(
 void bim::axmol::app::debug_popup::coin_transaction(int amount) const
 {
   if (amount >= 0)
-    add_coins(*m_context.get_local_preferences(), amount);
+    bim::app::add_coins(*m_context.get_local_preferences(), amount);
   else
-    consume_coins(*m_context.get_local_preferences(), -amount);
+    bim::app::consume_coins(*m_context.get_local_preferences(), -amount);
 
   const ax::Node& n = *m_controls->close_button;
 

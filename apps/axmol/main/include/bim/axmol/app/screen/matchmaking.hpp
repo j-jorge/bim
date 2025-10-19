@@ -19,6 +19,12 @@ namespace bim::axmol::widget
   class context;
 }
 
+namespace bim::app
+{
+  struct config;
+  class matchmaking_wait_message;
+}
+
 namespace bim::net
 {
   class new_game_exchange;
@@ -40,9 +46,7 @@ namespace bim::axmol::app
 {
   class analytics_service;
   class feature_deck;
-  class matchmaking_wait_message;
   class wallet;
-  struct config;
 
   class matchmaking
   {
@@ -57,7 +61,7 @@ namespace bim::axmol::app
             ((analytics_service*)(analytics))                              //
             ((bim::net::session_handler*)(session_handler))                //
             ((iscool::preferences::local_preferences*)(local_preferences)) //
-            ((const config*)(config))                                      //
+            ((const bim::app::config*)(config))                            //
             ),
         ic_context_no_properties);
 
@@ -107,7 +111,7 @@ namespace bim::axmol::app
     iscool::signals::scoped_connection m_launch_connection;
 
     std::unique_ptr<feature_deck> m_feature_deck;
-    std::unique_ptr<matchmaking_wait_message> m_wait_message;
+    std::unique_ptr<bim::app::matchmaking_wait_message> m_wait_message;
 
     const iscool::style::declaration& m_style_displaying;
     const iscool::style::declaration& m_action_displaying;

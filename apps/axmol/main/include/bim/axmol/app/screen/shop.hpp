@@ -19,6 +19,11 @@ namespace bim::axmol::widget
   class context;
 }
 
+namespace bim::app
+{
+  struct config;
+}
+
 namespace iscool::preferences
 {
   class local_preferences;
@@ -41,7 +46,6 @@ namespace bim::axmol::app
   class message_popup;
   class shop_service;
   class wallet;
-  struct config;
 
   class shop
   {
@@ -53,7 +57,7 @@ namespace bim::axmol::app
             ((const bim::axmol::widget::context&)(widget_context))         //
             ((main_scene*)(main_scene))                                    //
             ((analytics_service*)(analytics))                              //
-            ((const config*)(config))                                      //
+            ((const bim::app::config*)(config))                            //
             ((iscool::preferences::local_preferences*)(local_preferences)) //
             ),
         ic_context_no_properties);

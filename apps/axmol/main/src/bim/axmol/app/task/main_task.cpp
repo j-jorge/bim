@@ -3,13 +3,14 @@
 
 #include <bim/axmol/app/analytics_service.hpp>
 #include <bim/axmol/app/popup/message.hpp>
-#include <bim/axmol/app/preference/date_of_next_config_update.hpp>
-#include <bim/axmol/app/preference/date_of_next_version_update_message.hpp>
-#include <bim/axmol/app/preference/update_preferences.hpp>
-#include <bim/axmol/app/preference/user_language.hpp>
 #include <bim/axmol/app/screen_wheel.hpp>
 
 #include <bim/net/message/authentication_error_code.hpp>
+
+#include <bim/app/preference/date_of_next_config_update.hpp>
+#include <bim/app/preference/date_of_next_version_update_message.hpp>
+#include <bim/app/preference/update_preferences.hpp>
+#include <bim/app/preference/user_language.hpp>
 
 #include <bim/version.hpp>
 
@@ -71,10 +72,11 @@ void bim::axmol::app::main_task::start()
 void bim::axmol::app::main_task::start_optimistic()
 {
   m_is_forcing_config_update = false;
-  update_preferences(*m_context.get_local_preferences(), m_config);
+  bim::app::update_preferences(*m_context.get_local_preferences(), m_config);
 
   if (iscool::time::now<std::chrono::hours>()
-      >= date_of_next_config_update(*m_context.get_local_preferences()))
+      >= bim::app::date_of_next_config_update(
+          *m_context.get_local_preferences()))
     fetch_remote_config();
 
   create_ui();
@@ -113,8 +115,8 @@ bool bim::axmol::app::main_task::load_config()
 
   if (iscool::files::full_path_exists(remote_config_file))
     {
-      std::optional<config> config = bim::axmol::app::load_config(
-          iscool::json::from_file(remote_config_file));
+      std::optional<bim::app::config> config =
+          bim::app::load_config(iscool::json::from_file(remote_config_file));
 
       if (config)
         {
@@ -178,8 +180,8 @@ void bim::axmol::app::main_task::validate_remote_config(
       return;
     }
 
-  const std::optional<config> config =
-      bim::axmol::app::load_config(json_config);
+  const std::optional<bim::app::config> config =
+      bim::app::load_config(json_config);
 
   if (!config)
     {
@@ -213,9 +215,10 @@ void bim::axmol::app::main_task::validate_remote_config(
 
   ic_log(iscool::log::nature::info(), "main_task", "Config updated.");
 
-  date_of_next_config_update(*m_context.get_local_preferences(),
-                             iscool::time::now<std::chrono::hours>()
-                                 + config->remote_config_update_interval);
+  bim::app::date_of_next_config_update(
+      *m_context.get_local_preferences(),
+      iscool::time::now<std::chrono::hours>()
+          + config->remote_config_update_interval);
 }
 
 void bim::axmol::app::main_task::read_translations()
@@ -231,7 +234,7 @@ void bim::axmol::app::main_task::read_translations()
   };
 
   const iscool::language_name language =
-      user_language(*m_context.get_local_preferences());
+      bim::app::user_language(*m_context.get_local_preferences());
 
   if (!check_language_code(iscool::to_string(language))
       && !check_language_code(
@@ -255,11 +258,11 @@ bool bim::axmol::app::main_task::display_version_update_message()
   iscool::preferences::local_preferences& preferences =
       *m_context.get_local_preferences();
 
-  if (now < date_of_next_version_update_message(preferences))
+  if (now < bim::app::date_of_next_version_update_message(preferences))
     return false;
 
-  date_of_next_version_update_message(preferences,
-                                      now + m_config.version_update_interval);
+  bim::app::date_of_next_version_update_message(
+      preferences, now + m_config.version_update_interval);
 
   m_message_connection = m_message_popup->connect_to_ok(
       [this]() -> void

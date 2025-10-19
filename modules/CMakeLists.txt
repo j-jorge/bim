@@ -1,6 +1,7 @@
 add_subdirectory(bim/core)
 add_subdirectory(bim/game)
 add_subdirectory(bim/net)
+add_subdirectory(bim/app)
 add_subdirectory(bim/server)
 
 add_subdirectory(axmol/core)

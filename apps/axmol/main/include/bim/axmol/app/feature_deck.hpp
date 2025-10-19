@@ -20,6 +20,11 @@ namespace bim::axmol::widget
   class toggle;
 }
 
+namespace bim::app
+{
+  struct config;
+}
+
 namespace iscool::preferences
 {
   class local_preferences;
@@ -33,7 +38,6 @@ namespace iscool::style
 namespace bim::axmol::app
 {
   class game_feature_button;
-  struct config;
 
   class feature_deck
   {
@@ -44,7 +48,7 @@ namespace bim::axmol::app
         ic_context_declare_parent_properties(                              //
             ((const bim::axmol::widget::context&)(widget_context))         //
             ((iscool::preferences::local_preferences*)(local_preferences)) //
-            ((const config*)(config))                                      //
+            ((const bim::app::config*)(config))                            //
             ),
         ic_context_no_properties);
 

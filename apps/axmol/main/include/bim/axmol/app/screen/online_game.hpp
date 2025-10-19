@@ -38,6 +38,11 @@ namespace bim::game
   struct player;
 }
 
+namespace bim::app
+{
+  class player_progress_tracker;
+}
+
 namespace bim::net
 {
   class contest_runner;
@@ -82,7 +87,6 @@ namespace bim::axmol::app
 {
   class fog_display;
   class player;
-  class player_progress_tracker;
 
   class online_game
   {
@@ -91,11 +95,11 @@ namespace bim::axmol::app
 
     ic_declare_context(
         m_context,
-        ic_context_declare_parent_properties(                              //
-            ((const bim::axmol::widget::context&)(widget_context))         //
-            ((player_progress_tracker*)(player_progress_tracker))          //
-            ((bim::net::session_handler*)(session_handler))                //
-            ((iscool::preferences::local_preferences*)(local_preferences)) //
+        ic_context_declare_parent_properties(                               //
+            ((const bim::axmol::widget::context&)(widget_context))          //
+            ((bim::app::player_progress_tracker*)(player_progress_tracker)) //
+            ((bim::net::session_handler*)(session_handler))                 //
+            ((iscool::preferences::local_preferences*)(local_preferences))  //
             ((iscool::system::haptic_feedback*)(haptic_feedback))),
         ic_context_no_properties);
 

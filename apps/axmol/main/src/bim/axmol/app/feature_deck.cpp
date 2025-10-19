@@ -1,12 +1,13 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/axmol/app/feature_deck.hpp>
 
-#include <bim/axmol/app/config.hpp>
-#include <bim/axmol/app/preference/feature_flags.hpp>
-#include <bim/axmol/app/preference/wallet.hpp>
 #include <bim/axmol/app/widget/game_feature_button.hpp>
 
 #include <bim/axmol/widget/context.hpp>
+
+#include <bim/app/config.hpp>
+#include <bim/app/preference/feature_flags.hpp>
+#include <bim/app/preference/wallet.hpp>
 
 #include <bim/game/feature_flags.hpp>
 
@@ -74,11 +75,11 @@ void bim::axmol::app::feature_deck::displaying()
       *m_context.get_local_preferences();
 
   const bim::game::feature_flags enabled_features =
-      enabled_feature_flags(preferences);
+      bim::app::enabled_feature_flags(preferences);
   const bim::game::feature_flags available_features =
-      available_feature_flags(preferences);
+      bim::app::available_feature_flags(preferences);
 
-  const std::int64_t coins = coins_balance(preferences);
+  const std::int64_t coins = bim::app::coins_balance(preferences);
 
   for (bim::game::feature_flags f : bim::game::g_all_game_feature_flags)
     configure_feature_button(enabled_features, available_features, f, coins);
@@ -99,7 +100,8 @@ void bim::axmol::app::feature_deck::purchased(bim::game::feature_flags feature)
 {
   m_buttons[feature]->available(true);
 
-  const std::int64_t coins = coins_balance(*m_context.get_local_preferences());
+  const std::int64_t coins =
+      bim::app::coins_balance(*m_context.get_local_preferences());
 
   for (bim::game::feature_flags f : bim::game::g_all_game_feature_flags)
     m_buttons[f]->affordable(

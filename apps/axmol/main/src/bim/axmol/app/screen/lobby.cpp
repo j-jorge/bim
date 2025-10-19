@@ -7,7 +7,6 @@
 #include <bim/axmol/app/popup/message.hpp>
 #include <bim/axmol/app/popup/player_statistics_popup.hpp>
 #include <bim/axmol/app/popup/settings_popup.hpp>
-#include <bim/axmol/app/preference/arena_stats.hpp>
 #include <bim/axmol/app/shop_support.hpp>
 
 #include <bim/axmol/input/observer/tap_observer.hpp>
@@ -19,6 +18,8 @@
 #include <bim/axmol/widget/ui/button.hpp>
 
 #include <bim/axmol/find_child_by_path.hpp>
+
+#include <bim/app/preference/arena_stats.hpp>
 
 #include <bim/net/exchange/hello_exchange.hpp>
 #include <bim/net/message/hello_ok.hpp>

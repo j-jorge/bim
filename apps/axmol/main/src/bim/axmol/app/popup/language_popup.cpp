@@ -4,7 +4,6 @@
 #include <bim/axmol/app/analytics_service.hpp>
 #include <bim/axmol/app/popup/message.hpp>
 #include <bim/axmol/app/popup/popup.hpp>
-#include <bim/axmol/app/preference/user_language.hpp>
 
 #include <bim/axmol/widget/factory/label.hpp>
 #include <bim/axmol/widget/factory/rich_text.hpp>
@@ -30,6 +29,8 @@
 #include <bim/axmol/input/touch_observer_handle.impl.hpp>
 
 #include <bim/axmol/find_child_by_path.hpp>
+
+#include <bim/app/preference/user_language.hpp>
 
 #include <iscool/i18n/gettext.hpp>
 #include <iscool/language_name.hpp>
@@ -95,7 +96,7 @@ bim::axmol::app::language_popup::language_popup(
   const std::string& label_path_in_button =
       *style.get_string("language-label-path");
   const iscool::language_name preferred_language =
-      user_language(*context.get_local_preferences());
+      bim::app::user_language(*context.get_local_preferences());
 
   for (iscool::language_name language :
        { iscool::language_name::br_FR, iscool::language_name::de_DE,
@@ -150,7 +151,7 @@ void bim::axmol::app::language_popup::confirm_language(
 void bim::axmol::app::language_popup::switch_to_language(
     iscool::language_name language) const
 {
-  user_language(*m_context.get_local_preferences(), language);
+  bim::app::user_language(*m_context.get_local_preferences(), language);
 
   m_context.get_analytics()->event(
       "preference", { { "language", iscool::to_string(language) } });

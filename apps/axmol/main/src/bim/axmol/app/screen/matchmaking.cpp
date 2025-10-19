@@ -2,13 +2,8 @@
 #include <bim/axmol/app/screen/matchmaking.hpp>
 
 #include <bim/axmol/app/analytics_service.hpp>
-#include <bim/axmol/app/config.hpp>
 #include <bim/axmol/app/feature_deck.hpp>
-#include <bim/axmol/app/matchmaking_wait_message.hpp>
 #include <bim/axmol/app/part/wallet.hpp>
-#include <bim/axmol/app/preference/feature_flags.hpp>
-#include <bim/axmol/app/preference/user_language.hpp>
-#include <bim/axmol/app/preference/wallet.hpp>
 
 #include <bim/axmol/widget/apply_actions.hpp>
 #include <bim/axmol/widget/apply_display.hpp>
@@ -19,6 +14,12 @@
 
 #include <bim/axmol/input/key_observer_handle.impl.hpp>
 #include <bim/axmol/input/observer/single_key_observer.hpp>
+
+#include <bim/app/config.hpp>
+#include <bim/app/matchmaking_wait_message.hpp>
+#include <bim/app/preference/feature_flags.hpp>
+#include <bim/app/preference/user_language.hpp>
+#include <bim/app/preference/wallet.hpp>
 
 #include <bim/net/exchange/new_game_exchange.hpp>
 #include <bim/net/session_handler.hpp>
@@ -72,8 +73,8 @@ bim::axmol::app::matchmaking::matchmaking(
         m_context.get_session_handler()->message_stream()))
   , m_feature_deck(
         new feature_deck(m_context, *style.get_declaration("feature-deck")))
-  , m_wait_message(new matchmaking_wait_message(
-        user_language(*context.get_local_preferences())))
+  , m_wait_message(new bim::app::matchmaking_wait_message(
+        bim::app::user_language(*context.get_local_preferences())))
   , m_style_displaying(*style.get_declaration("display.displaying"))
   , m_action_displaying(*style.get_declaration("actions.displaying"))
   , m_action_wait(*style.get_declaration("actions.wait"))
@@ -266,7 +267,7 @@ void bim::axmol::app::matchmaking::accept_game()
   m_controls->ready_button->enable(false);
 
   const bim::game::feature_flags features =
-      enabled_feature_flags(*m_context.get_local_preferences());
+      bim::app::enabled_feature_flags(*m_context.get_local_preferences());
   m_new_game->accept(features);
 }
 
@@ -303,25 +304,25 @@ void bim::axmol::app::matchmaking::feature_flag_clicked(
       *m_context.get_local_preferences();
 
   bim::game::feature_flags available_features =
-      available_feature_flags(preferences);
+      bim::app::available_feature_flags(preferences);
   bim::game::feature_flags enabled_features =
-      enabled_feature_flags(preferences);
+      bim::app::enabled_feature_flags(preferences);
 
   if (!(available_features & f))
     {
-      const std::int64_t coins = coins_balance(preferences);
+      const std::int64_t coins = bim::app::coins_balance(preferences);
       const std::int16_t price = m_context.get_config()->game_feature_price[f];
 
       if (price <= coins)
         {
-          consume_coins(preferences, price);
+          bim::app::consume_coins(preferences, price);
           m_wallet->animate_cash_flow();
 
           available_features |= f;
-          available_feature_flags(preferences, available_features);
+          bim::app::available_feature_flags(preferences, available_features);
 
           enabled_features |= f;
-          enabled_feature_flags(preferences, enabled_features);
+          bim::app::enabled_feature_flags(preferences, enabled_features);
 
           m_feature_deck->purchased(f);
           m_feature_deck->activated(f);
@@ -335,7 +336,7 @@ void bim::axmol::app::matchmaking::feature_flag_clicked(
   else
     {
       enabled_features = enabled_features ^ f;
-      enabled_feature_flags(preferences, enabled_features);
+      bim::app::enabled_feature_flags(preferences, enabled_features);
 
       if (!(enabled_features & f))
         {
