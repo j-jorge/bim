@@ -1,17 +1,12 @@
-find_package(axmol 1.0.0 REQUIRED)
-
 set(main_sources
   main/src/bim/axmol/app/alloc_assets.cpp
   main/src/bim/axmol/app/application.cpp
   main/src/bim/axmol/app/arena_display_config.cpp
   main/src/bim/axmol/app/bridge.cpp
-  main/src/bim/axmol/app/config.cpp
   main/src/bim/axmol/app/feature_deck.cpp
   main/src/bim/axmol/app/fog_display.cpp
   main/src/bim/axmol/app/frame_profiler.cpp
   main/src/bim/axmol/app/main_scene.cpp
-  main/src/bim/axmol/app/matchmaking_wait_message.cpp
-  main/src/bim/axmol/app/player_progress_tracker.cpp
   main/src/bim/axmol/app/root_scene.cpp
   main/src/bim/axmol/app/scene_lock.cpp
   main/src/bim/axmol/app/screen_wheel.cpp
@@ -24,17 +19,6 @@ set(main_sources
   main/src/bim/axmol/app/popup/player_statistics_popup.cpp
   main/src/bim/axmol/app/popup/popup.cpp
   main/src/bim/axmol/app/popup/settings_popup.cpp
-
-  main/src/bim/axmol/app/preference/arena_stats.cpp
-  main/src/bim/axmol/app/preference/audio.cpp
-  main/src/bim/axmol/app/preference/controls.cpp
-  main/src/bim/axmol/app/preference/date_of_next_config_update.cpp
-  main/src/bim/axmol/app/preference/date_of_next_version_update_message.cpp
-  main/src/bim/axmol/app/preference/feature_flags.cpp
-  main/src/bim/axmol/app/preference/haptic.cpp
-  main/src/bim/axmol/app/preference/update_preferences.cpp
-  main/src/bim/axmol/app/preference/user_language.cpp
-  main/src/bim/axmol/app/preference/wallet.cpp
 
   main/src/bim/axmol/app/screen/end_game.cpp
   main/src/bim/axmol/app/screen/lobby.cpp
@@ -77,10 +61,12 @@ else()
   set(platform_includes desktop/include)
 endif()
 
-add_library(bim_app STATIC ${main_sources} ${platform_sources})
-target_include_directories(bim_app PUBLIC main/include ${platform_includes})
+add_library(bim_axmol_app STATIC ${main_sources} ${platform_sources})
+target_include_directories(
+  bim_axmol_app PUBLIC main/include ${platform_includes}
+)
 
-target_link_libraries(bim_app
+target_link_libraries(bim_axmol_app
   PUBLIC
   axmol::axmol
   bim_axmol_audio
@@ -90,9 +76,8 @@ target_link_libraries(bim_app
   bim_axmol_input
   bim_axmol_schedule
   bim_axmol_widget
+  bim_app
   bim_net
-  iscool_i18n
-  iscool_preferences
   iscool_signals
   iscool_social
   iscool_system

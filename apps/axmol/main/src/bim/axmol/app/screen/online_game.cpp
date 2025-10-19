@@ -3,8 +3,6 @@
 
 #include <bim/axmol/app/alloc_assets.hpp>
 #include <bim/axmol/app/fog_display.hpp>
-#include <bim/axmol/app/player_progress_tracker.hpp>
-#include <bim/axmol/app/preference/controls.hpp>
 #include <bim/axmol/app/widget/player.hpp>
 
 #include <bim/axmol/widget/animation/animation_cache.hpp>
@@ -19,6 +17,9 @@
 #include <bim/axmol/widget/ui/soft_pad.hpp>
 #include <bim/axmol/widget/ui/soft_stick.hpp>
 #include <bim/axmol/widget/ui/tiling.hpp>
+
+#include <bim/app/player_progress_tracker.hpp>
+#include <bim/app/preference/controls.hpp>
 
 #include <bim/net/contest_runner.hpp>
 #include <bim/net/exchange/game_launch_event.hpp>
@@ -423,13 +424,13 @@ void bim::axmol::app::online_game::closing()
 void bim::axmol::app::online_game::configure_direction_pad()
 {
   const bool pad_on_the_left =
-      direction_pad_on_the_left(*m_context.get_local_preferences());
+      bim::app::direction_pad_on_the_left(*m_context.get_local_preferences());
 
   bim::axmol::widget::apply_bounds(
       m_context.get_widget_context(), m_controls->all_nodes,
       pad_on_the_left ? m_style_pad_on_the_left : m_style_pad_on_the_right);
-  m_use_stick =
-      direction_pad_kind_is_stick(*m_context.get_local_preferences());
+  m_use_stick = bim::app::direction_pad_kind_is_stick(
+      *m_context.get_local_preferences());
 
   if (m_use_stick)
     m_controls->joystick->set_layout_on_the_left(pad_on_the_left);

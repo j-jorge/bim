@@ -2,7 +2,6 @@
 #include <bim/axmol/app/screen/end_game.hpp>
 
 #include <bim/axmol/app/analytics_service.hpp>
-#include <bim/axmol/app/config.hpp>
 #include <bim/axmol/app/part/wallet.hpp>
 
 #include <bim/axmol/widget/apply_actions.hpp>
@@ -12,6 +11,8 @@
 #include <bim/axmol/widget/merge_named_node_groups.hpp>
 #include <bim/axmol/widget/named_node_group.hpp>
 #include <bim/axmol/widget/ui/button.hpp>
+
+#include <bim/app/config.hpp>
 
 #include <bim/net/exchange/game_launch_event.hpp>
 

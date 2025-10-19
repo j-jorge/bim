@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #pragma once
 
-#include <bim/axmol/app/config.hpp>
+#include <bim/app/config.hpp>
 
 #include <bim/net/session_handler.hpp>
 
@@ -74,7 +74,7 @@ namespace bim::axmol::app
             ((bool)(enable_debug))),
         ic_context_declare_properties(                      //
             ((bim::net::session_handler*)(session_handler)) //
-            ((config*)(config))));
+            ((bim::app::config*)(config))));
 
   public:
     explicit main_task(context context);
@@ -112,7 +112,7 @@ namespace bim::axmol::app
 
     iscool::signals::shared_connection_set m_config_request_connections;
 
-    config m_config;
+    bim::app::config m_config;
 
     bool m_is_forcing_config_update;
   };

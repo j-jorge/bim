@@ -3,8 +3,6 @@
 
 #include <bim/axmol/app/analytics_service.hpp>
 #include <bim/axmol/app/frame_profiler.hpp>
-#include <bim/axmol/app/preference/audio.hpp>
-#include <bim/axmol/app/preference/haptic.hpp>
 #include <bim/axmol/app/task/main_task.hpp>
 
 #include <bim/axmol/app/main_scene.hpp>
@@ -21,6 +19,9 @@
 #include <bim/axmol/widget/register_widgets.hpp>
 
 #include <bim/axmol/ref_ptr.impl.hpp>
+
+#include <bim/app/preference/audio.hpp>
+#include <bim/app/preference/haptic.hpp>
 
 #include <iscool/audio/default_mixer.hpp>
 #include <iscool/audio/mixer.hpp>
@@ -568,14 +569,14 @@ void bim::axmol::app::application::apply_local_preferences()
       *m_context.get_local_preferences());
 
   m_context.get_haptic_feedback()->set_enabled(
-      haptic_feedback_enabled(preferences));
+      bim::app::haptic_feedback_enabled(preferences));
 
   iscool::audio::mixer& audio = *m_context.get_audio();
 
-  if (!music_enabled(preferences))
+  if (!bim::app::music_enabled(preferences))
     audio.set_music_muted(true);
 
-  if (!effects_enabled(preferences))
+  if (!bim::app::effects_enabled(preferences))
     audio.set_effects_muted(true);
 }
 

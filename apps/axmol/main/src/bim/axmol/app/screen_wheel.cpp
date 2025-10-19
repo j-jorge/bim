@@ -3,9 +3,7 @@
 
 #include <bim/axmol/app/analytics_service.hpp>
 #include <bim/axmol/app/main_scene.hpp>
-#include <bim/axmol/app/player_progress_tracker.hpp>
 #include <bim/axmol/app/popup/message.hpp>
-#include <bim/axmol/app/preference/wallet.hpp>
 #include <bim/axmol/app/screen/end_game.hpp>
 #include <bim/axmol/app/screen/lobby.hpp>
 #include <bim/axmol/app/screen/matchmaking.hpp>
@@ -16,6 +14,9 @@
 #include <bim/axmol/widget/apply_bounds.hpp>
 #include <bim/axmol/widget/context.hpp>
 #include <bim/axmol/widget/factory/clipping_rectangle_node.hpp>
+
+#include <bim/app/player_progress_tracker.hpp>
+#include <bim/app/preference/wallet.hpp>
 
 #include <bim/net/exchange/game_launch_event.hpp>
 #include <bim/net/exchange/keep_alive_exchange.hpp>
@@ -54,7 +55,8 @@ bim::axmol::app::screen_wheel::screen_wheel(
   : m_context(context)
   , m_main_container(ax::Node::create())
   , m_controls(context.get_widget_context(), *style.get_declaration("widgets"))
-  , m_player_progress_tracker(new player_progress_tracker(context))
+  , m_player_progress_tracker(new bim::app::player_progress_tracker(
+        *context.get_local_preferences(), *context.get_config()))
   , m_lobby(new lobby(context, *style.get_declaration("lobby")))
   , m_matchmaking(
         new matchmaking(context, *style.get_declaration("matchmaking")))
@@ -368,7 +370,7 @@ void bim::axmol::app::screen_wheel::animate_shop_to_lobby()
 void bim::axmol::app::screen_wheel::display_lobby()
 {
   m_context.get_analytics()->screen(
-      "lobby", { { "coins", std::to_string(coins_balance(
+      "lobby", { { "coins", std::to_string(bim::app::coins_balance(
                                 *m_context.get_local_preferences())) } });
 
   m_lobby->displaying();
@@ -418,7 +420,7 @@ void bim::axmol::app::screen_wheel::display_end_game(
     const bim::game::contest_result& result)
 {
   m_context.get_analytics()->screen(
-      "end-game", { { "coins", std::to_string(coins_balance(
+      "end-game", { { "coins", std::to_string(bim::app::coins_balance(
                                    *m_context.get_local_preferences())) } });
 
   m_end_game->displaying(result);

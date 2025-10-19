@@ -15,6 +15,11 @@ namespace bim
     class context;
   }
 
+  namespace app
+  {
+    struct config;
+  }
+
   namespace game
   {
     class contest_result;
@@ -40,7 +45,6 @@ namespace bim::axmol::app
 {
   class analytics_service;
   class wallet;
-  struct config;
 
   class end_game
   {
@@ -53,7 +57,7 @@ namespace bim::axmol::app
             ((const bim::axmol::widget::context&)(widget_context))         //
             ((analytics_service*)(analytics))                              //
             ((iscool::preferences::local_preferences*)(local_preferences)) //
-            ((const config*)(config))                                      //
+            ((const bim::app::config*)(config))                            //
             ),
         ic_context_no_properties);
 

@@ -29,6 +29,7 @@ else()
   endfunction()
 
   collect_target_sources(bim_app bim_app_sources)
+  collect_target_sources(bim_axmol_app bim_axmol_app_sources)
   collect_target_sources(styles style_files)
 
   # Collect the strings from the styles.
@@ -65,6 +66,7 @@ else()
       ${xgettext}
       ${xgettext_args}
       ${bim_app_sources}
+      ${bim_axmol_app_sources}
       ${style_strings_source}
     COMMAND
       # The .pot file may be copied in the repository by a custom
@@ -75,7 +77,10 @@ else()
       -DPOT_FILE=${pot_file}
       -P ${CMAKE_CURRENT_LIST_DIR}/erase-pot-creation-date.cmake
     DEPENDS
-      ${bim_app_sources} ${style_strings_source} erase-pot-creation-date.cmake
+      ${bim_app_sources}
+      ${bim_axmol_app_sources}
+      ${style_strings_source}
+      erase-pot-creation-date.cmake
   )
 
   # Merge the .po files from the repository with .pot file created

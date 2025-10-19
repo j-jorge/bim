@@ -4,10 +4,6 @@
 #include <bim/axmol/app/analytics_service.hpp>
 #include <bim/axmol/app/popup/language_popup.hpp>
 #include <bim/axmol/app/popup/popup.hpp>
-#include <bim/axmol/app/preference/audio.hpp>
-#include <bim/axmol/app/preference/controls.hpp>
-#include <bim/axmol/app/preference/haptic.hpp>
-#include <bim/axmol/app/preference/user_language.hpp>
 
 #include <bim/axmol/input/key_observer_handle.impl.hpp>
 #include <bim/axmol/input/observer/single_key_observer.hpp>
@@ -19,6 +15,11 @@
 #include <bim/axmol/widget/ui/toggle.hpp>
 
 #include <bim/axmol/find_child_by_path.hpp>
+
+#include <bim/app/preference/audio.hpp>
+#include <bim/app/preference/controls.hpp>
+#include <bim/app/preference/haptic.hpp>
+#include <bim/app/preference/user_language.hpp>
 
 #include <bim/version.hpp>
 
@@ -78,7 +79,7 @@ bim::axmol::app::settings_popup::settings_popup(
       *m_controls->language_button,
       *style.get_string("language-button-label-path"));
   language_label->setString(iscool::to_human_string(
-      user_language(*context.get_local_preferences())));
+      bim::app::user_language(*context.get_local_preferences())));
 
   m_inputs.push_back(m_escape);
   m_inputs.push_back(m_controls->close_button->input_node());
@@ -183,12 +184,13 @@ void bim::axmol::app::settings_popup::show()
   const iscool::preferences::local_preferences& preferences =
       *m_context.get_local_preferences();
 
-  m_controls->music->set_state(music_enabled(preferences));
-  m_controls->sound_effects->set_state(effects_enabled(preferences));
-  m_controls->vibrations->set_state(haptic_feedback_enabled(preferences));
+  m_controls->music->set_state(bim::app::music_enabled(preferences));
+  m_controls->sound_effects->set_state(bim::app::effects_enabled(preferences));
+  m_controls->vibrations->set_state(
+      bim::app::haptic_feedback_enabled(preferences));
 
-  set_direction_pad_display(direction_pad_on_the_left(preferences));
-  set_stick_or_pad_display(direction_pad_kind_is_stick(preferences));
+  set_direction_pad_display(bim::app::direction_pad_on_the_left(preferences));
+  set_stick_or_pad_display(bim::app::direction_pad_kind_is_stick(preferences));
 
   m_popup->show(m_controls->all_nodes, m_style_bounds, m_inputs.root());
 }
@@ -217,8 +219,8 @@ void bim::axmol::app::settings_popup::set_music_preference()
   iscool::preferences::local_preferences& preferences =
       *m_context.get_local_preferences();
 
-  const bool v = !music_enabled(preferences);
-  music_enabled(preferences, v);
+  const bool v = !bim::app::music_enabled(preferences);
+  bim::app::music_enabled(preferences, v);
   m_controls->music->set_state(v);
 
   m_context.get_analytics()->event("preference",
@@ -232,8 +234,8 @@ void bim::axmol::app::settings_popup::set_sound_effects_preference()
   iscool::preferences::local_preferences& preferences =
       *m_context.get_local_preferences();
 
-  const bool v = !effects_enabled(preferences);
-  effects_enabled(preferences, v);
+  const bool v = !bim::app::effects_enabled(preferences);
+  bim::app::effects_enabled(preferences, v);
   m_controls->sound_effects->set_state(v);
 
   m_context.get_analytics()->event("preference",
@@ -247,8 +249,8 @@ void bim::axmol::app::settings_popup::set_vibrations_preference()
   iscool::preferences::local_preferences& preferences =
       *m_context.get_local_preferences();
 
-  const bool v = !haptic_feedback_enabled(preferences);
-  haptic_feedback_enabled(preferences, v);
+  const bool v = !bim::app::haptic_feedback_enabled(preferences);
+  bim::app::haptic_feedback_enabled(preferences, v);
   m_controls->vibrations->set_state(v);
 
   m_context.get_analytics()->event("preference",
@@ -262,8 +264,8 @@ void bim::axmol::app::settings_popup::set_d_pad_position_preference()
   iscool::preferences::local_preferences& preferences =
       *m_context.get_local_preferences();
 
-  const bool v = !direction_pad_on_the_left(preferences);
-  direction_pad_on_the_left(preferences, v);
+  const bool v = !bim::app::direction_pad_on_the_left(preferences);
+  bim::app::direction_pad_on_the_left(preferences, v);
 
   m_context.get_analytics()->event(
       "preference", { { "d-pad-position", v ? "left" : "right" } });
@@ -276,8 +278,8 @@ void bim::axmol::app::settings_popup::set_d_pad_kind_preference()
   iscool::preferences::local_preferences& preferences =
       *m_context.get_local_preferences();
 
-  const bool use_stick = !direction_pad_kind_is_stick(preferences);
-  direction_pad_kind_is_stick(preferences, use_stick);
+  const bool use_stick = !bim::app::direction_pad_kind_is_stick(preferences);
+  bim::app::direction_pad_kind_is_stick(preferences, use_stick);
 
   m_context.get_analytics()->event(
       "preference", { { "d-pad-kind", use_stick ? "stick" : "cross" } });

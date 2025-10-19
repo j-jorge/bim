@@ -2,10 +2,8 @@
 #include <bim/axmol/app/screen/shop.hpp>
 
 #include <bim/axmol/app/analytics_service.hpp>
-#include <bim/axmol/app/config.hpp>
 #include <bim/axmol/app/part/wallet.hpp>
 #include <bim/axmol/app/popup/message.hpp>
-#include <bim/axmol/app/preference/wallet.hpp>
 #include <bim/axmol/app/shop_service.hpp>
 
 #include <bim/axmol/widget/apply_display.hpp>
@@ -18,6 +16,9 @@
 #include <bim/axmol/input/observer/single_key_observer.hpp>
 
 #include <bim/axmol/find_child_by_path.hpp>
+
+#include <bim/app/config.hpp>
+#include <bim/app/preference/wallet.hpp>
 
 #include <iscool/i18n/gettext.hpp>
 #include <iscool/i18n/numeric.hpp>
@@ -184,7 +185,7 @@ void bim::axmol::app::shop::fetch_products()
   bim::axmol::widget::apply_display(m_context.get_widget_context().style_cache,
                                     m_controls->all_nodes, m_style_loading);
 
-  const config& config = *m_context.get_config();
+  const bim::app::config& config = *m_context.get_config();
   std::vector<std::string_view> product_ids;
   product_ids.reserve(config.shop_products.size());
 
@@ -199,7 +200,7 @@ void bim::axmol::app::shop::products_ready(
 {
   m_index_in_products.clear();
 
-  const config& config = *m_context.get_config();
+  const bim::app::config& config = *m_context.get_config();
 
   for (std::size_t i = 0, n = config.shop_products.size(); i != n; ++i)
     {
@@ -250,7 +251,7 @@ void bim::axmol::app::shop::purchase_completed(std::string_view product,
                                                std::size_t quantity,
                                                std::string_view token)
 {
-  const config& config = *m_context.get_config();
+  const bim::app::config& config = *m_context.get_config();
 
   for (std::size_t i : m_index_in_products)
     if (config.shop_products[i] == product)
@@ -260,8 +261,8 @@ void bim::axmol::app::shop::purchase_completed(std::string_view product,
             { { "product", product },
               { "quantity", std::to_string(quantity) } });
 
-        add_coins(*m_context.get_local_preferences(),
-                  quantity * config.shop_product_coins[i]);
+        bim::app::add_coins(*m_context.get_local_preferences(),
+                            quantity * config.shop_product_coins[i]);
         m_wallet->animate_cash_flow();
         m_shop->consume(token);
         return;
