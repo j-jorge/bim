@@ -3,7 +3,7 @@
     "widgets": [
       {
         "feature_falling_blocks": [
-          "app/widget/game-feature-button",
+          "app/widget/legacy-game-feature-button",
           {
             "widgets/toggle/widgets/off": [
               {
@@ -20,7 +20,7 @@
         ],
 
         "feature_shield": [
-          "app/widget/game-feature-button",
+          "app/widget/legacy-game-feature-button",
           {
             "widgets/toggle/widgets/off": [
               {
@@ -37,7 +37,7 @@
         ],
 
         "feature_invisibility": [
-          "app/widget/game-feature-button",
+          "app/widget/legacy-game-feature-button",
           {
             "widgets/toggle/widgets/off": [
               {
@@ -54,7 +54,7 @@
         ],
 
         "feature_fog_of_war": [
-          "app/widget/game-feature-button",
+          "app/widget/legacy-game-feature-button",
           {
             "widgets/toggle/widgets/off": [
               {

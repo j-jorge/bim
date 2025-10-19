@@ -1,13 +1,25 @@
 {
+  "meta": {
+    "overrides": [
+      "button/base"
+    ]
+  },
+
   "style": {
     "color.affordable": "cod-gray",
     "color.unaffordable": "monza",
 
     "widgets": [
       {
-        "toggle": [
-          "toggle/game-feature"
+        "background": [
+          {
+            "instantiate": "ax::Sprite",
+            "frame": "sprites/features/background-green.png",
+            "z-order": -1000
+          }
         ],
+
+        "feature_icon/frame": "sprites/features/shield.png",
 
         "price-tag": [
           "nine-slice/price-tag",
@@ -15,7 +27,8 @@
             "instantiate": "nine_slices",
             "anchor-point.x": 0.5,
             "anchor-point.y": 0.5,
-            "rotation": -10
+            "rotation": -10,
+            "z-order": 100
           }
         ],
 
@@ -35,11 +48,17 @@
 
     "bounds": [
       {
-        "toggle": [
-          "layout/center",
+        "background": [
+          "layout/fill",
           {
-            "width.percents": 100,
-            "height.percents": 100
+            "keep-ratio": true
+          }
+        ],
+
+        "feature_icon": [
+          "layout/fill",
+          {
+            "keep-ratio": true
           }
         ],
 
@@ -75,6 +94,9 @@
       {
         "price-tag/visible": true
       }
-    ]
+    ],
+
+    "display.feature": [],
+    "display.no-feature": []
   }
 }

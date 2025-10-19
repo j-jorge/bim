@@ -12,36 +12,68 @@
 
 #include <iscool/preferences/local_preferences.hpp>
 
+static void
+update_preferences_v0_to_v1(iscool::preferences::local_preferences& p,
+                            const bim::app::config& config)
+{
+  // Version 1 introduced the coins for each completed game.
+  std::int64_t coins =
+      bim::app::victories_in_arena(p) * config.coins_per_victory
+      + bim::app::defeats_in_arena(p) * config.coins_per_defeat;
+
+  // Game features are purchased with coins.
+  const bim::game::feature_flags features =
+      (bim::game::feature_flags)p.get_value("feature_flags.available",
+                                            (std::int64_t)0);
+
+  if (!!(features & bim::game::feature_flags::falling_blocks))
+    coins -=
+        config.game_feature_price[bim::game::feature_flags::falling_blocks];
+
+  if (!!(features & bim::game::feature_flags::invisibility))
+    coins -= config.game_feature_price[bim::game::feature_flags::invisibility];
+
+  if (!!(features & bim::game::feature_flags::fog_of_war))
+    coins -= config.game_feature_price[bim::game::feature_flags::fog_of_war];
+
+  bim::app::coins_balance(p, std::max<int64_t>(0, coins));
+
+  p.set_value("version", (std::int64_t)1);
+}
+
+static void
+update_preferences_v1_to_v2(iscool::preferences::local_preferences& p,
+                            const bim::app::config& config)
+{
+  // v2 removed the enabled flags mask and introduced the feature flag slots.
+  const bim::game::feature_flags enabled =
+      (bim::game::feature_flags)p.get_value("feature_flags.enabled",
+                                            (std::int64_t)0);
+
+  bim::game::feature_flags slot_0{};
+
+  for (bim::game::feature_flags f : bim::game::g_all_game_feature_flags)
+    if (!!(enabled & f))
+      {
+        slot_0 = f;
+        break;
+      }
+
+  bim::app::available_feature_slot(p, 0, true);
+  bim::app::feature_flag_in_slot(p, 0, slot_0);
+
+  p.set_value("version", (std::int64_t)2);
+}
+
 void bim::app::update_preferences(iscool::preferences::local_preferences& p,
                                   const config& config)
 {
-  std::int64_t version = p.get_value("version", (std::int64_t)0);
-
-  if (version == 0)
+  switch (p.get_value("version", (std::int64_t)0))
     {
-      // Version 1 introduced the coins for each completed game.
-      std::int64_t coins = victories_in_arena(p) * config.coins_per_victory
-                           + defeats_in_arena(p) * config.coins_per_defeat;
-
-      // Game features are purchased with coins.
-      const bim::game::feature_flags features = available_feature_flags(p);
-
-      if (!!(features & bim::game::feature_flags::falling_blocks))
-        coins -=
-            config
-                .game_feature_price[bim::game::feature_flags::falling_blocks];
-
-      if (!!(features & bim::game::feature_flags::invisibility))
-        coins -=
-            config.game_feature_price[bim::game::feature_flags::invisibility];
-
-      if (!!(features & bim::game::feature_flags::fog_of_war))
-        coins -=
-            config.game_feature_price[bim::game::feature_flags::fog_of_war];
-
-      coins_balance(p, std::max<int64_t>(0, coins));
-      ++version;
+    case 0:
+      update_preferences_v0_to_v1(p, config);
+      [[fallthrough]];
+    case 1:
+      update_preferences_v1_to_v2(p, config);
     }
-
-  p.set_value("version", version);
 }

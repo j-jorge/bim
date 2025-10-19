@@ -45,6 +45,17 @@
       }
     ],
 
+    "game_features_button": [
+      {
+        "anchor.x": 0.5,
+        "anchor.y": 0.5,
+        "anchor.reference.x": 0.1,
+        "anchor.reference.y": 0.65,
+        "width-ratio": 0.94,
+        "height.percents": 7
+      }
+    ],
+
     "stats_button": [
       {
         "anchor.x": 0.5,

@@ -15,6 +15,8 @@ set(main_task_style_files
   app/screen/directional-pad.json
   app/screen/end-game.json
   app/screen/end-game-bounds.json
+  app/screen/game-features.json
+  app/screen/game-features-bounds.json
   app/screen/joystick.json
   app/screen/lobby.json
   app/screen/lobby-bounds.json
@@ -58,6 +60,9 @@ set(main_task_style_files
   app/screen/shop/price-button-bounds.json
 
   app/widget/game-feature-button.json
+  app/widget/game-feature-button-off.json
+  app/widget/game-feature-slot-button.json
+  app/widget/legacy-game-feature-button.json
 
   button/back.json
   button/base.json

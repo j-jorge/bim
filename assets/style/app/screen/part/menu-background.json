@@ -4,7 +4,7 @@
       {
         "instantiate": "ax::LayerColor",
         "color": "science-blue",
-        "z-order": -100,
+        "z-order": -1000,
         "opacity": 1
       }
     ],
@@ -22,7 +22,7 @@
         "rotation": -5,
         "scroll-per-second.x": 10,
         "scroll-per-second.y": 20,
-        "z-order": -75
+        "z-order": -750
       }
     ],
 
@@ -32,7 +32,7 @@
         "frame": "sprites/menu/glow.png",
         "color": "sail",
         "opacity": 0.4,
-        "z-order": -40
+        "z-order": -400
       }
     ],
 
@@ -42,7 +42,7 @@
         "frame": "sprites/menu/horizontal-gradient.png",
         "color": "blue-zodiac",
         "opacity": 0.6,
-        "z-order": -50
+        "z-order": -500
       }
     ],
 
@@ -53,7 +53,7 @@
         "color": "blue-zodiac",
         "opacity": 0.6,
         "flip.x": true,
-        "z-order": -50
+        "z-order": -500
       }
     ],
 
@@ -63,7 +63,7 @@
         "frame": "sprites/menu/glow.png",
         "color": "golf-blue",
         "opacity": 0.6,
-        "z-order": -40
+        "z-order": -400
       }
     ]
   }

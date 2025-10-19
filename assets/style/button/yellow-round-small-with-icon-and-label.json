@@ -1,0 +1,16 @@
+{
+  "meta": {
+    "overrides": [
+      "button/yellow-round-with-icon-and-label"
+    ]
+  },
+
+  "style": {
+    "widgets": [
+      {
+        "background/frame": "sprites/menu/round-button-yellow-small.png",
+        "label/font.size": 40
+      }
+    ]
+  }
+}

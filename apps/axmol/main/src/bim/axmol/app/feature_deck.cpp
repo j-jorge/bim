@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/axmol/app/feature_deck.hpp>
 
-#include <bim/axmol/app/widget/game_feature_button.hpp>
+#include <bim/axmol/app/widget/legacy_game_feature_button.hpp>
 
 #include <bim/axmol/widget/context.hpp>
 
@@ -19,10 +19,10 @@
 #define x_widget_scope bim::axmol::app::feature_deck::
 #define x_widget_type_name controls
 #define x_widget_controls                                                     \
-  x_widget(game_feature_button, feature_falling_blocks)                       \
-      x_widget(game_feature_button, feature_shield)                           \
-          x_widget(game_feature_button, feature_invisibility)                 \
-              x_widget(game_feature_button, feature_fog_of_war)
+  x_widget(legacy_game_feature_button, feature_falling_blocks)                \
+      x_widget(legacy_game_feature_button, feature_shield)                    \
+          x_widget(legacy_game_feature_button, feature_invisibility)          \
+              x_widget(legacy_game_feature_button, feature_fog_of_war)
 #include <bim/axmol/widget/implement_controls_struct.hpp>
 
 IMPLEMENT_SIGNAL(bim::axmol::app::feature_deck, clicked, m_clicked);
@@ -32,7 +32,7 @@ bim::axmol::app::feature_deck::feature_deck(
   : m_context(context)
   , m_controls(context.get_widget_context(), *style.get_declaration("widgets"))
 {
-  const auto configure_button = [this](game_feature_button& b,
+  const auto configure_button = [this](legacy_game_feature_button& b,
                                        bim::game::feature_flags f) -> void
   {
     m_buttons[f] = &b;
@@ -71,18 +71,16 @@ bim::axmol::app::feature_deck::display_nodes() const
 
 void bim::axmol::app::feature_deck::displaying()
 {
-  const iscool::preferences::local_preferences& preferences =
-      *m_context.get_local_preferences();
+  // const iscool::preferences::local_preferences& preferences =
+  // *m_context.get_local_preferences();
 
-  const bim::game::feature_flags enabled_features =
-      bim::app::enabled_feature_flags(preferences);
-  const bim::game::feature_flags available_features =
-      bim::app::available_feature_flags(preferences);
+  // const std::int64_t coins = bim::app::coins_balance(preferences);
 
-  const std::int64_t coins = bim::app::coins_balance(preferences);
-
-  for (bim::game::feature_flags f : bim::game::g_all_game_feature_flags)
-    configure_feature_button(enabled_features, available_features, f, coins);
+  // TODO: update
+  // for (bim::game::feature_flags f : bim::game::g_all_game_feature_flags)
+  //   configure_feature_button(bim::app::enabled_feature_flag(preferences, f),
+  //                            bim::app::available_feature_flag(preferences,
+  //                            f), f, coins);
 }
 
 void bim::axmol::app::feature_deck::activated(bim::game::feature_flags feature)
@@ -109,16 +107,15 @@ void bim::axmol::app::feature_deck::purchased(bim::game::feature_flags feature)
 }
 
 void bim::axmol::app::feature_deck::configure_feature_button(
-    bim::game::feature_flags enabled_features,
-    bim::game::feature_flags available_features,
-    bim::game::feature_flags feature, std::int64_t coins_balance) const
+    bool enabled, bool available, bim::game::feature_flags feature,
+    std::int64_t coins_balance) const
 {
-  game_feature_button& button = *m_buttons[feature];
+  legacy_game_feature_button& button = *m_buttons[feature];
 
-  if (!!(available_features & feature))
+  if (available)
     {
       button.available(true);
-      button.active(!!(enabled_features & feature));
+      button.active(enabled);
     }
   else
     {

@@ -21,6 +21,7 @@ set(main_sources
   main/src/bim/axmol/app/popup/settings_popup.cpp
 
   main/src/bim/axmol/app/screen/end_game.cpp
+  main/src/bim/axmol/app/screen/game_features.cpp
   main/src/bim/axmol/app/screen/lobby.cpp
   main/src/bim/axmol/app/screen/matchmaking.cpp
   main/src/bim/axmol/app/screen/online_game.cpp
@@ -29,6 +30,7 @@ set(main_sources
   main/src/bim/axmol/app/task/main_task.cpp
 
   main/src/bim/axmol/app/widget/game_feature_button.cpp
+  main/src/bim/axmol/app/widget/legacy_game_feature_button.cpp
   main/src/bim/axmol/app/widget/player.cpp
 )
 

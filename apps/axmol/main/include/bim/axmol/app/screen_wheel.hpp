@@ -75,6 +75,7 @@ namespace bim::axmol::app
 {
   class analytics_service;
   class end_game;
+  class game_features;
   class lobby;
   class main_scene;
   class matchmaking;
@@ -131,6 +132,11 @@ namespace bim::axmol::app
 
     void animate_lobby_to_shop();
     void animate_shop_to_lobby();
+    void animate_shop_to_game_features();
+
+    void animate_lobby_to_game_features();
+    void animate_game_features_to_lobby();
+    void animate_game_features_to_shop();
 
     void display_lobby();
     void lobby_displayed();
@@ -147,14 +153,20 @@ namespace bim::axmol::app
     void display_shop();
     void shop_displayed();
 
+    void display_game_features();
+    void game_features_displayed();
+
     void disconnected();
+
+  private:
+    using leave_shop_f = void (screen_wheel::*)();
 
   private:
     bim::axmol::ref_ptr<ax::Node> m_main_container;
     bim::axmol::input::tree m_inputs;
     ax::Node* m_active_view;
 
-    bim_declare_controls_struct(controls, m_controls, 5);
+    bim_declare_controls_struct(controls, m_controls, 6);
 
     std::unique_ptr<bim::app::player_progress_tracker>
         m_player_progress_tracker;
@@ -162,6 +174,7 @@ namespace bim::axmol::app
     std::unique_ptr<matchmaking> m_matchmaking;
     std::unique_ptr<online_game> m_online_game;
     std::unique_ptr<end_game> m_end_game;
+    std::unique_ptr<game_features> m_game_features;
     std::unique_ptr<shop> m_shop;
 
     boost::container::flat_map<const ax::Node*, std::uint8_t> m_screen_index;
@@ -174,6 +187,8 @@ namespace bim::axmol::app
     std::unique_ptr<bim::net::keep_alive_exchange> m_keep_alive;
     iscool::signals::scoped_connection m_keep_alive_connection;
     iscool::signals::scoped_connection m_session_handler_connection;
+
+    leave_shop_f m_leave_shop;
 
     bool m_silently_reconnect;
   };

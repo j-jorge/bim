@@ -25,3 +25,19 @@ target_link_libraries(bim_app
   iscool_preferences
   iscool_system
 )
+
+if (NOT BIM_BUILD_TESTS)
+  return()
+endif()
+
+add_executable(app-tests
+  tests/src/bim/app/config.cpp
+  tests/src/bim/app/preference/update_preferences.cpp
+)
+target_link_libraries(
+  app-tests
+  PRIVATE
+  bim_app
+  GTest::gtest
+  bim_gtest_main
+)

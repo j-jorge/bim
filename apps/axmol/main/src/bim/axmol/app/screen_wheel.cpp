@@ -5,6 +5,7 @@
 #include <bim/axmol/app/main_scene.hpp>
 #include <bim/axmol/app/popup/message.hpp>
 #include <bim/axmol/app/screen/end_game.hpp>
+#include <bim/axmol/app/screen/game_features.hpp>
 #include <bim/axmol/app/screen/lobby.hpp>
 #include <bim/axmol/app/screen/matchmaking.hpp>
 #include <bim/axmol/app/screen/online_game.hpp>
@@ -38,7 +39,8 @@
       x_widget(ax::ClippingRectangleNode, matchmaking)                        \
           x_widget(ax::ClippingRectangleNode, online_game)                    \
               x_widget(ax::ClippingRectangleNode, end_game)                   \
-                  x_widget(ax::ClippingRectangleNode, shop)
+                  x_widget(ax::ClippingRectangleNode, game_features)          \
+                      x_widget(ax::ClippingRectangleNode, shop)
 #include <bim/axmol/widget/implement_controls_struct.hpp>
 
 #include <iscool/system/keep_screen_on.hpp>
@@ -61,11 +63,14 @@ bim::axmol::app::screen_wheel::screen_wheel(
   , m_matchmaking(
         new matchmaking(context, *style.get_declaration("matchmaking")))
   , m_end_game(new end_game(context, *style.get_declaration("end-game")))
+  , m_game_features(
+        new game_features(context, *style.get_declaration("game-features")))
   , m_shop(new shop(context, *style.get_declaration("shop")))
   , m_message_popup(
         new message_popup(context, *style.get_declaration("message-popup")))
   , m_keep_alive(new bim::net::keep_alive_exchange(
         context.get_session_handler()->message_stream()))
+  , m_leave_shop(nullptr)
 {
   m_context.set_player_progress_tracker(m_player_progress_tracker.get());
 
@@ -97,6 +102,11 @@ bim::axmol::app::screen_wheel::screen_wheel(
   map_nodes(*m_controls->end_game, m_end_game->display_nodes(), style,
             "end-game-bounds");
   m_controls->end_game->removeFromParent();
+
+  map_nodes(*m_controls->game_features, m_game_features->display_nodes(),
+            style, "game-features-bounds");
+  m_game_features->attached();
+  m_controls->game_features->removeFromParent();
 
   map_nodes(*m_controls->shop, m_shop->display_nodes(), style, "shop-bounds");
   m_shop->attached();
@@ -134,6 +144,7 @@ bim::axmol::app::screen_wheel::screen_wheel(
   m_controls->matchmaking->setClippingRegion(clipping_region);
   m_controls->online_game->setClippingRegion(clipping_region);
   m_controls->end_game->setClippingRegion(clipping_region);
+  m_controls->game_features->setClippingRegion(clipping_region);
 
   // Start on the lobby, In the initial state
   m_active_view = m_controls->lobby;
@@ -162,6 +173,12 @@ void bim::axmol::app::screen_wheel::wire_permanent_connections()
       [this]()
       {
         animate_lobby_to_matchmaking();
+      });
+
+  m_lobby->connect_to_game_features(
+      [this]()
+      {
+        animate_lobby_to_game_features();
       });
 
   m_matchmaking->connect_to_start_game(
@@ -197,13 +214,26 @@ void bim::axmol::app::screen_wheel::wire_permanent_connections()
   m_shop->connect_to_back(
       [this]()
       {
-        animate_shop_to_lobby();
+        assert(m_leave_shop != nullptr);
+        (this->*m_leave_shop)();
       });
 
   m_lobby->connect_to_shop(
       [this]()
       {
         animate_lobby_to_shop();
+      });
+
+  m_game_features->connect_to_back(
+      [this]()
+      {
+        animate_game_features_to_lobby();
+      });
+
+  m_game_features->connect_to_shop(
+      [this]()
+      {
+        animate_game_features_to_shop();
       });
 }
 
@@ -227,6 +257,7 @@ void bim::axmol::app::screen_wheel::connect_keep_alive()
 void bim::axmol::app::screen_wheel::configure_screen_transitions()
 {
   const ax::Node* const lobby = m_controls->lobby;
+  const ax::Node* const game_features = m_controls->game_features;
   const ax::Node* const shop = m_controls->shop;
   const ax::Node* const matchmaking = m_controls->matchmaking;
   const ax::Node* const online_game = m_controls->online_game;
@@ -234,12 +265,15 @@ void bim::axmol::app::screen_wheel::configure_screen_transitions()
 
   m_screen_index[lobby] = m_screen_index.size();
   m_screen_index[shop] = m_screen_index.size();
+  m_screen_index[game_features] = m_screen_index.size();
   m_screen_index[matchmaking] = m_screen_index.size();
   m_screen_index[online_game] = m_screen_index.size();
   m_screen_index[end_game] = m_screen_index.size();
 
   m_displayed[m_screen_index[lobby]] = &screen_wheel::lobby_displayed;
   m_displayed[m_screen_index[shop]] = &screen_wheel::shop_displayed;
+  m_displayed[m_screen_index[game_features]] =
+      &screen_wheel::game_features_displayed;
   m_displayed[m_screen_index[matchmaking]] =
       &screen_wheel::matchmaking_displayed;
   m_displayed[m_screen_index[online_game]] =
@@ -259,7 +293,9 @@ void bim::axmol::app::screen_wheel::configure_screen_transitions()
   };
 
   set_screen_direction(lobby, shop, -1, 0);
+  set_screen_direction(lobby, game_features, -1, 0);
   set_screen_direction(lobby, matchmaking, 1, 0);
+  set_screen_direction(game_features, shop, -1, 0);
   set_screen_direction(matchmaking, online_game, 0, 1);
   set_screen_direction(online_game, lobby, 0, -1);
   set_screen_direction(online_game, end_game, 0, -1);
@@ -354,6 +390,7 @@ void bim::axmol::app::screen_wheel::animate_end_game_to_matchmaking()
 
 void bim::axmol::app::screen_wheel::animate_lobby_to_shop()
 {
+  m_leave_shop = &screen_wheel::animate_shop_to_lobby;
   m_inputs.erase(m_lobby->input_node());
 
   m_lobby->closing();
@@ -365,6 +402,39 @@ void bim::axmol::app::screen_wheel::animate_shop_to_lobby()
   m_inputs.erase(m_shop->input_node());
 
   display_lobby();
+}
+
+void bim::axmol::app::screen_wheel::animate_shop_to_game_features()
+{
+  m_inputs.erase(m_shop->input_node());
+
+  display_game_features();
+}
+
+void bim::axmol::app::screen_wheel::animate_lobby_to_game_features()
+{
+  m_leave_shop = &screen_wheel::animate_shop_to_lobby;
+  m_inputs.erase(m_lobby->input_node());
+
+  m_lobby->closing();
+  display_game_features();
+}
+
+void bim::axmol::app::screen_wheel::animate_game_features_to_lobby()
+{
+  m_inputs.erase(m_game_features->input_node());
+
+  m_game_features->closing();
+  display_lobby();
+}
+
+void bim::axmol::app::screen_wheel::animate_game_features_to_shop()
+{
+  m_leave_shop = &screen_wheel::animate_shop_to_game_features;
+  m_inputs.erase(m_game_features->input_node());
+
+  m_game_features->closing();
+  display_shop();
 }
 
 void bim::axmol::app::screen_wheel::display_lobby()
@@ -446,6 +516,19 @@ void bim::axmol::app::screen_wheel::shop_displayed()
 
   m_inputs.push_back(m_shop->input_node());
   m_shop->displayed();
+}
+
+void bim::axmol::app::screen_wheel::display_game_features()
+{
+  m_game_features->displaying();
+  switch_view(*m_controls->game_features);
+}
+
+void bim::axmol::app::screen_wheel::game_features_displayed()
+{
+  m_context.get_analytics()->screen("game-features");
+
+  m_inputs.push_back(m_game_features->input_node());
 }
 
 void bim::axmol::app::screen_wheel::disconnected()

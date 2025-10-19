@@ -76,6 +76,20 @@
           }
         ],
 
+        "game_features_button": [
+          "button/yellow-round-with-icon-and-label",
+          {
+            "widgets/icon/frame": "sprites/menu/shop-icon.png",
+            "widgets/label/text.i18n": "FEATURES",
+            "bounds/icon": [
+              {
+                "width.percents": 75,
+                "keep-ratio": true
+              }
+            ]
+          }
+        ],
+
         "stats_button": [
           "button/yellow-round-with-icon-and-label",
           {

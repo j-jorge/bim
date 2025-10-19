@@ -7,7 +7,7 @@
 #include <cassert>
 
 template <typename E, typename T, int M>
-const T& bim::bit_map<E, T, M>::operator[](E v) const
+constexpr const T& bim::bit_map<E, T, M>::operator[](E v) const
 {
   assert(std::popcount(std::underlying_type_t<E>(v)) <= 1);
   assert(std::countr_zero(std::underlying_type_t<E>(v)) < M);
@@ -15,7 +15,7 @@ const T& bim::bit_map<E, T, M>::operator[](E v) const
 }
 
 template <typename E, typename T, int M>
-T& bim::bit_map<E, T, M>::operator[](E v)
+constexpr T& bim::bit_map<E, T, M>::operator[](E v)
 {
   assert(std::popcount(std::underlying_type_t<E>(v)) <= 1);
   assert(std::countr_zero(std::underlying_type_t<E>(v)) < M);

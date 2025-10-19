@@ -1,0 +1,63 @@
+{
+  "meta": {
+    "overrides": [
+      "app/widget/game-feature-button"
+    ]
+  },
+
+  "style": {
+    "widgets": [
+      {
+        "no-feature-background": [
+          {
+            "instantiate": "ax::Sprite",
+            "frame": "sprites/features/background-white.png",
+            "z-order": -1000
+          }
+        ],
+        "no-feature-icon": [
+          {
+            "instantiate": "ax::Sprite",
+            "frame": "sprites/features/plus.png"
+          }
+        ]
+      }
+    ],
+
+    "bounds": [
+      {
+        "no-feature-background": [
+          "layout/fill",
+          {
+            "reference": "background"
+          }
+        ],
+
+        "no-feature-icon": [
+          "layout/fill",
+          {
+            "reference": "feature_icon"
+          }
+        ]
+      }
+    ],
+
+    "display.feature": [
+      {
+        "background/visible": true,
+        "feature_icon/visible": true,
+        "no-feature-background/visible": false,
+        "no-feature-icon/visible": false
+      }
+    ],
+
+    "display.no-feature": [
+      {
+        "background/visible": false,
+        "feature_icon/visible": false,
+        "no-feature-background/visible": true,
+        "no-feature-icon/visible": true
+      }
+    ]
+  }
+}

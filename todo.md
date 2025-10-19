@@ -1,6 +1,8 @@
 # Next
 
 - Game feature submenu.
+- Game features on the lobby, with edit button.
+- Loading screen.
 
 # Client
 

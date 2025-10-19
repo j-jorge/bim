@@ -10,6 +10,7 @@
         "matchmaking": [],
         "online_game": [],
         "end_game": [],
+        "game_features": [],
         "shop": []
       }
     ],
@@ -42,6 +43,13 @@
       "app/screen/end-game-bounds"
     ],
 
+    "game-features": [
+      "app/screen/game-features"
+    ],
+    "game-features-bounds": [
+      "app/screen/game-features-bounds"
+    ],
+
     "shop": [
       "app/screen/shop"
     ],
@@ -61,6 +69,9 @@
           "layout/fill"
         ],
         "end_game": [
+          "layout/fill"
+        ],
+        "game_features": [
           "layout/fill"
         ],
         "shop": [

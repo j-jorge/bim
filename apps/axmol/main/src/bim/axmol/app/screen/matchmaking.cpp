@@ -16,6 +16,7 @@
 #include <bim/axmol/input/observer/single_key_observer.hpp>
 
 #include <bim/app/config.hpp>
+#include <bim/app/constant/game_feature_slot_count.hpp>
 #include <bim/app/matchmaking_wait_message.hpp>
 #include <bim/app/preference/feature_flags.hpp>
 #include <bim/app/preference/user_language.hpp>
@@ -117,12 +118,6 @@ bim::axmol::app::matchmaking::matchmaking(
         dispatch_back();
       });
 
-  m_feature_deck->connect_to_clicked(
-      [this](bim::game::feature_flags f) -> void
-      {
-        feature_flag_clicked(f);
-      });
-
   m_wait_message->connect_to_updated(
       [this](std::string_view m) -> void
       {
@@ -163,7 +158,6 @@ void bim::axmol::app::matchmaking::displaying()
   run_actions(m_main_actions, m_action_displaying);
   run_actions(m_state_actions, m_action_wait);
 
-  show_default_feature_message();
   m_controls->ready_button->enable(true);
   m_controls->wait_message->setString("");
 }
@@ -266,8 +260,13 @@ void bim::axmol::app::matchmaking::accept_game()
   m_launch_monitor->set_launch_state();
   m_controls->ready_button->enable(false);
 
-  const bim::game::feature_flags features =
-      bim::app::enabled_feature_flags(*m_context.get_local_preferences());
+  const iscool::preferences::local_preferences& preferences =
+      *m_context.get_local_preferences();
+  bim::game::feature_flags features{};
+
+  for (int i = 0; i != bim::app::g_game_feature_slot_count; ++i)
+    features |= bim::app::feature_flag_in_slot(preferences, i);
+
   m_new_game->accept(features);
 }
 
@@ -295,92 +294,4 @@ void bim::axmol::app::matchmaking::dispatch_back() const
     return;
 
   m_back();
-}
-
-void bim::axmol::app::matchmaking::feature_flag_clicked(
-    bim::game::feature_flags f) const
-{
-  iscool::preferences::local_preferences& preferences =
-      *m_context.get_local_preferences();
-
-  bim::game::feature_flags available_features =
-      bim::app::available_feature_flags(preferences);
-  bim::game::feature_flags enabled_features =
-      bim::app::enabled_feature_flags(preferences);
-
-  if (!(available_features & f))
-    {
-      const std::int64_t coins = bim::app::coins_balance(preferences);
-      const std::int16_t price = m_context.get_config()->game_feature_price[f];
-
-      if (price <= coins)
-        {
-          bim::app::consume_coins(preferences, price);
-          m_wallet->animate_cash_flow();
-
-          available_features |= f;
-          bim::app::available_feature_flags(preferences, available_features);
-
-          enabled_features |= f;
-          bim::app::enabled_feature_flags(preferences, enabled_features);
-
-          m_feature_deck->purchased(f);
-          m_feature_deck->activated(f);
-
-          show_feature_message(f);
-        }
-      else
-        m_controls->feature_description->setString(
-            ic_gettext("You need more coins to purchase this item!"));
-    }
-  else
-    {
-      enabled_features = enabled_features ^ f;
-      bim::app::enabled_feature_flags(preferences, enabled_features);
-
-      if (!(enabled_features & f))
-        {
-          m_feature_deck->deactivated(f);
-          show_default_feature_message();
-        }
-      else
-        {
-          m_feature_deck->activated(f);
-          show_feature_message(f);
-        }
-    }
-}
-
-void bim::axmol::app::matchmaking::show_default_feature_message() const
-{
-  m_controls->feature_description->setString(
-      ic_gettext("Customize your experience below!"));
-}
-
-void bim::axmol::app::matchmaking::show_feature_message(
-    bim::game::feature_flags f) const
-{
-  const char* message = "";
-
-  switch (f)
-    {
-    case bim::game::feature_flags::falling_blocks:
-      message =
-          ic_gettext("Falling blocks reduce the arena after two minutes!");
-      break;
-    case bim::game::feature_flags::shield:
-      message = ic_gettext("Find this incredibly strong barrel, it will save "
-                           "you from one hit!");
-      break;
-    case bim::game::feature_flags::fog_of_war:
-      message = ic_gettext(
-          "A thick fog covers the arena. You can't see were you did not go!");
-      break;
-    case bim::game::feature_flags::invisibility:
-      message = ic_gettext("Find the invisibility power up to disappear from "
-                           "the screen of all other players!");
-      break;
-    }
-
-  m_controls->feature_description->setString(message);
 }

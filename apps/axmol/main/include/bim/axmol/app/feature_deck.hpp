@@ -37,7 +37,7 @@ namespace iscool::style
 
 namespace bim::axmol::app
 {
-  class game_feature_button;
+  class legacy_game_feature_button;
 
   class feature_deck
   {
@@ -67,14 +67,14 @@ namespace bim::axmol::app
     void purchased(bim::game::feature_flags feature);
 
   private:
-    void configure_feature_button(bim::game::feature_flags enabled_features,
-                                  bim::game::feature_flags available_features,
+    void configure_feature_button(bool enabled, bool available,
                                   bim::game::feature_flags feature,
                                   std::int64_t coins_balance) const;
 
   private:
     bim::axmol::input::tree m_inputs;
     bim_declare_controls_struct(controls, m_controls, 4);
-    bim::bit_map<bim::game::feature_flags, game_feature_button*> m_buttons;
+    bim::bit_map<bim::game::feature_flags, legacy_game_feature_button*>
+        m_buttons;
   };
 }

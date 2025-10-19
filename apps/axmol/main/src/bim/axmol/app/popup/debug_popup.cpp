@@ -211,7 +211,7 @@ void bim::axmol::app::debug_popup::add_feature_item(
       !!(bim::app::available_feature_flags(*m_context.get_local_preferences())
          & flag);
 
-  auto toggle_flag = [this, flag]() -> bool
+  const auto toggle_flag = [this, flag]() -> bool
   {
     const bim::game::feature_flags new_flags =
         bim::app::available_feature_flags(*m_context.get_local_preferences())

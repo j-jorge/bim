@@ -38,14 +38,16 @@
 #define x_widget_controls                                                     \
   x_widget(bim::axmol::widget::button, settings_button)                       \
       x_widget(bim::axmol::widget::button, play_button)                       \
-          x_widget(bim::axmol::widget::button, shop_button)                   \
-              x_widget(bim::axmol::widget::button, stats_button)              \
-                  x_widget(bim::axmol::widget::button, debug_button)          \
-                      x_widget(ax::Node, debug_activator)
+          x_widget(bim::axmol::widget::button, game_features_button)          \
+              x_widget(bim::axmol::widget::button, shop_button)               \
+                  x_widget(bim::axmol::widget::button, stats_button)          \
+                      x_widget(bim::axmol::widget::button, debug_button)      \
+                          x_widget(ax::Node, debug_activator)
 
 #include <bim/axmol/widget/implement_controls_struct.hpp>
 
 IMPLEMENT_SIGNAL(bim::axmol::app::lobby, play, m_play);
+IMPLEMENT_SIGNAL(bim::axmol::app::lobby, game_features, m_game_features);
 IMPLEMENT_SIGNAL(bim::axmol::app::lobby, shop, m_shop);
 IMPLEMENT_SIGNAL(bim::axmol::app::lobby, reset, m_reset);
 
@@ -95,6 +97,13 @@ bim::axmol::app::lobby::lobby(const context& context,
       [this]()
       {
         open_shop_from_button();
+      });
+
+  m_inputs.push_back(m_controls->game_features_button->input_node());
+  m_controls->game_features_button->connect_to_clicked(
+      [this]()
+      {
+        open_game_features();
       });
 
   m_inputs.push_back(m_controls->stats_button->input_node());
@@ -350,6 +359,13 @@ void bim::axmol::app::lobby::open_shop()
     }
   #undef ignore_when_non_foss
 #endif
+}
+
+void bim::axmol::app::lobby::open_game_features() const
+{
+  m_context.get_analytics()->event(
+      "button", { { "id", "game-features" }, { "where", "lobby" } });
+  m_game_features();
 }
 
 void bim::axmol::app::lobby::open_player_stats() const

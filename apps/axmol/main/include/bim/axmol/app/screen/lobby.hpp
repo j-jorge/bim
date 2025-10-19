@@ -64,6 +64,7 @@ namespace bim::axmol::app
   class lobby
   {
     DECLARE_VOID_SIGNAL(play, m_play)
+    DECLARE_VOID_SIGNAL(game_features, m_game_features)
     DECLARE_VOID_SIGNAL(shop, m_shop)
     DECLARE_VOID_SIGNAL(reset, m_reset)
 
@@ -109,11 +110,12 @@ namespace bim::axmol::app
     void open_shop_from_button();
     void open_shop();
 
+    void open_game_features() const;
     void open_player_stats() const;
 
   private:
     bim::axmol::input::tree m_inputs;
-    bim_declare_controls_struct(controls, m_controls, 6);
+    bim_declare_controls_struct(controls, m_controls, 7);
     ax::Label& m_server_statistics_label;
 
     std::unique_ptr<bim::net::hello_exchange> m_hello_exchange;

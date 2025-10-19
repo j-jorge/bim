@@ -1,0 +1,16 @@
+{
+  "meta": {
+    "overrides": [
+      "app/widget/game-feature-button"
+    ]
+  },
+
+  "style": {
+    "widgets": [
+      {
+        "background/frame": "sprites/features/background-off.png",
+        "feature_icon/frame": "sprites/features/padlock.png"
+      }
+    ]
+  }
+}

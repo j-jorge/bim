@@ -45,6 +45,10 @@
       }
     ],
 
+    "display.pressed": [],
+    "display.release": [],
+    "display.disabled": [],
+
     "sound.click": "tick"
   }
 }

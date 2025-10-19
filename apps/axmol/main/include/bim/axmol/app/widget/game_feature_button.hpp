@@ -1,19 +1,13 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #pragma once
 
+#include <bim/axmol/widget/button_behavior.hpp>
 #include <bim/axmol/widget/declare_controls_struct.hpp>
 #include <bim/axmol/widget/declare_widget_create_function.hpp>
 
-#include <bim/axmol/input/node_reference.hpp>
-
 #include <bim/game/feature_flags_fwd.hpp>
 
-#include <axmol/2d/Node.h>
 #include <axmol/math/Color.h>
-
-#include <iscool/signals/connection.hpp>
-
-#include <functional>
 
 namespace ax
 {
@@ -37,11 +31,14 @@ namespace bim::axmol::app
 
     bim::axmol::input::node_reference input_node() const;
 
+    void feature(bim::game::feature_flags f);
+
     void available(bool a);
     void price(int p);
     void affordable(bool a);
-    void active(bool a);
 
+    void onEnter() override;
+    void onExit() override;
     void setContentSize(const ax::Size& size) override;
 
   private:
@@ -50,10 +47,13 @@ namespace bim::axmol::app
   private:
     const bim::axmol::widget::context& m_context;
     bim_declare_controls_struct(controls, m_controls, 2);
+    const bim::axmol::ref_ptr<ax::Node> m_container;
+    bim::axmol::widget::button_behavior m_behavior;
 
-    const iscool::style::declaration& m_style_bounds;
     const iscool::style::declaration& m_style_available;
     const iscool::style::declaration& m_style_unavailable;
+    const iscool::style::declaration& m_style_feature;
+    const iscool::style::declaration& m_style_no_feature;
 
     const ax::Color4B m_color_affordable;
     const ax::Color4B m_color_unaffordable;

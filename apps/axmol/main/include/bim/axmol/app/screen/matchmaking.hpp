@@ -90,11 +90,6 @@ namespace bim::axmol::app
 
     void dispatch_back() const;
 
-    void feature_flag_clicked(bim::game::feature_flags f) const;
-
-    void show_default_feature_message() const;
-    void show_feature_message(bim::game::feature_flags f) const;
-
   private:
     ic_declare_state_monitor(m_player_count_monitor);
     ic_declare_state_monitor(m_launch_monitor);
