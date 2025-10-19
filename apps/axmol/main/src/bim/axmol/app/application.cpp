@@ -4,6 +4,7 @@
 #include <bim/axmol/app/analytics_service.hpp>
 #include <bim/axmol/app/frame_profiler.hpp>
 #include <bim/axmol/app/task/main_task.hpp>
+#include <bim/axmol/app/widget/register_widgets.hpp>
 
 #include <bim/axmol/app/main_scene.hpp>
 #include <bim/axmol/app/root_scene.hpp>
@@ -393,6 +394,7 @@ bim::axmol::app::application::application(
 
   bim::axmol::action::register_actions(m_action_factory);
   bim::axmol::widget::register_widgets(m_widget_factory);
+  bim::axmol::app::register_widgets(m_widget_factory);
 
   m_reset_key_observer->connect_to_released(
       [this]()

@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #pragma once
 
+#include <bim/app/constant/game_feature_slot_count.hpp>
+
 #include <bim/game/feature_flags_fwd.hpp>
 
 #include <bim/bit_map.hpp>
@@ -31,6 +33,7 @@ namespace bim::app
     int coins_per_draw;
 
     bim::bit_map<bim::game::feature_flags, std::int16_t> game_feature_price;
+    std::int16_t game_feature_slot_price[g_game_feature_slot_count];
 
     std::vector<std::string> shop_products;
     std::vector<int> shop_product_coins;

@@ -1,0 +1,7 @@
+{
+  "style": {
+    "instantiate": "ax::Sprite",
+    "frame": "sprites/features/background-green.png",
+    "z-order": -1000
+  }
+}

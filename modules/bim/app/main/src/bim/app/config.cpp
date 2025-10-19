@@ -195,6 +195,41 @@ static bool parse_game_feature_prices(bim::app::config& result,
   return true;
 }
 
+static bool parse_game_feature_slot_prices(bim::app::config& result,
+                                           const Json::Value& json,
+                                           const char* n)
+{
+  if (!iscool::json::is_member(n, json))
+    return true;
+
+  const Json::Value& prices = json[n];
+
+  if (!prices.isArray())
+    {
+      ic_log(iscool::log::nature::warning(), "config",
+             "Game feature slot prices is not an array.");
+      return false;
+    }
+
+  const Json::Value::ArrayIndex count = std::min<Json::Value::ArrayIndex>(
+      prices.size(), bim::app::g_game_feature_slot_count);
+
+  using value_type = std::decay_t<decltype(result.game_feature_slot_price[0])>;
+
+  for (Json::Value::ArrayIndex i = 0; i != count; ++i)
+    {
+      const Json::Value& v = prices[i];
+
+      if (!iscool::json::is_of_type<value_type>(v))
+        ic_log(iscool::log::nature::warning(), "config",
+               "Incorrect type for game feature slot price #{}.", i);
+      else
+        result.game_feature_slot_price[i] = iscool::json::cast<value_type>(v);
+    }
+
+  return true;
+}
+
 bim::app::config::config()
   : most_recent_version(bim::version_major)
   , game_server("bim.jorge.st:"
@@ -211,6 +246,9 @@ bim::app::config::config()
   game_feature_price[bim::game::feature_flags::shield] = 250;
   game_feature_price[bim::game::feature_flags::invisibility] = 250;
   game_feature_price[bim::game::feature_flags::fog_of_war] = 1000;
+
+  for (int i = 0; i != g_game_feature_slot_count; ++i)
+    game_feature_slot_price[i] = i * 250;
 }
 
 std::optional<bim::app::config> bim::app::load_config(const Json::Value& json)
@@ -255,6 +293,9 @@ std::optional<bim::app::config> bim::app::load_config(const Json::Value& json)
     return std::nullopt;
 
   if (!parse_game_feature_prices(result, json, "gfp"))
+    return std::nullopt;
+
+  if (!parse_game_feature_slot_prices(result, json, "game-feature-slot-price"))
     return std::nullopt;
 
   if (!parse_shop_products(result, json["shop"]))

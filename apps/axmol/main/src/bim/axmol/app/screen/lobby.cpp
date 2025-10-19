@@ -8,6 +8,7 @@
 #include <bim/axmol/app/popup/player_statistics_popup.hpp>
 #include <bim/axmol/app/popup/settings_popup.hpp>
 #include <bim/axmol/app/shop_support.hpp>
+#include <bim/axmol/app/widget/feature_deck.hpp>
 
 #include <bim/axmol/input/observer/tap_observer.hpp>
 #include <bim/axmol/input/touch_observer_handle.impl.hpp>
@@ -20,6 +21,7 @@
 #include <bim/axmol/find_child_by_path.hpp>
 
 #include <bim/app/preference/arena_stats.hpp>
+#include <bim/app/preference/feature_flags.hpp>
 
 #include <bim/net/exchange/hello_exchange.hpp>
 #include <bim/net/message/hello_ok.hpp>
@@ -38,14 +40,16 @@
 #define x_widget_controls                                                     \
   x_widget(bim::axmol::widget::button, settings_button)                       \
       x_widget(bim::axmol::widget::button, play_button)                       \
-          x_widget(bim::axmol::widget::button, shop_button)                   \
-              x_widget(bim::axmol::widget::button, stats_button)              \
-                  x_widget(bim::axmol::widget::button, debug_button)          \
-                      x_widget(ax::Node, debug_activator)
+          x_widget(bim::axmol::widget::button, game_features_button)          \
+              x_widget(bim::axmol::widget::button, shop_button)               \
+                  x_widget(bim::axmol::widget::button, stats_button)          \
+                      x_widget(bim::axmol::widget::button, debug_button)      \
+                          x_widget(ax::Node, debug_activator)
 
 #include <bim/axmol/widget/implement_controls_struct.hpp>
 
 IMPLEMENT_SIGNAL(bim::axmol::app::lobby, play, m_play);
+IMPLEMENT_SIGNAL(bim::axmol::app::lobby, game_features, m_game_features);
 IMPLEMENT_SIGNAL(bim::axmol::app::lobby, shop, m_shop);
 IMPLEMENT_SIGNAL(bim::axmol::app::lobby, reset, m_reset);
 
@@ -57,6 +61,9 @@ bim::axmol::app::lobby::lobby(const context& context,
         *dynamic_cast<ax::Label*>(bim::axmol::find_child_by_path(
             *m_controls->play_button,
             *style.get_string("play-button-server-stats-label-path"))))
+  , m_feature_deck(*dynamic_cast<feature_deck*>(bim::axmol::find_child_by_path(
+        *m_controls->game_features_button,
+        *style.get_string("feature-deck-path"))))
   , m_hello_exchange(new bim::net::hello_exchange(
         context.get_session_handler()->message_stream()))
   , m_wallet(new wallet(context, *style.get_declaration("wallet")))
@@ -95,6 +102,13 @@ bim::axmol::app::lobby::lobby(const context& context,
       [this]()
       {
         open_shop_from_button();
+      });
+
+  m_inputs.push_back(m_controls->game_features_button->input_node());
+  m_controls->game_features_button->connect_to_clicked(
+      [this]()
+      {
+        open_game_features();
       });
 
   m_inputs.push_back(m_controls->stats_button->input_node());
@@ -161,6 +175,9 @@ void bim::axmol::app::lobby::displayed()
 
 void bim::axmol::app::lobby::displaying()
 {
+  m_feature_deck.features(
+      bim::app::enabled_feature_flags(*m_context.get_local_preferences()));
+
   m_wallet->enter();
   bim::net::session_handler& session_handler =
       *m_context.get_session_handler();
@@ -350,6 +367,13 @@ void bim::axmol::app::lobby::open_shop()
     }
   #undef ignore_when_non_foss
 #endif
+}
+
+void bim::axmol::app::lobby::open_game_features() const
+{
+  m_context.get_analytics()->event(
+      "button", { { "id", "game-features" }, { "where", "lobby" } });
+  m_game_features();
 }
 
 void bim::axmol::app::lobby::open_player_stats() const

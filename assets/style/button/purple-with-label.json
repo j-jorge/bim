@@ -1,0 +1,15 @@
+{
+  "meta": {
+    "overrides": [
+      "button/green-with-label"
+    ]
+  },
+
+  "style": {
+    "widgets/decorum-on/widgets/fill": [
+      {
+        "frame": "sprites/menu/vertical-purple-gradient.png"
+      }
+    ]
+  }
+}

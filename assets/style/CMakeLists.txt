@@ -15,6 +15,8 @@ set(main_task_style_files
   app/screen/directional-pad.json
   app/screen/end-game.json
   app/screen/end-game-bounds.json
+  app/screen/game-features.json
+  app/screen/game-features-bounds.json
   app/screen/joystick.json
   app/screen/lobby.json
   app/screen/lobby-bounds.json
@@ -28,6 +30,7 @@ set(main_task_style_files
   app/screen/font/stripe-message.json
   app/screen/font/stripe-title.json
 
+  app/screen/lobby/game-features-button.json
   app/screen/lobby/stat-background.json
   app/screen/lobby/stat-background-bounds.json
   app/screen/lobby/stat-title.json
@@ -57,13 +60,21 @@ set(main_task_style_files
   app/screen/shop/price-button.json
   app/screen/shop/price-button-bounds.json
 
+  app/widget/feature-deck.json
+  app/widget/feature-deck-bounds-base.json
+  app/widget/feature-deck-slot.json
+  app/widget/feature-deck-slot-background.json
+  app/widget/feature-deck-slot-background-bounds.json
   app/widget/game-feature-button.json
+  app/widget/game-feature-button-off.json
+  app/widget/game-feature-slot-button.json
 
   button/back.json
   button/base.json
   button/feature-unavailable.json
   button/flat-with-label.json
   button/green-with-label.json
+  button/purple-with-label.json
   button/red-with-label.json
   button/sprite.json
   button/thick-base.json
@@ -88,7 +99,6 @@ set(main_task_style_files
 
   nine-slice/price-tag.json
   nine-slice/rounded-dark-rectangle.json
-  nine-slice/rounded-rectangle.json
   nine-slice/stripe.json
 
   popup/base.json

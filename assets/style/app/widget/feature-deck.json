@@ -1,0 +1,91 @@
+{
+  "style": {
+    "widgets": [
+      {
+        "slot-background-0": [
+          "app/widget/feature-deck-slot-background"
+        ],
+        "slot-background-1": [
+          "app/widget/feature-deck-slot-background"
+        ],
+
+        "slot_0": [
+          "app/widget/feature-deck-slot"
+        ],
+
+        "slot_1": [
+          "app/widget/feature-deck-slot"
+        ]
+      }
+    ],
+
+    "bounds.0": [
+      "app/widget/feature-deck-bounds-base",
+      {
+        "slot-background-0": [
+          {
+            "anchor.reference.x": 0.5,
+            "anchor.reference.y": 0.5
+          }
+        ]
+      }
+    ],
+
+    "display.0": [
+      {
+        "slot-background-0/visible": true,
+        "slot_0/visible": false,
+        "slot-background-1/visible": false,
+        "slot_1/visible": false
+      }
+    ],
+
+    "bounds.1": [
+      "app/widget/feature-deck-bounds-base",
+      {
+        "slot-background-0": [
+          {
+            "anchor.reference.x": 0.5,
+            "anchor.reference.y": 0.5
+          }
+        ]
+      }
+    ],
+
+    "display.1": [
+      {
+        "slot-background-0/visible": true,
+        "slot_0/visible": true,
+        "slot-background-1/visible": false,
+        "slot_1/visible": false
+      }
+    ],
+
+    "bounds.2": [
+      "app/widget/feature-deck-bounds-base",
+      {
+        "slot-background-0": [
+          {
+            "anchor.reference.x": 0.3,
+            "anchor.reference.y": 0.5
+          }
+        ],
+        "slot-background-1": [
+          {
+            "anchor.reference.x": 0.7,
+            "anchor.reference.y": 0.5
+          }
+        ]
+      }
+    ],
+
+    "display.2": [
+      {
+        "slot-background-0/visible": true,
+        "slot_0/visible": true,
+        "slot-background-1/visible": true,
+        "slot_1/visible": true
+      }
+    ]
+  }
+}

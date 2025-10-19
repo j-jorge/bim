@@ -3,9 +3,6 @@
     "wallet": [
       "app/screen/part/wallet"
     ],
-    "feature-deck": [
-      "app/screen/part/feature-deck"
-    ],
 
     "widgets": [
       "app/screen/part/menu-background",
@@ -123,30 +120,6 @@
             "frame": "sprites/menu/silhouette-4.png",
             "color": "black",
             "z-order": 2
-          }
-        ],
-
-        "feature-description-background": [
-          "nine-slice/rounded-rectangle",
-          {
-            "instantiate": "nine_slices",
-            "z-order": 5
-          }
-        ],
-
-        "feature_description": [
-          "app/screen/part/matchmaking-feature-label",
-          {
-            "parent": "feature-description-background"
-          }
-        ],
-
-        "feature-description-background-spike": [
-          {
-            "instantiate": "ax::Sprite",
-            "frame": "sprites/menu/rounded-rectangle-spike.png",
-            "parent": "feature-description-background",
-            "z-order": 10
           }
         ],
 

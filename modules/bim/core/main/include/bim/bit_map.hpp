@@ -9,8 +9,8 @@ namespace bim
   class bit_map
   {
   public:
-    const T& operator[](E v) const;
-    T& operator[](E v);
+    constexpr const T& operator[](E v) const;
+    constexpr T& operator[](E v);
 
   private:
     std::array<T, M> m_data;

@@ -1,0 +1,344 @@
+{
+  "style": {
+    "wallet": [
+      "app/screen/part/wallet"
+    ],
+    "message-popup": [
+      "popup/message"
+    ],
+
+    "list-row": [],
+    "list-bottom-filler-bounds": [
+      {
+        "width.percents": 100,
+        "height-ratio": 0.1
+      }
+    ],
+
+    "game-feature-button.on": [
+      "app/widget/game-feature-button",
+      {
+        "widgets/background/frame": "sprites/features/background-blue.png"
+      }
+    ],
+
+    "game-feature-button.off": [
+      "app/widget/game-feature-button-off"
+    ],
+
+    "game-features-row-bounds": [
+      {
+        "feature_0": [
+          {
+            "anchor.x": 0.5,
+            "anchor.y": 0,
+            "anchor.reference.x": 0.17,
+            "anchor.reference.y": 0,
+            "width.percents": 20,
+            "height-ratio": 1
+          }
+        ],
+        "feature_1": [
+          {
+            "anchor.x": 0.5,
+            "anchor.y": 0,
+            "anchor.reference.x": 0.39,
+            "anchor.reference.y": 0,
+            "width.percents": 20,
+            "height-ratio": 1
+          }
+        ],
+        "feature_2": [
+          {
+            "anchor.x": 0.5,
+            "anchor.y": 0,
+            "anchor.reference.x": 0.61,
+            "anchor.reference.y": 0,
+            "width.percents": 20,
+            "height-ratio": 1
+          }
+        ],
+        "feature_3": [
+          {
+            "anchor.x": 0.5,
+            "anchor.y": 0,
+            "anchor.reference.x": 0.83,
+            "anchor.reference.y": 0,
+            "width.percents": 20,
+            "height-ratio": 1
+          }
+        ]
+      }
+    ],
+
+    "bottom-filler-bounds": [
+      {
+        "width.percents": 100,
+        "height-ratio": 0.5
+      }
+    ],
+
+    "widgets": [
+      "app/screen/part/menu-background",
+      {
+        "pattern": [
+          {
+            "widgets/sprite": [
+              {
+                "frame": "texture/features-background-pattern.png",
+                "color": "white"
+              }
+            ]
+          }
+        ],
+
+        "bottom-shadow/visible": false,
+
+        "random_button": [
+          "button/yellow-round-small-with-icon-and-label",
+          {
+            "widgets": [
+              {
+                "icon/frame": "sprites/menu/dice.png",
+                "label/text.i18n": "RANDOM"
+              }
+            ],
+
+            "bounds/icon": [
+              {
+                "anchor.reference.x": 0.55,
+                "width.percents": 90,
+                "keep-ratio": true
+              }
+            ]
+          }
+        ],
+
+        "erase_button": [
+          "button/yellow-round-small-with-icon-and-label",
+          {
+            "widgets": [
+              {
+                "icon/frame": "sprites/menu/rubber.png",
+                "label/text.i18n": "ERASE"
+              }
+            ],
+
+            "bounds/icon": [
+              {
+                "anchor.reference.x": 0.55,
+                "anchor.reference.y": 0.85,
+                "width.percents": 70,
+                "keep-ratio": true
+              }
+            ]
+          }
+        ],
+
+        "slot_0": [
+          "app/widget/game-feature-slot-button",
+          {
+            "anchor-point.y": 0.25
+          }
+        ],
+
+        "slot_1": [
+          "app/widget/game-feature-slot-button",
+          {
+            "anchor-point.y": 0.25
+          }
+        ],
+
+        "top-panel": [
+          {
+            "instantiate": "nine_slices",
+            "z-order": -100,
+            "widgets/sprite": [
+              {
+                "frame": "sprites/menu/top-panel-114-114.png",
+                "insets.left": 114,
+                "insets.top": 114,
+                "insets.width": 1,
+                "insets.height": 1
+              }
+            ]
+          }
+        ],
+
+        "panel-separator": [
+          {
+            "instantiate": "nine_slices",
+            "z-order": -10,
+            "stretch-direction.vertical": false,
+            "widgets/sprite": [
+              {
+                "frame": "sprites/menu/horizontal-edge-1-76.png",
+                "insets.left": 1,
+                "insets.top": 76,
+                "insets.width": 1,
+                "insets.height": 1
+              }
+            ]
+          }
+        ],
+
+        "list-background": [
+          {
+            "instantiate": "ax::LayerColor",
+            "color": "gable-green",
+            "opacity": 1,
+            "z-order": -10
+          }
+        ],
+
+        "list/item-size": [
+          {
+            "width.percents": 100,
+            "height-ratio": 0.23
+          }
+        ],
+
+        "list-bottom-gradient": [
+          {
+            "instantiate": "ax::Sprite",
+            "frame": "sprites/menu/vertical-gradient.png",
+            "color": "gable-green",
+            "flip.y": true,
+            "z-order": 10
+          }
+        ],
+
+        "feature-description-background": [
+          {
+            "instantiate": "nine_slices",
+            "z-order": 50,
+            "widgets/sprite": [
+              {
+                "frame": "sprites/menu/bevel-invert-24-24.png",
+                "color": "#486e73",
+                "insets.left": 24,
+                "insets.top": 24,
+                "insets.width": 1,
+                "insets.height": 1
+              }
+            ]
+          }
+        ],
+
+        "feature_description_label": [
+          "font/bold",
+          {
+            "font.size": 42,
+            "align.horizontal": "center",
+            "align.vertical": "center",
+            "z-order": 100,
+            "wrap": true,
+            "overflow": "shrink"
+          }
+        ],
+
+        "back_button": [
+          "button/back"
+        ]
+      }
+    ],
+
+    "slot-bounds-off": [
+      {
+        "scale": 1
+      }
+    ],
+
+    "slot-display-off": [
+      {
+        "rotation": 0
+      }
+    ],
+
+    "item-bounds-off": [
+      {
+        "scale": 1
+      }
+    ],
+
+    "item-display-off": [
+      {
+        "rotation": 0
+      }
+    ],
+
+    "action.item-selection": [
+      {
+        "instantiate": "scale",
+        "from": 1,
+        "to": 1.2,
+        "ease": "back-out",
+        "duration": 0.4
+      }
+    ],
+
+    "action.slot-selection": [
+      {
+        "instantiate": "sequence",
+        "intro": [
+          {
+            "index": 0,
+            "instantiate": "spawn",
+
+            "scale": [
+              {
+                "instantiate": "scale",
+                "from": 1,
+                "to": 1.05,
+                "ease": "back-out",
+                "duration": 0.1
+              }
+            ],
+
+            "rotate": [
+              {
+                "instantiate": "rotate",
+                "from": 0,
+                "to": 5,
+                "duration": 0.1
+              }
+            ]
+          }
+        ],
+
+        "loop": [
+          {
+            "index": 10,
+            "instantiate": "repeat",
+            "forever": true,
+            "action": [
+              {
+                "instantiate": "sequence",
+
+                "rotate-left": [
+                  {
+                    "index": 0,
+                    "instantiate": "rotate",
+                    "to": -5,
+                    "duration": 0.4,
+                    "ease": "back-out"
+                  }
+                ],
+
+                "rotate-right": [
+                  {
+                    "index": 20,
+                    "instantiate": "rotate",
+                    "to": 5,
+                    "duration": 0.4,
+                    "ease": "back-out"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

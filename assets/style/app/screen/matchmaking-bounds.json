@@ -3,7 +3,6 @@
     "overrides": [
       "app/screen/part/menu-background-bounds",
       "app/screen/part/menu-stripe-bounds",
-      "app/screen/part/feature-deck-bounds",
       "app/screen/part/wallet-bounds"
     ]
   },
@@ -108,31 +107,6 @@
         "height.percents": 18,
         "width-ratio": 0.39
       }
-    ],
-
-    "feature-description-background": [
-      {
-        "anchor.x": 0.5,
-        "anchor.y": 0.5,
-        "anchor.reference.x": 0.5,
-        "anchor.reference.y": 0.41,
-        "height.percents": 8,
-        "width.percents": 85
-      }
-    ],
-
-    "feature-description-background-spike": [
-      {
-        "anchor.x": 0.5,
-        "anchor.y": 0.7,
-        "anchor.reference.x": 0.5,
-        "anchor.reference.y": 0,
-        "scale-mode": "device"
-      }
-    ],
-
-    "feature_description": [
-      "app/screen/part/matchmaking-feature-label-bounds"
     ],
 
     "wait_message": [

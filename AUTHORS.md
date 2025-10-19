@@ -83,6 +83,11 @@ GitHub
 From https://commons.wikimedia.org/wiki/File:GitHub_Invertocat_Logo.svg
 CC-BY 4.0
 
+assets/sprites/menu/dice.png
+Steaphan Greene
+From https://commons.wikimedia.org/wiki/File:2-Dice-Icon.svg
+CC-BY-SA 3.0
+
 assets/sprites/bomb.png
 assets/sprites/crate.png
 assets/sprites/flame-arm.png
@@ -160,14 +165,16 @@ assets/sprites/power-up-flame.png
 assets/sprites/power-up-invisibility.png
 assets/sprites/power-up-shield.png
 assets/sprites/solid-wall.png
-assets/sprites/features/falling-block-off.png
-assets/sprites/features/falling-block-on.png
-assets/sprites/features/fog-of-war-off.png
-assets/sprites/features/fog-of-war-on.png
-assets/sprites/features/invisibility-off.png
-assets/sprites/features/invisibility-on.png
-assets/sprites/features/shield-off.png
-assets/sprites/features/shield-on.png
+assets/sprites/features/background-blue.png
+assets/sprites/features/background-green.png
+assets/sprites/features/background-off.png
+assets/sprites/features/background-white.png
+assets/sprites/features/falling-blocks.png
+assets/sprites/features/fog-of-war.png
+assets/sprites/features/invisibility.png
+assets/sprites/features/padlock.png
+assets/sprites/features/plus.png
+assets/sprites/features/shield.png
 assets/sprites/fog/00000000.png
 assets/sprites/fog/00000001.png
 assets/sprites/fog/00000010.png
@@ -222,6 +229,7 @@ assets/sprites/fog/roll-in-4.png
 assets/sprites/fog/roll-in-5.png
 assets/sprites/fog/roll-in-6.png
 assets/sprites/menu/back.png
+assets/sprites/menu/bevel-invert-24-24.png
 assets/sprites/menu/checkmark.png
 assets/sprites/menu/coin.png
 assets/sprites/menu/coins-pack-1.png
@@ -234,18 +242,19 @@ assets/sprites/menu/dot-70.png
 assets/sprites/menu/gamepad-d-pad-left.png
 assets/sprites/menu/gamepad-d-pad-right.png
 assets/sprites/menu/glow.png
+assets/sprites/menu/horizontal-edge-1-76.png
 assets/sprites/menu/horizontal-gradient.png
 assets/sprites/menu/mail.png
 assets/sprites/menu/price-tag-88-40.png
 assets/sprites/menu/rays.png
 assets/sprites/menu/red-stripe-1-7-1-136.png
 assets/sprites/menu/round-button-yellow.png
+assets/sprites/menu/round-button-yellow-small.png
 assets/sprites/menu/rounded-button-border-54-66.png
 assets/sprites/menu/rounded-button-fill-54-66.png
 assets/sprites/menu/rounded-dark-rectangle-93-93.png
 assets/sprites/menu/rounded-dark-rectangle-spike.png
-assets/sprites/menu/rounded-rectangle-33-33.png
-assets/sprites/menu/rounded-rectangle-spike.png
+assets/sprites/menu/rubber.png
 assets/sprites/menu/share.png
 assets/sprites/menu/shop-icon.png
 assets/sprites/menu/shop-item-border-107-109.png
@@ -256,9 +265,11 @@ assets/sprites/menu/stats-icon.png
 assets/sprites/menu/stripe-1-79-1-258.png
 assets/sprites/menu/success-rate-disc.png
 assets/sprites/menu/success-rate-disc-empty.png
+assets/sprites/menu/top-panel-114-114.png
 assets/sprites/menu/vertical-gradient.png
 assets/sprites/menu/vertical-gray-gradient.png
 assets/sprites/menu/vertical-green-gradient.png
+assets/sprites/menu/vertical-purple-gradient.png
 assets/sprites/menu/vertical-red-gradient.png
 assets/sprites/menu/vertical-yellow-gradient.png
 assets/sprites/menu/wallet-coin.png
@@ -376,6 +387,7 @@ assets/sprites/ui/line-7-4.png
 assets/texture/bomb-stencil.png
 assets/texture/defeat-background-pattern.png
 assets/texture/draw-background-pattern.png
+assets/texture/features-background-pattern.png
 assets/texture/gifts-background-pattern.png
 assets/texture/menu-background-pattern.png
 assets/texture/popup-background-pattern.png

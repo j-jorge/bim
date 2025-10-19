@@ -1,5 +1,6 @@
 {
   "style": {
+    "feature-deck-path": "container/feature-deck",
     "play-button-server-stats-label-path": "container/server-statistics",
 
     "debug": [
@@ -88,6 +89,10 @@
               }
             ]
           }
+        ],
+
+        "game_features_button": [
+          "app/screen/lobby/game-features-button"
         ],
 
         "play_button": [

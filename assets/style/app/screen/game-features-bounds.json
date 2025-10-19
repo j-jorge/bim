@@ -1,0 +1,169 @@
+{
+  "meta": {
+    "overrides": [
+      "app/screen/part/menu-background-bounds",
+      "app/screen/part/wallet-bounds"
+    ]
+  },
+
+  "style": {
+    "background": [
+      {
+        "anchor.y": 1,
+        "anchor.reference.y": 1,
+        "height.percents": 18
+      }
+    ],
+
+    "pattern": [
+      {
+        "anchor.y": 1,
+        "anchor.reference.y": 1,
+        "height.percents": 20
+      }
+    ],
+
+    "left-shadow": [
+      {
+        "anchor.y": 1,
+        "anchor.reference.y": 1,
+        "height.percents": 18
+      }
+    ],
+
+    "right-shadow": [
+      {
+        "anchor.y": 1,
+        "anchor.reference.y": 1,
+        "height.percents": 18
+      }
+    ],
+
+    "random_button": [
+      {
+        "anchor.x": 0.5,
+        "anchor.y": 0.5,
+        "anchor.reference.x": 0.1,
+        "anchor.reference.y": 0.87,
+        "height.percents": 6,
+        "width-ratio": 1
+      }
+    ],
+
+    "erase_button": [
+      {
+        "anchor.x": 0.5,
+        "anchor.y": 0.5,
+        "anchor.reference.x": 0.9,
+        "anchor.reference.y": 0.87,
+        "height.percents": 6,
+        "width-ratio": 1
+      }
+    ],
+
+    "top-panel": [
+      {
+        "anchor.x": 0.5,
+        "anchor.y": 0,
+        "anchor.reference.x": 0.5,
+        "anchor.reference.y": 0.83,
+        "width.percents": 70,
+        "height.percents": 8
+      }
+    ],
+
+    "slot_0": [
+      {
+        "anchor.x": 0.5,
+        "anchor.y": 0.5,
+        "anchor.reference.x": 0.38,
+        "anchor.reference.y": 0.89,
+        "height.percents": 10,
+        "width-ratio": 1
+      }
+    ],
+
+    "slot_1": [
+      {
+        "anchor.x": 0.5,
+        "anchor.y": 0.5,
+        "anchor.reference.x": 0.62,
+        "anchor.reference.y": 0.89,
+        "height.percents": 10,
+        "width-ratio": 1
+      }
+    ],
+
+    "panel-separator": [
+      {
+        "anchor.x": 0.5,
+        "anchor.y": 0.5,
+        "anchor.reference.x": 0.5,
+        "anchor.reference.y": 0.83,
+        "width.percents": 100,
+        "height.percents": 7
+      }
+    ],
+
+    "list-background": [
+      {
+        "anchor.x": 0.5,
+        "anchor.y": 0,
+        "anchor.reference.x": 0.5,
+        "anchor.reference.y": 0,
+        "width.percents": 100,
+        "height.percents": 83
+      }
+    ],
+
+    "list": [
+      {
+        "anchor.x": 0.5,
+        "anchor.y": 0,
+        "anchor.reference.x": 0.5,
+        "anchor.reference.y": 0.19,
+        "width.percents": 100,
+        "height.percents": 64
+      }
+    ],
+
+    "list-bottom-gradient": [
+      {
+        "reference": "list",
+        "anchor.x": 0.5,
+        "anchor.y": 0,
+        "anchor.reference.x": 0.5,
+        "anchor.reference.y": 0,
+        "width.percents": 100,
+        "height.percents": 5
+      }
+    ],
+
+    "feature-description-background": [
+      {
+        "anchor.x": 0.5,
+        "anchor.y": 0,
+        "anchor.reference.x": 0.5,
+        "anchor.reference.y": 0.09,
+        "width.percents": 95,
+        "height.percents": 10
+      }
+    ],
+
+    "feature_description_label": [
+      {
+        "reference": "feature-description-background",
+        "anchor.x": 0.5,
+        "anchor.y": 0.5,
+        "anchor.reference.x": 0.5,
+        "anchor.reference.y": 0.5,
+        "width.percents": 90,
+        "height.percents": 66
+      }
+    ],
+
+    "back_button": [
+      "layout/back-button"
+    ]
+  }
+}

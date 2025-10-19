@@ -1,0 +1,25 @@
+{
+  "style": {
+    "slot-background-0": [
+      "app/widget/feature-deck-slot-background-bounds"
+    ],
+
+    "slot_0": [
+      "layout/fill",
+      {
+        "reference": "slot-background-0"
+      }
+    ],
+
+    "slot-background-1": [
+      "app/widget/feature-deck-slot-background-bounds"
+    ],
+
+    "slot_1": [
+      "layout/fill",
+      {
+        "reference": "slot-background-1"
+      }
+    ]
+  }
+}

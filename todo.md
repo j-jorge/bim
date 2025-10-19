@@ -1,10 +1,9 @@
 # Next
 
-- Game feature submenu.
+- Loading screen.
 
 # Client
 
-- At most three enabled features per game.
 - Display the frame duration (without the sleep) in addition to the FPS.
 
 # Server

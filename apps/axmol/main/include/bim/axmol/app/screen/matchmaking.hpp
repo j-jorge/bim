@@ -45,7 +45,6 @@ namespace iscool::style
 namespace bim::axmol::app
 {
   class analytics_service;
-  class feature_deck;
   class wallet;
 
   class matchmaking
@@ -90,18 +89,13 @@ namespace bim::axmol::app
 
     void dispatch_back() const;
 
-    void feature_flag_clicked(bim::game::feature_flags f) const;
-
-    void show_default_feature_message() const;
-    void show_feature_message(bim::game::feature_flags f) const;
-
   private:
     ic_declare_state_monitor(m_player_count_monitor);
     ic_declare_state_monitor(m_launch_monitor);
 
     bim::axmol::input::single_key_observer_handle m_escape;
     bim::axmol::input::tree m_inputs;
-    bim_declare_controls_struct(controls, m_controls, 5);
+    bim_declare_controls_struct(controls, m_controls, 4);
 
     const std::unique_ptr<wallet> m_wallet;
 
@@ -110,7 +104,6 @@ namespace bim::axmol::app
     iscool::signals::scoped_connection m_game_proposal_connection;
     iscool::signals::scoped_connection m_launch_connection;
 
-    std::unique_ptr<feature_deck> m_feature_deck;
     std::unique_ptr<bim::app::matchmaking_wait_message> m_wait_message;
 
     const iscool::style::declaration& m_style_displaying;

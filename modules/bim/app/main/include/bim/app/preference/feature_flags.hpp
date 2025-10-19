@@ -11,12 +11,22 @@ namespace iscool::preferences
 namespace bim::app
 {
   bim::game::feature_flags
-  enabled_feature_flags(const iscool::preferences::local_preferences& p);
-  void enabled_feature_flags(iscool::preferences::local_preferences& p,
-                             bim::game::feature_flags v);
-
-  bim::game::feature_flags
   available_feature_flags(const iscool::preferences::local_preferences& p);
   void available_feature_flags(iscool::preferences::local_preferences& p,
                                bim::game::feature_flags v);
+
+  bim::game::feature_flags
+  feature_flag_in_slot(const iscool::preferences::local_preferences& p,
+                       std::int64_t slot);
+
+  void feature_flag_in_slot(iscool::preferences::local_preferences& p,
+                            std::int64_t slot, bim::game::feature_flags f);
+
+  bim::game::feature_flags
+  enabled_feature_flags(const iscool::preferences::local_preferences& p);
+
+  bool available_feature_slot(const iscool::preferences::local_preferences& p,
+                              std::int64_t slot);
+  void available_feature_slot(iscool::preferences::local_preferences& p,
+                              std::int64_t slot, bool v);
 }

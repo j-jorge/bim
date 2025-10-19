@@ -3,9 +3,9 @@ set(main_sources
   main/src/bim/axmol/app/application.cpp
   main/src/bim/axmol/app/arena_display_config.cpp
   main/src/bim/axmol/app/bridge.cpp
-  main/src/bim/axmol/app/feature_deck.cpp
   main/src/bim/axmol/app/fog_display.cpp
   main/src/bim/axmol/app/frame_profiler.cpp
+  main/src/bim/axmol/app/game_feature_sprite_frame.cpp
   main/src/bim/axmol/app/main_scene.cpp
   main/src/bim/axmol/app/root_scene.cpp
   main/src/bim/axmol/app/scene_lock.cpp
@@ -21,6 +21,7 @@ set(main_sources
   main/src/bim/axmol/app/popup/settings_popup.cpp
 
   main/src/bim/axmol/app/screen/end_game.cpp
+  main/src/bim/axmol/app/screen/game_features.cpp
   main/src/bim/axmol/app/screen/lobby.cpp
   main/src/bim/axmol/app/screen/matchmaking.cpp
   main/src/bim/axmol/app/screen/online_game.cpp
@@ -29,7 +30,9 @@ set(main_sources
   main/src/bim/axmol/app/task/main_task.cpp
 
   main/src/bim/axmol/app/widget/game_feature_button.cpp
+  main/src/bim/axmol/app/widget/feature_deck.cpp
   main/src/bim/axmol/app/widget/player.cpp
+  main/src/bim/axmol/app/widget/register_widgets.cpp
 )
 
 if (BIM_PURE_FOSS)

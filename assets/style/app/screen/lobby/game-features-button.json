@@ -1,0 +1,85 @@
+{
+  "meta": {
+    "overrides": [
+      "button/purple-with-label"
+    ]
+  },
+
+  "style": {
+    "widgets": [
+      {
+        "feature-deck": [
+          "app/widget/feature-deck",
+          {
+            "instantiate": "bim::axmol::app::feature_deck",
+            "z-order": 100,
+
+            "bounds.2": [
+              {
+                "slot-background-0/anchor.reference.x": 0.27,
+                "slot-background-1/anchor.reference.x": 0.73
+              }
+            ]
+          }
+        ],
+
+        "decorum-on": [
+          {
+            "widgets/pattern": [
+              {
+                "instantiate": "texture",
+                "parent": "clipping_node",
+                "widgets/sprite/frame":
+                    "texture/features-background-pattern.png",
+                "scroll-per-second.x": 20,
+                "scroll-per-second.y": 10,
+                "rotation": -10,
+                "color": "heliotrope",
+                "scale": 0.5,
+                "opacity": 48,
+                "z-order": 10
+              }
+            ],
+            "bounds/pattern": [
+              "layout/fill"
+            ]
+
+          }
+        ],
+
+        "label": [
+          "font/bold",
+          {
+            "font.size": 50,
+            "text.i18n": "Features",
+            "overflow": "shrink"
+          }
+        ]
+      }
+    ],
+
+    "bounds": [
+      {
+        "feature-deck": [
+          {
+            "anchor.x": 0.5,
+            "anchor.y": 0.5,
+            "anchor.reference.x": 0.5,
+            "anchor.reference.y": 1,
+            "offset.y": -11,
+            "width.percents": 80,
+            "height.percents": 75
+          }
+        ],
+
+        "label": [
+          {
+            "anchor.reference.y": 0.1,
+            "offset.y": 59,
+            "width.percents": 90
+          }
+        ]
+      }
+    ]
+  }
+}
