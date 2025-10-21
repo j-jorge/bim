@@ -70,10 +70,11 @@ namespace bim::axmol::input
 
     void to_string(std::ostream& stream, std::size_t indentation) const;
 
-    template <typename Visit>
-    void depth_first_scan(Visit&& visit);
+    template <typename Enter, typename Visit>
+    void depth_first_scan(Enter&& enter, Visit&& visit);
 
-    static children_vector depth_first_select(const node& root);
+    template <typename Enter>
+    static children_vector depth_first_select(const node& root, Enter&& enter);
 
     template <typename Visit>
     static void visit_selected(const children_vector& selected, Visit&& visit);
@@ -87,5 +88,11 @@ namespace bim::axmol::input
     key_observer_pointer m_key_observer;
 
     bool m_selected_in_scan;
+
+    /**
+     * Did we propagate the pressed touch event to this node? If this is not
+     * the case then the move, release, and cancel events won't be propagated.
+     */
+    bool m_pressed_done;
   };
 }

@@ -14,12 +14,16 @@ namespace bim::axmol::input
     touch_observer(const touch_observer&) = delete;
     touch_observer& operator=(const touch_observer&) = delete;
 
+    bool may_process(const touch_event_view& touches) const;
+
     void pressed(const touch_event_view& touches);
     void moved(const touch_event_view& touches);
     void released(const touch_event_view& touches);
     void cancelled(const touch_event_view& touches);
 
   private:
+    virtual bool do_may_process(const touch_event_view& touches) const;
+
     virtual void do_pressed(const touch_event_view& touches) = 0;
     virtual void do_moved(const touch_event_view& touches) = 0;
     virtual void do_released(const touch_event_view& touches) = 0;
