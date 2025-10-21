@@ -27,6 +27,16 @@ bool bim::axmol::input::axmol_node_touch_observer::contains_touch(
   return bounding_box.containsPoint(touch.get()->getLocation());
 }
 
+bool bim::axmol::input::axmol_node_touch_observer::do_may_process(
+    const touch_event_view& touches) const
+{
+  for (const touch_event& touch : touches)
+    if (!contains_touch(touch))
+      return false;
+
+  return true;
+}
+
 void bim::axmol::input::axmol_node_touch_observer::do_pressed(
     const touch_event_view&)
 {}
