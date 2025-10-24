@@ -9,6 +9,7 @@ add_library(bim_axmol_action
   main/src/bim/axmol/action/factory/repeat.cpp
   main/src/bim/axmol/action/factory/rotate.cpp
   main/src/bim/axmol/action/factory/scale.cpp
+  main/src/bim/axmol/action/factory/sequence.cpp
   main/src/bim/axmol/action/factory/spawn.cpp
   main/src/bim/axmol/action/factory/tint.cpp
   main/src/bim/axmol/action/factory/wrap_in_easing_function.cpp

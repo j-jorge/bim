@@ -8,6 +8,7 @@
 #include <bim/axmol/action/factory/repeat.hpp>
 #include <bim/axmol/action/factory/rotate.hpp>
 #include <bim/axmol/action/factory/scale.hpp>
+#include <bim/axmol/action/factory/sequence.hpp>
 #include <bim/axmol/action/factory/spawn.hpp>
 #include <bim/axmol/action/factory/tint.hpp>
 #include <bim/axmol/action/factory/wrap_in_easing_function.hpp>
@@ -44,6 +45,7 @@ void bim::axmol::action::register_actions(dynamic_factory& factory)
   register_action_3(repeat);
   register_action_1(rotate);
   register_action_1(scale);
+  register_action_3(sequence);
   register_action_3(spawn);
   register_action_2(tint);
 
