@@ -126,34 +126,59 @@ void set_bottom_left(ax::Node& node,
                      const ax::Vec2& reference_bottom_left,
                      const ax::Vec2& reference_size, float device_scale)
 {
-  const ax::Vec2 node_anchor(
-      (bool(bounds.flags & bim::axmol::style::bounds_property_flags::anchor_x)
-           ? bounds.anchor_x
-           : 0.5f),
-      (bool(bounds.flags & bim::axmol::style::bounds_property_flags::anchor_y)
-           ? bounds.anchor_y
-           : 0.5f));
-  const ax::Vec2 reference_anchor(
-      (bool(bounds.flags
-            & bim::axmol::style::bounds_property_flags::anchor_in_reference_x)
-           ? bounds.anchor_in_reference_x
-           : 0.5f),
-      (bool(bounds.flags
-            & bim::axmol::style::bounds_property_flags::anchor_in_reference_y)
-           ? bounds.anchor_in_reference_y
-           : 0.5f));
-  const ax::Vec2 node_offset(
-      (bool(bounds.flags & bim::axmol::style::bounds_property_flags::offset_x)
-           ? (bounds.offset_x * device_scale)
-           : 0.f),
-      (bool(bounds.flags & bim::axmol::style::bounds_property_flags::offset_y)
-           ? (bounds.offset_y * device_scale)
-           : 0.f));
-
+  const ax::Vec2 node_anchor_point = node.getAnchorPoint();
   const ax::Vec2 size = node.getContentSize();
   const ax::Vec2 scaled_size = size * node.getScale();
 
-  node.setPosition(
-      node_offset + reference_bottom_left + reference_anchor * reference_size
-      - node_anchor * scaled_size + node.getAnchorPoint() * scaled_size);
+  ax::Vec2 final_position = node.getPosition();
+
+  if (bool(bounds.flags
+           & bim::axmol::style::bounds_property_flags::anchor_in_reference_x)
+      && bool(bounds.flags
+              & (bim::axmol::style::bounds_property_flags::anchor_x
+                 | bim::axmol::style::bounds_property_flags::offset_x)))
+    {
+      const float node_anchor =
+          bool(bounds.flags
+               & bim::axmol::style::bounds_property_flags::anchor_x)
+              ? bounds.anchor_x
+              : node_anchor_point.x;
+      const float reference_anchor = bounds.anchor_in_reference_x;
+      const float node_offset =
+          bool(bounds.flags
+               & bim::axmol::style::bounds_property_flags::offset_x)
+              ? (bounds.offset_x * device_scale)
+              : 0.f;
+
+      final_position.x = node_offset + reference_bottom_left.x
+                         + reference_anchor * reference_size.x
+                         - node_anchor * scaled_size.x
+                         + node_anchor_point.x * scaled_size.x;
+    }
+
+  if (bool(bounds.flags
+           & bim::axmol::style::bounds_property_flags::anchor_in_reference_y)
+      && bool(bounds.flags
+              & (bim::axmol::style::bounds_property_flags::anchor_y
+                 | bim::axmol::style::bounds_property_flags::offset_y)))
+    {
+      const float node_anchor =
+          bool(bounds.flags
+               & bim::axmol::style::bounds_property_flags::anchor_y)
+              ? bounds.anchor_y
+              : node_anchor_point.y;
+      const float reference_anchor = bounds.anchor_in_reference_y;
+      const float node_offset =
+          bool(bounds.flags
+               & bim::axmol::style::bounds_property_flags::offset_y)
+              ? (bounds.offset_y * device_scale)
+              : 0.f;
+
+      final_position.y = node_offset + reference_bottom_left.y
+                         + reference_anchor * reference_size.y
+                         - node_anchor * scaled_size.y
+                         + node_anchor_point.y * scaled_size.y;
+    }
+
+  node.setPosition(final_position);
 }
