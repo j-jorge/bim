@@ -1,10 +1,9 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #pragma once
 
-#include <boost/unordered/unordered_flat_map.hpp>
+#include <boost/unordered/unordered_node_map.hpp>
 
 #include <cstdint>
-#include <unordered_map>
 
 namespace iscool::style
 {
@@ -33,17 +32,23 @@ namespace bim::axmol
       get_display(const iscool::style::declaration& style);
 
     private:
-      // We need reference stability for the bounds because the map may grow
-      // while being read. For example, one has a reference to a
-      // bounds_properties and uses it to resize a node. The resizing triggers
-      // another computation of bounds for the child nodes, which will then
-      // look-up more properties in the same map. Since the properties are
-      // added lazily then it may cause a rehash or a reallocation, depending
-      // on the internals of the map. Without reference stability the first
-      // reference above would become invalid.
-      using bounds_map = std::unordered_map<std::uint64_t, bounds_properties>;
+      // We need reference stability for the properties because they may be
+      // stored on scene initialization to be applied later in the execution
+      // (e.g. restoring the state of a widget after it has been modified by an
+      // action).
+      //
+      // This is also essential for the bounds because the map may grow while
+      // being read. For example, one has a reference to a bounds_properties
+      // and uses it to resize a node. The resizing triggers another
+      // computation of bounds for the child nodes, which will then look-up
+      // more properties in the same map. Since the properties are added lazily
+      // then it may cause a rehash or a reallocation, depending on the
+      // internals of the map. Without reference stability the first reference
+      // above would become invalid.
+      using bounds_map =
+          boost::unordered_node_map<std::uint64_t, bounds_properties>;
       using display_map =
-          boost::unordered_flat_map<std::uint64_t, display_properties>;
+          boost::unordered_node_map<std::uint64_t, display_properties>;
 
     private:
       const bim::axmol::colour_chart& m_colour_chart;
