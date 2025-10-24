@@ -4,6 +4,7 @@
 #include <bim/axmol/action/dynamic_factory.impl.hpp>
 #include <bim/axmol/action/move.hpp>
 
+#include <bim/axmol/action/factory/delay.hpp>
 #include <bim/axmol/action/factory/fade.hpp>
 #include <bim/axmol/action/factory/repeat.hpp>
 #include <bim/axmol/action/factory/rotate.hpp>
@@ -41,6 +42,7 @@ void bim::axmol::action::register_actions(dynamic_factory& factory)
                                                      style);                  \
                           })
 
+  register_action_1(delay);
   register_action_1(fade);
   register_action_3(repeat);
   register_action_1(rotate);
