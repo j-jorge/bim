@@ -3,6 +3,8 @@
 
 #include <bim/axmol/widget/log_context.hpp>
 
+#include <bim/axmol/find_child_by_path.hpp>
+
 #include <iscool/log/log.hpp>
 #include <iscool/log/nature/error.hpp>
 #include <iscool/optional.hpp>
@@ -24,18 +26,32 @@ void bim::axmol::widget::set_node_parents(
       if (!parent_name)
         continue;
 
-      const named_node_group::const_iterator parent_it =
-          nodes.find(*parent_name);
+      const std::string_view node_path = *parent_name;
 
-      if (parent_it == nodes_end)
+      const std::string_view::size_type slash = node_path.find_first_of('/');
+      const bool has_child_path = slash != std::string_view::npos;
+
+      const std::string_view root_name =
+          has_child_path ? node_path.substr(0, slash) : node_path;
+
+      const named_node_group::const_iterator parent_it = nodes.find(root_name);
+
+      if (parent_it != nodes_end)
         {
-          ic_log(iscool::log::nature::error(),
-                 bim::axmol::widget::g_log_context,
-                 "No reference node named '{}' to set as parent node for {}.",
-                 *parent_name, name);
-          continue;
+          ax::Node* const parent =
+              has_child_path ? find_child_by_path(*parent_it->second,
+                                                  node_path.substr(slash + 1))
+                             : parent_it->second.get();
+
+          if (parent)
+            {
+              parent->addChild(node.get());
+              continue;
+            }
         }
 
-      parent_it->second->addChild(node.get());
+      ic_log(iscool::log::nature::error(), bim::axmol::widget::g_log_context,
+             "No reference node named '{}' to set as parent node for {}.",
+             root_name, name);
     }
 }
