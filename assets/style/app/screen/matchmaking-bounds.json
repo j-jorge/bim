@@ -48,7 +48,7 @@
         "anchor.x": 0.5,
         "anchor.y": 0.5,
         "anchor.reference.x": 0.5,
-        "anchor.reference.y": 0.57,
+        "anchor.reference.y": 0.45,
         "width.percents": 200,
         "height-ratio": 1
       }
@@ -59,7 +59,7 @@
         "anchor.x": 0.5,
         "anchor.y": 0.5,
         "anchor.reference.x": 0.5,
-        "anchor.reference.y": 0.57,
+        "anchor.reference.y": 0.45,
         "width.percents": 200,
         "height-ratio": 1
       }
@@ -69,9 +69,9 @@
       {
         "anchor.x": 0.5,
         "anchor.y": 0,
-        "anchor.reference.x": 0.57,
-        "anchor.reference.y": 0.48,
-        "height.percents": 20,
+        "anchor.reference.x": 0.58,
+        "anchor.reference.y": 0.36,
+        "height.percents": 26,
         "width-ratio": 0.3
       }
     ],
@@ -80,9 +80,9 @@
       {
         "anchor.x": 0.5,
         "anchor.y": 0,
-        "anchor.reference.x": 0.41,
-        "anchor.reference.y": 0.48,
-        "height.percents": 19,
+        "anchor.reference.x": 0.4,
+        "anchor.reference.y": 0.36,
+        "height.percents": 25,
         "width-ratio": 0.36
       }
     ],
@@ -91,9 +91,9 @@
       {
         "anchor.x": 0.5,
         "anchor.y": 0,
-        "anchor.reference.x": 0.27,
-        "anchor.reference.y": 0.48,
-        "height.percents": 18,
+        "anchor.reference.x": 0.25,
+        "anchor.reference.y": 0.36,
+        "height.percents": 24,
         "width-ratio": 0.3
       }
     ],
@@ -102,9 +102,9 @@
       {
         "anchor.x": 0.5,
         "anchor.y": 0,
-        "anchor.reference.x": 0.71,
-        "anchor.reference.y": 0.48,
-        "height.percents": 18,
+        "anchor.reference.x": 0.73,
+        "anchor.reference.y": 0.36,
+        "height.percents": 24,
         "width-ratio": 0.39
       }
     ],
