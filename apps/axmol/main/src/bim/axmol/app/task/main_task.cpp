@@ -1,12 +1,13 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/axmol/app/task/main_task.hpp>
 
-#include <bim/axmol/app/analytics_service.hpp>
 #include <bim/axmol/app/popup/message.hpp>
 #include <bim/axmol/app/screen_wheel.hpp>
 
 #include <bim/net/message/authentication_error_code.hpp>
 
+#include <bim/app/analytics/error.hpp>
+#include <bim/app/analytics_service.hpp>
 #include <bim/app/preference/date_of_next_config_update.hpp>
 #include <bim/app/preference/date_of_next_version_update_message.hpp>
 #include <bim/app/preference/update_preferences.hpp>
@@ -175,8 +176,7 @@ void bim::axmol::app::main_task::validate_remote_config(
       ic_log(iscool::log::nature::warning(), "main_task",
              "Failed to parse remote config {}.", str);
 
-      m_context.get_analytics()->event("error",
-                                       { { "cause", "config-parse-error" } });
+      bim::app::error(*m_context.get_analytics(), "config-parse-error");
       return;
     }
 
@@ -187,8 +187,7 @@ void bim::axmol::app::main_task::validate_remote_config(
     {
       ic_log(iscool::log::nature::warning(), "main_task",
              "Failed to load remote config from Json {}.", str);
-      m_context.get_analytics()->event("error",
-                                       { { "cause", "config-load-error" } });
+      bim::app::error(*m_context.get_analytics(), "config-load-error");
       return;
     }
 

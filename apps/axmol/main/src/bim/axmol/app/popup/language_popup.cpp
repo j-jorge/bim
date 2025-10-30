@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/axmol/app/popup/language_popup.hpp>
 
-#include <bim/axmol/app/analytics_service.hpp>
 #include <bim/axmol/app/popup/message.hpp>
 #include <bim/axmol/app/popup/popup.hpp>
 
@@ -11,6 +10,9 @@
 #include <bim/axmol/widget/ui/button.hpp>
 #include <bim/axmol/widget/ui/list.hpp>
 #include <bim/axmol/widget/ui/passive_node.hpp>
+
+#include <bim/app/analytics/button_clicked.hpp>
+#include <bim/app/analytics_service.hpp>
 
 #include <axmol/ui/UIRichText.h>
 
@@ -161,7 +163,6 @@ void bim::axmol::app::language_popup::switch_to_language(
 
 void bim::axmol::app::language_popup::open_url(std::string_view url)
 {
-  m_context.get_analytics()->event("button",
-                                   { { "id", url }, { "where", "language" } });
+  bim::app::button_clicked(*m_context.get_analytics(), url, "language");
   iscool::system::open_url(std::string(url));
 }

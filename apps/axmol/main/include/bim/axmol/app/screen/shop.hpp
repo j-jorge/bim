@@ -21,6 +21,8 @@ namespace bim::axmol::widget
 
 namespace bim::app
 {
+  class analytics_service;
+  class shop_service;
   struct config;
 }
 
@@ -41,10 +43,8 @@ namespace ax
 
 namespace bim::axmol::app
 {
-  class analytics_service;
   class main_scene;
   class message_popup;
-  class shop_service;
   class wallet;
 
   class shop
@@ -56,7 +56,7 @@ namespace bim::axmol::app
         ic_context_declare_parent_properties(                              //
             ((const bim::axmol::widget::context&)(widget_context))         //
             ((main_scene*)(main_scene))                                    //
-            ((analytics_service*)(analytics))                              //
+            ((bim::app::analytics_service*)(analytics))                    //
             ((const bim::app::config*)(config))                            //
             ((iscool::preferences::local_preferences*)(local_preferences)) //
             ),
@@ -95,7 +95,7 @@ namespace bim::axmol::app
 
     const std::unique_ptr<wallet> m_wallet;
 
-    const std::unique_ptr<shop_service> m_shop;
+    const std::unique_ptr<bim::app::shop_service> m_shop;
     iscool::signals::scoped_connection m_products_connection;
     iscool::signals::scoped_connection m_products_error_connection;
     iscool::signals::scoped_connection m_purchase_connection;

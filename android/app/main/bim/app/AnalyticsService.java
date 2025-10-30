@@ -16,7 +16,7 @@ import org.apache.commons.codec.binary.Hex;
 @Keep
 class AnalyticsService
 {
-  static public void init(Activity activity)
+  static public void init(Activity activity, boolean with_shop)
   {
     final PostHogAndroidConfig config = new PostHogAndroidConfig(
         "phc_57UXj7TS4OWO4UOPydBUssez5Z7OarK2BRS4QfjSo07",
@@ -24,7 +24,7 @@ class AnalyticsService
 
     PostHogAndroid.Companion.setup(activity, config);
 
-    send_start_event(activity);
+    send_start_event(activity, with_shop);
   }
 
   static public void screen(String name)
@@ -47,13 +47,14 @@ class AnalyticsService
     PostHog.Companion.capture(name, null, properties, null, null, null);
   }
 
-  static private void send_start_event(Activity activity)
+  static private void send_start_event(Activity activity, boolean with_shop)
   {
     final HashMap<String, String> properties = new HashMap<String, String>();
     final Context context = activity.getApplicationContext();
     final String package_name = context.getPackageName();
 
     properties.put("app", package_name);
+    properties.put("shop", with_shop ? "yes" : "no");
 
     try
       {

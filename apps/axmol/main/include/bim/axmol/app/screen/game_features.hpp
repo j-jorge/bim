@@ -53,9 +53,13 @@ namespace iscool::style
   class declaration;
 }
 
-namespace bim::axmol::app
+namespace bim::app
 {
   class analytics_service;
+}
+
+namespace bim::axmol::app
+{
   class game_feature_button;
   class main_scene;
   class message_popup;
@@ -71,7 +75,7 @@ namespace bim::axmol::app
         ic_context_declare_parent_properties(                              //
             ((const bim::axmol::widget::context&)(widget_context))         //
             ((main_scene*)(main_scene))                                    //
-            ((analytics_service*)(analytics))                              //
+            ((bim::app::analytics_service*)(analytics))                    //
             ((const bim::app::config*)(config))                            //
             ((iscool::preferences::local_preferences*)(local_preferences)) //
             ),

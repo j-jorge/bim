@@ -21,6 +21,11 @@ namespace bim::net
   class session_handler;
 }
 
+namespace bim::app
+{
+  class analytics_service;
+}
+
 namespace iscool::audio
 {
   class mixer;
@@ -53,7 +58,6 @@ namespace ax
 
 namespace bim::axmol::app
 {
-  class analytics_service;
   class debug_popup;
   class feature_deck;
   class main_scene;
@@ -74,7 +78,7 @@ namespace bim::axmol::app
         ic_context_declare_parent_properties(                              //
             ((const bim::axmol::widget::context&)(widget_context))         //
             ((main_scene*)(main_scene))                                    //
-            ((analytics_service*)(analytics))                              //
+            ((bim::app::analytics_service*)(analytics))                    //
             ((bim::net::session_handler*)(session_handler))                //
             ((iscool::audio::mixer*)(audio))                               //
             ((iscool::preferences::local_preferences*)(local_preferences)) //

@@ -30,6 +30,7 @@ endif()
 
 # Where the static part of the Android project is located (e.g. the
 # Java source of the game).
+set(bim_app_java_dir "${CMAKE_CURRENT_LIST_DIR}/modules/bim/app/java")
 set(android_app_root_dir "${CMAKE_CURRENT_LIST_DIR}/android")
 
 # Where we generate the configured project.

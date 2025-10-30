@@ -21,13 +21,13 @@ public class AppActivity extends AxmolActivity
     super.setEnableVirtualButton(false);
     super.onCreate(savedInstanceState);
 
-    AnalyticsService.init(this);
     JniService.init(this);
     Log.registerDelegate(NativeLog.defaultInstance());
     LinkService.init(this);
     ShareService.init(this, getPackageName() + ".fileprovider");
     SystemService.init(this);
     ShopService.init(this);
+    AnalyticsService.init(this, ShopService.supported());
 
     // Workaround in
     // https://stackoverflow.com/questions/16283079/re-launch-of-activity-on-home-button-but-only-the-first-time/16447508

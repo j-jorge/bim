@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/app/player_progress_tracker.hpp>
 
+#include <bim/app/analytics/coins_transaction.hpp>
 #include <bim/app/config.hpp>
 #include <bim/app/preference/arena_stats.hpp>
 #include <bim/app/preference/wallet.hpp>
@@ -10,9 +11,11 @@
 #include <iscool/preferences/local_preferences.hpp>
 
 bim::app::player_progress_tracker::player_progress_tracker(
+    analytics_service& analytics,
     iscool::preferences::local_preferences& local_preferences,
     const config& config)
-  : m_preferences(local_preferences)
+  : m_analytics(analytics)
+  , m_preferences(local_preferences)
   , m_config(config)
 {}
 
@@ -25,6 +28,7 @@ void bim::app::player_progress_tracker::game_over_in_public_arena(
 
   if (!result.has_a_winner())
     {
+      coins_transaction(m_analytics, "arena-draw", m_config.coins_per_draw);
       add_coins(m_preferences, m_config.coins_per_draw);
       return;
     }
@@ -36,12 +40,16 @@ void bim::app::player_progress_tracker::game_over_in_public_arena(
     {
       ++victories;
       victories_in_arena(m_preferences, victories);
+      coins_transaction(m_analytics, "arena-victory",
+                        m_config.coins_per_victory);
       add_coins(m_preferences, m_config.coins_per_victory);
     }
   else
     {
       ++defeats;
       defeats_in_arena(m_preferences, defeats);
+      coins_transaction(m_analytics, "arena-defeat",
+                        m_config.coins_per_defeat);
       add_coins(m_preferences, m_config.coins_per_defeat);
     }
 }

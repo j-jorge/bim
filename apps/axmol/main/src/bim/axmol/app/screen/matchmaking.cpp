@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/axmol/app/screen/matchmaking.hpp>
 
-#include <bim/axmol/app/analytics_service.hpp>
 #include <bim/axmol/app/part/wallet.hpp>
 
 #include <bim/axmol/widget/apply_actions.hpp>
@@ -14,6 +13,7 @@
 #include <bim/axmol/input/key_observer_handle.impl.hpp>
 #include <bim/axmol/input/observer/single_key_observer.hpp>
 
+#include <bim/app/analytics/button_clicked.hpp>
 #include <bim/app/config.hpp>
 #include <bim/app/constant/game_feature_slot_count.hpp>
 #include <bim/app/matchmaking_wait_message.hpp>
@@ -265,8 +265,7 @@ void bim::axmol::app::matchmaking::open_discord() const
   if (!m_player_count_monitor->is_waiting_state())
     return;
 
-  m_context.get_analytics()->event(
-      "button", { { "id", "discord" }, { "where", "matchmaking" } });
+  button_clicked(*m_context.get_analytics(), "discord", "matchmaking");
   iscool::system::open_url(m_context.get_config()->discord_url);
 }
 

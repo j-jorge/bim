@@ -1,10 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/axmol/app/screen/shop.hpp>
 
-#include <bim/axmol/app/analytics_service.hpp>
 #include <bim/axmol/app/part/wallet.hpp>
 #include <bim/axmol/app/popup/message.hpp>
-#include <bim/axmol/app/shop_service.hpp>
 
 #include <bim/axmol/widget/apply_display.hpp>
 #include <bim/axmol/widget/context.hpp>
@@ -17,8 +15,13 @@
 
 #include <bim/axmol/find_child_by_path.hpp>
 
+#include <bim/app/analytics/coins_transaction.hpp>
+#include <bim/app/analytics/error.hpp>
+#include <bim/app/analytics_service.hpp>
 #include <bim/app/config.hpp>
 #include <bim/app/preference/wallet.hpp>
+#include <bim/app/shop_service.hpp>
+#include <bim/app/shop_support.hpp>
 
 #include <iscool/i18n/gettext.hpp>
 #include <iscool/i18n/numeric.hpp>
@@ -53,7 +56,7 @@ bim::axmol::app::shop::shop(const context& context,
   , m_escape(ax::EventKeyboard::KeyCode::KEY_BACK)
   , m_controls(context.get_widget_context(), *style.get_declaration("widgets"))
   , m_wallet(new wallet(context, *style.get_declaration("wallet")))
-  , m_shop(new shop_service())
+  , m_shop(new bim::app::shop_service())
   , m_style_loading(*style.get_declaration("display.loading"))
   , m_style_ready(*style.get_declaration("display.ready"))
   , m_amount_label{ m_controls->coins_1_label, m_controls->coins_2_label,
@@ -141,7 +144,8 @@ bim::axmol::app::shop::shop(const context& context,
         purchase_error();
       });
 
-  fetch_products();
+  if (bim::app::is_shop_supported())
+    fetch_products();
 }
 
 bim::axmol::app::shop::~shop() = default;
@@ -226,8 +230,7 @@ void bim::axmol::app::shop::products_ready(
 
 void bim::axmol::app::shop::products_error()
 {
-  m_context.get_analytics()->event("error",
-                                   { { "cause", "products-detail" } });
+  bim::app::error(*m_context.get_analytics(), "products-detail");
 
   ic_log(iscool::log::nature::error(), "shop",
          "Could not fetch the products detail.");
@@ -261,8 +264,10 @@ void bim::axmol::app::shop::purchase_completed(std::string_view product,
             { { "product", product },
               { "quantity", std::to_string(quantity) } });
 
-        bim::app::add_coins(*m_context.get_local_preferences(),
-                            quantity * config.shop_product_coins[i]);
+        const std::int32_t amount = quantity * config.shop_product_coins[i];
+        bim::app::add_coins(*m_context.get_local_preferences(), amount);
+        bim::app::coins_transaction(*m_context.get_analytics(),
+                                    "purchase-completed", amount);
         m_wallet->animate_cash_flow();
         m_shop->consume(token);
         return;
@@ -278,7 +283,7 @@ void bim::axmol::app::shop::purchase_completed(std::string_view product,
 
 void bim::axmol::app::shop::purchase_error()
 {
-  m_context.get_analytics()->event("error", { { "cause", "purchase" } });
+  bim::app::error(*m_context.get_analytics(), "purchase");
 
   ic_log(iscool::log::nature::error(), "shop",
          "Could not perform the purchase.");

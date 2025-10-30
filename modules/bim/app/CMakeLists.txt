@@ -3,6 +3,10 @@ set(main_sources
   main/src/bim/app/matchmaking_wait_message.cpp
   main/src/bim/app/player_progress_tracker.cpp
 
+  main/src/bim/app/analytics/button_clicked.cpp
+  main/src/bim/app/analytics/coins_transaction.cpp
+  main/src/bim/app/analytics/error.cpp
+
   main/src/bim/app/preference/arena_stats.cpp
   main/src/bim/app/preference/audio.cpp
   main/src/bim/app/preference/controls.cpp
@@ -15,8 +19,24 @@ set(main_sources
   main/src/bim/app/preference/wallet.cpp
 )
 
-add_library(bim_app STATIC ${main_sources})
-target_include_directories(bim_app PUBLIC main/include)
+if (BIM_BUILDING_FOR_ANDROID)
+  set(platform_sources
+    android/src/bim/app/analytics_service.cpp
+    android/src/bim/app/shop_service.cpp
+    android/src/bim/app/shop_support.cpp
+  )
+  set(platform_includes android/include)
+else()
+  set(platform_sources
+    desktop/src/bim/app/analytics_service.cpp
+    desktop/src/bim/app/shop_service.cpp
+    desktop/src/bim/app/shop_support.cpp
+  )
+  set(platform_includes desktop/include)
+endif()
+
+add_library(bim_app STATIC ${main_sources} ${platform_sources})
+target_include_directories(bim_app PUBLIC main/include ${platform_includes})
 
 target_link_libraries(bim_app
   PUBLIC

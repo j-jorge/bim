@@ -71,9 +71,13 @@ namespace iscool
   }
 }
 
-namespace bim::axmol::app
+namespace bim::app
 {
   class analytics_service;
+}
+
+namespace bim::axmol::app
+{
   class end_game;
   class game_features;
   class lobby;
@@ -94,7 +98,7 @@ namespace bim::axmol::app
             ((iscool::preferences::local_preferences*)(local_preferences)) //
             ((const bim::axmol::widget::context&)(widget_context))         //
             ((main_scene*)(main_scene))                                    //
-            ((analytics_service*)(analytics))                              //
+            ((bim::app::analytics_service*)(analytics))                    //
             ((const bim::app::config*)(config))                            //
             ((bim::net::session_handler*)(session_handler))                //
             ((iscool::audio::mixer*)(audio))                               //

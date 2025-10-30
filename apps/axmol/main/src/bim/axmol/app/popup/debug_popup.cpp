@@ -22,6 +22,7 @@
 #include <bim/axmol/input/key_observer_handle.impl.hpp>
 #include <bim/axmol/input/observer/single_key_observer.hpp>
 
+#include <bim/app/analytics/coins_transaction.hpp>
 #include <bim/app/preference/arena_stats.hpp>
 #include <bim/app/preference/date_of_next_config_update.hpp>
 #include <bim/app/preference/date_of_next_version_update_message.hpp>
@@ -293,6 +294,8 @@ void bim::axmol::app::debug_popup::add_item(
 
 void bim::axmol::app::debug_popup::coin_transaction(int amount) const
 {
+  bim::app::coins_transaction(*m_context.get_analytics(), "debug", amount);
+
   if (amount >= 0)
     bim::app::add_coins(*m_context.get_local_preferences(), amount);
   else

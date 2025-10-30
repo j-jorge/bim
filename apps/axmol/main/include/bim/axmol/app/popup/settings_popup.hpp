@@ -41,9 +41,13 @@ namespace bim::axmol::widget
   class context;
 }
 
-namespace bim::axmol::app
+namespace bim::app
 {
   class analytics_service;
+}
+
+namespace bim::axmol::app
+{
   class language_popup;
   class main_scene;
   class popup;
@@ -57,7 +61,7 @@ namespace bim::axmol::app
         ic_context_declare_parent_properties(                              //
             ((const bim::axmol::widget::context&)(widget_context))         //
             ((main_scene*)(main_scene))                                    //
-            ((analytics_service*)(analytics))                              //
+            ((bim::app::analytics_service*)(analytics))                    //
             ((iscool::audio::mixer*)(audio))                               //
             ((iscool::preferences::local_preferences*)(local_preferences)) //
             ((iscool::social::service*)(social))                           //

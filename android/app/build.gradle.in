@@ -25,12 +25,15 @@ android {
     }
 
     sourceSets.main {
-        java.srcDirs = [ '@this_file_directory@/main' ]
+        java.srcDirs = [
+            '@this_file_directory@/main',
+            '@bim_app_java_dir@/main'
+        ]
 
         if (@bim_pure_foss@)
-            java.srcDirs += [ '@this_file_directory@/free' ]
+            java.srcDirs += [ '@bim_app_java_dir@/free' ]
         else
-            java.srcDirs += [ '@this_file_directory@/non-free' ]
+            java.srcDirs += [ '@bim_app_java_dir@/non-free' ]
 
         res.srcDirs = [
             '@this_file_directory@/res',

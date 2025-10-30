@@ -1,13 +1,11 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/axmol/app/screen/lobby.hpp>
 
-#include <bim/axmol/app/analytics_service.hpp>
 #include <bim/axmol/app/part/wallet.hpp>
 #include <bim/axmol/app/popup/debug_popup.hpp>
 #include <bim/axmol/app/popup/message.hpp>
 #include <bim/axmol/app/popup/player_statistics_popup.hpp>
 #include <bim/axmol/app/popup/settings_popup.hpp>
-#include <bim/axmol/app/shop_support.hpp>
 #include <bim/axmol/app/widget/feature_deck.hpp>
 
 #include <bim/axmol/input/observer/tap_observer.hpp>
@@ -20,8 +18,10 @@
 
 #include <bim/axmol/find_child_by_path.hpp>
 
+#include <bim/app/analytics/button_clicked.hpp>
 #include <bim/app/preference/arena_stats.hpp>
 #include <bim/app/preference/feature_flags.hpp>
+#include <bim/app/shop_support.hpp>
 
 #include <bim/net/exchange/hello_exchange.hpp>
 #include <bim/net/message/hello_ok.hpp>
@@ -314,42 +314,37 @@ void bim::axmol::app::lobby::enable_debug()
 
 void bim::axmol::app::lobby::show_debug()
 {
-  m_context.get_analytics()->event(
-      "button", { { "id", "debug" }, { "where", "lobby" } });
+  bim::app::button_clicked(*m_context.get_analytics(), "debug", "lobby");
   m_debug->show();
 }
 
 void bim::axmol::app::lobby::show_settings()
 {
-  m_context.get_analytics()->event(
-      "button", { { "id", "settings" }, { "where", "lobby" } });
+  bim::app::button_clicked(*m_context.get_analytics(), "settings", "lobby");
   m_settings->show();
 }
 
 void bim::axmol::app::lobby::play_online()
 {
-  m_context.get_analytics()->event("button",
-                                   { { "id", "play" }, { "where", "lobby" } });
+  bim::app::button_clicked(*m_context.get_analytics(), "play", "lobby");
   m_play();
 }
 
 void bim::axmol::app::lobby::open_shop_from_wallet()
 {
-  m_context.get_analytics()->event(
-      "button", { { "id", "wallet" }, { "where", "lobby" } });
+  bim::app::button_clicked(*m_context.get_analytics(), "wallet", "lobby");
   open_shop();
 }
 
 void bim::axmol::app::lobby::open_shop_from_button()
 {
-  m_context.get_analytics()->event("button",
-                                   { { "id", "shop" }, { "where", "lobby" } });
+  bim::app::button_clicked(*m_context.get_analytics(), "shop", "lobby");
   open_shop();
 }
 
 void bim::axmol::app::lobby::open_shop()
 {
-  if (is_shop_supported())
+  if (bim::app::is_shop_supported())
     m_shop();
 #if BIM_PURE_FOSS
   #define gettext_foss_only(s) ic_gettext(s)
@@ -371,14 +366,14 @@ void bim::axmol::app::lobby::open_shop()
 
 void bim::axmol::app::lobby::open_game_features() const
 {
-  m_context.get_analytics()->event(
-      "button", { { "id", "game-features" }, { "where", "lobby" } });
+  bim::app::button_clicked(*m_context.get_analytics(), "game-features",
+                           "lobby");
   m_game_features();
 }
 
 void bim::axmol::app::lobby::open_player_stats() const
 {
-  m_context.get_analytics()->event(
-      "button", { { "id", "player-stats" }, { "where", "lobby" } });
+  bim::app::button_clicked(*m_context.get_analytics(), "player-stats",
+                           "lobby");
   m_player_statistics->show();
 }

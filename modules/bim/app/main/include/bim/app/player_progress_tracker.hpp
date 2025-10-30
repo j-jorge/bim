@@ -15,12 +15,14 @@ namespace iscool::preferences
 
 namespace bim::app
 {
+  class analytics_service;
   struct config;
 
   class player_progress_tracker
   {
   public:
     player_progress_tracker(
+        analytics_service& analytics,
         iscool::preferences::local_preferences& local_preferences,
         const config& config);
 
@@ -30,6 +32,7 @@ namespace bim::app
                                    std::uint8_t local_player_index);
 
   private:
+    analytics_service& m_analytics;
     iscool::preferences::local_preferences& m_preferences;
     const config& m_config;
   };

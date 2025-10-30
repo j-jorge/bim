@@ -17,6 +17,7 @@ namespace bim
 
   namespace app
   {
+    class analytics_service;
     struct config;
   }
 
@@ -43,7 +44,6 @@ namespace iscool::style
 
 namespace bim::axmol::app
 {
-  class analytics_service;
   class wallet;
 
   class end_game
@@ -55,7 +55,7 @@ namespace bim::axmol::app
         m_context,
         ic_context_declare_parent_properties(                              //
             ((const bim::axmol::widget::context&)(widget_context))         //
-            ((analytics_service*)(analytics))                              //
+            ((bim::app::analytics_service*)(analytics))                    //
             ((iscool::preferences::local_preferences*)(local_preferences)) //
             ((const bim::app::config*)(config))                            //
             ),

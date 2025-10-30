@@ -22,6 +22,7 @@ namespace bim::axmol::widget
 namespace bim::app
 {
   struct config;
+  class analytics_service;
   class matchmaking_wait_message;
 }
 
@@ -44,7 +45,6 @@ namespace iscool::style
 
 namespace bim::axmol::app
 {
-  class analytics_service;
   class wallet;
 
   class matchmaking
@@ -57,7 +57,7 @@ namespace bim::axmol::app
         m_context,
         ic_context_declare_parent_properties(                              //
             ((const bim::axmol::widget::context&)(widget_context))         //
-            ((analytics_service*)(analytics))                              //
+            ((bim::app::analytics_service*)(analytics))                    //
             ((bim::net::session_handler*)(session_handler))                //
             ((iscool::preferences::local_preferences*)(local_preferences)) //
             ((const bim::app::config*)(config))                            //

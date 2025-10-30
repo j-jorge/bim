@@ -48,26 +48,8 @@ set_source_files_properties(
 )
 unset(bim_pure_foss_value)
 
-if (BIM_BUILDING_FOR_ANDROID)
-  set(platform_sources
-    android/src/bim/axmol/app/analytics_service.cpp
-    android/src/bim/axmol/app/shop_service.cpp
-    android/src/bim/axmol/app/shop_support.cpp
-  )
-  set(platform_includes android/include)
-else()
-  set(platform_sources
-    desktop/src/bim/axmol/app/analytics_service.cpp
-    desktop/src/bim/axmol/app/shop_service.cpp
-    desktop/src/bim/axmol/app/shop_support.cpp
-  )
-  set(platform_includes desktop/include)
-endif()
-
-add_library(bim_axmol_app STATIC ${main_sources} ${platform_sources})
-target_include_directories(
-  bim_axmol_app PUBLIC main/include ${platform_includes}
-)
+add_library(bim_axmol_app STATIC ${main_sources})
+target_include_directories(bim_axmol_app PUBLIC main/include)
 
 target_link_libraries(bim_axmol_app
   PUBLIC

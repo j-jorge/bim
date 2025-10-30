@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/axmol/app/screen/game_features.hpp>
 
-#include <bim/axmol/app/analytics_service.hpp>
 #include <bim/axmol/app/part/wallet.hpp>
 #include <bim/axmol/app/popup/message.hpp>
 #include <bim/axmol/app/widget/game_feature_button.hpp>
@@ -27,6 +26,8 @@
 #include <bim/axmol/input/observer/touch_anywhere.hpp>
 #include <bim/axmol/input/touch_observer_handle.impl.hpp>
 
+#include <bim/app/analytics/button_clicked.hpp>
+#include <bim/app/analytics/coins_transaction.hpp>
 #include <bim/app/config.hpp>
 #include <bim/app/preference/feature_flags.hpp>
 #include <bim/app/preference/wallet.hpp>
@@ -307,8 +308,7 @@ void bim::axmol::app::game_features::start_erase_mode()
       return;
     }
 
-  m_context.get_analytics()->event(
-      "button", { { "id", "erase" }, { "where", "game-features" } });
+  button_clicked(*m_context.get_analytics(), "erase", "game-features");
 
   assert(m_selected_feature == bim::game::feature_flags{});
 
@@ -397,6 +397,7 @@ bool bim::axmol::app::game_features::purchase_slot(std::size_t i)
   if (price <= coins)
     {
       bim::app::consume_coins(preferences, price);
+      coins_transaction(*m_context.get_analytics(), "feature-slot", -price);
       m_wallet->animate_cash_flow();
       bim::app::available_feature_slot(preferences, i, true);
       m_slot[i]->available(true);
@@ -423,8 +424,7 @@ void bim::axmol::app::game_features::select_feature(bim::game::feature_flags f)
       return;
     }
 
-  m_context.get_analytics()->event(
-      "button", { { "id", "feature" }, { "where", "game-features" } });
+  button_clicked(*m_context.get_analytics(), "feature", "game-features");
 
   iscool::preferences::local_preferences& preferences =
       *m_context.get_local_preferences();
@@ -440,6 +440,8 @@ void bim::axmol::app::game_features::select_feature(bim::game::feature_flags f)
       if (price <= coins)
         {
           bim::app::consume_coins(preferences, price);
+          coins_transaction(*m_context.get_analytics(), "feature-item",
+                            -price);
           m_wallet->animate_cash_flow();
           available_features |= f;
           bim::app::available_feature_flags(preferences, available_features);
@@ -589,8 +591,7 @@ void bim::axmol::app::game_features::deselect_item()
 
 void bim::axmol::app::game_features::select_random_features()
 {
-  m_context.get_analytics()->event(
-      "button", { { "id", "random" }, { "where", "game-features" } });
+  button_clicked(*m_context.get_analytics(), "random", "game-features");
 
   cancel();
 
@@ -642,15 +643,13 @@ void bim::axmol::app::game_features::select_random_features()
 
 void bim::axmol::app::game_features::open_shop_from_shortage()
 {
-  m_context.get_analytics()->event(
-      "button", { { "id", "shortage" }, { "where", "game-features" } });
+  button_clicked(*m_context.get_analytics(), "shortage", "game-features");
   m_shop();
 }
 
 void bim::axmol::app::game_features::open_shop_from_wallet()
 {
-  m_context.get_analytics()->event(
-      "button", { { "id", "wallet" }, { "where", "game-features" } });
+  button_clicked(*m_context.get_analytics(), "wallet", "game-features");
   m_shop();
 }
 

@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/axmol/app/screen_wheel.hpp>
 
-#include <bim/axmol/app/analytics_service.hpp>
 #include <bim/axmol/app/main_scene.hpp>
 #include <bim/axmol/app/popup/message.hpp>
 #include <bim/axmol/app/screen/end_game.hpp>
@@ -16,6 +15,8 @@
 #include <bim/axmol/widget/context.hpp>
 #include <bim/axmol/widget/factory/clipping_rectangle_node.hpp>
 
+#include <bim/app/analytics/error.hpp>
+#include <bim/app/analytics_service.hpp>
 #include <bim/app/player_progress_tracker.hpp>
 #include <bim/app/preference/wallet.hpp>
 
@@ -58,7 +59,8 @@ bim::axmol::app::screen_wheel::screen_wheel(
   , m_main_container(ax::Node::create())
   , m_controls(context.get_widget_context(), *style.get_declaration("widgets"))
   , m_player_progress_tracker(new bim::app::player_progress_tracker(
-        *context.get_local_preferences(), *context.get_config()))
+        *context.get_analytics(), *context.get_local_preferences(),
+        *context.get_config()))
   , m_lobby(new lobby(context, *style.get_declaration("lobby")))
   , m_matchmaking(
         new matchmaking(context, *style.get_declaration("matchmaking")))
@@ -537,8 +539,7 @@ void bim::axmol::app::screen_wheel::disconnected()
 
   if ((m_active_view == m_controls->online_game) || !m_silently_reconnect)
     {
-      m_context.get_analytics()->event("error",
-                                       { { "cause", "disconnected" } });
+      bim::app::error(*m_context.get_analytics(), "disconnected");
 
       m_online_game->closing();
       m_message_popup->show(ic_gettext("You have been disconnected :("));

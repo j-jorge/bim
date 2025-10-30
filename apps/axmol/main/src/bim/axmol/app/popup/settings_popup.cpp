@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/axmol/app/popup/settings_popup.hpp>
 
-#include <bim/axmol/app/analytics_service.hpp>
 #include <bim/axmol/app/popup/language_popup.hpp>
 #include <bim/axmol/app/popup/popup.hpp>
 
@@ -16,6 +15,8 @@
 
 #include <bim/axmol/find_child_by_path.hpp>
 
+#include <bim/app/analytics/button_clicked.hpp>
+#include <bim/app/analytics_service.hpp>
 #include <bim/app/preference/audio.hpp>
 #include <bim/app/preference/controls.hpp>
 #include <bim/app/preference/haptic.hpp>
@@ -289,37 +290,32 @@ void bim::axmol::app::settings_popup::set_d_pad_kind_preference()
 
 void bim::axmol::app::settings_popup::show_language_selection()
 {
-  m_context.get_analytics()->event(
-      "button", { { "id", "language" }, { "where", "settings" } });
+  bim::app::button_clicked(*m_context.get_analytics(), "language", "settings");
   m_language_popup->show();
 }
 
 void bim::axmol::app::settings_popup::open_bluesky()
 {
-  m_context.get_analytics()->event(
-      "button", { { "id", "bluesky" }, { "where", "settings" } });
+  bim::app::button_clicked(*m_context.get_analytics(), "bluesky", "settings");
   iscool::system::open_url("https://bsky.app/profile/j-jorge.bsky.social");
 }
 
 void bim::axmol::app::settings_popup::open_github()
 {
-  m_context.get_analytics()->event(
-      "button", { { "id", "github" }, { "where", "settings" } });
+  bim::app::button_clicked(*m_context.get_analytics(), "github", "settings");
   iscool::system::open_url("https://github.com/j-jorge/bim/");
 }
 
 void bim::axmol::app::settings_popup::open_mail()
 {
-  m_context.get_analytics()->event(
-      "button", { { "id", "mail" }, { "where", "settings" } });
+  bim::app::button_clicked(*m_context.get_analytics(), "mail", "settings");
   iscool::system::send_mail("bim-game@gmx.com",
                             ic_gettext("Feedback about Bim!"), "");
 }
 
 void bim::axmol::app::settings_popup::open_share()
 {
-  m_context.get_analytics()->event(
-      "button", { { "id", "share" }, { "where", "settings" } });
+  bim::app::button_clicked(*m_context.get_analytics(), "share", "settings");
   m_context.get_social()->share_message(
       ic_gettext("Come play a game of Bim! "
                  "https://play.google.com/store/apps/details?id=bim.app"));
