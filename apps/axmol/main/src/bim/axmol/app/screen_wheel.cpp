@@ -9,6 +9,7 @@
 #include <bim/axmol/app/screen/matchmaking.hpp>
 #include <bim/axmol/app/screen/online_game.hpp>
 #include <bim/axmol/app/screen/shop.hpp>
+#include <bim/axmol/app/shop_intent.hpp>
 
 #include <bim/axmol/widget/add_group_as_children.hpp>
 #include <bim/axmol/widget/apply_bounds.hpp>
@@ -19,6 +20,7 @@
 #include <bim/app/analytics_service.hpp>
 #include <bim/app/player_progress_tracker.hpp>
 #include <bim/app/preference/wallet.hpp>
+#include <bim/app/shop_support.hpp>
 
 #include <bim/net/exchange/game_launch_event.hpp>
 #include <bim/net/exchange/keep_alive_exchange.hpp>
@@ -30,6 +32,7 @@
 #include <iscool/log/log.hpp>
 #include <iscool/log/nature/info.hpp>
 #include <iscool/signals/implement_signal.hpp>
+#include <iscool/system/open_url.hpp>
 
 #include <axmol/2d/ClippingRectangleNode.h>
 
@@ -70,6 +73,8 @@ bim::axmol::app::screen_wheel::screen_wheel(
   , m_shop(new shop(context, *style.get_declaration("shop")))
   , m_message_popup(
         new message_popup(context, *style.get_declaration("message-popup")))
+  , m_yes_no_popup(
+        new message_popup(context, *style.get_declaration("yes-no-popup")))
   , m_keep_alive(new bim::net::keep_alive_exchange(
         context.get_session_handler()->message_stream()))
   , m_leave_shop(nullptr)
@@ -221,9 +226,9 @@ void bim::axmol::app::screen_wheel::wire_permanent_connections()
       });
 
   m_lobby->connect_to_shop(
-      [this]()
+      [this](shop_intent intent)
       {
-        animate_lobby_to_shop();
+        animate_lobby_to_shop(intent);
       });
 
   m_game_features->connect_to_back(
@@ -233,9 +238,9 @@ void bim::axmol::app::screen_wheel::wire_permanent_connections()
       });
 
   m_game_features->connect_to_shop(
-      [this]()
+      [this](shop_intent intent)
       {
-        animate_game_features_to_shop();
+        animate_game_features_to_shop(intent);
       });
 }
 
@@ -390,8 +395,11 @@ void bim::axmol::app::screen_wheel::animate_end_game_to_matchmaking()
   display_matchmaking();
 }
 
-void bim::axmol::app::screen_wheel::animate_lobby_to_shop()
+void bim::axmol::app::screen_wheel::animate_lobby_to_shop(shop_intent intent)
 {
+  if (!can_open_shop(intent))
+    return;
+
   m_leave_shop = &screen_wheel::animate_shop_to_lobby;
   m_inputs.erase(m_lobby->input_node());
 
@@ -430,8 +438,12 @@ void bim::axmol::app::screen_wheel::animate_game_features_to_lobby()
   display_lobby();
 }
 
-void bim::axmol::app::screen_wheel::animate_game_features_to_shop()
+void bim::axmol::app::screen_wheel::animate_game_features_to_shop(
+    shop_intent intent)
 {
+  if (!can_open_shop(intent))
+    return;
+
   m_leave_shop = &screen_wheel::animate_shop_to_game_features;
   m_inputs.erase(m_game_features->input_node());
 
@@ -542,6 +554,7 @@ void bim::axmol::app::screen_wheel::disconnected()
       bim::app::error(*m_context.get_analytics(), "disconnected");
 
       m_online_game->closing();
+
       m_message_popup->show(ic_gettext("You have been disconnected :("));
     }
   else
@@ -551,4 +564,25 @@ void bim::axmol::app::screen_wheel::disconnected()
       m_silently_reconnect = false;
       m_context.get_session_handler()->reconnect();
     }
+}
+
+bool bim::axmol::app::screen_wheel::can_open_shop(shop_intent intent)
+{
+  if (bim::app::is_shop_supported())
+    return true;
+
+  if (intent == shop_intent::user_request)
+    {
+      m_message_connection = m_yes_no_popup->connect_to_ok(
+          []()
+          {
+            iscool::system::open_url("https://github.com/sponsors/j-jorge");
+          });
+
+      m_yes_no_popup->show_yes_no(ic_gettext(
+          "The shop is not available on this platform, yet you can support "
+          "the developers with donations! Should I open the donations page?"));
+    }
+
+  return false;
 }

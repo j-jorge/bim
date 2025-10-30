@@ -3,6 +3,7 @@
 
 #include <bim/axmol/app/part/wallet.hpp>
 #include <bim/axmol/app/popup/message.hpp>
+#include <bim/axmol/app/shop_intent.hpp>
 #include <bim/axmol/app/widget/game_feature_button.hpp>
 
 #include <bim/axmol/widget/apply_display.hpp>
@@ -644,13 +645,13 @@ void bim::axmol::app::game_features::select_random_features()
 void bim::axmol::app::game_features::open_shop_from_shortage()
 {
   button_clicked(*m_context.get_analytics(), "shortage", "game-features");
-  m_shop();
+  m_shop(shop_intent::program_request);
 }
 
 void bim::axmol::app::game_features::open_shop_from_wallet()
 {
   button_clicked(*m_context.get_analytics(), "wallet", "game-features");
-  m_shop();
+  m_shop(shop_intent::user_request);
 }
 
 void bim::axmol::app::game_features::cancel_or_quit()

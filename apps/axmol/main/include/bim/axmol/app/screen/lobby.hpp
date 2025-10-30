@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #pragma once
 
+#include <bim/axmol/app/shop_intent_fwd.hpp>
+
 #include <bim/axmol/input/observer/tap_observer_handle.hpp>
 #include <bim/axmol/input/tree.hpp>
 #include <bim/axmol/widget/declare_controls_struct.hpp>
@@ -61,7 +63,6 @@ namespace bim::axmol::app
   class debug_popup;
   class feature_deck;
   class main_scene;
-  class message_popup;
   class player_statistics_popup;
   class settings_popup;
   class wallet;
@@ -70,7 +71,7 @@ namespace bim::axmol::app
   {
     DECLARE_VOID_SIGNAL(play, m_play)
     DECLARE_VOID_SIGNAL(game_features, m_game_features)
-    DECLARE_VOID_SIGNAL(shop, m_shop)
+    DECLARE_SIGNAL(void(shop_intent), shop, m_shop)
     DECLARE_VOID_SIGNAL(reset, m_reset)
 
     ic_declare_context(
@@ -113,7 +114,6 @@ namespace bim::axmol::app
 
     void open_shop_from_wallet();
     void open_shop_from_button();
-    void open_shop();
 
     void open_game_features() const;
     void open_player_stats() const;
@@ -130,11 +130,9 @@ namespace bim::axmol::app
 
     std::unique_ptr<settings_popup> m_settings;
     std::unique_ptr<player_statistics_popup> m_player_statistics;
-    std::unique_ptr<message_popup> m_message;
     std::unique_ptr<debug_popup> m_debug;
 
     iscool::signals::scoped_connection m_session_connection;
-    iscool::signals::scoped_connection m_message_connection;
 
     bim::axmol::input::tap_observer_handle m_debug_tap;
     std::uint8_t m_debug_activator_counter;

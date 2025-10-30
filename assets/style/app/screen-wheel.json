@@ -3,6 +3,9 @@
     "message-popup": [
       "popup/message"
     ],
+    "yes-no-popup": [
+      "popup/yes-no-message"
+    ],
 
     "widgets": [
       {

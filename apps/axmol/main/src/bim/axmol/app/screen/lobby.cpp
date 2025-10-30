@@ -3,9 +3,9 @@
 
 #include <bim/axmol/app/part/wallet.hpp>
 #include <bim/axmol/app/popup/debug_popup.hpp>
-#include <bim/axmol/app/popup/message.hpp>
 #include <bim/axmol/app/popup/player_statistics_popup.hpp>
 #include <bim/axmol/app/popup/settings_popup.hpp>
+#include <bim/axmol/app/shop_intent.hpp>
 #include <bim/axmol/app/widget/feature_deck.hpp>
 
 #include <bim/axmol/input/observer/tap_observer.hpp>
@@ -21,7 +21,6 @@
 #include <bim/app/analytics/button_clicked.hpp>
 #include <bim/app/preference/arena_stats.hpp>
 #include <bim/app/preference/feature_flags.hpp>
-#include <bim/app/shop_support.hpp>
 
 #include <bim/net/exchange/hello_exchange.hpp>
 #include <bim/net/message/hello_ok.hpp>
@@ -30,7 +29,6 @@
 #include <iscool/i18n/gettext.hpp>
 #include <iscool/i18n/numeric.hpp>
 #include <iscool/signals/implement_signal.hpp>
-#include <iscool/system/open_url.hpp>
 
 #include <axmol/2d/Label.h>
 #include <axmol/2d/ProgressTimer.h>
@@ -70,8 +68,6 @@ bim::axmol::app::lobby::lobby(const context& context,
   , m_settings(new settings_popup(context, *style.get_declaration("settings")))
   , m_player_statistics(new player_statistics_popup(
         context, *style.get_declaration("player-statistics")))
-  , m_message(
-        new message_popup(context, *style.get_declaration("message-popup")))
   , m_debug(
         new debug_popup(context, *style.get_declaration("debug"), *m_wallet))
   , m_debug_tap(*m_controls->debug_activator)
@@ -194,7 +190,6 @@ void bim::axmol::app::lobby::closing()
 {
   m_hello_exchange->stop();
   m_session_connection.disconnect();
-  m_message_connection.disconnect();
 }
 
 void bim::axmol::app::lobby::update_server_stats(
@@ -333,35 +328,13 @@ void bim::axmol::app::lobby::play_online()
 void bim::axmol::app::lobby::open_shop_from_wallet()
 {
   bim::app::button_clicked(*m_context.get_analytics(), "wallet", "lobby");
-  open_shop();
+  m_shop(shop_intent::user_request);
 }
 
 void bim::axmol::app::lobby::open_shop_from_button()
 {
   bim::app::button_clicked(*m_context.get_analytics(), "shop", "lobby");
-  open_shop();
-}
-
-void bim::axmol::app::lobby::open_shop()
-{
-  if (bim::app::is_shop_supported())
-    m_shop();
-#if BIM_PURE_FOSS
-  #define gettext_foss_only(s) ic_gettext(s)
-  else
-    {
-      m_message_connection = m_message->connect_to_ok(
-          []()
-          {
-            iscool::system::open_url("https://github.com/sponsors/j-jorge");
-          });
-
-      m_message->show_yes_no(gettext_foss_only(
-          "The shop is not available on this platform, yet you can support "
-          "the developers with donations! Should I open the donations page?"));
-    }
-  #undef ignore_when_non_foss
-#endif
+  m_shop(shop_intent::user_request);
 }
 
 void bim::axmol::app::lobby::open_game_features() const

@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #pragma once
 
+#include <bim/axmol/app/shop_intent_fwd.hpp>
+
 #include <bim/app/constant/game_feature_slot_count.hpp>
 
 #include <bim/axmol/action/runner.hpp>
@@ -68,7 +70,7 @@ namespace bim::axmol::app
   class game_features
   {
     DECLARE_VOID_SIGNAL(back, m_back)
-    DECLARE_VOID_SIGNAL(shop, m_shop)
+    DECLARE_SIGNAL(void(shop_intent), shop, m_shop)
 
     ic_declare_context(
         m_context,

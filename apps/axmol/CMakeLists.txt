@@ -35,19 +35,6 @@ set(main_sources
   main/src/bim/axmol/app/widget/register_widgets.cpp
 )
 
-if (BIM_PURE_FOSS)
-  set(bim_pure_foss_value 1)
-else()
-  set(bim_pure_foss_value 0)
-endif()
-
-set_source_files_properties(
-  main/src/bim/axmol/app/screen/lobby.cpp
-  PROPERTIES
-  COMPILE_DEFINITIONS BIM_PURE_FOSS=${bim_pure_foss_value}
-)
-unset(bim_pure_foss_value)
-
 add_library(bim_axmol_app STATIC ${main_sources})
 target_include_directories(bim_axmol_app PUBLIC main/include)
 

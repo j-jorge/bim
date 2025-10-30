@@ -6,9 +6,6 @@
     "debug": [
       "popup/debug"
     ],
-    "message-popup": [
-      "popup/yes-no-message"
-    ],
     "player-statistics": [
       "popup/player-statistics"
     ],

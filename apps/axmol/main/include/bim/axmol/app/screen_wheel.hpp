@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #pragma once
 
+#include <bim/axmol/app/shop_intent_fwd.hpp>
+
 #include <bim/axmol/input/tree.hpp>
 #include <bim/axmol/widget/declare_controls_struct.hpp>
 
@@ -134,13 +136,13 @@ namespace bim::axmol::app
     void animate_end_game_to_lobby();
     void animate_end_game_to_matchmaking();
 
-    void animate_lobby_to_shop();
+    void animate_lobby_to_shop(shop_intent intent);
     void animate_shop_to_lobby();
     void animate_shop_to_game_features();
 
     void animate_lobby_to_game_features();
     void animate_game_features_to_lobby();
-    void animate_game_features_to_shop();
+    void animate_game_features_to_shop(shop_intent intent);
 
     void display_lobby();
     void lobby_displayed();
@@ -161,6 +163,8 @@ namespace bim::axmol::app
     void game_features_displayed();
 
     void disconnected();
+
+    bool can_open_shop(shop_intent intent);
 
   private:
     using leave_shop_f = void (screen_wheel::*)();
@@ -187,6 +191,8 @@ namespace bim::axmol::app
         m_displayed;
 
     std::unique_ptr<message_popup> m_message_popup;
+    std::unique_ptr<message_popup> m_yes_no_popup;
+    iscool::signals::scoped_connection m_message_connection;
 
     std::unique_ptr<bim::net::keep_alive_exchange> m_keep_alive;
     iscool::signals::scoped_connection m_keep_alive_connection;
