@@ -94,9 +94,22 @@ bim_android_config(
   bim_android_toolchain --prefix "${CMAKE_PREFIX_PATH}" --toolchain
 )
 
-bim_android_config(bim_android_archs --arch)
-string(REPLACE "\n" ";" bim_android_archs "${bim_android_archs}")
-message(STATUS "Building for Android architectures ${bim_android_archs}")
+bim_android_config(bim_android_archs_default --arch)
+string(
+  REPLACE
+  "\n" ";"
+  bim_android_archs_default
+  "${bim_android_archs_default}"
+)
+
+set(
+  BIM_ARCHITECTURES
+  ${bim_android_archs_default}
+  CACHE
+  STRING
+  "Target architectures for the Android build."
+)
+message(STATUS "Building for Android architectures ${BIM_ARCHITECTURES}")
 
 # Create a target to build libbim.so for a given Android architecture,
 # by invoking the root CMakeLists.txt again but configured with the
@@ -170,7 +183,7 @@ function(generate_native_library_targets)
   # builds, directory creations, etc.
   set(install_axmol_shaders TRUE)
   set(all_archs)
-  foreach(arch ${bim_android_archs})
+  foreach(arch ${BIM_ARCHITECTURES})
     recursive_android_build(
       ARCH "${arch}"
       AXMOL_SHADERS ${install_axmol_shaders}
@@ -345,7 +358,7 @@ add_custom_target(aab ALL
   COMMAND
   ${CMAKE_COMMAND} -E env "ANDROID_HOME=${bim_android_sdk_root}"
   ${gradlew_bin} -p "${generated_project_root}" "bundle${java_build_type}"
-  DEPENDS ${bim_android_archs} generated-assets
+  DEPENDS ${BIM_ARCHITECTURES} generated-assets
   USES_TERMINAL
 )
 
@@ -353,7 +366,7 @@ add_custom_target(apk ALL
   COMMAND
   ${CMAKE_COMMAND} -E env "ANDROID_HOME=${bim_android_sdk_root}"
   ${gradlew_bin} -p "${generated_project_root}" "assemble${java_build_type}"
-  DEPENDS ${bim_android_archs} generated-assets
+  DEPENDS ${BIM_ARCHITECTURES} generated-assets
   USES_TERMINAL
 )
 
