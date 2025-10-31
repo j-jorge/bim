@@ -24,6 +24,11 @@ msgstr ""
 msgid "You have been disconnected :("
 msgstr ""
 
+msgid ""
+"The shop is not available on this platform, yet you can support the "
+"developers with donations! Should I open the donations page?"
+msgstr ""
+
 msgid "Do you really want to change the language setting?"
 msgstr ""
 
@@ -37,6 +42,29 @@ msgstr ""
 msgid ""
 "Come play a game of Bim! https://play.google.com/store/apps/details?"
 "id=bim.app"
+msgstr ""
+
+msgid "You need more coins to purchase this item!"
+msgstr ""
+
+#, c++-format
+msgid "Customize your games with up to {} feature."
+msgid_plural "Customize your games with up to {} features."
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Falling blocks reduce the arena after two minutes!"
+msgstr ""
+
+msgid "Find this incredibly strong barrel, it will save you from one hit!"
+msgstr ""
+
+msgid "A thick fog covers the arena. You can't see were you did not go!"
+msgstr ""
+
+msgid ""
+"Find the invisibility power up to disappear from the screen of all other "
+"players!"
 msgstr ""
 
 #, c++-format
@@ -91,31 +119,6 @@ msgstr[1] ""
 msgid "Connected to {}."
 msgstr ""
 
-msgid ""
-"The shop is not available on this platform, yet you can support the "
-"developers with donations! Should I open the donations page?"
-msgstr ""
-
-msgid "You need more coins to purchase this item!"
-msgstr ""
-
-msgid "Customize your experience below!"
-msgstr ""
-
-msgid "Falling blocks reduce the arena after two minutes!"
-msgstr ""
-
-msgid "Find this incredibly strong barrel, it will save you from one hit!"
-msgstr ""
-
-msgid "A thick fog covers the arena. You can't see were you did not go!"
-msgstr ""
-
-msgid ""
-"Find the invisibility power up to disappear from the screen of all other "
-"players!"
-msgstr ""
-
 msgid "An error occurred. The purchase could not be completed."
 msgstr ""
 
@@ -156,16 +159,16 @@ msgstr ""
 msgid "You won!"
 msgstr ""
 
+msgid "ERASE"
+msgstr ""
+
+msgid "RANDOM"
+msgstr ""
+
 msgid "Off"
 msgstr ""
 
 msgid "On"
-msgstr ""
-
-msgid "No"
-msgstr ""
-
-msgid "Yes"
 msgstr ""
 
 msgid "Defeats"
@@ -184,6 +187,12 @@ msgid "Your statistics"
 msgstr ""
 
 msgid "Success rate"
+msgstr ""
+
+msgid "No"
+msgstr ""
+
+msgid "Yes"
 msgstr ""
 
 msgid ""
@@ -228,6 +237,9 @@ msgid "Settings"
 msgstr ""
 
 msgid "Vibrations"
+msgstr ""
+
+msgid "Features"
 msgstr ""
 
 msgid "PLAY ONLINE"

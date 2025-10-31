@@ -25,6 +25,11 @@ msgstr "Bitte warten"
 msgid "You have been disconnected :("
 msgstr "Die Verbindung wurde unterbrochen :("
 
+msgid ""
+"The shop is not available on this platform, yet you can support the "
+"developers with donations! Should I open the donations page?"
+msgstr ""
+
 msgid "Do you really want to change the language setting?"
 msgstr ""
 
@@ -41,6 +46,35 @@ msgid ""
 msgstr ""
 "Komm und spiel eine Runde Bim! https://play.google.com/store/apps/details?"
 "id=bim.app"
+
+msgid "You need more coins to purchase this item!"
+msgstr "Sie benötigen mehr Münzen, um diesen Artikel zu kaufen!"
+
+#, c++-format
+msgid "Customize your games with up to {} feature."
+msgid_plural "Customize your games with up to {} features."
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Falling blocks reduce the arena after two minutes!"
+msgstr "Fallende Blöcke verkleinern die Arena nach zwei Minuten!"
+
+msgid "Find this incredibly strong barrel, it will save you from one hit!"
+msgstr ""
+"Finden Sie diesen unglaublich stabilen Lauf, er wird Sie vor einem Treffer "
+"bewahren!"
+
+msgid "A thick fog covers the arena. You can't see were you did not go!"
+msgstr ""
+"Ein dichter Nebel bedeckt die Arena. Man kann nicht sehen, wo man nicht "
+"hingegangen ist!"
+
+msgid ""
+"Find the invisibility power up to disappear from the screen of all other "
+"players!"
+msgstr ""
+"Finde das Unsichtbarkeits-Power-Up, um vom Bildschirm aller anderen Spieler "
+"zu verschwinden!"
 
 #, c++-format
 msgid "{} game being played right now."
@@ -94,37 +128,6 @@ msgstr[1] ""
 msgid "Connected to {}."
 msgstr ""
 
-msgid ""
-"The shop is not available on this platform, yet you can support the "
-"developers with donations! Should I open the donations page?"
-msgstr ""
-
-msgid "You need more coins to purchase this item!"
-msgstr "Sie benötigen mehr Münzen, um diesen Artikel zu kaufen!"
-
-msgid "Customize your experience below!"
-msgstr "Passen Sie Ihr Erlebnis unten an!"
-
-msgid "Falling blocks reduce the arena after two minutes!"
-msgstr "Fallende Blöcke verkleinern die Arena nach zwei Minuten!"
-
-msgid "Find this incredibly strong barrel, it will save you from one hit!"
-msgstr ""
-"Finden Sie diesen unglaublich stabilen Lauf, er wird Sie vor einem Treffer "
-"bewahren!"
-
-msgid "A thick fog covers the arena. You can't see were you did not go!"
-msgstr ""
-"Ein dichter Nebel bedeckt die Arena. Man kann nicht sehen, wo man nicht "
-"hingegangen ist!"
-
-msgid ""
-"Find the invisibility power up to disappear from the screen of all other "
-"players!"
-msgstr ""
-"Finde das Unsichtbarkeits-Power-Up, um vom Bildschirm aller anderen Spieler "
-"zu verschwinden!"
-
 msgid "An error occurred. The purchase could not be completed."
 msgstr ""
 "Ein Fehler ist aufgetreten. Der Kauf konnte nicht abgeschlossen werden."
@@ -175,17 +178,17 @@ msgstr "Du hast verloren!"
 msgid "You won!"
 msgstr "Du hast gewonnen!"
 
+msgid "ERASE"
+msgstr ""
+
+msgid "RANDOM"
+msgstr ""
+
 msgid "Off"
 msgstr "Aus"
 
 msgid "On"
 msgstr "An"
-
-msgid "No"
-msgstr ""
-
-msgid "Yes"
-msgstr ""
 
 msgid "Defeats"
 msgstr ""
@@ -203,6 +206,12 @@ msgid "Your statistics"
 msgstr ""
 
 msgid "Success rate"
+msgstr ""
+
+msgid "No"
+msgstr ""
+
+msgid "Yes"
 msgstr ""
 
 msgid ""
@@ -251,6 +260,9 @@ msgstr "Einstellungen"
 msgid "Vibrations"
 msgstr "Vibrationen"
 
+msgid "Features"
+msgstr ""
+
 msgid "PLAY ONLINE"
 msgstr "SPIEL ONLINE"
 
@@ -297,6 +309,9 @@ msgstr "×1000"
 
 msgid "LOADING…"
 msgstr "LADEN…"
+
+#~ msgid "Customize your experience below!"
+#~ msgstr "Passen Sie Ihr Erlebnis unten an!"
 
 #~ msgid "DEBUG"
 #~ msgstr "DEBUG"

@@ -10,8 +10,8 @@ msgstr ""
 "POT-Creation-Date: \n"
 "PO-Revision-Date: 2025-10-07 07:02+0000\n"
 "Last-Translator: AsetSiya <asetsiya@gmail.com>\n"
-"Language-Team: Turkish <https://hosted.weblate.org/projects/bim/"
-"gettext-files/tr/>\n"
+"Language-Team: Turkish <https://hosted.weblate.org/projects/bim/gettext-"
+"files/tr/>\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,6 +24,13 @@ msgstr "Bir saniye bekle"
 
 msgid "You have been disconnected :("
 msgstr "Bağlantın koptu :("
+
+msgid ""
+"The shop is not available on this platform, yet you can support the "
+"developers with donations! Should I open the donations page?"
+msgstr ""
+"Mağaza bu platformda mevcut değil, ancak geliştiricileri bağışlarınla "
+"destekleyebilirsin! Bağış sayfasını açayım mı?"
 
 msgid "Do you really want to change the language setting?"
 msgstr "Gerçekten dil ayarını değiştirmek istiyor musun?"
@@ -41,6 +48,30 @@ msgid ""
 msgstr ""
 "Bim! oyununu oynamaya gel! https://play.google.com/store/apps/details?"
 "id=bim.app"
+
+msgid "You need more coins to purchase this item!"
+msgstr "Bu öğeyi almak için daha fazla altın gerekiyor!"
+
+#, c++-format
+msgid "Customize your games with up to {} feature."
+msgid_plural "Customize your games with up to {} features."
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Falling blocks reduce the arena after two minutes!"
+msgstr "İkinci dakikadan sonra, düşen bloklar arenayı daraltıyor!"
+
+msgid "Find this incredibly strong barrel, it will save you from one hit!"
+msgstr "Bu inanılmaz güçlü varili bul, seni tek bir hasardan kurtaracak!"
+
+msgid "A thick fog covers the arena. You can't see were you did not go!"
+msgstr "Arenayı kalın bir sis kaplıyor. Gitmediğin yerleri göremiyorsun!"
+
+msgid ""
+"Find the invisibility power up to disappear from the screen of all other "
+"players!"
+msgstr ""
+"Diğer tüm oyuncuların ekranından kaybolmak için görünmezlik gücünü bul!"
 
 #, c++-format
 msgid "{} game being played right now."
@@ -94,34 +125,6 @@ msgstr[1] "Son 30 günde {} oyuncu çevrimiçiydi."
 msgid "Connected to {}."
 msgstr "Şuna bağlanıldı: {}."
 
-msgid ""
-"The shop is not available on this platform, yet you can support the "
-"developers with donations! Should I open the donations page?"
-msgstr ""
-"Mağaza bu platformda mevcut değil, ancak geliştiricileri bağışlarınla "
-"destekleyebilirsin! Bağış sayfasını açayım mı?"
-
-msgid "You need more coins to purchase this item!"
-msgstr "Bu öğeyi almak için daha fazla altın gerekiyor!"
-
-msgid "Customize your experience below!"
-msgstr "Alttan deneyimini özelleştir!"
-
-msgid "Falling blocks reduce the arena after two minutes!"
-msgstr "İkinci dakikadan sonra, düşen bloklar arenayı daraltıyor!"
-
-msgid "Find this incredibly strong barrel, it will save you from one hit!"
-msgstr "Bu inanılmaz güçlü varili bul, seni tek bir hasardan kurtaracak!"
-
-msgid "A thick fog covers the arena. You can't see were you did not go!"
-msgstr "Arenayı kalın bir sis kaplıyor. Gitmediğin yerleri göremiyorsun!"
-
-msgid ""
-"Find the invisibility power up to disappear from the screen of all other "
-"players!"
-msgstr ""
-"Diğer tüm oyuncuların ekranından kaybolmak için görünmezlik gücünü bul!"
-
 msgid "An error occurred. The purchase could not be completed."
 msgstr "Bir hata oluştu. Satın alma işlemi tamamlanamadı."
 
@@ -168,17 +171,17 @@ msgstr "Kaybettin!"
 msgid "You won!"
 msgstr "Kazandın!"
 
+msgid "ERASE"
+msgstr ""
+
+msgid "RANDOM"
+msgstr ""
+
 msgid "Off"
 msgstr "Kapalı"
 
 msgid "On"
 msgstr "Açık"
-
-msgid "No"
-msgstr "Hayır"
-
-msgid "Yes"
-msgstr "Evet"
 
 msgid "Defeats"
 msgstr "Yenilgiler"
@@ -197,6 +200,12 @@ msgstr "İSTATİSTİKLERİN"
 
 msgid "Success rate"
 msgstr "Başarı oranı"
+
+msgid "No"
+msgstr "Hayır"
+
+msgid "Yes"
+msgstr "Evet"
 
 msgid ""
 "Is your language missing? Add it on <a href='https://hosted.weblate.org/"
@@ -244,6 +253,9 @@ msgstr "Ayarlar"
 msgid "Vibrations"
 msgstr "Titreşimler"
 
+msgid "Features"
+msgstr ""
+
 msgid "PLAY ONLINE"
 msgstr "ÇEVRİMİÇİ OYNA"
 
@@ -290,6 +302,9 @@ msgstr "×1000"
 
 msgid "LOADING…"
 msgstr "YÜKLENİYOR…"
+
+#~ msgid "Customize your experience below!"
+#~ msgstr "Alttan deneyimini özelleştir!"
 
 #~ msgid "DEBUG"
 #~ msgstr "HATA AYIKLAMA"

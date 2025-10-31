@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-03-09 22:26+0100\n"
-"PO-Revision-Date: 2025-09-30 20:30+0200\n"
+"PO-Revision-Date: 2025-10-31 20:31+0100\n"
 "Last-Translator: Julien Jorge <julien.jorge@gmx.fr>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/bim/gettext-files/"
 "fr/>\n"
@@ -24,6 +24,13 @@ msgstr "Juste un instant"
 
 msgid "You have been disconnected :("
 msgstr "Tu as été déconnecté :("
+
+msgid ""
+"The shop is not available on this platform, yet you can support the "
+"developers with donations! Should I open the donations page?"
+msgstr ""
+"La boutique n'est pas disponible sur cette plateforme, cependant tu peux "
+"soutenir les développeurs avec des dons ! Dois-je ouvrir la page de dons ?"
 
 msgid "Do you really want to change the language setting?"
 msgstr "Veux-tu vraiment changer le paramètre de langue ?"
@@ -41,6 +48,34 @@ msgid ""
 msgstr ""
 "Viens faire une partie de Bim! https://play.google.com/store/apps/details?"
 "id=bim.app"
+
+msgid "You need more coins to purchase this item!"
+msgstr "Il te faut d'avantage de pièces pour acheter cela !"
+
+#, c++-format
+msgid "Customize your games with up to {} feature."
+msgid_plural "Customize your games with up to {} features."
+msgstr[0] "Utilise jusqu'à {} élément pour personnaliser tes parties."
+msgstr[1] "Utilise jusqu'à {} éléments pour personnaliser tes parties."
+
+msgid "Falling blocks reduce the arena after two minutes!"
+msgstr "Des blocs tombent et réduisent l'espace de combat après deux minutes !"
+
+msgid "Find this incredibly strong barrel, it will save you from one hit!"
+msgstr ""
+"Trouve cet incroyablement solide tonneau, il te protégera d'une attaque !"
+
+msgid "A thick fog covers the arena. You can't see were you did not go!"
+msgstr ""
+"Un épais brouillard recouvre l'arène. Tu ne peux voir là où tu n'es pas "
+"allé !"
+
+msgid ""
+"Find the invisibility power up to disappear from the screen of all other "
+"players!"
+msgstr ""
+"Trouve le bonus d'invisibilité pour disparaître de l'écran de tes "
+"adversaires !"
 
 #, c++-format
 msgid "{} game being played right now."
@@ -94,38 +129,6 @@ msgstr[1] "{} joueurs connectés dans les 30 derniers jours."
 msgid "Connected to {}."
 msgstr "Connecté à {}."
 
-msgid ""
-"The shop is not available on this platform, yet you can support the "
-"developers with donations! Should I open the donations page?"
-msgstr ""
-"La boutique n'est pas disponible sur cette plateforme, cependant tu peux "
-"soutenir les développeurs avec des dons ! Dois-je ouvrir la page de dons ?"
-
-msgid "You need more coins to purchase this item!"
-msgstr "Il te faut d'avantage de pièces pour acheter cela !"
-
-msgid "Customize your experience below!"
-msgstr "Personnalise la partie avec les options ci-dessous !"
-
-msgid "Falling blocks reduce the arena after two minutes!"
-msgstr "Des blocs tombent et réduisent l'espace de combat après deux minutes !"
-
-msgid "Find this incredibly strong barrel, it will save you from one hit!"
-msgstr ""
-"Trouve cet incroyablement solide tonneau, il te protégera d'une attaque !"
-
-msgid "A thick fog covers the arena. You can't see were you did not go!"
-msgstr ""
-"Un épais brouillard recouvre l'arène. Tu ne peux voir là où tu n'es pas "
-"allé !"
-
-msgid ""
-"Find the invisibility power up to disappear from the screen of all other "
-"players!"
-msgstr ""
-"Trouve le bonus d'invisibilité pour disparaître de l'écran de tes "
-"adversaires !"
-
 msgid "An error occurred. The purchase could not be completed."
 msgstr "Une erreur s'est produite, l'achat n'a pu se conclure."
 
@@ -173,17 +176,17 @@ msgstr "Perdu !"
 msgid "You won!"
 msgstr "Victoire !"
 
+msgid "ERASE"
+msgstr "EFFACER"
+
+msgid "RANDOM"
+msgstr "ALÉATOIRE"
+
 msgid "Off"
 msgstr "Sans"
 
 msgid "On"
 msgstr "Avec"
-
-msgid "No"
-msgstr "Non"
-
-msgid "Yes"
-msgstr "Oui"
 
 msgid "Defeats"
 msgstr "Défaites"
@@ -202,6 +205,12 @@ msgstr "Tes statistiques"
 
 msgid "Success rate"
 msgstr "Taux de victoires"
+
+msgid "No"
+msgstr "Non"
+
+msgid "Yes"
+msgstr "Oui"
 
 msgid ""
 "Is your language missing? Add it on <a href='https://hosted.weblate.org/"
@@ -251,6 +260,9 @@ msgstr "Paramètres"
 msgid "Vibrations"
 msgstr "Vibrations"
 
+msgid "Features"
+msgstr "Fonctionnalités"
+
 msgid "PLAY ONLINE"
 msgstr "JOUER EN LIGNE"
 
@@ -293,6 +305,9 @@ msgstr "×1000"
 
 msgid "LOADING…"
 msgstr "CHARGEMENT…"
+
+#~ msgid "Customize your experience below!"
+#~ msgstr "Personnalise la partie avec les options ci-dessous !"
 
 #~ msgid "Disconnected."
 #~ msgstr "Déconnecté."
