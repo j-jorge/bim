@@ -8,9 +8,10 @@ namespace bim::axmol::input
   class touch_sink : public bim::axmol::input::touch_observer
   {
   private:
-    void do_pressed(const touch_event_view& touches) override;
-    void do_moved(const touch_event_view& touches) override;
-    void do_released(const touch_event_view& touches) override;
-    void do_cancelled(const touch_event_view& touches) override;
+    void do_pressed(touch_event& touch) override;
+    void do_moved(touch_event& touch) override;
+    void do_released(touch_event& touch) override;
+    void do_cancelled(touch_event& touch) override;
+    void do_unplugged() override;
   };
 }

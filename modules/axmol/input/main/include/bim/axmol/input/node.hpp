@@ -4,7 +4,7 @@
 #include <bim/axmol/input/key_event_view.hpp>
 #include <bim/axmol/input/key_observer_pointer.hpp>
 #include <bim/axmol/input/node_pointer.hpp>
-#include <bim/axmol/input/touch_event_view.hpp>
+#include <bim/axmol/input/touch_event.hpp>
 #include <bim/axmol/input/touch_observer_pointer.hpp>
 
 #include <unordered_set>
@@ -47,15 +47,17 @@ namespace bim::axmol::input
 
     void clear();
 
-    void touch_pressed(const touch_event_view& touches);
-    void touch_moved(const touch_event_view& touches);
-    void touch_released(const touch_event_view& touches);
-    void touch_cancelled(const touch_event_view& touches);
+    void touch_pressed(touch_event& touch);
+    void touch_moved(touch_event& touch);
+    void touch_released(touch_event& touch);
+    void touch_cancelled(touch_event& touch);
 
     void key_pressed(const key_event_view& keys);
     void key_released(const key_event_view& keys);
 
+    std::string string_id() const;
     std::string to_string() const;
+
     bool check_no_duplicates() const;
 
   private:
@@ -68,7 +70,10 @@ namespace bim::axmol::input
     bool check_no_duplicate_key_observer(
         std::unordered_set<key_observer*>& result) const;
 
+    void string_id(std::ostream& stream) const;
     void to_string(std::ostream& stream, std::size_t indentation) const;
+
+    void unplugged();
 
     template <typename Enter, typename Visit>
     void depth_first_scan(Enter&& enter, Visit&& visit);
@@ -87,12 +92,13 @@ namespace bim::axmol::input
     touch_observer_pointer m_touch_observer;
     key_observer_pointer m_key_observer;
 
-    bool m_selected_in_scan;
-
     /**
      * Did we propagate the pressed touch event to this node? If this is not
      * the case then the move, release, and cancel events won't be propagated.
+     * Each bit represents a touch ID.
      */
-    bool m_pressed_done;
+    std::uint16_t m_touch_pressed_mask;
+
+    bool m_selected_in_scan;
   };
 }

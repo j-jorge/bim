@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/axmol/input/observer/soft_stick.hpp>
 
-#include <bim/axmol/input/touch_event_view.hpp>
+#include <bim/axmol/input/touch_event.hpp>
 
 #include <bim/axmol/bounding_box_on_screen.hpp>
 
@@ -48,17 +48,13 @@ void bim::axmol::input::soft_stick::reset()
   m_drag = {};
 }
 
-void bim::axmol::input::soft_stick::do_pressed(const touch_event_view& touches)
+void bim::axmol::input::soft_stick::do_pressed(touch_event& touch)
 {
   if (should_ignore_touches())
     return;
 
   if (m_touch_id)
     return;
-
-  assert(!std::empty(touches));
-
-  touch_event& touch = *std::begin(touches);
 
   if (!touch.is_available() || !contains_touch(touch))
     return;
@@ -73,52 +69,47 @@ void bim::axmol::input::soft_stick::do_pressed(const touch_event_view& touches)
   m_move(touch_position);
 }
 
-void bim::axmol::input::soft_stick::do_moved(const touch_event_view& touches)
+void bim::axmol::input::soft_stick::do_moved(touch_event& touch)
 {
   if (!m_touch_id || should_ignore_touches())
     return;
 
-  std::optional<ax::Vec2> position;
+  if (!touch.is_available() || (touch.get()->getID() != *m_touch_id))
+    return;
 
-  for (touch_event& touch : touches)
-    if (touch.is_available() && (touch.get()->getID() == *m_touch_id))
-      {
-        touch.consume();
+  touch.consume();
 
-        position = touch.get()->getLocation();
-        constraint_drag(*position);
+  ax::Vec2 position = touch.get()->getLocation();
+  constraint_drag(position);
 
-        break;
-      }
-
-  if (position)
-    m_move(*position);
+  m_move(position);
 }
 
-void bim::axmol::input::soft_stick::do_released(
-    const touch_event_view& touches)
+void bim::axmol::input::soft_stick::do_released(touch_event& touch)
 {
-  do_cancelled(touches);
+  do_cancelled(touch);
 }
 
-void bim::axmol::input::soft_stick::do_cancelled(
-    const touch_event_view& touches)
+void bim::axmol::input::soft_stick::do_cancelled(touch_event& touch)
 {
   if (!m_touch_id || should_ignore_touches())
     return;
 
-  for (touch_event& touch : touches)
-    if (touch.get()->getID() == *m_touch_id)
-      {
-        if (touch.is_available())
-          touch.consume();
+  if (touch.get()->getID() != *m_touch_id)
+    return;
 
-        m_touch_id = std::nullopt;
-        m_drag = {};
-        m_up();
+  if (touch.is_available())
+    touch.consume();
 
-        break;
-      }
+  m_touch_id = std::nullopt;
+  m_drag = {};
+  m_up();
+}
+
+void bim::axmol::input::soft_stick::do_unplugged()
+{
+  m_touch_id = std::nullopt;
+  m_drag = {};
 }
 
 bool bim::axmol::input::soft_stick::should_ignore_touches() const

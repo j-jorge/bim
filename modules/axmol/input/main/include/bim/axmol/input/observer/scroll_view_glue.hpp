@@ -6,7 +6,6 @@
 
 #include <unordered_map>
 #include <unordered_set>
-#include <vector>
 
 namespace ax
 {
@@ -30,20 +29,19 @@ namespace bim::axmol::input
     explicit scroll_view_glue(ax::extension::ScrollView& view);
 
     bool should_ignore_touches() const;
-    bool contains_touch(const touch_event& touch) const;
+    bool contains_touch(touch_event& touch) const;
 
   private:
-    void do_pressed(const touch_event_view& touches) override;
-    void do_moved(const touch_event_view& touches) override;
-    void do_released(const touch_event_view& touches) override;
-    void do_cancelled(const touch_event_view& touches) override;
+    void do_pressed(touch_event& touch) override;
+    void do_moved(touch_event& touch) override;
+    void do_released(touch_event& touch) override;
+    void do_cancelled(touch_event& touch) override;
 
-    void categorize_moving_touch(touch_event& touch,
-                                 std::vector<ax::Touch*>& began,
-                                 std::vector<ax::Touch*>& moved);
-    void categorize_released_touch(touch_event& touch,
-                                   std::vector<ax::Touch*>& released,
-                                   std::vector<ax::Touch*>& cancelled);
+    void do_unplugged() override;
+
+    void categorize_moving_touch(touch_event& touch, bool& began, bool& moved);
+    void categorize_released_touch(touch_event& touch, bool& released,
+                                   bool& cancelled);
 
   private:
     ax::extension::ScrollView& m_view;

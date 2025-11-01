@@ -1,42 +1,41 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/axmol/input/touch_observer.hpp>
 
-#include <bim/axmol/input/touch_event_view.hpp>
-
 bim::axmol::input::touch_observer::touch_observer() = default;
 bim::axmol::input::touch_observer::~touch_observer() = default;
 
-bool bim::axmol::input::touch_observer::may_process(
-    const touch_event_view& touches) const
+bool bim::axmol::input::touch_observer::may_process(touch_event& touch) const
 {
-  return do_may_process(touches);
+  return do_may_process(touch);
 }
 
-void bim::axmol::input::touch_observer::pressed(
-    const touch_event_view& touches)
+void bim::axmol::input::touch_observer::pressed(touch_event& touch)
 {
-  do_pressed(touches);
+  do_pressed(touch);
 }
 
-void bim::axmol::input::touch_observer::moved(const touch_event_view& touches)
+void bim::axmol::input::touch_observer::moved(touch_event& touch)
 {
-  do_moved(touches);
+  do_moved(touch);
 }
 
-void bim::axmol::input::touch_observer::released(
-    const touch_event_view& touches)
+void bim::axmol::input::touch_observer::released(touch_event& touch)
 {
-  do_released(touches);
+  do_released(touch);
 }
 
-void bim::axmol::input::touch_observer::cancelled(
-    const touch_event_view& touches)
+void bim::axmol::input::touch_observer::cancelled(touch_event& touch)
 {
-  do_cancelled(touches);
+  do_cancelled(touch);
+}
+
+void bim::axmol::input::touch_observer::unplugged()
+{
+  do_unplugged();
 }
 
 bool bim::axmol::input::touch_observer::do_may_process(
-    const touch_event_view& touches) const
+    touch_event& touch) const
 {
   return true;
 }

@@ -28,6 +28,8 @@ namespace bim::axmol::input
     std::size_t size() const;
     bool empty() const;
 
+    Event& operator[](std::size_t i) const;
+
   private:
     event_span m_events;
   };

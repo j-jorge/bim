@@ -17,15 +17,17 @@ namespace bim::axmol::input
     explicit axmol_node_touch_observer(const ax::Node& node);
 
     bool should_ignore_touches() const;
-    bool contains_touch(const touch_event& touch) const;
+    bool contains_touch(touch_event& touch) const;
 
   private:
-    bool do_may_process(const touch_event_view& touches) const override;
+    bool do_may_process(touch_event& touch) const override;
 
-    void do_pressed(const touch_event_view& touches) override;
-    void do_moved(const touch_event_view& touches) override;
-    void do_released(const touch_event_view& touches) override;
-    void do_cancelled(const touch_event_view& touches) override;
+    void do_pressed(touch_event& touch) override;
+    void do_moved(touch_event& touch) override;
+    void do_released(touch_event& touch) override;
+    void do_cancelled(touch_event& touch) override;
+
+    void do_unplugged() override;
 
   protected:
     const ax::Node& m_node;

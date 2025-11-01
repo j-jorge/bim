@@ -5,7 +5,7 @@
 #include <bim/axmol/input/backend_event_view.impl.hpp>
 #include <bim/axmol/input/key_event_view.hpp>
 #include <bim/axmol/input/key_observer_handle.hpp>
-#include <bim/axmol/input/touch_event_view.hpp>
+#include <bim/axmol/input/touch_event.hpp>
 #include <bim/axmol/input/touch_observer_handle.hpp>
 #include <bim/axmol/input/touch_observer_handle.impl.hpp>
 

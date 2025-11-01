@@ -24,16 +24,18 @@ namespace bim::axmol::input
     bool is_enabled() const;
 
   private:
-    void do_pressed(const touch_event_view& touches) override;
-    void do_moved(const touch_event_view& touches) override;
-    void do_released(const touch_event_view& touches) override;
-    void do_cancelled(const touch_event_view& touches) override;
+    void do_pressed(touch_event& touch) override;
+    void do_moved(touch_event& touch) override;
+    void do_released(touch_event& touch) override;
+    void do_cancelled(touch_event& touch) override;
+
+    void do_unplugged() override;
 
     bool should_ignore_touches() const;
     bool is_pressed() const;
 
     void update_touch_position(touch_event& touch);
-    bool consume_known_touches(const touch_event_view& touches);
+    bool consume_known_touches(touch_event& touch);
 
     void disable_temporarily();
     bool is_temporarily_disabled() const;

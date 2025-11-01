@@ -3,7 +3,7 @@
 
 #include <bim/axmol/input/key_event_view.hpp>
 #include <bim/axmol/input/node.hpp>
-#include <bim/axmol/input/touch_event_view.hpp>
+#include <bim/axmol/input/touch_event.hpp>
 
 #include <bim/axmol/ref_ptr.impl.hpp>
 
@@ -15,7 +15,7 @@
 bim::axmol::input::flow::flow(ax::Scene& scene, node& root)
   : m_root(root)
   , m_key_listener(ax::EventListenerKeyboard::create())
-  , m_touch_listener(ax::EventListenerTouchAllAtOnce::create())
+  , m_touch_listener(ax::EventListenerTouchOneByOne::create())
 {
   m_key_listener->onKeyPressed = AX_CALLBACK_2(flow::key_pressed, this);
   m_key_listener->onKeyReleased = AX_CALLBACK_2(flow::key_released, this);
@@ -26,11 +26,11 @@ bim::axmol::input::flow::flow(ax::Scene& scene, node& root)
   dispatcher.addEventListenerWithSceneGraphPriority(m_key_listener.get(),
                                                     &scene);
 
-  m_touch_listener->onTouchesBegan = AX_CALLBACK_2(flow::touches_began, this);
-  m_touch_listener->onTouchesMoved = AX_CALLBACK_2(flow::touches_moved, this);
-  m_touch_listener->onTouchesEnded = AX_CALLBACK_2(flow::touches_ended, this);
-  m_touch_listener->onTouchesCancelled =
-      AX_CALLBACK_2(flow::touches_cancelled, this);
+  m_touch_listener->onTouchBegan = AX_CALLBACK_2(flow::touch_began, this);
+  m_touch_listener->onTouchMoved = AX_CALLBACK_2(flow::touch_moved, this);
+  m_touch_listener->onTouchEnded = AX_CALLBACK_2(flow::touch_ended, this);
+  m_touch_listener->onTouchCancelled =
+      AX_CALLBACK_2(flow::touch_cancelled, this);
 
   dispatcher.addEventListenerWithSceneGraphPriority(m_touch_listener.get(),
                                                     &scene);
@@ -72,88 +72,76 @@ void bim::axmol::input::flow::key_released(ax::EventKeyboard::KeyCode key,
   m_root.key_released(events);
 }
 
-void bim::axmol::input::flow::touches_began(
-    const std::vector<ax::Touch*>& touches, ax::Event* event)
+bool bim::axmol::input::flow::touch_began(ax::Touch* touch, ax::Event* event)
 {
   event->stopPropagation();
 
-  new_pressed_touches(touches);
+  if (known_touch(touch))
+    return true;
 
-  if (m_touch_event_storage.empty())
-    return;
+  new_pressed_touch(touch);
 
-  bim::axmol::input::touch_event_view events(m_touch_event_storage);
-  m_root.touch_pressed(events);
+  touch_event t(touch);
+  m_root.touch_pressed(t);
+
+  return true;
 }
 
-void bim::axmol::input::flow::touches_moved(
-    const std::vector<ax::Touch*>& touches, ax::Event* event)
+bool bim::axmol::input::flow::touch_moved(ax::Touch* touch, ax::Event* event)
 {
   event->stopPropagation();
 
-  known_moving_touches(touches);
+  if (!known_touch(touch))
+    return true;
 
-  if (m_touch_event_storage.empty())
-    return;
+  touch_event t(touch);
+  m_root.touch_moved(t);
 
-  bim::axmol::input::touch_event_view events(m_touch_event_storage);
-  m_root.touch_moved(events);
+  return true;
 }
 
-void bim::axmol::input::flow::touches_ended(
-    const std::vector<ax::Touch*>& touches, ax::Event* event)
+bool bim::axmol::input::flow::touch_ended(ax::Touch* touch, ax::Event* event)
 {
   event->stopPropagation();
 
-  known_released_touches(touches);
+  if (!known_touch(touch))
+    return true;
 
-  if (m_touch_event_storage.empty())
-    return;
+  released_touch(touch);
 
-  bim::axmol::input::touch_event_view events(m_touch_event_storage);
-  m_root.touch_released(events);
+  touch_event t(touch);
+  m_root.touch_released(t);
+
+  return true;
 }
 
-void bim::axmol::input::flow::touches_cancelled(
-    const std::vector<ax::Touch*>& touches, ax::Event* event)
+bool bim::axmol::input::flow::touch_cancelled(ax::Touch* touch,
+                                              ax::Event* event)
 {
   event->stopPropagation();
 
-  known_released_touches(touches);
+  if (!known_touch(touch))
+    return true;
 
-  if (m_touch_event_storage.empty())
-    return;
+  released_touch(touch);
 
-  bim::axmol::input::touch_event_view events(m_touch_event_storage);
-  m_root.touch_cancelled(events);
+  touch_event t(touch);
+  m_root.touch_cancelled(t);
+
+  return true;
 }
 
-void bim::axmol::input::flow::new_pressed_touches(
-    const std::vector<ax::Touch*>& touches)
+void bim::axmol::input::flow::new_pressed_touch(ax::Touch* touch)
 {
-  m_touch_event_storage.clear();
-
-  for (ax::Touch* const touch : touches)
-    if (m_pressed_ids.insert(touch->getID()).second)
-      m_touch_event_storage.emplace_back(touch);
+  m_pressed_ids |= (1 << touch->getID());
 }
 
-void bim::axmol::input::flow::known_moving_touches(
-    const std::vector<ax::Touch*>& touches)
+bool bim::axmol::input::flow::known_touch(ax::Touch* touch)
 {
-  m_touch_event_storage.clear();
-
-  for (ax::Touch* const touch : touches)
-    if (m_pressed_ids.find(touch->getID()) != m_pressed_ids.end())
-      m_touch_event_storage.emplace_back(touch);
+  return m_pressed_ids & (1 << touch->getID());
 }
 
-void bim::axmol::input::flow::known_released_touches(
-    const std::vector<ax::Touch*>& touches)
+void bim::axmol::input::flow::released_touch(ax::Touch* touch)
 {
-  m_touch_event_storage.clear();
-
-  for (ax::Touch* const touch : touches)
-    if (m_pressed_ids.erase(touch->getID()) == 1)
-      m_touch_event_storage.emplace_back(touch);
+  m_pressed_ids &= ~(1 << touch->getID());
 }
