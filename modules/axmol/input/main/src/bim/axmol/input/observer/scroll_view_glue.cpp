@@ -1,6 +1,6 @@
 #include <bim/axmol/input/observer/scroll_view_glue.hpp>
 
-#include <bim/axmol/input/touch_event_view.hpp>
+#include <bim/axmol/input/touch_event.hpp>
 
 #include <bim/axmol/bounding_box_on_screen.hpp>
 #include <bim/axmol/displayed.hpp>
@@ -20,7 +20,7 @@ bool bim::axmol::input::scroll_view_glue::should_ignore_touches() const
 }
 
 bool bim::axmol::input::scroll_view_glue::contains_touch(
-    const touch_event& touch) const
+    touch_event& touch) const
 {
   // The implementation of ax::ScrollView::getContentSize() changes the meaning
   // of the content size. While it is the visual bounds for all other nodes,
@@ -34,8 +34,7 @@ bool bim::axmol::input::scroll_view_glue::contains_touch(
   return view_box.containsPoint(touch.get()->getLocation());
 }
 
-void bim::axmol::input::scroll_view_glue::do_pressed(
-    const touch_event_view& touches)
+void bim::axmol::input::scroll_view_glue::do_pressed(touch_event& touch)
 {
   // The scroll is handled in do_moved, including the initial move. In
   // do_pressed we only handle the inputs to stop the scroll of the view,
@@ -43,86 +42,72 @@ void bim::axmol::input::scroll_view_glue::do_pressed(
   if (!m_view.isScrolling() || should_ignore_touches())
     return;
 
-  for (touch_event& touch : touches)
-    if (touch.is_available())
-      {
-        touch.consume();
+  if (touch.is_available())
+    {
+      touch.consume();
 
-        ax::Touch& t = *touch.get();
-        const int id = t.getID();
+      ax::Touch& t = *touch.get();
+      const int id = t.getID();
 
-        m_touch_initial_position[id] = t.getLocation();
-        m_active_touch.insert(id);
+      m_touch_initial_position[id] = t.getLocation();
+      m_active_touch.insert(id);
 
-        m_view.onTouchBegan(&t, nullptr);
-      }
+      m_view.onTouchBegan(&t, nullptr);
+    }
 }
 
-void bim::axmol::input::scroll_view_glue::do_moved(
-    const touch_event_view& touches)
+void bim::axmol::input::scroll_view_glue::do_moved(touch_event& touch)
 {
   if (should_ignore_touches())
     return;
 
-  std::vector<ax::Touch*> began;
-  std::vector<ax::Touch*> moved;
+  bool began = false;
+  bool moved = false;
+  categorize_moving_touch(touch, began, moved);
 
-  const std::size_t count = touches.size();
-  began.reserve(count);
-  moved.reserve(count);
+  if (began)
+    m_view.onTouchBegan(touch.get(), nullptr);
 
-  for (touch_event& touch : touches)
-    categorize_moving_touch(touch, began, moved);
-
-  for (ax::Touch* const touch : began)
-    m_view.onTouchBegan(touch, nullptr);
-
-  for (ax::Touch* const touch : moved)
-    m_view.onTouchMoved(touch, nullptr);
+  if (moved)
+    m_view.onTouchMoved(touch.get(), nullptr);
 }
 
-void bim::axmol::input::scroll_view_glue::do_released(
-    const touch_event_view& touches)
+void bim::axmol::input::scroll_view_glue::do_released(touch_event& touch)
 {
   if (should_ignore_touches())
     return;
 
-  std::vector<ax::Touch*> released;
-  std::vector<ax::Touch*> cancelled;
+  bool released = false;
+  bool cancelled = false;
+  categorize_released_touch(touch, released, cancelled);
 
-  const std::size_t count = touches.size();
-  released.reserve(count);
-  cancelled.reserve(count);
+  if (released)
+    m_view.onTouchEnded(touch.get(), nullptr);
 
-  for (touch_event& touch : touches)
-    categorize_released_touch(touch, released, cancelled);
-
-  for (ax::Touch* const touch : released)
-    m_view.onTouchEnded(touch, nullptr);
-
-  for (ax::Touch* const touch : cancelled)
-    m_view.onTouchEnded(touch, nullptr);
+  if (cancelled)
+    m_view.onTouchEnded(touch.get(), nullptr);
 }
 
-void bim::axmol::input::scroll_view_glue::do_cancelled(
-    const touch_event_view& touches)
+void bim::axmol::input::scroll_view_glue::do_cancelled(touch_event& touch)
 {
   if (should_ignore_touches())
     return;
 
-  std::vector<ax::Touch*> cancelled;
-  cancelled.reserve(touches.size());
+  bool cancelled = false;
+  categorize_released_touch(touch, cancelled, cancelled);
 
-  for (touch_event& touch : touches)
-    categorize_released_touch(touch, cancelled, cancelled);
+  if (cancelled)
+    m_view.onTouchCancelled(touch.get(), nullptr);
+}
 
-  for (ax::Touch* const touch : cancelled)
-    m_view.onTouchCancelled(touch, nullptr);
+void bim::axmol::input::scroll_view_glue::do_unplugged()
+{
+  m_touch_initial_position.clear();
+  m_active_touch.clear();
 }
 
 void bim::axmol::input::scroll_view_glue::categorize_moving_touch(
-    touch_event& touch, std::vector<ax::Touch*>& began,
-    std::vector<ax::Touch*>& moved)
+    touch_event& touch, bool& began, bool& moved)
 {
   ax::Touch& t = *touch.get();
   const int id = t.getID();
@@ -134,7 +119,7 @@ void bim::axmol::input::scroll_view_glue::categorize_moving_touch(
       if (touch.is_available())
         touch.consume();
 
-      moved.push_back(&t);
+      moved = true;
       return;
     }
 
@@ -159,13 +144,12 @@ void bim::axmol::input::scroll_view_glue::categorize_moving_touch(
     {
       touch.consume();
       m_active_touch.insert(id);
-      began.push_back(&t);
+      began = true;
     }
 }
 
 void bim::axmol::input::scroll_view_glue::categorize_released_touch(
-    touch_event& touch, std::vector<ax::Touch*>& released,
-    std::vector<ax::Touch*>& cancelled)
+    touch_event& touch, bool& released, bool& cancelled)
 {
   ax::Touch& t = *touch.get();
   const int id = t.getID();
@@ -176,7 +160,7 @@ void bim::axmol::input::scroll_view_glue::categorize_released_touch(
   m_touch_initial_position.erase(id);
 
   if (touch.is_available())
-    released.push_back(&t);
+    released = true;
   else
-    cancelled.push_back(&t);
+    cancelled = true;
 }

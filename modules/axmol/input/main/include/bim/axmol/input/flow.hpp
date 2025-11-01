@@ -15,7 +15,7 @@ namespace ax
 {
   class Event;
   class EventListener;
-  class EventListenerTouchAllAtOnce;
+  class EventListenerTouchOneByOne;
   class Scene;
 }
 
@@ -36,37 +36,22 @@ namespace bim::axmol::input
     void key_pressed(ax::EventKeyboard::KeyCode key, ax::Event* event);
     void key_released(ax::EventKeyboard::KeyCode key, ax::Event* event);
 
-    void touches_began(const std::vector<ax::Touch*>& touches,
-                       ax::Event* event);
+    bool touch_began(ax::Touch* touch, ax::Event* event);
+    bool touch_moved(ax::Touch* touch, ax::Event* event);
+    bool touch_ended(ax::Touch* touch, ax::Event* event);
+    bool touch_cancelled(ax::Touch* touch, ax::Event* event);
 
-    void touches_moved(const std::vector<ax::Touch*>& touches,
-                       ax::Event* event);
-
-    void touches_ended(const std::vector<ax::Touch*>& touches,
-                       ax::Event* event);
-
-    void touches_cancelled(const std::vector<ax::Touch*>& touches,
-                           ax::Event* event);
-
-    void new_pressed_touches(const std::vector<ax::Touch*>& touches);
-
-    void known_moving_touches(const std::vector<ax::Touch*>& touches);
-
-    void known_released_touches(const std::vector<ax::Touch*>& touches);
+    void new_pressed_touch(ax::Touch* touch);
+    bool known_touch(ax::Touch* touch);
+    void released_touch(ax::Touch* touch);
 
   private:
     node& m_root;
-    std::unordered_set<int> m_pressed_ids;
+    std::uint16_t m_pressed_ids;
 
     bim::axmol::ref_ptr<ax::EventListenerKeyboard> m_key_listener;
     std::vector<key_event> m_key_event_storage;
 
-    bim::axmol::ref_ptr<ax::EventListenerTouchAllAtOnce> m_touch_listener;
-
-    /**
-     * Storage of the touch events for the duration of the dispatch. It is
-     * reset on each event.
-     */
-    std::vector<touch_event> m_touch_event_storage;
+    bim::axmol::ref_ptr<ax::EventListenerTouchOneByOne> m_touch_listener;
   };
 }

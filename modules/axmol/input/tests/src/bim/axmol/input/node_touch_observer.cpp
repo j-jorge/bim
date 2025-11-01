@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/axmol/input/node.hpp>
 #include <bim/axmol/input/node_reference.hpp>
-#include <bim/axmol/input/touch_event_view.hpp>
+#include <bim/axmol/input/touch_event.hpp>
 #include <bim/axmol/input/touch_observer.hpp>
 
 #include <axmol/base/Touch.h>
@@ -18,6 +18,7 @@ public:
   std::vector<std::string> moved;
   std::vector<std::string> released;
   std::vector<std::string> cancelled;
+  std::vector<std::string> unplugged;
 };
 
 namespace
@@ -28,13 +29,12 @@ namespace
     touch_observer_mockup(std::string name, call_tracker& calls);
 
   private:
-    void
-    do_pressed(const bim::axmol::input::touch_event_view& touches) override;
-    void do_moved(const bim::axmol::input::touch_event_view& touches) override;
-    void
-    do_released(const bim::axmol::input::touch_event_view& touches) override;
-    void
-    do_cancelled(const bim::axmol::input::touch_event_view& touches) override;
+    void do_pressed(bim::axmol::input::touch_event& touch) override;
+    void do_moved(bim::axmol::input::touch_event& touch) override;
+    void do_released(bim::axmol::input::touch_event& touch) override;
+    void do_cancelled(bim::axmol::input::touch_event& touch) override;
+
+    void do_unplugged() override;
 
   public:
     std::size_t m_pressed_call_count;
@@ -51,6 +51,7 @@ void call_tracker::clear()
   moved.clear();
   released.clear();
   cancelled.clear();
+  unplugged.clear();
 }
 
 touch_observer_mockup::touch_observer_mockup(std::string name,
@@ -60,29 +61,30 @@ touch_observer_mockup::touch_observer_mockup(std::string name,
   , m_calls(calls)
 {}
 
-void touch_observer_mockup::do_pressed(
-    const bim::axmol::input::touch_event_view& touches)
+void touch_observer_mockup::do_pressed(bim::axmol::input::touch_event& touch)
 {
   m_calls.pressed.push_back(m_name);
   ++m_pressed_call_count;
 }
 
-void touch_observer_mockup::do_moved(
-    const bim::axmol::input::touch_event_view& touches)
+void touch_observer_mockup::do_moved(bim::axmol::input::touch_event& touch)
 {
   m_calls.moved.push_back(m_name);
 }
 
-void touch_observer_mockup::do_released(
-    const bim::axmol::input::touch_event_view& touches)
+void touch_observer_mockup::do_released(bim::axmol::input::touch_event& touch)
 {
   m_calls.released.push_back(m_name);
 }
 
-void touch_observer_mockup::do_cancelled(
-    const bim::axmol::input::touch_event_view& touches)
+void touch_observer_mockup::do_cancelled(bim::axmol::input::touch_event& touch)
 {
   m_calls.cancelled.push_back(m_name);
+}
+
+void touch_observer_mockup::do_unplugged()
+{
+  m_calls.unplugged.push_back(m_name);
 }
 
 class node_touch_observer_test : public ::testing::Test
@@ -95,8 +97,7 @@ static void invoke_pressed(bim::axmol::input::node& node)
 {
   ax::Touch touch;
   bim::axmol::input::touch_event event(&touch);
-  bim::axmol::input::touch_event_view touches(std::span(&event, 1));
-  node.touch_pressed(touches);
+  node.touch_pressed(event);
 }
 
 TEST_F(node_touch_observer_test, invoke_self)
@@ -113,6 +114,7 @@ TEST_F(node_touch_observer_test, invoke_self)
   EXPECT_TRUE(m_calls.moved.empty());
   EXPECT_TRUE(m_calls.released.empty());
   EXPECT_TRUE(m_calls.cancelled.empty());
+  EXPECT_TRUE(m_calls.unplugged.empty());
 
   EXPECT_EQ("root", m_calls.pressed[0]);
 }
@@ -138,9 +140,33 @@ TEST_F(node_touch_observer_test, children_order)
   EXPECT_TRUE(m_calls.moved.empty());
   EXPECT_TRUE(m_calls.released.empty());
   EXPECT_TRUE(m_calls.cancelled.empty());
+  EXPECT_TRUE(m_calls.unplugged.empty());
 
   EXPECT_EQ("child_1", m_calls.pressed[0]);
   EXPECT_EQ("child_2", m_calls.pressed[1]);
+}
+
+TEST_F(node_touch_observer_test, unplugged_child)
+{
+  bim::axmol::input::node root;
+
+  std::shared_ptr<touch_observer_mockup> observer_1(
+      std::make_shared<touch_observer_mockup>("child_1", m_calls));
+  root.push_back(observer_1);
+
+  std::shared_ptr<touch_observer_mockup> observer_2(
+      std::make_shared<touch_observer_mockup>("child_2", m_calls));
+  root.push_back(observer_2);
+
+  root.erase(observer_1);
+
+  EXPECT_TRUE(m_calls.pressed.empty());
+  EXPECT_TRUE(m_calls.moved.empty());
+  EXPECT_TRUE(m_calls.released.empty());
+  EXPECT_TRUE(m_calls.cancelled.empty());
+  ASSERT_EQ(1, m_calls.unplugged.size());
+
+  EXPECT_EQ("child_1", m_calls.unplugged[0]);
 }
 
 TEST_F(node_touch_observer_test, depth_order)
@@ -169,6 +195,7 @@ TEST_F(node_touch_observer_test, depth_order)
   EXPECT_TRUE(m_calls.moved.empty());
   EXPECT_TRUE(m_calls.released.empty());
   EXPECT_TRUE(m_calls.cancelled.empty());
+  EXPECT_TRUE(m_calls.unplugged.empty());
 
   EXPECT_EQ("grandchild", m_calls.pressed[0]);
   EXPECT_EQ("child", m_calls.pressed[1]);
@@ -197,6 +224,7 @@ TEST_F(node_touch_observer_test, clear)
   EXPECT_TRUE(m_calls.moved.empty());
   EXPECT_TRUE(m_calls.released.empty());
   EXPECT_TRUE(m_calls.cancelled.empty());
+  EXPECT_TRUE(m_calls.unplugged.empty());
 }
 
 TEST_F(node_touch_observer_test, uniqueness)

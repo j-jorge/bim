@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/axmol/input/observer/tap_observer.hpp>
 
-#include <bim/axmol/input/touch_event_view.hpp>
+#include <bim/axmol/input/touch_event.hpp>
 
 #include <iscool/signals/implement_signal.hpp>
 
@@ -35,22 +35,20 @@ void bim::axmol::input::tap_observer::cancel_on_swipe(bool v)
   m_cancel_on_swipe = v;
 }
 
-void bim::axmol::input::tap_observer::do_pressed(
-    const touch_event_view& touches)
+void bim::axmol::input::tap_observer::do_pressed(touch_event& touch)
 {
   if (should_ignore_touches())
     return;
 
   const bool was_pressed = is_pressed();
 
-  for (touch_event& touch : touches)
-    update_touch_position(touch);
+  update_touch_position(touch);
 
   if (!was_pressed && is_pressed())
     m_enter();
 }
 
-void bim::axmol::input::tap_observer::do_moved(const touch_event_view& touches)
+void bim::axmol::input::tap_observer::do_moved(touch_event& touch)
 {
   if (!is_pressed() || should_ignore_touches() || !m_cancel_on_swipe)
     return;
@@ -59,32 +57,28 @@ void bim::axmol::input::tap_observer::do_moved(const touch_event_view& touches)
   // is not a tap, but maybe rather a swipe.
   constexpr float threshold = 16;
 
-  for (const touch_event& touch : touches)
+  const int id = touch.get()->getID();
+  const auto it = m_touch_id_pressed_position.find(id);
+
+  if (it != m_touch_id_pressed_position.end())
     {
-      const int id = touch.get()->getID();
-      const auto it = m_touch_id_pressed_position.find(id);
+      const ax::Vec2 offset = touch.get()->getLocation() - it->second;
 
-      if (it != m_touch_id_pressed_position.end())
-        {
-          const ax::Vec2 offset = touch.get()->getLocation() - it->second;
-
-          if ((std::abs(offset.x) >= threshold)
-              || (std::abs(offset.y) >= threshold))
-            m_touch_id_pressed_position.erase(it);
-        }
+      if ((std::abs(offset.x) >= threshold)
+          || (std::abs(offset.y) >= threshold))
+        m_touch_id_pressed_position.erase(it);
     }
 
   if (!is_pressed())
     m_leave();
 }
 
-void bim::axmol::input::tap_observer::do_released(
-    const touch_event_view& touches)
+void bim::axmol::input::tap_observer::do_released(touch_event& touch)
 {
   if (!is_pressed() || should_ignore_touches())
     return;
 
-  const bool consumed = consume_known_touches(touches);
+  const bool consumed = consume_known_touch(touch);
 
   if (is_pressed())
     return;
@@ -97,17 +91,22 @@ void bim::axmol::input::tap_observer::do_released(
     m_leave();
 }
 
-void bim::axmol::input::tap_observer::do_cancelled(
-    const touch_event_view& touches)
+void bim::axmol::input::tap_observer::do_cancelled(touch_event& touch)
 {
   if (!is_pressed() || should_ignore_touches())
     return;
 
-  consume_known_touches(touches);
+  consume_known_touch(touch);
   disable_temporarily();
 
   if (!is_pressed())
     m_leave();
+}
+
+void bim::axmol::input::tap_observer::do_unplugged()
+{
+  m_touch_id_pressed_position.clear();
+  m_cooldown_end_date = {};
 }
 
 bool bim::axmol::input::tap_observer::should_ignore_touches() const
@@ -134,20 +133,16 @@ void bim::axmol::input::tap_observer::update_touch_position(touch_event& touch)
     m_touch_id_pressed_position.erase(id);
 }
 
-bool bim::axmol::input::tap_observer::consume_known_touches(
-    const touch_event_view& touches)
+bool bim::axmol::input::tap_observer::consume_known_touch(touch_event& touch)
 {
-  bool result = false;
+  if (m_touch_id_pressed_position.erase(touch.get()->getID()) != 0)
+    if (touch.is_available())
+      {
+        touch.consume();
+        return true;
+      }
 
-  for (touch_event& touch : touches)
-    if (m_touch_id_pressed_position.erase(touch.get()->getID()) != 0)
-      if (touch.is_available())
-        {
-          touch.consume();
-          result = true;
-        }
-
-  return result;
+  return false;
 }
 
 void bim::axmol::input::tap_observer::disable_temporarily()

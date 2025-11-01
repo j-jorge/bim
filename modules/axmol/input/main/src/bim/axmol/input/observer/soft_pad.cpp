@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/axmol/input/observer/soft_pad.hpp>
 
-#include <bim/axmol/input/touch_event_view.hpp>
+#include <bim/axmol/input/touch_event.hpp>
 
 #include <bim/axmol/bounding_box_on_screen.hpp>
 
@@ -55,24 +55,23 @@ void bim::axmol::input::soft_pad::reset()
   m_vertical = 0;
 }
 
-void bim::axmol::input::soft_pad::do_pressed(const touch_event_view& touches)
+void bim::axmol::input::soft_pad::do_pressed(touch_event& touch)
 {
   if (m_touch_id || should_ignore_touches())
     return;
 
-  check_touches(touches);
+  check_touch(touch);
 }
 
-void bim::axmol::input::soft_pad::do_moved(const touch_event_view& touches)
+void bim::axmol::input::soft_pad::do_moved(touch_event& touch)
 {
   if (should_ignore_touches())
     return;
 
-  check_touches(touches);
+  check_touch(touch);
 }
 
-void bim::axmol::input::soft_pad::check_touches(
-    const touch_event_view& touches)
+void bim::axmol::input::soft_pad::check_touch(touch_event& touch)
 {
   const ax::Rect box = bim::axmol::bounding_box_on_screen(m_node);
   const ax::Vec2 size = box.size;
@@ -84,37 +83,34 @@ void bim::axmol::input::soft_pad::check_touches(
   constexpr float min_range_squared = 1.f / 25;
   constexpr float angle_split = std::numbers::sqrt2_v<float> / 2;
 
-  for (touch_event& touch : touches)
+  if (!touch.is_available() || !contains_touch(touch))
+    return;
+
+  const ax::Vec2 p =
+      (touch.get()->getLocation() - box.origin - half_size) / half_size;
+
+  if (p.getLengthSq() <= min_range_squared)
+    return;
+
+  touch.consume();
+  m_touch_id = touch.get()->getID();
+
+  const ax::Vec2 a = p.getNormalized();
+
+  if ((a.y >= -angle_split) && (a.y <= angle_split))
     {
-      if (!touch.is_available() || !contains_touch(touch))
-        continue;
+      if (a.x >= 0)
+        horizontal = 1;
+      else
+        horizontal = -1;
+    }
 
-      const ax::Vec2 p =
-          (touch.get()->getLocation() - box.origin - half_size) / half_size;
-
-      if (p.getLengthSq() <= min_range_squared)
-        continue;
-
-      touch.consume();
-      m_touch_id = touch.get()->getID();
-
-      const ax::Vec2 a = p.getNormalized();
-
-      if ((a.y >= -angle_split) && (a.y <= angle_split))
-        {
-          if (a.x >= 0)
-            horizontal = 1;
-          else
-            horizontal = -1;
-        }
-
-      if ((a.x >= -angle_split) && (a.x <= angle_split))
-        {
-          if (a.y >= 0)
-            vertical = 1;
-          else
-            vertical = -1;
-        }
+  if ((a.x >= -angle_split) && (a.x <= angle_split))
+    {
+      if (a.y >= 0)
+        vertical = 1;
+      else
+        vertical = -1;
     }
 
   if ((vertical != m_vertical) || (horizontal != m_horizontal))
@@ -125,31 +121,33 @@ void bim::axmol::input::soft_pad::check_touches(
     }
 }
 
-void bim::axmol::input::soft_pad::do_released(const touch_event_view& touches)
+void bim::axmol::input::soft_pad::do_released(touch_event& touch)
 {
   if (!m_touch_id || should_ignore_touches())
     return;
 
-  const int id = *m_touch_id;
+  if (touch.get()->getID() == *m_touch_id)
+    {
+      if (touch.is_available())
+        touch.consume();
 
-  for (touch_event& touch : touches)
-    if (touch.get()->getID() == id)
-      {
-        if (touch.is_available())
-          touch.consume();
-
-        m_touch_id = std::nullopt;
-        m_horizontal = 0;
-        m_vertical = 0;
-        m_changed();
-
-        break;
-      }
+      m_touch_id = std::nullopt;
+      m_horizontal = 0;
+      m_vertical = 0;
+      m_changed();
+    }
 }
 
-void bim::axmol::input::soft_pad::do_cancelled(const touch_event_view& touches)
+void bim::axmol::input::soft_pad::do_cancelled(touch_event& touch)
 {
-  do_released(touches);
+  do_released(touch);
+}
+
+void bim::axmol::input::soft_pad::do_unplugged()
+{
+  m_touch_id = std::nullopt;
+  m_horizontal = 0;
+  m_vertical = 0;
 }
 
 bool bim::axmol::input::soft_pad::should_ignore_touches() const
