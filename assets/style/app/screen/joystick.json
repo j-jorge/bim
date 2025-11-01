@@ -43,6 +43,10 @@
 
         "stick": [
           {
+            "anchor.x": 0.5,
+            "anchor.y": 0.5,
+            "anchor.reference.x": 0.5,
+            "anchor.reference.y": 0.5,
             "keep-ratio": true,
             "height.percents": 57
           }
@@ -69,6 +73,10 @@
 
         "stick": [
           {
+            "anchor.x": 0.5,
+            "anchor.y": 0.5,
+            "anchor.reference.x": 0.5,
+            "anchor.reference.y": 0.5,
             "keep-ratio": true,
             "height.percents": 57
           }
