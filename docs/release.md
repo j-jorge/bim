@@ -1,6 +1,5 @@
 # Things to do for a release
  - Update the translations.
- - Update the screen captures from the docs/readme folder (LANG=C).
  - Update the screen captures from the metadata folder.
  - Check if the descriptions from the metadata folder must be updated.
  - Fill the changelog.

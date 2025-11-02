@@ -18,20 +18,21 @@ enough of one player enabling a feature for all players benefiting
 from it during the contest.
 
 <p align="center">
-  <img src="docs/readme/title-screen.jpg" width="270px"/>
-  <img src="metadata/en-US/images/phoneScreenshots/screenshot-1-matchmaking.jpg"
+  <img src="metadata/en-US/images/phoneScreenshots/screenshot-3-title.jpg"
+       width="270px"/>
+  <img src="metadata/en-US/images/phoneScreenshots/screenshot-2-matchmaking.jpg"
        width="270px"/>
 </p>
 <p align="center">
-  <img src="metadata/en-US/images/phoneScreenshots/screenshot-2-gameplay.jpg"
+  <img src="metadata/en-US/images/phoneScreenshots/screenshot-1-gameplay.jpg"
        width="270px"/>
-  <img src="metadata/en-US/images/phoneScreenshots/screenshot-3-gameplay.jpg"
+  <img src="metadata/en-US/images/phoneScreenshots/screenshot-5-gameplay.jpg"
        width="270px"/>
 </p>
 <p align="center">
-  <img src="metadata/en-US/images/phoneScreenshots/screenshot-4-victory.jpg"
+  <img src="metadata/en-US/images/phoneScreenshots/screenshot-4-features.jpg"
        width="270px"/>
-  <img src="metadata/en-US/images/phoneScreenshots/screenshot-5-settings.jpg"
+  <img src="metadata/en-US/images/phoneScreenshots/screenshot-7-settings.jpg"
        width="270px"/>
 </p>
 
