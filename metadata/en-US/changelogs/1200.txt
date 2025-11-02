@@ -1,0 +1,2 @@
+- Fix incorrect position of the soft stick.
+- Add the selection screen for the game features.
