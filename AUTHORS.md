@@ -18,7 +18,7 @@ assets/i18n/pt.po
 CC-BY-SA 4.0 Silvério Santos, via Weblate.
 
 assets/i18n/pt_BR.po
-CC-BY-SA 4.0 OlliesGudh, via Weblate.
+CC-BY-SA 4.0 OlliesGudh, samuel0220, via Weblate.
 
 assets/i18n/tr.po
 CC-BY-SA 4.0 AsetSiya, via Weblate.
