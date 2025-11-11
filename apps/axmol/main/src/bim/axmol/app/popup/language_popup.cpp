@@ -68,7 +68,7 @@ bim::axmol::app::language_popup::language_popup(
   m_add_language_inputs.reset(
       new bim::axmol::input::rich_text_glue_handle(*m_controls->add_language));
 
-  m_inputs.attach_to_root(*m_add_language_inputs);
+  m_inputs.push_back(*m_add_language_inputs);
 
   m_inputs.push_back(m_controls->list->input_node());
   m_inputs.push_back(m_controls->close_button->input_node());
