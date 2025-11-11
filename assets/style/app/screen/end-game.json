@@ -12,7 +12,7 @@
           {
             "instantiate": "ax::LayerColor",
             "color": "kashmir-blue",
-            "z-order": -100,
+            "z-order": -1000,
             "opacity": 1
           }
         ],
@@ -43,7 +43,7 @@
             "rotation": 5,
             "scroll-per-second.x": 5,
             "scroll-per-second.y": 20,
-            "z-order": -75
+            "z-order": -750
           }
         ],
 
@@ -60,7 +60,7 @@
             "rotation": -5,
             "scroll-per-second.x": -5,
             "scroll-per-second.y": 20,
-            "z-order": -75
+            "z-order": -750
           }
         ],
 
