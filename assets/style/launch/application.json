@@ -1,0 +1,68 @@
+{
+  "style": {
+    "main-scene": [
+      "launch/main-scene"
+    ],
+
+    "main-task/loading-screen": [
+      {
+        "widgets": [
+          {
+            "background": [
+              {
+                "instantiate": "ax::LayerColor",
+                "color": "black",
+                "z-order": -100,
+                "opacity": 1
+              }
+            ],
+
+            "sprite": [
+              {
+                "instantiate": "ax::Sprite",
+                "frame": "texture/loading.png"
+              }
+            ]
+          }
+        ],
+
+        "bounds": [
+          {
+            "background": [
+              "layout/fill"
+            ],
+
+            "sprite": [
+              "layout/center",
+              {
+                "width.percents": 33,
+                "keep-ratio": true
+              }
+            ]
+          }
+        ],
+
+        "action.done": [
+          {
+            "background": [
+              {
+                "instantiate": "fade",
+                "to": 0,
+                "duration": 0.3
+              }
+            ],
+
+            "sprite": [
+              {
+                "instantiate": "scale",
+                "to": 0,
+                "ease": "back-in",
+                "duration": 0.3
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

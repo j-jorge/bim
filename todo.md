@@ -1,6 +1,8 @@
 # Next
 
-- Loading screen.
+- Review the startup steps.
+- Update Tracy.
+- Update Axmol.
 
 # Client
 

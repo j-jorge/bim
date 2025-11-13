@@ -61,7 +61,6 @@ namespace bim::axmol::app
 
   class main_scene;
   class main_task;
-  class scene_lock;
 
   class application : private ax::Application
   {
@@ -73,7 +72,6 @@ namespace bim::axmol::app
         ic_context_declare_properties(                                     //
             ((bim::axmol::widget::context)(widget_context))                //
             ((main_scene*)(main_scene))                                    //
-            ((scene_lock*)(scene_lock))                                    //
             ((bim::app::analytics_service*)(analytics))                    //
             ((iscool::audio::mixer*)(audio))                               //
             ((iscool::preferences::local_preferences*)(local_preferences)) //

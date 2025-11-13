@@ -2,11 +2,12 @@ find_program(style_merger style-merger REQUIRED)
 
 set(common_style_files
   layout/center.json
+  layout/fill.json
 )
 
-set(main_task_style_files
+set(application_style_files
 
-  main-task.json
+  application.json
 
   action/rotate-forever-30s.json
 
@@ -130,7 +131,9 @@ set(main_task_style_files
   ${common_style_files}
 )
 
-set(main_scene_style_files
+set(launcher_style_files
+  launch/application.json
+
   launch/main-scene.json
 
   ${common_style_files}
@@ -165,5 +168,5 @@ function(merge_styles main_style_id)
   set_property(TARGET styles APPEND PROPERTY SOURCES "${output}")
 endfunction()
 
-merge_styles(main-task ${main_task_style_files})
-merge_styles(launch/main-scene ${main_scene_style_files})
+merge_styles(application ${application_style_files})
+merge_styles(launch/application ${launcher_style_files})

@@ -73,6 +73,12 @@ void bim::axmol::app::main_scene::add_in_overlays(
 {
   m_controls->overlay->addChild(&node);
 
+  const ax::Vec2 size = m_controls->overlay->getContentSize();
+  node.setContentSize(size);
+
+  // Align the node's bottom-left corner with its parent's.
+  node.setPosition(node.getAnchorPoint() * size);
+
   m_overlay_inputs.push_front(inputs);
   m_overlay_node_inputs.insert(node_to_inputs_map::value_type(&node, inputs));
 }

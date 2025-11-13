@@ -6,9 +6,9 @@ set(main_sources
   main/src/bim/axmol/app/fog_display.cpp
   main/src/bim/axmol/app/frame_profiler.cpp
   main/src/bim/axmol/app/game_feature_sprite_frame.cpp
+  main/src/bim/axmol/app/loading_screen.cpp
   main/src/bim/axmol/app/main_scene.cpp
   main/src/bim/axmol/app/root_scene.cpp
-  main/src/bim/axmol/app/scene_lock.cpp
   main/src/bim/axmol/app/screen_wheel.cpp
 
   main/src/bim/axmol/app/part/wallet.cpp

@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/axmol/app/task/main_task.hpp>
 
+#include <bim/axmol/app/loading_screen.hpp>
 #include <bim/axmol/app/popup/message.hpp>
 #include <bim/axmol/app/screen_wheel.hpp>
 
@@ -11,20 +12,16 @@
 #include <bim/app/preference/date_of_next_config_update.hpp>
 #include <bim/app/preference/date_of_next_version_update_message.hpp>
 #include <bim/app/preference/update_preferences.hpp>
-#include <bim/app/preference/user_language.hpp>
 
 #include <bim/version.hpp>
 
 #include <iscool/audio/loop_mode.hpp>
 #include <iscool/audio/mixer.hpp>
-#include <iscool/files/file_exists.hpp>
 #include <iscool/files/full_path_exists.hpp>
 #include <iscool/files/get_writable_path.hpp>
-#include <iscool/files/read_file.hpp>
 #include <iscool/files/rename_file.hpp>
 #include <iscool/http/send.hpp>
 #include <iscool/i18n/gettext.hpp>
-#include <iscool/i18n/load_translations.hpp>
 #include <iscool/json/from_file.hpp>
 #include <iscool/json/parse_string.hpp>
 #include <iscool/json/write_to_stream.hpp>
@@ -48,9 +45,11 @@ static std::string cached_remote_config_file()
 IMPLEMENT_SIGNAL(bim::axmol::app::main_task, end, m_end);
 IMPLEMENT_SIGNAL(bim::axmol::app::main_task, reset, m_reset);
 
-bim::axmol::app::main_task::main_task(context context)
+bim::axmol::app::main_task::main_task(context context,
+                                      const iscool::style::declaration& style)
   : m_context(context)
-  , m_style(iscool::style::loader::load("main-task"))
+  , m_loading_screen(new loading_screen(
+        m_context, *style.get_declaration("loading-screen")))
 {
   m_context.set_session_handler(&m_session_handler);
   m_context.set_config(&m_config);
@@ -60,8 +59,17 @@ bim::axmol::app::main_task::~main_task() = default;
 
 void bim::axmol::app::main_task::start()
 {
+  m_loader_connection = m_loading_screen->connect_to_done(
+      [this]()
+      {
+        resources_loaded();
+      });
+  m_loading_screen->start();
+}
+
+void bim::axmol::app::main_task::resources_loaded()
+{
   m_context.get_audio()->play_music("menu", iscool::audio::loop_mode::forever);
-  read_translations();
 
   if (load_config())
     start_optimistic();
@@ -98,6 +106,8 @@ void bim::axmol::app::main_task::start_fresh()
 
 void bim::axmol::app::main_task::create_ui()
 {
+  m_style = iscool::style::loader::load("application");
+
   m_message_popup.reset(
       new message_popup(m_context, *m_style.get_declaration("message-popup")));
 
@@ -108,6 +118,8 @@ void bim::axmol::app::main_task::create_ui()
       {
         m_reset();
       });
+
+  m_loading_screen->stop();
 }
 
 bool bim::axmol::app::main_task::load_config()
@@ -218,34 +230,6 @@ void bim::axmol::app::main_task::validate_remote_config(
       *m_context.get_local_preferences(),
       iscool::time::now<std::chrono::hours>()
           + config->remote_config_update_interval);
-}
-
-void bim::axmol::app::main_task::read_translations()
-{
-  std::string translations_file;
-
-  const auto check_language_code = [&](std::string_view c) -> bool
-  {
-    translations_file = "i18n/";
-    translations_file += c;
-    translations_file += ".mo";
-    return iscool::files::file_exists(translations_file);
-  };
-
-  const iscool::language_name language =
-      bim::app::user_language(*m_context.get_local_preferences());
-
-  if (!check_language_code(iscool::to_string(language))
-      && !check_language_code(
-          iscool::to_string(iscool::to_language_code(language))))
-    translations_file = "i18n/en.mo";
-
-  const std::unique_ptr<std::istream> mo_file =
-      iscool::files::read_file(translations_file);
-
-  if (!iscool::i18n::load_translations(language, *mo_file))
-    ic_log(iscool::log::nature::warning(), "main_task",
-           "Could not read translations from {}.", translations_file);
 }
 
 bool bim::axmol::app::main_task::display_version_update_message()

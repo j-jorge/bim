@@ -54,9 +54,9 @@ namespace bim::app
 
 namespace bim::axmol::app
 {
+  class loading_screen;
   class main_scene;
   class message_popup;
-  class scene_lock;
   class screen_wheel;
 
   class main_task
@@ -69,7 +69,6 @@ namespace bim::axmol::app
         ic_context_declare_parent_properties(                              //
             ((const bim::axmol::widget::context&)(widget_context))         //
             ((main_scene*)(main_scene))                                    //
-            ((scene_lock*)(scene_lock))                                    //
             ((bim::app::analytics_service*)(analytics))                    //
             ((iscool::audio::mixer*)(audio))                               //
             ((iscool::preferences::local_preferences*)(local_preferences)) //
@@ -81,12 +80,14 @@ namespace bim::axmol::app
             ((bim::app::config*)(config))));
 
   public:
-    explicit main_task(context context);
+    main_task(context context, const iscool::style::declaration& style);
     ~main_task();
 
     void start();
 
   private:
+    void resources_loaded();
+
     void start_optimistic();
     void start_fresh();
     void create_ui();
@@ -96,8 +97,6 @@ namespace bim::axmol::app
     void fetch_remote_config();
     void validate_remote_config(const std::string_view& str);
 
-    void read_translations();
-
     bool display_version_update_message();
     void connect_to_game_server();
 
@@ -106,10 +105,13 @@ namespace bim::axmol::app
 
   private:
     iscool::style::declaration m_style;
+    std::unique_ptr<loading_screen> m_loading_screen;
+
     bim::net::session_handler m_session_handler;
     std::unique_ptr<message_popup> m_message_popup;
     std::unique_ptr<screen_wheel> m_screen_wheel;
 
+    iscool::signals::scoped_connection m_loader_connection;
     iscool::signals::scoped_connection
         m_session_authentication_error_connection;
     iscool::signals::scoped_connection m_message_connection;

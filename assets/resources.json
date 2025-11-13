@@ -1,6 +1,33 @@
 {
+  "textures": [
+    "sprite-sheet-1.png",
+    "sprite-sheet-2.png",
+    "sprite-sheet-3.png",
+
+    "texture/bomb-stencil.png",
+    "texture/defeat-background-pattern.png",
+    "texture/draw-background-pattern.png",
+    "texture/features-background-pattern.png",
+    "texture/gifts-background-pattern.png",
+    "texture/menu-background-pattern.png",
+    "texture/popup-background-pattern.png",
+    "texture/search-background-pattern.png",
+    "texture/squares.png",
+    "texture/stars.png",
+    "texture/victory-background-pattern.png"
+  ],
+
+  "sprite-sheets": [
+    "sprite-sheet-1.plist",
+    "sprite-sheet-2.plist",
+    "sprite-sheet-3.plist"
+  ],
+
+  "shaders": [
+    "shaders/shine_fs"
+  ],
+
   "styles": [
-    "app/screen-wheel",
-    "popup/message"
+    "application"
   ]
 }

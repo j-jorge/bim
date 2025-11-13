@@ -7,7 +7,6 @@
 
 #include <bim/axmol/app/main_scene.hpp>
 #include <bim/axmol/app/root_scene.hpp>
-#include <bim/axmol/app/scene_lock.hpp>
 
 #include <bim/axmol/action/register_actions.hpp>
 #include <bim/axmol/audio/mixer.hpp>
@@ -45,13 +44,13 @@
 #include <iscool/time/now.hpp>
 
 #include <axmol/2d/Scene.h>
-#include <axmol/2d/SpriteFrameCache.h> // TODO: remove
+#include <axmol/2d/SpriteFrameCache.h>
 #include <axmol/base/Director.h>
 #include <axmol/base/EventDispatcher.h>
 #include <axmol/base/Utils.h>
 #include <axmol/platform/FileUtils.h>
 #include <axmol/platform/Image.h>
-#include <axmol/renderer/Shaders.h>
+#include <axmol/renderer/TextureCache.h>
 #include <axmol/renderer/backend/ProgramManager.h>
 
 #include <ctime>
@@ -104,6 +103,8 @@ public:
   session_systems(const session_systems&) = delete;
   ~session_systems();
 
+  const iscool::style::declaration& root_style() const;
+
 private:
   void start_styles();
   void stop_styles();
@@ -114,12 +115,10 @@ private:
   void start_inputs();
   void stop_inputs();
 
-  void start_lock();
-  void stop_lock();
-
 private:
   application& m_application;
 
+  std::unique_ptr<iscool::style::declaration> m_style;
   std::unique_ptr<bim::axmol::input::flow> m_input_flow;
 };
 
@@ -288,26 +287,13 @@ void bim::axmol::app::detail::persistent_systems::stop_root_scene()
 bim::axmol::app::detail::session_systems::session_systems(application& app)
   : m_application(app)
 {
-  // TODO: in a loader.
-  ax::SpriteFrameCache::getInstance()->addSpriteFramesWithFile(
-      "sprite-sheet-1.plist");
-  ax::SpriteFrameCache::getInstance()->addSpriteFramesWithFile(
-      "sprite-sheet-2.plist");
-  ax::SpriteFrameCache::getInstance()->addSpriteFramesWithFile(
-      "sprite-sheet-3.plist");
-  ax::backend::ProgramManager::getInstance()->registerCustomProgram(
-      ax::positionTextureColor_vert, "shaders/shine_fs",
-      ax::VertexLayoutType::Sprite);
-
   start_styles();
   start_main_scene();
   start_inputs();
-  start_lock();
 }
 
 bim::axmol::app::detail::session_systems::~session_systems()
 {
-  stop_lock();
   stop_inputs();
   stop_main_scene();
   stop_styles();
@@ -316,26 +302,38 @@ bim::axmol::app::detail::session_systems::~session_systems()
   ax::backend::ProgramManager::getInstance()->unloadAllPrograms();
 }
 
+const iscool::style::declaration&
+bim::axmol::app::detail::session_systems::root_style() const
+{
+  assert(m_style);
+  return *m_style;
+}
+
 void bim::axmol::app::detail::session_systems::start_styles()
 {
   ic_log(iscool::log::nature::info(), g_log_context, "Start: styles.");
 
   iscool::style::initialize({ "style/" });
+
+  m_style.reset(new iscool::style::declaration(
+      iscool::style::loader::load("launch/application")));
 }
 
 void bim::axmol::app::detail::session_systems::stop_styles()
 {
   ic_log(iscool::log::nature::info(), g_log_context, "Stop: styles.");
 
+  m_style.reset();
+
   iscool::style::finalize();
 }
 
 void bim::axmol::app::detail::session_systems::start_main_scene()
 {
-  main_scene* const scene(
+  main_scene* const scene =
       new main_scene(m_application.m_persistent_systems->root_scene(),
                      m_application.m_context.get_widget_context(),
-                     iscool::style::loader::load("launch/main-scene")));
+                     *m_style->get_declaration("main-scene"));
   m_application.m_context.set_main_scene(scene);
   m_application.m_input_root.push_back(scene->input_node());
 }
@@ -358,22 +356,6 @@ void bim::axmol::app::detail::session_systems::start_inputs()
 void bim::axmol::app::detail::session_systems::stop_inputs()
 {
   m_input_flow.reset();
-}
-
-void bim::axmol::app::detail::session_systems::start_lock()
-{
-  assert(!m_application.m_context.is_scene_lock_set());
-  assert(m_application.m_context.get_main_scene() != nullptr);
-
-  m_application.m_context.set_scene_lock(
-      new scene_lock(*m_application.m_context.get_main_scene(),
-                     iscool::style::loader::load("launch/scene-lock")));
-}
-
-void bim::axmol::app::detail::session_systems::stop_lock()
-{
-  delete m_application.m_context.get_scene_lock();
-  m_application.m_context.reset_scene_lock();
 }
 
 bim::axmol::app::application::application()
@@ -433,8 +415,6 @@ bool bim::axmol::app::application::applicationDidFinishLaunching()
 
   m_session_systems.reset(new detail::session_systems(*this));
 
-  m_context.get_scene_lock()->instant_lock();
-
   m_launch_connection = iscool::schedule::delayed_call(
       std::bind(&application::complete_launch, this));
 
@@ -490,6 +470,10 @@ void bim::axmol::app::application::reset()
   // Don't call the overridden cleanup function as it would trigger the
   // clean_up signal and end the game.
   m_persistent_systems->root_scene().ax::Scene::cleanup();
+
+  ax::Director::getInstance()->getTextureCache()->unbindAllImageAsync();
+  ax::Director::getInstance()->getTextureCache()->removeAllTextures();
+
   m_session_systems.reset(new detail::session_systems(*this));
 
   m_launch_connection = iscool::schedule::delayed_call(
@@ -586,7 +570,9 @@ void bim::axmol::app::application::launch_game()
 {
   ic_log(iscool::log::nature::info(), g_log_context, "Launching the game.");
 
-  m_main_task.reset(new main_task(m_context));
+  m_main_task.reset(new main_task(
+      m_context,
+      *m_session_systems->root_style().get_declaration("main-task")));
   m_main_task->connect_to_end(
       [this]() -> void
       {
