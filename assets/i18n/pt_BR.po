@@ -9,7 +9,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: 2025-11-15 20:20+0000\n"
-"Last-Translator: OlliesGudh <github@paulogomez.anonaddy.com>\n"
+"Last-Translator: Samuel <samuel22w@hotmail.com>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/bim/"
 "gettext-files/pt_BR/>\n"
 "Language: pt_BR\n"
@@ -29,9 +29,11 @@ msgid ""
 "The shop is not available on this platform, yet you can support the "
 "developers with donations! Should I open the donations page?"
 msgstr ""
+"A loja não está disponível nesta plataforma, mas você pode apoiar os "
+"desenvolvedores com doações! Devo abrir a página de doações?"
 
 msgid "Do you really want to change the language setting?"
-msgstr ""
+msgstr "Você realmente deseja mudar a configuração do idioma?"
 
 #, c++-format
 msgid "Version {}"
@@ -82,26 +84,26 @@ msgstr[1] ""
 #, c++-format
 msgid "{} player connected right now."
 msgid_plural "{} players connected right now."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{} jogador conectado neste momento."
+msgstr[1] "{} jogadores conectados neste momento."
 
 #, c++-format
 msgid "{} game played in the last hour."
 msgid_plural "{} games played in the last hour."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{} jogo jogado na última hora."
+msgstr[1] "{} jogos jogados na última hora."
 
 #, c++-format
 msgid "{} player connected in the last hour."
 msgid_plural "{} players connected in the last hour."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{} jogador conectado na última hora."
+msgstr[1] "{} jogadores conectados na última hora."
 
 #, c++-format
 msgid "{} game played in the last 24 hours."
 msgid_plural "{} games played in the last 24 hours."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{} jogo jogado nas últimas 24 horas."
+msgstr[1] "{} jogos jogados nas últimas 24 horas."
 
 #, c++-format
 msgid "{} player connected in the last 24 hours."
