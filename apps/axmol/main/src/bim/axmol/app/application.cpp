@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/axmol/app/application.hpp>
 
-#include <bim/axmol/app/frame_profiler.hpp>
 #include <bim/axmol/app/task/main_task.hpp>
 #include <bim/axmol/app/widget/register_widgets.hpp>
 
@@ -90,7 +89,6 @@ private:
 private:
   application& m_application;
   bim::app::analytics_service m_analytics;
-  bim::axmol::app::frame_profiler m_frame_profiler;
   bim::axmol::audio::mixer m_audio;
   bim::axmol::ref_ptr<bim::axmol::app::root_scene> m_root_scene;
   iscool::signals::scoped_connection m_clean_up_connection;

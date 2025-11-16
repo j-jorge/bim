@@ -1,12 +1,8 @@
 # Next
 
 - Review the startup steps.
-- Update Tracy.
-- Update Axmol.
 
 # Client
-
-- Display the frame duration (without the sleep) in addition to the FPS.
 
 # Server
 

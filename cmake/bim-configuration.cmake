@@ -23,6 +23,10 @@ message(STATUS "Building tests: ${BIM_BUILD_TESTS}")
 option(BIM_ENABLE_TRACY "Enable Tracy profiler." OFF)
 message(STATUS "Profiling with Tracy: ${BIM_ENABLE_TRACY}")
 
+if(BIM_ENABLE_TRACY)
+  set(AX_ENABLE_TRACY ON)
+endif()
+
 option(BIM_BUILD_SERVER
   "Whether the standalone server should be built or not."
   ON)

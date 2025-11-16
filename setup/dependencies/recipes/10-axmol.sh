@@ -3,22 +3,36 @@
 set -euo pipefail
 
 : "${bim_build_type:-}"
+: "${bim_product_mode:-}"
 : "${bim_package_install_platform:-}"
 : "${bim_packages_root:-}"
 
 : "${axmol_repository:=https://github.com/j-jorge/axmol/}"
-: "${axmol_version:=2.9.0.2j}"
+: "${axmol_version:=2.9.1.1j}"
 package_revision=1
 version="$axmol_version"-"$package_revision"
+
+package_name=axmol
+package_conflict=axmol-tracy
+enable_tracy=0
 
 if [[ "$bim_build_type" = "release" ]]
 then
     build_type=release
+
+    if [[ "$bim_product_mode" = 0 ]]
+    then
+        enable_tracy=1
+        package_name=axmol-tracy
+        package_conflict=axmol
+    fi
 else
     build_type=debug
 fi
 
-! bim-install-package axmol "$version" "$build_type" 2>/dev/null \
+bim-uninstall-package "$package_conflict"
+
+! bim-install-package "$package_name" "$version" "$build_type" 2>/dev/null \
     || exit 0
 
 axmol_definitions=(
@@ -34,7 +48,6 @@ axmol_definitions=(
 )
 
 axmol_link_libraries=(
-    "axmol"
     "astcenc"
     "clipper2"
     "ConvertUTF"
@@ -128,6 +141,8 @@ build()
         cmake_options+=("--cmake" "-D$definition")
     done
 
+    cmake_options+=("--cmake" "-DAX_ENABLE_TRACY=${enable_tracy}")
+
     # Axmol's dependency management tool, 1k, is implemented in .Net,
     # which requires libicu unless told not to. This environment variable
     # turns this requirement off.
@@ -209,6 +224,15 @@ if(TARGET axmol::axmol)
   return()
 endif()
 
+message(STATUS "Axmol with Tracy: \${AX_ENABLE_TRACY}")
+
+if (AX_ENABLE_TRACY)
+  set(AX_ENABLE_TRACY 1)
+  find_package(Tracy REQUIRED)
+else()
+  set(AX_ENABLE_TRACY 0)
+endif()
+
 set(AX_GLES_PROFILE $ax_gles_profile)
 set(AX_USE_GL $ax_use_gl)
 include(\${CMAKE_CURRENT_LIST_DIR}/AXSLCC.cmake)
@@ -222,6 +246,7 @@ find_path(
 set(
   axmol_definitions
 $(printf "  %s\n" "${axmol_definitions[@]}")
+  -DAX_ENABLE_TRACY=\${AX_ENABLE_TRACY}
 )
 
 function(link_axmol_library name)
@@ -238,6 +263,12 @@ function(link_axmol_library name)
 
   set(axmol_libraries "\${axmol_libraries}" "\${axmol_dependency}" PARENT_SCOPE)
 endfunction()
+
+if(AX_ENABLE_TRACY)
+  link_axmol_library(axmol_tracy)
+else()
+  link_axmol_library(axmol)
+endif()
 
 $(printf "link_axmol_library(%s)\n" "${axmol_link_libraries[@]}")
 
@@ -313,4 +344,5 @@ else
     install_cmake_file "$install_dir"/lib/cmake/axmol/
 fi
 
-bim-package-and-install "$install_dir" axmol "$version" "$build_type"
+bim-package-and-install \
+    "$install_dir" "$package_name" "$version" "$build_type"

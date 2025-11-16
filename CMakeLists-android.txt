@@ -46,6 +46,7 @@ function(bim_android_config out_var)
 endfunction()
 
 function(paco_package_version out_var package)
+  cmake_parse_arguments(arg REQUIRED "" "" ${ARGN})
   execute_process(
     COMMAND
       "${paco_info_bin}"
@@ -55,14 +56,18 @@ function(paco_package_version out_var package)
   )
 
   if("${output}" MATCHES "is not installed")
-    message(
-      FATAL_ERROR
-      "Could not find package '${package}' in ${BIM_TARGET_PREFIX}"
-    )
+    if(arg_REQUIRED)
+      message(
+        FATAL_ERROR
+        "Could not find package '${package}' in ${BIM_TARGET_PREFIX}"
+      )
+    else()
+      set(${out_var} "" PARENT_SCOPE)
+    endif()
+  else()
+    string(REGEX REPLACE "Version:([^\n]+)\n.+" "\\1" output "${output}")
+    set(${out_var} "${output}" PARENT_SCOPE)
   endif()
-
-  string(REGEX REPLACE "Version:([^\n]+)\n.+" "\\1" output "${output}")
-  set(${out_var} "${output}" PARENT_SCOPE)
 endfunction()
 
 # Collect some settings from bim-android-config. We need them in this
@@ -237,8 +242,17 @@ function(configure_android_project)
   )
 
   # Collect the dependency versions from the installed packages.
-  paco_package_version(axmol_version axmol)
-  paco_package_version(iscool_core_version iscool-core)
+  if(BIM_ENABLE_TRACY)
+    paco_package_version(axmol_version axmol-tracy REQUIRED)
+  else()
+    paco_package_version(axmol_version axmol-tracy)
+
+    if (NOT axmol_version)
+      paco_package_version(axmol_version axmol REQUIRED)
+    endif()
+  endif()
+
+  paco_package_version(iscool_core_version iscool-core REQUIRED)
 
   set(this_file_directory "${android_app_root_dir}/app")
   configure_file(

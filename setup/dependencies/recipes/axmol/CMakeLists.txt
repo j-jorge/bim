@@ -29,6 +29,10 @@ set(CMAKE_MODULE_PATH
 include(unity-build)
 include(GNUInstallDirs)
 
+if (AX_ENABLE_TRACY)
+  find_package(Tracy REQUIRED)
+endif()
+
 macro(assign_platform_variables)
   if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     set(target_linux 1)
@@ -379,7 +383,7 @@ macro(assign_platform_sources)
   set(axmol_sources ${axmol_sources} ${platform_sources})
 endmacro()
 
-macro(set_include_directories)
+macro(set_include_directories target)
   if(target_linux)
     set(
       platform_include_dirs
@@ -393,7 +397,7 @@ macro(set_include_directories)
   endif()
 
   target_include_directories(
-    axmol
+    ${target}
     PUBLIC
     ${axmol_root}
     ${source_root}
@@ -404,17 +408,17 @@ macro(set_include_directories)
   )
 endmacro()
 
-macro(set_link_libraries)
+macro(set_link_libraries target)
   target_link_libraries(
-    axmol
+    ${target}
     PRIVATE
     3rdparty
   )
 endmacro()
 
-macro(set_compile_definitions)
+macro(set_compile_definitions target tracy)
   target_compile_definitions(
-    axmol
+    ${target}
     PUBLIC
     AX_USE_PHYSICS=${AX_USE_PHYSICS}
     AX_USE_3D_PHYSICS=${AX_USE_3D_PHYSICS}
@@ -425,13 +429,14 @@ macro(set_compile_definitions)
     AX_USE_WIC=${AX_USE_WIC}
     AX_ENABLE_SCRIPT_BINDING=${AX_ENABLE_SCRIPT_BINDING}
     AX_ENABLE_PREMULTIPLIED_ALPHA=${AX_ENABLE_PREMULTIPLIED_ALPHA}
+    AX_ENABLE_TRACY=${tracy}
 
     PRIVATE
     P2T_STATIC_EXPORTS
    )
 
   if(LINUX)
-    target_compile_definitions(axmol PUBLIC LINUX)
+    target_compile_definitions(${target} PUBLIC LINUX)
   endif()
 endmacro()
 
@@ -473,9 +478,30 @@ macro(declare_library)
      ${axmol_platform_individual_sources}
    )
 
-  set_include_directories()
-  set_link_libraries()
-  set_compile_definitions()
+  set_include_directories(axmol)
+  set_link_libraries(axmol)
+  set_compile_definitions(axmol 0)
+
+   if (AX_ENABLE_TRACY)
+     add_library(
+       axmol_tracy
+       ${unity_build_file}
+       ${axmol_individual_sources}
+       ${axmol_platform_individual_sources}
+     )
+
+     set_include_directories(axmol_tracy)
+     set_link_libraries(axmol_tracy)
+     set_compile_definitions(axmol_tracy 1)
+
+     target_link_libraries(
+       axmol_tracy
+       PRIVATE
+       Tracy::TracyClient
+     )
+
+   endif()
+
   compile_shaders()
 endmacro()
 
@@ -508,8 +534,13 @@ macro(install_products)
     DESTINATION ${header_install_dir}/axmol/extensions/
   )
 
-     install_shaders(${source_root} .)
+  install_shaders(${source_root} .)
   install(TARGETS axmol DESTINATION ${library_install_dir})
+
+  if (AX_ENABLE_TRACY)
+    install(TARGETS axmol_tracy DESTINATION ${library_install_dir})
+  endif()
+
   install(TARGETS
     ${platform_install_targets}
     astcenc

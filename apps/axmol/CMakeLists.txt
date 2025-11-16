@@ -4,7 +4,6 @@ set(main_sources
   main/src/bim/axmol/app/arena_display_config.cpp
   main/src/bim/axmol/app/bridge.cpp
   main/src/bim/axmol/app/fog_display.cpp
-  main/src/bim/axmol/app/frame_profiler.cpp
   main/src/bim/axmol/app/game_feature_sprite_frame.cpp
   main/src/bim/axmol/app/loading_screen.cpp
   main/src/bim/axmol/app/main_scene.cpp
