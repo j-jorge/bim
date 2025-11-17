@@ -4,9 +4,9 @@ set -euo pipefail
 
 : "${bim_host_prefix:-}"
 
-boost_version=1.87.0
+boost_version=1.89.0
 boost_version_underscore="${boost_version//./_}"
-package_revision=3
+package_revision=1
 version="$boost_version"-"$package_revision"
 build_type=release
 
