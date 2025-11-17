@@ -173,4 +173,14 @@ then
         clang-"$clang_version" clang++-"$clang_version"
 fi
 
+if [[ "$target_platform" = android ]]
+then
+    java_version="$(java --version \
+                       | head -n 1 \
+                       | tr -d -c '[0-9].' \
+                       | cut -d. -f1)"
 
+    DEBIAN_FRONTEND=noninteractive \
+        apt-get install --no-install-recommends --yes \
+        openjdk-"$java_version"-jdk-headless
+fi

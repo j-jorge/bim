@@ -9,7 +9,7 @@ set -euo pipefail
 
 : "${axmol_repository:=https://github.com/j-jorge/axmol/}"
 : "${axmol_version:=2.9.1.1j}"
-package_revision=1
+package_revision=2
 version="$axmol_version"-"$package_revision"
 
 package_name=axmol
