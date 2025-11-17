@@ -5,8 +5,8 @@ set -euo pipefail
 [[ "${bim_target_platform:-}" == "linux" ]] || exit 0
 
 : "${libunwind_repository:=https://github.com/j-jorge/libunwind}"
-: "${libunwind_version:=1.8.2}"
-package_revision=2
+: "${libunwind_version:=1.8.3}"
+package_revision=1
 version="$libunwind_version"-"$package_revision"
 build_type=release
 

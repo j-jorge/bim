@@ -5,8 +5,8 @@ set -euo pipefail
 [[ "${bim_target_platform:-}" == "linux" ]] || exit 0
 
 : "${cpptrace_repository:=https://github.com/j-jorge/cpptrace}"
-: "${cpptrace_version:=1.0.2}"
-package_revision=5
+: "${cpptrace_version:=1.0.4}"
+package_revision=1
 version="$cpptrace_version"-"$package_revision"
 build_type=release
 
