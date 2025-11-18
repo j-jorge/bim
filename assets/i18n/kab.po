@@ -7,20 +7,22 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2025-11-18 16:08+0000\n"
+"Last-Translator: ButterflyOfFire <boffire@users.noreply.hosted.weblate.org>\n"
+"Language-Team: Kabyle <https://hosted.weblate.org/projects/bim/gettext-files/"
+"kab/>\n"
 "Language: kab\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 5.15-dev\n"
 
 msgid "Please wait"
-msgstr ""
+msgstr "Ttxil-k·m arǧu"
 
 msgid "You have been disconnected :("
-msgstr ""
+msgstr "Tettwakkes-ak tuqqna :("
 
 msgid ""
 "The shop is not available on this platform, yet you can support the "
@@ -32,7 +34,7 @@ msgstr ""
 
 #, c++-format
 msgid "Version {}"
-msgstr ""
+msgstr "Lqem {}"
 
 msgid "Feedback about Bim!"
 msgstr ""
@@ -74,8 +76,8 @@ msgstr[1] ""
 #, c++-format
 msgid "{} player connected right now."
 msgid_plural "{} players connected right now."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{} n umyurar yeqqen akka tura."
+msgstr[1] "{} n imyurar qqnen akka tura."
 
 #, c++-format
 msgid "{} game played in the last hour."
@@ -98,8 +100,8 @@ msgstr[1] ""
 #, c++-format
 msgid "{} player connected in the last 24 hours."
 msgid_plural "{} players connected in the last 24 hours."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{} n umyurar d uqqin deg 24 n yesragen aya."
+msgstr[1] "{} n imyurar d uqqinen deg 24 n yesragen aya."
 
 #, c++-format
 msgid "{} game played in the last 30 days."
@@ -115,7 +117,7 @@ msgstr[1] ""
 
 #, c++-format
 msgid "Connected to {}."
-msgstr ""
+msgstr "D uqqin ar {}."
 
 msgid "An error occurred. The purchase could not be completed."
 msgstr ""
@@ -128,15 +130,17 @@ msgid "Failed to authenticate with the game server. Error code {}."
 msgstr ""
 
 msgid "Cancel"
-msgstr ""
+msgstr "Semmet"
 
 msgid "OK"
-msgstr ""
+msgstr "Ih"
 
 msgid ""
 "NEW\n"
 "GAME"
 msgstr ""
+"URAR\n"
+"AMAYNUT"
 
 msgid ""
 "Start a new game\n"
@@ -155,13 +159,13 @@ msgid "You lost!"
 msgstr ""
 
 msgid "You won!"
-msgstr ""
+msgstr "Trebḥeḍ!"
 
 msgid "ERASE"
-msgstr ""
+msgstr "SFEḌ"
 
 msgid "RANDOM"
-msgstr ""
+msgstr "AGACURAN"
 
 msgid "Off"
 msgstr ""
@@ -176,30 +180,32 @@ msgid "Draws"
 msgstr ""
 
 msgid "Games"
-msgstr ""
+msgstr "Uraren"
 
 msgid "Victories"
 msgstr ""
 
 msgid "Your statistics"
-msgstr ""
+msgstr "Tidaddanin-ik·im"
 
 msgid "Success rate"
 msgstr ""
 
 msgid "No"
-msgstr ""
+msgstr "Uhu"
 
 msgid "Yes"
-msgstr ""
+msgstr "Ih"
 
 msgid ""
 "Is your language missing? Add it on <a href='https://hosted.weblate.org/"
 "projects/bim/gettext-files/'>Weblate</a>!"
 msgstr ""
+"Txuṣṣ tutlayt-ik·im? Rnu-tt ɣef <a href='https://hosted.weblate.org/projects/"
+"bim/gettext-files/'>Weblate</a>!"
 
 msgid "Language"
-msgstr ""
+msgstr "Tutlayt"
 
 msgid "Directions kind"
 msgstr ""
@@ -211,7 +217,7 @@ msgid "Analog stick, it pops where you tap and follows the drag."
 msgstr ""
 
 msgid "Controls"
-msgstr ""
+msgstr "Isenqaden"
 
 msgid "Directions on the left, actions on the right."
 msgstr ""
@@ -226,31 +232,31 @@ msgid "Stick"
 msgstr ""
 
 msgid "Music"
-msgstr ""
+msgstr "Aẓawan"
 
 msgid "Sound effects"
 msgstr ""
 
 msgid "Settings"
-msgstr ""
+msgstr "Iɣewwaren"
 
 msgid "Vibrations"
 msgstr ""
 
 msgid "Features"
-msgstr ""
+msgstr "Timahilin"
 
 msgid "PLAY ONLINE"
-msgstr ""
+msgstr "URAR S TUQQNA"
 
 msgid "SHOP"
-msgstr ""
+msgstr "TAḤANUT"
 
 msgid "STATISTICS"
-msgstr ""
+msgstr "TIDADDANIN"
 
 msgid "ALPHA VERSION"
-msgstr ""
+msgstr "LQEM ALPHA"
 
 msgid "Join our Discord to meet other players."
 msgstr ""
@@ -262,7 +268,7 @@ msgid "You can start a three-players game now or wait for more players!"
 msgstr ""
 
 msgid "Start the game now!"
-msgstr ""
+msgstr "Sekker urar tura!"
 
 msgid "FIGHT!"
 msgstr ""
@@ -276,7 +282,7 @@ msgid "Online Game"
 msgstr ""
 
 msgid "×1000"
-msgstr ""
+msgstr "×1000"
 
 msgid "LOADING…"
-msgstr ""
+msgstr "YESSALAY-D…"
