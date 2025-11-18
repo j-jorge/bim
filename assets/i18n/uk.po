@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-11-18 15:24+0000\n"
+"PO-Revision-Date: 2025-11-18 16:08+0000\n"
 "Last-Translator: Andrij Mizyk <andm1zyk@proton.me>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/bim/"
 "gettext-files/uk/>\n"
@@ -111,13 +111,13 @@ msgid "On"
 msgstr ""
 
 msgid "No"
-msgstr ""
+msgstr "Ні"
 
 msgid "Yes"
-msgstr ""
+msgstr "Так"
 
 msgid "Language"
-msgstr ""
+msgstr "Мова"
 
 msgid "Directions kind"
 msgstr ""
@@ -129,7 +129,7 @@ msgid "Analog stick, it pops where you tap and follows the drag."
 msgstr ""
 
 msgid "Controls"
-msgstr ""
+msgstr "Керування"
 
 msgid "Directions on the left, actions on the right."
 msgstr ""
@@ -144,7 +144,7 @@ msgid "Stick"
 msgstr ""
 
 msgid "Music"
-msgstr ""
+msgstr "Музика"
 
 msgid "Sound effects"
 msgstr ""
@@ -162,7 +162,7 @@ msgid "Draws"
 msgstr ""
 
 msgid "Games"
-msgstr ""
+msgstr "Ігри"
 
 msgid "Victories"
 msgstr ""
@@ -176,7 +176,7 @@ msgid ""
 msgstr ""
 
 msgid "Your statistics"
-msgstr ""
+msgstr "Ваша статистика"
 
 msgid "ALPHA VERSION"
 msgstr ""
@@ -194,7 +194,7 @@ msgid "Start the game now!"
 msgstr ""
 
 msgid "FIGHT!"
-msgstr ""
+msgstr "БІЙ!"
 
 msgid ""
 "Waiting for your opponents…\n"
@@ -204,11 +204,12 @@ msgstr ""
 msgid "Online Game"
 msgstr ""
 
+#, fuzzy
 msgid "×1000"
-msgstr ""
+msgstr "×1000"
 
 msgid "LOADING…"
-msgstr ""
+msgstr "ЗАВАНТАЖЕННЯ…"
 
 msgid "SHOP"
 msgstr ""
