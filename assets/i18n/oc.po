@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-11-19 16:51+0000\n"
+"PO-Revision-Date: 2025-11-20 18:51+0000\n"
 "Last-Translator: Quentin PAGÈS <quentinantonin@free.fr>\n"
 "Language-Team: Occitan <https://hosted.weblate.org/projects/bim/"
 "gettext-files/oc/>\n"
@@ -54,8 +54,8 @@ msgstr "Vos cal mai de pèças per comprar aqueste article !"
 #, c++-format
 msgid "Customize your games with up to {} feature."
 msgid_plural "Customize your games with up to {} features."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Personalizatz las partidas amb dusca {} foncionalitat."
+msgstr[1] "Personalizatz las partidas amb dusca {} foncionalitats."
 
 msgid "Falling blocks reduce the arena after two minutes!"
 msgstr "De blòcs que tomban redusisson l'arèna après doas minutas !"
@@ -78,38 +78,38 @@ msgstr ""
 #, c++-format
 msgid "{} game being played right now."
 msgid_plural "{} games being played right now."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{} partida en cors ara meteis."
+msgstr[1] "{} partidas en cors ara meteis."
 
 #, c++-format
 msgid "{} player connected right now."
 msgid_plural "{} players connected right now."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{} jogaire connectat ara meteis."
+msgstr[1] "{} jogaires connectats ara meteis."
 
 #, c++-format
 msgid "{} game played in the last hour."
 msgid_plural "{} games played in the last hour."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{} partida jogada dins la darrièra ora."
+msgstr[1] "{} partidas jogadas dins la darrièra ora."
 
 #, c++-format
 msgid "{} player connected in the last hour."
 msgid_plural "{} players connected in the last hour."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{} jogaire connectat dins la darrièra ora."
+msgstr[1] "{} jogaires connectats dins la darrièra ora."
 
 #, c++-format
 msgid "{} game played in the last 24 hours."
 msgid_plural "{} games played in the last 24 hours."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{} partida jogada dins las darrièras 24 oras"
+msgstr[1] "{} partidas jogadas dins las darrièras 24 oras"
 
 #, c++-format
 msgid "{} player connected in the last 24 hours."
 msgid_plural "{} players connected in the last 24 hours."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{} jogaire connectat dins las darrièras 24 oras."
+msgstr[1] "{} jogaires connectats dins las darrièras 24 oras."
 
 #, c++-format
 msgid "{} game played in the last 30 days."
@@ -163,7 +163,7 @@ msgid ""
 msgstr ""
 
 msgid "Draw game!"
-msgstr ""
+msgstr "Partida nulla !"
 
 msgid "You lost!"
 msgstr "Perdut !"
@@ -178,10 +178,10 @@ msgid "RANDOM"
 msgstr "ALEATÒRI"
 
 msgid "Off"
-msgstr ""
+msgstr "Sens"
 
 msgid "On"
-msgstr ""
+msgstr "Amb"
 
 msgid "Defeats"
 msgstr ""
@@ -248,7 +248,7 @@ msgid "Sound effects"
 msgstr "Efièches sonòrs"
 
 msgid "Settings"
-msgstr ""
+msgstr "Paramètres"
 
 msgid "Vibrations"
 msgstr "Vibracions"
@@ -292,7 +292,7 @@ msgid "Online Game"
 msgstr "Jòc en linha"
 
 msgid "×1000"
-msgstr ""
+msgstr "×1000"
 
 msgid "LOADING…"
 msgstr "CARGAMENT…"
