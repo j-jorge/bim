@@ -14,6 +14,15 @@ CC-BY-SA 4.0 Anna Al Lae, Fulup Travers, via Weblate.
 assets/i18n/de.po
 CC-BY-SA 4.0 Mirko P., via Weblate.
 
+assets/i18n/fr.po
+CC-BY-SA 4.0 Julien Jorge, Quentin Pagès, via Weblate.
+
+assets/i18n/kab.po
+CC-BY-SA 4.0 ButterflyOfFire, via Weblate.
+
+assets/i18n/oc.po
+CC-BY-SA 4.0 Quentin Pagès, via Weblate.
+
 assets/i18n/pt.po
 CC-BY-SA 4.0 Silvério Santos, via Weblate.
 
@@ -24,7 +33,7 @@ assets/i18n/tr.po
 CC-BY-SA 4.0 AsetSiya, via Weblate.
 
 assets/i18n/uk.po
-CC-BY-SA 4.0 Максим Горпиніч, via Weblate.
+CC-BY-SA 4.0 Максим Горпиніч, Andrij Mizyk, via Weblate.
 
 assets/sprites/menu/language.png
 Based on https://commons.wikimedia.org/wiki/File:Codex_icon_language.svg
@@ -156,7 +165,6 @@ Julien Jorge, based on the work of Aryeom
 CC-BY-SA 4.0
 
 assets/i18n/en.po
-assets/i18n/fr.po
 assets/sprites/arena-border.png
 assets/sprites/arena-corner.png
 assets/sprites/pixel.png
