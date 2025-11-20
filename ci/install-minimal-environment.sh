@@ -184,3 +184,17 @@ then
         apt-get install --no-install-recommends --yes \
         openjdk-"$java_version"-jdk-headless
 fi
+
+# Workaround for F-droid whose custom gradle script takes precedence
+# over the installed gradle program. If and only if we are in an
+# environment for F-Droid, and if there is a gradle script, then we
+# remove the gradle script.
+#
+# See https://gitlab.com/fdroid/fdroidserver/-/merge_requests/1729#note_2900734669
+if [[ -f /usr/local/bin/gradlew-fdroid ]] \
+       && [[ -f /usr/local/bin/gradle ]]
+then
+    rm -f /usr/local/bin/gradle
+fi
+
+
