@@ -1,11 +1,14 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/axmol/app/application.hpp>
 
-#include <bim/axmol/app/task/main_task.hpp>
-#include <bim/axmol/app/widget/register_widgets.hpp>
-
+#include <bim/axmol/app/application_event_dispatcher.hpp>
+#include <bim/axmol/app/application_event_listener.hpp>
 #include <bim/axmol/app/main_scene.hpp>
 #include <bim/axmol/app/root_scene.hpp>
+#include <bim/axmol/app/script_director.hpp>
+#include <bim/axmol/app/script_info.hpp>
+#include <bim/axmol/app/task/main_task.hpp>
+#include <bim/axmol/app/widget/register_widgets.hpp>
 
 #include <bim/axmol/action/register_actions.hpp>
 #include <bim/axmol/audio/mixer.hpp>
@@ -83,6 +86,9 @@ private:
   void start_audio();
   void stop_audio();
 
+  void listen_to_frame_event();
+  void remove_frame_event_listener();
+
   void start_root_scene();
   void stop_root_scene();
 
@@ -92,6 +98,9 @@ private:
   bim::axmol::audio::mixer m_audio;
   bim::axmol::ref_ptr<bim::axmol::app::root_scene> m_root_scene;
   iscool::signals::scoped_connection m_clean_up_connection;
+  application_event_dispatcher m_event_dispatcher;
+
+  ax::EventListenerCustom* m_frame_event_listener;
 };
 
 struct bim::axmol::app::detail::session_systems
@@ -125,18 +134,21 @@ bim::axmol::app::detail::persistent_systems::persistent_systems(
   : m_application(app)
 {
   m_application.m_context.set_analytics(&m_analytics);
+  m_application.m_context.set_event_dispatcher(&m_event_dispatcher);
 
   start_log_system();
   start_display();
   start_social();
   start_haptic_feedback();
   start_audio();
+  listen_to_frame_event();
   start_root_scene();
 }
 
 bim::axmol::app::detail::persistent_systems::~persistent_systems()
 {
   stop_root_scene();
+  remove_frame_event_listener();
   stop_audio();
   stop_haptic_feedback();
   stop_social();
@@ -254,6 +266,24 @@ void bim::axmol::app::detail::persistent_systems::stop_audio()
   m_application.m_context.reset_audio();
 }
 
+void bim::axmol::app::detail::persistent_systems::listen_to_frame_event()
+{
+  m_frame_event_listener =
+      ax::Director::getInstance()
+          ->getEventDispatcher()
+          ->addCustomEventListener(ax::Director::EVENT_AFTER_DRAW,
+                                   [this](ax::EventCustom*)
+                                   {
+                                     m_application.tick();
+                                   });
+}
+
+void bim::axmol::app::detail::persistent_systems::remove_frame_event_listener()
+{
+  ax::Director::getInstance()->getEventDispatcher()->removeEventListener(
+      m_frame_event_listener);
+}
+
 void bim::axmol::app::detail::persistent_systems::start_root_scene()
 {
   ic_log(iscool::log::nature::info(), g_log_context, "Start: root scene.");
@@ -357,18 +387,19 @@ void bim::axmol::app::detail::session_systems::stop_inputs()
 }
 
 bim::axmol::app::application::application()
-  : application({}, ax::Size(1, 1), 1, false)
+  : application({}, ax::Size(1, 1), 1, false, nullptr)
 {}
 
 bim::axmol::app::application::application(
     std::vector<std::string> asset_directories, const ax::Size& screen_size,
-    float screen_scale, bool enable_debug)
+    float screen_scale, bool enable_debug, script_info* script)
   : m_asset_directories(std::move(asset_directories))
   , m_style_cache(m_colors)
   , m_screen_capture_key_observer(ax::EventKeyboard::KeyCode::KEY_C)
   , m_reset_key_observer(ax::EventKeyboard::KeyCode::KEY_R)
   , m_input_root(m_reset_key_observer)
   , m_screen_config{ screen_size, screen_scale }
+  , m_script_info(script)
 {
   ax::Image::setPNGPremultipliedAlphaEnabled(false);
 
@@ -413,8 +444,14 @@ bool bim::axmol::app::application::applicationDidFinishLaunching()
 
   m_session_systems.reset(new detail::session_systems(*this));
 
+  if (m_script_info)
+    start_script();
+
   m_launch_connection = iscool::schedule::delayed_call(
-      std::bind(&application::complete_launch, this));
+      [this]()
+      {
+        complete_launch();
+      });
 
   return true;
 }
@@ -440,8 +477,6 @@ void bim::axmol::app::application::complete_launch()
   set_up_local_preferences();
   apply_local_preferences();
 
-  listen_to_frame_event();
-
   launch_game();
 }
 
@@ -450,6 +485,8 @@ void bim::axmol::app::application::clean_up()
   ic_log(iscool::log::nature::info(), g_log_context, "Quit requested.");
 
   stop_game();
+
+  m_script_director.reset();
 
   tear_down_local_preferences();
 
@@ -475,7 +512,10 @@ void bim::axmol::app::application::reset()
   m_session_systems.reset(new detail::session_systems(*this));
 
   m_launch_connection = iscool::schedule::delayed_call(
-      std::bind(&application::complete_launch, this));
+      [this]()
+      {
+        complete_launch();
+      });
 }
 
 void bim::axmol::app::application::set_up_file_utils()
@@ -571,16 +611,6 @@ void bim::axmol::app::application::launch_game()
   m_main_task.reset(new main_task(
       m_context,
       *m_session_systems->root_style().get_declaration("main-task")));
-  m_main_task->connect_to_end(
-      [this]() -> void
-      {
-        ic_log(iscool::log::nature::info(), g_log_context,
-               "Stopping the game.");
-        stop_game();
-        m_session_systems = nullptr;
-        m_persistent_systems = nullptr;
-        ax::Director::getInstance()->end();
-      });
   m_main_task->connect_to_reset(
       [this]() -> void
       {
@@ -600,13 +630,30 @@ void bim::axmol::app::application::stop_game()
   m_main_task = nullptr;
 }
 
-void bim::axmol::app::application::listen_to_frame_event()
+void bim::axmol::app::application::end()
 {
-  ax::Director& director(*ax::Director::getInstance());
+  ic_log(iscool::log::nature::info(), g_log_context, "Stopping the game.");
 
-  director.getEventDispatcher()->addCustomEventListener(
-      ax::Director::EVENT_AFTER_DRAW,
-      std::bind(&bim::axmol::app::application::tick, this));
+  clean_up();
+
+  ax::Director::getInstance()->end();
+}
+
+void bim::axmol::app::application::start_script()
+{
+#if !__ANDROID__
+  assert(m_script_info);
+
+  m_script_director.reset(new script_director(
+      application_event_listener(*m_context.get_event_dispatcher()),
+      m_script_info->file_path, m_script_info->number_screenshots));
+  m_script_director->connect_to_done(
+      [this](script_director::result r)
+      {
+        m_script_info->passed = (r == script_director::result::ok);
+        end();
+      });
+#endif
 }
 
 void bim::axmol::app::application::tick()

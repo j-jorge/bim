@@ -1,0 +1,40 @@
+{
+  "actions": [
+    {
+      "kind": "wait",
+      "event": "loaded"
+    },
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/lobby/play_button",
+      "event": "players-ready-4"
+    },
+    {
+      "kind": "capture",
+      "file": "player-2-players-ready.png"
+    },
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/matchmaking/ready_button",
+      "event": "game-started"
+    },
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/online_game/bomb_button",
+      "event": "end-game-ready"
+    },
+    {
+      "kind": "capture",
+      "file": "player-2-defeat-screen.png"
+    },
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/end_game/revenge_button",
+      "event": "matchmaking-ready"
+    },
+    {
+      "kind": "capture",
+      "file": "player-2-matchmaking.png"
+    }
+  ]
+}

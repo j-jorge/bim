@@ -216,6 +216,7 @@ void bim::axmol::widget::list::create_view()
   m_table_view =
       ax::extension::TableView::create(m_table_view_bridge.get(), size);
 
+  m_table_view->setName("view");
   m_table_view->setDelegate(m_table_view_bridge.get());
   m_table_view->reloadData();
 

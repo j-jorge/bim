@@ -51,11 +51,18 @@ struct x_widget_scope x_widget_type_name
     // Initializing all members and filling the map of all nodes.
 #define x_widget(type, name)                                                  \
   {                                                                           \
+    const iscool::style::declaration& ws = *style.get_declaration(#name);     \
     bim::axmol::ref_ptr<type> node =                                          \
-        bim::axmol::widget::factory<type>::create(                            \
-            context, *style.get_declaration(#name));                          \
+        bim::axmol::widget::factory<type>::create(context, ws);               \
     name = node.get();                                                        \
-    name->setName(#name);                                                     \
+                                                                              \
+    const iscool::optional<const std::string&> n = ws.get_string("name");     \
+                                                                              \
+    if (n)                                                                    \
+      node->setName(*n);                                                      \
+    else                                                                      \
+      node->setName(#name);                                                   \
+                                                                              \
     all_nodes[#name] = std::move(node);                                       \
   }
 

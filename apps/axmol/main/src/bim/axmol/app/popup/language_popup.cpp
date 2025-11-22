@@ -109,6 +109,7 @@ bim::axmol::app::language_popup::language_popup(
       language_list_item_controls controls(context.get_widget_context(),
                                            button_item_controls);
       bim::axmol::widget::button& b = *controls.button;
+      b.setName(iscool::to_string(language));
 
       ((ax::Label*)bim::axmol::find_child_by_path(b, label_path_in_button))
           ->setString(iscool::to_human_string(language));

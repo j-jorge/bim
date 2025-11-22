@@ -59,8 +59,11 @@ namespace bim::axmol::app
     struct session_systems;
   }
 
+  class application_event_dispatcher;
   class main_scene;
   class main_task;
+  class script_director;
+  struct script_info;
 
   class application : private ax::Application
   {
@@ -73,6 +76,7 @@ namespace bim::axmol::app
             ((bim::axmol::widget::context)(widget_context))                //
             ((main_scene*)(main_scene))                                    //
             ((bim::app::analytics_service*)(analytics))                    //
+            ((application_event_dispatcher*)(event_dispatcher))            //
             ((iscool::audio::mixer*)(audio))                               //
             ((iscool::preferences::local_preferences*)(local_preferences)) //
             ((iscool::social::service*)(social))                           //
@@ -83,7 +87,7 @@ namespace bim::axmol::app
     application();
     application(std::vector<std::string> asset_directories,
                 const ax::Size& screen_size, float screen_scale,
-                bool enable_debug);
+                bool enable_debug, script_info* script);
     ~application();
 
     bool applicationDidFinishLaunching() override;
@@ -113,8 +117,10 @@ namespace bim::axmol::app
 
     void launch_game();
     void stop_game();
+    void end();
 
-    void listen_to_frame_event();
+    void start_script();
+
     void tick();
 
     void capture_screen() const;
@@ -142,5 +148,8 @@ namespace bim::axmol::app
     bim::axmol::input::node m_input_root;
 
     screen_config m_screen_config;
+
+    script_info* const m_script_info;
+    std::unique_ptr<script_director> m_script_director;
   };
 }

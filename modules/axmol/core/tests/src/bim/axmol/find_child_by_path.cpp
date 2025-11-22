@@ -46,3 +46,28 @@ TEST(bim_axmol_find_child_by_path, general_case)
   EXPECT_EQ(nullptr,
             bim::axmol::find_child_by_path(*n[0], "one/two/three/nope"));
 }
+
+TEST(bim_axmol_find_child_by_path, multiple_children_with_same_name)
+{
+  const bim::axmol::ref_ptr<ax::Node> n[6] = {
+    ax::Node::create(), ax::Node::create(), ax::Node::create(),
+    ax::Node::create(), ax::Node::create(), ax::Node::create()
+  };
+
+  n[0]->setName("root");
+  n[1]->setName("one");
+  n[2]->setName("two");
+  n[3]->setName("two");
+  n[4]->setName("three");
+  n[5]->setName("four");
+
+  n[0]->addChild(n[1].get());
+  n[1]->addChild(n[2].get());
+  n[1]->addChild(n[3].get());
+  n[2]->addChild(n[4].get());
+  n[3]->addChild(n[5].get());
+
+  EXPECT_EQ(n[4].get(),
+            bim::axmol::find_child_by_path(*n[0], "one/two/three"));
+  EXPECT_EQ(n[5].get(), bim::axmol::find_child_by_path(*n[0], "one/two/four"));
+}

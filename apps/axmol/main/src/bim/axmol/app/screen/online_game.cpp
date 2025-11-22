@@ -2,6 +2,7 @@
 #include <bim/axmol/app/screen/online_game.hpp>
 
 #include <bim/axmol/app/alloc_assets.hpp>
+#include <bim/axmol/app/application_event_dispatcher.hpp>
 #include <bim/axmol/app/fog_display.hpp>
 #include <bim/axmol/app/widget/player.hpp>
 
@@ -373,6 +374,7 @@ void bim::axmol::app::online_game::displaying(
         m_last_tick_date =
             iscool::time::monotonic_now<std::chrono::nanoseconds>();
         m_game_start_date = m_last_tick_date;
+        m_context.get_event_dispatcher()->dispatch("game-started");
         schedule_tick();
       });
   m_contest_runner.reset(new bim::net::contest_runner(

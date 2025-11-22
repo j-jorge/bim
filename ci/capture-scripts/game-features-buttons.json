@@ -1,0 +1,307 @@
+{
+  "actions": [
+    {
+      "kind": "wait",
+      "event": "loaded"
+    },
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/lobby/game_features_button",
+      "event": "game-features-ready"
+    },
+    {
+      "kind": "capture",
+      "file": "game-features.png"
+    },
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/game_features/random_button"
+    },
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/game_features/erase_button"
+    },
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/game_features/slot_1",
+      "event": "popup-shown"
+    },
+    {
+      "kind": "capture",
+      "file": "game-features-slot-1-fail.png"
+    },
+    {
+      "kind": "click",
+      "node": "overlay/container/client_container/yes_button",
+      "event": "products-ready"
+    },
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/shop/back_button",
+      "event": "game-features-ready"
+    },
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/game_features/list/view///row-0/feature-0",
+      "event": "popup-shown"
+    },
+    {
+      "kind": "capture",
+      "file": "game-features-purchase-1-fail.png"
+    },
+    {
+      "kind": "click",
+      "node": "overlay/container/client_container/yes_button",
+      "event": "shop-ready"
+    },
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/shop/back_button",
+      "event": "game-features-ready"
+    },
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/game_features/list/view///row-0/feature-1",
+      "event": "popup-shown"
+    },
+    {
+      "kind": "capture",
+      "file": "game-features-purchase-2-fail.png"
+    },
+    {
+      "kind": "click",
+      "node": "overlay/container/client_container/yes_button",
+      "event": "shop-ready"
+    },
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/shop/back_button",
+      "event": "game-features-ready"
+    },
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/game_features/list/view///row-0/feature-2",
+      "event": "popup-shown"
+    },
+    {
+      "kind": "capture",
+      "file": "game-features-purchase-3-fail.png"
+    },
+    {
+      "kind": "click",
+      "node": "overlay/container/client_container/yes_button",
+      "event": "shop-ready"
+    },
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/shop/back_button",
+      "event": "game-features-ready"
+    },
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/game_features/list/view///row-0/feature-3",
+      "event": "popup-shown"
+    },
+    {
+      "kind": "capture",
+      "file": "game-features-purchase-4-fail.png"
+    },
+    {
+      "kind": "click",
+      "node": "overlay/container/client_container/yes_button",
+      "event": "shop-ready"
+    },
+
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/shop/coins_1_button",
+      "event": "popup-shown"
+    },
+    {
+      "kind": "click",
+      "node": "overlay/container/client_container/yes_button",
+      "event": "popup-hidden"
+    },
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/shop/coins_1_button",
+      "event": "purchase-completed"
+    },
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/shop/back_button",
+      "event": "game-features-ready"
+    },
+
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/game_features/list/view///row-0/feature-0"
+    },
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/game_features/slot_0"
+    },
+    {
+      "kind": "capture",
+      "file": "feature-0-in-slot-0.png"
+    },
+
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/game_features/list/view///row-0/feature-1"
+    },
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/game_features/slot_1",
+      "event": "popup-shown"
+    },
+    {
+      "kind": "click",
+      "node": "overlay/container/client_container/yes_button",
+      "event": "shop-ready"
+    },
+
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/shop/coins_1_button",
+      "event": "popup-shown"
+    },
+    {
+      "kind": "click",
+      "node": "overlay/container/client_container/yes_button",
+      "event": "popup-hidden"
+    },
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/shop/coins_1_button",
+      "event": "purchase-completed"
+    },
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/shop/coins_1_button",
+      "event": "popup-shown"
+    },
+    {
+      "kind": "click",
+      "node": "overlay/container/client_container/yes_button",
+      "event": "popup-hidden"
+    },
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/shop/coins_1_button",
+      "event": "purchase-completed"
+    },
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/shop/coins_1_button",
+      "event": "popup-shown"
+    },
+    {
+      "kind": "click",
+      "node": "overlay/container/client_container/yes_button",
+      "event": "popup-hidden"
+    },
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/shop/coins_1_button",
+      "event": "purchase-completed"
+    },
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/shop/back_button",
+      "event": "game-features-ready"
+    },
+
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/game_features/list/view///row-0/feature-1"
+    },
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/game_features/slot_1"
+    },
+    {
+      "kind": "capture",
+      "file": "feature-1-in-slot-1.png"
+    },
+
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/game_features/list/view///row-0/feature-2"
+    },
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/game_features/slot_0"
+    },
+    {
+      "kind": "capture",
+      "file": "feature-2-in-slot-0.png"
+    },
+
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/game_features/list/view///row-0/feature-3"
+    },
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/game_features/slot_1"
+    },
+    {
+      "kind": "capture",
+      "file": "feature-3-in-slot-1.png"
+    },
+
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/game_features/random_button"
+    },
+    {
+      "kind": "capture",
+      "file": "random-1.png"
+    },
+
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/game_features/random_button"
+    },
+    {
+      "kind": "capture",
+      "file": "random-2.png"
+    },
+
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/game_features/random_button"
+    },
+    {
+      "kind": "capture",
+      "file": "random-3.png"
+    },
+
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/game_features/erase_button"
+    },
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/game_features/slot_0"
+    },
+    {
+      "kind": "capture",
+      "file": "slot-0-erased.png"
+    },
+
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/game_features/erase_button"
+    },
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/game_features/slot_1"
+    },
+    {
+      "kind": "capture",
+      "file": "slot-1-erased.png"
+    }
+  ]
+}

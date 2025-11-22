@@ -1,7 +1,10 @@
 {
   "style": {
     "popup": [
-      "popup/full-screen"
+      "popup/full-screen",
+      {
+        "widgets/container/name": "language"
+      }
     ],
 
     "message-popup": [

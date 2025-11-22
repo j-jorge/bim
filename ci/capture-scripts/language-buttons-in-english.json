@@ -1,0 +1,110 @@
+{
+  "actions": [
+    {
+      "kind": "wait",
+      "event": "loaded"
+    },
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/lobby/settings_button",
+      "event": "popup-shown"
+    },
+    {
+      "kind": "click",
+      "node": "overlay/settings/client_container/language_button",
+      "event": "popup-shown"
+    },
+    {
+      "kind": "click",
+      "node": "overlay/language/client_container/list/view////br_FR",
+      "event": "popup-shown"
+    },
+    {
+      "kind": "capture",
+      "file": "brezhoneg.png"
+    },
+    {
+      "kind": "click",
+      "node": "overlay/container/client_container/no_button",
+      "event": "popup-hidden"
+    },
+    {
+      "kind": "click",
+      "node": "overlay/language/client_container/list/view////de_DE",
+      "event": "popup-shown"
+    },
+    {
+      "kind": "capture",
+      "file": "deutsch.png"
+    },
+    {
+      "kind": "click",
+      "node": "overlay/container/client_container/no_button",
+      "event": "popup-hidden"
+    },
+    {
+      "kind": "click",
+      "node": "overlay/language/client_container/list/view////en_GB"
+    },
+    {
+      "kind": "click",
+      "node": "overlay/language/client_container/list/view////fr_FR",
+      "event": "popup-shown"
+    },
+    {
+      "kind": "capture",
+      "file": "french.png"
+    },
+    {
+      "kind": "click",
+      "node": "overlay/container/client_container/no_button",
+      "event": "popup-hidden"
+    },
+    {
+      "kind": "click",
+      "node": "overlay/language/client_container/list/view////pt_PT",
+      "event": "popup-shown"
+    },
+    {
+      "kind": "capture",
+      "file": "portugues.png"
+    },
+    {
+      "kind": "click",
+      "node": "overlay/container/client_container/no_button",
+      "event": "popup-hidden"
+    },
+    {
+      "kind": "click",
+      "node": "overlay/language/client_container/list/view////pt_BR",
+      "event": "popup-shown"
+    },
+    {
+      "kind": "capture",
+      "file": "portugues-brasil.png"
+    },
+    {
+      "kind": "click",
+      "node": "overlay/container/client_container/no_button",
+      "event": "popup-hidden"
+    },
+    {
+      "kind": "click",
+      "node": "overlay/language/client_container/list/view////tr_TR",
+      "event": "popup-shown"
+    },
+    {
+      "kind": "capture",
+      "file": "turkce.png"
+    },
+    {
+      "kind": "click",
+      "node": "overlay/container/client_container/yes_button",
+      "event": "loaded"
+    },
+    {
+      "kind": "capture",
+      "file": "lobby-turkce.png"
+    }
+  ]
+}

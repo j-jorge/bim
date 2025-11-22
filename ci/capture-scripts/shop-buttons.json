@@ -1,0 +1,54 @@
+{
+  "actions": [
+    {
+      "kind": "wait",
+      "event": "loaded"
+    },
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/lobby/shop_button",
+      "event": "products-ready"
+    },
+    {
+      "kind": "capture",
+      "file": "shop.png"
+    },
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/shop/coins_1_button",
+      "event": "popup-shown"
+    },
+    {
+      "kind": "capture",
+      "file": "shop-error.png"
+    },
+    {
+      "kind": "click",
+      "node": "overlay/container/client_container/yes_button",
+      "event": "popup-hidden"
+    },
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/shop/coins_2_button",
+      "event": "purchase-completed"
+    },
+    {
+      "kind": "capture",
+      "file": "purchase-1.png"
+    },
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/shop/coins_3_button",
+      "event": "popup-shown"
+    },
+    {
+      "kind": "capture",
+      "file": "shop-error-2.png"
+    },
+    {
+      "kind": "click",
+      "node": "overlay/container/client_container/yes_button",
+      "event": "popup-hidden"
+    }
+  ]
+}

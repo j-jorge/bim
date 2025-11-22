@@ -3,7 +3,10 @@
     "language-button-label-path": "container/label",
 
     "popup": [
-      "popup/full-screen"
+      "popup/full-screen",
+      {
+        "widgets/container/name": "settings"
+      }
     ],
 
     "language-popup": [

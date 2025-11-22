@@ -2,6 +2,7 @@
 #include <bim/axmol/app/application.hpp>
 
 #include <bim/axmol/app/bridge.hpp>
+#include <bim/axmol/app/script_info.hpp>
 
 #include <bim/net/message/protocol_version.hpp>
 
@@ -13,6 +14,7 @@
 #include <iscool/strings/unordered_string_map.hpp>
 
 #include <axmol/platform/Application.h>
+#include <axmol/platform/FileUtils.h>
 
 #include <boost/container/flat_map.hpp>
 #include <boost/program_options.hpp>
@@ -40,6 +42,9 @@ namespace
     bool enable_debug;
     std::vector<std::string> asset_directories;
     std::vector<std::string> http_mockup_directories;
+    std::string script_path;
+    bool number_screenshots;
+    std::string app_dir;
   };
 
   struct command_line
@@ -104,6 +109,10 @@ static void display_known_devices()
 static command_line parse_command_line(int argc, char* argv[])
 {
   boost::program_options::options_description options("Options");
+  options.add_options()("app-dir",
+                        boost::program_options::value<std::string>(),
+                        "Where to get and put the application's files "
+                        "(configuration, logs, etc.).");
   options.add_options()(
       "assets",
       boost::program_options::value<std::vector<std::string>>()
@@ -120,6 +129,9 @@ static command_line parse_command_line(int argc, char* argv[])
           ->value_name("path…")
           ->multitoken(),
       "Files from which the game can find fake responses to HTTP requests.");
+  options.add_options()("number-screenshots",
+                        "When --script is used, prefix the screenshots with a "
+                        "number incrementing on each screenshot.");
   options.add_options()(
       "scale", boost::program_options::value<float>()->default_value(1),
       "The scale to apply to the game window.");
@@ -129,6 +141,8 @@ static command_line parse_command_line(int argc, char* argv[])
       "The screen resolution, in pixels, of the targetted device. It can be "
       "either WIDTHxHEIGHT (e.g. 720x1280) or the name of a device. Pass "
       "--screen list to get a list of known devices.");
+  options.add_options()("script", boost::program_options::value<std::string>(),
+                        "An optional UI script to run.");
   options.add_options()("version", "Display the version number and exit.");
 
   boost::program_options::variables_map variables;
@@ -164,6 +178,8 @@ static command_line parse_command_line(int argc, char* argv[])
 
   ::options result;
 
+  if (variables.count("app-dir") != 0)
+    result.app_dir = variables["app-dir"].as<std::string>();
   result.asset_directories =
       asset_directories->second.as<std::vector<std::string>>();
   result.console_log = (variables.count("console-log") != 0);
@@ -196,14 +212,17 @@ static command_line parse_command_line(int argc, char* argv[])
       return command_line{};
     }
 
+  if (variables.count("script") != 0)
+    {
+      result.script_path = variables["script"].as<std::string>();
+      result.number_screenshots = (variables.count("number-screenshots") != 0);
+    }
+
   return command_line{ .options = std::move(result), .valid = true };
 }
 
 int main(int argc, char* argv[])
 {
-  std::unique_ptr<bim::axmol::app::bridge> bridge(
-      new bim::axmol::app::bridge());
-
   const ::command_line command_line = parse_command_line(argc, argv);
 
   if (!command_line.valid)
@@ -213,6 +232,12 @@ int main(int argc, char* argv[])
     return EXIT_SUCCESS;
 
   const ::options& options = *command_line.options;
+
+  if (!options.app_dir.empty())
+    ax::FileUtils::getInstance()->setWritablePath(options.app_dir);
+
+  std::unique_ptr<bim::axmol::app::bridge> bridge(
+      new bim::axmol::app::bridge());
 
   if (options.console_log)
     iscool::log::enable_console_log();
@@ -225,10 +250,17 @@ int main(int argc, char* argv[])
         iscool::http::get_global_mockup().add_predefined_responses(dir);
     }
 
+  const bool scripted = !options.script_path.empty();
+
+  bim::axmol::app::script_info script_info{ std::move(options.script_path),
+                                            options.number_screenshots,
+                                            false };
+
   bim::axmol::app::application app(options.asset_directories,
                                    ax::Size(options.screen_resolution.width,
                                             options.screen_resolution.height),
-                                   options.screen_scale, options.enable_debug);
+                                   options.screen_scale, options.enable_debug,
+                                   scripted ? &script_info : nullptr);
 
   const int result = axmol::Application::getInstance()->run();
 
@@ -236,5 +268,11 @@ int main(int argc, char* argv[])
   // global scheduler, which is destroyed with the app.
   bridge.reset();
 
-  return result;
+  if (result != EXIT_SUCCESS)
+    return result;
+
+  if (scripted)
+    return script_info.passed ? EXIT_SUCCESS : EXIT_FAILURE;
+
+  return EXIT_SUCCESS;
 }

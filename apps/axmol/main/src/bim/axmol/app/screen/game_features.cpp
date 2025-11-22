@@ -196,15 +196,18 @@ bim::axmol::app::game_features::game_features(
   const std::string node_names[buttons_per_row] = { "feature_0", "feature_1",
                                                     "feature_2", "feature_3" };
 
+  std::size_t row_count = 0;
   const auto add_list_row = [&]()
   {
     bim::axmol::ref_ptr<bim::axmol::widget::passive_node> item =
         bim::axmol::widget::factory<bim::axmol::widget::passive_node>::create(
             widget_context, row_container_style);
 
+    item->setName(fmt::format("row-{}", row_count));
     item->fill(row_controls, row_bounds);
     row_controls.clear();
     m_controls->list->push_back(*item);
+    ++row_count;
   };
 
   const auto new_button = [&](std::size_t& index,
@@ -213,6 +216,7 @@ bim::axmol::app::game_features::game_features(
   {
     bim::axmol::ref_ptr<game_feature_button> button(
         game_feature_button::create(widget_context, style));
+    button->setName(fmt::format("feature-{}", index));
     button->available(available);
     row_controls[node_names[index % buttons_per_row]] = button;
     ++index;

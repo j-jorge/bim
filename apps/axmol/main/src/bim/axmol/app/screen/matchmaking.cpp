@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/axmol/app/screen/matchmaking.hpp>
 
+#include <bim/axmol/app/application_event_dispatcher.hpp>
 #include <bim/axmol/app/part/wallet.hpp>
 
 #include <bim/axmol/widget/apply_actions.hpp>
@@ -209,25 +210,28 @@ void bim::axmol::app::matchmaking::update_display_with_game_proposal(
         return;
       m_player_count_monitor->set_waiting_state();
       action = &m_action_wait;
+      m_context.get_event_dispatcher()->dispatch("players-ready-1");
       break;
     case 2:
       if (m_player_count_monitor->is_match_2_state())
         return;
       m_player_count_monitor->set_match_2_state();
       action = &m_action_2_players;
-      m_wait_message->pause();
+      m_context.get_event_dispatcher()->dispatch("players-ready-2");
       break;
     case 3:
       if (m_player_count_monitor->is_match_3_state())
         return;
       m_player_count_monitor->set_match_3_state();
       action = &m_action_3_players;
+      m_context.get_event_dispatcher()->dispatch("players-ready-3");
       break;
     default:
       if (m_player_count_monitor->is_match_4_state())
         return;
       m_player_count_monitor->set_match_4_state();
       action = &m_action_4_players;
+      m_context.get_event_dispatcher()->dispatch("players-ready-4");
       break;
     }
 

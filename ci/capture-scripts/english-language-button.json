@@ -1,0 +1,36 @@
+{
+  "actions": [
+    {
+      "kind": "wait",
+      "event": "loaded"
+    },
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/lobby/settings_button",
+      "event": "popup-shown"
+    },
+    {
+      "kind": "click",
+      "node": "overlay/settings/client_container/language_button",
+      "event": "popup-shown"
+    },
+    {
+      "kind": "click",
+      "node": "overlay/language/client_container/list/view////en_GB",
+      "event": "popup-shown"
+    },
+    {
+      "kind": "capture",
+      "file": "english.png"
+    },
+    {
+      "kind": "click",
+      "node": "overlay/container/client_container/yes_button",
+      "event": "loaded"
+    },
+    {
+      "kind": "capture",
+      "file": "lobby-english.png"
+    }
+  ]
+}

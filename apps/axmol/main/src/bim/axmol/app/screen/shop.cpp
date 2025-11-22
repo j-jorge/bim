@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/axmol/app/screen/shop.hpp>
 
+#include <bim/axmol/app/application_event_dispatcher.hpp>
 #include <bim/axmol/app/part/wallet.hpp>
 #include <bim/axmol/app/popup/message.hpp>
 
@@ -226,6 +227,7 @@ void bim::axmol::app::shop::products_ready(
 
   bim::axmol::widget::apply_display(m_context.get_widget_context().style_cache,
                                     m_controls->all_nodes, m_style_ready);
+  m_context.get_event_dispatcher()->dispatch("products-ready");
 }
 
 void bim::axmol::app::shop::products_error()
@@ -270,6 +272,7 @@ void bim::axmol::app::shop::purchase_completed(std::string_view product,
                                     "purchase-completed", amount);
         m_wallet->animate_cash_flow();
         m_shop->consume(token);
+        m_context.get_event_dispatcher()->dispatch("purchase-completed");
         return;
       }
 
@@ -279,6 +282,8 @@ void bim::axmol::app::shop::purchase_completed(std::string_view product,
 
   ic_log(iscool::log::nature::warning(), "shop",
          "Purchase completed on unknown product '{}'.", product);
+
+  m_context.get_event_dispatcher()->dispatch("purchase-completed");
 }
 
 void bim::axmol::app::shop::purchase_error()

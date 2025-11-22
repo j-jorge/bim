@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/axmol/app/loading_screen.hpp>
 
+#include <bim/axmol/app/application_event_dispatcher.hpp>
 #include <bim/axmol/app/main_scene.hpp>
 
 #include <bim/axmol/widget/add_group_as_children.hpp>
@@ -202,4 +203,5 @@ void bim::axmol::app::loading_screen::stopped()
 {
   assert(m_container->isRunning());
   m_context.get_main_scene()->remove_from_overlays(*m_container);
+  m_context.get_event_dispatcher()->dispatch("loaded");
 }

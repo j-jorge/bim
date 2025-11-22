@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/axmol/app/popup/popup.hpp>
 
+#include <bim/axmol/app/application_event_dispatcher.hpp>
 #include <bim/axmol/app/main_scene.hpp>
 
 #include <bim/axmol/widget/add_group_as_children.hpp>
@@ -67,13 +68,14 @@ void bim::axmol::app::popup::show(
   bim::axmol::widget::apply_display(m_context.get_widget_context().style_cache,
                                     m_controls->all_nodes,
                                     m_style_display_show);
-  bim::axmol::widget::apply_actions(m_action_runner,
-                                    m_context.get_widget_context(),
-                                    m_controls->all_nodes, m_style_action_show,
-                                    [this, inputs]()
-                                    {
-                                      m_inputs.push_back(inputs);
-                                    });
+  bim::axmol::widget::apply_actions(
+      m_action_runner, m_context.get_widget_context(), m_controls->all_nodes,
+      m_style_action_show,
+      [this, inputs]()
+      {
+        m_inputs.push_back(inputs);
+        m_context.get_event_dispatcher()->dispatch("popup-shown");
+      });
 }
 
 void bim::axmol::app::popup::hide()
@@ -91,4 +93,5 @@ void bim::axmol::app::popup::hide()
   m_inputs.pop_back();
 
   m_context.get_main_scene()->remove_from_overlays(*m_controls->container);
+  m_context.get_event_dispatcher()->dispatch("popup-hidden");
 }

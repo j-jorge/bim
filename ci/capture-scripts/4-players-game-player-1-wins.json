@@ -1,0 +1,35 @@
+{
+  "actions": [
+    {
+      "kind": "wait",
+      "event": "loaded"
+    },
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/lobby/play_button",
+      "event": "players-ready-4"
+    },
+    {
+      "kind": "capture",
+      "file": "player-1-players-ready.png"
+    },
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/matchmaking/ready_button",
+      "event": "end-game-ready"
+    },
+    {
+      "kind": "capture",
+      "file": "player-1-victory-screen.png"
+    },
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/end_game/quit_button",
+      "event": "lobby-ready"
+    },
+    {
+      "kind": "capture",
+      "file": "player-1-lobby.png"
+    }
+  ]
+}

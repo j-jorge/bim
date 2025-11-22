@@ -8,8 +8,6 @@
   "style": {
     "widgets": [
       {
-        "container": [],
-
         "background": [
           {
             "instantiate": "ax::LayerColor",

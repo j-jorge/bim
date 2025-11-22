@@ -36,6 +36,7 @@ namespace bim::app
 
 namespace bim::axmol::app
 {
+  class application_event_dispatcher;
   class main_scene;
   class message_popup;
   class popup;
@@ -50,6 +51,7 @@ namespace bim::axmol::app
             ((const bim::axmol::widget::context&)(widget_context))         //
             ((main_scene*)(main_scene))                                    //
             ((bim::app::analytics_service*)(analytics))                    //
+            ((application_event_dispatcher*)(event_dispatcher))            //
             ((iscool::preferences::local_preferences*)(local_preferences)) //
             ),
         ic_context_no_properties);

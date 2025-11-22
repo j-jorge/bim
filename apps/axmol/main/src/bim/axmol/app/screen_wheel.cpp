@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/axmol/app/screen_wheel.hpp>
 
+#include <bim/axmol/app/application_event_dispatcher.hpp>
 #include <bim/axmol/app/main_scene.hpp>
 #include <bim/axmol/app/popup/message.hpp>
 #include <bim/axmol/app/screen/end_game.hpp>
@@ -79,6 +80,8 @@ bim::axmol::app::screen_wheel::screen_wheel(
         context.get_session_handler()->message_stream()))
   , m_leave_shop(nullptr)
 {
+  m_main_container->setName("screen-wheel");
+
   m_context.set_player_progress_tracker(m_player_progress_tracker.get());
 
   m_online_game.reset(
@@ -465,6 +468,7 @@ void bim::axmol::app::screen_wheel::lobby_displayed()
 {
   m_inputs.push_back(m_lobby->input_node());
   m_lobby->displayed();
+  m_context.get_event_dispatcher()->dispatch("lobby-ready");
 }
 
 void bim::axmol::app::screen_wheel::display_matchmaking()
@@ -480,6 +484,7 @@ void bim::axmol::app::screen_wheel::matchmaking_displayed()
   iscool::system::keep_screen_on(true);
   m_inputs.push_back(m_matchmaking->input_node());
   m_matchmaking->displayed();
+  m_context.get_event_dispatcher()->dispatch("matchmaking-ready");
 }
 
 void bim::axmol::app::screen_wheel::display_online_game(
@@ -498,6 +503,7 @@ void bim::axmol::app::screen_wheel::online_game_displayed()
 {
   m_inputs.push_back(m_online_game->input_node());
   m_online_game->displayed();
+  m_context.get_event_dispatcher()->dispatch("online-game-ready");
 }
 
 void bim::axmol::app::screen_wheel::display_end_game(
@@ -516,6 +522,7 @@ void bim::axmol::app::screen_wheel::end_game_displayed()
   iscool::system::keep_screen_on(false);
   m_inputs.push_back(m_end_game->input_node());
   m_end_game->displayed();
+  m_context.get_event_dispatcher()->dispatch("end-game-ready");
 }
 
 void bim::axmol::app::screen_wheel::display_shop()
@@ -530,6 +537,7 @@ void bim::axmol::app::screen_wheel::shop_displayed()
 
   m_inputs.push_back(m_shop->input_node());
   m_shop->displayed();
+  m_context.get_event_dispatcher()->dispatch("shop-ready");
 }
 
 void bim::axmol::app::screen_wheel::display_game_features()
@@ -543,6 +551,7 @@ void bim::axmol::app::screen_wheel::game_features_displayed()
   m_context.get_analytics()->screen("game-features");
 
   m_inputs.push_back(m_game_features->input_node());
+  m_context.get_event_dispatcher()->dispatch("game-features-ready");
 }
 
 void bim::axmol::app::screen_wheel::disconnected()

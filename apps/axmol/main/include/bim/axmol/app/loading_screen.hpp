@@ -28,6 +28,7 @@ namespace bim::axmol::widget
 
 namespace bim::axmol::app
 {
+  class application_event_dispatcher;
   class main_scene;
 
   class loading_screen
@@ -39,6 +40,7 @@ namespace bim::axmol::app
         ic_context_declare_parent_properties(                              //
             ((const bim::axmol::widget::context&)(widget_context))         //
             ((main_scene*)(main_scene))                                    //
+            ((application_event_dispatcher*)(event_dispatcher))            //
             ((iscool::preferences::local_preferences*)(local_preferences)) //
             ),
         ic_context_no_properties);

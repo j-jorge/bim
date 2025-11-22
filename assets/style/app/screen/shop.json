@@ -101,10 +101,7 @@
         ],
 
         "coins_1_button": [
-          "app/screen/shop/price-button",
-          {
-            "parent": "item-1"
-          }
+          "app/screen/shop/price-button"
         ],
         "coins_2_button": [
           "app/screen/shop/price-button"

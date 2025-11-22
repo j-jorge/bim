@@ -1,0 +1,83 @@
+{
+  "actions": [
+    {
+      "kind": "wait",
+      "event": "loaded"
+    },
+
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/lobby/settings_button",
+      "event": "popup-shown"
+    },
+    {
+      "kind": "capture",
+      "file": "setting-1.png"
+    },
+    {
+      "kind": "click",
+      "node": "overlay/settings/client_container/music"
+    },
+    {
+      "kind": "click",
+      "node": "overlay/settings/client_container/sound_effects"
+    },
+    {
+      "kind": "click",
+      "node": "overlay/settings/client_container/vibrations"
+    },
+    {
+      "kind": "click",
+      "node": "overlay/settings/client_container/d_pad_position"
+    },
+    {
+      "kind": "click",
+      "node": "overlay/settings/client_container/d_pad_kind"
+    },
+    {
+      "kind": "capture",
+      "file": "setting-2.png"
+    },
+
+    {
+      "kind": "click",
+      "node": "overlay/settings/client_container/github_button",
+      "event": "github"
+    },
+    {
+      "kind": "click",
+      "node": "overlay/settings/client_container/bluesky_button",
+      "event": "bluesky"
+    },
+    {
+      "kind": "click",
+      "node": "overlay/settings/client_container/share_button",
+      "event": "share"
+    },
+    {
+      "kind": "click",
+      "node": "overlay/settings/client_container/mail_button",
+      "event": "mail"
+    },
+
+    {
+      "kind": "click",
+      "node": "overlay/settings/client_container/language_button",
+      "event": "popup-shown"
+    },
+    {
+      "kind": "capture",
+      "file": "languages.png"
+    },
+    {
+      "kind": "click",
+      "node": "overlay/language/client_container/close_button",
+      "event": "popup-hidden"
+    },
+    {
+      "kind": "click",
+      "node": "overlay/settings/client_container/close_button",
+      "event": "popup-hidden"
+    }
+  ]
+}

@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/axmol/app/popup/settings_popup.hpp>
 
+#include <bim/axmol/app/application_event_dispatcher.hpp>
 #include <bim/axmol/app/popup/language_popup.hpp>
 #include <bim/axmol/app/popup/popup.hpp>
 
@@ -298,12 +299,14 @@ void bim::axmol::app::settings_popup::open_bluesky()
 {
   bim::app::button_clicked(*m_context.get_analytics(), "bluesky", "settings");
   iscool::system::open_url("https://bsky.app/profile/j-jorge.bsky.social");
+  m_context.get_event_dispatcher()->dispatch("bluesky");
 }
 
 void bim::axmol::app::settings_popup::open_github()
 {
   bim::app::button_clicked(*m_context.get_analytics(), "github", "settings");
   iscool::system::open_url("https://github.com/j-jorge/bim/");
+  m_context.get_event_dispatcher()->dispatch("github");
 }
 
 void bim::axmol::app::settings_popup::open_mail()
@@ -311,6 +314,7 @@ void bim::axmol::app::settings_popup::open_mail()
   bim::app::button_clicked(*m_context.get_analytics(), "mail", "settings");
   iscool::system::send_mail("bim-game@gmx.com",
                             ic_gettext("Feedback about Bim!"), "");
+  m_context.get_event_dispatcher()->dispatch("mail");
 }
 
 void bim::axmol::app::settings_popup::open_share()
@@ -319,4 +323,5 @@ void bim::axmol::app::settings_popup::open_share()
   m_context.get_social()->share_message(
       ic_gettext("Come play a game of Bim! "
                  "https://play.google.com/store/apps/details?id=bim.app"));
+  m_context.get_event_dispatcher()->dispatch("share");
 }

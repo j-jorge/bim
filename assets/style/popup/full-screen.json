@@ -8,9 +8,6 @@
   "style": {
     "widgets": [
       {
-        "container": [],
-        "client_container/parent": "container",
-
         "background": [
           {
             "instantiate": "ax::LayerColor",

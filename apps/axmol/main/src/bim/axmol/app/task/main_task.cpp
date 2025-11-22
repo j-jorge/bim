@@ -42,7 +42,6 @@ static std::string cached_remote_config_file()
   return iscool::files::get_writable_path() + "/remote-config.json";
 }
 
-IMPLEMENT_SIGNAL(bim::axmol::app::main_task, end, m_end);
 IMPLEMENT_SIGNAL(bim::axmol::app::main_task, reset, m_reset);
 
 bim::axmol::app::main_task::main_task(context context,

@@ -1,0 +1,97 @@
+{
+  "actions": [
+    {
+      "kind": "wait",
+      "event": "loaded"
+    },
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/lobby/stats_button",
+      "event": "popup-shown"
+    },
+    {
+      "kind": "capture",
+      "file": "stats.png"
+    },
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/lobby/stats_button",
+      "event": "popup-hidden"
+    },
+
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/lobby/game_features_button",
+      "event": "game-features-ready"
+    },
+    {
+      "kind": "capture",
+      "file": "game-features.png"
+    },
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/game_features/back_button",
+      "event": "lobby-ready"
+    },
+
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/lobby/shop_button",
+      "event": "shop-ready"
+    },
+    {
+      "kind": "capture",
+      "file": "shop-via-button.png"
+    },
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/shop/back_button",
+      "event": "lobby-ready"
+    },
+
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/lobby/wallet_button",
+      "event": "shop-ready"
+    },
+    {
+      "kind": "capture",
+      "file": "shop-via-wallet.png"
+    },
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/shop/back_button",
+      "event": "lobby-ready"
+    },
+
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/lobby/settings_button",
+      "event": "popup-shown"
+    },
+    {
+      "kind": "capture",
+      "file": "settings.png"
+    },
+    {
+      "kind": "click",
+      "node": "overlay/settings/client_container/close_button",
+      "event": "popup-hidden"
+    },
+
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/lobby/play_button",
+      "event": "matchmaking-ready"
+    },
+    {
+      "kind": "capture",
+      "file": "matchmaking.png"
+    },
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/matchmaking/back_button",
+      "event": "lobby-ready"
+    }
+  ]
+}

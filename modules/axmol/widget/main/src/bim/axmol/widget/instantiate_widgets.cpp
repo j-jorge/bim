@@ -44,7 +44,15 @@ void bim::axmol::widget::instantiate_widgets(
 
       ref_ptr<ax::Node> node =
           context.factory.create(*type, context, *d.second);
-      node->setName(d.first);
+
+      const iscool::optional<const std::string&> name =
+          d.second->get_string("name");
+
+      if (name)
+        node->setName(*name);
+      else
+        node->setName(d.first);
+
       nodes.emplace(d.first, std::move(node));
     }
 }

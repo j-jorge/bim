@@ -1,6 +1,8 @@
 set(main_sources
   main/src/bim/axmol/app/alloc_assets.cpp
   main/src/bim/axmol/app/application.cpp
+  main/src/bim/axmol/app/application_event_dispatcher.cpp
+  main/src/bim/axmol/app/application_event_listener.cpp
   main/src/bim/axmol/app/arena_display_config.cpp
   main/src/bim/axmol/app/bridge.cpp
   main/src/bim/axmol/app/fog_display.cpp
@@ -9,6 +11,7 @@ set(main_sources
   main/src/bim/axmol/app/main_scene.cpp
   main/src/bim/axmol/app/root_scene.cpp
   main/src/bim/axmol/app/screen_wheel.cpp
+  main/src/bim/axmol/app/script_director.cpp
 
   main/src/bim/axmol/app/part/wallet.cpp
 

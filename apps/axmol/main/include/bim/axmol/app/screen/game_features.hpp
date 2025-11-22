@@ -62,6 +62,7 @@ namespace bim::app
 
 namespace bim::axmol::app
 {
+  class application_event_dispatcher;
   class game_feature_button;
   class main_scene;
   class message_popup;
@@ -78,6 +79,7 @@ namespace bim::axmol::app
             ((const bim::axmol::widget::context&)(widget_context))         //
             ((main_scene*)(main_scene))                                    //
             ((bim::app::analytics_service*)(analytics))                    //
+            ((application_event_dispatcher*)(event_dispatcher))            //
             ((const bim::app::config*)(config))                            //
             ((iscool::preferences::local_preferences*)(local_preferences)) //
             ),

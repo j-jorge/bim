@@ -60,6 +60,7 @@ namespace ax
 
 namespace bim::axmol::app
 {
+  class application_event_dispatcher;
   class debug_popup;
   class feature_deck;
   class main_scene;
@@ -80,6 +81,7 @@ namespace bim::axmol::app
             ((const bim::axmol::widget::context&)(widget_context))         //
             ((main_scene*)(main_scene))                                    //
             ((bim::app::analytics_service*)(analytics))                    //
+            ((application_event_dispatcher*)(event_dispatcher))            //
             ((bim::net::session_handler*)(session_handler))                //
             ((iscool::audio::mixer*)(audio))                               //
             ((iscool::preferences::local_preferences*)(local_preferences)) //

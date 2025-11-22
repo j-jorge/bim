@@ -3,19 +3,35 @@
 
 #include <axmol/2d/Node.h>
 
-ax::Node* bim::axmol::find_child_by_path(ax::Node& node, std::string_view path)
+static ax::Node* find_child(ax::Node& node, std::string_view path,
+                            std::string_view::size_type p)
 {
   const std::string_view::size_type e = path.size();
-  ax::Node* n = &node;
-  std::string_view::size_type s = 0;
-  std::string_view::size_type p = std::min(e, path.find_first_of('/'));
 
-  while ((n != nullptr) && (s < e))
-    {
-      n = n->getChildByName(path.substr(s, p - s));
-      s = p + 1;
-      p = std::min(e, path.find_first_of('/', s));
-    }
+  const std::string_view::size_type s =
+      std::min(e, path.find_first_of('/', p));
+  const std::string_view name = path.substr(p, s - p);
+  const std::uint64_t hash = ax::hash_node_name(name);
 
-  return n;
+  for (ax::Node* n : node.getChildren())
+    if ((n->getHashOfName() == hash) && (n->getName() == name))
+      {
+        if (s + 1 >= e)
+          return n;
+
+        ax::Node* c = find_child(*n, path, s + 1);
+
+        if (c)
+          return c;
+      }
+
+  return nullptr;
+}
+
+ax::Node* bim::axmol::find_child_by_path(ax::Node& node, std::string_view path)
+{
+  if (path.empty())
+    return &node;
+
+  return find_child(node, path, 0);
 }
