@@ -14,6 +14,7 @@
 
 bim::axmol::input::flow::flow(ax::Scene& scene, node& root)
   : m_root(root)
+  , m_pressed_ids(0)
   , m_key_listener(ax::EventListenerKeyboard::create())
   , m_touch_listener(ax::EventListenerTouchOneByOne::create())
 {
