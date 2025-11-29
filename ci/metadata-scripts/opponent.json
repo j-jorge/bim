@@ -1,0 +1,57 @@
+{
+  "actions": [
+    {
+      "kind": "wait",
+      "event": "loaded"
+    },
+
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/lobby/stats_button",
+      "event": "popup-shown"
+    },
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/lobby/stats_button",
+      "event": "popup-hidden"
+    },
+
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/lobby/settings_button",
+      "event": "popup-shown"
+    },
+    {
+      "kind": "click",
+      "node": "overlay/settings/client_container/close_button",
+      "event": "popup-hidden"
+    },
+
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/lobby/game_features_button",
+      "event": "game-features-ready"
+    },
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/game_features/back_button",
+      "event": "lobby-ready"
+    },
+
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/lobby/play_button",
+      "event": "players-ready-4"
+    },
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/matchmaking/ready_button",
+      "event": "game-started"
+    },
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/online_game/bomb_button",
+      "event": "end-game-ready"
+    }
+  ]
+}
