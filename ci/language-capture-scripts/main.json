@@ -1,0 +1,213 @@
+{
+  "actions": [
+    {
+      "kind": "wait",
+      "event": "loaded"
+    },
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/lobby/stats_button",
+      "event": "popup-shown"
+    },
+    {
+      "kind": "capture",
+      "file": "lobby.png"
+    },
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/lobby/stats_button",
+      "event": "popup-hidden"
+    },
+
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/lobby/game_features_button",
+      "event": "game-features-ready"
+    },
+    {
+      "kind": "capture",
+      "file": "game-features.png"
+    },
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/game_features/slot_1",
+      "event": "popup-shown"
+    },
+    {
+      "kind": "capture",
+      "file": "game-features-fail.png"
+    },
+    {
+      "kind": "click",
+      "node": "overlay/container/client_container/yes_button",
+      "event": "products-ready"
+    },
+
+    {
+      "kind": "capture",
+      "file": "shop.png"
+    },
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/shop/coins_1_button",
+      "event": "popup-shown"
+    },
+    {
+      "kind": "capture",
+      "file": "shop-error.png"
+    },
+    {
+      "kind": "click",
+      "node": "overlay/container/client_container/yes_button",
+      "event": "popup-hidden"
+    },
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/shop/back_button",
+      "event": "game-features-ready"
+    },
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/game_features/back_button",
+      "event": "lobby-ready"
+    },
+
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/lobby/settings_button",
+      "event": "popup-shown"
+    },
+    {
+      "kind": "capture",
+      "file": "settings-1.png"
+    },
+    {
+      "kind": "click",
+      "node": "overlay/settings/client_container/music"
+    },
+    {
+      "kind": "click",
+      "node": "overlay/settings/client_container/sound_effects"
+    },
+    {
+      "kind": "click",
+      "node": "overlay/settings/client_container/vibrations"
+    },
+    {
+      "kind": "click",
+      "node": "overlay/settings/client_container/d_pad_position"
+    },
+    {
+      "kind": "click",
+      "node": "overlay/settings/client_container/d_pad_kind"
+    },
+    {
+      "kind": "capture",
+      "file": "setting-2.png"
+    },
+    {
+      "kind": "click",
+      "node": "overlay/settings/client_container/language_button",
+      "event": "popup-shown"
+    },
+    {
+      "kind": "capture",
+      "file": "languages.png"
+    },
+    {
+      "kind": "click",
+      "node": "overlay/language/client_container/list/view////en_GB",
+      "event": "popup-shown"
+    },
+    {
+      "kind": "capture",
+      "file": "language-change.png"
+    },
+    {
+      "kind": "click",
+      "node": "overlay/container/client_container/no_button",
+      "event": "popup-hidden"
+    },
+    {
+      "kind": "click",
+      "node": "overlay/language/client_container/close_button",
+      "event": "popup-hidden"
+    },
+    {
+      "kind": "click",
+      "node": "overlay/settings/client_container/close_button",
+      "event": "popup-hidden"
+    },
+
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/lobby/play_button",
+      "event": "players-ready-2"
+    },
+    {
+      "kind": "capture",
+      "file": "matchmaking.png"
+    },
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/matchmaking/ready_button",
+      "event": "game-started"
+    },
+    {
+      "kind": "wait",
+      "event": "end-game-ready"
+    },
+    {
+      "kind": "capture",
+      "file": "victory.png"
+    },
+
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/end_game/revenge_button",
+      "event": "players-ready-2"
+    },
+    {
+      "kind": "capture",
+      "file": "matchmaking.png"
+    },
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/matchmaking/ready_button",
+      "event": "game-started"
+    },
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/online_game/bomb_button",
+      "event": "end-game-ready"
+    },
+    {
+      "kind": "capture",
+      "file": "defeat.png"
+    },
+
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/end_game/revenge_button",
+      "event": "players-ready-2"
+    },
+    {
+      "kind": "capture",
+      "file": "matchmaking.png"
+    },
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/matchmaking/ready_button",
+      "event": "game-started"
+    },
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/online_game/bomb_button",
+      "event": "end-game-ready"
+    },
+    {
+      "kind": "capture",
+      "file": "draw.png"
+    }
+  ]
+}
