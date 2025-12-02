@@ -298,7 +298,9 @@ void bim::axmol::app::script_director::press(ax::Touch& touch) const
   std::vector<ax::Touch*> touches;
   touches.emplace_back(&touch);
 
-  ax::EventTouch event(ax::EventTouch::EventCode::BEGAN, std::move(touches));
+  ax::EventTouch event;
+  event.setEventCode(ax::EventTouch::EventCode::BEGAN);
+  event.setTouches(std::move(touches));
 
   ax::Director::getInstance()->getEventDispatcher()->dispatchEvent(&event);
 }
@@ -308,7 +310,9 @@ void bim::axmol::app::script_director::release(ax::Touch& touch) const
   std::vector<ax::Touch*> touches;
   touches.emplace_back(&touch);
 
-  ax::EventTouch event(ax::EventTouch::EventCode::ENDED, std::move(touches));
+  ax::EventTouch event;
+  event.setEventCode(ax::EventTouch::EventCode::ENDED);
+  event.setTouches(std::move(touches));
 
   ax::Director::getInstance()->getEventDispatcher()->dispatchEvent(&event);
 }

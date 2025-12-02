@@ -8,31 +8,46 @@ set -euo pipefail
 : "${bim_packages_root:-}"
 
 : "${axmol_repository:=https://github.com/j-jorge/axmol/}"
-: "${axmol_version:=2.9.1.2j}"
-package_revision=1
+: "${axmol_version:=2.10.0.1j}"
+package_revision=2
 version="$axmol_version"-"$package_revision"
+flavor="$bim_build_type"
 
 package_name=axmol
 package_conflict=axmol-tracy
 enable_tracy=0
 
-if [[ "$bim_build_type" = "release" ]]
-then
-    build_type=release
+case "$bim_build_type" in
+    asan)
+        build_type=RelWithDebInfo
+        cmake_options=("--cmake"
+                       "-DCMAKE_CXX_FLAGS=-fsanitize=address \
+                            -fsanitize=undefined"
+                      )
+        ;;
+    debug)
+        build_type=Debug
+        ;;
+    release)
+        build_type=Release
 
-    if [[ "$bim_product_mode" = 0 ]]
-    then
-        enable_tracy=1
-        package_name=axmol-tracy
-        package_conflict=axmol
-    fi
-else
-    build_type=debug
-fi
+        if [[ "$bim_product_mode" = 0 ]]
+        then
+            enable_tracy=1
+            package_name=axmol-tracy
+            package_conflict=axmol
+        fi
+        ;;
+    tsan)
+        build_type=RelWithDebInfo
+        cmake_options=("--cmake"
+                       "-DCMAKE_CXX_FLAGS=-fsanitize=thread")
+        ;;
+esac
 
 bim-uninstall-package "$package_conflict"
 
-! bim-install-package "$package_name" "$version" "$build_type" 2>/dev/null \
+! bim-install-package "$package_name" "$version" "$flavor" 2>/dev/null \
     || exit 0
 
 axmol_definitions=(
@@ -106,7 +121,7 @@ fi
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd)"
 
 # shellcheck source=SCRIPTDIR/set-package-vars.sh
-. "$script_dir"/set-package-vars.sh axmol "$build_type"
+. "$script_dir"/set-package-vars.sh axmol "$flavor"
 
 rm --force --recursive "$install_dir"
 mkdir --parents "$source_dir" "$build_dir" "$install_dir"
@@ -345,4 +360,4 @@ else
 fi
 
 bim-package-and-install \
-    "$install_dir" "$package_name" "$version" "$build_type"
+    "$install_dir" "$package_name" "$version" "$flavor"
