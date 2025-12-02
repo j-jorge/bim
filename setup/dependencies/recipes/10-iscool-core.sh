@@ -17,8 +17,7 @@ case "$bim_build_type" in
         build_type=RelWithDebInfo
         cmake_options=("--cmake"
                        "-DCMAKE_CXX_FLAGS=-fsanitize=address \
-                            -fsanitize=undefined \
-                            -fno-omit-frame-pointer"
+                            -fsanitize=undefined"
                       )
         ;;
     debug)
@@ -30,8 +29,7 @@ case "$bim_build_type" in
     tsan)
         build_type=RelWithDebInfo
         cmake_options=("--cmake"
-                       "-DCMAKE_CXX_FLAGS=-fsanitize=thread \
-                           -fno-omit-frame-pointer")
+                       "-DCMAKE_CXX_FLAGS=-fsanitize=thread")
         ;;
 esac
 
