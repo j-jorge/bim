@@ -35,7 +35,9 @@
 #include <axmol/renderer/backend/ProgramManager.h>
 
 #if BIM_ENABLE_TRACY
+static const char* const g_tracy_tag_locked = "locked";
 static const char* const g_tracy_tag_loading = "loading";
+static const char* const g_tracy_tag_load_textures = "textures";
 #endif
 
 IMPLEMENT_SIGNAL(bim::axmol::app::loading_screen, done, m_done);
@@ -53,6 +55,8 @@ bim::axmol::app::loading_screen::~loading_screen() = default;
 
 void bim::axmol::app::loading_screen::start()
 {
+  FrameMarkStart(g_tracy_tag_locked);
+
   m_context.get_main_scene()->add_in_overlays(*m_container, m_inputs.root());
   bim::axmol::widget::add_group_as_children(*m_container,
                                             m_controls->all_nodes);
@@ -129,6 +133,8 @@ void bim::axmol::app::loading_screen::load_translations()
 
 void bim::axmol::app::loading_screen::load_textures()
 {
+  FrameMarkStart(g_tracy_tag_load_textures);
+
   ax::TextureCache& cache = *ax::Director::getInstance()->getTextureCache();
   const Json::Value& textures = m_resources["textures"];
 
@@ -180,6 +186,8 @@ void bim::axmol::app::loading_screen::one_loaded_texture()
 
   if (m_pending_textures == 0)
     {
+      FrameMarkEnd(g_tracy_tag_load_textures);
+
       load_sprite_sheets();
       one_loaded_resource();
     }
@@ -204,4 +212,6 @@ void bim::axmol::app::loading_screen::stopped()
   assert(m_container->isRunning());
   m_context.get_main_scene()->remove_from_overlays(*m_container);
   m_context.get_event_dispatcher()->dispatch("loaded");
+
+  FrameMarkEnd(g_tracy_tag_locked);
 }

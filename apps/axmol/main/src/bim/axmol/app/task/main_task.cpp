@@ -13,6 +13,7 @@
 #include <bim/app/preference/date_of_next_version_update_message.hpp>
 #include <bim/app/preference/update_preferences.hpp>
 
+#include <bim/tracy.hpp>
 #include <bim/version.hpp>
 
 #include <iscool/audio/loop_mode.hpp>
@@ -105,6 +106,8 @@ void bim::axmol::app::main_task::start_fresh()
 
 void bim::axmol::app::main_task::create_ui()
 {
+  ZoneScoped;
+
   m_style = iscool::style::loader::load("application");
 
   m_message_popup.reset(
