@@ -3,6 +3,7 @@
 set -euo pipefail
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd)"
+languages=()
 
 function fail()
 {
@@ -20,6 +21,8 @@ OPTIONS
      Path to the build directory.
   --help, -h
      Display this message then exit.
+  --language LANGUAGE_CODE…
+     List of languages for which to generate the captures.
 EOF
 }
 
@@ -44,6 +47,19 @@ do
 
             build_dir="$1"
             shift
+            ;;
+        --language)
+            if (( $# == 0 ))
+            then
+                echo "Missing value for --language" >&2
+                exit 1
+            fi
+
+            while (( $# != 0 )) && [[ "$1" != --* ]]
+            do
+                languages+=("$1")
+                shift
+            done
             ;;
     esac
 done
@@ -93,12 +109,15 @@ function run_script()
         || failing+=("$lang")
 }
 
-run_script br
-run_script de
-run_script fr
-run_script pt
-run_script pt_BR
-run_script tr
+if [[ "${#languages[@]}" -eq 0 ]]
+then
+    languages=(br de fr kab oc pt pt_BR tr)
+fi
+
+for language in "${languages[@]}"
+do
+    run_script "$language"
+done
 
 for s in "${failing[@]}"
 do

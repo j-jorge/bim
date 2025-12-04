@@ -48,7 +48,7 @@ while read -r png
 do
     file_count=$((file_count + 1))
     check_file "$png"
-done < <(find "$@" -name "*.png" -not -wholename '*/intermediates/*')
+done < <(find "$@" -wholename "*/assets/*.png")
 
 echo "Passes: $pass_count/$file_count"
 

@@ -124,6 +124,8 @@ generate_captures br br-FR
 generate_captures de de-DE
 generate_captures en en-US
 generate_captures fr fr-FR
+generate_captures kab kab-DZ
+generate_captures oc oc-FR
 generate_captures pt pt-PT
 generate_captures pt_BR pt-BR
 generate_captures tr tr-TR
