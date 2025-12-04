@@ -142,8 +142,11 @@ command+=("$bim"
           --assets
           "$repo_root"/static-assets/
           "$build_dir"/assets/generated/
-          --console-log
-         "$@")
+          --console-log)
+
+(( use_valgrind == 0 )) || command+=(--script-step-timeout 20)
+
+command+=("$@")
 
 if printf '%s\n' "$@" | grep --quiet '^--app-dir'
 then

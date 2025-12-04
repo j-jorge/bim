@@ -57,8 +57,9 @@ struct bim::axmol::app::script_director::click_target
 
 bim::axmol::app::script_director::script_director(
     const application_event_listener& events, const std::string& script_file,
-    bool number_screenshots)
+    bool number_screenshots, std::chrono::seconds timeout)
   : m_next_step(0)
+  , m_timeout(timeout)
   , m_event_connection(events.connect_to_event(
         [this](std::string_view name)
         {
@@ -334,7 +335,7 @@ void bim::axmol::app::script_director::schedule_timeout()
       {
         timeout();
       },
-      std::chrono::seconds(10));
+      m_timeout);
 }
 
 void bim::axmol::app::script_director::timeout()

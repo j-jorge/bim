@@ -646,7 +646,8 @@ void bim::axmol::app::application::start_script()
 
   m_script_director.reset(new script_director(
       application_event_listener(*m_context.get_event_dispatcher()),
-      m_script_info->file_path, m_script_info->number_screenshots));
+      m_script_info->file_path, m_script_info->number_screenshots,
+      m_script_info->timeout));
   m_script_director->connect_to_done(
       [this](script_director::result r)
       {

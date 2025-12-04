@@ -43,6 +43,7 @@ namespace
     std::vector<std::string> asset_directories;
     std::vector<std::string> http_mockup_directories;
     std::string script_path;
+    std::chrono::seconds script_step_timeout;
     bool number_screenshots;
     std::string app_dir;
   };
@@ -143,6 +144,11 @@ static command_line parse_command_line(int argc, char* argv[])
       "--screen list to get a list of known devices.");
   options.add_options()("script", boost::program_options::value<std::string>(),
                         "An optional UI script to run.");
+  options.add_options()(
+      "script-step-timeout",
+      boost::program_options::value<std::int64_t>()->default_value(10),
+      "When --script is used, how long to wait for an event before failing, "
+      "in seconds.");
   options.add_options()("version", "Display the version number and exit.");
 
   boost::program_options::variables_map variables;
@@ -215,6 +221,8 @@ static command_line parse_command_line(int argc, char* argv[])
   if (variables.count("script") != 0)
     {
       result.script_path = variables["script"].as<std::string>();
+      result.script_step_timeout = std::chrono::seconds(
+          variables["script-step-timeout"].as<std::int64_t>());
       result.number_screenshots = (variables.count("number-screenshots") != 0);
     }
 
@@ -253,6 +261,7 @@ int main(int argc, char* argv[])
   const bool scripted = !options.script_path.empty();
 
   bim::axmol::app::script_info script_info{ std::move(options.script_path),
+                                            options.script_step_timeout,
                                             options.number_screenshots,
                                             false };
 

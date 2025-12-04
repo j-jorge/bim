@@ -5,6 +5,7 @@
 #include <iscool/signals/declare_signal.hpp>
 #include <iscool/signals/scoped_connection.hpp>
 
+#include <chrono>
 #include <string>
 #include <vector>
 
@@ -31,7 +32,8 @@ namespace bim::axmol::app
 
   public:
     script_director(const application_event_listener& events,
-                    const std::string& script_file, bool number_screenshots);
+                    const std::string& script_file, bool number_screenshots,
+                    std::chrono::seconds timeout);
     ~script_director();
 
   private:
@@ -61,6 +63,7 @@ namespace bim::axmol::app
     std::vector<std::string> m_capture_steps;
     std::string_view m_pending_event;
     std::size_t m_next_step;
+    std::chrono::seconds m_timeout;
 
     const iscool::signals::scoped_connection m_event_connection;
     iscool::schedule::scoped_connection m_tick_connection;
