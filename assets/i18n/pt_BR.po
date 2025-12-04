@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2025-11-11 16:51+0000\n"
-"Last-Translator: Samuel <samuel22w@hotmail.com>\n"
+"PO-Revision-Date: 2025-12-05 02:00+0000\n"
+"Last-Translator: OlliesGudh <github@paulogomez.anonaddy.com>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/bim/"
 "gettext-files/pt_BR/>\n"
 "Language: pt_BR\n"
@@ -54,8 +54,8 @@ msgstr "Você precisa de mais moedas para comprar este item!"
 #, c++-format
 msgid "Customize your games with up to {} feature."
 msgid_plural "Customize your games with up to {} features."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Personalize seus jogos com até {} recurso."
+msgstr[1] "Personalize seus jogos com até {} recursos."
 
 msgid "Falling blocks reduce the arena after two minutes!"
 msgstr "Blocos caindo reduzem a arena depois de dois minutos!"
@@ -78,8 +78,8 @@ msgstr ""
 #, c++-format
 msgid "{} game being played right now."
 msgid_plural "{} games being played right now."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{} partida sendo jogada nesse momento."
+msgstr[1] "{} partidas sendo jogadas nesse momento."
 
 #, c++-format
 msgid "{} player connected right now."
@@ -108,24 +108,24 @@ msgstr[1] "{} jogos jogados nas últimas 24 horas."
 #, c++-format
 msgid "{} player connected in the last 24 hours."
 msgid_plural "{} players connected in the last 24 hours."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{} jogador conectado nas últimas 24 horas."
+msgstr[1] "{} jogadores conectados nas últimas 24 horas."
 
 #, c++-format
 msgid "{} game played in the last 30 days."
 msgid_plural "{} games played in the last 30 days."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{} partida jogada nos últimos 30 dias."
+msgstr[1] "{} partidas jogadas nos últimos 30 dias."
 
 #, c++-format
 msgid "{} player connected in the last 30 days."
 msgid_plural "{} players connected in the last 30 days."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{} jogador conectado nos últimos 30 dias."
+msgstr[1] "{} jogadores conectados nos últimos 30 dias."
 
 #, c++-format
 msgid "Connected to {}."
-msgstr ""
+msgstr "Conectado a {}."
 
 msgid "An error occurred. The purchase could not be completed."
 msgstr "Ocorreu um erro. Não foi possível completar a compra."
@@ -138,7 +138,7 @@ msgid "Failed to authenticate with the game server. Error code {}."
 msgstr "Erro ao autenticar com o servidor do jogo. Erro código {}."
 
 msgid "Cancel"
-msgstr ""
+msgstr "Cancelar"
 
 msgid "OK"
 msgstr "OK"
@@ -174,10 +174,10 @@ msgid "You won!"
 msgstr "Você ganhou!"
 
 msgid "ERASE"
-msgstr ""
+msgstr "APAGAR"
 
 msgid "RANDOM"
-msgstr ""
+msgstr "ALEATÓRIO"
 
 msgid "Off"
 msgstr "Desligado"
@@ -186,36 +186,38 @@ msgid "On"
 msgstr "Ligado"
 
 msgid "Defeats"
-msgstr ""
+msgstr "Derrotas"
 
 msgid "Draws"
-msgstr ""
+msgstr "Empates"
 
 msgid "Games"
-msgstr ""
+msgstr "Partidas"
 
 msgid "Victories"
-msgstr ""
+msgstr "Vitórias"
 
 msgid "Your statistics"
-msgstr ""
+msgstr "Suas estatísticas"
 
 msgid "Success rate"
-msgstr ""
+msgstr "Taxa de sucesso"
 
 msgid "No"
-msgstr ""
+msgstr "Não"
 
 msgid "Yes"
-msgstr ""
+msgstr "Sim"
 
 msgid ""
 "Is your language missing? Add it on <a href='https://hosted.weblate.org/"
 "projects/bim/gettext-files/'>Weblate</a>!"
 msgstr ""
+"Seu idioma está faltando? Adicione-o no <a href='https://hosted.weblate.org/"
+"projects/bim/gettext-files/'>Weblate</a>!"
 
 msgid "Language"
-msgstr ""
+msgstr "Idioma"
 
 msgid "Directions kind"
 msgstr "Tipo do controle"
@@ -254,7 +256,7 @@ msgid "Vibrations"
 msgstr "Vibrações"
 
 msgid "Features"
-msgstr ""
+msgstr "Recursos"
 
 msgid "PLAY ONLINE"
 msgstr "JOGUE ONLINE"
@@ -263,13 +265,13 @@ msgid "SHOP"
 msgstr "LOJA"
 
 msgid "STATISTICS"
-msgstr ""
+msgstr "ESTATÍSTICAS"
 
 msgid "ALPHA VERSION"
 msgstr "VERSÃO ALFA"
 
 msgid "Join our Discord to meet other players."
-msgstr ""
+msgstr "Junte-se ao nosso Discord para conhecer outros jogadores."
 
 msgid "You can start a two-players game now or wait for more players!"
 msgstr ""
