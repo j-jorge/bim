@@ -9,7 +9,7 @@ set -euo pipefail
 
 : "${axmol_repository:=https://github.com/j-jorge/axmol/}"
 : "${axmol_version:=2.10.0.1j}"
-package_revision=2
+package_revision=3
 version="$axmol_version"-"$package_revision"
 flavor="$bim_build_type"
 
@@ -261,7 +261,7 @@ find_path(
 set(
   axmol_definitions
 $(printf "  %s\n" "${axmol_definitions[@]}")
-  -DAX_ENABLE_TRACY=\${AX_ENABLE_TRACY}
+  AX_ENABLE_TRACY=\${AX_ENABLE_TRACY}
 )
 
 function(link_axmol_library name)
