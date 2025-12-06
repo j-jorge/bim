@@ -13,9 +13,11 @@ walls or, ultimately, attack another player. Sometimes the broken
 walls will expose a bonus such as extra bombs or an increase of the
 bombs' blast distance.
 
-The match features can be selected from the matchmaking screen. It is
-enough of one player enabling a feature for all players benefiting
-from it during the contest.
+As you'll progress in the game you'll unlock additional gameplay
+features to spice the competition up. Select your favorite game
+features and see them combining with the selection from your
+opponents. There's no pay to win here, all features will impact every
+player in a match equally, so pick your ingredients wisely!
 
 <p align="center">
   <img src="metadata/en-US/images/phoneScreenshots/screenshot-3-title.jpg"
