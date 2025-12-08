@@ -6,7 +6,7 @@ set -euo pipefail
 
 boost_version=1.89.0
 boost_version_underscore="${boost_version//./_}"
-package_revision=1
+package_revision=2
 version="$boost_version"-"$package_revision"
 build_type=release
 

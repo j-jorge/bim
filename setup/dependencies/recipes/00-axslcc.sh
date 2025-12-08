@@ -5,7 +5,7 @@ set -euo pipefail
 : "${bim_packages_root:-}"
 
 axslcc_version=1.9.6
-package_revision=1
+package_revision=2
 version="$axslcc_version"-"$package_revision"
 build_type=release
 

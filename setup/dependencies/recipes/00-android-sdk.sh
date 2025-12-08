@@ -10,7 +10,7 @@ set -euo pipefail
 [[ "$bim_target_platform" == "android" ]] || exit 0
 
 sdk_version=13114758
-package_revision=1
+package_revision=2
 version="$sdk_version"-"$package_revision"
 build_type=release
 

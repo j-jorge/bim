@@ -6,7 +6,7 @@ set -euo pipefail
 
 : "${libunwind_repository:=https://github.com/j-jorge/libunwind}"
 : "${libunwind_version:=1.8.3}"
-package_revision=1
+package_revision=2
 version="$libunwind_version"-"$package_revision"
 build_type=release
 

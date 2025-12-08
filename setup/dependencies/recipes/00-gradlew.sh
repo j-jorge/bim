@@ -10,7 +10,7 @@ set -euo pipefail
 [[ "$bim_target_platform" == "android" ]] || exit 0
 
 gradlew_version=8.13
-package_revision=1
+package_revision=2
 version="$gradlew_version"-"$package_revision"
 build_type=release
 
