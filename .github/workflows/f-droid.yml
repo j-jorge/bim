@@ -30,6 +30,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Free disk space
+        run: >
+          ./ci/clean-up-github-runner.sh
+
       - name: Install dependencies
         run: >
           ./ci/install-minimal-environment.sh
