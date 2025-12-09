@@ -1,0 +1,7 @@
+- Retour de l'arrière-plan sur l'écran de fin de partie en cas de match nul.
+- Réactivation de l'interaction sur l'écran de sélection de langue.
+- Mise à jour des traductions (breton, français, portugais, brésilien).
+- Ajout des traductions en kabyle et occitan.
+- Ajout d'un écran de chargement.
+- Correction d'un bug de variable non initialisée.
+- Mise à jour de l'icône.

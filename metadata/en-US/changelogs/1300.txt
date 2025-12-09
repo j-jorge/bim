@@ -1,0 +1,7 @@
+- Restore the background for the end-game screen of draw games.
+- Restore the inputs in the language selection popup.
+- Update the translations (Breton, French, Portuguese, Portuguese (Brazil)).
+- New translations: Kabyle, Occitan.
+- Add a loading screen.
+- Fix read of uninitialized variable.
+- Update the icon.
