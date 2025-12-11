@@ -6,7 +6,7 @@ set -euo pipefail
 
 : "${iscool_core_repository:=https://github.com/j-jorge/iscool-core/}"
 : "${iscool_core_version:=1.20.0}"
-package_revision=2
+package_revision=3
 version="$iscool_core_version"-"$package_revision"
 flavor="$bim_build_type"
 build_type=
