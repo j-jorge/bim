@@ -7,58 +7,66 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2025-12-11 15:00+0000\n"
+"Last-Translator: Mariano Portal <devsiderio@tutanota.com>\n"
+"Language-Team: Spanish <https://hosted.weblate.org/projects/bim/gettext-"
+"files/es/>\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.15-dev\n"
 
 msgid "Please wait"
-msgstr ""
+msgstr "Por favor, espera"
 
 msgid "You have been disconnected :("
-msgstr ""
+msgstr "Has sido desconectado :("
 
 msgid ""
 "The shop is not available on this platform, yet you can support the "
 "developers with donations! Should I open the donations page?"
 msgstr ""
+"La tienda no está disponible en esta plataforma, ¡pero puedes apoyar a los "
+"desarrolladores con donaciones! ¿Te abro la página de donaciones?"
 
 msgid "Do you really want to change the language setting?"
-msgstr ""
+msgstr "¿Realmente deseas cambiar la configuración de idioma?"
 
 #, c++-format
 msgid "Version {}"
-msgstr ""
+msgstr "Versión {}"
 
 msgid "Feedback about Bim!"
-msgstr ""
+msgstr "Haz un comentario sobre Bim!"
 
 msgid ""
 "Come play a game of Bim! https://play.google.com/store/apps/details?"
 "id=bim.app"
 msgstr ""
+"Juguemos una partida de Bim! https://play.google.com/store/apps/"
+"details?id=bim.app"
 
 msgid "You need more coins to purchase this item!"
-msgstr ""
+msgstr "¡Necesitas más monedas para poder comprar este artículo!"
 
 #, c++-format
 msgid "Customize your games with up to {} feature."
 msgid_plural "Customize your games with up to {} features."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Personalizá tus juegos con hasta {} característica."
+msgstr[1] "Personalizá tus juegos con hasta {} características."
 
 msgid "Falling blocks reduce the arena after two minutes!"
-msgstr ""
+msgstr "¡Los bloques que caen reducen la arena después de dos minutos!"
 
+#, fuzzy
 msgid "Find this incredibly strong barrel, it will save you from one hit!"
 msgstr ""
+"¡Encuentra este barril increíblemente resistente, te salvará de un golpe!"
 
 msgid "A thick fog covers the arena. You can't see were you did not go!"
-msgstr ""
+msgstr "Una espesa niebla cubre la arena. ¡No puedes ver donde no has ido!"
 
 msgid ""
 "Find the invisibility power up to disappear from the screen of all other "
