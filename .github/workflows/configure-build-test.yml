@@ -20,21 +20,23 @@ jobs:
     strategy:
       matrix:
         # Last LTS and last non-LTS.
-        container: ["ubuntu:24.04", "ubuntu:25.04"]
+        container: ["ubuntu:24.04", "ubuntu:25.10"]
         build_type: [release, debug]
+        # Can't use Clang 21 on Ubuntu 25.10 as it is missing
+        # LLVMgold.so, necessary for LTO builds.
         compiler: [g++, clang-18, clang-20]
         maybe_incremental: [--incremental, ""]
         exclude:
           - container: "ubuntu:24.04"
             compiler: clang-20
-          - container: "ubuntu:25.04"
+          - container: "ubuntu:25.10"
             compiler: clang-18
 
     steps:
       - name: Cache dependencies
         if: |
           (matrix.maybe_incremental != '')
-          || (matrix.container != 'ubuntu:25.04')
+          || (matrix.container != 'ubuntu:25.10')
           || (matrix.build_type != 'debug')
           || (matrix.compiler != 'g++')
         uses: actions/cache@v4
@@ -67,7 +69,7 @@ jobs:
       - name: Valgrind tests
         if: |
           (matrix.maybe_incremental == '')
-          && (matrix.container == 'ubuntu:25.04')
+          && (matrix.container == 'ubuntu:25.10')
           && (matrix.build_type == 'release')
           && (matrix.compiler == 'g++')
         run: >
@@ -76,7 +78,7 @@ jobs:
       - name: Archive artifacts
         if: |
           (matrix.maybe_incremental == '')
-          && (matrix.container == 'ubuntu:25.04')
+          && (matrix.container == 'ubuntu:25.10')
         uses: actions/upload-artifact@v4
         with:
           name: server-${{matrix.build_type}}-${{matrix.compiler}}

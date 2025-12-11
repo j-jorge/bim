@@ -15,7 +15,7 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    container: "ubuntu:25.04"
+    container: "ubuntu:25.10"
 
     strategy:
       matrix:
@@ -25,7 +25,7 @@ jobs:
       - name: Cache dependencies
         uses: actions/cache@v4
         with:
-          key: dependencies-ubuntu:25.04-${{matrix.build_type}}-g++-android
+          key: dependencies-ubuntu:25.10-${{matrix.build_type}}-g++-android
           path: |
             ~/.cache/ccache
             ~/.cache/iscool
