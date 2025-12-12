@@ -40,10 +40,11 @@ player in a match equally, so pick your ingredients wisely!
 
 # Installing
 
-The game is available for Android devices but still in beta on the
-PlayStore. In order to install it you can download the APK from [the
-releases page](https://github.com/j-jorge/bim/releases/latest) or get
-it from alternative stores.
+The game is available for Android devices in beta on the
+[PlayStore](https://play.google.com/store/apps/details?id=bim.app). Alternatively,
+you can also download the APK from [the releases
+page](https://github.com/j-jorge/bim/releases/latest) or get it from
+other stores.
 
 [<img src="docs/badges/fdroid.png" alt="F-Droid" width="160">](https://f-droid.org/en/packages/bim.app/)
 [<img src="docs/badges/openapk.png" alt="OpenAPK" width="160">](https://www.openapk.net/bim/bim.app/)
