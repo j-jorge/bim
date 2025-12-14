@@ -153,7 +153,7 @@ bool bim::server::matchmaking_service::refresh_encounter(
  * Search an encounter into which the given session can be inserted. Return
  * true if the session has been included in an existing encounter.
  */
-std::optional<bim::net::encounter_id>
+std::optional<bim::server::matchmaking_service::join_encounter_result>
 bim::server::matchmaking_service::add_in_any_encounter(
     const iscool::net::endpoint& endpoint, iscool::net::session_id session,
     bim::net::client_token request_token)
@@ -169,7 +169,7 @@ bim::server::matchmaking_service::add_in_any_encounter(
 
       refresh_encounter(encounter_id, encounter, endpoint, session,
                         request_token, session_index);
-      return encounter_id;
+      return join_encounter_result{ encounter_id, encounter.player_count };
     }
 
   return {};

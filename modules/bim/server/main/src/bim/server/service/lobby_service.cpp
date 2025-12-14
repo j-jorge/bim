@@ -10,8 +10,9 @@
 bim::server::lobby_service::lobby_service(const config& config,
                                           iscool::net::socket_stream& socket,
                                           game_service& game_service)
-  : m_named_game_encounter(config, socket, game_service)
-  , m_random_game_encounter(config, socket, game_service)
+  : m_discord_publisher(config)
+  , m_named_game_encounter(config, socket, game_service)
+  , m_random_game_encounter(config, socket, game_service, m_discord_publisher)
 {}
 
 bim::server::lobby_service::~lobby_service() = default;

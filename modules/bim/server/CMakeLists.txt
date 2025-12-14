@@ -3,6 +3,7 @@ if (NOT BIM_BUILD_SERVER)
 endif()
 
 find_package(maxminddb REQUIRED)
+find_package(CURL REQUIRED)
 
 add_library(bim_server
   STATIC
@@ -11,6 +12,7 @@ add_library(bim_server
   main/src/bim/server/server.cpp
   main/src/bim/server/service/authentication_service.cpp
   main/src/bim/server/service/contest_timeline_service.cpp
+  main/src/bim/server/service/discord_publisher_service.cpp
   main/src/bim/server/service/game_info.cpp
   main/src/bim/server/service/game_service.cpp
   main/src/bim/server/service/geolocation_service.cpp
@@ -22,7 +24,13 @@ add_library(bim_server
 )
 
 target_include_directories(bim_server PUBLIC main/include)
-target_link_libraries(bim_server PUBLIC bim_net maxminddb::maxminddb)
+target_link_libraries(
+  bim_server
+  PUBLIC
+  bim_net
+  maxminddb::maxminddb
+  CURL::libcurl
+)
 
 if (NOT BIM_BUILD_TESTS)
   return()

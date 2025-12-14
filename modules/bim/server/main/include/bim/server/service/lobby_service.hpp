@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #pragma once
 
+#include <bim/server/service/discord_publisher_service.hpp>
 #include <bim/server/service/named_game_encounter_service.hpp>
 #include <bim/server/service/random_game_encounter_service.hpp>
 
@@ -37,6 +38,7 @@ namespace bim::server
                                    const iscool::net::message& m);
 
   private:
+    discord_publisher_service m_discord_publisher;
     named_game_encounter_service m_named_game_encounter;
     random_game_encounter_service m_random_game_encounter;
   };

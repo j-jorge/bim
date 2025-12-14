@@ -23,6 +23,7 @@ namespace bim::net
 
 namespace bim::server
 {
+  class discord_publisher_service;
   class game_service;
 
   struct config;
@@ -32,7 +33,8 @@ namespace bim::server
   public:
     random_game_encounter_service(const config& config,
                                   iscool::net::socket_stream& socket,
-                                  game_service& game_service);
+                                  game_service& game_service,
+                                  discord_publisher_service& discord);
     ~random_game_encounter_service();
 
     void process(const iscool::net::endpoint& endpoint,
@@ -53,6 +55,7 @@ namespace bim::server
 
   private:
     const game_service& m_game_service;
+    discord_publisher_service& m_discord;
     matchmaking_service m_matchmaking_service;
 
     session_to_encounter_map m_session_to_encounter;

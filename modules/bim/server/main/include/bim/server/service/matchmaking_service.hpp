@@ -33,6 +33,12 @@ namespace bim::server
       now
     };
 
+    struct join_encounter_result
+    {
+      bim::net::encounter_id id;
+      uint8_t player_count;
+    };
+
     struct kick_session_event
     {
       iscool::net::session_id session;
@@ -52,7 +58,7 @@ namespace bim::server
                            const iscool::net::endpoint& endpoint,
                            iscool::net::session_id session,
                            bim::net::client_token request_token);
-    std::optional<bim::net::encounter_id>
+    std::optional<join_encounter_result>
     add_in_any_encounter(const iscool::net::endpoint& endpoint,
                          iscool::net::session_id session,
                          bim::net::client_token request_token);

@@ -15,6 +15,7 @@
 #include <iscool/log/add_file_sink.hpp>
 #include <iscool/log/enable_console_log.hpp>
 #include <iscool/log/log.hpp>
+#include <iscool/log/nature/error.hpp>
 #include <iscool/log/nature/info.hpp>
 #include <iscool/log/setup.hpp>
 #include <iscool/schedule/manual_scheduler.hpp>
@@ -23,6 +24,8 @@
 #include <boost/program_options.hpp>
 
 #include <cpptrace/cpptrace.hpp>
+
+#include <curl/curl.h>
 
 #include <chrono>
 #include <csignal>
@@ -295,6 +298,19 @@ static command_line parse_command_line(int argc, char* argv[])
       "contest-timeline-folder", boost::program_options::value<std::string>(),
       "Path to the folder where to store the contest timelines.");
 
+  config_options.add_options()(
+      "enable-discord-matchmaking-notifications",
+      "Whether or not we send notifications to a Discord channel when players "
+      "are waiting for a random opponent.");
+  config_options.add_options()("discord-matchmaking-notification-interval",
+                               boost::program_options::value<std::int64_t>(),
+                               "Interval in seconds between two messages sent "
+                               "to --discord-matchmaking-notification-url.");
+  config_options.add_options()("discord-matchmaking-notification-url",
+                               boost::program_options::value<std::string>(),
+                               "Discord endpoint where to send a message when "
+                               "a player is waiting for a random opponent");
+
   config_options.add_options()("enable-geolocation",
                                "Whether or not we use IP geolocation.");
   config_options.add_options()(
@@ -407,6 +423,14 @@ static command_line parse_command_line(int argc, char* argv[])
   if (result.config.enable_contest_timeline_recording)
     parse_config_option(contest_timeline_folder);
 
+  parse_config_option(enable_discord_matchmaking_notifications);
+
+  if (result.config.enable_discord_matchmaking_notifications)
+    {
+      parse_config_option(discord_matchmaking_notification_url);
+      parse_config_option(discord_matchmaking_notification_interval);
+    }
+
   parse_config_option(enable_geolocation);
 
   if (result.config.enable_geolocation)
@@ -490,6 +514,15 @@ int main(int argc, char* argv[])
   ic_log(iscool::log::nature::info(), "server", "Running on port {}.",
          command_line.options->config.port);
 
+  if (command_line.options->config.enable_discord_matchmaking_notifications)
+    {
+      const CURLcode result = curl_global_init(CURL_GLOBAL_ALL);
+
+      if (result != CURLE_OK)
+        ic_log(iscool::log::nature::error(), "server",
+               "Failed to initialize CURL {}.", curl_easy_strerror(result));
+    }
+
   bim::server::server server(command_line.options->config);
 
   using clock = std::chrono::steady_clock;
@@ -526,6 +559,9 @@ int main(int argc, char* argv[])
   ic_log(iscool::log::nature::info(), "server", "Quit.");
 
   iscool::schedule::finalize();
+
+  if (command_line.options->config.enable_discord_matchmaking_notifications)
+    curl_global_cleanup();
 
   return EXIT_SUCCESS;
 }

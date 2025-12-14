@@ -10,3 +10,4 @@
 10-axmol.sh
 10-cpptrace.sh
 10-iscool-core.sh
+20-curl.sh

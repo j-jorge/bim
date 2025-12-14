@@ -18,4 +18,6 @@ bim::server::config::config()
   , enable_statistics_log(false)
   , enable_rolling_statistics(false)
   , statistics_dump_delay(std::chrono::seconds(60))
+  , enable_discord_matchmaking_notifications(false)
+  , discord_matchmaking_notification_interval(std::chrono::seconds(60))
 {}
