@@ -3,7 +3,7 @@
 set -euo pipefail
 
 dev=0
-name="Bim! World's Server"
+config_tag=prod
 set_up=
 temp_client_config=
 temp_server_config=
@@ -81,7 +81,6 @@ do
             ;;
         --dev)
             dev=1
-            shift
             ;;
         -h|--help)
             usage
@@ -149,7 +148,7 @@ echo "GO!"
 
 if (( dev == 1 ))
 then
-    name="Bim! Dev Server"
+    config_tag=dev
 fi
 
 if [[ -z "${build_dir:-}" ]]
@@ -159,8 +158,10 @@ then
 fi
 
 temp_server_config="$(mktemp)"
-sed "s/{name}/$name/" "$script_dir"/server-config.json > "$temp_server_config"
-python3 -m json.tool --compact "$temp_server_config" "$temp_server_config"
+jq --compact-output --slurp '.[0] * .[1]' \
+   "$script_dir"/server-config.json \
+   "$script_dir"/server-config-"${config_tag}".json \
+   > "$temp_server_config"
 
 set_up="$(mktemp)"
 
@@ -189,8 +190,13 @@ ssh "$login_at_host" \
     '&&' /tmp/bim-set-up.sh \
     '&&' rm --force /tmp/bim-set-up.sh
 
-rsync "$build_dir"/apps/server/bim-server{,.dbg} \
-      "$build_dir"/apps/server/bim-stack-dump \
+bin_files=("$build_dir"/apps/server/bim-server
+           "$build_dir"/apps/server/bim-stack-dump)
+
+[[ ! -f "$build_dir"/apps/server/bim-server.dbg ]] \
+    || bin_files+=("$build_dir"/apps/server/bim-server.dbg)
+
+rsync "${bin_files[@]}" \
       "$login_at_host":bim/"$port"/bin/
 
 rsync --recursive \

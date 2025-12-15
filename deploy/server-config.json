@@ -2,10 +2,6 @@
   "enable-contest-timeline-recording": true,
   "contest-timeline-folder": "/opt/bim/persistent/contest/",
 
-  "enable-discord-matchmaking-notifications": true,
-  "discord-matchmaking-notification-interval": 60,
-  "discord-matchmaking-notification-url": "{discord_url}",
-
   "enable-geolocation": true,
   "geolocation-clean-up-interval": 86400,
   "geolocation-update-interval": 1080,
@@ -13,7 +9,5 @@
 
   "enable-statistics-log": true,
   "enable-rolling-statistics": true,
-  "statistics-log-file": "/opt/bim/persistent/log/statistics.txt",
-
-  "name": "{name}"
+  "statistics-log-file": "/opt/bim/persistent/log/statistics.txt"
 }

@@ -1,14 +1,10 @@
 {
-  "mrv": 11,
+  "mrv": 13,
   "rcui": 24,
   "vui": 24,
   "gs": [
     {
       "h": "bim.jorge.st:PORT"
-    },
-    {
-      "p": 9,
-      "h": "bim.jorge.st:20809"
     }
   ],
   "cpv": 50,

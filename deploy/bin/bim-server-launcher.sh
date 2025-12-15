@@ -2,6 +2,11 @@
 
 set -euo pipefail
 
+if ldd /opt/bim/bin/bim-server | grep --quiet libtsan
+then
+    sysctl vm.mmap_rnd_bits=28
+fi
+
 cp --recursive \
    /opt/bim/etc/logrotate.d \
    /opt/bim/etc/cron.weekly \
