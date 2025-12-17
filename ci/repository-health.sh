@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-script_dir="$(dirname "${BASH_SOURCE[0]}")"
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd)"
 repository_root="$(cd "$script_dir"/..; pwd)"
 cd "$repository_root"
 
@@ -19,19 +19,7 @@ clean_up()
 
 find_sources()
 {
-    local exclude_args=()
-
-    while read -r ignored
-    do
-        if (( ${#exclude_args[@]} == 0 ))
-        then
-            exclude_args=("-path" ."$ignored*")
-        else
-            exclude_args+=("-o" "-path" ."$ignored*")
-        fi
-    done < .gitignore
-
-    find . -not \( "${exclude_args[@]}" \) \( "$@" \) -print0
+    "$script_dir"/find-sources.sh \( "$@" \) -print0
 }
 
 run_test()
@@ -107,6 +95,9 @@ run_test "Validating C++/Java/JSON formatting." \
          -name "*.[cht]pp" \
          -o -name "*.java" \
          -o -name "*.json"
+
+custom_command_test "Checking license in sources." \
+                    "$script_dir"/check-licenses.sh
 
 run_test "Validating Python files." \
          black \
