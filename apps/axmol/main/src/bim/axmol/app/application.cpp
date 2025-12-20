@@ -45,6 +45,7 @@
 #include <iscool/system/language_name.hpp>
 #include <iscool/time/now.hpp>
 
+#include <axmol/2d/FontFreeType.h>
 #include <axmol/2d/Scene.h>
 #include <axmol/2d/SpriteFrameCache.h>
 #include <axmol/base/Director.h>
@@ -401,6 +402,7 @@ bim::axmol::app::application::application(
   , m_screen_config{ screen_size, screen_scale }
   , m_script_info(script)
 {
+  ax::FontFreeType::setStreamParsingEnabled(false);
   ax::Image::setPNGPremultipliedAlphaEnabled(false);
 
   bim::axmol::action::register_actions(m_action_factory);
