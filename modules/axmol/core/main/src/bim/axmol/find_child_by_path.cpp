@@ -11,7 +11,7 @@ static ax::Node* find_child(ax::Node& node, std::string_view path,
   const std::string_view::size_type s =
       std::min(e, path.find_first_of('/', p));
   const std::string_view name = path.substr(p, s - p);
-  const std::uint64_t hash = ax::hash_node_name(name);
+  const std::uint64_t hash = ax::hashNodeName(name);
 
   for (ax::Node* n : node.getChildren())
     if ((n->getHashOfName() == hash) && (n->getName() == name))
