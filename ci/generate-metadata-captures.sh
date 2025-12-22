@@ -123,7 +123,9 @@ function generate_captures()
 generate_captures br br-FR
 generate_captures de de-DE
 generate_captures en en-US
+generate_captures es es-ES
 generate_captures fr fr-FR
+generate_captures it it-IT
 generate_captures kab kab-DZ
 generate_captures oc oc-FR
 generate_captures pt pt-PT

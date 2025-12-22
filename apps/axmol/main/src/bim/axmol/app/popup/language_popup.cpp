@@ -102,10 +102,10 @@ bim::axmol::app::language_popup::language_popup(
 
   for (iscool::language_name language :
        { iscool::language_name::br_FR, iscool::language_name::de_DE,
-         iscool::language_name::en_GB, iscool::language_name::fr_FR,
-         iscool::language_name::kab_DZ, iscool::language_name::oc_FR,
-         iscool::language_name::pt_PT, iscool::language_name::pt_BR,
-         iscool::language_name::tr_TR })
+         iscool::language_name::en_GB, iscool::language_name::es_ES,
+         iscool::language_name::fr_FR, iscool::language_name::kab_DZ,
+         iscool::language_name::oc_FR, iscool::language_name::pt_PT,
+         iscool::language_name::pt_BR, iscool::language_name::tr_TR })
     {
       language_list_item_controls controls(context.get_widget_context(),
                                            button_item_controls);

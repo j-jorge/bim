@@ -48,12 +48,63 @@
     },
     {
       "kind": "click",
+      "node": "overlay/language/client_container/list/view////es_ES",
+      "event": "popup-shown"
+    },
+    {
+      "kind": "capture",
+      "file": "spanish.png"
+    },
+    {
+      "kind": "click",
+      "node": "overlay/container/client_container/no_button",
+      "event": "popup-hidden"
+    },
+    {
+      "kind": "click",
       "node": "overlay/language/client_container/list/view////fr_FR",
       "event": "popup-shown"
     },
     {
       "kind": "capture",
       "file": "french.png"
+    },
+    {
+      "kind": "click",
+      "node": "overlay/container/client_container/no_button",
+      "event": "popup-hidden"
+    },
+    {
+      "kind": "click",
+      "node": "overlay/language/client_container/list/view////kab_DZ",
+      "event": "popup-shown"
+    },
+    {
+      "kind": "capture",
+      "file": "kabyle.png"
+    },
+    {
+      "kind": "click",
+      "node": "overlay/container/client_container/no_button",
+      "event": "popup-hidden"
+    },
+    {
+      "kind": "swipe",
+      "from-node": "overlay/language/client_container/list/view////fr_FR",
+      "to-node": "overlay/language/client_container/list/view////br_FR"
+    },
+    {
+      "kind": "click",
+      "node": "overlay/language/client_container/list/view"
+    },
+    {
+      "kind": "click",
+      "node": "overlay/language/client_container/list/view////oc_FR",
+      "event": "popup-shown"
+    },
+    {
+      "kind": "capture",
+      "file": "occitan.png"
     },
     {
       "kind": "click",

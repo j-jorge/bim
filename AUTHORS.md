@@ -14,6 +14,10 @@ CC-BY-SA 4.0 Anna Al Lae, Fulup Travers, via Weblate.
 assets/i18n/de.po
 CC-BY-SA 4.0 Mirko P., via Weblate.
 
+assets/i18n/it.po
+assets/i18n/es.po
+CC-BY-SA 4.0 Mariano Portal, via Weblate.
+
 assets/i18n/fr.po
 CC-BY-SA 4.0 Julien Jorge, Quentin Pagès, via Weblate.
 
