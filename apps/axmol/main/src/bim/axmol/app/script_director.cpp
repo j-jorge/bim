@@ -40,6 +40,7 @@ enum class bim::axmol::app::script_director::step_kind : std::uint8_t
 {
   wait,
   click,
+  swipe,
   capture
 };
 
@@ -167,6 +168,22 @@ bim::axmol::app::script_director::script_director(
           m_steps.emplace_back(step_kind::click, m_click_steps.size());
           m_click_steps.emplace_back(std::move(path), std::move(event));
         }
+      else if (kind_string == "swipe")
+        {
+          std::string path_from;
+
+          if (!action_property_to_string(path_from, action, "from-node", i))
+            continue;
+
+          std::string path_to;
+
+          if (!action_property_to_string(path_to, action, "to-node", i))
+            continue;
+
+          m_steps.emplace_back(step_kind::swipe, m_swipe_steps.size());
+          m_swipe_steps.emplace_back(std::move(path_from));
+          m_swipe_steps.emplace_back(std::move(path_to));
+        }
       else if (kind_string == "wait")
         {
           std::string event;
@@ -214,6 +231,7 @@ void bim::axmol::app::script_director::tick()
   ++m_next_step;
 
   const std::size_t i = m_steps[s].index;
+  bool success = true;
 
   switch (m_steps[s].kind)
     {
@@ -229,9 +247,9 @@ void bim::axmol::app::script_director::tick()
     case step_kind::click:
       ic_log(iscool::log::nature::info(), "script_director",
              "Click '{}', wait '{}'.", m_click_steps[i].node_path,
-             m_pending_event);
+             m_click_steps[i].event);
 
-      click(m_click_steps[i].node_path);
+      success = click(m_click_steps[i].node_path);
 
       m_pending_event = m_click_steps[i].event;
 
@@ -239,6 +257,15 @@ void bim::axmol::app::script_director::tick()
         schedule_tick();
       else
         schedule_timeout();
+
+      break;
+    case step_kind::swipe:
+      ic_log(iscool::log::nature::info(), "script_director",
+             "Swipe from '{}' to '{}'.", m_swipe_steps[i],
+             m_swipe_steps[i + 1]);
+
+      success = swipe(m_swipe_steps[i], m_swipe_steps[i + 1]);
+      schedule_tick();
       break;
     case step_kind::wait:
       ic_log(iscool::log::nature::info(), "script_director", "Wait '{}'.",
@@ -248,6 +275,9 @@ void bim::axmol::app::script_director::tick()
       schedule_timeout();
       break;
     }
+
+  if (!success)
+    m_done(result::fail);
 }
 
 void bim::axmol::app::script_director::capture(
@@ -260,7 +290,7 @@ void bim::axmol::app::script_director::capture(
       });
 }
 
-void bim::axmol::app::script_director::click(
+bool bim::axmol::app::script_director::click(
     const std::string& node_path) const
 {
   ax::Director& director = *ax::Director::getInstance();
@@ -273,9 +303,8 @@ void bim::axmol::app::script_director::click(
       dump_node(*director.getRunningScene(), 0);
       ic_log(iscool::log::nature::error(), "script_director",
              "Cannot find node '{}'.", node_path);
-      m_done(result::fail);
 
-      return;
+      return false;
     }
 
   const ax::Vec2 p =
@@ -292,6 +321,75 @@ void bim::axmol::app::script_director::click(
   // We need to set it twice, otherwise the release event is ignored.
   touch.setTouchInfo(0, p.x, p.y);
   release(touch);
+
+  return true;
+}
+
+bool bim::axmol::app::script_director::swipe(
+    const std::string& from_node_path, const std::string& to_node_path) const
+{
+  ax::Director& director = *ax::Director::getInstance();
+
+  ax::Node* const from = bim::axmol::find_child_by_path(
+      *director.getRunningScene(), from_node_path);
+
+  if (from == nullptr)
+    {
+      dump_node(*director.getRunningScene(), 0);
+      ic_log(iscool::log::nature::error(), "script_director",
+             "Cannot find node '{}'.", from_node_path);
+      m_done(result::fail);
+
+      return false;
+    }
+
+  ax::Node* const to = bim::axmol::find_child_by_path(
+      *director.getRunningScene(), to_node_path);
+
+  if (to == nullptr)
+    {
+      dump_node(*director.getRunningScene(), 0);
+      ic_log(iscool::log::nature::error(), "script_director",
+             "Cannot find node '{}'.", to_node_path);
+      m_done(result::fail);
+
+      return false;
+    }
+
+  const ax::Vec2 from_pos = director.convertToUI(
+      from->convertToWorldSpace(from->getContentSize() / 2));
+  const ax::Vec2 to_pos =
+      director.convertToUI(to->convertToWorldSpace(to->getContentSize() / 2));
+
+  ic_log(iscool::log::nature::info(), "script_director",
+         "Swipe '{}' -> '{}', ({}, {}) -> ({}, {}).", from_node_path,
+         to_node_path, from_pos.x, from_pos.y, to_pos.x, to_pos.y);
+
+  ax::Touch touch;
+  touch.setTouchInfo(0, from_pos.x, from_pos.y);
+
+  press(touch);
+
+  // Swipe is done in multiple steps because there is a threshold and multiple
+  // steps to distinguish a swipe from a tap.
+  const ax::Vec2 positions[3] = { from_pos + 1 * (to_pos - from_pos) / 4,
+                                  from_pos + 2 * (to_pos - from_pos) / 4,
+                                  from_pos + 3 * (to_pos - from_pos) / 4 };
+
+  for (const ax::Vec2& p : positions)
+    {
+      touch.setTouchInfo(0, p.x, p.y);
+      move(touch);
+    }
+
+  // And the second move to reach the final position.
+  touch.setTouchInfo(0, to_pos.x, to_pos.y);
+  move(touch);
+
+  touch.setTouchInfo(0, to_pos.x, to_pos.y);
+  release(touch);
+
+  return true;
 }
 
 void bim::axmol::app::script_director::press(ax::Touch& touch) const
@@ -301,6 +399,18 @@ void bim::axmol::app::script_director::press(ax::Touch& touch) const
 
   ax::EventTouch event;
   event.setEventCode(ax::EventTouch::EventCode::BEGAN);
+  event.setTouches(std::move(touches));
+
+  ax::Director::getInstance()->getEventDispatcher()->dispatchEvent(&event);
+}
+
+void bim::axmol::app::script_director::move(ax::Touch& touch) const
+{
+  std::vector<ax::Touch*> touches;
+  touches.emplace_back(&touch);
+
+  ax::EventTouch event;
+  event.setEventCode(ax::EventTouch::EventCode::MOVED);
   event.setTouches(std::move(touches));
 
   ax::Director::getInstance()->getEventDispatcher()->dispatchEvent(&event);

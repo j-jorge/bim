@@ -47,8 +47,11 @@ namespace bim::axmol::app
 
     void capture(const std::string& file_name) const;
 
-    void click(const std::string& node_path) const;
+    bool click(const std::string& node_path) const;
+    bool swipe(const std::string& from_node_path,
+               const std::string& to_node_path) const;
     void press(ax::Touch& touch) const;
+    void move(ax::Touch& touch) const;
     void release(ax::Touch& touch) const;
 
     void check_event(std::string_view name);
@@ -61,6 +64,7 @@ namespace bim::axmol::app
     std::vector<std::string> m_wait_steps;
     std::vector<click_target> m_click_steps;
     std::vector<std::string> m_capture_steps;
+    std::vector<std::string> m_swipe_steps;
     std::string_view m_pending_event;
     std::size_t m_next_step;
     std::chrono::seconds m_timeout;
