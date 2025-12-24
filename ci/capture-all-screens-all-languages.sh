@@ -111,7 +111,7 @@ function run_script()
 
 if [[ "${#languages[@]}" -eq 0 ]]
 then
-    languages=(br de en es fr it kab oc pt pt_BR tr)
+    languages=(br de en es fr it kab oc pt pt_BR tr uk)
 fi
 
 for language in "${languages[@]}"

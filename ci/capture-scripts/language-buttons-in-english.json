@@ -141,7 +141,7 @@
     },
     {
       "kind": "click",
-      "node": "overlay/language/client_container/list/view////tr_TR",
+      "node": "overlay/language/client_container/list/view////ptr_TR",
       "event": "popup-shown"
     },
     {
@@ -150,12 +150,26 @@
     },
     {
       "kind": "click",
+      "node": "overlay/container/client_container/no_button",
+      "event": "popup-hidden"
+    },
+    {
+      "kind": "click",
+      "node": "overlay/language/client_container/list/view////uk_UA",
+      "event": "popup-shown"
+    },
+    {
+      "kind": "capture",
+      "file": "ukrainian.png"
+    },
+    {
+      "kind": "click",
       "node": "overlay/container/client_container/yes_button",
       "event": "loaded"
     },
     {
       "kind": "capture",
-      "file": "lobby-turkce.png"
+      "file": "lobby-ukrainian.png"
     }
   ]
 }

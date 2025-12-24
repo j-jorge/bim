@@ -131,6 +131,7 @@ generate_captures oc oc-FR
 generate_captures pt pt-PT
 generate_captures pt_BR pt-BR
 generate_captures tr tr-TR
+generate_captures uk uk-UA
 
 for s in "${failing[@]}"
 do
