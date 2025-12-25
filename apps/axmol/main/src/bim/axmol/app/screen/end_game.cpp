@@ -40,7 +40,8 @@ IMPLEMENT_SIGNAL(bim::axmol::app::end_game, revenge, m_revenge);
 bim::axmol::app::end_game::end_game(const context& context,
                                     const iscool::style::declaration& style)
   : m_context(context)
-  , m_controls(context.get_widget_context(), *style.get_declaration("widgets"))
+  , m_controls(*context.get_widget_context(),
+               *style.get_declaration("widgets"))
   , m_wallet(new wallet(context, *style.get_declaration("wallet")))
   , m_action_draw(*style.get_declaration("actions.draw"))
   , m_action_win(*style.get_declaration("actions.win"))
@@ -114,7 +115,7 @@ void bim::axmol::app::end_game::displaying(
   m_main_actions.stop();
 
   bim::axmol::widget::apply_actions(m_main_actions,
-                                    m_context.get_widget_context(),
+                                    *m_context.get_widget_context(),
                                     m_all_nodes, *action_style);
 }
 

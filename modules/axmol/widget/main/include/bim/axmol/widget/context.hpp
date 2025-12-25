@@ -3,6 +3,8 @@
 
 #include <iscool/context.hpp>
 
+#include <boost/unordered/unordered_flat_map.hpp>
+
 namespace bim::axmol
 {
   class colour_chart;
@@ -20,14 +22,17 @@ namespace bim::axmol
   namespace widget
   {
     class dynamic_factory;
+    class font_catalog;
 
     class context
     {
     public:
       const bim::axmol::colour_chart& colors;
       bim::axmol::style::cache& style_cache;
-      const bim::axmol::widget::dynamic_factory& factory;
+      const dynamic_factory& factory;
       const bim::axmol::action::dynamic_factory& action_factory;
+
+      font_catalog& fonts;
 
       /**
        * Scale factor to apply to the widgets to stretch them from the design

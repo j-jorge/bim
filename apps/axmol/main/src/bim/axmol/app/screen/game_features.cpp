@@ -71,18 +71,19 @@ ic_implement_state_monitor(bim::axmol::app::game_features, m_monitor, idle,
 bim::axmol::app::game_features::game_features(
     const context& context, const iscool::style::declaration& style)
   : m_context(context)
-  , m_controls(context.get_widget_context(), *style.get_declaration("widgets"))
+  , m_controls(*context.get_widget_context(),
+               *style.get_declaration("widgets"))
   , m_escape(ax::EventKeyboard::KeyCode::KEY_BACK)
   , m_list_input_stencil(*m_controls->list)
   , m_list_item_inputs(new bim::axmol::input::node(m_list_input_stencil))
   , m_selected_feature{}
-  , m_slot_bounds_off(context.get_widget_context().style_cache.get_bounds(
+  , m_slot_bounds_off(context.get_widget_context()->style_cache.get_bounds(
         *style.get_declaration("slot-bounds-off")))
-  , m_slot_display_off(context.get_widget_context().style_cache.get_display(
+  , m_slot_display_off(context.get_widget_context()->style_cache.get_display(
         *style.get_declaration("slot-display-off")))
-  , m_item_bounds_off(context.get_widget_context().style_cache.get_bounds(
+  , m_item_bounds_off(context.get_widget_context()->style_cache.get_bounds(
         *style.get_declaration("item-bounds-off")))
-  , m_item_display_off(context.get_widget_context().style_cache.get_display(
+  , m_item_display_off(context.get_widget_context()->style_cache.get_display(
         *style.get_declaration("item-display-off")))
   , m_wallet(new wallet(context, *style.get_declaration("wallet")))
   , m_slot{ m_controls->slot_0, m_controls->slot_1 }
@@ -97,8 +98,8 @@ bim::axmol::app::game_features::game_features(
       m_slot_selection_action[i] = ax::TargetedAction::create(
           m_slot[i],
           context.get_widget_context()
-              .action_factory
-              .create(context.get_widget_context().colors, slot_action_style)
+              ->action_factory
+              .create(context.get_widget_context()->colors, slot_action_style)
               .get());
   }
 
@@ -191,7 +192,7 @@ bim::axmol::app::game_features::game_features(
   bim::axmol::widget::named_node_group row_controls;
 
   const bim::axmol::widget::context& widget_context =
-      context.get_widget_context();
+      *context.get_widget_context();
 
   const std::string node_names[buttons_per_row] = { "feature_0", "feature_1",
                                                     "feature_2", "feature_3" };
@@ -246,8 +247,8 @@ bim::axmol::app::game_features::game_features(
 
       m_item_selection_action[f] = ax::TargetedAction::create(
           &button, context.get_widget_context()
-                       .action_factory
-                       .create(context.get_widget_context().colors,
+                       ->action_factory
+                       .create(context.get_widget_context()->colors,
                                item_selection_action_style)
                        .get());
 
@@ -561,7 +562,7 @@ void bim::axmol::app::game_features::stop_slot_animations()
     {
       bim::axmol::style::apply_bounds(
           m_slot_bounds_off, *m_slot[i], *m_slot[i]->getParent(),
-          m_context.get_widget_context().device_scale);
+          m_context.get_widget_context()->device_scale);
 
       bim::axmol::style::apply_display(m_slot_display_off, *m_slot[i]);
     }
@@ -583,10 +584,10 @@ void bim::axmol::app::game_features::deselect_item()
 
   m_item_animation.stop();
 
-  bim::axmol::style::apply_bounds(m_item_bounds_off,
-                                  *m_catalog[m_selected_feature],
-                                  *m_catalog[m_selected_feature]->getParent(),
-                                  m_context.get_widget_context().device_scale);
+  bim::axmol::style::apply_bounds(
+      m_item_bounds_off, *m_catalog[m_selected_feature],
+      *m_catalog[m_selected_feature]->getParent(),
+      m_context.get_widget_context()->device_scale);
 
   bim::axmol::style::apply_display(m_item_display_off,
                                    *m_catalog[m_selected_feature]);

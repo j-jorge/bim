@@ -99,7 +99,7 @@ namespace bim::axmol::app
         m_context,
         ic_context_declare_parent_properties(                              //
             ((iscool::preferences::local_preferences*)(local_preferences)) //
-            ((const bim::axmol::widget::context&)(widget_context))         //
+            ((const bim::axmol::widget::context*)(widget_context))         //
             ((main_scene*)(main_scene))                                    //
             ((bim::app::analytics_service*)(analytics))                    //
             ((application_event_dispatcher*)(event_dispatcher))            //

@@ -26,7 +26,8 @@ IMPLEMENT_SIGNAL(bim::axmol::app::message_popup, ok, m_ok);
 bim::axmol::app::message_popup::message_popup(
     const context& context, const iscool::style::declaration& style)
   : m_context(context)
-  , m_controls(context.get_widget_context(), *style.get_declaration("widgets"))
+  , m_controls(*context.get_widget_context(),
+               *style.get_declaration("widgets"))
   , m_yes_only_bounds(*style.get_declaration("yes-only-bounds"))
   , m_yes_no_bounds(*style.get_declaration("yes-no-bounds"))
   , m_yes_only_display(*style.get_declaration("yes-only-display"))
@@ -67,8 +68,9 @@ void bim::axmol::app::message_popup::show(
 {
   m_controls->message->setString(message);
 
-  bim::axmol::widget::apply_display(m_context.get_widget_context().style_cache,
-                                    m_controls->all_nodes, display);
+  bim::axmol::widget::apply_display(
+      m_context.get_widget_context()->style_cache, m_controls->all_nodes,
+      display);
 
   m_popup->show(m_controls->all_nodes, bounds, m_inputs.root());
 }

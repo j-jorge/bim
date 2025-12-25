@@ -1,4 +1,14 @@
 {
+  "font-aliases": [
+    {
+      "font": "font/LuckiestGuy-Regular.ttf",
+      "languages": [
+        "uk"
+      ],
+      "substitute": "font/OpenSans-ExtraBold.ttf"
+    }
+  ],
+
   "textures": [
     "sprite-sheet-1.png",
     "sprite-sheet-2.png",

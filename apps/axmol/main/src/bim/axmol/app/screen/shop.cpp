@@ -55,7 +55,8 @@ bim::axmol::app::shop::shop(const context& context,
                             const iscool::style::declaration& style)
   : m_context(context)
   , m_escape(ax::EventKeyboard::KeyCode::KEY_BACK)
-  , m_controls(context.get_widget_context(), *style.get_declaration("widgets"))
+  , m_controls(*context.get_widget_context(),
+               *style.get_declaration("widgets"))
   , m_wallet(new wallet(context, *style.get_declaration("wallet")))
   , m_shop(new bim::app::shop_service())
   , m_style_loading(*style.get_declaration("display.loading"))
@@ -187,8 +188,9 @@ void bim::axmol::app::shop::dispatch_back()
 
 void bim::axmol::app::shop::fetch_products()
 {
-  bim::axmol::widget::apply_display(m_context.get_widget_context().style_cache,
-                                    m_controls->all_nodes, m_style_loading);
+  bim::axmol::widget::apply_display(
+      m_context.get_widget_context()->style_cache, m_controls->all_nodes,
+      m_style_loading);
 
   const bim::app::config& config = *m_context.get_config();
   std::vector<std::string_view> product_ids;
@@ -225,8 +227,9 @@ void bim::axmol::app::shop::products_ready(
         break;
     }
 
-  bim::axmol::widget::apply_display(m_context.get_widget_context().style_cache,
-                                    m_controls->all_nodes, m_style_ready);
+  bim::axmol::widget::apply_display(
+      m_context.get_widget_context()->style_cache, m_controls->all_nodes,
+      m_style_ready);
   m_context.get_event_dispatcher()->dispatch("products-ready");
 }
 

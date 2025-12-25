@@ -65,10 +65,11 @@ static void neighborhood_to_string(char* buffer,
 bim::axmol::app::fog_display::fog_display(
     const context& context, const iscool::style::declaration& style)
   : m_context(context)
-  , m_controls(context.get_widget_context(), *style.get_declaration("widgets"))
+  , m_controls(*context.get_widget_context(),
+               *style.get_declaration("widgets"))
 {
   alloc_assets(
-      m_sprite, m_context.get_widget_context(),
+      m_sprite, *m_context.get_widget_context(),
       bim::game::g_default_arena_width * bim::game::g_default_arena_height,
       *style.get_declaration("fog-of-war"), *m_controls->fog_container);
 

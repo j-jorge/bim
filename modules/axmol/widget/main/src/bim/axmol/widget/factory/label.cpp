@@ -2,6 +2,7 @@
 #include <bim/axmol/widget/factory/label.hpp>
 
 #include <bim/axmol/widget/context.hpp>
+#include <bim/axmol/widget/font_catalog.hpp>
 #include <bim/axmol/widget/log_context.hpp>
 
 #include <bim/axmol/style/apply_display.hpp>
@@ -34,7 +35,7 @@ bim::axmol::ref_ptr<ax::Label> bim::axmol::widget::factory<ax::Label>::create(
 
   ax::TTFConfig ttf_config;
 
-  ttf_config.fontFilePath = *font_path;
+  ttf_config.fontFilePath = context.fonts.resolve(*font_path);
   ttf_config.fontSize =
       style.get_number("font.size", 12) * context.device_scale;
   ttf_config.outlineSize = outline_size;

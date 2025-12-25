@@ -81,7 +81,8 @@ bim::axmol::app::debug_popup::debug_popup(
     const context& context, const iscool::style::declaration& style,
     wallet& wallet)
   : m_context(context)
-  , m_controls(context.get_widget_context(), *style.get_declaration("widgets"))
+  , m_controls(*context.get_widget_context(),
+               *style.get_declaration("widgets"))
   , m_style_bounds(*style.get_declaration("bounds"))
   , m_list_item_container_style(*style.get_declaration("list-item"))
   , m_title_item_controls(*style.get_declaration("title-item-controls"))
@@ -227,7 +228,7 @@ void bim::axmol::app::debug_popup::add_feature_item(
 
 void bim::axmol::app::debug_popup::add_title(std::string_view label)
 {
-  label_controls controls(m_context.get_widget_context(),
+  label_controls controls(*m_context.get_widget_context(),
                           m_title_item_controls);
   controls.label->setString(label);
 
@@ -237,7 +238,8 @@ void bim::axmol::app::debug_popup::add_title(std::string_view label)
 void bim::axmol::app::debug_popup::add_text_item(std::string_view label,
                                                  std::string_view value)
 {
-  text_controls controls(m_context.get_widget_context(), m_text_item_controls);
+  text_controls controls(*m_context.get_widget_context(),
+                         m_text_item_controls);
   controls.label->setString(label);
   controls.value->setString(value);
 
@@ -247,7 +249,7 @@ void bim::axmol::app::debug_popup::add_text_item(std::string_view label,
 void bim::axmol::app::debug_popup::add_toggle_item(
     std::string_view label, bool state, std::function<bool()> do_toggle)
 {
-  toggle_controls controls(m_context.get_widget_context(),
+  toggle_controls controls(*m_context.get_widget_context(),
                            m_toggle_item_controls);
   controls.label->setString(label);
 
@@ -267,7 +269,7 @@ void bim::axmol::app::debug_popup::add_toggle_item(
 void bim::axmol::app::debug_popup::add_button_item(
     std::string_view label, std::function<void()> do_action)
 {
-  button_controls controls(m_context.get_widget_context(),
+  button_controls controls(*m_context.get_widget_context(),
                            m_button_item_controls);
   controls.label->setString(label);
 
@@ -286,7 +288,7 @@ void bim::axmol::app::debug_popup::add_item(
 {
   bim::axmol::ref_ptr<bim::axmol::widget::passive_node> item =
       bim::axmol::widget::factory<bim::axmol::widget::passive_node>::create(
-          m_context.get_widget_context(), m_list_item_container_style);
+          *m_context.get_widget_context(), m_list_item_container_style);
 
   item->fill(nodes, bounds);
   m_controls->list->push_back(*item);

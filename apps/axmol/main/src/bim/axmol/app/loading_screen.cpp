@@ -7,6 +7,8 @@
 #include <bim/axmol/widget/add_group_as_children.hpp>
 #include <bim/axmol/widget/apply_actions.hpp>
 #include <bim/axmol/widget/apply_bounds.hpp>
+#include <bim/axmol/widget/context.hpp>
+#include <bim/axmol/widget/font_catalog.hpp>
 
 #include <bim/app/preference/user_language.hpp>
 
@@ -21,6 +23,7 @@
 #include <iscool/files/file_exists.hpp>
 #include <iscool/files/read_file.hpp>
 #include <iscool/i18n/load_translations.hpp>
+#include <iscool/json/cast_string.hpp>
 #include <iscool/json/from_file.hpp>
 #include <iscool/log/log.hpp>
 #include <iscool/log/nature/warning.hpp>
@@ -34,6 +37,8 @@
 #include <axmol/renderer/TextureCache.h>
 #include <axmol/renderer/backend/ProgramManager.h>
 
+#include <algorithm>
+
 #if BIM_ENABLE_TRACY
 static const char* const g_tracy_tag_locked = "locked";
 static const char* const g_tracy_tag_loading = "loading";
@@ -46,7 +51,8 @@ bim::axmol::app::loading_screen::loading_screen(
     const context& context, const iscool::style::declaration& style)
   : m_context(context)
   , m_container(ax::Node::create())
-  , m_controls(context.get_widget_context(), *style.get_declaration("widgets"))
+  , m_controls(*context.get_widget_context(),
+               *style.get_declaration("widgets"))
   , m_bounds(*style.get_declaration("bounds"))
   , m_action_done(*style.get_declaration("action.done"))
 {}
@@ -60,7 +66,7 @@ void bim::axmol::app::loading_screen::start()
   m_context.get_main_scene()->add_in_overlays(*m_container, m_inputs.root());
   bim::axmol::widget::add_group_as_children(*m_container,
                                             m_controls->all_nodes);
-  bim::axmol::widget::apply_bounds(m_context.get_widget_context(),
+  bim::axmol::widget::apply_bounds(*m_context.get_widget_context(),
                                    m_controls->all_nodes, m_bounds);
 
   m_start_connection = iscool::schedule::delayed_call(
@@ -76,7 +82,7 @@ void bim::axmol::app::loading_screen::stop()
     return;
 
   bim::axmol::widget::apply_actions(m_action_runner,
-                                    m_context.get_widget_context(),
+                                    *m_context.get_widget_context(),
                                     m_controls->all_nodes, m_action_done,
                                     [this]()
                                     {
@@ -106,13 +112,21 @@ void bim::axmol::app::loading_screen::load_translations()
   ZoneScoped;
 
   std::string translations_file;
+  std::string selected_language;
 
   const auto check_language_code = [&](std::string_view c) -> bool
   {
     translations_file = "i18n/";
     translations_file += c;
     translations_file += ".mo";
-    return iscool::files::file_exists(translations_file);
+
+    if (iscool::files::file_exists(translations_file))
+      {
+        selected_language = c;
+        return true;
+      }
+
+    return false;
   };
 
   const iscool::language_name language =
@@ -121,7 +135,10 @@ void bim::axmol::app::loading_screen::load_translations()
   if (!check_language_code(iscool::to_string(language))
       && !check_language_code(
           iscool::to_string(iscool::to_language_code(language))))
-    translations_file = "i18n/en.mo";
+    {
+      translations_file = "i18n/en.mo";
+      selected_language = "en";
+    }
 
   const std::unique_ptr<std::istream> mo_file =
       iscool::files::read_file(translations_file);
@@ -129,6 +146,20 @@ void bim::axmol::app::loading_screen::load_translations()
   if (!iscool::i18n::load_translations(language, *mo_file))
     ic_log(iscool::log::nature::warning(), "loading",
            "Could not read translations from {}.", translations_file);
+
+  for (const Json::Value& alias : m_resources["font-aliases"])
+    {
+      const Json::Value& languages = alias["languages"];
+
+      if (std::ranges::any_of(languages,
+                              [&](const Json::Value& v)
+                              {
+                                return selected_language == v.asCString();
+                              }))
+        m_context.get_widget_context()->fonts.set_alias(
+            iscool::json::cast<std::string>(alias["font"]),
+            iscool::json::cast<std::string>(alias["substitute"]));
+    }
 }
 
 void bim::axmol::app::loading_screen::load_textures()

@@ -52,7 +52,7 @@ namespace bim::axmol::app
     ic_declare_context(
         m_context,
         ic_context_declare_parent_properties(                      //
-            ((const bim::axmol::widget::context&)(widget_context)) //
+            ((const bim::axmol::widget::context*)(widget_context)) //
             ((iscool::preferences::local_preferences*)(local_preferences))),
         ic_context_no_properties);
 

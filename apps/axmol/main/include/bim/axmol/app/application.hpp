@@ -3,13 +3,9 @@
 
 #include <bim/axmol/action/dynamic_factory.hpp>
 #include <bim/axmol/audio/mixer.hpp>
-#include <bim/axmol/colour_chart.hpp>
 #include <bim/axmol/display/main_view.hpp>
 #include <bim/axmol/input/node.hpp>
 #include <bim/axmol/input/observer/single_key_observer_handle.hpp>
-#include <bim/axmol/style/cache.hpp>
-#include <bim/axmol/widget/context.hpp>
-#include <bim/axmol/widget/dynamic_factory.hpp>
 
 #include <iscool/context.hpp>
 #include <iscool/schedule/scoped_connection.hpp>
@@ -48,6 +44,11 @@ namespace bim::app
   class analytics_service;
 }
 
+namespace bim::axmol::widget
+{
+  class context;
+}
+
 namespace bim::axmol::app
 {
   namespace detail
@@ -73,7 +74,7 @@ namespace bim::axmol::app
     ic_declare_context(
         m_context, ic_context_no_parent_properties,
         ic_context_declare_properties(                                     //
-            ((bim::axmol::widget::context)(widget_context))                //
+            ((bim::axmol::widget::context*)(widget_context))               //
             ((main_scene*)(main_scene))                                    //
             ((bim::app::analytics_service*)(analytics))                    //
             ((application_event_dispatcher*)(event_dispatcher))            //
@@ -108,7 +109,6 @@ namespace bim::axmol::app
     void reset();
 
     void set_up_file_utils();
-    void set_up_colour_chart();
 
     void set_up_local_preferences();
     void tear_down_local_preferences();
@@ -131,11 +131,6 @@ namespace bim::axmol::app
     iscool::schedule::scoped_connection m_launch_connection;
 
     std::unique_ptr<bim::axmol::display::main_view> m_main_view;
-
-    bim::axmol::colour_chart m_colors;
-    bim::axmol::style::cache m_style_cache;
-    bim::axmol::action::dynamic_factory m_action_factory;
-    bim::axmol::widget::dynamic_factory m_widget_factory;
 
     std::unique_ptr<detail::persistent_systems> m_persistent_systems;
     std::unique_ptr<detail::session_systems> m_session_systems;

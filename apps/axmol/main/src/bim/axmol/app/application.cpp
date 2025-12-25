@@ -12,11 +12,16 @@
 
 #include <bim/axmol/action/register_actions.hpp>
 #include <bim/axmol/audio/mixer.hpp>
+#include <bim/axmol/colour_chart.hpp>
 #include <bim/axmol/display/device_scale.hpp>
 #include <bim/axmol/input/flow.hpp>
 #include <bim/axmol/input/key_observer_handle.impl.hpp>
 #include <bim/axmol/input/node.hpp>
 #include <bim/axmol/input/observer/single_key_observer.hpp>
+#include <bim/axmol/style/cache.hpp>
+#include <bim/axmol/widget/context.hpp>
+#include <bim/axmol/widget/dynamic_factory.hpp>
+#include <bim/axmol/widget/font_catalog.hpp>
 #include <bim/axmol/widget/register_widgets.hpp>
 
 #include <bim/axmol/ref_ptr.impl.hpp>
@@ -64,6 +69,8 @@ static const char* const g_log_context = "StartUp";
 
 struct bim::axmol::app::detail::persistent_systems
 {
+  friend struct bim::axmol::app::detail::session_systems;
+
 public:
   explicit persistent_systems(application& app);
   persistent_systems(const persistent_systems&) = delete;
@@ -72,6 +79,8 @@ public:
   bim::axmol::app::root_scene& root_scene();
 
 private:
+  void set_up_colour_chart();
+
   void start_log_system();
   void stop_log_system();
 
@@ -98,6 +107,12 @@ private:
   bim::app::analytics_service m_analytics;
   bim::axmol::audio::mixer m_audio;
   bim::axmol::ref_ptr<bim::axmol::app::root_scene> m_root_scene;
+
+  bim::axmol::colour_chart m_colors;
+  bim::axmol::style::cache m_style_cache;
+  bim::axmol::action::dynamic_factory m_action_factory;
+  bim::axmol::widget::dynamic_factory m_widget_factory;
+
   iscool::signals::scoped_connection m_clean_up_connection;
   application_event_dispatcher m_event_dispatcher;
 
@@ -114,6 +129,9 @@ public:
   const iscool::style::declaration& root_style() const;
 
 private:
+  void start_widgets();
+  void stop_widgets();
+
   void start_styles();
   void stop_styles();
 
@@ -128,12 +146,22 @@ private:
 
   std::unique_ptr<iscool::style::declaration> m_style;
   std::unique_ptr<bim::axmol::input::flow> m_input_flow;
+
+  bim::axmol::widget::font_catalog m_font_catalog;
+  std::unique_ptr<bim::axmol::widget::context> m_widget_context;
 };
 
 bim::axmol::app::detail::persistent_systems::persistent_systems(
     application& app)
   : m_application(app)
+  , m_style_cache(m_colors)
 {
+  set_up_colour_chart();
+
+  bim::axmol::action::register_actions(m_action_factory);
+  bim::axmol::widget::register_widgets(m_widget_factory);
+  bim::axmol::app::register_widgets(m_widget_factory);
+
   m_application.m_context.set_analytics(&m_analytics);
   m_application.m_context.set_event_dispatcher(&m_event_dispatcher);
 
@@ -155,6 +183,28 @@ bim::axmol::app::detail::persistent_systems::~persistent_systems()
   stop_social();
   stop_display();
   stop_log_system();
+}
+
+void bim::axmol::app::detail::persistent_systems::set_up_colour_chart()
+{
+  ic_log(iscool::log::nature::info(), g_log_context, "Start: colour chart.");
+
+  const char* const color_file = "colors.json";
+
+  if (!iscool::files::file_exists(color_file))
+    {
+      ic_log(iscool::log::nature::info(), g_log_context,
+             "Could not find color file '{}'.", color_file);
+      return;
+    }
+
+  const Json::Value colors(iscool::json::from_file(color_file));
+  assert(colors.isObject());
+
+  for (Json::Value::const_iterator it = colors.begin(), end = colors.end();
+       it != end; ++it)
+    m_colors.add_alias(iscool::json::cast<std::string>(it.key()),
+                       iscool::json::cast<std::string>(*it));
 }
 
 bim::axmol::app::root_scene&
@@ -316,6 +366,7 @@ void bim::axmol::app::detail::persistent_systems::stop_root_scene()
 bim::axmol::app::detail::session_systems::session_systems(application& app)
   : m_application(app)
 {
+  start_widgets();
   start_styles();
   start_main_scene();
   start_inputs();
@@ -326,6 +377,7 @@ bim::axmol::app::detail::session_systems::~session_systems()
   stop_inputs();
   stop_main_scene();
   stop_styles();
+  stop_widgets();
 
   ax::SpriteFrameCache::getInstance()->removeSpriteFrames();
   ax::backend::ProgramManager::getInstance()->unloadAllPrograms();
@@ -336,6 +388,28 @@ bim::axmol::app::detail::session_systems::root_style() const
 {
   assert(m_style);
   return *m_style;
+}
+
+void bim::axmol::app::detail::session_systems::start_widgets()
+{
+  ic_log(iscool::log::nature::info(), g_log_context, "Start: widgets.");
+
+  m_widget_context.reset(new bim::axmol::widget::context{
+      m_application.m_persistent_systems->m_colors,
+      m_application.m_persistent_systems->m_style_cache,
+      m_application.m_persistent_systems->m_widget_factory,
+      m_application.m_persistent_systems->m_action_factory, m_font_catalog,
+      bim::axmol::display::device_scale(1080, 2220) });
+
+  m_application.m_context.set_widget_context(m_widget_context.get());
+}
+
+void bim::axmol::app::detail::session_systems::stop_widgets()
+{
+  ic_log(iscool::log::nature::info(), g_log_context, "Stop: widgets.");
+
+  m_widget_context.reset();
+  m_application.m_context.reset_widget_context();
 }
 
 void bim::axmol::app::detail::session_systems::start_styles()
@@ -361,7 +435,7 @@ void bim::axmol::app::detail::session_systems::start_main_scene()
 {
   main_scene* const scene =
       new main_scene(m_application.m_persistent_systems->root_scene(),
-                     m_application.m_context.get_widget_context(),
+                     *m_application.m_context.get_widget_context(),
                      *m_style->get_declaration("main-scene"));
   m_application.m_context.set_main_scene(scene);
   m_application.m_input_root.push_back(scene->input_node());
@@ -395,7 +469,6 @@ bim::axmol::app::application::application(
     std::vector<std::string> asset_directories, const ax::Size& screen_size,
     float screen_scale, bool enable_debug, script_info* script)
   : m_asset_directories(std::move(asset_directories))
-  , m_style_cache(m_colors)
   , m_screen_capture_key_observer(ax::EventKeyboard::KeyCode::KEY_C)
   , m_reset_key_observer(ax::EventKeyboard::KeyCode::KEY_R)
   , m_input_root(m_reset_key_observer)
@@ -404,10 +477,6 @@ bim::axmol::app::application::application(
 {
   ax::FontFreeType::setStreamParsingEnabled(false);
   ax::Image::setPNGPremultipliedAlphaEnabled(false);
-
-  bim::axmol::action::register_actions(m_action_factory);
-  bim::axmol::widget::register_widgets(m_widget_factory);
-  bim::axmol::app::register_widgets(m_widget_factory);
 
   m_reset_key_observer->connect_to_released(
       [this]()
@@ -437,12 +506,6 @@ bool bim::axmol::app::application::applicationDidFinishLaunching()
       "launched",
       { { "language",
           iscool::to_string(iscool::system::get_language_name()) } });
-
-  set_up_colour_chart();
-
-  m_context.set_widget_context(bim::axmol::widget::context{
-      m_colors, m_style_cache, m_widget_factory, m_action_factory,
-      bim::axmol::display::device_scale(1080, 2220) });
 
   m_session_systems.reset(new detail::session_systems(*this));
 
@@ -528,28 +591,6 @@ void bim::axmol::app::application::set_up_file_utils()
 
   file_utils.setPopupNotify(false);
   file_utils.setSearchPaths(std::move(m_asset_directories));
-}
-
-void bim::axmol::app::application::set_up_colour_chart()
-{
-  ic_log(iscool::log::nature::info(), g_log_context, "Start: colour chart.");
-
-  const char* const color_file = "colors.json";
-
-  if (!iscool::files::file_exists(color_file))
-    {
-      ic_log(iscool::log::nature::info(), g_log_context,
-             "Could not find color file '{}'.", color_file);
-      return;
-    }
-
-  const Json::Value colors(iscool::json::from_file(color_file));
-  assert(colors.isObject());
-
-  for (Json::Value::const_iterator it = colors.begin(), end = colors.end();
-       it != end; ++it)
-    m_colors.add_alias(iscool::json::cast<std::string>(it.key()),
-                       iscool::json::cast<std::string>(*it));
 }
 
 void bim::axmol::app::application::set_up_local_preferences()

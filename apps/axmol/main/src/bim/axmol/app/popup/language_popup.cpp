@@ -58,7 +58,8 @@ IMPLEMENT_SIGNAL(bim::axmol::app::language_popup, reset, m_reset);
 bim::axmol::app::language_popup::language_popup(
     const context& context, const iscool::style::declaration& style)
   : m_context(context)
-  , m_controls(context.get_widget_context(), *style.get_declaration("widgets"))
+  , m_controls(*context.get_widget_context(),
+               *style.get_declaration("widgets"))
   , m_style_bounds(*style.get_declaration("bounds"))
   , m_popup(new popup(context, *style.get_declaration("popup")))
   , m_message(
@@ -107,7 +108,7 @@ bim::axmol::app::language_popup::language_popup(
          iscool::language_name::oc_FR, iscool::language_name::pt_PT,
          iscool::language_name::pt_BR, iscool::language_name::tr_TR })
     {
-      language_list_item_controls controls(context.get_widget_context(),
+      language_list_item_controls controls(*context.get_widget_context(),
                                            button_item_controls);
       bim::axmol::widget::button& b = *controls.button;
       b.setName(iscool::to_string(language));
@@ -126,7 +127,7 @@ bim::axmol::app::language_popup::language_popup(
 
       const bim::axmol::ref_ptr<bim::axmol::widget::passive_node> item =
           bim::axmol::widget::factory<bim::axmol::widget::passive_node>::
-              create(context.get_widget_context(), list_item_container_style);
+              create(*context.get_widget_context(), list_item_container_style);
 
       item->fill(controls.all_nodes, button_item_bounds);
       m_controls->list->push_back(*item);

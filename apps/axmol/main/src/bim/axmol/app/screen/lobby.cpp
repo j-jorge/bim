@@ -54,7 +54,8 @@ IMPLEMENT_SIGNAL(bim::axmol::app::lobby, reset, m_reset);
 bim::axmol::app::lobby::lobby(const context& context,
                               const iscool::style::declaration& style)
   : m_context(context)
-  , m_controls(context.get_widget_context(), *style.get_declaration("widgets"))
+  , m_controls(*context.get_widget_context(),
+               *style.get_declaration("widgets"))
   , m_server_statistics_label(
         *dynamic_cast<ax::Label*>(bim::axmol::find_child_by_path(
             *m_controls->play_button,

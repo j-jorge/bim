@@ -36,13 +36,14 @@ static constexpr std::int64_t g_coins_per_transaction = 10;
 bim::axmol::app::wallet::wallet(const context& context,
                                 const iscool::style::declaration& style)
   : m_context(context)
-  , m_controls(context.get_widget_context(), *style.get_declaration("widgets"))
+  , m_controls(*context.get_widget_context(),
+               *style.get_declaration("widgets"))
   , m_balance_label(dynamic_cast<ax::Label*>(bim::axmol::find_child_by_path(
         *m_controls->wallet_button,
         *style.get_string("label-path-in-button"))))
   , m_coins(g_coins_per_transaction)
   , m_coin_style(*style.get_declaration("coin"))
-  , m_coin_bounds_style(context.get_widget_context().style_cache.get_bounds(
+  , m_coin_bounds_style(context.get_widget_context()->style_cache.get_bounds(
         *style.get_declaration("coin-bounds")))
 {
   m_controls->wallet_button->connect_to_clicked(
@@ -126,7 +127,7 @@ void bim::axmol::app::wallet::animate_cash_flow(
 bim::axmol::ref_ptr<ax::Node> bim::axmol::app::wallet::new_coin_node() const
 {
   const bim::axmol::widget::context& widget_context =
-      m_context.get_widget_context();
+      *m_context.get_widget_context();
 
   const bim::axmol::ref_ptr<ax::Node> node =
       bim::axmol::widget::instantiate_widget(widget_context, m_coin_style);

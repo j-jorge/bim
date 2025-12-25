@@ -31,7 +31,7 @@ namespace bim::axmol::app
     ic_declare_context(
         m_context,
         ic_context_declare_parent_properties(                      //
-            ((const bim::axmol::widget::context&)(widget_context)) //
+            ((const bim::axmol::widget::context*)(widget_context)) //
             ((main_scene*)(main_scene))                            //
             ((application_event_dispatcher*)(event_dispatcher))    //
             ),

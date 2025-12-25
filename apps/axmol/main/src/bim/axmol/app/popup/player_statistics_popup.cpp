@@ -39,7 +39,8 @@ bim::axmol::app::player_statistics_popup::player_statistics_popup(
     const context& context, const iscool::style::declaration& style)
   : m_context(context)
   , m_escape(ax::EventKeyboard::KeyCode::KEY_BACK)
-  , m_controls(context.get_widget_context(), *style.get_declaration("widgets"))
+  , m_controls(*context.get_widget_context(),
+               *style.get_declaration("widgets"))
   , m_style_bounds(*style.get_declaration("bounds"))
   , m_popup(new popup(context, *style.get_declaration("popup")))
 {

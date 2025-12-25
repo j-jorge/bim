@@ -61,7 +61,8 @@ bim::axmol::app::screen_wheel::screen_wheel(
     const context& context, const iscool::style::declaration& style)
   : m_context(context)
   , m_main_container(ax::Node::create())
-  , m_controls(context.get_widget_context(), *style.get_declaration("widgets"))
+  , m_controls(*context.get_widget_context(),
+               *style.get_declaration("widgets"))
   , m_player_progress_tracker(new bim::app::player_progress_tracker(
         *context.get_analytics(), *context.get_local_preferences(),
         *context.get_config()))
@@ -173,7 +174,7 @@ void bim::axmol::app::screen_wheel::map_nodes(
     const std::string& bounds_style_name) const
 {
   bim::axmol::widget::add_group_as_children(container, nodes);
-  bim::axmol::widget::apply_bounds(m_context.get_widget_context(), nodes,
+  bim::axmol::widget::apply_bounds(*m_context.get_widget_context(), nodes,
                                    *style.get_declaration(bounds_style_name));
 }
 

@@ -65,7 +65,8 @@ bim::axmol::app::settings_popup::settings_popup(
     const context& context, const iscool::style::declaration& style)
   : m_context(context)
   , m_escape(ax::EventKeyboard::KeyCode::KEY_BACK)
-  , m_controls(context.get_widget_context(), *style.get_declaration("widgets"))
+  , m_controls(*context.get_widget_context(),
+               *style.get_declaration("widgets"))
   , m_style_bounds(*style.get_declaration("bounds"))
   , m_style_pad_on_the_left(
         *style.get_declaration("display.d-pad-on-the-left"))
@@ -203,7 +204,7 @@ void bim::axmol::app::settings_popup::set_direction_pad_display(
   m_controls->d_pad_position->set_state(pad_on_the_left);
 
   bim::axmol::widget::apply_display(
-      m_context.get_widget_context().style_cache, m_controls->all_nodes,
+      m_context.get_widget_context()->style_cache, m_controls->all_nodes,
       pad_on_the_left ? m_style_pad_on_the_left : m_style_pad_on_the_right);
 }
 
@@ -212,7 +213,7 @@ void bim::axmol::app::settings_popup::set_stick_or_pad_display(bool use_stick)
   m_controls->d_pad_kind->set_state(use_stick);
 
   bim::axmol::widget::apply_display(
-      m_context.get_widget_context().style_cache, m_controls->all_nodes,
+      m_context.get_widget_context()->style_cache, m_controls->all_nodes,
       use_stick ? m_style_directions_stick : m_style_directions_pad);
 }
 

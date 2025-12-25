@@ -121,7 +121,8 @@ IMPLEMENT_SIGNAL(bim::axmol::app::online_game, game_over, m_game_over)
 bim::axmol::app::online_game::online_game(
     const context& context, const iscool::style::declaration& style)
   : m_context(context)
-  , m_controls(context.get_widget_context(), *style.get_declaration("widgets"))
+  , m_controls(*context.get_widget_context(),
+               *style.get_declaration("widgets"))
   , m_keyboard_gamepad(ax::EventKeyboard::KeyCode::KEY_UP_ARROW,
                        ax::EventKeyboard::KeyCode::KEY_DOWN_ARROW,
                        ax::EventKeyboard::KeyCode::KEY_RIGHT_ARROW,
@@ -180,7 +181,7 @@ bim::axmol::app::online_game::online_game(
       });
 
   const bim::axmol::widget::context& widget_context =
-      m_context.get_widget_context();
+      *m_context.get_widget_context();
 
   m_players.resize(bim::game::g_max_player_count);
 
@@ -190,7 +191,7 @@ bim::axmol::app::online_game::online_game(
   for (int i = 0; i != bim::game::g_max_player_count; ++i)
     {
       m_players[i] = bim::axmol::widget::factory<player>::create(
-                         m_context.get_widget_context(), player_style)
+                         *m_context.get_widget_context(), player_style)
                          .get();
 
       m_players[i]->setVisible(false);
@@ -346,7 +347,7 @@ void bim::axmol::app::online_game::displaying(
   configure_direction_pad();
 
   bim::axmol::widget::apply_display(
-      m_context.get_widget_context().style_cache, m_controls->all_nodes,
+      m_context.get_widget_context()->style_cache, m_controls->all_nodes,
       *m_style_player[std::min<std::size_t>(event.player_index,
                                             m_style_player.size())]);
 
@@ -429,7 +430,7 @@ void bim::axmol::app::online_game::configure_direction_pad()
       bim::app::direction_pad_on_the_left(*m_context.get_local_preferences());
 
   bim::axmol::widget::apply_bounds(
-      m_context.get_widget_context(), m_controls->all_nodes,
+      *m_context.get_widget_context(), m_controls->all_nodes,
       pad_on_the_left ? m_style_pad_on_the_left : m_style_pad_on_the_right);
   m_use_stick = bim::app::direction_pad_kind_is_stick(
       *m_context.get_local_preferences());
@@ -438,7 +439,7 @@ void bim::axmol::app::online_game::configure_direction_pad()
     m_controls->joystick->set_layout_on_the_left(pad_on_the_left);
 
   bim::axmol::widget::apply_display(
-      m_context.get_widget_context().style_cache, m_controls->all_nodes,
+      m_context.get_widget_context()->style_cache, m_controls->all_nodes,
       m_use_stick ? m_style_use_joystick : m_style_use_d_pad);
 }
 

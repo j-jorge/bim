@@ -65,7 +65,8 @@ bim::axmol::app::matchmaking::matchmaking(
     const context& context, const iscool::style::declaration& style)
   : m_context(context)
   , m_escape(ax::EventKeyboard::KeyCode::KEY_BACK)
-  , m_controls(context.get_widget_context(), *style.get_declaration("widgets"))
+  , m_controls(*context.get_widget_context(),
+               *style.get_declaration("widgets"))
   , m_wallet(new wallet(context, *style.get_declaration("wallet")))
   , m_new_game(new bim::net::new_game_exchange(
         m_context.get_session_handler()->message_stream()))
@@ -142,8 +143,9 @@ void bim::axmol::app::matchmaking::displaying()
 
   m_player_count_monitor->set_waiting_state();
 
-  bim::axmol::widget::apply_display(m_context.get_widget_context().style_cache,
-                                    m_controls->all_nodes, m_style_displaying);
+  bim::axmol::widget::apply_display(
+      m_context.get_widget_context()->style_cache, m_controls->all_nodes,
+      m_style_displaying);
 
   run_actions(m_main_actions, m_action_displaying);
   run_actions(m_state_actions, m_action_wait);
@@ -244,7 +246,7 @@ void bim::axmol::app::matchmaking::run_actions(
 {
   runner.stop();
 
-  bim::axmol::widget::apply_actions(runner, m_context.get_widget_context(),
+  bim::axmol::widget::apply_actions(runner, *m_context.get_widget_context(),
                                     m_controls->all_nodes, style);
 }
 

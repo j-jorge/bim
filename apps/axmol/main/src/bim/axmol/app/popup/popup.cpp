@@ -28,7 +28,8 @@
 bim::axmol::app::popup::popup(const context& context,
                               const iscool::style::declaration& style)
   : m_context(context)
-  , m_controls(context.get_widget_context(), *style.get_declaration("widgets"))
+  , m_controls(*context.get_widget_context(),
+               *style.get_declaration("widgets"))
   , m_style_bounds(*style.get_declaration("bounds"))
   , m_style_display_show(*style.get_declaration("display.show"))
   , m_style_action_show(*style.get_declaration("action.show"))
@@ -52,12 +53,12 @@ void bim::axmol::app::popup::show(
 
   m_context.get_main_scene()->add_in_overlays(*m_controls->container,
                                               m_inputs.root());
-  bim::axmol::widget::apply_bounds(m_context.get_widget_context(),
+  bim::axmol::widget::apply_bounds(*m_context.get_widget_context(),
                                    m_controls->all_nodes, m_style_bounds);
 
   bim::axmol::widget::add_group_as_children(*m_controls->client_container,
                                             nodes);
-  bim::axmol::widget::apply_bounds(m_context.get_widget_context(), nodes,
+  bim::axmol::widget::apply_bounds(*m_context.get_widget_context(), nodes,
                                    bounds);
 
   m_client_nodes.clear();
@@ -65,11 +66,11 @@ void bim::axmol::app::popup::show(
   for (const bim::axmol::widget::named_node_group::value_type& e : nodes)
     m_client_nodes.push_back(e.second.get());
 
-  bim::axmol::widget::apply_display(m_context.get_widget_context().style_cache,
-                                    m_controls->all_nodes,
-                                    m_style_display_show);
+  bim::axmol::widget::apply_display(
+      m_context.get_widget_context()->style_cache, m_controls->all_nodes,
+      m_style_display_show);
   bim::axmol::widget::apply_actions(
-      m_action_runner, m_context.get_widget_context(), m_controls->all_nodes,
+      m_action_runner, *m_context.get_widget_context(), m_controls->all_nodes,
       m_style_action_show,
       [this, inputs]()
       {
