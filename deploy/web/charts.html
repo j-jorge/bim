@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="icon" href="data:image/png;base64,iVBORw0KGgo=">
+</head>
+<body>
+  <div id="g_sessions_per_hour"></div>
+  <div id="g_games_per_hour"></div>
+  <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0"></script>
+  <script type="module">
+const width = window.innerWidth;
+const height = 400;
+const margin_top = 30;
+const margin_right = 20;
+const margin_bottom = 30;
+const margin_left = 40;
+
+var max_sessions = 0;
+var max_games = 0;
+const sessions_last_hour_column = 7;
+const games_last_hour_column = 13;
+
+const text = await d3.text("https://bim.jorge.st/statistics.txt")
+const data = d3.dsvFormat(" ").parseRows(text).map(
+    function(row) {
+        const s = +row[sessions_last_hour_column];
+
+        if (s > max_sessions)
+            max_sessions = s;
+
+        const g = +row[games_last_hour_column];
+
+        if (g > max_games)
+            max_games = g;
+
+        return {
+            date: new Date(row[0] + "T" + row[1]),
+            sessions: s,
+            games: g
+        };
+    }
+);
+
+function draw_graph(max_y, p, title)
+{
+    const x = d3.scaleUtc()
+          .domain([data[0].date, data[data.length-1].date])
+          .range([margin_left, width - margin_right]);
+
+    const y = d3.scaleLinear()
+          .domain([0, max_y])
+          .range([height - margin_bottom, margin_top]);
+
+    const line = d3.line()
+          .x(d => x(d.date))
+          .y(d => y(d[p]));
+
+    const svg = d3.create("svg")
+          .attr("width", width)
+          .attr("height", height);
+
+    svg.append("g")
+        .attr("transform", `translate(0,${height - margin_bottom})`)
+        .call(d3.axisBottom(x));
+
+    svg.append("g")
+        .attr("transform", `translate(${margin_left},0)`)
+        .call(d3.axisLeft(y));
+
+    svg.append("path")
+        .attr("fill", "none")
+        .attr("stroke", "steelblue")
+        .attr("stroke-width", 1.5)
+        .attr("d", line(data));
+
+    svg.append("text")
+        .attr("x", width / 2)
+        .attr("y", margin_top / 2)
+        .attr("text-anchor", "middle")
+        .style("font-size", "16px")
+        .text(title);
+
+    return svg.node();
+}
+
+g_sessions_per_hour.append
+(draw_graph
+ (max_sessions, "sessions", "Sessions per hour"));
+g_games_per_hour.append
+(draw_graph
+ (max_games, "games", "Games per hour"));
+  </script>
+</body>
+</html>
