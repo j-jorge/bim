@@ -2,6 +2,7 @@
 #include <bim/game/system/apply_player_action.hpp>
 
 #include <bim/game/arena.hpp>
+#include <bim/game/cell_edge.hpp>
 #include <bim/game/component/animation_state.hpp>
 #include <bim/game/component/fractional_position_on_grid.hpp>
 #include <bim/game/component/player.hpp>
@@ -19,6 +20,14 @@
 
 #include <fpm/math.hpp>
 
+using position_t = bim::game::fractional_position_on_grid::value_type;
+
+static constexpr position_t g_one(1);
+static constexpr position_t g_half = g_one / 2;
+static constexpr position_t g_step =
+    g_one / bim::game::g_player_steps_per_cell;
+static constexpr position_t g_edge_width = 2 * g_step;
+
 static bool is_solid(const entt::registry& registry,
                      const bim::game::entity_world_map& entity_map,
                      std::uint8_t arena_x, std::uint8_t arena_y)
@@ -34,15 +43,250 @@ static bool is_solid(const entt::registry& registry,
   return false;
 }
 
-static bool is_blocker(const entt::registry& registry,
+static bim::game::cell_edge
+edges_at(const entt::registry& registry, const bim::game::arena& arena,
+         const bim::game::entity_world_map& entity_map, std::uint8_t arena_x,
+         std::uint8_t arena_y)
+{
+  if (arena.is_static_wall(arena_x, arena_y)
+      || is_solid(registry, entity_map, arena_x, arena_y))
+    return bim::game::cell_edge::all;
+
+  return arena.fences(arena_x, arena_y);
+}
+
+/**
+ * Adjust the position on the other axis than the movement to avoid obstacles.
+ */
+static void straighten_horizontal_move(
+    const entt::registry& registry, const bim::game::arena& arena,
+    const bim::game::entity_world_map& entity_map,
+    bim::game::fractional_position_on_grid& position, position_t y_decimal,
+    std::uint8_t x, std::uint8_t y, bim::game::cell_edge edge)
+{
+  if (y_decimal > g_half)
+    {
+      if (!!(edges_at(registry, arena, entity_map, x, y + 1) & edge))
+        position.y -= std::min(g_step, y_decimal - g_half);
+    }
+  else if (y_decimal < g_half)
+    {
+      if (!!(edges_at(registry, arena, entity_map, x, y - 1) & edge))
+        position.y += std::min(g_step, g_half - y_decimal);
+    }
+}
+
+/**
+ * Adjust the position on the other axis than the movement to avoid obstacles.
+ */
+static void straighten_vertical_move(
+    const entt::registry& registry, const bim::game::arena& arena,
+    const bim::game::entity_world_map& entity_map,
+    bim::game::fractional_position_on_grid& position, position_t x_decimal,
+    std::uint8_t x, std::uint8_t y, bim::game::cell_edge edge)
+{
+  if (x_decimal > g_half)
+    {
+      if (!!(edges_at(registry, arena, entity_map, x + 1, y) & edge))
+        position.x -= std::min(g_step, x_decimal - g_half);
+    }
+  else if (x_decimal < g_half)
+    {
+      if (!!(edges_at(registry, arena, entity_map, x - 1, y) & edge))
+        position.x += std::min(g_step, g_half - x_decimal);
+    }
+}
+
+static void dodge_vertical_move(
+    const entt::registry& registry, const bim::game::arena& arena,
+    const bim::game::entity_world_map& entity_map,
+    bim::game::fractional_position_on_grid& position, position_t x_decimal,
+    std::uint8_t x, std::uint8_t y, int dy, bim::game::cell_edge current_edges,
+    bim::game::cell_edge edge_forward, bim::game::cell_edge edge_backward)
+{
+  if (x_decimal < g_half)
+    {
+      // The player is in the left half of the current cell, let's check if
+      // there's a path forward-left.
+      if (!(current_edges & bim::game::cell_edge::left)
+          && !(edges_at(registry, arena, entity_map, x - 1, y)
+               & (edge_forward | bim::game::cell_edge::right))
+          && !(edges_at(registry, arena, entity_map, x - 1, y + dy)
+               & edge_backward))
+        position.x -= g_step;
+    }
+  else if (x_decimal > g_half)
+    {
+      // The player is in the right half of the current cell, let's check if
+      // there's a path forward-right.
+      if (!(current_edges & bim::game::cell_edge::right)
+          && !(edges_at(registry, arena, entity_map, x + 1, y)
+               & (edge_forward | bim::game::cell_edge::left))
+          && !(edges_at(registry, arena, entity_map, x + 1, y + dy)
+               & edge_backward))
+        position.x += g_step;
+    }
+}
+
+static void dodge_horizontal_move(
+    const entt::registry& registry, const bim::game::arena& arena,
+    const bim::game::entity_world_map& entity_map,
+    bim::game::fractional_position_on_grid& position, position_t y_decimal,
+    std::uint8_t x, std::uint8_t y, int dx, bim::game::cell_edge current_edges,
+    bim::game::cell_edge edge_forward, bim::game::cell_edge edge_backward)
+{
+  if (y_decimal < g_half)
+    {
+      // The player is in the top half of the current cell, let's check if
+      // there's a path up-forward.
+      if (!(current_edges & bim::game::cell_edge::up)
+          && !(edges_at(registry, arena, entity_map, x, y - 1)
+               & (bim::game::cell_edge::up | edge_forward))
+          && !(edges_at(registry, arena, entity_map, x + dx, y - 1)
+               & edge_backward))
+        position.y -= g_step;
+    }
+  else if (y_decimal > g_half)
+    {
+      // The player is in the bottom half of the current cell, let's check if
+      // there's a path down-forward.
+      if (!(current_edges & bim::game::cell_edge::down)
+          && !(edges_at(registry, arena, entity_map, x, y + 1)
+               & (bim::game::cell_edge::up | edge_forward))
+          && !(edges_at(registry, arena, entity_map, x + dx, y + 1)
+               & edge_backward))
+        position.y += g_step;
+    }
+}
+
+static void move_right(const entt::registry& registry,
                        const bim::game::arena& arena,
                        const bim::game::entity_world_map& entity_map,
-                       std::uint8_t arena_x, std::uint8_t arena_y)
+                       std::uint8_t x_int, std::uint8_t y_int,
+                       position_t x_decimal, position_t y_decimal,
+                       position_t x_floor,
+                       bim::game::fractional_position_on_grid& position)
 {
-  if (arena.is_static_wall(arena_x, arena_y))
-    return true;
+  const bim::game::cell_edge edges = arena.fences(x_int, y_int);
 
-  return is_solid(registry, entity_map, arena_x, arena_y);
+  if ((x_decimal + g_step >= g_half - g_edge_width)
+      && !!(edges & bim::game::cell_edge::right))
+    // In contact with an edge on the right, inside the current cell.
+    position.x = x_floor + g_half - g_edge_width;
+  else if ((x_decimal + g_step >= g_half)
+           && !!(edges_at(registry, arena, entity_map, x_int + 1, y_int)
+                 & bim::game::cell_edge::left))
+    // In contact with something solid inside the adjacent cell.
+    position.x = x_floor + g_half;
+  else
+    {
+      position.x += g_step;
+      straighten_horizontal_move(registry, arena, entity_map, position,
+                                 y_decimal, x_int + 1, y_int,
+                                 bim::game::cell_edge::left);
+      return;
+    }
+
+  // We are encountering an obstacle, try to dodge it.
+  dodge_horizontal_move(registry, arena, entity_map, position, y_decimal,
+                        x_int, y_int, 1, edges, bim::game::cell_edge::right,
+                        bim::game::cell_edge::left);
+}
+
+static void
+move_left(const entt::registry& registry, const bim::game::arena& arena,
+          const bim::game::entity_world_map& entity_map, std::uint8_t x_int,
+          std::uint8_t y_int, position_t x_decimal, position_t y_decimal,
+          position_t x_floor, bim::game::fractional_position_on_grid& position)
+{
+  const bim::game::cell_edge edges = arena.fences(x_int, y_int);
+
+  if ((x_decimal - g_step <= g_half + g_edge_width)
+      && !!(edges & bim::game::cell_edge::left))
+    // In contact with an edge on the left, inside the current cell.
+    position.x = x_floor + g_half + g_edge_width;
+  else if ((x_decimal - g_step <= g_half)
+           && !!(edges_at(registry, arena, entity_map, x_int - 1, y_int)
+                 & bim::game::cell_edge::right))
+    // In contact with something solid inside the adjacent cell.
+    position.x = x_floor + g_half;
+  else
+    {
+      position.x -= g_step;
+      straighten_horizontal_move(registry, arena, entity_map, position,
+                                 y_decimal, x_int - 1, y_int,
+                                 bim::game::cell_edge::right);
+      return;
+    }
+
+  // We are encountering an obstacle, try to dodge it.
+  dodge_horizontal_move(registry, arena, entity_map, position, y_decimal,
+                        x_int, y_int, -1, edges, bim::game::cell_edge::left,
+                        bim::game::cell_edge::right);
+}
+
+static void
+move_up(const entt::registry& registry, const bim::game::arena& arena,
+        const bim::game::entity_world_map& entity_map, std::uint8_t x_int,
+        std::uint8_t y_int, position_t x_decimal, position_t y_decimal,
+        position_t y_floor, bim::game::fractional_position_on_grid& position)
+{
+  const bim::game::cell_edge edges = arena.fences(x_int, y_int);
+
+  if ((y_decimal - g_step <= g_half + g_edge_width)
+      && !!(edges & bim::game::cell_edge::up))
+    // In contact with an edge at the top, inside the current cell.
+    position.y = y_floor + g_half + g_edge_width;
+  else if ((y_decimal - g_step <= g_half)
+           && !!(edges_at(registry, arena, entity_map, x_int, y_int - 1)
+                 & bim::game::cell_edge::down))
+    // In contact with something solid inside the adjacent cell.
+    position.y = y_floor + g_half;
+  else
+    {
+      position.y -= g_step;
+      straighten_vertical_move(registry, arena, entity_map, position,
+                               x_decimal, x_int, y_int - 1,
+                               bim::game::cell_edge::down);
+      return;
+    }
+
+  // We are encountering an obstacle, try to dodge it.
+  dodge_vertical_move(registry, arena, entity_map, position, x_decimal, x_int,
+                      y_int, -1, edges, bim::game::cell_edge::up,
+                      bim::game::cell_edge::down);
+}
+
+static void
+move_down(const entt::registry& registry, const bim::game::arena& arena,
+          const bim::game::entity_world_map& entity_map, std::uint8_t x_int,
+          std::uint8_t y_int, position_t x_decimal, position_t y_decimal,
+          position_t y_floor, bim::game::fractional_position_on_grid& position)
+{
+  const bim::game::cell_edge edges = arena.fences(x_int, y_int);
+
+  if ((y_decimal + g_step >= g_half - g_edge_width)
+      && !!(edges & bim::game::cell_edge::down))
+    // In contact with an edge at the bottom, inside the current cell.
+    position.y = y_floor + g_half - g_edge_width;
+  else if ((y_decimal + g_step >= g_half)
+           && !!(edges_at(registry, arena, entity_map, x_int, y_int + 1)
+                 & bim::game::cell_edge::up))
+    // In contact with something solid inside the adjacent cell.
+    position.y = y_floor + g_half;
+  else
+    {
+      position.y += g_step;
+      straighten_vertical_move(registry, arena, entity_map, position,
+                               x_decimal, x_int, y_int + 1,
+                               bim::game::cell_edge::up);
+      return;
+    }
+
+  // We are encountering an obstacle, try to dodge it.
+  dodge_vertical_move(registry, arena, entity_map, position, x_decimal, x_int,
+                      y_int, 1, edges, bim::game::cell_edge::down,
+                      bim::game::cell_edge::up);
 }
 
 static void drop_bomb(entt::registry& registry,
@@ -90,12 +334,6 @@ static void move_player(entt::entity player_entity, bim::game::player& player,
       return;
     }
 
-  using position_t = bim::game::fractional_position_on_grid::value_type;
-
-  constexpr position_t offset =
-      position_t(1) / bim::game::g_player_steps_per_cell;
-  constexpr position_t half = position_t(1) / 2;
-
   const position_t x = position.x;
   const position_t y = position.y;
 
@@ -112,180 +350,36 @@ static void move_player(entt::entity player_entity, bim::game::player& player,
   const std::uint8_t x_int = (std::uint8_t)x;
   const std::uint8_t y_int = (std::uint8_t)y;
 
-  // If the player has moved, these variables are set to tell if we must check
-  // for an obstacle at the given x or y. Only one is set since the player
-  // moves in only one direction. E.g. move to the right -> check obstacles in
-  // x_int + 1.
-  std::uint8_t check_obstacle_x = 0;
-  std::uint8_t check_obstacle_y = 0;
-
   // Move the player.
   switch (movement)
     {
     case bim::game::player_movement::left:
       state.transition_to(animations.walk_left);
 
-      if ((x_decimal <= half + offset)
-          && is_blocker(registry, arena, entity_map, x_int - 1, y_int))
-        {
-          position.x = x_floor + half;
-
-          // turn around the solid block.
-          if (y_decimal < half)
-            {
-              // There is a path above: move up.
-              if (!is_blocker(registry, arena, entity_map, x_int, y_int - 1)
-                  && !is_blocker(registry, arena, entity_map, x_int - 1,
-                                 y_int - 1))
-                position.y -= offset;
-            }
-          else if (y_decimal > half)
-            {
-              // There is a path below: move down.
-              if (!is_blocker(registry, arena, entity_map, x_int, y_int + 1)
-                  && !is_blocker(registry, arena, entity_map, x_int - 1,
-                                 y_int + 1))
-                position.y += offset;
-            }
-        }
-      else
-        {
-          check_obstacle_x = x_int - 1;
-          position.x -= offset;
-        }
+      move_left(registry, arena, entity_map, x_int, y_int, x_decimal,
+                y_decimal, x_floor, position);
       break;
     case bim::game::player_movement::right:
       state.transition_to(animations.walk_right);
 
-      if ((x_decimal + offset >= half)
-          && is_blocker(registry, arena, entity_map, x_int + 1, y_int))
-        {
-          position.x = x_floor + half;
-
-          // turn around the solid block.
-          if (y_decimal < half)
-            {
-              // There is a path above: move up.
-              if (!is_blocker(registry, arena, entity_map, x_int, y_int - 1)
-                  && !is_blocker(registry, arena, entity_map, x_int + 1,
-                                 y_int - 1))
-                position.y -= offset;
-            }
-          else if (y_decimal > half)
-            {
-              // There is a path below: move down.
-              if (!is_blocker(registry, arena, entity_map, x_int, y_int + 1)
-                  && !is_blocker(registry, arena, entity_map, x_int + 1,
-                                 y_int + 1))
-                position.y += offset;
-            }
-        }
-      else
-        {
-          check_obstacle_x = x_int + 1;
-          position.x += offset;
-        }
+      move_right(registry, arena, entity_map, x_int, y_int, x_decimal,
+                 y_decimal, x_floor, position);
       break;
     case bim::game::player_movement::up:
       state.transition_to(animations.walk_up);
 
-      if ((y_decimal <= half + offset)
-          && is_blocker(registry, arena, entity_map, x_int, y_int - 1))
-        {
-          position.y = y_floor + half;
-
-          // turn around the solid block.
-          if (x_decimal < half)
-            {
-              // There is a path on the left: move left.
-              if (!is_blocker(registry, arena, entity_map, x_int - 1, y_int)
-                  && !is_blocker(registry, arena, entity_map, x_int - 1,
-                                 y_int - 1))
-                position.x -= offset;
-            }
-          else if (x_decimal > half)
-            {
-              // There is a path on the right: move right.
-              if (!is_blocker(registry, arena, entity_map, x_int + 1, y_int)
-                  && !is_blocker(registry, arena, entity_map, x_int + 1,
-                                 y_int - 1))
-                position.x += offset;
-            }
-        }
-      else
-        {
-          check_obstacle_y = y_int - 1;
-          position.y -= offset;
-        }
+      move_up(registry, arena, entity_map, x_int, y_int, x_decimal, y_decimal,
+              y_floor, position);
       break;
     case bim::game::player_movement::down:
       state.transition_to(animations.walk_down);
 
-      if ((y_decimal + offset >= half)
-          && is_blocker(registry, arena, entity_map, x_int, y_int + 1))
-        {
-          position.y = y_floor + half;
-
-          // turn around the solid block.
-          if (x_decimal < half)
-            {
-              // There is a path on the left: move left.
-              if (!is_blocker(registry, arena, entity_map, x_int - 1, y_int)
-                  && !is_blocker(registry, arena, entity_map, x_int - 1,
-                                 y_int + 1))
-                position.x -= offset;
-            }
-          else if (x_decimal > half)
-            {
-              // There is a path on the right: move right.
-              if (!is_blocker(registry, arena, entity_map, x_int + 1, y_int)
-                  && !is_blocker(registry, arena, entity_map, x_int + 1,
-                                 y_int + 1))
-                position.x += offset;
-            }
-        }
-      else
-        {
-          check_obstacle_y = y_int + 1;
-          position.y += offset;
-        }
+      move_down(registry, arena, entity_map, x_int, y_int, x_decimal,
+                y_decimal, y_floor, position);
       break;
     case bim::game::player_movement::idle:
       bim_assume(false);
       break;
-    }
-
-  // Adjust the position on the other axis than the movement to avoid
-  // obstacles.
-  if (check_obstacle_x != 0)
-    {
-      if (y_decimal > half)
-        {
-          if (is_blocker(registry, arena, entity_map, check_obstacle_x,
-                         y_int + 1))
-            position.y -= std::min(offset, y_decimal - half);
-        }
-      else if (y_decimal < half)
-        {
-          if (is_blocker(registry, arena, entity_map, check_obstacle_x,
-                         y_int - 1))
-            position.y += std::min(offset, half - y_decimal);
-        }
-    }
-  else if (check_obstacle_y != 0)
-    {
-      if (x_decimal > half)
-        {
-          if (is_blocker(registry, arena, entity_map, x_int + 1,
-                         check_obstacle_y))
-            position.x -= std::min(offset, x_decimal - half);
-        }
-      else if (x_decimal < half)
-        {
-          if (is_blocker(registry, arena, entity_map, x_int - 1,
-                         check_obstacle_y))
-            position.x += std::min(offset, half - x_decimal);
-        }
     }
 
   if ((position.x == x) && (position.y == y))

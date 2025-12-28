@@ -60,11 +60,10 @@ namespace bim::game
 
 constexpr std::chrono::milliseconds bim::game::contest::tick_interval;
 
-static void add_players(const bim::game::context& context,
-                        entt::registry& registry,
-                        bim::game::entity_world_map& entity_map,
-                        std::uint8_t player_count, std::uint8_t arena_width,
-                        std::uint8_t arena_height)
+static std::vector<bim::game::position_on_grid>
+add_players(const bim::game::context& context, entt::registry& registry,
+            bim::game::entity_world_map& entity_map, std::uint8_t player_count,
+            std::uint8_t arena_width, std::uint8_t arena_height)
 {
   bim_assume(player_count > 0);
 
@@ -79,14 +78,28 @@ static void add_players(const bim::game::context& context,
   };
   const int start_position_count = std::size(player_start_position);
 
+  std::vector<bim::game::position_on_grid> positions_around_players;
+  // Typically 9 blocks for each player: their position and the cells around
+  // them.
+  positions_around_players.reserve(player_count * 9);
+
   for (std::size_t i = 0; i != player_count; ++i)
     {
       const int start_position_index = i % start_position_count;
-      bim::game::player_factory(registry, entity_map, i,
-                                player_start_position[start_position_index].x,
-                                player_start_position[start_position_index].y,
+      const std::uint8_t player_x =
+          player_start_position[start_position_index].x;
+      const std::uint8_t player_y =
+          player_start_position[start_position_index].y;
+      bim::game::player_factory(registry, entity_map, i, player_x, player_y,
                                 initial_state);
+
+      for (int y : { -1, 0, 1 })
+        for (int x : { -1, 0, 1 })
+          positions_around_players.push_back(
+              bim::game::position_on_grid(player_x + x, player_y + y));
     }
+
+  return positions_around_players;
 }
 
 static void add_fog_of_war(entt::registry& registry, std::uint8_t player_count,
@@ -163,15 +176,21 @@ bim::game::contest::contest(const contest_fingerprint& fingerprint,
 {
   fill_context(*m_context);
 
-  add_players(*m_context, *m_registry, *m_entity_world_map,
-              fingerprint.player_count, fingerprint.arena_width,
-              fingerprint.arena_height);
+  const std::vector<bim::game::position_on_grid> forbidden_positions =
+      add_players(*m_context, *m_registry, *m_entity_world_map,
+                  fingerprint.player_count, fingerprint.arena_width,
+                  fingerprint.arena_height);
+
   generate_basic_level_structure(*m_arena);
 
   bim::game::random_generator random(fingerprint.seed);
 
+  if (!!(fingerprint.features & feature_flags::fences))
+    insert_random_fences(*m_arena, random, forbidden_positions);
+
   insert_random_crates(*m_arena, *m_entity_world_map, *m_registry, random,
-                       fingerprint.crate_probability, fingerprint.features);
+                       fingerprint.crate_probability, fingerprint.features,
+                       forbidden_positions);
 
   if (!!(fingerprint.features & feature_flags::falling_blocks))
     arena_reduction_factory(*m_registry, std::chrono::minutes(2));

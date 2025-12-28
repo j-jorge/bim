@@ -2,6 +2,7 @@
 #include <bim/game/level_generation.hpp>
 
 #include <bim/game/arena.hpp>
+#include <bim/game/cell_edge.hpp>
 #include <bim/game/cell_neighborhood.hpp>
 #include <bim/game/component/bomb_power_up_spawner.hpp>
 #include <bim/game/component/flame_power_up_spawner.hpp>
@@ -10,8 +11,10 @@
 #include <bim/game/component/player.hpp>
 #include <bim/game/component/position_on_grid.hpp>
 #include <bim/game/component/shield_power_up_spawner.hpp>
+#include <bim/game/constant/fence_count_ratio.hpp>
 #include <bim/game/constant/max_player_count.hpp>
 #include <bim/game/factory/crate.hpp>
+#include <bim/game/navigation_check.hpp>
 
 #include <bim/game/random_generator.hpp>
 
@@ -108,40 +111,16 @@ void bim::game::generate_basic_level_structure(arena& arena)
       arena.set_static_wall(x, y, cell_neighborhood::none);
 }
 
-void bim::game::insert_random_crates(arena& arena,
-                                     entity_world_map& entity_map,
-                                     entt::registry& registry,
-                                     random_generator& random_generator,
-                                     std::uint8_t crate_probability,
-                                     feature_flags features)
+void bim::game::insert_random_crates(
+    arena& arena, entity_world_map& entity_map, entt::registry& registry,
+    random_generator& random_generator, std::uint8_t crate_probability,
+    feature_flags features,
+    std::span<const position_on_grid> forbidden_positions)
 {
   const int width = arena.width();
   const int height = arena.height();
 
   boost::random::uniform_int_distribution<std::uint8_t> random(0, 99);
-
-  std::vector<position_on_grid> forbidden_positions;
-  // Typically 9 blocks for each player: their position and the cells around
-  // them.
-  forbidden_positions.reserve(g_max_player_count * 9);
-
-  registry.view<bim::game::player, bim::game::fractional_position_on_grid>()
-      .each(
-          [&forbidden_positions](
-              const bim::game::player&,
-              const bim::game::fractional_position_on_grid& p) -> void
-          {
-            const std::uint8_t player_x = p.grid_aligned_x();
-            const std::uint8_t player_y = p.grid_aligned_y();
-
-            bim_assume(player_x > 0);
-            bim_assume(player_y > 0);
-
-            for (int y : { -1, 0, 1 })
-              for (int x : { -1, 0, 1 })
-                forbidden_positions.push_back(
-                    position_on_grid(player_x + x, player_y + y));
-          });
 
   // Generate the crates and remember their entities such that we can assign
   // them the power-up spawners after.
@@ -156,8 +135,9 @@ void bim::game::insert_random_crates(arena& arena,
   // The actual generation of crates.
   for (int y = 0; y != height; ++y)
     for (int x = 0; x != width; ++x)
-      if (!arena.is_static_wall(x, y)
-          && !boost::algorithm::any_of_equal(forbidden_positions,
+      if (!arena.is_static_wall(x, y) && !arena.fences(x, y)
+          && !boost::algorithm::any_of_equal(forbidden_positions.begin(),
+                                             forbidden_positions.end(),
                                              position_on_grid(x, y))
           && (random(random_generator) < crate_probability))
         {
@@ -234,4 +214,143 @@ bool bim::game::valid_invisibility_power_up_position(int x, int y, int w,
 
   return (x + y > r) && ((w - x - 1) + y > r) && (x + (h - y - 1) > r)
          && ((w - x - 1) + (h - y - 1) > r);
+}
+
+void bim::game::insert_random_fences(
+    arena& arena, random_generator& random_generator,
+    std::span<const position_on_grid> forbidden_positions)
+{
+  // We are going to generate fences one one quarter of the arena, then we will
+  // duplicate the result with symmetry for the other quarters.
+
+  const std::size_t arena_width = arena.width();
+  const std::size_t arena_height = arena.height();
+
+  bim_assume(arena_width >= 3);
+  bim_assume(arena_height >= 3);
+
+  const std::size_t pattern_width = (arena_width + 1) / 2;
+  const std::size_t pattern_height = (arena_height + 1) / 2;
+
+  // We collect the cell positions where we can put a fence. We will draw
+  // randomly from this set later on.
+  struct candidate
+  {
+    uint8_t x;
+    uint8_t y;
+    bool vertical_edge;
+  };
+  std::vector<candidate> candidates;
+  candidates.reserve(pattern_width * pattern_height);
+
+  for (std::size_t y = 1; y < pattern_height; ++y)
+    for (std::size_t x = 1; x < pattern_width; ++x)
+      {
+        if (arena.is_static_wall(x, y)
+            || boost::algorithm::any_of_equal(forbidden_positions.begin(),
+                                              forbidden_positions.end(),
+                                              position_on_grid(x, y)))
+          continue;
+
+        const int walls_vertical =
+            arena.is_static_wall(x, y - 1) + arena.is_static_wall(x, y + 1);
+        const int walls_horizontal =
+            arena.is_static_wall(x - 1, y) + arena.is_static_wall(x + 1, y);
+
+        const bool vertical_candidate = walls_vertical == 2;
+        const bool horizontal_candidate = walls_horizontal == 2;
+
+        if (vertical_candidate == horizontal_candidate)
+          continue;
+
+        // The pattern goes to the middle of the arena, on both dimensions. If
+        // we put a fence here then it would create a closed cell when the
+        // symmetric fence will be added later in the function. Consequently we
+        // avoid fences on the edges.
+        const bool allowed = vertical_candidate ? (x + 1 < pattern_width)
+                                                : (y + 1 < pattern_height);
+
+        if (!allowed)
+          continue;
+
+        candidates.emplace_back(x, y, vertical_candidate);
+      }
+
+  navigation_check nav_check;
+
+  const int min_allowed = 2;
+  int available = candidates.size();
+  boost::random::uniform_int_distribution d(
+      min_allowed, std::max(min_allowed, available / g_fence_count_ratio));
+  int needed = d(random_generator);
+
+  boost::random::uniform_int_distribution side(0, 1);
+
+  for (const candidate& c : candidates)
+    {
+      if ((available == 0) || (needed == 0))
+        break;
+
+      if (boost::random::uniform_int_distribution(1,
+                                                  available)(random_generator)
+          > needed)
+        {
+          --available;
+          continue;
+        }
+
+      --needed;
+      --available;
+
+      const int s = side(random_generator);
+      cell_edge e[4];
+
+      if (c.vertical_edge)
+        e[0] = s ? cell_edge::left : cell_edge::right;
+      else
+        e[0] = s ? cell_edge::up : cell_edge::down;
+
+      e[1] = horizontal_flip(e[0]);
+      e[2] = vertical_flip(e[0]);
+      e[3] = horizontal_flip(e[2]);
+
+      const position_on_grid p[] = {
+        position_on_grid(c.x, c.y),
+        position_on_grid(arena_width - c.x - 1, c.y),
+        position_on_grid(c.x, arena_height - c.y - 1),
+        position_on_grid(arena_width - c.x - 1, arena_height - c.y - 1)
+      };
+
+      for (int i = 0; i != 4; ++i)
+        {
+          const int x = p[i].x;
+          const int y = p[i].y;
+
+          if (arena.is_static_wall(x, y))
+            continue;
+
+          arena.add_fence(x, y, e[i]);
+
+          bool good;
+
+          switch (e[i])
+            {
+            case cell_edge::left:
+              good = nav_check.reachable(arena, x, y, x - 1, y);
+              break;
+            case cell_edge::right:
+              good = nav_check.reachable(arena, x, y, x + 1, y);
+              break;
+            case cell_edge::up:
+              good = nav_check.reachable(arena, x, y, x, y - 1);
+              break;
+            default:
+              assert(e[i] == cell_edge::down);
+              good = nav_check.reachable(arena, x, y, x, y + 1);
+            }
+
+          if (!good)
+            arena.remove_fence(x, y, e[i]);
+        }
+    }
 }

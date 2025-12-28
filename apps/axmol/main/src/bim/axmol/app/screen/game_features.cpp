@@ -235,10 +235,11 @@ bim::axmol::app::game_features::game_features(
       bim::app::available_feature_flags(preferences);
 
   std::size_t i = 0;
-  for (bim::game::feature_flags f : { bim::game::feature_flags::falling_blocks,
-                                      bim::game::feature_flags::shield,
-                                      bim::game::feature_flags::invisibility,
-                                      bim::game::feature_flags::fog_of_war })
+  for (bim::game::feature_flags f :
+       { bim::game::feature_flags::falling_blocks,
+         bim::game::feature_flags::fences, bim::game::feature_flags::shield,
+         bim::game::feature_flags::invisibility,
+         bim::game::feature_flags::fog_of_war })
     {
       game_feature_button& button =
           new_button(i, button_on_style, !!(available_features & f));
@@ -505,9 +506,9 @@ void bim::axmol::app::game_features::show_feature_message(
       message =
           ic_gettext("Falling blocks reduce the arena after two minutes!");
       break;
-    case bim::game::feature_flags::shield:
-      message = ic_gettext("Find this incredibly strong barrel, it will save "
-                           "you from one hit!");
+    case bim::game::feature_flags::fences:
+      message = ic_gettext(
+          "Fences block the players, but the flames can go through!");
       break;
     case bim::game::feature_flags::fog_of_war:
       message = ic_gettext(
@@ -516,6 +517,10 @@ void bim::axmol::app::game_features::show_feature_message(
     case bim::game::feature_flags::invisibility:
       message = ic_gettext("Find the invisibility power up to disappear from "
                            "the screen of all other players!");
+      break;
+    case bim::game::feature_flags::shield:
+      message = ic_gettext("Find this incredibly strong barrel, it will save "
+                           "you from one hit!");
       break;
     }
 

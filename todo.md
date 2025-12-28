@@ -1,7 +1,5 @@
 # Next
 
-- Fences.
-
 # Client
 
 - Review the startup steps.

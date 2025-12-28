@@ -142,6 +142,14 @@ void bim::game::dump_arena(const arena& arena,
         const std::span<const entt::entity> entities =
             entity_map.entities_at(x, y);
 
+        if (arena.is_static_wall(x, y))
+          arena_str[y][x] = "▒";
+        else
+          {
+            static const char* const e = " 123456789abcdef";
+            arena_str[y][x] = std::string(e + (int)arena.fences(x, y), 1);
+          }
+
         if (!entities.empty())
           arena_str[y][x] = "!";
 
@@ -152,9 +160,6 @@ void bim::game::dump_arena(const arena& arena,
                 arena_str[y][x] = "░";
                 break;
               }
-
-        if (arena.is_static_wall(x, y))
-          arena_str[y][x] = "▒";
       }
 
   std::vector<player> players;

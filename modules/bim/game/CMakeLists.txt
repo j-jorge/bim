@@ -1,6 +1,7 @@
 add_library(bim_game
   STATIC
   main/src/bim/game/arena.cpp
+  main/src/bim/game/cell_edge.cpp
   main/src/bim/game/cell_neighborhood.cpp
   main/src/bim/game/check_game_over.cpp
   main/src/bim/game/contest.cpp
@@ -14,6 +15,7 @@ add_library(bim_game
   main/src/bim/game/input_archive.cpp
   main/src/bim/game/kick_event.cpp
   main/src/bim/game/level_generation.cpp
+  main/src/bim/game/navigation_check.cpp
   main/src/bim/game/output_archive.cpp
   main/src/bim/game/player_action.cpp
   main/src/bim/game/random_generator.cpp
@@ -70,49 +72,63 @@ add_library(bim_game
 target_include_directories(bim_game PUBLIC main/include)
 target_link_libraries(bim_game PUBLIC bim_core iscool_net EnTT::EnTT)
 
-if (NOT BIM_BUILD_TESTS)
-  return()
+if (BIM_BUILD_TESTS)
+  add_executable(game-tests
+    tests/src/bim/game/archive.cpp
+    tests/src/bim/game/arena.cpp
+    tests/src/bim/game/check_game_over.cpp
+    tests/src/bim/game/contest.cpp
+    tests/src/bim/game/contest_timeline.cpp
+    tests/src/bim/game/entity_world_map.cpp
+    tests/src/bim/game/level_generation.cpp
+    tests/src/bim/game/navigation_check.cpp
+    tests/src/bim/game/player_action.cpp
+
+    tests/src/bim/game/component/animation_state.cpp
+    tests/src/bim/game/component/flame_direction.cpp
+    tests/src/bim/game/component/player_action_queue.cpp
+
+    tests/src/bim/game/factory/power_up.cpp
+
+    tests/src/bim/game/system/animator.cpp
+    tests/src/bim/game/system/apply_player_action.cpp
+    tests/src/bim/game/system/arena_reduction.cpp
+    tests/src/bim/game/system/fog_of_war.cpp
+    tests/src/bim/game/system/remove_dead_objects.cpp
+    tests/src/bim/game/system/update_bomb_power_ups.cpp
+    tests/src/bim/game/system/update_bombs.cpp
+    tests/src/bim/game/system/update_crates.cpp
+    tests/src/bim/game/system/update_falling_blocks.cpp
+    tests/src/bim/game/system/update_flame_power_ups.cpp
+    tests/src/bim/game/system/update_invincibility_state.cpp
+    tests/src/bim/game/system/update_invisibility_power_ups.cpp
+    tests/src/bim/game/system/update_invisibility_state.cpp
+    tests/src/bim/game/system/update_players.cpp
+    tests/src/bim/game/system/update_power_up_spawners.cpp
+    tests/src/bim/game/system/update_shields.cpp
+    tests/src/bim/game/system/update_shield_power_ups.cpp
+    tests/src/bim/game/system/update_timers.cpp
+  )
+  target_link_libraries(
+    game-tests
+    PRIVATE
+    bim_game
+    GTest::gtest
+    bim_gtest_main
+  )
 endif()
 
-add_executable(game-tests
-  tests/src/bim/game/archive.cpp
-  tests/src/bim/game/arena.cpp
-  tests/src/bim/game/check_game_over.cpp
-  tests/src/bim/game/contest.cpp
-  tests/src/bim/game/contest_timeline.cpp
-  tests/src/bim/game/entity_world_map.cpp
-  tests/src/bim/game/level_generation.cpp
-  tests/src/bim/game/player_action.cpp
-
-  tests/src/bim/game/component/animation_state.cpp
-  tests/src/bim/game/component/flame_direction.cpp
-  tests/src/bim/game/component/player_action_queue.cpp
-
-  tests/src/bim/game/factory/power_up.cpp
-
-  tests/src/bim/game/system/animator.cpp
-  tests/src/bim/game/system/apply_player_action.cpp
-  tests/src/bim/game/system/arena_reduction.cpp
-  tests/src/bim/game/system/fog_of_war.cpp
-  tests/src/bim/game/system/remove_dead_objects.cpp
-  tests/src/bim/game/system/update_bomb_power_ups.cpp
-  tests/src/bim/game/system/update_bombs.cpp
-  tests/src/bim/game/system/update_crates.cpp
-  tests/src/bim/game/system/update_falling_blocks.cpp
-  tests/src/bim/game/system/update_flame_power_ups.cpp
-  tests/src/bim/game/system/update_invincibility_state.cpp
-  tests/src/bim/game/system/update_invisibility_power_ups.cpp
-  tests/src/bim/game/system/update_invisibility_state.cpp
-  tests/src/bim/game/system/update_players.cpp
-  tests/src/bim/game/system/update_power_up_spawners.cpp
-  tests/src/bim/game/system/update_shields.cpp
-  tests/src/bim/game/system/update_shield_power_ups.cpp
-  tests/src/bim/game/system/update_timers.cpp
-)
-target_link_libraries(
-  game-tests
-  PRIVATE
-  bim_game
-  GTest::gtest
-  bim_gtest_main
-)
+if (BIM_BUILD_BENCHMARKS)
+  add_executable(
+    navigation-check-benchmark
+    benchmarks/src/bim/game/navigation_check.cpp
+  )
+  target_link_libraries(
+    navigation-check-benchmark
+    PRIVATE
+    bim_game
+    benchmark::benchmark
+    benchmark::benchmark_main
+  )
+  add_dependencies(benchmarks navigation-check-benchmark)
+endif()

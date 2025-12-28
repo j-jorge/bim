@@ -228,6 +228,11 @@
       }
     ],
 
+    "fence.up/frame": "sprites/fence-up.png",
+    "fence.down/frame": "sprites/fence-down.png",
+    "fence.left/frame": "sprites/fence-left.png",
+    "fence.right/frame": "sprites/fence-right.png",
+
     "bomb/frame": "sprites/bomb.png",
     "static-wall/frame": "sprites/solid-wall.png",
     "wall/frame": "sprites/solid-wall.png",

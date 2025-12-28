@@ -2,6 +2,10 @@
 #include <bim/game/system/update_bombs.hpp>
 
 #include <bim/game/arena.hpp>
+#include <bim/game/cell_edge.hpp>
+#include <bim/game/context/context.hpp>
+#include <bim/game/context/fill_context.hpp>
+#include <bim/game/context/player_animations.hpp>
 #include <bim/game/entity_world_map.hpp>
 
 #include <bim/game/component/bomb.hpp>
@@ -498,6 +502,36 @@ TEST(update_bombs, flames_go_through_players)
                             player_animations.idle_down);
   bim::game::player_factory(registry, entity_map, 3, 2, 3,
                             player_animations.idle_down);
+
+  bim::game::update_timers(registry, std::chrono::milliseconds(1));
+  bim::game::update_bombs(registry, arena, entity_map);
+  bim::game::remove_dead_objects(registry, entity_map);
+
+  std::vector<std::string> flames = flames_map(arena, registry);
+  EXPECT_EQ("  v  ", flames[0]);
+  EXPECT_EQ("  V  ", flames[1]);
+  EXPECT_EQ("hHBHh", flames[2]);
+  EXPECT_EQ("  V  ", flames[3]);
+  EXPECT_EQ("  v  ", flames[4]);
+}
+
+TEST(update_bombs, flames_go_through_fences)
+{
+  entt::registry registry;
+  bim::game::arena arena(5, 5);
+  arena.add_fence(1, 2, bim::game::cell_edge::left);
+  arena.add_fence(3, 2, bim::game::cell_edge::right);
+  arena.add_fence(2, 1, bim::game::cell_edge::down);
+  arena.add_fence(2, 3, bim::game::cell_edge::up);
+
+  bim::game::entity_world_map entity_map(arena.width(), arena.height());
+  constexpr std::uint8_t x = 2;
+  constexpr std::uint8_t y = 2;
+  constexpr std::uint8_t strength = 2;
+  constexpr std::uint8_t player_index = 0;
+
+  bim::game::bomb_factory(registry, entity_map, x, y, strength, player_index,
+                          std::chrono::milliseconds(0));
 
   bim::game::update_timers(registry, std::chrono::milliseconds(1));
   bim::game::update_bombs(registry, arena, entity_map);

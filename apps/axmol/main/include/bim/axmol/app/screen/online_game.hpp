@@ -6,7 +6,10 @@
 #include <bim/axmol/input/tree.hpp>
 #include <bim/axmol/widget/declare_controls_struct.hpp>
 
-#include <bim/game/cell_neighborhood.hpp>
+#include <bim/game/cell_edge_fwd.hpp>
+#include <bim/game/cell_neighborhood_fwd.hpp>
+
+#include <bim/bit_map.hpp>
 
 #include <iscool/context.hpp>
 #include <iscool/schedule/scoped_connection.hpp>
@@ -119,6 +122,9 @@ namespace bim::axmol::app
     void closing();
 
   private:
+    struct fence;
+
+  private:
     void create_power_up_shader(std::vector<ax::Sprite*>& sprites,
                                 ax::backend::Program& p);
     void configure_direction_pad();
@@ -139,6 +145,7 @@ namespace bim::axmol::app
     void refresh_display();
     void display_static_walls();
     void display_walls();
+    void display_fences(bim::game::cell_edge mask);
     void display_falling_blocks();
     void display_crates();
     void display_players();
@@ -185,6 +192,12 @@ namespace bim::axmol::app
     std::array<std::vector<ax::Sprite*>,
                bim::game::cell_neighborhood_layout_count>
         m_static_walls;
+
+    std::vector<fence> m_fences;
+    bim::bit_map<bim::game::cell_edge, std::vector<ax::Sprite*>,
+                 bim::game::cell_edge_count>
+        m_fence_assets;
+
     std::vector<ax::Sprite*> m_walls;
     std::vector<ax::Sprite*> m_falling_blocks;
     std::vector<ax::Sprite*> m_falling_blocks_shadows;

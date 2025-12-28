@@ -18,5 +18,5 @@ namespace bim::game
 
   bool operator!(feature_flags f);
 
-  extern const std::array<feature_flags, 4> g_all_game_feature_flags;
+  extern const std::array<feature_flags, 5> g_all_game_feature_flags;
 }

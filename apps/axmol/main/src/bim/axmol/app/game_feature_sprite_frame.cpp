@@ -15,6 +15,9 @@ bim::axmol::app::game_feature_sprite_frame(bim::game::feature_flags f)
     case bim::game::feature_flags::falling_blocks:
       sprite_frame_name = "sprites/features/falling-blocks.png";
       break;
+    case bim::game::feature_flags::fences:
+      sprite_frame_name = "sprites/features/fences.png";
+      break;
     case bim::game::feature_flags::invisibility:
       sprite_frame_name = "sprites/features/invisibility.png";
       break;

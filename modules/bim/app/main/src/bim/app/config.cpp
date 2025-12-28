@@ -188,6 +188,10 @@ static bool parse_game_feature_prices(bim::app::config& result,
           prices, "invisibility"))
     return false;
 
+  if (!read_value(result.game_feature_price[bim::game::feature_flags::fences],
+                  prices, "fences"))
+    return false;
+
   if (!read_value(
           result.game_feature_price[bim::game::feature_flags::fog_of_war],
           prices, "fog-of-war"))

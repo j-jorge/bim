@@ -28,6 +28,10 @@ set(sprites
 set(sprites_crop
   "sprites/bomb.png"
   "sprites/crate.png"
+  "sprites/fence-down.png"
+  "sprites/fence-left.png"
+  "sprites/fence-right.png"
+  "sprites/fence-up.png"
   "sprites/power-up-bomb.png"
   "sprites/power-up-flame.png"
   "sprites/power-up-invisibility.png"
@@ -40,6 +44,7 @@ set(sprites_crop
   "sprites/features/background-off.png"
   "sprites/features/background-white.png"
   "sprites/features/falling-blocks.png"
+  "sprites/features/fences.png"
   "sprites/features/fog-of-war.png"
   "sprites/features/invisibility.png"
   "sprites/features/padlock.png"

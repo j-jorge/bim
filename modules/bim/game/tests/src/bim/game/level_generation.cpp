@@ -5,12 +5,15 @@
 #include <bim/game/component/crate.hpp>
 #include <bim/game/component/player.hpp>
 #include <bim/game/component/position_on_grid.hpp>
+#include <bim/game/context/context.hpp>
 #include <bim/game/entity_world_map.hpp>
 #include <bim/game/factory/player.hpp>
 #include <bim/game/random_generator.hpp>
 
 #include <entt/entity/entity.hpp>
 #include <entt/entity/registry.hpp>
+
+#include <boost/algorithm/cxx11/any_of.hpp>
 
 #include <algorithm>
 
@@ -73,7 +76,8 @@ TEST_P(bim_game_level_generation_test, random_crates)
 
   entt::registry registry;
   bim::game::random_generator random(1234);
-  bim::game::insert_random_crates(arena, entity_map, registry, random, 50, {});
+  bim::game::insert_random_crates(arena, entity_map, registry, random, 50, {},
+                                  {});
 
   int free_cell_count = 0;
 
@@ -96,17 +100,28 @@ TEST_P(bim_game_level_generation_test, random_crates)
   EXPECT_LE(crate_count, free_cell_count);
 }
 
+TEST_P(bim_game_level_generation_test, random_fences)
+{
+  const uint8_t width = std::get<0>(GetParam());
+  const uint8_t height = std::get<1>(GetParam());
+  bim::game::arena arena(width, height);
+
+  bim::game::generate_basic_level_structure(arena);
+
+  bim::game::random_generator random(1234);
+  bim::game::insert_random_fences(arena, random, {});
+
+  // This is a test to ensure that insert_random_fences() does not crash.
+}
+
 // Levels with a size of 4 or less in one dimension barely have enough room for
 // a player, so we test larger sizes.
 INSTANTIATE_TEST_SUITE_P(bim_game_arena_suite, bim_game_level_generation_test,
                          ::testing::Combine(::testing::Range(5, 15),
                                             ::testing::Range(5, 15)));
 
-TEST(bim_game_insert_random_crates, no_walls_near_player)
+TEST(bim_game_insert_random_crates, no_crate_in_forbidden_positions)
 {
-  // insert_random_crates should not create crates around the
-  // players.
-
   const uint8_t width = 10;
   const uint8_t height = 10;
   bim::game::arena arena(width, height);
@@ -115,55 +130,31 @@ TEST(bim_game_insert_random_crates, no_walls_near_player)
   entt::registry registry;
   constexpr int player_count = 5;
 
-  // Insert one player in each corner, and one in the center.
-  const bim::game::position_on_grid player_positions[player_count] = {
+  const bim::game::position_on_grid forbidden_positions[player_count] = {
     { 1, 1 },
     { width - 2, 1 },
     { width / 2, height / 2 },
     { 1, height - 2 },
     { width - 2, height - 2 }
   };
-  entt::entity players[player_count];
-
-  // Create the actual player entities that should be used by
-  // insert_random_crates to avoid creating walls.
-  for (int i = 0; i != player_count; ++i)
-    players[i] = bim::game::player_factory(
-        registry, entity_map, i, player_positions[i].x, player_positions[i].y,
-        bim::game::animation_id{});
 
   bim::game::random_generator random(1234);
 
   // Insert crates with a 100% probability, i.e. create a crate every time.
-  bim::game::insert_random_crates(arena, entity_map, registry, random, 100,
-                                  {});
+  bim::game::insert_random_crates(arena, entity_map, registry, random, 100, {},
+                                  forbidden_positions);
 
   for (int y = 0; y != height; ++y)
     for (int x = 0; x != width; ++x)
       {
-        bool near_player_position = false;
-        bool at_player_position = false;
-
-        for (bim::game::position_on_grid p : player_positions)
-          if ((p.x == x) && (p.y == y))
-            at_player_position = true;
-          else if ((std::abs(p.x - x) <= 1) && (std::abs(p.y - y) <= 1))
-            {
-              near_player_position = true;
-              break;
-            }
-
         const std::span<const entt::entity> entity_in_arena =
             entity_map.entities_at(x, y);
 
-        if (at_player_position)
+        if (boost::algorithm::any_of_equal(forbidden_positions,
+                                           bim::game::position_on_grid(x, y)))
           {
-            ASSERT_EQ(1, entity_in_arena.size());
-            EXPECT_NE(std::end(players),
-                      std::ranges::find(players, entity_in_arena[0]));
+            ASSERT_EQ(0, entity_in_arena.size());
           }
-        else if (near_player_position)
-          EXPECT_EQ(0, entity_in_arena.size());
         else
           {
             ASSERT_EQ(1, entity_in_arena.size());

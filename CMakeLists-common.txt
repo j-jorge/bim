@@ -22,6 +22,8 @@ find_package(fmt REQUIRED)
 
 if (BIM_BUILD_BENCHMARKS)
   find_package(benchmark REQUIRED)
+
+  add_custom_target(benchmarks)
 endif()
 
 if (BIM_BUILD_TESTS)

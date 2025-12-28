@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #pragma once
 
+#include <bim/game/cell_edge_fwd.hpp>
 #include <bim/game/cell_neighborhood_fwd.hpp>
 
 #include <bim/table_2d.hpp>
@@ -12,6 +13,7 @@
 namespace bim::game
 {
   struct static_wall;
+  struct fence;
 
   class arena
   {
@@ -32,10 +34,16 @@ namespace bim::game
     std::uint8_t width() const;
     std::uint8_t height() const;
 
-    std::span<const bim::game::static_wall> static_walls() const;
+    std::span<const static_wall> static_walls() const;
 
     bool is_static_wall(std::uint8_t x, std::uint8_t y) const;
     void set_static_wall(std::uint8_t x, std::uint8_t y, cell_neighborhood n);
+
+    std::span<const fence> fences() const;
+
+    cell_edge fences(std::uint8_t x, std::uint8_t y) const;
+    void add_fence(std::uint8_t x, std::uint8_t y, cell_edge e);
+    void remove_fence(std::uint8_t x, std::uint8_t y, cell_edge e);
 
   private:
     std::uint8_t m_width;
@@ -43,6 +51,8 @@ namespace bim::game
 
     /// Static walls, they are never removed.
     table_2d<bool> m_is_static_wall;
+
+    table_2d<cell_edge> m_fences;
 
     std::vector<static_wall> m_static_walls;
   };

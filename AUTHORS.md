@@ -171,6 +171,10 @@ CC-BY-SA 4.0
 assets/i18n/en.po
 assets/sprites/arena-border.png
 assets/sprites/arena-corner.png
+assets/sprites/fence-down.png
+assets/sprites/fence-left.png
+assets/sprites/fence-right.png
+assets/sprites/fence-up.png
 assets/sprites/pixel.png
 assets/sprites/power-up-bomb.png
 assets/sprites/power-up-flame.png
@@ -182,6 +186,7 @@ assets/sprites/features/background-green.png
 assets/sprites/features/background-off.png
 assets/sprites/features/background-white.png
 assets/sprites/features/falling-blocks.png
+assets/sprites/features/fences.png
 assets/sprites/features/fog-of-war.png
 assets/sprites/features/invisibility.png
 assets/sprites/features/padlock.png
