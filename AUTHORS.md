@@ -34,7 +34,7 @@ assets/i18n/pt_BR.po
 CC-BY-SA 4.0 OlliesGudh, samuel0220, via Weblate.
 
 assets/i18n/tr.po
-CC-BY-SA 4.0 AsetSiya, via Weblate.
+CC-BY-SA 4.0 AsetSiya, Metin, via Weblate.
 
 assets/i18n/uk.po
 CC-BY-SA 4.0 Максим Горпиніч, Andrij Mizyk, via Weblate.
