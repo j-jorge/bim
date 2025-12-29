@@ -9,6 +9,6 @@ namespace bim::game
 {
   class arena;
 
-  entt::entity brick_wall_factory(entt::registry& registry, arena& arena,
+  entt::entity crate_factory(entt::registry& registry, arena& arena,
                                   std::uint8_t x, std::uint8_t y);
 }

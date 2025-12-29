@@ -28,7 +28,7 @@ TEST(bim_game_contest_timeline, write_and_read)
     .seed = 0,
     .features = {},
     .player_count = player_count,
-    .brick_wall_probability = 50,
+    .crate_probability = 50,
     .arena_width = 5,
     .arena_height = 7
   };
@@ -154,8 +154,8 @@ TEST(bim_game_contest_timeline, write_and_read)
   EXPECT_EQ(tick_count, timeline.tick_count());
 
   EXPECT_EQ(original_fingerprint.seed, timeline.fingerprint().seed);
-  EXPECT_EQ(original_fingerprint.brick_wall_probability,
-            timeline.fingerprint().brick_wall_probability);
+  EXPECT_EQ(original_fingerprint.crate_probability,
+            timeline.fingerprint().crate_probability);
   EXPECT_EQ(original_fingerprint.player_count,
             timeline.fingerprint().player_count);
   EXPECT_EQ(original_fingerprint.arena_width,
@@ -227,7 +227,7 @@ TEST(bim_game_contest_timeline, kick_event)
     .seed = 0,
     .features = {},
     .player_count = player_count,
-    .brick_wall_probability = 50,
+    .crate_probability = 50,
     .arena_width = 5,
     .arena_height = 7
   };
@@ -314,8 +314,8 @@ TEST(bim_game_contest_timeline, kick_event)
   EXPECT_EQ(tick_count, timeline.tick_count());
 
   EXPECT_EQ(original_fingerprint.seed, timeline.fingerprint().seed);
-  EXPECT_EQ(original_fingerprint.brick_wall_probability,
-            timeline.fingerprint().brick_wall_probability);
+  EXPECT_EQ(original_fingerprint.crate_probability,
+            timeline.fingerprint().crate_probability);
   EXPECT_EQ(original_fingerprint.player_count,
             timeline.fingerprint().player_count);
   EXPECT_EQ(original_fingerprint.arena_width,
@@ -349,7 +349,7 @@ TEST(bim_game_contest_timeline, three_players_dead_or_kicked)
     .seed = 0,
     .features = {},
     .player_count = player_count,
-    .brick_wall_probability = 50,
+    .crate_probability = 50,
     .arena_width = 5,
     .arena_height = 7
   };
@@ -455,8 +455,8 @@ TEST(bim_game_contest_timeline, three_players_dead_or_kicked)
   EXPECT_EQ(tick_count, timeline.tick_count());
 
   EXPECT_EQ(original_fingerprint.seed, timeline.fingerprint().seed);
-  EXPECT_EQ(original_fingerprint.brick_wall_probability,
-            timeline.fingerprint().brick_wall_probability);
+  EXPECT_EQ(original_fingerprint.crate_probability,
+            timeline.fingerprint().crate_probability);
   EXPECT_EQ(original_fingerprint.player_count,
             timeline.fingerprint().player_count);
   EXPECT_EQ(original_fingerprint.arena_width,

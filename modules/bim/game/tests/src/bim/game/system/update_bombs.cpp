@@ -11,7 +11,7 @@
 #include <bim/game/component/position_on_grid.hpp>
 #include <bim/game/component/timer.hpp>
 #include <bim/game/factory/bomb.hpp>
-#include <bim/game/factory/brick_wall.hpp>
+#include <bim/game/factory/crate.hpp>
 #include <bim/game/system/remove_dead_objects.hpp>
 #include <bim/game/system/update_timers.hpp>
 
@@ -434,10 +434,10 @@ TEST(update_bombs, burning_walls)
                           std::chrono::milliseconds(0));
 
   const entt::entity walls[] = {
-    bim::game::brick_wall_factory(registry, arena, 2, 1),
-    bim::game::brick_wall_factory(registry, arena, 4, 2),
-    bim::game::brick_wall_factory(registry, arena, 5, 2),
-    bim::game::brick_wall_factory(registry, arena, 2, 5)
+    bim::game::crate_factory(registry, arena, 2, 1),
+    bim::game::crate_factory(registry, arena, 4, 2),
+    bim::game::crate_factory(registry, arena, 5, 2),
+    bim::game::crate_factory(registry, arena, 2, 5)
   };
 
   bim::game::update_timers(registry, std::chrono::milliseconds(12));

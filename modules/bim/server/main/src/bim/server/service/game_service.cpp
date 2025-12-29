@@ -35,7 +35,7 @@
 #include <array>
 #include <limits>
 
-static constexpr std::uint8_t g_brick_wall_probability = 80;
+static constexpr std::uint8_t g_crate_probability = 80;
 
 struct bim::server::game_service::game
 {
@@ -80,7 +80,7 @@ public:
     , contest({ .seed = seed,
                 .features = features,
                 .player_count = player_count,
-                .brick_wall_probability = g_brick_wall_probability,
+                .crate_probability = g_crate_probability,
                 .arena_width = bim::game::g_default_arena_width,
                 .arena_height = bim::game::g_default_arena_height })
   {
@@ -97,7 +97,7 @@ public:
     return { .seed = seed,
              .features = features,
              .player_count = player_count,
-             .brick_wall_probability = g_brick_wall_probability,
+             .crate_probability = g_crate_probability,
              .arena_width = contest.arena().width(),
              .arena_height = contest.arena().height() };
   }

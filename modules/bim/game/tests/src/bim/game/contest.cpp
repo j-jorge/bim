@@ -57,14 +57,14 @@ void bim_game_contest_power_up_distribution::run_test(
   ASSERT_EQ(arena_width, usable_cells.width());
   ASSERT_EQ(arena_height, usable_cells.height());
 
-  constexpr int brick_wall_probability = 80;
+  constexpr int crate_probability = 80;
   constexpr int player_count = 4;
 
   bim::game::contest_fingerprint fingerprint = { .seed = 0,
                                                  .features = feature_flags,
                                                  .player_count = player_count,
-                                                 .brick_wall_probability =
-                                                     brick_wall_probability,
+                                                 .crate_probability =
+                                                     crate_probability,
                                                  .arena_width = arena_width,
                                                  .arena_height =
                                                      arena_height };

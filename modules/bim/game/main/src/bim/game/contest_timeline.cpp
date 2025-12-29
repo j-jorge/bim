@@ -103,10 +103,10 @@ bool bim::game::load_contest_timeline(contest_timeline& timeline, std::FILE* f)
       return false;
     }
 
-  if (!read(f, timeline.m_fingerprint.brick_wall_probability))
+  if (!read(f, timeline.m_fingerprint.crate_probability))
     {
       ic_log(iscool::log::nature::error(), "load_contest_timeline",
-             "Failed to read the brick wall probability.");
+             "Failed to read the crate probability.");
       return false;
     }
 

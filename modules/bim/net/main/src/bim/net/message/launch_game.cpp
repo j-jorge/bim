@@ -15,7 +15,7 @@ bim::net::launch_game::launch_game(
     client_token request_token, std::uint64_t seed,
     iscool::net::channel_id game_channel, bim::game::feature_flags features,
     std::uint8_t player_count, std::uint8_t player_index,
-    std::uint8_t brick_wall_probability, std::uint8_t arena_width,
+    std::uint8_t crate_probability, std::uint8_t arena_width,
     std::uint8_t arena_height)
   : m_request_token(request_token)
   , m_seed(seed)
@@ -23,7 +23,7 @@ bim::net::launch_game::launch_game(
   , m_features(features)
   , m_player_count(player_count)
   , m_player_index(player_index)
-  , m_brick_wall_probability(brick_wall_probability)
+  , m_crate_probability(crate_probability)
   , m_arena_width(arena_width)
   , m_arena_height(arena_height)
 {
@@ -42,7 +42,7 @@ bim::net::launch_game::launch_game(const iscool::net::byte_array& raw_content)
   m_player_count = bits.get(2) + 1;
   m_player_index = bits.get(2);
 
-  reader >> m_brick_wall_probability >> m_arena_width >> m_arena_height;
+  reader >> m_crate_probability >> m_arena_width >> m_arena_height;
 }
 
 void bim::net::launch_game::build_message(iscool::net::message& message) const
@@ -64,7 +64,7 @@ void bim::net::launch_game::build_message(iscool::net::message& message) const
 
   bits.flush();
 
-  content << m_brick_wall_probability << m_arena_width << m_arena_height;
+  content << m_crate_probability << m_arena_width << m_arena_height;
 }
 
 bim::net::client_token bim::net::launch_game::get_request_token() const
@@ -97,9 +97,9 @@ std::uint8_t bim::net::launch_game::get_player_index() const
   return m_player_index;
 }
 
-std::uint8_t bim::net::launch_game::get_brick_wall_probability() const
+std::uint8_t bim::net::launch_game::get_crate_probability() const
 {
-  return m_brick_wall_probability;
+  return m_crate_probability;
 }
 
 std::uint8_t bim::net::launch_game::get_arena_width() const

@@ -10,7 +10,7 @@ namespace bim::game
     std::uint64_t seed;
     feature_flags features;
     std::uint8_t player_count;
-    std::uint8_t brick_wall_probability;
+    std::uint8_t crate_probability;
     std::uint8_t arena_width;
     std::uint8_t arena_height;
   };

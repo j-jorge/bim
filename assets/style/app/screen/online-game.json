@@ -241,7 +241,7 @@
       }
     ],
 
-    "brick-wall/frame": "sprites/crate.png",
+    "crate/frame": "sprites/crate.png",
     "flame/frame": "sprites/flame-center.png",
     "flame-center-asset-name": "sprites/flame-center.png",
     "flame-arm-asset-name": "sprites/flame-arm.png",

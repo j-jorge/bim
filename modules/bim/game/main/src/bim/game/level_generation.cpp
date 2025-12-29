@@ -11,7 +11,7 @@
 #include <bim/game/component/position_on_grid.hpp>
 #include <bim/game/component/shield_power_up_spawner.hpp>
 #include <bim/game/constant/max_player_count.hpp>
-#include <bim/game/factory/brick_wall.hpp>
+#include <bim/game/factory/crate.hpp>
 
 #include <bim/game/random_generator.hpp>
 
@@ -108,11 +108,10 @@ void bim::game::generate_basic_level_structure(arena& arena)
       arena.set_static_wall(x, y, cell_neighborhood::none);
 }
 
-void bim::game::insert_random_brick_walls(arena& arena,
-                                          entt::registry& registry,
-                                          random_generator& random_generator,
-                                          std::uint8_t brick_wall_probability,
-                                          feature_flags features)
+void bim::game::insert_random_crates(arena& arena, entt::registry& registry,
+                                     random_generator& random_generator,
+                                     std::uint8_t crate_probability,
+                                     feature_flags features)
 {
   const int width = arena.width();
   const int height = arena.height();
@@ -142,44 +141,44 @@ void bim::game::insert_random_brick_walls(arena& arena,
                     position_on_grid(player_x + x, player_y + y));
           });
 
-  // Generate the brick walls and remember their entities such that we can
-  // assign them the power-up spawners after.
-  std::vector<entt::entity> brick_walls;
-  brick_walls.reserve(width * height);
+  // Generate the crates and remember their entities such that we can assign
+  // them the power-up spawners after.
+  std::vector<entt::entity> crates;
+  crates.reserve(width * height);
 
   // The invisibility power-up applies to a restricted set of positions; we
   // keep count of the walls matching these position to parameterize the draw
   // of walls for them.
   std::size_t count_for_invisibility = 0;
 
-  // The actual generation of brick walls.
+  // The actual generation of crates.
   for (int y = 0; y != height; ++y)
     for (int x = 0; x != width; ++x)
       if (!arena.is_static_wall(x, y)
           && !boost::algorithm::any_of_equal(forbidden_positions,
                                              position_on_grid(x, y))
-          && (random(random_generator) < brick_wall_probability))
+          && (random(random_generator) < crate_probability))
         {
-          brick_walls.emplace_back(brick_wall_factory(registry, arena, x, y));
+          crates.emplace_back(crate_factory(registry, arena, x, y));
 
           if (valid_invisibility_power_up_position(x, y, width, height))
             ++count_for_invisibility;
         }
 
   // Shuffle the walls before assigning the power-ups.
-  for (std::size_t i = 0, n = brick_walls.size(); i != n - 1; ++i)
+  for (std::size_t i = 0, n = crates.size(); i != n - 1; ++i)
     {
       boost::random::uniform_int_distribution<std::uint8_t> random(i, n - 1);
-      std::swap(brick_walls[i], brick_walls[random(random_generator)]);
+      std::swap(crates[i], crates[random(random_generator)]);
     }
 
   // Select the walls that will spawn power-ups.
-  std::size_t brick_wall_count = brick_walls.size();
+  std::size_t crate_count = crates.size();
 
   // The invisibility power-ups.
   if (!!(features & feature_flags::invisibility))
     generate_power_up_spawners<invisibility_power_up_spawner>(
-        registry, brick_walls, brick_wall_count, count_for_invisibility,
+        registry, crates, crate_count, count_for_invisibility,
         g_invisibility_power_up_count_in_level, random_generator,
         [=, &registry](entt::entity e) -> bool
         {
@@ -192,17 +191,17 @@ void bim::game::insert_random_brick_walls(arena& arena,
   // The shield power-ups.
   if (!!(features & feature_flags::shield))
     generate_power_up_spawners<shield_power_up_spawner>(
-        registry, brick_walls, brick_wall_count,
-        g_shield_power_up_count_in_level, random_generator);
+        registry, crates, crate_count, g_shield_power_up_count_in_level,
+        random_generator);
 
   // The bomb power-ups.
   generate_power_up_spawners<bomb_power_up_spawner>(
-      registry, brick_walls, brick_wall_count, g_bomb_power_up_count_in_level,
+      registry, crates, crate_count, g_bomb_power_up_count_in_level,
       random_generator);
 
   // The flame power-ups.
   generate_power_up_spawners<flame_power_up_spawner>(
-      registry, brick_walls, brick_wall_count, g_flame_power_up_count_in_level,
+      registry, crates, crate_count, g_flame_power_up_count_in_level,
       random_generator);
 }
 

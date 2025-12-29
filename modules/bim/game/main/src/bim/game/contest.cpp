@@ -25,7 +25,7 @@
 #include <bim/game/system/remove_dead_objects.hpp>
 #include <bim/game/system/update_bomb_power_ups.hpp>
 #include <bim/game/system/update_bombs.hpp>
-#include <bim/game/system/update_brick_walls.hpp>
+#include <bim/game/system/update_crates.hpp>
 #include <bim/game/system/update_falling_blocks.hpp>
 #include <bim/game/system/update_flame_power_ups.hpp>
 #include <bim/game/system/update_invincibility_state.hpp>
@@ -161,9 +161,8 @@ bim::game::contest::contest(const contest_fingerprint& fingerprint,
 
   bim::game::random_generator random(fingerprint.seed);
 
-  insert_random_brick_walls(*m_arena, *m_registry, random,
-                            fingerprint.brick_wall_probability,
-                            fingerprint.features);
+  insert_random_crates(*m_arena, *m_registry, random,
+                       fingerprint.crate_probability, fingerprint.features);
 
   if (!!(fingerprint.features & feature_flags::falling_blocks))
     arena_reduction_factory(*m_registry, std::chrono::minutes(2));
@@ -209,7 +208,7 @@ bim::game::contest_result bim::game::contest::tick()
   update_invincibility_state(*m_registry);
   update_shields(*m_registry);
 
-  update_brick_walls(*m_registry, *m_arena);
+  update_crates(*m_registry, *m_arena);
   update_invisibility_state(*m_context, *m_registry);
 
   update_power_up_spawners<bomb_power_up_spawner>(*m_registry, *m_arena);

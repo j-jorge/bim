@@ -10,8 +10,8 @@
 #include <bim/game/component/bomb.hpp>
 #include <bim/game/component/bomb_power_up.hpp>
 #include <bim/game/component/bomb_power_up_spawner.hpp>
-#include <bim/game/component/brick_wall.hpp>
 #include <bim/game/component/burning.hpp>
+#include <bim/game/component/crate.hpp>
 #include <bim/game/component/dead.hpp>
 #include <bim/game/component/falling_block.hpp>
 #include <bim/game/component/flame.hpp>
@@ -305,7 +305,7 @@ void bim::net::contest_runner::archive_io(Snapshot&& snapshot,
       .template get<bim::game::bomb>(archive)
       .template get<bim::game::bomb_power_up>(archive)
       .template get<bim::game::bomb_power_up_spawner>(archive)
-      .template get<bim::game::brick_wall>(archive)
+      .template get<bim::game::crate>(archive)
       .template get<bim::game::burning>(archive)
       .template get<bim::game::dead>(archive)
       .template get<bim::game::falling_block>(archive)

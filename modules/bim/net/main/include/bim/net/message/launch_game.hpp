@@ -21,7 +21,7 @@ namespace bim::net
     launch_game(client_token request_token, std::uint64_t seed,
                 iscool::net::channel_id game_channel,
                 bim::game::feature_flags features, std::uint8_t player_count,
-                std::uint8_t player_index, std::uint8_t brick_wall_probability,
+                std::uint8_t player_index, std::uint8_t crate_probability,
                 std::uint8_t arena_width, std::uint8_t arena_height);
     explicit launch_game(const iscool::net::byte_array& raw_content);
 
@@ -33,7 +33,7 @@ namespace bim::net
     bim::game::feature_flags get_features() const;
     std::uint8_t get_player_count() const;
     std::uint8_t get_player_index() const;
-    std::uint8_t get_brick_wall_probability() const;
+    std::uint8_t get_crate_probability() const;
     std::uint8_t get_arena_width() const;
     std::uint8_t get_arena_height() const;
 
@@ -44,7 +44,7 @@ namespace bim::net
     bim::game::feature_flags m_features;
     std::uint8_t m_player_count;
     std::uint8_t m_player_index;
-    std::uint8_t m_brick_wall_probability;
+    std::uint8_t m_crate_probability;
     std::uint8_t m_arena_width;
     std::uint8_t m_arena_height;
   };

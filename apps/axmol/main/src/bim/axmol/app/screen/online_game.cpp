@@ -30,7 +30,7 @@
 #include <bim/game/component/animation_state.hpp>
 #include <bim/game/component/bomb.hpp>
 #include <bim/game/component/bomb_power_up.hpp>
-#include <bim/game/component/brick_wall.hpp>
+#include <bim/game/component/crate.hpp>
 #include <bim/game/component/dead.hpp>
 #include <bim/game/component/falling_block.hpp>
 #include <bim/game/component/flame.hpp>
@@ -252,8 +252,8 @@ bim::axmol::app::online_game::online_game(
   ::alloc_assets(m_falling_blocks_shadows, widget_context, free_cell_count,
                  *style.get_declaration("falling-block-shadow"),
                  *m_controls->arena);
-  ::alloc_assets(m_brick_walls, widget_context, free_cell_count,
-                 *style.get_declaration("brick-wall"), *m_controls->arena);
+  ::alloc_assets(m_crates, widget_context, free_cell_count,
+                 *style.get_declaration("crate"), *m_controls->arena);
   ::alloc_assets(m_bombs, widget_context,
                  bim::game::g_max_player_count
                      * bim::game::g_max_bomb_count_per_player,
@@ -326,7 +326,7 @@ void bim::axmol::app::online_game::attached()
   resize_to_block_width(m_players);
   resize_to_block_width(m_falling_blocks);
   resize_to_block_width(m_falling_blocks_shadows);
-  resize_to_block_width(m_brick_walls);
+  resize_to_block_width(m_crates);
   resize_to_block_width(m_flames);
   resize_to_block_width(m_bombs);
   resize_to_block_width(m_bomb_power_ups);
@@ -389,7 +389,7 @@ void bim::axmol::app::online_game::displaying(
   hide_all(m_players);
   hide_all(m_falling_blocks);
   hide_all(m_falling_blocks_shadows);
-  hide_all(m_brick_walls);
+  hide_all(m_crates);
   hide_all(m_bombs);
   hide_all(m_flames);
   hide_all(m_bomb_power_ups);
@@ -399,7 +399,7 @@ void bim::axmol::app::online_game::displaying(
   m_fog->displaying(m_local_player_index);
 
   reset_z_order();
-  display_brick_walls();
+  display_crates();
   display_players();
   display_static_walls();
   m_fog->update(*m_contest);
@@ -644,7 +644,7 @@ void bim::axmol::app::online_game::refresh_display()
   ZoneScopedC(0x3644a0);
 
   reset_z_order();
-  display_brick_walls();
+  display_crates();
   display_bombs();
   display_flames();
   display_power_ups<bim::game::bomb_power_up>(m_bomb_power_ups);
@@ -727,23 +727,23 @@ void bim::axmol::app::online_game::display_falling_blocks()
                                          asset_index);
 }
 
-void bim::axmol::app::online_game::display_brick_walls()
+void bim::axmol::app::online_game::display_crates()
 {
   ZoneScoped;
 
   const entt::registry& registry = m_contest->registry();
   std::size_t asset_index = 0;
 
-  registry.view<bim::game::position_on_grid, bim::game::brick_wall>().each(
+  registry.view<bim::game::position_on_grid, bim::game::crate>().each(
       [this, &asset_index](const bim::game::position_on_grid& p) -> void
       {
-        display_at(p.y, *m_brick_walls[asset_index],
+        display_at(p.y, *m_crates[asset_index],
                    m_display_config.grid_position_to_displayed_block_center(
                        p.x, p.y));
         ++asset_index;
       });
 
-  bim::axmol::widget::hide_while_visible(m_brick_walls, asset_index);
+  bim::axmol::widget::hide_while_visible(m_crates, asset_index);
 }
 
 void bim::axmol::app::online_game::display_players()

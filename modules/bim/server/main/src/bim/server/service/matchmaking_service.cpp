@@ -262,8 +262,8 @@ void bim::server::matchmaking_service::mark_as_ready(
   bim::net::launch_game(request_token, fingerprint.seed, game->channel,
                         fingerprint.features, fingerprint.player_count,
                         game->session_index(session),
-                        fingerprint.brick_wall_probability,
-                        fingerprint.arena_width, fingerprint.arena_height)
+                        fingerprint.crate_probability, fingerprint.arena_width,
+                        fingerprint.arena_height)
       .build_message(*s.value);
 
   m_message_stream.send(endpoint, *s.value, session, 0);

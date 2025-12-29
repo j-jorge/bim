@@ -3,6 +3,6 @@
 
 namespace bim::game
 {
-  class brick_wall
+  class crate
   {};
 }

@@ -23,7 +23,7 @@ TEST(bim_net_launch_game, serialization)
   EXPECT_EQ((bim::game::feature_flags)0x22222222, deserialized.get_features());
   EXPECT_EQ(4, deserialized.get_player_count());
   EXPECT_EQ(3, deserialized.get_player_index());
-  EXPECT_EQ(0xfe, deserialized.get_brick_wall_probability());
+  EXPECT_EQ(0xfe, deserialized.get_crate_probability());
   EXPECT_EQ(0xef, deserialized.get_arena_width());
   EXPECT_EQ(0xff, deserialized.get_arena_height());
 }

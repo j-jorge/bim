@@ -34,7 +34,7 @@ add_library(bim_game
 
   main/src/bim/game/factory/arena_reduction.cpp
   main/src/bim/game/factory/bomb.cpp
-  main/src/bim/game/factory/brick_wall.cpp
+  main/src/bim/game/factory/crate.cpp
   main/src/bim/game/factory/falling_block.cpp
   main/src/bim/game/factory/flame.cpp
   main/src/bim/game/factory/fog_of_war.cpp
@@ -53,7 +53,7 @@ add_library(bim_game
   main/src/bim/game/system/remove_dead_objects.cpp
   main/src/bim/game/system/update_bomb_power_ups.cpp
   main/src/bim/game/system/update_bombs.cpp
-  main/src/bim/game/system/update_brick_walls.cpp
+  main/src/bim/game/system/update_crates.cpp
   main/src/bim/game/system/update_falling_blocks.cpp
   main/src/bim/game/system/update_flame_power_ups.cpp
   main/src/bim/game/system/update_invincibility_state.cpp
@@ -93,7 +93,7 @@ add_executable(game-tests
   tests/src/bim/game/system/fog_of_war.cpp
   tests/src/bim/game/system/update_bomb_power_ups.cpp
   tests/src/bim/game/system/update_bombs.cpp
-  tests/src/bim/game/system/update_brick_walls.cpp
+  tests/src/bim/game/system/update_crates.cpp
   tests/src/bim/game/system/update_falling_blocks.cpp
   tests/src/bim/game/system/update_flame_power_ups.cpp
   tests/src/bim/game/system/update_invincibility_state.cpp

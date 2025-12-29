@@ -139,7 +139,7 @@ namespace bim::axmol::app
     void refresh_display();
     void display_static_walls();
     void display_falling_blocks();
-    void display_brick_walls();
+    void display_crates();
     void display_players();
     void display_player(bool local_still_alive, entt::entity e,
                         const bim::game::player& player,
@@ -186,7 +186,7 @@ namespace bim::axmol::app
         m_walls;
     std::vector<ax::Sprite*> m_falling_blocks;
     std::vector<ax::Sprite*> m_falling_blocks_shadows;
-    std::vector<ax::Sprite*> m_brick_walls;
+    std::vector<ax::Sprite*> m_crates;
     std::vector<ax::Sprite*> m_bombs;
     std::vector<ax::Sprite*> m_flames;
     std::vector<ax::Sprite*> m_bomb_power_ups;

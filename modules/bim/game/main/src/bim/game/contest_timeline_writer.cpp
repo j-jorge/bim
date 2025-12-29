@@ -104,9 +104,9 @@ bim::game::contest_timeline_writer::contest_timeline_writer(
     ic_log(iscool::log::nature::error(), "contest_timeline_writer",
            "Could not write the player_count.");
 
-  if (!write(m_file, contest.brick_wall_probability))
+  if (!write(m_file, contest.crate_probability))
     ic_log(iscool::log::nature::error(), "contest_timeline_writer",
-           "Could not write the brick wall probability.");
+           "Could not write the crate probability.");
 
   if (!write(m_file, contest.arena_width))
     ic_log(iscool::log::nature::error(), "contest_timeline_writer",

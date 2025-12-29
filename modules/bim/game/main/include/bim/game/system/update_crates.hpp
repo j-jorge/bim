@@ -9,5 +9,5 @@ namespace bim::game
 {
   class arena;
 
-  void update_brick_walls(entt::registry& registry, arena& arena);
+  void update_crates(entt::registry& registry, arena& arena);
 }

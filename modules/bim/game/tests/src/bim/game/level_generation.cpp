@@ -3,7 +3,7 @@
 
 #include <bim/game/level_generation.hpp>
 
-#include <bim/game/component/brick_wall.hpp>
+#include <bim/game/component/crate.hpp>
 #include <bim/game/component/player.hpp>
 #include <bim/game/component/position_on_grid.hpp>
 
@@ -62,7 +62,7 @@ TEST_P(bim_game_level_generation_test, basic_solid_structure)
         << "height - 1=" << (height - 1) << "x=" << x;
 }
 
-TEST_P(bim_game_level_generation_test, random_brick_walls)
+TEST_P(bim_game_level_generation_test, random_crates)
 {
   const uint8_t width = std::get<0>(GetParam());
   const uint8_t height = std::get<1>(GetParam());
@@ -72,7 +72,7 @@ TEST_P(bim_game_level_generation_test, random_brick_walls)
 
   entt::registry registry;
   bim::game::random_generator random(1234);
-  bim::game::insert_random_brick_walls(arena, registry, random, 50, {});
+  bim::game::insert_random_crates(arena, registry, random, 50, {});
 
   int free_cell_count = 0;
 
@@ -87,16 +87,16 @@ TEST_P(bim_game_level_generation_test, random_brick_walls)
           ++free_cell_count;
       }
 
-  int brick_wall_count = 0;
+  int crate_count = 0;
 
-  registry.view<bim::game::position_on_grid, bim::game::brick_wall>().each(
-      [&brick_wall_count](const bim::game::position_on_grid&) -> void
+  registry.view<bim::game::position_on_grid, bim::game::crate>().each(
+      [&crate_count](const bim::game::position_on_grid&) -> void
       {
-        ++brick_wall_count;
+        ++crate_count;
       });
 
-  EXPECT_LT(0, brick_wall_count);
-  EXPECT_LE(brick_wall_count, free_cell_count);
+  EXPECT_LT(0, crate_count);
+  EXPECT_LE(crate_count, free_cell_count);
 }
 
 // Levels with a size of 4 or less in one dimension barely have enough room for
@@ -105,9 +105,9 @@ INSTANTIATE_TEST_SUITE_P(bim_game_arena_suite, bim_game_level_generation_test,
                          ::testing::Combine(::testing::Range(5, 15),
                                             ::testing::Range(5, 15)));
 
-TEST(bim_game_insert_random_brick_walls, no_walls_near_player)
+TEST(bim_game_insert_random_crates, no_walls_near_player)
 {
-  // insert_random_brick_walls should not create brick_walls around the
+  // insert_random_crates should not create crates around the
   // players.
 
   const uint8_t width = 10;
@@ -126,7 +126,7 @@ TEST(bim_game_insert_random_brick_walls, no_walls_near_player)
   };
 
   // Create the actual player entities that should be used by
-  // insert_random_brick_walls to avoid creating walls.
+  // insert_random_crates to avoid creating walls.
   int i = 0;
   for (bim::game::position_on_grid p : player_positions)
     {
@@ -137,8 +137,8 @@ TEST(bim_game_insert_random_brick_walls, no_walls_near_player)
 
   bim::game::random_generator random(1234);
 
-  // Insert brick walls with a 100% probability, i.e. create a wall every time.
-  bim::game::insert_random_brick_walls(arena, registry, random, 100, {});
+  // Insert crates with a 100% probability, i.e. create a crate every time.
+  bim::game::insert_random_crates(arena, registry, random, 100, {});
 
   for (int y = 0; y != height; ++y)
     for (int x = 0; x != width; ++x)
@@ -157,7 +157,7 @@ TEST(bim_game_insert_random_brick_walls, no_walls_near_player)
         if (near_player_position)
           EXPECT_TRUE(entt::null == entity_in_arena);
         else
-          EXPECT_TRUE(registry.storage<bim::game::brick_wall>().contains(
-              entity_in_arena));
+          EXPECT_TRUE(
+              registry.storage<bim::game::crate>().contains(entity_in_arena));
       }
 }

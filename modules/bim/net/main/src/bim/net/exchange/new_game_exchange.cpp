@@ -186,8 +186,7 @@ void bim::net::new_game_exchange::check_launch_game(
       .fingerprint = { .seed = message->get_seed(),
                        .features = message->get_features(),
                        .player_count = message->get_player_count(),
-                       .brick_wall_probability =
-                           message->get_brick_wall_probability(),
+                       .crate_probability = message->get_crate_probability(),
                        .arena_width = message->get_arena_width(),
                        .arena_height = message->get_arena_height() },
       .player_index = message->get_player_index() });
