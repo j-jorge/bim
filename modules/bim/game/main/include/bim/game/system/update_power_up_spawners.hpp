@@ -5,8 +5,9 @@
 
 namespace bim::game
 {
-  class arena;
+  class entity_world_map;
 
   template <typename PowerUpSpawner>
-  void update_power_up_spawners(entt::registry& registry, arena& arena);
+  void update_power_up_spawners(entt::registry& registry,
+                                entity_world_map& entity_map);
 }

@@ -3,6 +3,7 @@
 
 #include <bim/game/component/animation_state.hpp>
 #include <bim/game/component/burning.hpp>
+#include <bim/game/component/crushed.hpp>
 #include <bim/game/component/dead.hpp>
 #include <bim/game/component/fractional_position_on_grid.hpp>
 #include <bim/game/component/kicked.hpp>
@@ -30,5 +31,14 @@ void bim::game::update_players(const context& context,
       {
         if (animations.is_alive(state.model))
           state.transition_to(animations.burn);
+      });
+
+  registry.view<player, crushed, animation_state>().each(
+      [&](entt::entity e, const player&, animation_state& state) -> void
+      {
+        if (animations.is_alive(state.model))
+          state.transition_to(animations.die);
+
+        registry.erase<crushed>(e);
       });
 }

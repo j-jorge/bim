@@ -3,13 +3,11 @@
 
 #include <entt/entity/fwd.hpp>
 
-#include <chrono>
-
 namespace bim::game
 {
-  class arena;
   class context;
+  class entity_world_map;
 
   void update_falling_blocks(const context& context, entt::registry& registry,
-                             arena& arena);
+                             entity_world_map& entity_map);
 }

@@ -11,6 +11,7 @@
 #include <bim/game/context/context.hpp>
 #include <bim/game/context/fill_context.hpp>
 #include <bim/game/context/player_animations.hpp>
+#include <bim/game/entity_world_map.hpp>
 #include <bim/game/factory/arena_reduction.hpp>
 #include <bim/game/factory/fog_of_war.hpp>
 #include <bim/game/factory/main_timer.hpp>
@@ -19,7 +20,6 @@
 #include <bim/game/system/animator.hpp>
 #include <bim/game/system/apply_player_action.hpp>
 #include <bim/game/system/arena_reduction.hpp>
-#include <bim/game/system/flame_updater.hpp>
 #include <bim/game/system/fog_of_war_updater.hpp>
 #include <bim/game/system/refresh_bomb_inventory.hpp>
 #include <bim/game/system/remove_dead_objects.hpp>
@@ -28,6 +28,7 @@
 #include <bim/game/system/update_crates.hpp>
 #include <bim/game/system/update_falling_blocks.hpp>
 #include <bim/game/system/update_flame_power_ups.hpp>
+#include <bim/game/system/update_flames.hpp>
 #include <bim/game/system/update_invincibility_state.hpp>
 #include <bim/game/system/update_invisibility_power_ups.hpp>
 #include <bim/game/system/update_invisibility_state.hpp>
@@ -47,6 +48,8 @@
 
 #include <boost/random/uniform_int_distribution.hpp>
 
+#include <cassert>
+
 namespace bim::game
 {
   class bomb_power_up_spawner;
@@ -58,8 +61,10 @@ namespace bim::game
 constexpr std::chrono::milliseconds bim::game::contest::tick_interval;
 
 static void add_players(const bim::game::context& context,
-                        entt::registry& registry, std::uint8_t player_count,
-                        std::uint8_t arena_width, std::uint8_t arena_height)
+                        entt::registry& registry,
+                        bim::game::entity_world_map& entity_map,
+                        std::uint8_t player_count, std::uint8_t arena_width,
+                        std::uint8_t arena_height)
 {
   bim_assume(player_count > 0);
 
@@ -77,9 +82,10 @@ static void add_players(const bim::game::context& context,
   for (std::size_t i = 0; i != player_count; ++i)
     {
       const int start_position_index = i % start_position_count;
-      bim::game::player_factory(
-          registry, i, player_start_position[start_position_index].x,
-          player_start_position[start_position_index].y, initial_state);
+      bim::game::player_factory(registry, entity_map, i,
+                                player_start_position[start_position_index].x,
+                                player_start_position[start_position_index].y,
+                                initial_state);
     }
 }
 
@@ -152,16 +158,19 @@ bim::game::contest::contest(const contest_fingerprint& fingerprint,
   , m_context(new bim::game::context())
   , m_arena(new bim::game::arena(fingerprint.arena_width,
                                  fingerprint.arena_height))
+  , m_entity_world_map(new entity_world_map(fingerprint.arena_width,
+                                            fingerprint.arena_height))
 {
   fill_context(*m_context);
 
-  add_players(*m_context, *m_registry, fingerprint.player_count,
-              fingerprint.arena_width, fingerprint.arena_height);
+  add_players(*m_context, *m_registry, *m_entity_world_map,
+              fingerprint.player_count, fingerprint.arena_width,
+              fingerprint.arena_height);
   generate_basic_level_structure(*m_arena);
 
   bim::game::random_generator random(fingerprint.seed);
 
-  insert_random_crates(*m_arena, *m_registry, random,
+  insert_random_crates(*m_arena, *m_entity_world_map, *m_registry, random,
                        fingerprint.crate_probability, fingerprint.features);
 
   if (!!(fingerprint.features & feature_flags::falling_blocks))
@@ -178,8 +187,6 @@ bim::game::contest::contest(const contest_fingerprint& fingerprint,
                    fingerprint.seed);
 
   m_arena_reduction.reset(new arena_reduction(*m_arena));
-  m_flame_updater.reset(
-      new flame_updater(fingerprint.arena_width, fingerprint.arena_height));
   m_fog_of_war.reset(
       new fog_of_war_updater(*m_registry, *m_arena, fingerprint.player_count));
 }
@@ -199,33 +206,48 @@ bim::game::contest_result bim::game::contest::tick()
   refresh_bomb_inventory(*m_registry);
   update_timers(*m_registry, tick_interval);
   animator(*m_context, *m_registry, tick_interval);
-  apply_player_action(*m_context, *m_registry, *m_arena);
-  m_arena_reduction->update(*m_registry, *m_arena);
-  update_falling_blocks(*m_context, *m_registry, *m_arena);
-  update_bombs(*m_registry, *m_arena);
 
-  m_flame_updater->update(*m_registry, *m_arena);
+  apply_player_action(*m_context, *m_registry, *m_arena, *m_entity_world_map);
+
+  m_arena_reduction->update(*m_registry, *m_arena);
+  update_falling_blocks(*m_context, *m_registry, *m_entity_world_map);
+
+  trigger_crushed_timers(*m_registry);
+
+  update_bombs(*m_registry, *m_arena, *m_entity_world_map);
+
+  update_flames(*m_registry, *m_entity_world_map);
   update_invincibility_state(*m_registry);
   update_shields(*m_registry);
 
-  update_crates(*m_registry, *m_arena);
+  update_crates(*m_registry, *m_entity_world_map);
   update_invisibility_state(*m_context, *m_registry);
 
-  update_power_up_spawners<bomb_power_up_spawner>(*m_registry, *m_arena);
-  update_power_up_spawners<flame_power_up_spawner>(*m_registry, *m_arena);
+  update_power_up_spawners<bomb_power_up_spawner>(*m_registry,
+                                                  *m_entity_world_map);
+  update_power_up_spawners<flame_power_up_spawner>(*m_registry,
+                                                   *m_entity_world_map);
   update_power_up_spawners<invisibility_power_up_spawner>(*m_registry,
-                                                          *m_arena);
-  update_power_up_spawners<shield_power_up_spawner>(*m_registry, *m_arena);
+                                                          *m_entity_world_map);
+  update_power_up_spawners<shield_power_up_spawner>(*m_registry,
+                                                    *m_entity_world_map);
 
-  update_bomb_power_ups(*m_registry, *m_arena);
-  update_flame_power_ups(*m_registry, *m_arena);
-  update_invisibility_power_ups(*m_registry, *m_arena);
-  update_shield_power_ups(*m_registry, *m_arena);
+  update_bomb_power_ups(*m_registry, *m_entity_world_map);
+  update_flame_power_ups(*m_registry, *m_entity_world_map);
+  update_invisibility_power_ups(*m_registry, *m_entity_world_map);
+  update_shield_power_ups(*m_registry, *m_entity_world_map);
 
   update_players(*m_context, *m_registry);
   m_fog_of_war->update(*m_registry);
 
-  remove_dead_objects(*m_registry);
+  remove_dead_objects(*m_registry, *m_entity_world_map);
+
+#ifndef NDEBUG
+  for (std::size_t y = 0; y != m_arena->height(); ++y)
+    for (std::size_t x = 0; x != m_arena->width(); ++x)
+      for (entt::entity e : m_entity_world_map->entities_at(x, y))
+        assert(m_registry->valid(e));
+#endif
 
   return check_game_over(*m_context, *m_registry);
 }
@@ -250,7 +272,12 @@ const bim::game::arena& bim::game::contest::arena() const
   return *m_arena;
 }
 
-void bim::game::contest::arena(const bim::game::arena& a)
+const bim::game::entity_world_map& bim::game::contest::entity_map() const
 {
-  *m_arena = a;
+  return *m_entity_world_map;
+}
+
+void bim::game::contest::entity_map(const bim::game::entity_world_map& m)
+{
+  *m_entity_world_map = m;
 }

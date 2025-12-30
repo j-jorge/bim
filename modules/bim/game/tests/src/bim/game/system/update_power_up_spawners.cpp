@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/game/system/update_power_up_spawners.hpp>
 
-#include <bim/game/arena.hpp>
+#include <bim/game/entity_world_map.hpp>
 
 #include <bim/game/component/bomb_power_up.hpp>
 #include <bim/game/component/bomb_power_up_spawner.hpp>
@@ -50,16 +50,16 @@ TYPED_TEST(update_power_up_spawners_test, burning)
   using power_up_type = TypeParam::power_up;
 
   entt::registry registry;
-  bim::game::arena arena(3, 3);
+  bim::game::entity_world_map entity_map(3, 3);
 
   const entt::entity entity = registry.create();
   registry.emplace<spawner_type>(entity);
   registry.emplace<bim::game::burning>(entity);
   registry.emplace<bim::game::position_on_grid>(entity, 1, 2);
 
-  bim::game::update_power_up_spawners<spawner_type>(registry, arena);
+  bim::game::update_power_up_spawners<spawner_type>(registry, entity_map);
 
-  const entt::entity power_up = arena.entity_at(1, 2);
-  ASSERT_TRUE(entt::null != power_up);
-  EXPECT_TRUE(registry.storage<power_up_type>().contains(power_up));
+  const std::span<const entt::entity> power_ups = entity_map.entities_at(1, 2);
+  ASSERT_EQ(1, power_ups.size());
+  EXPECT_TRUE(registry.storage<power_up_type>().contains(power_ups[0]));
 }

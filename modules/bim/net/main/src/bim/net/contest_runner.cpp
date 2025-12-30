@@ -12,6 +12,7 @@
 #include <bim/game/component/bomb_power_up_spawner.hpp>
 #include <bim/game/component/burning.hpp>
 #include <bim/game/component/crate.hpp>
+#include <bim/game/component/crushed.hpp>
 #include <bim/game/component/dead.hpp>
 #include <bim/game/component/falling_block.hpp>
 #include <bim/game/component/flame.hpp>
@@ -33,7 +34,9 @@
 #include <bim/game/component/shield.hpp>
 #include <bim/game/component/shield_power_up.hpp>
 #include <bim/game/component/shield_power_up_spawner.hpp>
+#include <bim/game/component/solid.hpp>
 #include <bim/game/component/timer.hpp>
+#include <bim/game/component/wall.hpp>
 #include <bim/game/constant/max_player_count.hpp>
 #include <bim/game/contest.hpp>
 #include <bim/game/input_archive.hpp>
@@ -173,7 +176,7 @@ void bim::net::contest_runner::restore_last_confirmed_state(
 
   archive_io(entt::snapshot_loader(registry),
              bim::game::input_archive(m_last_confirmed_archive.data()));
-  m_contest.arena(m_last_confirmed_arena);
+  m_contest.entity_map(m_last_confirmed_entity_map);
 }
 
 void bim::net::contest_runner::apply_server_actions(entt::registry& registry)
@@ -237,7 +240,7 @@ void bim::net::contest_runner::save_contest_state(entt::registry& registry)
 
   archive_io(entt::snapshot(registry),
              bim::game::output_archive(m_last_confirmed_archive));
-  m_last_confirmed_arena = m_contest.arena();
+  m_last_confirmed_entity_map = m_contest.entity_map();
 }
 
 void bim::net::contest_runner::drop_confirmed_actions()
@@ -306,6 +309,7 @@ void bim::net::contest_runner::archive_io(Snapshot&& snapshot,
       .template get<bim::game::bomb_power_up>(archive)
       .template get<bim::game::bomb_power_up_spawner>(archive)
       .template get<bim::game::crate>(archive)
+      .template get<bim::game::crushed>(archive)
       .template get<bim::game::burning>(archive)
       .template get<bim::game::dead>(archive)
       .template get<bim::game::falling_block>(archive)
@@ -328,5 +332,7 @@ void bim::net::contest_runner::archive_io(Snapshot&& snapshot,
       .template get<bim::game::player_action>(archive)
       .template get<bim::game::player_action_queue>(archive)
       .template get<bim::game::position_on_grid>(archive)
-      .template get<bim::game::timer>(archive);
+      .template get<bim::game::solid>(archive)
+      .template get<bim::game::timer>(archive)
+      .template get<bim::game::wall>(archive);
 }

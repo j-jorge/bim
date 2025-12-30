@@ -5,19 +5,20 @@
 #include <bim/game/component/flame_power_up_spawner.hpp>
 #include <bim/game/component/invisibility_power_up_spawner.hpp>
 #include <bim/game/component/shield_power_up_spawner.hpp>
+#include <bim/game/entity_world_map.hpp>
 
 template void
 bim::game::update_power_up_spawners<bim::game::bomb_power_up_spawner>(
-    entt::registry& registry, arena& arena);
+    entt::registry& registry, entity_world_map& entity_map);
 
 template void
 bim::game::update_power_up_spawners<bim::game::flame_power_up_spawner>(
-    entt::registry& registry, arena& arena);
+    entt::registry& registry, entity_world_map& entity_map);
 
 template void
 bim::game::update_power_up_spawners<bim::game::invisibility_power_up_spawner>(
-    entt::registry& registry, arena& arena);
+    entt::registry& registry, entity_world_map& entity_map);
 
 template void
 bim::game::update_power_up_spawners<bim::game::shield_power_up_spawner>(
-    entt::registry& registry, arena& arena);
+    entt::registry& registry, entity_world_map& entity_map);

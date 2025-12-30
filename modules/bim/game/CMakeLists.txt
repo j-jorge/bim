@@ -9,6 +9,7 @@ add_library(bim_game
   main/src/bim/game/contest_timeline.cpp
   main/src/bim/game/contest_timeline_writer.cpp
   main/src/bim/game/dump_arena.cpp
+  main/src/bim/game/entity_world_map.cpp
   main/src/bim/game/feature_flags.cpp
   main/src/bim/game/input_archive.cpp
   main/src/bim/game/kick_event.cpp
@@ -43,11 +44,11 @@ add_library(bim_game
   main/src/bim/game/factory/main_timer.cpp
   main/src/bim/game/factory/player.cpp
   main/src/bim/game/factory/power_up.cpp
+  main/src/bim/game/factory/wall.cpp
 
   main/src/bim/game/system/animator.cpp
   main/src/bim/game/system/apply_player_action.cpp
   main/src/bim/game/system/arena_reduction.cpp
-  main/src/bim/game/system/flame_updater.cpp
   main/src/bim/game/system/fog_of_war_updater.cpp
   main/src/bim/game/system/refresh_bomb_inventory.cpp
   main/src/bim/game/system/remove_dead_objects.cpp
@@ -56,6 +57,7 @@ add_library(bim_game
   main/src/bim/game/system/update_crates.cpp
   main/src/bim/game/system/update_falling_blocks.cpp
   main/src/bim/game/system/update_flame_power_ups.cpp
+  main/src/bim/game/system/update_flames.cpp
   main/src/bim/game/system/update_invincibility_state.cpp
   main/src/bim/game/system/update_invisibility_power_ups.cpp
   main/src/bim/game/system/update_invisibility_state.cpp
@@ -78,6 +80,7 @@ add_executable(game-tests
   tests/src/bim/game/check_game_over.cpp
   tests/src/bim/game/contest.cpp
   tests/src/bim/game/contest_timeline.cpp
+  tests/src/bim/game/entity_world_map.cpp
   tests/src/bim/game/level_generation.cpp
   tests/src/bim/game/player_action.cpp
 

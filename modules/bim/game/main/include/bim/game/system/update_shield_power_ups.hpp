@@ -5,7 +5,8 @@
 
 namespace bim::game
 {
-  class arena;
+  class entity_world_map;
 
-  void update_shield_power_ups(entt::registry& registry, arena& arena);
+  void update_shield_power_ups(entt::registry& registry,
+                               entity_world_map& entity_map);
 }

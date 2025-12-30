@@ -3,6 +3,7 @@
 
 #include <bim/game/component/burning.hpp>
 #include <bim/game/component/position_on_grid.hpp>
+#include <bim/game/entity_world_map.hpp>
 
 #include <bim/game/factory/power_up.hpp>
 
@@ -10,12 +11,12 @@
 
 template <typename PowerUpSpawner>
 void bim::game::update_power_up_spawners(entt::registry& registry,
-                                         arena& arena)
+                                         entity_world_map& entity_map)
 {
   registry.view<burning, PowerUpSpawner, position_on_grid>().each(
       [&](entt::entity, position_on_grid position) -> void
       {
         power_up_factory<typename PowerUpSpawner::power_up_type>(
-            registry, arena, position.x, position.y);
+            registry, entity_map, position.x, position.y);
       });
 }

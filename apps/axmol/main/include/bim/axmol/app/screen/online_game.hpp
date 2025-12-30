@@ -138,6 +138,7 @@ namespace bim::axmol::app
     void reset_z_order();
     void refresh_display();
     void display_static_walls();
+    void display_walls();
     void display_falling_blocks();
     void display_crates();
     void display_players();
@@ -183,7 +184,8 @@ namespace bim::axmol::app
     std::vector<player*> m_players;
     std::array<std::vector<ax::Sprite*>,
                bim::game::cell_neighborhood_layout_count>
-        m_walls;
+        m_static_walls;
+    std::vector<ax::Sprite*> m_walls;
     std::vector<ax::Sprite*> m_falling_blocks;
     std::vector<ax::Sprite*> m_falling_blocks_shadows;
     std::vector<ax::Sprite*> m_crates;

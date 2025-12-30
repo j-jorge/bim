@@ -2,9 +2,9 @@
 #pragma once
 
 #include <bim/game/archive_storage.hpp>
-#include <bim/game/arena.hpp>
 #include <bim/game/constant/max_player_count.hpp>
 #include <bim/game/contest_result.hpp>
+#include <bim/game/entity_world_map.hpp>
 #include <bim/game/tick_counter.hpp>
 
 #include <entt/entity/fwd.hpp>
@@ -74,7 +74,7 @@ namespace bim::net
         m_unconfirmed_actions;
 
     bim::game::archive_storage m_last_confirmed_archive;
-    bim::game::arena m_last_confirmed_arena;
+    bim::game::entity_world_map m_last_confirmed_entity_map;
 
     std::optional<bim::game::contest_result> m_contest_result;
   };

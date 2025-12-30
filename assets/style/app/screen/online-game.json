@@ -229,6 +229,7 @@
     ],
 
     "bomb/frame": "sprites/bomb.png",
+    "static-wall/frame": "sprites/solid-wall.png",
     "wall/frame": "sprites/solid-wall.png",
 
     "falling-block/frame": "sprites/solid-wall.png",

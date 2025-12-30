@@ -9,4 +9,5 @@ namespace bim::game
 {
   void update_timers(entt::registry& registry,
                      std::chrono::milliseconds elapsed_time);
+  void trigger_crushed_timers(entt::registry& registry);
 }

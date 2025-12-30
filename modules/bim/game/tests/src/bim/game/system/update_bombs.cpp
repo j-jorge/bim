@@ -2,6 +2,7 @@
 #include <bim/game/system/update_bombs.hpp>
 
 #include <bim/game/arena.hpp>
+#include <bim/game/entity_world_map.hpp>
 
 #include <bim/game/component/bomb.hpp>
 #include <bim/game/component/burning.hpp>
@@ -12,7 +13,9 @@
 #include <bim/game/component/timer.hpp>
 #include <bim/game/factory/bomb.hpp>
 #include <bim/game/factory/crate.hpp>
+#include <bim/game/factory/flame.hpp>
 #include <bim/game/system/remove_dead_objects.hpp>
+#include <bim/game/system/update_flames.hpp>
 #include <bim/game/system/update_timers.hpp>
 
 #include <entt/entity/registry.hpp>
@@ -54,13 +57,15 @@ TEST(update_bombs, delay)
 {
   entt::registry registry;
   bim::game::arena arena(3, 3);
+  bim::game::entity_world_map entity_map(arena.width(), arena.height());
   constexpr std::uint8_t x = 0;
   constexpr std::uint8_t y = 0;
   constexpr std::uint8_t strength = 0;
   constexpr std::uint8_t player_index = 0;
 
-  const entt::entity entity = bim::game::bomb_factory(
-      registry, x, y, strength, player_index, std::chrono::milliseconds(24));
+  const entt::entity entity =
+      bim::game::bomb_factory(registry, entity_map, x, y, strength,
+                              player_index, std::chrono::milliseconds(24));
   bim::game::timer& timer = registry.get<bim::game::timer>(entity);
 
   EXPECT_EQ(std::chrono::milliseconds(24), timer.duration);
@@ -70,21 +75,22 @@ TEST(update_bombs, explode_strength_2)
 {
   entt::registry registry;
   bim::game::arena arena(5, 3);
+  bim::game::entity_world_map entity_map(arena.width(), arena.height());
   const std::uint8_t bomb_x = arena.width() / 2;
   const std::uint8_t bomb_y = arena.height() / 2;
   const std::uint8_t strength = 2;
   constexpr std::uint8_t player_index = 0;
 
   const entt::entity entity =
-      bim::game::bomb_factory(registry, bomb_x, bomb_y, strength, player_index,
-                              std::chrono::milliseconds(24));
+      bim::game::bomb_factory(registry, entity_map, bomb_x, bomb_y, strength,
+                              player_index, std::chrono::milliseconds(24));
 
   bim::game::update_timers(registry, std::chrono::milliseconds(12));
-  bim::game::update_bombs(registry, arena);
+  bim::game::update_bombs(registry, arena, entity_map);
   EXPECT_TRUE(registry.storage<bim::game::bomb>().contains(entity));
 
   bim::game::update_timers(registry, std::chrono::milliseconds(12));
-  bim::game::update_bombs(registry, arena);
+  bim::game::update_bombs(registry, arena, entity_map);
   EXPECT_TRUE(registry.storage<bim::game::dead>().contains(entity));
 
   const std::vector<std::string> flames = flames_map(arena, registry);
@@ -97,16 +103,17 @@ TEST(update_bombs, explode_strength_5)
 {
   entt::registry registry;
   bim::game::arena arena(11, 11);
+  bim::game::entity_world_map entity_map(arena.width(), arena.height());
   const std::uint8_t bomb_x = arena.width() / 2;
   const std::uint8_t bomb_y = arena.height() / 2;
   const std::uint8_t strength = 5;
   constexpr std::uint8_t player_index = 0;
 
-  bim::game::bomb_factory(registry, bomb_x, bomb_y, strength, player_index,
-                          std::chrono::milliseconds(0));
+  bim::game::bomb_factory(registry, entity_map, bomb_x, bomb_y, strength,
+                          player_index, std::chrono::milliseconds(0));
 
   bim::game::update_timers(registry, std::chrono::milliseconds(24));
-  bim::game::update_bombs(registry, arena);
+  bim::game::update_bombs(registry, arena, entity_map);
 
   const std::vector<std::string> flames = flames_map(arena, registry);
   EXPECT_EQ("     v     ", flames[0]);
@@ -126,21 +133,22 @@ TEST(update_bombs, stop_at_old_bomb)
 {
   entt::registry registry;
   bim::game::arena arena(11, 11);
+  bim::game::entity_world_map entity_map(arena.width(), arena.height());
   constexpr std::uint8_t player_index = 0;
 
-  bim::game::bomb_factory(registry, 2, 5, 1, player_index,
+  bim::game::bomb_factory(registry, entity_map, 2, 5, 1, player_index,
                           std::chrono::milliseconds(1));
-  bim::game::bomb_factory(registry, 8, 5, 1, player_index,
+  bim::game::bomb_factory(registry, entity_map, 8, 5, 1, player_index,
                           std::chrono::milliseconds(1));
-  bim::game::bomb_factory(registry, 5, 2, 1, player_index,
+  bim::game::bomb_factory(registry, entity_map, 5, 2, 1, player_index,
                           std::chrono::milliseconds(1));
-  bim::game::bomb_factory(registry, 5, 8, 1, player_index,
+  bim::game::bomb_factory(registry, entity_map, 5, 8, 1, player_index,
                           std::chrono::milliseconds(1));
-  bim::game::bomb_factory(registry, 5, 5, 11, player_index,
+  bim::game::bomb_factory(registry, entity_map, 5, 5, 11, player_index,
                           std::chrono::milliseconds(2));
 
   bim::game::update_timers(registry, std::chrono::milliseconds(1));
-  bim::game::update_bombs(registry, arena);
+  bim::game::update_bombs(registry, arena, entity_map);
 
   std::vector<std::string> flames = flames_map(arena, registry);
   EXPECT_EQ("           ", flames[0]);
@@ -156,7 +164,7 @@ TEST(update_bombs, stop_at_old_bomb)
   EXPECT_EQ("           ", flames[10]);
 
   bim::game::update_timers(registry, std::chrono::milliseconds(1));
-  bim::game::update_bombs(registry, arena);
+  bim::game::update_bombs(registry, arena, entity_map);
   flames = flames_map(arena, registry);
   EXPECT_EQ("           ", flames[0]);
   EXPECT_EQ("     v     ", flames[1]);
@@ -175,6 +183,7 @@ TEST(update_bombs, chain_reaction)
 {
   entt::registry registry;
   bim::game::arena arena(8, 7);
+  bim::game::entity_world_map entity_map(arena.width(), arena.height());
   constexpr std::uint8_t strength = 2;
   constexpr std::uint8_t player_index = 0;
 
@@ -188,30 +197,20 @@ TEST(update_bombs, chain_reaction)
     ....x.x.
     ........
   */
-  arena.put_entity(3, 3,
-                   bim::game::bomb_factory(registry, 3, 3, strength,
-                                           player_index,
-                                           std::chrono::milliseconds(10)));
-  arena.put_entity(4, 3,
-                   bim::game::bomb_factory(registry, 4, 3, strength,
-                                           player_index,
-                                           std::chrono::milliseconds(200)));
-  arena.put_entity(6, 3,
-                   bim::game::bomb_factory(registry, 6, 3, strength,
-                                           player_index,
-                                           std::chrono::milliseconds(200)));
-  arena.put_entity(4, 5,
-                   bim::game::bomb_factory(registry, 4, 5, strength,
-                                           player_index,
-                                           std::chrono::milliseconds(200)));
-  arena.put_entity(6, 5,
-                   bim::game::bomb_factory(registry, 6, 5, strength,
-                                           player_index,
-                                           std::chrono::milliseconds(200)));
+  bim::game::bomb_factory(registry, entity_map, 3, 3, strength, player_index,
+                          std::chrono::milliseconds(10));
+  bim::game::bomb_factory(registry, entity_map, 4, 3, strength, player_index,
+                          std::chrono::milliseconds(200));
+  bim::game::bomb_factory(registry, entity_map, 6, 3, strength, player_index,
+                          std::chrono::milliseconds(200));
+  bim::game::bomb_factory(registry, entity_map, 4, 5, strength, player_index,
+                          std::chrono::milliseconds(200));
+  bim::game::bomb_factory(registry, entity_map, 6, 5, strength, player_index,
+                          std::chrono::milliseconds(200));
 
   bim::game::update_timers(registry, std::chrono::milliseconds(10));
-  bim::game::update_bombs(registry, arena);
-  bim::game::remove_dead_objects(registry);
+  bim::game::update_bombs(registry, arena, entity_map);
+  bim::game::remove_dead_objects(registry, entity_map);
 
   std::vector<std::string> flames = flames_map(arena, registry);
   EXPECT_EQ("        ", flames[0]);
@@ -223,8 +222,8 @@ TEST(update_bombs, chain_reaction)
   EXPECT_EQ("        ", flames[6]);
 
   bim::game::update_timers(registry, std::chrono::milliseconds(10));
-  bim::game::update_bombs(registry, arena);
-  bim::game::remove_dead_objects(registry);
+  bim::game::update_bombs(registry, arena, entity_map);
+  bim::game::remove_dead_objects(registry, entity_map);
 
   flames = flames_map(arena, registry);
   EXPECT_EQ("        ", flames[0]);
@@ -236,8 +235,8 @@ TEST(update_bombs, chain_reaction)
   EXPECT_EQ("        ", flames[6]);
 
   bim::game::update_timers(registry, std::chrono::milliseconds(10));
-  bim::game::update_bombs(registry, arena);
-  bim::game::remove_dead_objects(registry);
+  bim::game::update_bombs(registry, arena, entity_map);
+  bim::game::remove_dead_objects(registry, entity_map);
 
   {
     const char* const expected[] = { "        ", //
@@ -262,8 +261,8 @@ TEST(update_bombs, chain_reaction)
   }
 
   bim::game::update_timers(registry, std::chrono::milliseconds(10));
-  bim::game::update_bombs(registry, arena);
-  bim::game::remove_dead_objects(registry);
+  bim::game::update_bombs(registry, arena, entity_map);
+  bim::game::remove_dead_objects(registry, entity_map);
 
   {
     const char* const expected[] = { "        ", //
@@ -292,6 +291,7 @@ TEST(update_bombs, flame_intersections_simultaneous)
 {
   entt::registry registry;
   bim::game::arena arena(9, 7);
+  bim::game::entity_world_map entity_map(arena.width(), arena.height());
   constexpr std::uint8_t strength = 3;
   constexpr std::uint8_t player_index = 0;
 
@@ -305,18 +305,14 @@ TEST(update_bombs, flame_intersections_simultaneous)
     ......x..
     .........
   */
-  arena.put_entity(4, 3,
-                   bim::game::bomb_factory(registry, 4, 3, strength,
-                                           player_index,
-                                           std::chrono::milliseconds(20)));
-  arena.put_entity(6, 5,
-                   bim::game::bomb_factory(registry, 6, 5, strength,
-                                           player_index,
-                                           std::chrono::milliseconds(20)));
+  bim::game::bomb_factory(registry, entity_map, 4, 3, strength, player_index,
+                          std::chrono::milliseconds(20));
+  bim::game::bomb_factory(registry, entity_map, 6, 5, strength, player_index,
+                          std::chrono::milliseconds(20));
 
   bim::game::update_timers(registry, std::chrono::milliseconds(20));
-  bim::game::update_bombs(registry, arena);
-  bim::game::remove_dead_objects(registry);
+  bim::game::update_bombs(registry, arena, entity_map);
+  bim::game::remove_dead_objects(registry, entity_map);
 
   const char* const expected[7] = { "    v    ", //
                                     "    V    ", //
@@ -346,6 +342,7 @@ TEST(update_bombs, flame_intersections_sequential)
 {
   entt::registry registry;
   bim::game::arena arena(9, 7);
+  bim::game::entity_world_map entity_map(arena.width(), arena.height());
   constexpr std::uint8_t strength = 3;
   constexpr std::uint8_t player_index = 0;
 
@@ -359,18 +356,14 @@ TEST(update_bombs, flame_intersections_sequential)
     ......x..
     .........
   */
-  arena.put_entity(4, 3,
-                   bim::game::bomb_factory(registry, 4, 3, strength,
-                                           player_index,
-                                           std::chrono::milliseconds(20)));
-  arena.put_entity(6, 5,
-                   bim::game::bomb_factory(registry, 6, 5, strength,
-                                           player_index,
-                                           std::chrono::milliseconds(21)));
+  bim::game::bomb_factory(registry, entity_map, 4, 3, strength, player_index,
+                          std::chrono::milliseconds(20));
+  bim::game::bomb_factory(registry, entity_map, 6, 5, strength, player_index,
+                          std::chrono::milliseconds(21));
 
   bim::game::update_timers(registry, std::chrono::milliseconds(20));
-  bim::game::update_bombs(registry, arena);
-  bim::game::remove_dead_objects(registry);
+  bim::game::update_bombs(registry, arena, entity_map);
+  bim::game::remove_dead_objects(registry, entity_map);
 
   {
     const char* const expected[7] = { "    v    ", //
@@ -392,8 +385,8 @@ TEST(update_bombs, flame_intersections_sequential)
   }
 
   bim::game::update_timers(registry, std::chrono::milliseconds(1));
-  bim::game::update_bombs(registry, arena);
-  bim::game::remove_dead_objects(registry);
+  bim::game::update_bombs(registry, arena, entity_map);
+  bim::game::remove_dead_objects(registry, entity_map);
 
   {
     const char* const expected[7] = { "    v    ", //
@@ -425,26 +418,53 @@ TEST(update_bombs, burning_walls)
 {
   entt::registry registry;
   bim::game::arena arena(6, 6);
+  bim::game::entity_world_map entity_map(arena.width(), arena.height());
   constexpr std::uint8_t x = 2;
   constexpr std::uint8_t y = 2;
   constexpr std::uint8_t strength = 2;
   constexpr std::uint8_t player_index = 0;
 
-  bim::game::bomb_factory(registry, x, y, strength, player_index,
+  bim::game::bomb_factory(registry, entity_map, x, y, strength, player_index,
                           std::chrono::milliseconds(0));
 
   const entt::entity walls[] = {
-    bim::game::crate_factory(registry, arena, 2, 1),
-    bim::game::crate_factory(registry, arena, 4, 2),
-    bim::game::crate_factory(registry, arena, 5, 2),
-    bim::game::crate_factory(registry, arena, 2, 5)
+    bim::game::crate_factory(registry, entity_map, 2, 1),
+    bim::game::crate_factory(registry, entity_map, 4, 2),
+    bim::game::crate_factory(registry, entity_map, 5, 2),
+    bim::game::crate_factory(registry, entity_map, 2, 5)
   };
 
   bim::game::update_timers(registry, std::chrono::milliseconds(12));
-  bim::game::update_bombs(registry, arena);
+  bim::game::update_bombs(registry, arena, entity_map);
 
   EXPECT_TRUE(registry.storage<bim::game::burning>().contains(walls[0]));
   EXPECT_TRUE(registry.storage<bim::game::burning>().contains(walls[1]));
   EXPECT_FALSE(registry.storage<bim::game::burning>().contains(walls[2]));
   EXPECT_FALSE(registry.storage<bim::game::burning>().contains(walls[3]));
+}
+
+TEST(update_bombs, a_bomb_in_a_flame_explodes)
+{
+  entt::registry registry;
+  bim::game::arena arena(6, 6);
+  bim::game::entity_world_map entity_map(arena.width(), arena.height());
+  constexpr std::uint8_t x = 2;
+  constexpr std::uint8_t y = 2;
+  constexpr std::uint8_t strength = 2;
+  constexpr std::uint8_t player_index = 0;
+
+  const entt::entity bomb_entity =
+      bim::game::bomb_factory(registry, entity_map, x, y, strength,
+                              player_index, std::chrono::milliseconds(10));
+  bim::game::flame_factory(registry, x, y, bim::game::flame_direction::left,
+                           bim::game::flame_segment::tip);
+
+  update_flames(registry, entity_map);
+
+  EXPECT_TRUE(registry.storage<bim::game::burning>().contains(bomb_entity));
+
+  bim::game::update_bombs(registry, arena, entity_map);
+
+  const std::span<const entt::entity> entities = entity_map.entities_at(x, y);
+  EXPECT_EQ(entities.end(), std::ranges::find(entities, bomb_entity));
 }

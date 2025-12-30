@@ -16,7 +16,7 @@ namespace bim::game
   class arena_reduction;
   class contest_result;
   class context;
-  class flame_updater;
+  class entity_world_map;
   class fog_of_war_updater;
   struct contest_fingerprint;
   struct fog_of_war;
@@ -39,19 +39,22 @@ namespace bim::game
 
     entt::registry& registry();
     const entt::registry& registry() const;
+
     const bim::game::arena& arena() const;
-    void arena(const bim::game::arena& a);
+
+    const bim::game::entity_world_map& entity_map() const;
+    void entity_map(const bim::game::entity_world_map& m);
 
     const bim::table_2d<bim::game::fog_of_war*>&
     fog_map(std::size_t player_index) const;
 
   private:
-    std::unique_ptr<entt::registry> m_registry;
-    std::unique_ptr<bim::game::context> m_context;
-    std::unique_ptr<bim::game::arena> m_arena;
+    const std::unique_ptr<entt::registry> m_registry;
+    const std::unique_ptr<bim::game::context> m_context;
+    const std::unique_ptr<bim::game::arena> m_arena;
+    const std::unique_ptr<entity_world_map> m_entity_world_map;
 
     std::unique_ptr<arena_reduction> m_arena_reduction;
-    std::unique_ptr<flame_updater> m_flame_updater;
     std::unique_ptr<fog_of_war_updater> m_fog_of_war;
   };
 }

@@ -7,8 +7,10 @@
 #include <bim/game/component/player.hpp>
 #include <bim/game/component/player_action_queue.hpp>
 #include <bim/game/component/player_movement.hpp>
+#include <bim/game/component/solid.hpp>
 #include <bim/game/context/context.hpp>
 #include <bim/game/context/player_animations.hpp>
+#include <bim/game/entity_world_map.hpp>
 #include <bim/game/factory/bomb.hpp>
 
 #include <bim/assume.hpp>
@@ -17,22 +19,46 @@
 
 #include <fpm/math.hpp>
 
-static void drop_bomb(entt::registry& registry, bim::game::arena& arena,
+static bool is_solid(const entt::registry& registry,
+                     const bim::game::entity_world_map& entity_map,
+                     std::uint8_t arena_x, std::uint8_t arena_y)
+{
+  const entt::registry::storage_for_type<const bim::game::solid>* const
+      solids = registry.storage<bim::game::solid>();
+
+  if (solids)
+    for (entt::entity e : entity_map.entities_at(arena_x, arena_y))
+      if (solids->contains(e))
+        return true;
+
+  return false;
+}
+
+static bool is_blocker(const entt::registry& registry,
+                       const bim::game::arena& arena,
+                       const bim::game::entity_world_map& entity_map,
+                       std::uint8_t arena_x, std::uint8_t arena_y)
+{
+  if (arena.is_static_wall(arena_x, arena_y))
+    return true;
+
+  return is_solid(registry, entity_map, arena_x, arena_y);
+}
+
+static void drop_bomb(entt::registry& registry,
+                      bim::game::entity_world_map& entity_map,
                       bim::game::player& player, std::uint8_t arena_x,
                       std::uint8_t arena_y)
 {
-  if (arena.entity_at(arena_x, arena_y) != entt::null)
-    return;
-
   if (player.bomb_available == 0)
     return;
 
+  if (is_solid(registry, entity_map, arena_x, arena_y))
+    return;
+
   --player.bomb_available;
-  arena.put_entity(arena_x, arena_y,
-                   bim::game::bomb_factory(registry, arena_x, arena_y,
-                                           player.bomb_strength,
-                                           player.index));
-  arena.set_solid(arena_x, arena_y);
+  bim::game::bomb_factory(registry, entity_map, arena_x, arena_y,
+                          player.bomb_strength, player.index);
 }
 
 static void
@@ -49,11 +75,13 @@ switch_to_idle_state(bim::game::animation_state& state,
     state.transition_to(animations.idle_down);
 }
 
-static void move_player(bim::game::player& player,
+static void move_player(entt::entity player_entity, bim::game::player& player,
                         bim::game::fractional_position_on_grid& position,
                         bim::game::player_movement movement,
                         bim::game::animation_state& state,
+                        const entt::registry& registry,
                         const bim::game::arena& arena,
+                        bim::game::entity_world_map& entity_map,
                         const bim::game::player_animations& animations)
 {
   if (movement == bim::game::player_movement::idle)
@@ -97,7 +125,8 @@ static void move_player(bim::game::player& player,
     case bim::game::player_movement::left:
       state.transition_to(animations.walk_left);
 
-      if ((x_decimal <= half + offset) && arena.is_blocker(x_int - 1, y_int))
+      if ((x_decimal <= half + offset)
+          && is_blocker(registry, arena, entity_map, x_int - 1, y_int))
         {
           position.x = x_floor + half;
 
@@ -105,15 +134,17 @@ static void move_player(bim::game::player& player,
           if (y_decimal < half)
             {
               // There is a path above: move up.
-              if (!arena.is_blocker(x_int, y_int - 1)
-                  && !arena.is_blocker(x_int - 1, y_int - 1))
+              if (!is_blocker(registry, arena, entity_map, x_int, y_int - 1)
+                  && !is_blocker(registry, arena, entity_map, x_int - 1,
+                                 y_int - 1))
                 position.y -= offset;
             }
           else if (y_decimal > half)
             {
               // There is a path below: move down.
-              if (!arena.is_blocker(x_int, y_int + 1)
-                  && !arena.is_blocker(x_int - 1, y_int + 1))
+              if (!is_blocker(registry, arena, entity_map, x_int, y_int + 1)
+                  && !is_blocker(registry, arena, entity_map, x_int - 1,
+                                 y_int + 1))
                 position.y += offset;
             }
         }
@@ -126,7 +157,8 @@ static void move_player(bim::game::player& player,
     case bim::game::player_movement::right:
       state.transition_to(animations.walk_right);
 
-      if ((x_decimal + offset >= half) && arena.is_blocker(x_int + 1, y_int))
+      if ((x_decimal + offset >= half)
+          && is_blocker(registry, arena, entity_map, x_int + 1, y_int))
         {
           position.x = x_floor + half;
 
@@ -134,15 +166,17 @@ static void move_player(bim::game::player& player,
           if (y_decimal < half)
             {
               // There is a path above: move up.
-              if (!arena.is_blocker(x_int, y_int - 1)
-                  && !arena.is_blocker(x_int + 1, y_int - 1))
+              if (!is_blocker(registry, arena, entity_map, x_int, y_int - 1)
+                  && !is_blocker(registry, arena, entity_map, x_int + 1,
+                                 y_int - 1))
                 position.y -= offset;
             }
           else if (y_decimal > half)
             {
               // There is a path below: move down.
-              if (!arena.is_blocker(x_int, y_int + 1)
-                  && !arena.is_blocker(x_int + 1, y_int + 1))
+              if (!is_blocker(registry, arena, entity_map, x_int, y_int + 1)
+                  && !is_blocker(registry, arena, entity_map, x_int + 1,
+                                 y_int + 1))
                 position.y += offset;
             }
         }
@@ -155,7 +189,8 @@ static void move_player(bim::game::player& player,
     case bim::game::player_movement::up:
       state.transition_to(animations.walk_up);
 
-      if ((y_decimal <= half + offset) && arena.is_blocker(x_int, y_int - 1))
+      if ((y_decimal <= half + offset)
+          && is_blocker(registry, arena, entity_map, x_int, y_int - 1))
         {
           position.y = y_floor + half;
 
@@ -163,15 +198,17 @@ static void move_player(bim::game::player& player,
           if (x_decimal < half)
             {
               // There is a path on the left: move left.
-              if (!arena.is_blocker(x_int - 1, y_int)
-                  && !arena.is_blocker(x_int - 1, y_int - 1))
+              if (!is_blocker(registry, arena, entity_map, x_int - 1, y_int)
+                  && !is_blocker(registry, arena, entity_map, x_int - 1,
+                                 y_int - 1))
                 position.x -= offset;
             }
           else if (x_decimal > half)
             {
               // There is a path on the right: move right.
-              if (!arena.is_blocker(x_int + 1, y_int)
-                  && !arena.is_blocker(x_int + 1, y_int - 1))
+              if (!is_blocker(registry, arena, entity_map, x_int + 1, y_int)
+                  && !is_blocker(registry, arena, entity_map, x_int + 1,
+                                 y_int - 1))
                 position.x += offset;
             }
         }
@@ -184,7 +221,8 @@ static void move_player(bim::game::player& player,
     case bim::game::player_movement::down:
       state.transition_to(animations.walk_down);
 
-      if ((y_decimal + offset >= half) && arena.is_blocker(x_int, y_int + 1))
+      if ((y_decimal + offset >= half)
+          && is_blocker(registry, arena, entity_map, x_int, y_int + 1))
         {
           position.y = y_floor + half;
 
@@ -192,15 +230,17 @@ static void move_player(bim::game::player& player,
           if (x_decimal < half)
             {
               // There is a path on the left: move left.
-              if (!arena.is_blocker(x_int - 1, y_int)
-                  && !arena.is_blocker(x_int - 1, y_int + 1))
+              if (!is_blocker(registry, arena, entity_map, x_int - 1, y_int)
+                  && !is_blocker(registry, arena, entity_map, x_int - 1,
+                                 y_int + 1))
                 position.x -= offset;
             }
           else if (x_decimal > half)
             {
               // There is a path on the right: move right.
-              if (!arena.is_blocker(x_int + 1, y_int)
-                  && !arena.is_blocker(x_int + 1, y_int + 1))
+              if (!is_blocker(registry, arena, entity_map, x_int + 1, y_int)
+                  && !is_blocker(registry, arena, entity_map, x_int + 1,
+                                 y_int + 1))
                 position.x += offset;
             }
         }
@@ -221,12 +261,14 @@ static void move_player(bim::game::player& player,
     {
       if (y_decimal > half)
         {
-          if (arena.is_blocker(check_obstacle_x, y_int + 1))
+          if (is_blocker(registry, arena, entity_map, check_obstacle_x,
+                         y_int + 1))
             position.y -= std::min(offset, y_decimal - half);
         }
       else if (y_decimal < half)
         {
-          if (arena.is_blocker(check_obstacle_x, y_int - 1))
+          if (is_blocker(registry, arena, entity_map, check_obstacle_x,
+                         y_int - 1))
             position.y += std::min(offset, half - y_decimal);
         }
     }
@@ -234,38 +276,51 @@ static void move_player(bim::game::player& player,
     {
       if (x_decimal > half)
         {
-          if (arena.is_blocker(x_int + 1, check_obstacle_y))
+          if (is_blocker(registry, arena, entity_map, x_int + 1,
+                         check_obstacle_y))
             position.x -= std::min(offset, x_decimal - half);
         }
       else if (x_decimal < half)
         {
-          if (arena.is_blocker(x_int - 1, check_obstacle_y))
+          if (is_blocker(registry, arena, entity_map, x_int - 1,
+                         check_obstacle_y))
             position.x += std::min(offset, half - x_decimal);
         }
     }
 
   if ((position.x == x) && (position.y == y))
     switch_to_idle_state(state, animations);
+  else
+    {
+      const std::uint8_t new_x_int = (std::uint8_t)position.x;
+      const std::uint8_t new_y_int = (std::uint8_t)position.y;
+
+      entity_map.erase_entity(player_entity, x_int, y_int);
+      entity_map.put_entity(player_entity, new_x_int, new_y_int);
+    }
 }
 
 static void
-apply_player_actions(entt::registry& registry, bim::game::arena& arena,
+apply_player_actions(entt::registry& registry, const bim::game::arena& arena,
+                     bim::game::entity_world_map& entity_map,
                      const bim::game::player_animations& animations,
-                     bim::game::player& player,
+                     entt::entity player_entity, bim::game::player& player,
                      bim::game::fractional_position_on_grid& position,
                      const bim::game::queued_action& queued_action,
                      bim::game::animation_state& state)
 {
-  move_player(player, position, queued_action.action.movement, state, arena,
-              animations);
+  move_player(player_entity, player, position, queued_action.action.movement,
+              state, registry, arena, entity_map, animations);
 
   if (queued_action.action.drop_bomb)
-    drop_bomb(registry, arena, player, queued_action.arena_x,
+    drop_bomb(registry, entity_map, player, queued_action.arena_x,
               queued_action.arena_y);
 }
 
 void bim::game::apply_player_action(const context& context,
-                                    entt::registry& registry, arena& arena)
+                                    entt::registry& registry,
+                                    const arena& arena,
+                                    bim::game::entity_world_map& entity_map)
 {
   const player_animations& animations = context.get<const player_animations>();
 
@@ -273,11 +328,11 @@ void bim::game::apply_player_action(const context& context,
       .view<player, fractional_position_on_grid, player_action,
             player_action_queue, animation_state>()
       .each(
-          [&registry, &arena,
-           &animations](player& player, fractional_position_on_grid& position,
-                        player_action& scheduled_action,
-                        player_action_queue& action_queue,
-                        animation_state& state) -> void
+          [&](entt::entity e, player& player,
+              fractional_position_on_grid& position,
+              player_action& scheduled_action,
+              player_action_queue& action_queue,
+              animation_state& state) -> void
           {
             if (!animations.is_alive(state.model))
               {
@@ -290,7 +345,7 @@ void bim::game::apply_player_action(const context& context,
                 position.grid_aligned_y());
 
             scheduled_action = {};
-            apply_player_actions(registry, arena, animations, player, position,
-                                 action, state);
+            apply_player_actions(registry, arena, entity_map, animations, e,
+                                 player, position, action, state);
           });
 }

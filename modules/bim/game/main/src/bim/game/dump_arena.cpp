@@ -20,9 +20,11 @@
 #include <bim/game/component/position_on_grid.hpp>
 #include <bim/game/component/shield.hpp>
 #include <bim/game/component/shield_power_up.hpp>
+#include <bim/game/component/solid.hpp>
 #include <bim/game/constant/max_player_count.hpp>
 #include <bim/game/context/context.hpp>
 #include <bim/game/context/player_animations.hpp>
+#include <bim/game/entity_world_map.hpp>
 
 #include <entt/entity/registry.hpp>
 
@@ -108,14 +110,16 @@ static const char* animation_name(const bim::game::context& context,
   return "unknown";
 }
 
-void bim::game::dump_arena(const arena& arena, const context& context,
+void bim::game::dump_arena(const arena& arena,
+                           const entity_world_map& entity_map,
+                           const context& context,
                            const entt::registry& registry)
 {
   const int w = arena.width();
   const int h = arena.height();
 
   std::vector<std::vector<std::string>> arena_str(
-      arena.height(), std::vector<std::string>(arena.width(), " "));
+      h, std::vector<std::string>(w, " "));
 
   registry.view<fractional_position_on_grid>().each(
       [&](fractional_position_on_grid pos) -> void
@@ -129,14 +133,25 @@ void bim::game::dump_arena(const arena& arena, const context& context,
         arena_str[pos.y][pos.x] = "?";
       });
 
+  const entt::registry::storage_for_type<solid>* const solids =
+      registry.storage<solid>();
+
   for (int y = 0; y != h; ++y)
     for (int x = 0; x != w; ++x)
       {
-        if (arena.entity_at(x, y) != entt::null)
+        const std::span<const entt::entity> entities =
+            entity_map.entities_at(x, y);
+
+        if (!entities.empty())
           arena_str[y][x] = "!";
 
-        if (arena.is_solid(x, y))
-          arena_str[y][x] = "░";
+        if (solids)
+          for (entt::entity e : entities)
+            if (solids->contains(e))
+              {
+                arena_str[y][x] = "░";
+                break;
+              }
 
         if (arena.is_static_wall(x, y))
           arena_str[y][x] = "▒";

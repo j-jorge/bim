@@ -3,6 +3,7 @@
 
 #include <bim/game/context/context.hpp>
 #include <bim/game/context/fill_context.hpp>
+#include <bim/game/entity_world_map.hpp>
 #include <bim/game/factory/main_timer.hpp>
 #include <bim/game/factory/player.hpp>
 #include <bim/game/system/update_timers.hpp>
@@ -31,7 +32,9 @@ TEST(bim_game_check_game_over, one_player)
   bim::game::fill_context(context);
 
   entt::registry registry;
-  bim::game::player_factory(registry, 2, 0, 0, bim::game::animation_id{});
+  bim::game::entity_world_map entity_map(3, 3);
+  bim::game::player_factory(registry, entity_map, 2, 0, 0,
+                            bim::game::animation_id{});
 
   const bim::game::contest_result result =
       bim::game::check_game_over(context, registry);
@@ -47,8 +50,11 @@ TEST(bim_game_check_game_over, two_players)
   bim::game::fill_context(context);
 
   entt::registry registry;
-  bim::game::player_factory(registry, 1, 0, 0, bim::game::animation_id{});
-  bim::game::player_factory(registry, 2, 0, 0, bim::game::animation_id{});
+  bim::game::entity_world_map entity_map(3, 3);
+  bim::game::player_factory(registry, entity_map, 1, 0, 0,
+                            bim::game::animation_id{});
+  bim::game::player_factory(registry, entity_map, 2, 0, 0,
+                            bim::game::animation_id{});
 
   const bim::game::contest_result result =
       bim::game::check_game_over(context, registry);
@@ -63,9 +69,13 @@ TEST(bim_game_check_game_over, three_players)
   bim::game::fill_context(context);
 
   entt::registry registry;
-  bim::game::player_factory(registry, 0, 0, 0, bim::game::animation_id{});
-  bim::game::player_factory(registry, 1, 0, 0, bim::game::animation_id{});
-  bim::game::player_factory(registry, 2, 0, 0, bim::game::animation_id{});
+  bim::game::entity_world_map entity_map(3, 3);
+  bim::game::player_factory(registry, entity_map, 0, 0, 0,
+                            bim::game::animation_id{});
+  bim::game::player_factory(registry, entity_map, 1, 0, 0,
+                            bim::game::animation_id{});
+  bim::game::player_factory(registry, entity_map, 2, 0, 0,
+                            bim::game::animation_id{});
 
   const bim::game::contest_result result =
       bim::game::check_game_over(context, registry);
@@ -80,10 +90,15 @@ TEST(bim_game_check_game_over, four_players)
   bim::game::fill_context(context);
 
   entt::registry registry;
-  bim::game::player_factory(registry, 0, 0, 0, bim::game::animation_id{});
-  bim::game::player_factory(registry, 1, 0, 0, bim::game::animation_id{});
-  bim::game::player_factory(registry, 2, 0, 0, bim::game::animation_id{});
-  bim::game::player_factory(registry, 3, 0, 0, bim::game::animation_id{});
+  bim::game::entity_world_map entity_map(3, 3);
+  bim::game::player_factory(registry, entity_map, 0, 0, 0,
+                            bim::game::animation_id{});
+  bim::game::player_factory(registry, entity_map, 1, 0, 0,
+                            bim::game::animation_id{});
+  bim::game::player_factory(registry, entity_map, 2, 0, 0,
+                            bim::game::animation_id{});
+  bim::game::player_factory(registry, entity_map, 3, 0, 0,
+                            bim::game::animation_id{});
 
   const bim::game::contest_result result =
       bim::game::check_game_over(context, registry);
@@ -98,8 +113,11 @@ TEST(bim_game_check_game_over, two_players_timeout)
   bim::game::fill_context(context);
 
   entt::registry registry;
-  bim::game::player_factory(registry, 1, 0, 0, bim::game::animation_id{});
-  bim::game::player_factory(registry, 2, 0, 0, bim::game::animation_id{});
+  bim::game::entity_world_map entity_map(3, 3);
+  bim::game::player_factory(registry, entity_map, 1, 0, 0,
+                            bim::game::animation_id{});
+  bim::game::player_factory(registry, entity_map, 2, 0, 0,
+                            bim::game::animation_id{});
   bim::game::main_timer_factory(registry, std::chrono::seconds(1));
 
   bim::game::contest_result result =
@@ -122,9 +140,13 @@ TEST(bim_game_check_game_over, three_players_timeout)
   bim::game::fill_context(context);
 
   entt::registry registry;
-  bim::game::player_factory(registry, 0, 0, 0, bim::game::animation_id{});
-  bim::game::player_factory(registry, 1, 0, 0, bim::game::animation_id{});
-  bim::game::player_factory(registry, 2, 0, 0, bim::game::animation_id{});
+  bim::game::entity_world_map entity_map(3, 3);
+  bim::game::player_factory(registry, entity_map, 0, 0, 0,
+                            bim::game::animation_id{});
+  bim::game::player_factory(registry, entity_map, 1, 0, 0,
+                            bim::game::animation_id{});
+  bim::game::player_factory(registry, entity_map, 2, 0, 0,
+                            bim::game::animation_id{});
   bim::game::main_timer_factory(registry, std::chrono::seconds(1));
 
   bim::game::contest_result result =
@@ -147,10 +169,15 @@ TEST(bim_game_check_game_over, four_players_timeout)
   bim::game::fill_context(context);
 
   entt::registry registry;
-  bim::game::player_factory(registry, 0, 0, 0, bim::game::animation_id{});
-  bim::game::player_factory(registry, 1, 0, 0, bim::game::animation_id{});
-  bim::game::player_factory(registry, 2, 0, 0, bim::game::animation_id{});
-  bim::game::player_factory(registry, 3, 0, 0, bim::game::animation_id{});
+  bim::game::entity_world_map entity_map(3, 3);
+  bim::game::player_factory(registry, entity_map, 0, 0, 0,
+                            bim::game::animation_id{});
+  bim::game::player_factory(registry, entity_map, 1, 0, 0,
+                            bim::game::animation_id{});
+  bim::game::player_factory(registry, entity_map, 2, 0, 0,
+                            bim::game::animation_id{});
+  bim::game::player_factory(registry, entity_map, 3, 0, 0,
+                            bim::game::animation_id{});
   bim::game::main_timer_factory(registry, std::chrono::seconds(1));
 
   bim::game::contest_result result =

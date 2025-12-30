@@ -7,7 +7,8 @@
 
 namespace bim::game
 {
-  class dead;
+  class entity_world_map;
 
-  void remove_dead_objects(entt::registry& registry);
+  void remove_dead_objects(entt::registry& registry,
+                           entity_world_map& entity_map);
 }

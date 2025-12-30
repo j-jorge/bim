@@ -1,11 +1,10 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/game/system/update_bomb_power_ups.hpp>
 
-#include <bim/game/arena.hpp>
-
 #include <bim/game/component/dead.hpp>
 #include <bim/game/component/player.hpp>
 #include <bim/game/constant/max_bomb_count_per_player.hpp>
+#include <bim/game/entity_world_map.hpp>
 #include <bim/game/factory/player.hpp>
 #include <bim/game/factory/power_up.hpp>
 
@@ -21,14 +20,15 @@ namespace bim::game
 TEST(update_bomb_power_ups, increment_player_capacity_and_available)
 {
   entt::registry registry;
-  bim::game::arena arena(3, 3);
+  bim::game::entity_world_map entity_map(3, 3);
   const int x = 1;
   const int y = 1;
 
   const entt::entity power_up_entity =
-      power_up_factory<bim::game::bomb_power_up>(registry, arena, x, y);
-  const entt::entity player_entity =
-      bim::game::player_factory(registry, 0, x, y, bim::game::animation_id{});
+      bim::game::power_up_factory<bim::game::bomb_power_up>(registry,
+                                                            entity_map, x, y);
+  const entt::entity player_entity = bim::game::player_factory(
+      registry, entity_map, 0, x, y, bim::game::animation_id{});
 
   bim::game::player& player = registry.get<bim::game::player>(player_entity);
 
@@ -36,25 +36,30 @@ TEST(update_bomb_power_ups, increment_player_capacity_and_available)
   player.bomb_available = 0;
   const int bomb_available = player.bomb_available;
 
-  bim::game::update_bomb_power_ups(registry, arena);
+  bim::game::update_bomb_power_ups(registry, entity_map);
 
   EXPECT_EQ(bomb_capacity + 1, player.bomb_capacity);
   EXPECT_EQ(bomb_available + 1, player.bomb_available);
   EXPECT_TRUE(registry.storage<bim::game::dead>().contains(power_up_entity));
+  ASSERT_EQ(1, entity_map.entities_at(x, y).size());
+  EXPECT_EQ(player_entity, entity_map.entities_at(x, y)[0]);
 }
 
 TEST(update_bomb_power_ups, two_players_only_one_gets_the_power_up)
 {
   entt::registry registry;
-  bim::game::arena arena(3, 3);
+  bim::game::entity_world_map entity_map(3, 3);
   const int x = 1;
   const int y = 1;
 
-  power_up_factory<bim::game::bomb_power_up>(registry, arena, x, y);
+  bim::game::power_up_factory<bim::game::bomb_power_up>(registry, entity_map,
+                                                        x, y);
 
   const entt::entity player_entity[2] = {
-    bim::game::player_factory(registry, 0, x, y, bim::game::animation_id{}),
-    bim::game::player_factory(registry, 1, x, y, bim::game::animation_id{})
+    bim::game::player_factory(registry, entity_map, 0, x, y,
+                              bim::game::animation_id{}),
+    bim::game::player_factory(registry, entity_map, 1, x, y,
+                              bim::game::animation_id{})
   };
 
   bim::game::player* players[2] = {
@@ -65,7 +70,7 @@ TEST(update_bomb_power_ups, two_players_only_one_gets_the_power_up)
   EXPECT_EQ(players[0]->bomb_capacity, players[1]->bomb_capacity);
   EXPECT_EQ(players[0]->bomb_available, players[1]->bomb_available);
 
-  bim::game::update_bomb_power_ups(registry, arena);
+  bim::game::update_bomb_power_ups(registry, entity_map);
 
   EXPECT_EQ(1,
             std::abs(players[0]->bomb_capacity - players[1]->bomb_capacity));
@@ -76,19 +81,20 @@ TEST(update_bomb_power_ups, two_players_only_one_gets_the_power_up)
 TEST(update_bomb_power_ups, max_capacity)
 {
   entt::registry registry;
-  bim::game::arena arena(3, 3);
+  bim::game::entity_world_map entity_map(3, 3);
   const int x = 1;
   const int y = 1;
 
-  const entt::entity player_entity =
-      bim::game::player_factory(registry, 0, x, y, bim::game::animation_id{});
+  const entt::entity player_entity = bim::game::player_factory(
+      registry, entity_map, 0, x, y, bim::game::animation_id{});
   bim::game::player& player = registry.get<bim::game::player>(player_entity);
   player.bomb_capacity = 0;
 
   for (int i = 0; i != bim::game::g_max_bomb_count_per_player; ++i)
     {
-      power_up_factory<bim::game::bomb_power_up>(registry, arena, x, y);
-      bim::game::update_bomb_power_ups(registry, arena);
+      bim::game::power_up_factory<bim::game::bomb_power_up>(registry,
+                                                            entity_map, x, y);
+      bim::game::update_bomb_power_ups(registry, entity_map);
     }
 
   EXPECT_EQ(bim::game::g_max_bomb_count_per_player, player.bomb_capacity);
@@ -96,10 +102,13 @@ TEST(update_bomb_power_ups, max_capacity)
   // Give more bombs to the player, he should take them but not have them.
   for (int i = 0; i != bim::game::g_max_bomb_count_per_player; ++i)
     {
-      power_up_factory<bim::game::bomb_power_up>(registry, arena, x, y);
-      bim::game::update_bomb_power_ups(registry, arena);
+      bim::game::power_up_factory<bim::game::bomb_power_up>(registry,
+                                                            entity_map, x, y);
+      bim::game::update_bomb_power_ups(registry, entity_map);
 
-      EXPECT_TRUE(entt::null == arena.entity_at(x, y));
+      ASSERT_EQ(1, entity_map.entities_at(x, y).size());
+      EXPECT_EQ(player_entity, entity_map.entities_at(x, y)[0]);
+
       EXPECT_EQ(bim::game::g_max_bomb_count_per_player, player.bomb_capacity);
     }
 }

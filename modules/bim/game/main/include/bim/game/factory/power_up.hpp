@@ -7,9 +7,10 @@
 
 namespace bim::game
 {
-  class arena;
+  class entity_world_map;
 
   template <typename PowerUpComponent>
-  entt::entity power_up_factory(entt::registry& registry, arena& arena,
-                                std::uint8_t x, std::uint8_t y);
+  entt::entity power_up_factory(entt::registry& registry,
+                                entity_world_map& entity_map, std::uint8_t x,
+                                std::uint8_t y);
 }

@@ -1,7 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-// #include <bim/game/system/update_fog_of_war.hpp>
-
-#include <bim/game/arena.hpp>
+#include <bim/game/entity_world_map.hpp>
 
 #include <bim/game/cell_neighborhood.hpp>
 #include <bim/game/component/fog_of_war.hpp>
@@ -55,11 +53,11 @@ namespace bim
 }
 
 static bim::table_2d<bim::game::cell_neighborhood>
-fog_map(const bim::game::arena& arena, const entt::registry& registry)
+fog_map(int arena_width, int arena_height, const entt::registry& registry)
 {
   bim::table_2d<bim::game::cell_neighborhood> result(
-      arena.width(), arena.height(), bim::game::cell_neighborhood::none);
-  bim::table_2d<bool> seen(arena.width(), arena.height(), false);
+      arena_width, arena_height, bim::game::cell_neighborhood::none);
+  bim::table_2d<bool> seen(arena_width, arena_height, false);
 
   registry.view<bim::game::fog_of_war, bim::game::position_on_grid>().each(
       [&](const bim::game::fog_of_war& f,
@@ -77,7 +75,11 @@ fog_map(const bim::game::arena& arena, const entt::registry& registry)
 TEST(fog_of_war, initial_fog)
 {
   entt::registry registry;
-  const bim::game::arena arena(5, 7);
+
+  constexpr int arena_width = 5;
+  constexpr int arena_height = 7;
+  bim::game::entity_world_map entity_map(arena_width, arena_height);
+
   constexpr int player_0_x = 0;
   constexpr int player_0_y = 0;
   constexpr int player_1_x = 2;
@@ -93,16 +95,15 @@ TEST(fog_of_war, initial_fog)
     5 .....    f...f
     6 .....    fffff
   */
-  bim::game::player_factory(registry, 0, player_0_x, player_0_y,
+  bim::game::player_factory(registry, entity_map, 0, player_0_x, player_0_y,
                             bim::game::animation_id{});
-  bim::game::player_factory(registry, 1, player_1_x, player_1_y,
+  bim::game::player_factory(registry, entity_map, 1, player_1_x, player_1_y,
                             bim::game::animation_id{});
 
-  bim::game::fog_of_war_factory(registry, 1, arena.width(), arena.height(),
-                                {});
+  bim::game::fog_of_war_factory(registry, 1, arena_width, arena_height, {});
 
   const bim::table_2d<bim::game::cell_neighborhood> neighborhood =
-      fog_map(arena, registry);
+      fog_map(arena_width, arena_height, registry);
 
   // Row 0.
   EXPECT_EQ(bim::game::cell_neighborhood::right
@@ -221,7 +222,11 @@ TEST(fog_of_war, initial_fog)
 TEST(fog_of_war, excluded)
 {
   entt::registry registry;
-  const bim::game::arena arena(5, 7);
+
+  constexpr int arena_width = 5;
+  constexpr int arena_height = 7;
+  bim::game::entity_world_map entity_map(arena_width, arena_height);
+
   constexpr int player_0_x = 0;
   constexpr int player_0_y = 0;
 
@@ -235,15 +240,15 @@ TEST(fog_of_war, excluded)
     5 ...x.    fff.f
     6 .....    fffff
   */
-  bim::game::player_factory(registry, 0, player_0_x, player_0_y,
+  bim::game::player_factory(registry, entity_map, 0, player_0_x, player_0_y,
                             bim::game::animation_id{});
 
   const bim::game::position_on_grid excluded[] = { { 1, 4 }, { 3, 5 } };
-  bim::game::fog_of_war_factory(registry, 0, arena.width(), arena.height(),
+  bim::game::fog_of_war_factory(registry, 0, arena_width, arena_height,
                                 excluded);
 
   const bim::table_2d<bim::game::cell_neighborhood> neighborhood =
-      fog_map(arena, registry);
+      fog_map(arena_width, arena_height, registry);
 
   EXPECT_EQ(bim::game::cell_neighborhood::none, neighborhood(1, 4));
   EXPECT_EQ(~(bim::game::cell_neighborhood::down_right

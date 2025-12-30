@@ -2,7 +2,6 @@
 #include <bim/game/arena.hpp>
 
 #include <bim/game/cell_neighborhood.hpp>
-#include <bim/game/component/position_on_grid.hpp>
 #include <bim/game/static_wall.hpp>
 
 #include <entt/entity/registry.hpp>
@@ -53,20 +52,6 @@ INSTANTIATE_TEST_SUITE_P(bim_game_arena_suite, bim_game_arena_test,
                          ::testing::Combine(::testing::Range(1, 10),
                                             ::testing::Range(1, 10)));
 
-TEST(bim_game_arena, static_wall_is_blocker)
-{
-  bim::game::arena arena(2, 2);
-
-  arena.set_static_wall(0, 1, bim::game::cell_neighborhood::none);
-
-  EXPECT_FALSE(arena.is_blocker(0, 0));
-  EXPECT_TRUE(arena.is_blocker(0, 1));
-  EXPECT_FALSE(arena.is_blocker(1, 0));
-  EXPECT_FALSE(arena.is_blocker(1, 1));
-
-  EXPECT_FALSE(arena.is_solid(0, 1));
-}
-
 TEST(bim_game_arena, static_wall_view)
 {
   bim::game::arena arena(2, 2);
@@ -83,67 +68,4 @@ TEST(bim_game_arena, static_wall_view)
   EXPECT_EQ(1, walls[1].x);
   EXPECT_EQ(0, walls[1].y);
   EXPECT_EQ(bim::game::cell_neighborhood::right, walls[1].neighbors);
-}
-
-TEST(bim_game_arena, solid_not_static_wall)
-{
-  bim::game::arena arena(2, 2);
-
-  arena.set_solid(0, 1);
-
-  EXPECT_FALSE(arena.is_solid(0, 0));
-  EXPECT_TRUE(arena.is_solid(0, 1));
-  EXPECT_FALSE(arena.is_solid(1, 0));
-  EXPECT_FALSE(arena.is_solid(1, 1));
-
-  EXPECT_TRUE(arena.is_blocker(0, 1));
-}
-
-TEST(bim_game_arena, put_entity)
-{
-  bim::game::arena arena(2, 2);
-
-  entt::registry registry;
-  const entt::entity entity = registry.create();
-
-  arena.put_entity(0, 1, entity);
-
-  EXPECT_NE(entity, arena.entity_at(0, 0));
-  EXPECT_EQ(entity, arena.entity_at(0, 1));
-  EXPECT_NE(entity, arena.entity_at(1, 0));
-  EXPECT_NE(entity, arena.entity_at(1, 1));
-}
-
-TEST(bim_game_arena, erase_entity)
-{
-  bim::game::arena arena(2, 2);
-
-  entt::registry registry;
-  const entt::entity entities[] = { registry.create(), registry.create() };
-
-  arena.put_entity(0, 1, entities[0]);
-  arena.put_entity(1, 0, entities[1]);
-  arena.set_solid(1, 0);
-
-  EXPECT_TRUE(entt::null == arena.entity_at(0, 0));
-  EXPECT_EQ(entities[0], arena.entity_at(0, 1));
-  EXPECT_EQ(entities[1], arena.entity_at(1, 0));
-  EXPECT_TRUE(entt::null == arena.entity_at(1, 1));
-  EXPECT_TRUE(arena.is_solid(1, 0));
-
-  arena.erase_entity(0, 1);
-
-  EXPECT_TRUE(entt::null == arena.entity_at(0, 0));
-  EXPECT_TRUE(entt::null == arena.entity_at(0, 1));
-  EXPECT_EQ(entities[1], arena.entity_at(1, 0));
-  EXPECT_TRUE(entt::null == arena.entity_at(1, 1));
-  EXPECT_TRUE(arena.is_solid(1, 0));
-
-  arena.erase_entity(1, 0);
-
-  EXPECT_TRUE(entt::null == arena.entity_at(0, 0));
-  EXPECT_TRUE(entt::null == arena.entity_at(0, 1));
-  EXPECT_TRUE(entt::null == arena.entity_at(1, 0));
-  EXPECT_TRUE(entt::null == arena.entity_at(1, 1));
-  EXPECT_FALSE(arena.is_solid(1, 0));
 }

@@ -1,6 +1,9 @@
 # Next
 
 - Review the startup steps.
+- Add this test: multiple players touched by the same flame.
+- Add tests for the shield: update_shield_power_ups.
+- Put a ZoneScoped in all systems.
 
 # Client
 
@@ -14,20 +17,12 @@
 # Nice to have
 
 - Add a timed_to_death component: dead when timer is zero.
-- Build maps of entities instead of relying on the arena object.
 - Set UBSAN_OPTIONS and co. to stop the tests on failure.
 - Why does --console-log on server-tests only works for the first test?
 - Robots, for the tests.
 - Opt-in for the console-log in Android builds.
-- Tests for the factories.
-- Tests for the flame power-ups.
-- Display some stats about the server in the client (e.g. active player
-  count).
 - Factorize online_game::display_bomb/flame_power_up
-- Factorize flame/bomb_power_up_spawners
 - Room full for named games?
-- Tests for contest::arena setters.
-- Copy arena without alloc.
 - setup.sh
   - include-what-you-use
   - clang-tidy

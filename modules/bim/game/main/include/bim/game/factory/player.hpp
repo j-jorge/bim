@@ -9,7 +9,10 @@
 
 namespace bim::game
 {
-  entt::entity player_factory(entt::registry& registry, std::uint8_t index,
+  class entity_world_map;
+
+  entt::entity player_factory(entt::registry& registry,
+                              entity_world_map& entity_map, std::uint8_t index,
                               std::uint8_t cell_x, std::uint8_t cell_y,
                               animation_id initial_state);
 }

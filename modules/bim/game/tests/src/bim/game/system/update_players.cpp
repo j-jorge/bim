@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/game/system/update_players.hpp>
 
-#include <bim/game/arena.hpp>
+#include <bim/game/entity_world_map.hpp>
 
 #include <bim/game/component/animation_state.hpp>
 #include <bim/game/component/bomb.hpp>
@@ -14,7 +14,7 @@
 #include <bim/game/context/player_animations.hpp>
 #include <bim/game/factory/flame.hpp>
 #include <bim/game/factory/player.hpp>
-#include <bim/game/system/flame_updater.hpp>
+#include <bim/game/system/update_flames.hpp>
 
 #include <entt/entity/registry.hpp>
 
@@ -26,37 +26,32 @@ TEST(bim_game_update_players, death_on_flame_collision)
   bim::game::fill_context(context);
 
   entt::registry registry;
-  bim::game::arena arena(3, 3);
+  const int arena_width = 3;
+  const int arena_height = 3;
+  bim::game::entity_world_map entity_map(arena_width, arena_height);
 
-  const auto insert_flame = [&](int x, int y)
-  {
-    arena.put_entity(x, y,
-                     bim::game::flame_factory(registry, x, y,
-                                              bim::game::flame_direction::up,
-                                              bim::game::flame_segment::tip));
-  };
-
-  insert_flame(1, 0);
-  insert_flame(1, 1);
+  bim::game::flame_factory(registry, 1, 0, bim::game::flame_direction::up,
+                           bim::game::flame_segment::tip);
+  bim::game::flame_factory(registry, 1, 1, bim::game::flame_direction::up,
+                           bim::game::flame_segment::tip);
 
   const bim::game::player_animations& player_animations =
       context.get<const bim::game::player_animations>();
 
   const bim::game::animation_state& player_on_flame =
       registry.storage<bim::game::animation_state>().get(
-          bim::game::player_factory(registry, 0, 1, 0,
+          bim::game::player_factory(registry, entity_map, 0, 1, 0,
                                     player_animations.idle_down));
   const bim::game::animation_state& other_player_on_flame =
       registry.storage<bim::game::animation_state>().get(
-          bim::game::player_factory(registry, 1, 1, 1,
+          bim::game::player_factory(registry, entity_map, 1, 1, 1,
                                     player_animations.idle_down));
   const bim::game::animation_state& surviving_player =
       registry.storage<bim::game::animation_state>().get(
-          bim::game::player_factory(registry, 2, 0, 1,
+          bim::game::player_factory(registry, entity_map, 2, 0, 1,
                                     player_animations.idle_down));
 
-  bim::game::flame_updater(arena.width(), arena.height())
-      .update(registry, arena);
+  bim::game::update_flames(registry, entity_map);
   bim::game::update_players(context, registry);
 
   EXPECT_EQ(player_animations.burn, player_on_flame.model);

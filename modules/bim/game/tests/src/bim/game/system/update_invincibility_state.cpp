@@ -2,6 +2,7 @@
 #include <bim/game/system/update_invincibility_state.hpp>
 
 #include <bim/game/component/invincibility_state.hpp>
+#include <bim/game/entity_world_map.hpp>
 #include <bim/game/factory/invincibility_state.hpp>
 #include <bim/game/system/remove_dead_objects.hpp>
 #include <bim/game/system/update_timers.hpp>
@@ -16,6 +17,7 @@ TEST(update_invincibility_state, expire)
 
   const entt::entity e = registry.create();
   const std::chrono::milliseconds duration(100);
+  bim::game::entity_world_map entity_map;
 
   bim::game::invincibility_state_factory(registry, e, duration);
 
@@ -23,7 +25,7 @@ TEST(update_invincibility_state, expire)
 
   bim::game::update_timers(registry, duration);
   bim::game::update_invincibility_state(registry);
-  bim::game::remove_dead_objects(registry);
+  bim::game::remove_dead_objects(registry, entity_map);
 
   EXPECT_FALSE(registry.storage<bim::game::invincibility_state>().contains(e));
 }
