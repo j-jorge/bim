@@ -1,3 +1,4 @@
+00-benchmark.sh
 00-boost.sh
 00-entt.sh
 00-fpm.sh

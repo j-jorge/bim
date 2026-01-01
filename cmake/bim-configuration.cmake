@@ -15,6 +15,11 @@ if(NOT DEFINED BIM_BUILDING_FOR_ANDROID)
   set(BIM_BUILDING_FOR_ANDROID FALSE)
 endif()
 
+option(BIM_BUILD_BENCHMARKS
+  "Whether benchmark programs should be compiled or not."
+  ON)
+message(STATUS "Building benchmarks: ${BIM_BUILD_BENCHMARKS}")
+
 option(BIM_BUILD_TESTS
   "Whether test programs should be compiled or not."
   ON)

@@ -153,6 +153,7 @@ function(recursive_android_build)
       -DBIM_HOST_BIN="${host_bin}"
       -DBIM_ANDROID_DEV=${BIM_ANDROID_DEV}
       -DBIM_BUILDING_FOR_ANDROID=TRUE
+      -DBIM_BUILD_BENCHMARKS=${BIM_BUILD_BENCHMARKS}
       -DBIM_BUILD_TESTS=FALSE
       -DBIM_BUILD_SERVER=FALSE
       -DBIM_ENABLE_TRACY=${BIM_ENABLE_TRACY}
@@ -162,7 +163,7 @@ function(recursive_android_build)
       -DBIM_GENERATED_ASSETS_DIR="${BIM_GENERATED_ASSETS_DIR}"
     )
 
-  set(bim_targets bim ${BIM_ANDROID_ADDITIONAL_TARGETS})
+  set(bim_targets bim)
 
   if(ARG_AXMOL_SHADERS)
     set(bim_targets ${bim_targets} shaders)

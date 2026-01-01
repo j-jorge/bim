@@ -20,6 +20,10 @@ find_package(Boost REQUIRED)
 find_package(EnTT REQUIRED)
 find_package(fmt REQUIRED)
 
+if (BIM_BUILD_BENCHMARKS)
+  find_package(benchmark REQUIRED)
+endif()
+
 if (BIM_BUILD_TESTS)
   find_package(GTest REQUIRED)
 endif()
