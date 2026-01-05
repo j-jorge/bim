@@ -1,7 +1,6 @@
 # Next
 
 - Review the startup steps.
-- Add this test: multiple players touched by the same flame.
 - Add tests for the shield: update_shield_power_ups.
 - Put a ZoneScoped in all systems.
 

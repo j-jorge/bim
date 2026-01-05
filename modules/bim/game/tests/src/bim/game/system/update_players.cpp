@@ -58,3 +58,47 @@ TEST(bim_game_update_players, death_on_flame_collision)
   EXPECT_EQ(player_animations.burn, other_player_on_flame.model);
   EXPECT_EQ(player_animations.idle_down, surviving_player.model);
 }
+
+TEST(bim_game_update_players, death_of_multiple_players_on_same_flame)
+{
+  bim::game::context context;
+  bim::game::fill_context(context);
+
+  entt::registry registry;
+  const int arena_width = 3;
+  const int arena_height = 3;
+  bim::game::entity_world_map entity_map(arena_width, arena_height);
+
+  bim::game::flame_factory(registry, 1, 0, bim::game::flame_direction::up,
+                           bim::game::flame_segment::tip);
+  bim::game::flame_factory(registry, 1, 1, bim::game::flame_direction::up,
+                           bim::game::flame_segment::tip);
+  bim::game::flame_factory(registry, 1, 2, bim::game::flame_direction::up,
+                           bim::game::flame_segment::tip);
+
+  const bim::game::player_animations& player_animations =
+      context.get<const bim::game::player_animations>();
+
+  const bim::game::animation_state* const player_state[4] = {
+    &registry.storage<bim::game::animation_state>().get(
+        bim::game::player_factory(registry, entity_map, 0, 1, 0,
+                                  player_animations.idle_down)),
+    &registry.storage<bim::game::animation_state>().get(
+        bim::game::player_factory(registry, entity_map, 1, 1, 1,
+                                  player_animations.idle_down)),
+    &registry.storage<bim::game::animation_state>().get(
+        bim::game::player_factory(registry, entity_map, 2, 1, 2,
+                                  player_animations.idle_down)),
+    &registry.storage<bim::game::animation_state>().get(
+        bim::game::player_factory(registry, entity_map, 3, 1, 2,
+                                  player_animations.idle_down))
+  };
+
+  bim::game::update_flames(registry, entity_map);
+  bim::game::update_players(context, registry);
+
+  EXPECT_EQ(player_animations.burn, player_state[0]->model);
+  EXPECT_EQ(player_animations.burn, player_state[1]->model);
+  EXPECT_EQ(player_animations.burn, player_state[2]->model);
+  EXPECT_EQ(player_animations.burn, player_state[3]->model);
+}
