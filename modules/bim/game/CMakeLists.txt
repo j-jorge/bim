@@ -105,6 +105,7 @@ add_executable(game-tests
   tests/src/bim/game/system/update_players.cpp
   tests/src/bim/game/system/update_power_up_spawners.cpp
   tests/src/bim/game/system/update_shields.cpp
+  tests/src/bim/game/system/update_shield_power_ups.cpp
   tests/src/bim/game/system/update_timers.cpp
 )
 target_link_libraries(
