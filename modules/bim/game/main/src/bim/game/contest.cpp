@@ -203,44 +203,63 @@ bim::game::contest_result bim::game::contest::tick()
 {
   ZoneScoped;
 
-  refresh_bomb_inventory(*m_registry);
-  update_timers(*m_registry, tick_interval);
-  animator(*m_context, *m_registry, tick_interval);
+#define run_system(n, call)                                                   \
+  do                                                                          \
+    {                                                                         \
+      ZoneScopedN(n);                                                         \
+      call;                                                                   \
+    }                                                                         \
+  while (false)
 
-  apply_player_action(*m_context, *m_registry, *m_arena, *m_entity_world_map);
+#define run_system_s(f, ...) run_system(#f, f(__VA_ARGS__))
+#define run_system_t(t, f, ...) run_system(#t, f<t>(__VA_ARGS__))
 
-  m_arena_reduction->update(*m_registry, *m_arena);
-  update_falling_blocks(*m_context, *m_registry, *m_entity_world_map);
+  run_system_s(refresh_bomb_inventory, *m_registry);
+  run_system_s(update_timers, *m_registry, tick_interval);
+  run_system_s(animator, *m_context, *m_registry, tick_interval);
 
-  trigger_crushed_timers(*m_registry);
+  run_system_s(apply_player_action, *m_context, *m_registry, *m_arena,
+               *m_entity_world_map);
 
-  update_bombs(*m_registry, *m_arena, *m_entity_world_map);
+  run_system("arena_reduction",
+             m_arena_reduction->update(*m_registry, *m_arena));
+  run_system_s(update_falling_blocks, *m_context, *m_registry,
+               *m_entity_world_map);
 
-  update_flames(*m_registry, *m_entity_world_map);
-  update_invincibility_state(*m_registry);
-  update_shields(*m_registry);
+  run_system_s(trigger_crushed_timers, *m_registry);
 
-  update_crates(*m_registry, *m_entity_world_map);
-  update_invisibility_state(*m_context, *m_registry);
+  run_system_s(update_bombs, *m_registry, *m_arena, *m_entity_world_map);
 
-  update_power_up_spawners<bomb_power_up_spawner>(*m_registry,
-                                                  *m_entity_world_map);
-  update_power_up_spawners<flame_power_up_spawner>(*m_registry,
-                                                   *m_entity_world_map);
-  update_power_up_spawners<invisibility_power_up_spawner>(*m_registry,
-                                                          *m_entity_world_map);
-  update_power_up_spawners<shield_power_up_spawner>(*m_registry,
-                                                    *m_entity_world_map);
+  run_system_s(update_flames, *m_registry, *m_entity_world_map);
+  run_system_s(update_invincibility_state, *m_registry);
+  run_system_s(update_shields, *m_registry);
 
-  update_bomb_power_ups(*m_registry, *m_entity_world_map);
-  update_flame_power_ups(*m_registry, *m_entity_world_map);
-  update_invisibility_power_ups(*m_registry, *m_entity_world_map);
-  update_shield_power_ups(*m_registry, *m_entity_world_map);
+  run_system_s(update_crates, *m_registry, *m_entity_world_map);
+  run_system_s(update_invisibility_state, *m_context, *m_registry);
 
-  update_players(*m_context, *m_registry);
-  m_fog_of_war->update(*m_registry);
+  run_system_t(bomb_power_up_spawner, update_power_up_spawners, *m_registry,
+               *m_entity_world_map);
+  run_system_t(flame_power_up_spawner, update_power_up_spawners, *m_registry,
+               *m_entity_world_map);
+  run_system_t(invisibility_power_up_spawner, update_power_up_spawners,
+               *m_registry, *m_entity_world_map);
+  run_system_t(shield_power_up_spawner, update_power_up_spawners, *m_registry,
+               *m_entity_world_map);
 
-  remove_dead_objects(*m_registry, *m_entity_world_map);
+  run_system_s(update_bomb_power_ups, *m_registry, *m_entity_world_map);
+  run_system_s(update_flame_power_ups, *m_registry, *m_entity_world_map);
+  run_system_s(update_invisibility_power_ups, *m_registry,
+               *m_entity_world_map);
+  run_system_s(update_shield_power_ups, *m_registry, *m_entity_world_map);
+
+  run_system_s(update_players, *m_context, *m_registry);
+  run_system("fog_of_war", m_fog_of_war->update(*m_registry));
+
+  run_system_s(remove_dead_objects, *m_registry, *m_entity_world_map);
+
+#undef run_system_t
+#undef run_system_s
+#undef run_system
 
 #ifndef NDEBUG
   for (std::size_t y = 0; y != m_arena->height(); ++y)

@@ -38,6 +38,11 @@
       {                                                                       \
       }                                                                       \
     while (false)
+  #define ZoneScopedN(n)                                                      \
+    do                                                                        \
+      {                                                                       \
+      }                                                                       \
+    while (false)
   #define TracyPlot(n, v)                                                     \
     do                                                                        \
       {                                                                       \

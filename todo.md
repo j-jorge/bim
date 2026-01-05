@@ -1,9 +1,10 @@
 # Next
 
-- Review the startup steps.
-- Put a ZoneScoped in all systems.
+- Fences.
 
 # Client
+
+- Review the startup steps.
 
 # Server
 
