@@ -7,6 +7,7 @@
 
 namespace bim::game
 {
-  void invisibility_state_factory(entt::registry& registry, entt::entity e,
-                                  std::chrono::milliseconds duration);
+  entt::entity invisibility_state_factory(entt::registry& registry,
+                                          entt::entity e,
+                                          std::chrono::milliseconds duration);
 }

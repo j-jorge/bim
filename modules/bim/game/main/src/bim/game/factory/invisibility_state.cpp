@@ -6,12 +6,14 @@
 
 #include <entt/entity/registry.hpp>
 
-void bim::game::invisibility_state_factory(entt::registry& registry,
-                                           entt::entity e,
-                                           std::chrono::milliseconds duration)
+entt::entity
+bim::game::invisibility_state_factory(entt::registry& registry, entt::entity e,
+                                      std::chrono::milliseconds duration)
 {
   const entt::entity entity = registry.create();
 
   registry.emplace_or_replace<invisibility_state>(e, entity);
   registry.emplace<timer>(entity, duration);
+
+  return entity;
 }

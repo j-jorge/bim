@@ -94,6 +94,7 @@ add_executable(game-tests
   tests/src/bim/game/system/apply_player_action.cpp
   tests/src/bim/game/system/arena_reduction.cpp
   tests/src/bim/game/system/fog_of_war.cpp
+  tests/src/bim/game/system/remove_dead_objects.cpp
   tests/src/bim/game/system/update_bomb_power_ups.cpp
   tests/src/bim/game/system/update_bombs.cpp
   tests/src/bim/game/system/update_crates.cpp
