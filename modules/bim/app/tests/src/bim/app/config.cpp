@@ -8,7 +8,7 @@
 TEST(bim_app_config, game_feature_slot_prices_ok)
 {
   Json::Value json;
-  json["gs"][0]["h"] = "1.2.3.4:1234";
+  json["game-servers"][0]["host"] = "1.2.3.4:1234";
   json["game-feature-slot-price"][0] = 11;
   json["game-feature-slot-price"][1] = 22;
   json["game-feature-slot-price"][2] = 33;
@@ -26,7 +26,7 @@ TEST(bim_app_config, game_feature_slot_prices_ok)
 TEST(bim_app_config, game_feature_slot_prices_short)
 {
   Json::Value json;
-  json["gs"][0]["h"] = "1.2.3.4:1234";
+  json["game-servers"][0]["host"] = "1.2.3.4:1234";
   json["game-feature-slot-price"][0] = 11;
 
   static_assert(bim::app::g_game_feature_slot_count == 2);
@@ -43,7 +43,7 @@ TEST(bim_app_config, game_feature_slot_prices_short)
 TEST(bim_app_config, game_feature_slot_prices_ignore_non_numeric)
 {
   Json::Value json;
-  json["gs"][0]["h"] = "1.2.3.4:1234";
+  json["game-servers"][0]["host"] = "1.2.3.4:1234";
   json["game-feature-slot-price"][0] = "11";
   json["game-feature-slot-price"][1] = 22;
 

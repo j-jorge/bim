@@ -36,22 +36,23 @@ static bool parse_server_list(bim::app::config& result,
 
   for (const Json::Value& server : servers)
     {
-      if (!server.isObject() || !iscool::json::is_member("h", server))
+      if (!server.isObject() || !iscool::json::is_member("host", server))
         continue;
 
-      const Json::Value& host = server["h"];
+      const Json::Value& host = server["host"];
 
       if (!iscool::json::is_of_type<std::string>(host))
         continue;
 
       std::string host_str = iscool::json::cast<std::string>(host);
 
-      const bool has_app_version = iscool::json::is_member("v", server);
-      const bool has_protocol_version = iscool::json::is_member("p", server);
+      const bool has_app_version = iscool::json::is_member("version", server);
+      const bool has_protocol_version =
+          iscool::json::is_member("protocol", server);
 
       if (has_app_version)
         {
-          const Json::Value& version = server["v"];
+          const Json::Value& version = server["version"];
 
           if (iscool::json::is_of_type<unsigned int>(version))
             {
@@ -63,7 +64,7 @@ static bool parse_server_list(bim::app::config& result,
 
       if (has_protocol_version)
         {
-          const Json::Value& version = server["p"];
+          const Json::Value& version = server["protocol"];
 
           if (iscool::json::is_of_type<bim::net::version>(version))
             {
@@ -175,21 +176,21 @@ static bool parse_game_feature_prices(bim::app::config& result,
 
   if (!read_value(
           result.game_feature_price[bim::game::feature_flags::falling_blocks],
-          prices, "fb"))
+          prices, "falling-blocks"))
     return false;
 
   if (!read_value(result.game_feature_price[bim::game::feature_flags::shield],
-                  prices, "s"))
+                  prices, "shield"))
     return false;
 
   if (!read_value(
           result.game_feature_price[bim::game::feature_flags::invisibility],
-          prices, "i"))
+          prices, "invisibility"))
     return false;
 
   if (!read_value(
           result.game_feature_price[bim::game::feature_flags::fog_of_war],
-          prices, "fow"))
+          prices, "fog-of-war"))
     return false;
 
   return true;
@@ -258,8 +259,8 @@ std::optional<bim::app::config> bim::app::load_config(const Json::Value& json)
 
   config result;
 
-  result.most_recent_version =
-      iscool::json::cast<unsigned int>(json["mrv"], bim::version_major);
+  result.most_recent_version = iscool::json::cast<unsigned int>(
+      json["most-recent-version"], bim::version_major);
 
   const auto read_hours = [&json](std::chrono::hours& r, const char* n) -> bool
   {
@@ -274,25 +275,26 @@ std::optional<bim::app::config> bim::app::load_config(const Json::Value& json)
     return false;
   };
 
-  if (!read_hours(result.remote_config_update_interval, "rcui"))
+  if (!read_hours(result.remote_config_update_interval,
+                  "config-update-interval"))
     return std::nullopt;
 
-  if (!read_hours(result.version_update_interval, "vui"))
+  if (!read_hours(result.version_update_interval, "version-update-interval"))
     return std::nullopt;
 
-  if (!parse_server_list(result, json["gs"]))
+  if (!parse_server_list(result, json["game-servers"]))
     return std::nullopt;
 
-  if (!read_value(result.coins_per_victory, json, "cpv"))
+  if (!read_value(result.coins_per_victory, json, "coins-per-victory"))
     return std::nullopt;
 
-  if (!read_value(result.coins_per_defeat, json, "cpde"))
+  if (!read_value(result.coins_per_defeat, json, "coins-per-defeat"))
     return std::nullopt;
 
-  if (!read_value(result.coins_per_draw, json, "cpdr"))
+  if (!read_value(result.coins_per_draw, json, "coins-per-draw"))
     return std::nullopt;
 
-  if (!parse_game_feature_prices(result, json, "gfp"))
+  if (!parse_game_feature_prices(result, json, "game-feature-prices"))
     return std::nullopt;
 
   if (!parse_game_feature_slot_prices(result, json, "game-feature-slot-price"))

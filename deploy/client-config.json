@@ -1,19 +1,36 @@
 {
   "mrv": 13,
+  "most-recent-version": 13,
   "rcui": 24,
+  "remote-config-update-interval": 24,
   "vui": 24,
+  "version-update-interval": 24,
   "gs": [
     {
       "h": "bim.jorge.st:PORT"
     }
   ],
+  "game-servers": [
+    {
+      "host": "bim.jorge.st:PORT"
+    }
+  ],
   "cpv": 50,
+  "coins-per-victory": 50,
   "cpde": 10,
+  "coins-per-defeat": 10,
   "cpdr": 10,
+  "coins-per-draw": 10,
   "gfp": {
     "fb": 50,
     "i": 250,
     "fow": 1000
+  },
+  "game-feature-prices": {
+    "falling-blocks": 50,
+    "invisibility": 250,
+    "shield": 250,
+    "fog-of-war": 1000
   },
   "shop": [
     {
