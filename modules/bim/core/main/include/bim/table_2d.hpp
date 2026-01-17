@@ -27,6 +27,7 @@ namespace bim
     std::size_t width() const;
     std::size_t height() const;
 
+    void resize(std::size_t w, std::size_t h);
     void fill(const T& v);
 
     T* begin();

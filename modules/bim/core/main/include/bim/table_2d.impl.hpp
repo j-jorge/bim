@@ -108,6 +108,16 @@ std::size_t bim::table_2d<T>::height() const
 }
 
 template <typename T>
+void bim::table_2d<T>::resize(std::size_t w, std::size_t h)
+{
+  if (w * h > m_width * m_height)
+    m_data.reset(new T[w * h]);
+
+  m_width = w;
+  m_height = h;
+}
+
+template <typename T>
 void bim::table_2d<T>::fill(const T& v)
 {
   std::fill_n(m_data.get(), m_width * m_height, v);
