@@ -75,6 +75,12 @@ build_step_is_enabled()
         || ( printf '%s\n' "${build_steps[@]}" | grep --quiet "^$1\$" )
 }
 
+if printf '%s\n' "$@" | grep --quiet '^\(--help\|-h\)$'
+then
+    usage
+    exit
+fi
+
 while (("$#" != 0))
 do
     arg="$1"
@@ -113,10 +119,6 @@ do
             ;;
         --foss-only)
             foss_only=1
-            ;;
-        --help|-h)
-            usage
-            exit
             ;;
         --incremental)
             incremental_build=1
