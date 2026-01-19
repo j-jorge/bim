@@ -10,6 +10,7 @@
 #include <bim/game/component/flame_blocker.hpp>
 #include <bim/game/component/flame_direction.hpp>
 #include <bim/game/component/position_on_grid.hpp>
+#include <bim/game/component/shallow.hpp>
 #include <bim/game/component/timer.hpp>
 #include <bim/game/constant/flame_duration.hpp>
 #include <bim/game/factory/flame.hpp>
@@ -27,17 +28,19 @@ static bool burn(entt::registry& registry, const bim::game::arena& arena,
     return false;
 
   const std::span<const entt::entity> entities = entity_map.entities_at(x, y);
-
-  if (entities.empty())
-    {
-      bim::game::flame_factory(registry, x, y, direction, segment);
-      return true;
-    }
+  bool flames_go_through = true;
 
   for (const entt::entity entity : entities)
-    registry.emplace_or_replace<bim::game::burning>(entity);
+    {
+      flames_go_through &=
+          registry.storage<bim::game::shallow>().contains(entity);
+      registry.emplace_or_replace<bim::game::burning>(entity);
+    }
 
-  return false;
+  if (flames_go_through)
+    bim::game::flame_factory(registry, x, y, direction, segment);
+
+  return flames_go_through;
 }
 
 static void create_flames(entt::registry& registry,

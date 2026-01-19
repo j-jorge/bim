@@ -14,6 +14,7 @@
 #include <bim/game/factory/bomb.hpp>
 #include <bim/game/factory/crate.hpp>
 #include <bim/game/factory/flame.hpp>
+#include <bim/game/factory/player.hpp>
 #include <bim/game/system/remove_dead_objects.hpp>
 #include <bim/game/system/update_flames.hpp>
 #include <bim/game/system/update_timers.hpp>
@@ -467,4 +468,45 @@ TEST(update_bombs, a_bomb_in_a_flame_explodes)
 
   const std::span<const entt::entity> entities = entity_map.entities_at(x, y);
   EXPECT_EQ(entities.end(), std::ranges::find(entities, bomb_entity));
+}
+
+TEST(update_bombs, flames_go_through_players)
+{
+  bim::game::context context;
+  bim::game::fill_context(context);
+
+  entt::registry registry;
+  bim::game::arena arena(5, 5);
+
+  bim::game::entity_world_map entity_map(arena.width(), arena.height());
+  constexpr std::uint8_t x = 2;
+  constexpr std::uint8_t y = 2;
+  constexpr std::uint8_t strength = 2;
+  constexpr std::uint8_t player_index = 0;
+
+  bim::game::bomb_factory(registry, entity_map, x, y, strength, player_index,
+                          std::chrono::milliseconds(0));
+
+  const bim::game::player_animations& player_animations =
+      context.get<const bim::game::player_animations>();
+
+  bim::game::player_factory(registry, entity_map, 0, 1, 2,
+                            player_animations.idle_down);
+  bim::game::player_factory(registry, entity_map, 1, 3, 2,
+                            player_animations.idle_down);
+  bim::game::player_factory(registry, entity_map, 2, 2, 1,
+                            player_animations.idle_down);
+  bim::game::player_factory(registry, entity_map, 3, 2, 3,
+                            player_animations.idle_down);
+
+  bim::game::update_timers(registry, std::chrono::milliseconds(1));
+  bim::game::update_bombs(registry, arena, entity_map);
+  bim::game::remove_dead_objects(registry, entity_map);
+
+  std::vector<std::string> flames = flames_map(arena, registry);
+  EXPECT_EQ("  v  ", flames[0]);
+  EXPECT_EQ("  V  ", flames[1]);
+  EXPECT_EQ("hHBHh", flames[2]);
+  EXPECT_EQ("  V  ", flames[3]);
+  EXPECT_EQ("  v  ", flames[4]);
 }

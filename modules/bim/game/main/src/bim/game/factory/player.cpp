@@ -5,6 +5,7 @@
 #include <bim/game/component/fractional_position_on_grid.hpp>
 #include <bim/game/component/player.hpp>
 #include <bim/game/component/player_action_queue.hpp>
+#include <bim/game/component/shallow.hpp>
 #include <bim/game/component/timer.hpp>
 #include <bim/game/entity_world_map.hpp>
 
@@ -29,6 +30,7 @@ entt::entity bim::game::player_factory(entt::registry& registry,
   registry.emplace<player_action_queue>(entity);
   registry.emplace<animation_state>(entity, initial_state,
                                     std::chrono::seconds());
+  registry.emplace<shallow>(entity);
 
   entity_map.put_entity(entity, cell_x, cell_y);
 
