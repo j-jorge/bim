@@ -6,7 +6,7 @@
   "controls.direction_pad_kind_is_stick": false,
   "controls.direction_pad_on_the_left": true,
   "effects.enabled": true,
-  "feature_flags.available": 15,
+  "feature_flags.available": 31,
   "feature_flags.slot_0": 8,
   "feature_flags.slot_0.available": true,
   "feature_flags.slot_1": 2,
