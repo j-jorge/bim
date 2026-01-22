@@ -15,7 +15,7 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    container: "registry.gitlab.com/fdroid/fdroidserver:buildserver-bookworm"
+    container: "registry.gitlab.com/fdroid/fdroidserver:buildserver-trixie"
 
     steps:
       - name: Cache dependencies
