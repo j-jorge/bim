@@ -61,8 +61,8 @@ msgstr[1] "Oyunlarınızı {} özelliğe kadar özelleştirin."
 msgid "Falling blocks reduce the arena after two minutes!"
 msgstr "İkinci dakikadan sonra, düşen bloklar arenayı küçültür!"
 
-msgid "Find this incredibly strong barrel, it will save you from one hit!"
-msgstr "Bu inanılmaz güçlü varili bul, seni tek bir hasardan kurtaracak!"
+msgid "Fences block the players, but the flames can go through!"
+msgstr ""
 
 msgid "A thick fog covers the arena. You can't see were you did not go!"
 msgstr "Arenayı kalın bir sis kaplıyor. Gitmediğin yerleri göremiyorsun!"
@@ -72,6 +72,9 @@ msgid ""
 "players!"
 msgstr ""
 "Diğer tüm oyuncuların ekranından kaybolmak için görünmezlik gücünü bul!"
+
+msgid "Find this incredibly strong barrel, it will save you from one hit!"
+msgstr "Bu inanılmaz güçlü varili bul, seni tek bir hasardan kurtaracak!"
 
 #, c++-format
 msgid "{} game being played right now."

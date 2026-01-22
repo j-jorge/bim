@@ -9,21 +9,25 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "PO-Revision-Date: 2025-11-18 16:08+0000\n"
 "Last-Translator: Andrij Mizyk <andm1zyk@proton.me>\n"
-"Language-Team: Ukrainian <https://hosted.weblate.org/projects/bim/"
-"gettext-files/uk/>\n"
+"Language-Team: Ukrainian <https://hosted.weblate.org/projects/bim/gettext-"
+"files/uk/>\n"
 "Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural="
-"(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? "
-"1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Generator: Weblate 5.15-dev\n"
 
 msgid "Please wait"
 msgstr "Будь ласка, зачекайте"
 
 msgid "You have been disconnected :("
+msgstr ""
+
+msgid ""
+"The shop is not available on this platform, yet you can support the "
+"developers with donations! Should I open the donations page?"
 msgstr ""
 
 msgid "Do you really want to change the language setting?"
@@ -44,13 +48,17 @@ msgstr ""
 msgid "You need more coins to purchase this item!"
 msgstr ""
 
-msgid "Customize your experience below!"
-msgstr ""
+#, c++-format
+msgid "Customize your games with up to {} feature."
+msgid_plural "Customize your games with up to {} features."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
 
 msgid "Falling blocks reduce the arena after two minutes!"
 msgstr ""
 
-msgid "Find this incredibly strong barrel, it will save you from one hit!"
+msgid "Fences block the players, but the flames can go through!"
 msgstr ""
 
 msgid "A thick fog covers the arena. You can't see were you did not go!"
@@ -59,6 +67,69 @@ msgstr ""
 msgid ""
 "Find the invisibility power up to disappear from the screen of all other "
 "players!"
+msgstr ""
+
+msgid "Find this incredibly strong barrel, it will save you from one hit!"
+msgstr ""
+
+#, c++-format
+msgid "{} game being played right now."
+msgid_plural "{} games being played right now."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#, c++-format
+msgid "{} player connected right now."
+msgid_plural "{} players connected right now."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#, c++-format
+msgid "{} game played in the last hour."
+msgid_plural "{} games played in the last hour."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#, c++-format
+msgid "{} player connected in the last hour."
+msgid_plural "{} players connected in the last hour."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#, c++-format
+msgid "{} game played in the last 24 hours."
+msgid_plural "{} games played in the last 24 hours."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#, c++-format
+msgid "{} player connected in the last 24 hours."
+msgid_plural "{} players connected in the last 24 hours."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#, c++-format
+msgid "{} game played in the last 30 days."
+msgid_plural "{} games played in the last 30 days."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#, c++-format
+msgid "{} player connected in the last 30 days."
+msgid_plural "{} players connected in the last 30 days."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#, c++-format
+msgid "Connected to {}."
 msgstr ""
 
 msgid "An error occurred. The purchase could not be completed."
@@ -104,10 +175,34 @@ msgstr ""
 msgid "You won!"
 msgstr ""
 
+msgid "ERASE"
+msgstr ""
+
+msgid "RANDOM"
+msgstr ""
+
 msgid "Off"
 msgstr ""
 
 msgid "On"
+msgstr ""
+
+msgid "Defeats"
+msgstr ""
+
+msgid "Draws"
+msgstr ""
+
+msgid "Games"
+msgstr "Ігри"
+
+msgid "Victories"
+msgstr ""
+
+msgid "Your statistics"
+msgstr "Ваша статистика"
+
+msgid "Success rate"
 msgstr ""
 
 msgid "No"
@@ -115,6 +210,11 @@ msgstr "Ні"
 
 msgid "Yes"
 msgstr "Так"
+
+msgid ""
+"Is your language missing? Add it on <a href='https://hosted.weblate.org/"
+"projects/bim/gettext-files/'>Weblate</a>!"
+msgstr ""
 
 msgid "Language"
 msgstr "Мова"
@@ -155,33 +255,22 @@ msgstr ""
 msgid "Vibrations"
 msgstr ""
 
-msgid "Defeats"
+msgid "Features"
 msgstr ""
 
-msgid "Draws"
+msgid "PLAY ONLINE"
 msgstr ""
 
-msgid "Games"
-msgstr "Ігри"
-
-msgid "Victories"
+msgid "SHOP"
 msgstr ""
 
-msgid "DEBUG"
+msgid "STATISTICS"
 msgstr ""
-
-msgid ""
-"PLAY\n"
-"ONLINE"
-msgstr ""
-
-msgid "Your statistics"
-msgstr "Ваша статистика"
 
 msgid "ALPHA VERSION"
 msgstr ""
 
-msgid "Success rate"
+msgid "Join our Discord to meet other players."
 msgstr ""
 
 msgid "You can start a two-players game now or wait for more players!"
@@ -210,6 +299,3 @@ msgstr "×1000"
 
 msgid "LOADING…"
 msgstr "ЗАВАНТАЖЕННЯ…"
-
-msgid "SHOP"
-msgstr ""

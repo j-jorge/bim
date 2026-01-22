@@ -60,9 +60,8 @@ msgstr[1] ""
 msgid "Falling blocks reduce the arena after two minutes!"
 msgstr "Blocos a cair reduzem a arena depois de dois minutos!"
 
-msgid "Find this incredibly strong barrel, it will save you from one hit!"
+msgid "Fences block the players, but the flames can go through!"
 msgstr ""
-"Encontre este barril incrivelmente forte, que irá salvá-lo de um golpe!"
 
 msgid "A thick fog covers the arena. You can't see were you did not go!"
 msgstr ""
@@ -74,6 +73,10 @@ msgid ""
 msgstr ""
 "Encontre o poder de invisibilidade para desaparecer do ecrã dos outros "
 "jogadores!"
+
+msgid "Find this incredibly strong barrel, it will save you from one hit!"
+msgstr ""
+"Encontre este barril incrivelmente forte, que irá salvá-lo de um golpe!"
 
 #, c++-format
 msgid "{} game being played right now."

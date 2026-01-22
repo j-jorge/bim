@@ -59,10 +59,8 @@ msgstr[1] ""
 msgid "Falling blocks reduce the arena after two minutes!"
 msgstr "Fallende Blöcke verkleinern die Arena nach zwei Minuten!"
 
-msgid "Find this incredibly strong barrel, it will save you from one hit!"
+msgid "Fences block the players, but the flames can go through!"
 msgstr ""
-"Finden Sie diesen unglaublich stabilen Lauf, er wird Sie vor einem Treffer "
-"bewahren!"
 
 msgid "A thick fog covers the arena. You can't see were you did not go!"
 msgstr ""
@@ -75,6 +73,11 @@ msgid ""
 msgstr ""
 "Finde das Unsichtbarkeits-Power-Up, um vom Bildschirm aller anderen Spieler "
 "zu verschwinden!"
+
+msgid "Find this incredibly strong barrel, it will save you from one hit!"
+msgstr ""
+"Finden Sie diesen unglaublich stabilen Lauf, er wird Sie vor einem Treffer "
+"bewahren!"
 
 #, c++-format
 msgid "{} game being played right now."

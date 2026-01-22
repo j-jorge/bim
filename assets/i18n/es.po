@@ -45,8 +45,8 @@ msgid ""
 "Come play a game of Bim! https://play.google.com/store/apps/details?"
 "id=bim.app"
 msgstr ""
-"Juguemos una partida de Bim! https://play.google.com/store/apps/"
-"details?id=bim.app"
+"Juguemos una partida de Bim! https://play.google.com/store/apps/details?"
+"id=bim.app"
 
 msgid "You need more coins to purchase this item!"
 msgstr "¡Necesitas más monedas para poder comprar este artículo!"
@@ -60,10 +60,8 @@ msgstr[1] "Personalizá tus juegos con hasta {} características."
 msgid "Falling blocks reduce the arena after two minutes!"
 msgstr "¡Los bloques que caen reducen la arena después de dos minutos!"
 
-#, fuzzy
-msgid "Find this incredibly strong barrel, it will save you from one hit!"
+msgid "Fences block the players, but the flames can go through!"
 msgstr ""
-"¡Encuentra este barril increíblemente resistente, te salvará de un golpe!"
 
 msgid "A thick fog covers the arena. You can't see were you did not go!"
 msgstr "Una espesa niebla cubre la arena. ¡No puedes ver donde no has ido!"
@@ -72,6 +70,11 @@ msgid ""
 "Find the invisibility power up to disappear from the screen of all other "
 "players!"
 msgstr ""
+
+#, fuzzy
+msgid "Find this incredibly strong barrel, it will save you from one hit!"
+msgstr ""
+"¡Encuentra este barril increíblemente resistente, te salvará de un golpe!"
 
 #, c++-format
 msgid "{} game being played right now."
