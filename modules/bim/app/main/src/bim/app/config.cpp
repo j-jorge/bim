@@ -250,6 +250,7 @@ bim::app::config::config()
   game_feature_price[bim::game::feature_flags::falling_blocks] = 50;
   game_feature_price[bim::game::feature_flags::shield] = 250;
   game_feature_price[bim::game::feature_flags::invisibility] = 250;
+  game_feature_price[bim::game::feature_flags::fences] = 500;
   game_feature_price[bim::game::feature_flags::fog_of_war] = 1000;
 
   for (int i = 0; i != g_game_feature_slot_count; ++i)

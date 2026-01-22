@@ -30,6 +30,7 @@
     "falling-blocks": 50,
     "invisibility": 250,
     "shield": 250,
+    "fence": 500,
     "fog-of-war": 1000
   },
   "shop": [
