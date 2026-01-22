@@ -1,0 +1,3 @@
+- Nouvelle option de jeu : des obstacles bloquent le joueur mais laissent passer les flammes.
+- Correction du bug du joystick qui disparaît.
+- Ajout de traductions en italien, espagnol, et ukrainien.
