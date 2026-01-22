@@ -7,12 +7,22 @@
   "version-update-interval": 24,
   "gs": [
     {
-      "h": "bim.jorge.st:PORT"
+      "v": 14,
+      "h": "bim.jorge.st:20812"
+    },
+    {
+      "v": 13,
+      "h": "bim.jorge.st:20811"
     }
   ],
   "game-servers": [
     {
-      "host": "bim.jorge.st:PORT"
+      "v": 14,
+      "h": "bim.jorge.st:20812"
+    },
+    {
+      "v": 13,
+      "h": "bim.jorge.st:20811"
     }
   ],
   "cpv": 50,
