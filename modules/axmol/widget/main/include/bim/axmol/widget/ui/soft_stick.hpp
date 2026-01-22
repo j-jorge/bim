@@ -23,6 +23,7 @@ namespace bim::axmol::widget
     ~soft_stick();
 
     void set_layout_on_the_left(bool left);
+    void ready();
 
     bim::axmol::input::node_reference input_node() const;
 
@@ -52,7 +53,7 @@ namespace bim::axmol::widget
     const iscool::style::declaration& m_style_bounds_left;
     const iscool::style::declaration& m_style_bounds_right;
 
-    ax::Vec2 m_original_stick_world_position;
+    ax::Vec2 m_default_stick_world_position;
 
     bool m_on_the_left;
   };

@@ -468,6 +468,9 @@ void bim::axmol::app::online_game::displaying(
 
 void bim::axmol::app::online_game::displayed()
 {
+  if (m_use_stick)
+    m_controls->joystick->ready();
+
   m_controls->peephole->show();
 }
 

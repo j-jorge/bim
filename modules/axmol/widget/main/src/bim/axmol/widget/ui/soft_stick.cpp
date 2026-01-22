@@ -36,7 +36,7 @@ bim::axmol::widget::soft_stick::soft_stick(
   m_soft_stick_input->connect_to_up(
       [this]()
       {
-        move_stick_to(m_original_stick_world_position);
+        move_stick_to(m_default_stick_world_position);
       });
 
   m_inputs.attach_to_root(m_soft_stick_input);
@@ -50,6 +50,18 @@ void bim::axmol::widget::soft_stick::set_layout_on_the_left(bool left)
 
   if (isRunning())
     update_display();
+}
+
+/**
+ * To be called when the stick is at its final position on the scene, so it can
+ * save its default position.
+ */
+void bim::axmol::widget::soft_stick::ready()
+{
+  const ax::Node& stick = *m_controls->stick;
+
+  m_default_stick_world_position = stick.convertToWorldSpace(
+      stick.getAnchorPoint() * stick.getContentSize());
 }
 
 bim::axmol::input::node_reference
@@ -83,7 +95,7 @@ void bim::axmol::widget::soft_stick::enable(bool enabled)
     return;
 
   m_soft_stick_input->enable(enabled);
-  move_stick_to(m_original_stick_world_position);
+  move_stick_to(m_default_stick_world_position);
 }
 
 const ax::Vec2& bim::axmol::widget::soft_stick::drag() const
@@ -110,11 +122,6 @@ void bim::axmol::widget::soft_stick::update_display()
     apply_bounds(m_context, m_controls->all_nodes, m_style_bounds_left);
   else
     apply_bounds(m_context, m_controls->all_nodes, m_style_bounds_right);
-
-  const ax::Node& stick = *m_controls->stick;
-
-  m_original_stick_world_position = stick.convertToWorldSpace(
-      stick.getAnchorPoint() * stick.getContentSize());
 }
 
 void bim::axmol::widget::soft_stick::move_stick_to(
