@@ -140,8 +140,17 @@
       "event": "popup-hidden"
     },
     {
+      "kind": "swipe",
+      "from-node": "overlay/language/client_container/list/view////pt_PT",
+      "to-node": "overlay/language/client_container/list/view////fr_FR"
+    },
+    {
       "kind": "click",
-      "node": "overlay/language/client_container/list/view////ptr_TR",
+      "node": "overlay/language/client_container/list/view"
+    },
+    {
+      "kind": "click",
+      "node": "overlay/language/client_container/list/view////tr_TR",
       "event": "popup-shown"
     },
     {
