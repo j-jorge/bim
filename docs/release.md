@@ -1,5 +1,6 @@
 # Things to do for a release
  - Update the translations.
+ - Run the UI tests.
  - Update the screen captures from the metadata folder.
  - Check if the descriptions from the metadata folder must be updated.
  - Fill the changelog.
