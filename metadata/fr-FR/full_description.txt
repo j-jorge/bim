@@ -2,4 +2,4 @@ Bim! est un jeu mobile multijoueur en ligne open-source du genre « dernier sur
 
 Deux à quatre joueurs se retrouvent coincés dans une petite arène avec pour objectif d'être le dernier en vie. Les joueurs peuvent poser des bombes pour détruire les murs ou pour attaquer un autre joueur. Parfois la destruction des murs révèle un bonus, comme des bombes supplémentaires ou une augmentation de la portée des explosions.
 
-Tu débloqueras des fonctionnalités supplémentaires pour pimenter les parties en progressant dans le jeu. Sélectionne tes paramètres de jeu préférés et découvre le résultat combiné avec le choix des autres joueurs. On ne gagne pas en payant ici, les paramètres sélectionnés impactent tous les joueurs de manière égale, alors choisi judicieusement!
+Tu débloqueras des fonctionnalités supplémentaires pour pimenter les parties en progressant dans le jeu. Sélectionne tes paramètres de jeu préférés et découvre le résultat combiné avec le choix des autres joueurs. On ne gagne pas en payant ici, les paramètres sélectionnés impactent tous les joueurs de manière égale, alors choisi judicieusement !

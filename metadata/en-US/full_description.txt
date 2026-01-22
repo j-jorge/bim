@@ -1,4 +1,4 @@
-Bim! is an open-source multiplayer online mobile game of the last man standing genre.
+Bim! is an open-source online multiplayer mobile game of the last man standing genre.
 
 Up to four players are stuck in a small arena with a single goal: be the last person standing. The players can drop bombs to destroy the walls or, ultimately, attack another player. Sometimes the broken walls will expose a bonus such as extra bombs or an increase of the bombs' blast distance.
 
