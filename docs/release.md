@@ -1,9 +1,10 @@
 # Things to do for a release
+ - Prepare the changelog for the release page.
  - Update the translations.
  - Run the UI tests.
  - Update the screen captures from the metadata folder.
  - Check if the descriptions from the metadata folder must be updated.
- - Fill the changelog.
+ - Fill the changelogs from the metadata.
  - Double-check the version in the main CMakeLists.txt
  - Create a release-candidate tag.
  - Ensure that the CI passes.
