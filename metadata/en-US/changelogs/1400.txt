@@ -1,3 +1,4 @@
+- Shorter loading times.
 - New game feature: fences block the players but let the flames go through.
 - Fix the bug of the disappearing joystick.
 - Integrate Italian, Spanish, and Ukrainian languages.
