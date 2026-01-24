@@ -17,12 +17,8 @@
   ],
   "game-servers": [
     {
-      "v": 14,
-      "h": "bim.jorge.st:20812"
-    },
-    {
-      "v": 13,
-      "h": "bim.jorge.st:20811"
+      "version": 14,
+      "host": "bim.jorge.st:20812"
     }
   ],
   "cpv": 50,
