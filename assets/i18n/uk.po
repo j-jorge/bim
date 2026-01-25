@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-11-18 16:08+0000\n"
+"PO-Revision-Date: 2026-01-26 13:01+0000\n"
 "Last-Translator: Andrij Mizyk <andm1zyk@proton.me>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/bim/gettext-"
 "files/uk/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Weblate 5.15-dev\n"
+"X-Generator: Weblate 5.16-dev\n"
 
 msgid "Please wait"
 msgstr "Будь ласка, зачекайте"
@@ -31,7 +31,7 @@ msgid ""
 msgstr ""
 
 msgid "Do you really want to change the language setting?"
-msgstr ""
+msgstr "Ви справді хочете змінити налаштування мови?"
 
 #, c++-format
 msgid "Version {}"
@@ -46,7 +46,7 @@ msgid ""
 msgstr ""
 
 msgid "You need more coins to purchase this item!"
-msgstr ""
+msgstr "Вам потрібно більше монет, щоб придбати цей предмет!"
 
 #, c++-format
 msgid "Customize your games with up to {} feature."
@@ -56,7 +56,7 @@ msgstr[1] ""
 msgstr[2] ""
 
 msgid "Falling blocks reduce the arena after two minutes!"
-msgstr ""
+msgstr "Падаючі блоки зменшують поле після другої хвилини!"
 
 msgid "Fences block the players, but the flames can go through!"
 msgstr ""
