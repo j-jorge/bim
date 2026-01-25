@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-11-20 18:51+0000\n"
+"PO-Revision-Date: 2026-01-26 13:01+0000\n"
 "Last-Translator: Quentin PAGÈS <quentinantonin@free.fr>\n"
 "Language-Team: Occitan <https://hosted.weblate.org/projects/bim/gettext-"
 "files/oc/>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.15-dev\n"
+"X-Generator: Weblate 5.16-dev\n"
 
 msgid "Please wait"
 msgstr "Un momenton"
@@ -61,7 +61,7 @@ msgid "Falling blocks reduce the arena after two minutes!"
 msgstr "De blòcs que tomban redusisson l'arèna après doas minutas !"
 
 msgid "Fences block the players, but the flames can go through!"
-msgstr ""
+msgstr "Aquestes obstacles blòcan los jogaires, mas las flamas los travèrsan !"
 
 msgid "A thick fog covers the arena. You can't see were you did not go!"
 msgstr ""
@@ -106,8 +106,8 @@ msgstr[1] "{} jogaires connectats dins la darrièra ora."
 #, c++-format
 msgid "{} game played in the last 24 hours."
 msgid_plural "{} games played in the last 24 hours."
-msgstr[0] "{} partida jogada dins las darrièras 24 oras"
-msgstr[1] "{} partidas jogadas dins las darrièras 24 oras"
+msgstr[0] "{} partida jogada dins las darrièras 24 oras."
+msgstr[1] "{} partidas jogadas dins las darrièras 24 oras."
 
 #, c++-format
 msgid "{} player connected in the last 24 hours."
@@ -118,14 +118,14 @@ msgstr[1] "{} jogaires connectats dins las darrièras 24 oras."
 #, c++-format
 msgid "{} game played in the last 30 days."
 msgid_plural "{} games played in the last 30 days."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{} partida jogada los darrièrs 30 jorns."
+msgstr[1] "{} partidas jogadas los darrièrs 30 jorns."
 
 #, c++-format
 msgid "{} player connected in the last 30 days."
 msgid_plural "{} players connected in the last 30 days."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{} jogaire connectat los darrièrs 30 jorns."
+msgstr[1] "{} jogaires connectats los darrièrs 30 jorns."
 
 #, c++-format
 msgid "Connected to {}."
@@ -160,11 +160,15 @@ msgid ""
 "Start a new game\n"
 "and get your revenge!"
 msgstr ""
+"Lançar una partida nòva\n"
+"e venjatz-vos !"
 
 msgid ""
 "Was it pure luck?\n"
 "Confirm your skills in a new game!"
 msgstr ""
+"Pur bon astre ?\n"
+"Confirmatz vòstras competéncias de nòu !"
 
 msgid "Draw game!"
 msgstr "Partida nulla !"
@@ -188,13 +192,13 @@ msgid "On"
 msgstr "Amb"
 
 msgid "Defeats"
-msgstr ""
+msgstr "Desfachas"
 
 msgid "Draws"
-msgstr ""
+msgstr "Egalitatas"
 
 msgid "Games"
-msgstr ""
+msgstr "Partidas"
 
 msgid "Victories"
 msgstr "Victòrias"
@@ -225,25 +229,26 @@ msgid "Directions kind"
 msgstr "Mòde de direccion"
 
 msgid "Directional pad, at a fixed position on the screen."
-msgstr ""
+msgstr "Crotz direccionala, que sa posicion es fixa a l'ecran."
 
 msgid "Analog stick, it pops where you tap and follows the drag."
 msgstr ""
+"Levier analogic, se plaça ont tocas l'ecran e seguís la traccion del det."
 
 msgid "Controls"
 msgstr "Contraròtles"
 
 msgid "Directions on the left, actions on the right."
-msgstr ""
+msgstr "Las direccions del costat esquèrre, las accions del costat drech."
 
 msgid "Directions on the right, actions on the left."
-msgstr ""
+msgstr "Las direccions del costat drech, las accions del costat esquèrre."
 
 msgid "D-pad"
 msgstr "Crotz"
 
 msgid "Stick"
-msgstr ""
+msgstr "Stick"
 
 msgid "Music"
 msgstr "Musica"
@@ -273,13 +278,13 @@ msgid "ALPHA VERSION"
 msgstr "VERSION ALFA"
 
 msgid "Join our Discord to meet other players."
-msgstr ""
+msgstr "Rejonhetz nòstre Discord per trobar d'autres jogaires."
 
 msgid "You can start a two-players game now or wait for more players!"
-msgstr ""
+msgstr "Pòdes lançar una partida de 2 jogaires o esperar d'autres jogaires !"
 
 msgid "You can start a three-players game now or wait for more players!"
-msgstr ""
+msgstr "Pòdes lançar una partida de 3 jogaires o esperar d'autres jogaires !"
 
 msgid "Start the game now!"
 msgstr "Lancatz lo jòc ara !"
@@ -291,6 +296,8 @@ msgid ""
 "Waiting for your opponents…\n"
 "Tell your friends to join!"
 msgstr ""
+"En espèra dels adversaris…\n"
+"Convida tos amics !"
 
 msgid "Online Game"
 msgstr "Jòc en linha"
