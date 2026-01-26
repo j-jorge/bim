@@ -1,8 +1,15 @@
 # Next
 
-# Client
+- Animate the flames.
+- Animate the burning crates.
+- Display the game features in the output of bim-player.
+- Review the client's startup steps.
+- Visual bug for stats with zero victories.
+- Share the logs when sending an e-mail.
+- Display the host in the debug menu.
+- Game state's CRC to be checked by the server.
 
-- Review the startup steps.
+# Client
 
 # Server
 
