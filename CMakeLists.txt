@@ -2,8 +2,8 @@ cmake_minimum_required(VERSION 3.22)
 
 # Keep Android version code as a raw value (i.e. no computation) such
 # that F-Droid can parse it.
-set(project_version 14)
-set(android_version_code 1400)
+set(project_version 15)
+set(android_version_code 1500)
 
 set(CMAKE_MODULE_PATH
   "${CMAKE_CURRENT_LIST_DIR}/cmake"
