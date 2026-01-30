@@ -3,8 +3,8 @@
 set -euo pipefail
 
 : "${googletest_repository:=https://github.com/google/googletest/}"
-: "${googletest_version:=1.15.2}"
-package_revision=5
+: "${googletest_version:=1.17.0}"
+package_revision=1
 version="$googletest_version"-"$package_revision"
 build_type=release
 

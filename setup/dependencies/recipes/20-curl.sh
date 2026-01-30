@@ -4,7 +4,7 @@ set -euo pipefail
 
 [[ "${bim_target_platform:-}" == "linux" ]] || exit 0
 
-curl_version=8.17.0
+curl_version=8.18.0
 package_revision=1
 version="$curl_version"-"$package_revision"
 build_type=release

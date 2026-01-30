@@ -3,8 +3,8 @@
 set -euo pipefail
 
 : "${entt_repository:=https://github.com/skypjack/entt/}"
-: "${entt_version:=3.14.0}"
-package_revision=5
+: "${entt_version:=3.16.0}"
+package_revision=1
 package_version="$entt_version"-"$package_revision"
 build_type=release
 
@@ -22,6 +22,7 @@ bim-cmake-build \
     --build-dir "$build_dir" \
     --build-type "${build_type^}" \
     --install-dir "$install_dir" \
-    --source-dir "$source_dir"
+    --source-dir "$source_dir" \
+    --cmake -DENTT_INSTALL=ON
 
 bim-package-and-install "$install_dir" entt "$package_version" "$build_type"

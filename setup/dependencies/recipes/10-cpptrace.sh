@@ -6,7 +6,7 @@ set -euo pipefail
 
 : "${cpptrace_repository:=https://github.com/j-jorge/cpptrace}"
 : "${cpptrace_version:=1.0.4}"
-package_revision=3
+package_revision=4
 version="$cpptrace_version"-"$package_revision"
 build_type=release
 

@@ -4,7 +4,7 @@ set -euo pipefail
 
 : "${fpm_repository:=https://github.com/j-jorge/fpm.git/}"
 : "${fpm_version:=1.1.1}"
-package_revision=5
+package_revision=6
 package_version="$fpm_version"-"$package_revision"
 build_type=release
 

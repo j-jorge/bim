@@ -4,13 +4,15 @@ set -euo pipefail
 
 : "${bim_product_mode:-}"
 : "${tracy_repository:=https://github.com/wolfpld/tracy}"
+# Version 0.13 cannot be compiled on Ubuntu 24.04 due to dependencies
+# to newer Wayland API.
 : "${tracy_version:=0.12.2}"
 
 # Tracy is a tool for the developers, we don't use it when building
 # the final product.
 [[ "$bim_product_mode" = 0 ]] || exit 0
 
-package_revision=3
+package_revision=4
 version="$tracy_version"-"$package_revision"
 build_type=release
 
@@ -30,7 +32,8 @@ bim-cmake-build \
     --build-type "${build_type^}" \
     --install-dir "$install_dir" \
     --source-dir "$source_dir/profiler" \
-    --no-lto
+    --no-lto \
+    --cmake -DENABLE_LLM=OFF
 
 bim-package-and-install \
     "$install_dir" tracy-profiler "$version" "$build_type"

@@ -6,7 +6,7 @@ set -euo pipefail
 
 : "${maxminddb_repository:=https://github.com/maxmind/libmaxminddb}"
 : "${maxminddb_version:=1.12.2}"
-package_revision=4
+package_revision=5
 version="$maxminddb_version"-"$package_revision"
 build_type=release
 

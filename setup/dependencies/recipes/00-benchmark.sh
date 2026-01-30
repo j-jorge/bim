@@ -4,7 +4,7 @@ set -euo pipefail
 
 : "${benchmark_repository:=https://github.com/j-jorge/benchmark/}"
 : "${benchmark_version:=1.9.4.0j}"
-package_revision=1
+package_revision=2
 version="$benchmark_version"-"$package_revision"
 build_type=release
 

@@ -9,8 +9,8 @@ set -euo pipefail
 # target is Android.
 [[ "$bim_target_platform" == "android" ]] || exit 0
 
-sdk_version=13114758
-package_revision=2
+sdk_version=14742923
+package_revision=1
 version="$sdk_version"-"$package_revision"
 build_type=release
 
@@ -45,10 +45,10 @@ sdk_manager="$sdk_dir"/cmdline-tools/latest/bin/sdkmanager
 
 yes | "$sdk_manager" --licenses > /dev/null || true
 yes | "$sdk_manager" \
-          "build-tools;35.0.0" \
+          "build-tools;36.0.0" \
           "ndk;29.0.14206865" \
           "platforms;android-21" \
-          "platforms;android-35" \
+          "platforms;android-36" \
     || true
 
 bim-package-and-install "$install_dir" android-sdk "$version" "$build_type"

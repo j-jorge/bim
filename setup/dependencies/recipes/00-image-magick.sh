@@ -3,8 +3,8 @@
 set -euo pipefail
 
 : "${image_magick_repository:=https://github.com/ImageMagick/ImageMagick/}"
-: "${image_magick_version:=7.1.1-43}"
-package_revision=2
+: "${image_magick_version:=7.1.2-13}"
+package_revision=1
 version="$image_magick_version"-"$package_revision"
 build_type=release
 
