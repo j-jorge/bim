@@ -27,6 +27,7 @@ namespace bim::server::tests
     void tick(std::chrono::nanoseconds d);
     void tick(std::size_t tick_count);
     void tick(int client_index, std::size_t tick_count);
+    void wait(std::chrono::milliseconds d);
     void wait(const std::function<bool()>& ready);
 
   private:

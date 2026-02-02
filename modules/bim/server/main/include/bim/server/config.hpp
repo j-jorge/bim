@@ -57,6 +57,11 @@ namespace bim::server
      */
     std::chrono::seconds game_service_disconnection_inactivity_delay;
 
+    /**
+     * The duration under which a game is considered short.
+     */
+    std::chrono::seconds game_service_max_duration_for_short_game;
+
     /** Path to the folder where to store the contest timelines. */
     std::string contest_timeline_folder;
 
@@ -120,5 +125,29 @@ namespace bim::server
      * discord_matchmaking_notification_url.
      */
     std::chrono::seconds discord_matchmaking_notification_interval;
+
+    /**
+     * Whether or not we should enable the karma service to filter incoming
+     * connections.
+     */
+    bool enable_karma;
+
+    /** How long IPs with negative karma are blacklisted. */
+    std::chrono::minutes karma_blacklisting_duration;
+
+    /** The interval between two reviews of the blacklisted IPs. */
+    std::chrono::minutes karma_review_interval;
+
+    /** Karma value assigned to new connections. */
+    std::int8_t initial_karma_value;
+
+    /** Value added to the karma when a player is disconnected. */
+    std::int8_t disconnection_karma_adjustment;
+
+    /** Value added to the karma when a player dies in a short game. */
+    std::int8_t short_game_karma_adjustment;
+
+    /** Value added to the karma when a player behaves correctly. */
+    std::int8_t good_behavior_karma_adjustment;
   };
 }

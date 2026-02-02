@@ -22,13 +22,13 @@ bim::server::tests::test_client::test_client(
   m_authentication.connect_to_authenticated(
       [this](iscool::net::session_id session) -> void
       {
-        m_session = session;
+        this->session = session;
       });
 
   m_authentication.connect_to_error(
-      [](bim::net::authentication_error_code) -> void
+      [this](bim::net::authentication_error_code code) -> void
       {
-        EXPECT_TRUE(false);
+        authentication_error = code;
       });
 
   m_new_game.connect_to_launch_game(
@@ -42,17 +42,18 @@ bim::server::tests::test_client::~test_client() = default;
 
 void bim::server::tests::test_client::authenticate()
 {
-  EXPECT_FALSE(!!m_session);
+  session = std::nullopt;
+  authentication_error = std::nullopt;
 
   m_authentication.start();
 
-  for (int i = 0; (i != 10) && !m_session; ++i)
+  for (int i = 0; (i != 10) && !session; ++i)
     m_scheduler.tick(std::chrono::milliseconds(20));
 }
 
 void bim::server::tests::test_client::new_game()
 {
-  ASSERT_TRUE(!!m_session);
+  ASSERT_TRUE(!!session);
 
   m_message_channel.reset();
   m_game_update.reset();
@@ -66,19 +67,19 @@ void bim::server::tests::test_client::new_game()
         m_new_game.accept({});
       });
 
-  m_new_game.start(*m_session);
+  m_new_game.start(*session);
 }
 
 void bim::server::tests::test_client::launch_game(
     iscool::net::message_stream& stream,
     const bim::net::game_launch_event& event)
 {
-  EXPECT_TRUE(!!m_session);
+  EXPECT_TRUE(!!session);
 
   player_index = event.player_index;
 
   m_message_channel.reset(
-      new iscool::net::message_channel(stream, *m_session, event.channel));
+      new iscool::net::message_channel(stream, *session, event.channel));
   m_game_update.reset(new bim::net::game_update_exchange(
       *m_message_channel, event.fingerprint.player_count));
   contest.reset(new bim::game::contest(event.fingerprint, player_index));

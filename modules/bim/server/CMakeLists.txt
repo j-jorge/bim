@@ -16,6 +16,7 @@ add_library(bim_server
   main/src/bim/server/service/game_info.cpp
   main/src/bim/server/service/game_service.cpp
   main/src/bim/server/service/geolocation_service.cpp
+  main/src/bim/server/service/karma_service.cpp
   main/src/bim/server/service/lobby_service.cpp
   main/src/bim/server/service/matchmaking_service.cpp
   main/src/bim/server/service/named_game_encounter_service.cpp
@@ -41,6 +42,7 @@ add_executable(server-tests
   tests/src/bim/server/game_creation.cpp
   tests/src/bim/server/game_update.cpp
   tests/src/bim/server/hello.cpp
+  tests/src/bim/server/karma_blacklisting.cpp
   tests/src/bim/server/player_disconnection.cpp
   tests/src/bim/server/new_named_game.cpp
   tests/src/bim/server/new_game_after_game_over.cpp
@@ -48,6 +50,7 @@ add_executable(server-tests
 
   tests/src/bim/server/service/game_info.cpp
   tests/src/bim/server/service/game_service.cpp
+  tests/src/bim/server/service/karma_service.cpp
   tests/src/bim/server/service/statistics_service.cpp
 
   tests/src/bim/server/tests/client_server_simulator.cpp

@@ -2,6 +2,7 @@
 #pragma once
 
 #include <bim/server/service/geolocation_service.hpp>
+#include <bim/server/service/karma_service.hpp>
 
 #include <bim/net/message/client_token.hpp>
 #include <bim/net/message/hello_ok.hpp>
@@ -33,7 +34,9 @@ namespace bim::server
                            statistics_service& statistics);
     ~authentication_service();
 
-    void disconnect(iscool::net::session_id session);
+    void update_karma_disconnection(iscool::net::session_id session);
+    void update_karma_short_game(iscool::net::session_id session);
+    void update_karma_good_behavior(iscool::net::session_id session);
 
   private:
     using session_map =
@@ -50,18 +53,27 @@ namespace bim::server
 
     void check_authentication(const iscool::net::endpoint& endpoint,
                               const iscool::net::message& m);
+    void send_bad_protocol(const iscool::net::endpoint& endpoint,
+                           const std::string& client_ip_address,
+                           const bim::net::authentication& message);
+    void send_refused(const iscool::net::endpoint& endpoint,
+                      const std::string& client_ip_address,
+                      const bim::net::authentication& message);
+
     void check_hello(const iscool::net::endpoint& endpoint,
                      const iscool::net::message& m);
 
     void send_acknowledge_keep_alive(const iscool::net::endpoint& endpoint,
                                      iscool::net::session_id session);
 
-    void schedule_clean_up();
+    void disconnect(const client_map::iterator& it);
 
+    void schedule_clean_up();
     void clean_up();
 
   private:
     geolocation_service m_geoloc;
+    karma_service m_karma;
     statistics_service& m_statistics;
 
     const iscool::net::socket_stream& m_socket;

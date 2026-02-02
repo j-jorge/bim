@@ -54,6 +54,9 @@ namespace bim::server::tests
     void set_action(const bim::game::player_action& action);
 
   public:
+    std::optional<iscool::net::session_id> session;
+    std::optional<bim::net::authentication_error_code> authentication_error;
+
     std::optional<bool> started;
     std::unique_ptr<bim::net::contest_runner> contest_runner;
     std::unique_ptr<bim::game::contest> contest;
@@ -71,8 +74,6 @@ namespace bim::server::tests
     bim::net::new_game_exchange m_new_game;
     iscool::signals::connection m_game_proposal_connection;
     std::unique_ptr<iscool::net::message_channel> m_message_channel;
-
-    std::optional<iscool::net::session_id> m_session;
 
     std::unique_ptr<bim::net::game_update_exchange> m_game_update;
   };

@@ -29,7 +29,10 @@ bim::server::tests::client_server_simulator::~client_server_simulator() =
 void bim::server::tests::client_server_simulator::authenticate()
 {
   for (int i = 0; i != m_player_count; ++i)
-    clients[i].authenticate();
+    {
+      clients[i].authenticate();
+      EXPECT_TRUE(!!clients[i].session) << "i=" << i;
+    }
 }
 
 void bim::server::tests::client_server_simulator::join_game()
@@ -48,6 +51,9 @@ void bim::server::tests::client_server_simulator::join_game()
 
         return true;
       });
+
+  for (int i = 0; i != m_player_count; ++i)
+    EXPECT_TRUE(clients[i].is_in_game()) << "i=" << i;
 }
 
 void bim::server::tests::client_server_simulator::tick(
@@ -133,6 +139,13 @@ void bim::server::tests::client_server_simulator::tick(int client_index,
 void bim::server::tests::client_server_simulator::tick()
 {
   tick(bim::game::contest::tick_interval);
+}
+
+void bim::server::tests::client_server_simulator::wait(
+    std::chrono::milliseconds d)
+{
+  std::this_thread::sleep_for(std::chrono::seconds(0));
+  m_scheduler.tick(d);
 }
 
 void bim::server::tests::client_server_simulator::wait(

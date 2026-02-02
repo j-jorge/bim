@@ -21,6 +21,7 @@
 #include <iscool/schedule/manual_scheduler.hpp>
 #include <iscool/schedule/setup.hpp>
 
+#include <boost/numeric/conversion/cast.hpp>
 #include <boost/program_options.hpp>
 
 #include <cpptrace/cpptrace.hpp>
@@ -189,6 +190,12 @@ namespace
     using type = Rep;
   };
 
+  template <>
+  struct fundamental_type<std::int8_t>
+  {
+    using type = int;
+  };
+
   template <typename T>
   using fundamental_t = fundamental_type<T>::type;
 }
@@ -222,6 +229,11 @@ read_config_option(std::string name, T& value,
     value = true;
   else
     value = T(it->second.as<fundamental_t<T>>());
+}
+
+static int8_t parse_int8_arg(int v)
+{
+  return boost::numeric_cast<int8_t>(v);
 }
 
 static command_line parse_command_line(int argc, char* argv[])
@@ -289,6 +301,10 @@ static command_line parse_command_line(int argc, char* argv[])
       boost::program_options::value<std::int64_t>(),
       "How many seconds of inactivity (i.e. no message from the client) do we "
       "tolerate before disconnecting a client.");
+  config_options.add_options()(
+      "game-service-max-duration-for-short-game",
+      boost::program_options::value<std::int64_t>(),
+      "The duration in seconds under which the game over makes a short game.");
 
   config_options.add_options()(
       "enable-contest-timeline-recording",
@@ -327,6 +343,33 @@ static command_line parse_command_line(int argc, char* argv[])
   config_options.add_options()("geolocation-database-path",
                                boost::program_options::value<std::string>(),
                                "The path to the GeoIP database.");
+
+  config_options.add_options()("enable-karma",
+                               "Whether or not we should enable the karma "
+                               "service to filter incoming connections.");
+  config_options.add_options()(
+      "karma-blacklisting-duration",
+      boost::program_options::value<std::int64_t>(),
+      "How many minutes IPs with negative karma are blacklisted.");
+  config_options.add_options()(
+      "karma-review-interval", boost::program_options::value<std::int64_t>(),
+      "The interval in minutes between two reviews of the blacklisted IPs.");
+  config_options.add_options()(
+      "initial-karma-value",
+      boost::program_options::value<int>()->notifier(&parse_int8_arg),
+      "Karma value assigned to new connections.");
+  config_options.add_options()(
+      "disconnection-karma-adjustment",
+      boost::program_options::value<int>()->notifier(&parse_int8_arg),
+      "Value added to the karma when a player is disconnected.");
+  config_options.add_options()(
+      "short-game-karma-adjustment",
+      boost::program_options::value<int>()->notifier(&parse_int8_arg),
+      "Value added to the karma when a player dies in a short game.");
+  config_options.add_options()(
+      "good-behavior-karma-adjustment",
+      boost::program_options::value<int>()->notifier(&parse_int8_arg),
+      "Value added to the karma when a player behaves correctly.");
 
   config_options.add_options()(
       "enable-statistics-log",
@@ -417,6 +460,7 @@ static command_line parse_command_line(int argc, char* argv[])
   parse_config_option(game_service_disconnection_lateness_threshold_in_ticks);
   parse_config_option(game_service_disconnection_earliness_threshold_in_ticks);
   parse_config_option(game_service_disconnection_inactivity_delay);
+  parse_config_option(game_service_max_duration_for_short_game);
 
   parse_config_option(enable_contest_timeline_recording);
 
@@ -438,6 +482,18 @@ static command_line parse_command_line(int argc, char* argv[])
       parse_config_option(geolocation_clean_up_interval);
       parse_config_option(geolocation_update_interval);
       parse_config_option(geolocation_database_path);
+    }
+
+  parse_config_option(enable_karma);
+
+  if (result.config.enable_karma)
+    {
+      parse_config_option(karma_blacklisting_duration);
+      parse_config_option(karma_review_interval);
+      parse_config_option(initial_karma_value);
+      parse_config_option(disconnection_karma_adjustment);
+      parse_config_option(short_game_karma_adjustment);
+      parse_config_option(good_behavior_karma_adjustment);
     }
 
   parse_config_option(enable_statistics_log);

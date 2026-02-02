@@ -7,6 +7,7 @@ namespace bim::net
 {
   enum class authentication_error_code : std::uint8_t
   {
-    bad_protocol = 1
+    bad_protocol = 1,
+    refused = 2
   };
 }

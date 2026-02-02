@@ -37,6 +37,30 @@
 
 static constexpr std::uint8_t g_crate_probability = 80;
 
+namespace
+{
+  enum class simulation_state
+  {
+    /// The simulation could not be updated.
+    frozen,
+
+    /**
+     * At least one tick of the simulation has been played and the game is not
+     * over.
+     */
+    playing,
+
+    /**
+     * At least one tick of the simulation has been played and the game is now
+     * over.
+     */
+    over,
+
+    /// The game was already over when the tick started.
+    flushing
+  };
+}
+
 struct bim::server::game_service::game
 {
   /*
@@ -108,14 +132,25 @@ public:
            - sessions.begin();
   }
 
+  simulation_state update()
+  {
+    const simulation_state result = drop_old_actions();
+    align_simulation_tick();
+
+    return result;
+  }
+
+private:
   /**
    * Remove from the action list all actions that have been confirmed by all
    * players. This updates the globally-confirmed state of the simulation.
    *
    * \return True if the simulation has been updated, false otherwise.
    */
-  bool drop_old_actions()
+  simulation_state drop_old_actions()
   {
+    // Offset is the number of ticks that have been processed by all active
+    // clients, since completed_tick_count_all.
     std::size_t offset = std::numeric_limits<std::size_t>::max();
 
     bim_assume(player_count >= 2);
@@ -136,10 +171,11 @@ public:
         }
 
     if (offset == 0)
-      return false;
+      return contest_result.still_running() ? simulation_state::frozen
+                                            : simulation_state::flushing;
 
     // Play the ticks reached by all players.
-    seal_player_actions(offset);
+    const bool game_over_reached = seal_player_actions(offset);
 
     // Actually remove the actions.
     for (std::uint8_t player_index = 0; player_index != player_count;
@@ -157,7 +193,13 @@ public:
 
     completed_tick_count_all += offset;
 
-    return true;
+    if (game_over_reached)
+      return simulation_state::over;
+
+    if (!contest_result.still_running())
+      return simulation_state::flushing;
+
+    return simulation_state::playing;
   }
 
   /**
@@ -184,9 +226,14 @@ public:
     simulation_tick = completed_tick_count_all + simulation_offset;
   }
 
-private:
-  void seal_player_actions(std::size_t count)
+  /**
+   * Run some ticks known to have been reached by all players.
+   * \param count The number of ticks to play.
+   */
+  bool seal_player_actions(std::size_t count)
   {
+    bool reached_game_over = false;
+
     for (std::size_t i = 0; i != count; ++i)
       {
         std::array<bim::game::player_action*, bim::game::g_max_player_count>
@@ -209,11 +256,14 @@ private:
 
         if (contest_result.still_running() && !tick_result.still_running())
           {
+            reached_game_over = true;
             contest_result = tick_result;
             game_over_tick = completed_tick_count_all + i;
             timeline_writer = {};
           }
       }
+
+    return reached_game_over;
   }
 
 public:
@@ -271,12 +321,14 @@ bim::server::game_service::game_service(const config& config,
                                         iscool::net::socket_stream& socket,
                                         authentication_service& authentication,
                                         statistics_service& statistics)
-  : m_statistics(statistics)
-  , m_message_stream(socket)
+  : m_message_stream(socket)
   , m_next_game_channel(1)
   , m_random(config.random_seed)
   , m_clean_up_interval(config.game_service_clean_up_interval)
   , m_authentication_service(authentication)
+  , m_statistics(statistics)
+  , m_max_duration_for_short_game(
+        config.game_service_max_duration_for_short_game)
   , m_disconnection_lateness_threshold_in_ticks(
         config.game_service_disconnection_lateness_threshold_in_ticks)
   , m_disconnection_earliness_threshold_in_ticks(
@@ -489,17 +541,35 @@ void bim::server::game_service::push_update(
   if (*tick_count != 0)
     queue_actions(*update, player_index, game);
 
-  const bool simulation_updated = game.drop_old_actions();
-  game.align_simulation_tick();
+  bool do_send_actions = true;
 
-  if (!simulation_updated)
-    check_drop_desynchronized_player(channel, game, now);
+  switch (game.update())
+    {
+    case simulation_state::frozen:
+      check_drop_desynchronized_player(channel, game, now);
+      break;
+    case simulation_state::playing:
+      break;
+    case simulation_state::over:
+      record_game_over(channel, game);
+      [[fallthrough]];
+    case simulation_state::flushing:
+      if (game.game_over_tick
+          <= game.completed_tick_count_per_player[player_index])
+        {
+          do_send_actions = false;
+          send_game_over(endpoint, session, channel, game);
+        }
+      break;
+    }
 
-  if (!game.contest_result.still_running()
-      && (game.game_over_tick
-          <= game.completed_tick_count_per_player[player_index]))
-    send_game_over(endpoint, session, channel, game);
-  else
+  // Keep sending the actions to the player to notify it about any updates,
+  // even if the game could not be updated. Even if one player is frozen we
+  // must keep them updated.
+  //
+  // Except if we sent the game over, in which case there's no need for an
+  // update of the other players.
+  if (do_send_actions)
     send_actions(endpoint, session, channel, player_index, game);
 }
 
@@ -659,6 +729,42 @@ void bim::server::game_service::send_actions(
   m_message_pool.release(s.id);
 }
 
+void bim::server::game_service::record_game_over(
+    iscool::net::channel_id channel, const game& game) const
+{
+  assert(!game.contest_result.still_running());
+
+  const int winner_index = game.contest_result.has_a_winner()
+                               ? game.contest_result.winning_player()
+                               : bim::game::g_max_player_count;
+  const iscool::net::session_id winner_session =
+      game.contest_result.has_a_winner() ? game.sessions[winner_index] : -1;
+
+  const std::chrono::seconds game_duration =
+      std::chrono::duration_cast<std::chrono::seconds>(
+          game.game_over_tick * bim::game::contest::tick_interval);
+
+  const bool short_game = game_duration < m_max_duration_for_short_game;
+
+  ic_log(iscool::log::nature::info(), "game_service",
+         "Game over, game_id={}, winner_index={}, winner_session={}, "
+         "ticks={}, duration={}, short={}.",
+         channel, winner_index, winner_session, game.game_over_tick,
+         game_duration, short_game);
+
+  if (short_game)
+    {
+      // In doubt, we do not update the karma of the winner.
+      for (int i = 0; i != game.player_count; ++i)
+        if (i != winner_index)
+          m_authentication_service.update_karma_short_game(game.sessions[i]);
+    }
+  else
+    for (int i = 0; i != game.player_count; ++i)
+      if (game.active[i])
+        m_authentication_service.update_karma_good_behavior(game.sessions[i]);
+}
+
 void bim::server::game_service::send_game_over(
     const iscool::net::endpoint& endpoint, iscool::net::session_id session,
     iscool::net::channel_id channel, const game& game)
@@ -668,10 +774,6 @@ void bim::server::game_service::send_game_over(
   const int winner_index = game.contest_result.has_a_winner()
                                ? game.contest_result.winning_player()
                                : bim::game::g_max_player_count;
-
-  ic_log(iscool::log::nature::info(), "game_service",
-         "Sending game over, session={}, game_id={}, winner={}.", session,
-         channel, winner_index);
 
   const bim::net::game_over message(winner_index);
   const iscool::net::message_pool::slot s = m_message_pool.pick_available();
@@ -694,7 +796,7 @@ void bim::server::game_service::check_drop_desynchronized_player(
                "lateness. No news since {}.",
                i, game.sessions[i], channel, m_disconnection_inactivity_delay);
         game.active[i] = false;
-        m_authentication_service.disconnect(game.sessions[i]);
+        m_authentication_service.update_karma_disconnection(game.sessions[i]);
       }
 
   std::array<int, bim::game::g_max_player_count> player_tick;
@@ -738,7 +840,7 @@ void bim::server::game_service::check_drop_desynchronized_player(
              second_slowest_tick - slowest_tick, second_slowest_tick,
              m_disconnection_lateness_threshold_in_ticks);
       game.active[i] = false;
-      m_authentication_service.disconnect(game.sessions[i]);
+      m_authentication_service.update_karma_disconnection(game.sessions[i]);
       return;
     }
 
@@ -758,7 +860,7 @@ void bim::server::game_service::check_drop_desynchronized_player(
              fastest_tick - second_fastest_tick, second_fastest_tick,
              m_disconnection_earliness_threshold_in_ticks);
       game.active[i] = false;
-      m_authentication_service.disconnect(game.sessions[i]);
+      m_authentication_service.update_karma_disconnection(game.sessions[i]);
     }
 }
 

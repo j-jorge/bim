@@ -34,6 +34,7 @@ static std::chrono::nanoseconds authentication_date_for_next_release()
 
 struct bim::server::authentication_service::client_info
 {
+  boost::asio::ip::address address;
   bim::net::client_token token;
   std::chrono::nanoseconds release_at_this_date;
 };
@@ -42,6 +43,7 @@ bim::server::authentication_service::authentication_service(
     const config& config, iscool::net::socket_stream& socket,
     statistics_service& statistics)
   : m_geoloc(config)
+  , m_karma(config)
   , m_statistics(statistics)
   , m_socket(socket)
   , m_message_stream(socket)
@@ -73,7 +75,7 @@ bim::server::authentication_service::authentication_service(
 
 bim::server::authentication_service::~authentication_service() = default;
 
-void bim::server::authentication_service::disconnect(
+void bim::server::authentication_service::update_karma_disconnection(
     iscool::net::session_id session)
 {
   const client_map::iterator it = m_clients.find(session);
@@ -84,10 +86,32 @@ void bim::server::authentication_service::disconnect(
   ic_log(iscool::log::nature::info(), "authentication_service",
          "Internal disconnection for session={}.", session);
 
-  m_sessions.erase(it->second.token);
-  m_clients.erase(it);
+  m_karma.disconnection(it->second.address);
+  disconnect(it);
+}
 
-  m_statistics.record_session_disconnected(1);
+void bim::server::authentication_service::update_karma_short_game(
+    iscool::net::session_id session)
+{
+  const client_map::iterator it = m_clients.find(session);
+
+  if (it == m_clients.end())
+    return;
+
+  if (m_karma.short_game(it->second.address)
+      == karma_service::update_result::kick_out)
+    disconnect(it);
+}
+
+void bim::server::authentication_service::update_karma_good_behavior(
+    iscool::net::session_id session)
+{
+  const client_map::iterator it = m_clients.find(session);
+
+  if (it == m_clients.end())
+    return;
+
+  m_karma.good_behavior(it->second.address);
 }
 
 void bim::server::authentication_service::check_session(
@@ -141,21 +165,17 @@ void bim::server::authentication_service::check_authentication(
   ic_log(iscool::log::nature::info(), "authentication_service",
          "Received authentication request from token {}.", token);
 
+  const std::string client_ip_address = endpoint.address().to_string();
+
   if (message->get_protocol_version() != bim::net::protocol_version)
     {
-      ic_log(iscool::log::nature::info(), "server",
-             "Authentication request from token {}: bad protocol {}.", token,
-             endpoint.address().to_string(), message->get_protocol_version());
+      send_bad_protocol(endpoint, client_ip_address, *message);
+      return;
+    }
 
-      const iscool::net::message_pool::slot s =
-          m_message_pool.pick_available();
-      bim::net::authentication_ko(
-          token, bim::net::authentication_error_code::bad_protocol)
-          .build_message(*s.value);
-
-      m_message_stream.send(endpoint, *s.value);
-      m_message_pool.release(s.id);
-
+  if (!m_karma.allowed(endpoint.address()))
+    {
+      send_refused(endpoint, client_ip_address, *message);
       return;
     }
 
@@ -166,20 +186,21 @@ void bim::server::authentication_service::check_authentication(
 
   std::tie(it, inserted) = m_sessions.emplace(token, session);
 
-  const geolocation_service::address_info address_info =
-      m_geoloc.lookup(endpoint.address().to_string());
-
-  ic_log(
-      iscool::log::nature::info(), "server",
-      "Attach session {} to token {}, id={}, country_code={}, country='{}'.",
-      it->second, token, address_info.id, address_info.country_code,
-      address_info.country);
-
   if (inserted)
     {
+      const geolocation_service::address_info address_info =
+          m_geoloc.lookup(client_ip_address);
+
+      ic_log(iscool::log::nature::info(), "authentication_service",
+             "Attach session {} to token {}, id={}, country_code={}, "
+             "country='{}'.",
+             it->second, token, address_info.id, address_info.country_code,
+             address_info.country);
+
       ++m_next_session_id;
 
-      client_info client{ .token = token,
+      client_info client{ .address = endpoint.address(),
+                          .token = token,
                           .release_at_this_date =
                               authentication_date_for_next_release() };
 
@@ -189,6 +210,45 @@ void bim::server::authentication_service::check_authentication(
 
   const iscool::net::message_pool::slot s = m_message_pool.pick_available();
   bim::net::authentication_ok(token, it->second).build_message(*s.value);
+
+  m_message_stream.send(endpoint, *s.value);
+  m_message_pool.release(s.id);
+}
+
+void bim::server::authentication_service::send_bad_protocol(
+    const iscool::net::endpoint& endpoint,
+    const std::string& client_ip_address,
+    const bim::net::authentication& message)
+{
+  const bim::net::client_token token = message.get_request_token();
+
+  ic_log(iscool::log::nature::info(), "authentication_service",
+         "Authentication request from token {}: bad protocol {}.", token,
+         client_ip_address, message.get_protocol_version());
+
+  const iscool::net::message_pool::slot s = m_message_pool.pick_available();
+  bim::net::authentication_ko(
+      token, bim::net::authentication_error_code::bad_protocol)
+      .build_message(*s.value);
+
+  m_message_stream.send(endpoint, *s.value);
+  m_message_pool.release(s.id);
+}
+
+void bim::server::authentication_service::send_refused(
+    const iscool::net::endpoint& endpoint,
+    const std::string& client_ip_address,
+    const bim::net::authentication& message)
+{
+  ic_log(iscool::log::nature::info(), "authentication_service",
+         "Authentication request from blacklisted IP {}.", client_ip_address);
+
+  const bim::net::client_token token = message.get_request_token();
+
+  const iscool::net::message_pool::slot s = m_message_pool.pick_available();
+  bim::net::authentication_ko(token,
+                              bim::net::authentication_error_code::refused)
+      .build_message(*s.value);
 
   m_message_stream.send(endpoint, *s.value);
   m_message_pool.release(s.id);
@@ -237,6 +297,15 @@ void bim::server::authentication_service::send_acknowledge_keep_alive(
   m_message_pool.release(s.id);
 }
 
+void bim::server::authentication_service::disconnect(
+    const client_map::iterator& it)
+{
+  m_sessions.erase(it->second.token);
+  m_clients.erase(it);
+
+  m_statistics.record_session_disconnected(1);
+}
+
 void bim::server::authentication_service::schedule_clean_up()
 {
   m_clean_up_connection = iscool::schedule::delayed_call(
@@ -258,8 +327,8 @@ void bim::server::authentication_service::clean_up()
        it != eit;)
     if (it->second.release_at_this_date <= now)
       {
-        ic_log(iscool::log::nature::info(), "server", "Disconnected {}.",
-               it->first);
+        ic_log(iscool::log::nature::info(), "authentication_service",
+               "Disconnected {}.", it->first);
         m_sessions.erase(it->second.token);
         it = m_clients.erase(it);
         ++disconnected_count;

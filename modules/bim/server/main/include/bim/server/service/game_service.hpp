@@ -75,6 +75,8 @@ namespace bim::server
                       iscool::net::session_id session,
                       iscool::net::channel_id channel,
                       std::size_t player_index, const game& game);
+    void record_game_over(iscool::net::channel_id channel,
+                          const game& game) const;
     void send_game_over(const iscool::net::endpoint& endpoint,
                         iscool::net::session_id session,
                         iscool::net::channel_id channel, const game& game);
@@ -88,7 +90,6 @@ namespace bim::server
     void clean_up(iscool::net::channel_id channel, const game& g);
 
   private:
-    statistics_service& m_statistics;
     iscool::net::message_stream m_message_stream;
     iscool::net::channel_id m_next_game_channel;
     game_map m_games;
@@ -100,6 +101,10 @@ namespace bim::server
 
     std::unique_ptr<contest_timeline_service> m_contest_timeline_service;
     authentication_service& m_authentication_service;
+    statistics_service& m_statistics;
+
+    const std::chrono::seconds m_max_duration_for_short_game;
+
     const int m_disconnection_lateness_threshold_in_ticks;
     const int m_disconnection_earliness_threshold_in_ticks;
     const std::chrono::seconds m_disconnection_inactivity_delay;
