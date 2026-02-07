@@ -23,6 +23,7 @@
 #include <iscool/files/file_exists.hpp>
 #include <iscool/files/read_file.hpp>
 #include <iscool/i18n/load_translations.hpp>
+#include <iscool/json/cast_bool.hpp>
 #include <iscool/json/cast_string.hpp>
 #include <iscool/json/from_file.hpp>
 #include <iscool/log/log.hpp>
@@ -156,9 +157,14 @@ void bim::axmol::app::loading_screen::load_translations()
                               {
                                 return selected_language == v.asCString();
                               }))
-        m_context.get_widget_context()->fonts.set_alias(
-            iscool::json::cast<std::string>(alias["font"]),
-            iscool::json::cast<std::string>(alias["substitute"]));
+        for (const Json::Value& substitution : alias["substitutions"])
+          {
+            m_context.get_widget_context()->fonts.set_alias(
+                iscool::json::cast<std::string>(substitution["font"]),
+                iscool::json::cast<std::string>(substitution["substitute"]),
+                iscool::json::cast<bool>(substitution["force-italics"],
+                                         false));
+          }
     }
 }
 

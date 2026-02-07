@@ -99,6 +99,20 @@
     },
     {
       "kind": "click",
+      "node": "overlay/language/client_container/list/view////ko_KR",
+      "event": "popup-shown"
+    },
+    {
+      "kind": "capture",
+      "file": "korean.png"
+    },
+    {
+      "kind": "click",
+      "node": "overlay/container/client_container/no_button",
+      "event": "popup-hidden"
+    },
+    {
+      "kind": "click",
       "node": "overlay/language/client_container/list/view////oc_FR",
       "event": "popup-shown"
     },

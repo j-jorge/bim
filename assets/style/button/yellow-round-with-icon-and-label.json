@@ -23,9 +23,20 @@
           }
         ],
 
+        "label-parent": [
+          {
+            "instantiate": "ax::Node",
+            "anchor-point.x": 0.5,
+            "anchor-point.y": 0.5,
+            "z-order": 10,
+            "rotation": -10
+          }
+        ],
+
         "label": [
           "font/bold-italic",
           {
+            "parent": "label-parent",
             "anchor-point.x": 0.5,
             "anchor-point.y": 0.5,
             "instantiate": "ax::Label",
@@ -36,9 +47,7 @@
             "outline.color": "cod-gray",
             "outline.size": 5,
             "align.horizontal": "center",
-            "overflow": "shrink",
-            "z-order": 10,
-            "rotation": -10
+            "overflow": "shrink"
           }
         ]
       }
@@ -59,13 +68,21 @@
           }
         ],
 
-        "label": [
+        "label-parent": [
           {
             "anchor.x": 0.5,
             "anchor.y": 0.5,
             "anchor.reference.x": 0.53,
             "anchor.reference.y": 0.25,
-            "width.percents": 120
+            "width.percents": 120,
+            "height.percents": 100
+          }
+        ],
+
+        "label": [
+          "layout/center",
+          {
+            "width.percents": 100
           }
         ]
       }

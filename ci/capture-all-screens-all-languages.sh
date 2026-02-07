@@ -111,7 +111,11 @@ function run_script()
 
 if [[ "${#languages[@]}" -eq 0 ]]
 then
-    languages=(br de en es fr it kab oc pt pt_BR tr uk)
+    readarray -t languages < \
+              <(find "$script_dir/../assets/i18n/" \
+                     -name "*.po" \
+                     -exec basename --suffix .po '{}' ';'
+               )
 fi
 
 for language in "${languages[@]}"

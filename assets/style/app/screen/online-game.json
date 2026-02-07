@@ -134,6 +134,7 @@
         "timer": [
           "font/fancy-regular",
           {
+            "font.substitutable": false,
             "anchor-point.x": 0.5,
             "anchor-point.y": 1,
             "font.size": 60,
@@ -145,6 +146,7 @@
         "bim": [
           "font/fancy-regular",
           {
+            "font.substitutable": false,
             "instantiate": "ax::Label",
             "anchor-point.x": 0,
             "anchor-point.y": 1,

@@ -1,11 +1,39 @@
 {
   "font-aliases": [
     {
-      "font": "font/LuckiestGuy-Regular.ttf",
       "languages": [
         "uk"
       ],
-      "substitute": "font/OpenSans-ExtraBold.ttf"
+      "substitutions": [
+        {
+          "font": "font/LuckiestGuy-Regular.ttf",
+          "substitute": "font/OpenSans-ExtraBold.ttf"
+        }
+      ]
+    },
+    {
+      "languages": [
+        "ko"
+      ],
+      "substitutions": [
+        {
+          "font": "font/LuckiestGuy-Regular.ttf",
+          "substitute": "font/BagelFatOne-Regular.ttf"
+        },
+        {
+          "font": "font/OpenSans-Regular.ttf",
+          "substitute": "font/NotoSansKR-Regular.ttf"
+        },
+        {
+          "font": "font/OpenSans-ExtraBold.ttf",
+          "substitute": "font/NotoSansKR-ExtraBold.ttf"
+        },
+        {
+          "font": "font/OpenSans-ExtraBoldItalic.ttf",
+          "substitute": "font/NotoSansKR-ExtraBold.ttf",
+          "force-italics": true
+        }
+      ]
     }
   ],
 

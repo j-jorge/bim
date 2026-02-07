@@ -14,7 +14,7 @@
       }
     ],
 
-    "label-path-in-button": "container/label",
+    "label-path-in-button": "container/label-parent/label",
 
     "widgets": [
       {
@@ -32,9 +32,20 @@
                   }
                 ],
 
+                "label-parent": [
+                  {
+                    "instantiate": "ax::Node",
+                    "anchor-point.x": 0,
+                    "anchor-point.y": 0,
+                    "z-order": 10,
+                    "rotation": -10
+                  }
+                ],
+
                 "label": [
                   "font/bold-italic",
                   {
+                    "parent": "label-parent",
                     "instantiate": "ax::Label",
                     "anchor-point.x": 0,
                     "anchor-point.y": 0,
@@ -42,8 +53,6 @@
                     "font.color": "white",
                     "outline.color": "cod-gray",
                     "outline.size": 7,
-                    "z-order": 10,
-                    "rotation": -10,
                     "text": "0"
                   }
                 ]
@@ -63,11 +72,20 @@
                   }
                 ],
 
+                "label-parent": [
+                  {
+                    "anchor.x": 0,
+                    "anchor.y": 0,
+                    "anchor.reference.x": 0.4,
+                    "anchor.reference.y": 0
+                  }
+                ],
+
                 "label": [
                   {
                     "anchor.x": 0,
                     "anchor.y": 0.2,
-                    "anchor.reference.x": 0.4,
+                    "anchor.reference.x": 0,
                     "anchor.reference.y": 0
                   }
                 ]

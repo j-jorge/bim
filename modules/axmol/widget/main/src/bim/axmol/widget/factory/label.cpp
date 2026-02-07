@@ -31,15 +31,26 @@ bim::axmol::ref_ptr<ax::Label> bim::axmol::widget::factory<ax::Label>::create(
       return ax::Label::create();
     }
 
-  const int outline_size = style.get_number("outline.size", 0);
-
   ax::TTFConfig ttf_config;
+  if (style.get_boolean("font.substitutable", true))
+    {
+      const bim::axmol::widget::font_catalog::resolve_result font =
+          context.fonts.resolve(*font_path);
+      ttf_config.fontFilePath = font.name;
+      ttf_config.italics =
+          font.force_italics || style.get_boolean("font.italics", false);
+    }
+  else
+    {
+      ttf_config.fontFilePath = *font_path;
+      ttf_config.italics = style.get_boolean("font.italics", false);
+    }
 
-  ttf_config.fontFilePath = context.fonts.resolve(*font_path);
+  const int outline_size = style.get_number("outline.size", 0);
+  ttf_config.outlineSize = outline_size;
+
   ttf_config.fontSize =
       style.get_number("font.size", 12) * context.device_scale;
-  ttf_config.outlineSize = outline_size;
-  ttf_config.italics = style.get_boolean("font.italics", false);
   ttf_config.bold = style.get_boolean("font.bold", false);
   ttf_config.underline = style.get_boolean("font.underline", false);
   ttf_config.strikethrough = style.get_boolean("font.strikethrough", false);

@@ -37,6 +37,8 @@ bim::app::user_language(const iscool::preferences::local_preferences& p)
       return iscool::language_name::it_IT;
     case iscool::iso_639_language_code::kab:
       return iscool::language_name::kab_DZ;
+    case iscool::iso_639_language_code::ko:
+      return iscool::language_name::ko_KR;
     case iscool::iso_639_language_code::oc:
       return iscool::language_name::oc_FR;
     case iscool::iso_639_language_code::pt:

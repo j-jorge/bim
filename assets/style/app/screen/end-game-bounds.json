@@ -136,12 +136,21 @@
       }
     ],
 
-    "reward_label": [
+    "reward-label-parent": [
       {
         "anchor.x": 0.5,
         "anchor.y": 0.5,
         "anchor.reference.x": 0.5,
         "anchor.reference.y": 0.43
+      }
+    ],
+
+    "reward_label": [
+      {
+        "anchor.x": 0.5,
+        "anchor.y": 0.5,
+        "anchor.reference.x": 0.5,
+        "anchor.reference.y": 0.5
       }
     ],
 

@@ -3,6 +3,7 @@
 set -euo pipefail
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd)"
+languages=()
 
 function fail()
 {
@@ -20,6 +21,8 @@ OPTIONS
      Path to the build directory.
   --help, -h
      Display this message then exit.
+  --language LANGUAGE_CODE…
+     List of languages for which to generate the captures.
 EOF
 }
 
@@ -44,6 +47,19 @@ do
 
             build_dir="$1"
             shift
+            ;;
+        --language)
+            if (( $# == 0 ))
+            then
+                echo "Missing value for --language" >&2
+                exit 1
+            fi
+
+            while (( $# != 0 )) && [[ "$1" != --* ]]
+            do
+                languages+=("$1")
+                shift
+            done
             ;;
     esac
 done
@@ -120,18 +136,48 @@ function generate_captures()
     fi
 }
 
-generate_captures br br-FR
-generate_captures de de-DE
-generate_captures en en-US
-generate_captures es es-ES
-generate_captures fr fr-FR
-generate_captures it it-IT
-generate_captures kab kab-DZ
-generate_captures oc oc-FR
-generate_captures pt pt-PT
-generate_captures pt_BR pt-BR
-generate_captures tr tr-TR
-generate_captures uk uk-UA
+function generate_captures_for_directory()
+{
+    if [[ "$1" = "pt-BR" ]]
+    then
+        generate_captures pt_BR pt-BR
+    else
+        generate_captures "${1/-*/}" "$1"
+    fi
+}
+
+all_directories=(br-FR
+                 de-DE
+                 en-US
+                 es-ES
+                 fr-FR
+                 it-IT
+                 kab-DZ
+                 ko-KR
+                 oc-FR
+                 pt-PT
+                 pt-BR
+                 tr-TR
+                 uk-UA
+                )
+
+if [[ "${#languages[@]}" -eq 0 ]]
+then
+    for d in "${all_directories[@]}"
+    do
+        generate_captures_for_directory "$d"
+    done
+else
+    for d in "${all_directories[@]}"
+    do
+        language_code="${d/-*/}"
+        if printf '%s' "${languages[@]}" \
+                | grep --quiet "^\($language_code\|$d\)\$"
+        then
+            generate_captures_for_directory "$d"
+        fi
+    done
+fi
 
 for s in "${failing[@]}"
 do

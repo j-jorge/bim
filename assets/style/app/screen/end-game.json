@@ -152,15 +152,27 @@
 
         "reward-label-icon": [
           {
+            "parent": "reward-label-parent",
             "instantiate": "ax::Sprite",
             "frame": "sprites/menu/wallet-coin.png",
             "z-order": 10
           }
         ],
 
+        "reward-label-parent": [
+          {
+            "instantiate": "ax::Node",
+            "anchor-point.x": 0,
+            "anchor-point.y": 0,
+            "z-order": 20,
+            "rotation": -10
+          }
+        ],
+
         "reward_label": [
           "font/bold-italic",
           {
+            "parent": "reward-label-parent",
             "instantiate": "ax::Label",
             "anchor-point.x": 0,
             "anchor-point.y": 0,
@@ -168,9 +180,8 @@
             "font.color": "white",
             "outline.color": "cod-gray",
             "outline.size": 7,
-            "z-order": 20,
-            "rotation": -10,
-            "text": "0"
+            "text": "0",
+            "z-order": 20
           }
         ],
 

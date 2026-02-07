@@ -10,12 +10,26 @@ namespace bim::axmol
     class font_catalog
     {
     public:
-      const std::string& resolve(const std::string& name) const;
+      struct resolve_result
+      {
+        const std::string& name;
+        bool force_italics;
+      };
 
-      void set_alias(const std::string& key, const std::string& font);
+    public:
+      font_catalog();
+      ~font_catalog();
+
+      resolve_result resolve(const std::string& name) const;
+
+      void set_alias(const std::string& key, const std::string& font,
+                     bool force_italics);
 
     private:
-      using alias_map = boost::unordered_flat_map<std::string, std::string>;
+      struct entry;
+
+    private:
+      using alias_map = boost::unordered_flat_map<std::string, entry>;
 
     private:
       alias_map m_alias;

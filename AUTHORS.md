@@ -1,43 +1,66 @@
+static-assets/font/BagelFatOne-Regular.ttf
+The Bagel Fat Project Authors, adjusted by Julien Jorge.
+SIL Open Font License 1.1.
+
+static-assets/font/NotoSansKR-Regular.ttf
+static-assets/font/NotoSansKR-ExtraBold.ttf
+Adobe.
+SIL Open Font License 1.1.
+
 static-assets/font/LuckiestGuy-Regular.ttf
 Astigmatic, adjusted by Julien Jorge.
-Apache 2.0
+Apache 2.0.
 
 static-assets/font/OpenSans-ExtraBold.ttf
 static-assets/font/OpenSans-ExtraBoldItalic.ttf
 static-assets/font/OpenSans-Regular.ttf
-Steve Matteson
-Open Font License 1.1
+Steve Matteson.
+Open Font License 1.1.
 
 assets/i18n/br.po
-CC-BY-SA 4.0 Anna Al Lae, Fulup Travers, via Weblate.
+Anna Al Lae, Fulup Travers, via Weblate.
+CC-BY-SA 4.0.
 
 assets/i18n/de.po
-CC-BY-SA 4.0 Mirko P., via Weblate.
+Mirko P., via Weblate.
+CC-BY-SA 4.0.
 
 assets/i18n/it.po
 assets/i18n/es.po
-CC-BY-SA 4.0 Mariano Portal, via Weblate.
+Mariano Portal, via Weblate.
+CC-BY-SA 4.0.
 
 assets/i18n/fr.po
-CC-BY-SA 4.0 Julien Jorge, Quentin Pagès, via Weblate.
+Julien Jorge, Quentin Pagès, via Weblate.
+CC-BY-SA 4.0.
 
 assets/i18n/kab.po
-CC-BY-SA 4.0 ButterflyOfFire, via Weblate.
+ButterflyOfFire, via Weblate.
+CC-BY-SA 4.0.
+
+assets/i18n/ko.po
+Bruno Roh, via Weblate.
+CC-BY-SA 4.0
 
 assets/i18n/oc.po
-CC-BY-SA 4.0 Quentin Pagès, via Weblate.
+Quentin Pagès, via Weblate.
+CC-BY-SA 4.0.
 
 assets/i18n/pt.po
-CC-BY-SA 4.0 Silvério Santos, via Weblate.
+Silvério Santos, via Weblate.
+CC-BY-SA 4.0.
 
 assets/i18n/pt_BR.po
-CC-BY-SA 4.0 OlliesGudh, samuel0220, via Weblate.
+OlliesGudh, samuel0220, via Weblate.
+CC-BY-SA 4.0.
 
 assets/i18n/tr.po
-CC-BY-SA 4.0 AsetSiya, Metin, via Weblate.
+AsetSiya, Metin, via Weblate.
+CC-BY-SA 4.0.
 
 assets/i18n/uk.po
-CC-BY-SA 4.0 Максим Горпиніч, Andrij Mizyk, via Weblate.
+Максим Горпиніч, Andrij Mizyk, via Weblate.
+CC-BY-SA 4.0.
 
 assets/sprites/menu/language.png
 Based on https://commons.wikimedia.org/wiki/File:Codex_icon_language.svg
@@ -57,14 +80,14 @@ From https://commons.wikimedia.org/wiki/File:Silhouette_of_Woman_with_Short_Pigt
 CC0 1.0
 
 static-assets/audio/menu.ogg
-shiru8bit
+shiru8bit.
 From https://opengameart.org/content/8-bit-chiptune-spring-came
 CC-BY 3.0
 
 assets/sprites/menu/audio.png
 assets/sprites/menu/gamepad.png
 assets/sprites/menu/joystick.png
-Kenney.nl
+Kenney.nl.
 From https://opengameart.org/content/game-icons
 CC0
 
@@ -106,8 +129,8 @@ assets/sprites/crate.png
 assets/sprites/flame-arm.png
 assets/sprites/flame-center.png
 assets/sprites/flame-end.png
-Aryeom
-CC-BY-SA 4.0
+Aryeom.
+CC-BY-SA 4.0.
 
 assets/sprites/player/1-walk-back-0-4.png
 assets/sprites/player/1-walk-back-1-3-m5-m7.png
@@ -165,8 +188,8 @@ assets/sprites/player/burned-4.png
 assets/sprites/player/burned-5.png
 assets/sprites/player/burned-8.png
 assets/sprites/player/burned-9.png
-Julien Jorge, based on the work of Aryeom
-CC-BY-SA 4.0
+Julien Jorge, based on the work of Aryeom.
+CC-BY-SA 4.0.
 
 assets/i18n/en.po
 assets/sprites/arena-border.png
@@ -417,5 +440,5 @@ metadata/en-US/images/icon.png
 static-assets/audio/tick.ogg
 static-assets/texture/carbon.png
 static-assets/texture/grass.png
-Julien Jorge
-CC-BY-SA 4.0
+Julien Jorge.
+CC-BY-SA 4.0.

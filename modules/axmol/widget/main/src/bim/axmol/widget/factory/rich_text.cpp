@@ -2,6 +2,7 @@
 #include <bim/axmol/widget/factory/rich_text.hpp>
 
 #include <bim/axmol/widget/context.hpp>
+#include <bim/axmol/widget/font_catalog.hpp>
 #include <bim/axmol/widget/log_context.hpp>
 
 #include <bim/axmol/style/apply_display.hpp>
@@ -27,15 +28,20 @@ bim::axmol::widget::factory<ax::ui::RichText>::create(
   const iscool::optional<const std::string&> font_path =
       style.get_string("font.file");
 
-  if (font_path)
-    defaults[ax::ui::RichText::KEY_FONT_FACE] = *font_path;
-  else
-    ic_log(iscool::log::nature::error(), g_log_context, "Missing font.");
+  if (!font_path)
+    {
+      ic_log(iscool::log::nature::error(), g_log_context, "Missing font.");
+      return ax::ui::RichText::create();
+    }
 
+  const bim::axmol::widget::font_catalog::resolve_result font =
+      context.fonts.resolve(*font_path);
+
+  defaults[ax::ui::RichText::KEY_FONT_FACE] = font.name;
   defaults[ax::ui::RichText::KEY_FONT_SIZE] =
       style.get_number("font.size", 12) * context.device_scale;
   defaults[ax::ui::RichText::KEY_TEXT_ITALIC] =
-      style.get_boolean("font.italics", false);
+      font.force_italics || style.get_boolean("font.italics", false);
   defaults[ax::ui::RichText::KEY_TEXT_BOLD] =
       style.get_boolean("font.bold", false);
 
