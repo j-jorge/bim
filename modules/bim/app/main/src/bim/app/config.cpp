@@ -86,11 +86,8 @@ static bool parse_server_list(bim::app::config& result,
   else if (!default_host.empty())
     result.game_server = std::move(default_host);
   else
-    {
-      ic_log(iscool::log::nature::warning(), "config",
-             "No game server configured.");
-      return false;
-    }
+    ic_log(iscool::log::nature::warning(), "config",
+           "No game server configured.");
 
   return true;
 }
