@@ -238,6 +238,8 @@ static int8_t parse_int8_arg(int v)
 
 static command_line parse_command_line(int argc, char* argv[])
 {
+  boost::program_options::options_description all_options;
+
   boost::program_options::options_description general_options("Options");
   general_options.add_options()("console-log",
                                 "Display logs in the terminal.");
@@ -250,6 +252,7 @@ static command_line parse_command_line(int argc, char* argv[])
                                 "Load the server config from this file.");
   general_options.add_options()("version",
                                 "Display the version number and exit.");
+  all_options.add(general_options);
 
   boost::program_options::options_description hidden_options("Options");
   hidden_options.add_options()(
@@ -257,8 +260,10 @@ static command_line parse_command_line(int argc, char* argv[])
       "Force a crash of the application for testing purposes.");
   hidden_options.add_options()(
       "testing-throw", "Throw an uncaught exception for testing purposes.");
+  all_options.add(hidden_options);
 
-  boost::program_options::options_description config_options("Config options");
+  boost::program_options::options_description config_options(
+      "General config options");
   config_options.add_options()(
       "port",
       boost::program_options::value<unsigned short>()->default_value(23899),
@@ -266,128 +271,151 @@ static command_line parse_command_line(int argc, char* argv[])
   config_options.add_options()(
       "name", boost::program_options::value<std::string>(),
       "The name of the server, as sent to the clients.");
-  config_options.add_options()(
+  all_options.add(config_options);
+
+  boost::program_options::options_description statistics_options(
+      "Statistics config options");
+  statistics_options.add_options()(
+      "enable-statistics-log",
+      "Whether or not we dump statistics about the players and the games.");
+  statistics_options.add_options()(
+      "enable-rolling-statistics",
+      "Whether or not we should enable the statistics on a rolling window.");
+  statistics_options.add_options()(
+      "statistics-dump-delay", boost::program_options::value<std::int64_t>(),
+      "How long we wait after a stat is changed to record it in the logs.");
+  statistics_options.add_options()(
+      "statistics-log-file", boost::program_options::value<std::string>(),
+      "Path to the folder where to store the server stats.");
+  all_options.add(statistics_options);
+
+  boost::program_options::options_description session_options(
+      "Session management config options");
+  session_options.add_options()(
       "session-clean-up-interval",
       boost::program_options::value<std::int64_t>(),
       "Time interval at which we check and remove inactive sessions.");
-  config_options.add_options()(
+  session_options.add_options()(
       "session-removal-delay", boost::program_options::value<std::int64_t>(),
       "Inactivity delay after which a session becomes eligible for removal.");
-  config_options.add_options()(
-      "matchmaking-clean-up-interval",
-      boost::program_options::value<std::int64_t>(),
-      "Time interval in seconds at which we remove the "
-      "encounters from the matchmaking.");
-  config_options.add_options()(
-      "random-game-auto-start-delay",
-      boost::program_options::value<std::int64_t>(),
-      "How long to wait for the players to be ready before automatically"
-      " launching a random game, in seconds.");
-  config_options.add_options()(
-      "game-service-clean-up_interval",
-      boost::program_options::value<std::int64_t>(),
-      "Time interval at which we remove the games for which no activity has"
-      " been observed, in seconds.");
-  config_options.add_options()(
-      "game-service-disconnection-lateness-threshold-in-ticks",
-      boost::program_options::value<int>(),
-      "How many ticks behind the second slowest client can the slowest client"
-      " be before being disconnected.");
-  config_options.add_options()(
-      "game-service-disconnection-earliness-threshold-in-ticks",
-      boost::program_options::value<int>(),
-      "How many ticks ahead of the second fastest client can the fastest "
-      "client be before being disconnected.");
-  config_options.add_options()(
-      "game-service-disconnection-inactivity-delay",
-      boost::program_options::value<std::int64_t>(),
-      "How many seconds of inactivity (i.e. no message from the client) do we "
-      "tolerate before disconnecting a client.");
-  config_options.add_options()(
-      "game-service-max-duration-for-short-game",
-      boost::program_options::value<std::int64_t>(),
-      "The duration in seconds under which the game over makes a short game.");
+  all_options.add(session_options);
 
-  config_options.add_options()(
-      "enable-contest-timeline-recording",
-      "Tells if we record the games played in this server. "
-      "The games are saved in --contest-timeline-folder.");
-  config_options.add_options()(
-      "contest-timeline-folder", boost::program_options::value<std::string>(),
-      "Path to the folder where to store the contest timelines.");
+  boost::program_options::options_description karma_options(
+      "Karma config options");
+  karma_options.add_options()("enable-karma",
+                              "Whether or not we should enable the karma "
+                              "service to filter incoming connections.");
+  karma_options.add_options()(
+      "karma-blacklisting-duration",
+      boost::program_options::value<std::int64_t>(),
+      "How many minutes IPs with negative karma are blacklisted.");
+  karma_options.add_options()(
+      "karma-review-interval", boost::program_options::value<std::int64_t>(),
+      "The interval in minutes between two reviews of the blacklisted IPs.");
+  karma_options.add_options()(
+      "initial-karma-value",
+      boost::program_options::value<int>()->notifier(&parse_int8_arg),
+      "Karma value assigned to new connections.");
+  karma_options.add_options()(
+      "disconnection-karma-adjustment",
+      boost::program_options::value<int>()->notifier(&parse_int8_arg),
+      "Value added to the karma when a player is disconnected.");
+  karma_options.add_options()(
+      "short-game-karma-adjustment",
+      boost::program_options::value<int>()->notifier(&parse_int8_arg),
+      "Value added to the karma when a player dies in a short game.");
+  karma_options.add_options()(
+      "good-behavior-karma-adjustment",
+      boost::program_options::value<int>()->notifier(&parse_int8_arg),
+      "Value added to the karma when a player behaves correctly.");
+  all_options.add(karma_options);
 
-  config_options.add_options()(
-      "enable-discord-matchmaking-notifications",
-      "Whether or not we send notifications to a Discord channel when players "
-      "are waiting for a random opponent.");
-  config_options.add_options()("discord-matchmaking-notification-interval",
-                               boost::program_options::value<std::int64_t>(),
-                               "Interval in seconds between two messages sent "
-                               "to --discord-matchmaking-notification-url.");
-  config_options.add_options()("discord-matchmaking-notification-url",
-                               boost::program_options::value<std::string>(),
-                               "Discord endpoint where to send a message when "
-                               "a player is waiting for a random opponent");
-
-  config_options.add_options()("enable-geolocation",
-                               "Whether or not we use IP geolocation.");
-  config_options.add_options()(
+  boost::program_options::options_description geolocation_options(
+      "Geolocation config options");
+  geolocation_options.add_options()("enable-geolocation",
+                                    "Whether or not we use IP geolocation.");
+  geolocation_options.add_options()(
       "geolocation-clean-up-interval",
       boost::program_options::value<std::int64_t>(),
       "How many seconds after the last request for a given "
       "IP to be removed from the geolocation service. The "
       "IP will receive a new ID on the next request.");
-  config_options.add_options()(
+  geolocation_options.add_options()(
       "geolocation-update-interval",
       boost::program_options::value<std::int64_t>(),
       "Interval in seconds at which we reopen the GeoIP "
       "database, to get fresh data.");
-  config_options.add_options()("geolocation-database-path",
-                               boost::program_options::value<std::string>(),
-                               "The path to the GeoIP database.");
+  geolocation_options.add_options()(
+      "geolocation-database-path",
+      boost::program_options::value<std::string>(),
+      "The path to the GeoIP database.");
+  all_options.add(geolocation_options);
 
-  config_options.add_options()("enable-karma",
-                               "Whether or not we should enable the karma "
-                               "service to filter incoming connections.");
-  config_options.add_options()(
-      "karma-blacklisting-duration",
+  boost::program_options::options_description matchmaking_options(
+      "Matchmaking config options");
+  matchmaking_options.add_options()(
+      "matchmaking-clean-up-interval",
       boost::program_options::value<std::int64_t>(),
-      "How many minutes IPs with negative karma are blacklisted.");
-  config_options.add_options()(
-      "karma-review-interval", boost::program_options::value<std::int64_t>(),
-      "The interval in minutes between two reviews of the blacklisted IPs.");
-  config_options.add_options()(
-      "initial-karma-value",
-      boost::program_options::value<int>()->notifier(&parse_int8_arg),
-      "Karma value assigned to new connections.");
-  config_options.add_options()(
-      "disconnection-karma-adjustment",
-      boost::program_options::value<int>()->notifier(&parse_int8_arg),
-      "Value added to the karma when a player is disconnected.");
-  config_options.add_options()(
-      "short-game-karma-adjustment",
-      boost::program_options::value<int>()->notifier(&parse_int8_arg),
-      "Value added to the karma when a player dies in a short game.");
-  config_options.add_options()(
-      "good-behavior-karma-adjustment",
-      boost::program_options::value<int>()->notifier(&parse_int8_arg),
-      "Value added to the karma when a player behaves correctly.");
+      "Time interval in seconds at which we remove the "
+      "encounters from the matchmaking.");
+  matchmaking_options.add_options()(
+      "random-game-auto-start-delay",
+      boost::program_options::value<std::int64_t>(),
+      "How long to wait for the players to be ready before automatically"
+      " launching a random game, in seconds.");
 
-  config_options.add_options()(
-      "enable-statistics-log",
-      "Whether or not we dump statistics about the players and the games.");
-  config_options.add_options()(
-      "enable-rolling-statistics",
-      "Whether or not we should enable the statistics on a rolling window.");
-  config_options.add_options()(
-      "statistics-dump-delay", boost::program_options::value<std::int64_t>(),
-      "How long we wait after a stat is changed to record it in the logs.");
-  config_options.add_options()(
-      "statistics-log-file", boost::program_options::value<std::string>(),
-      "Path to the folder where to store the server stats.");
+  matchmaking_options.add_options()(
+      "enable-discord-matchmaking-notifications",
+      "Whether or not we send notifications to a Discord channel when players "
+      "are waiting for a random opponent.");
+  matchmaking_options.add_options()(
+      "discord-matchmaking-notification-interval",
+      boost::program_options::value<std::int64_t>(),
+      "Interval in seconds between two messages sent "
+      "to --discord-matchmaking-notification-url.");
+  matchmaking_options.add_options()(
+      "discord-matchmaking-notification-url",
+      boost::program_options::value<std::string>(),
+      "Discord endpoint where to send a message when "
+      "a player is waiting for a random opponent");
+  all_options.add(matchmaking_options);
 
-  boost::program_options::options_description all_options;
-  all_options.add(general_options).add(config_options).add(hidden_options);
+  boost::program_options::options_description game_options(
+      "Game config options");
+  game_options.add_options()(
+      "game-service-clean-up_interval",
+      boost::program_options::value<std::int64_t>(),
+      "Time interval at which we remove the games for which no activity has"
+      " been observed, in seconds.");
+  game_options.add_options()(
+      "game-service-disconnection-lateness-threshold-in-ticks",
+      boost::program_options::value<int>(),
+      "How many ticks behind the second slowest client can the slowest client"
+      " be before being disconnected.");
+  game_options.add_options()(
+      "game-service-disconnection-earliness-threshold-in-ticks",
+      boost::program_options::value<int>(),
+      "How many ticks ahead of the second fastest client can the fastest "
+      "client be before being disconnected.");
+  game_options.add_options()(
+      "game-service-disconnection-inactivity-delay",
+      boost::program_options::value<std::int64_t>(),
+      "How many seconds of inactivity (i.e. no message from the client) do we "
+      "tolerate before disconnecting a client.");
+  game_options.add_options()(
+      "game-service-max-duration-for-short-game",
+      boost::program_options::value<std::int64_t>(),
+      "The duration in seconds under which the game over makes a short game.");
+
+  game_options.add_options()(
+      "enable-contest-timeline-recording",
+      "Tells if we record the games played in this server. "
+      "The games are saved in --contest-timeline-folder.");
+  game_options.add_options()(
+      "contest-timeline-folder", boost::program_options::value<std::string>(),
+      "Path to the folder where to store the contest timelines.");
+  all_options.add(game_options);
+
   boost::program_options::variables_map variables;
   boost::program_options::store(
       boost::program_options::command_line_parser(argc, argv)
@@ -400,7 +428,14 @@ static command_line parse_command_line(int argc, char* argv[])
   if (variables.count("help") != 0)
     {
       boost::program_options::options_description visible_options;
-      visible_options.add(general_options).add(config_options);
+      visible_options.add(general_options)
+          .add(config_options)
+          .add(statistics_options)
+          .add(session_options)
+          .add(karma_options)
+          .add(geolocation_options)
+          .add(matchmaking_options)
+          .add(game_options);
       std::cout << "Usage: " << argv[0] << " OPTIONS\n" << visible_options;
       return command_line{ .options = std::nullopt, .valid = true };
     }
