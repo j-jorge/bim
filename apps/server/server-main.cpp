@@ -267,10 +267,12 @@ static command_line parse_command_line(int argc, char* argv[])
       "name", boost::program_options::value<std::string>(),
       "The name of the server, as sent to the clients.");
   config_options.add_options()(
-      "authentication-clean-up-interval",
+      "session-clean-up-interval",
       boost::program_options::value<std::int64_t>(),
-      "Time interval in seconds at which we remove the sessions from "
-      "the authentication.");
+      "Time interval at which we check and remove inactive sessions.");
+  config_options.add_options()(
+      "session-removal-delay", boost::program_options::value<std::int64_t>(),
+      "Inactivity delay after which a session becomes eligible for removal.");
   config_options.add_options()(
       "matchmaking-clean-up-interval",
       boost::program_options::value<std::int64_t>(),
@@ -282,7 +284,7 @@ static command_line parse_command_line(int argc, char* argv[])
       "How long to wait for the players to be ready before automatically"
       " launching a random game, in seconds.");
   config_options.add_options()(
-      "game_service_clean_up_interval",
+      "game-service-clean-up_interval",
       boost::program_options::value<std::int64_t>(),
       "Time interval at which we remove the games for which no activity has"
       " been observed, in seconds.");
@@ -453,7 +455,8 @@ static command_line parse_command_line(int argc, char* argv[])
 
   parse_config_option(port);
   parse_config_option(name);
-  parse_config_option(authentication_clean_up_interval);
+  parse_config_option(session_clean_up_interval);
+  parse_config_option(session_removal_delay);
   parse_config_option(matchmaking_clean_up_interval);
   parse_config_option(random_game_auto_start_delay);
   parse_config_option(game_service_clean_up_interval);

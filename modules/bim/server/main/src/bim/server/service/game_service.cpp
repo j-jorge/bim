@@ -2,9 +2,9 @@
 #include <bim/server/service/game_service.hpp>
 
 #include <bim/server/config.hpp>
-#include <bim/server/service/authentication_service.hpp>
 #include <bim/server/service/contest_timeline_service.hpp>
 #include <bim/server/service/game_info.hpp>
+#include <bim/server/service/session_service.hpp>
 #include <bim/server/service/statistics_service.hpp>
 
 #include <bim/net/message/game_over.hpp>
@@ -319,13 +319,13 @@ public:
 
 bim::server::game_service::game_service(const config& config,
                                         iscool::net::socket_stream& socket,
-                                        authentication_service& authentication,
+                                        session_service& session,
                                         statistics_service& statistics)
   : m_message_stream(socket)
   , m_next_game_channel(1)
   , m_random(config.random_seed)
   , m_clean_up_interval(config.game_service_clean_up_interval)
-  , m_authentication_service(authentication)
+  , m_session_service(session)
   , m_statistics(statistics)
   , m_max_duration_for_short_game(
         config.game_service_max_duration_for_short_game)
@@ -757,12 +757,12 @@ void bim::server::game_service::record_game_over(
       // In doubt, we do not update the karma of the winner.
       for (int i = 0; i != game.player_count; ++i)
         if (i != winner_index)
-          m_authentication_service.update_karma_short_game(game.sessions[i]);
+          m_session_service.update_karma_short_game(game.sessions[i]);
     }
   else
     for (int i = 0; i != game.player_count; ++i)
       if (game.active[i])
-        m_authentication_service.update_karma_good_behavior(game.sessions[i]);
+        m_session_service.update_karma_good_behavior(game.sessions[i]);
 }
 
 void bim::server::game_service::send_game_over(
@@ -796,7 +796,7 @@ void bim::server::game_service::check_drop_desynchronized_player(
                "lateness. No news since {}.",
                i, game.sessions[i], channel, m_disconnection_inactivity_delay);
         game.active[i] = false;
-        m_authentication_service.update_karma_disconnection(game.sessions[i]);
+        m_session_service.update_karma_disconnection(game.sessions[i]);
       }
 
   std::array<int, bim::game::g_max_player_count> player_tick;
@@ -840,7 +840,7 @@ void bim::server::game_service::check_drop_desynchronized_player(
              second_slowest_tick - slowest_tick, second_slowest_tick,
              m_disconnection_lateness_threshold_in_ticks);
       game.active[i] = false;
-      m_authentication_service.update_karma_disconnection(game.sessions[i]);
+      m_session_service.update_karma_disconnection(game.sessions[i]);
       return;
     }
 
@@ -860,7 +860,7 @@ void bim::server::game_service::check_drop_desynchronized_player(
              fastest_tick - second_fastest_tick, second_fastest_tick,
              m_disconnection_earliness_threshold_in_ticks);
       game.active[i] = false;
-      m_authentication_service.update_karma_disconnection(game.sessions[i]);
+      m_session_service.update_karma_disconnection(game.sessions[i]);
     }
 }
 

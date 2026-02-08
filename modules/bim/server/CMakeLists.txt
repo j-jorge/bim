@@ -21,6 +21,7 @@ add_library(bim_server
   main/src/bim/server/service/matchmaking_service.cpp
   main/src/bim/server/service/named_game_encounter_service.cpp
   main/src/bim/server/service/random_game_encounter_service.cpp
+  main/src/bim/server/service/session_service.cpp
   main/src/bim/server/service/statistics_service.cpp
 )
 
@@ -51,6 +52,7 @@ add_executable(server-tests
   tests/src/bim/server/service/game_info.cpp
   tests/src/bim/server/service/game_service.cpp
   tests/src/bim/server/service/karma_service.cpp
+  tests/src/bim/server/service/session_service.cpp
   tests/src/bim/server/service/statistics_service.cpp
 
   tests/src/bim/server/tests/client_server_simulator.cpp

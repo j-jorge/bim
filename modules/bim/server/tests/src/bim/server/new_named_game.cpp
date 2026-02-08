@@ -170,7 +170,14 @@ void new_game_test::client::send_accept_named_game(
 }
 
 new_game_test::new_game_test()
-  : m_config(bim::server::tests::new_test_config())
+  : m_config(
+        []()
+        {
+          bim::server::config config = bim::server::tests::new_test_config();
+          config.session_removal_delay = std::chrono::minutes(10);
+          config.session_clean_up_interval = std::chrono::minutes(3);
+          return config;
+        }())
   , m_server(m_config)
   , m_socket_stream("localhost:" + std::to_string(m_config.port),
                     iscool::net::socket_mode::client{})

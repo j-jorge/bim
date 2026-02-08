@@ -10,6 +10,8 @@
 #include <iscool/log/setup.hpp>
 #include <iscool/net/message_channel.hpp>
 
+#include <gtest/gtest.h>
+
 bim::server::tests::client_server_simulator::client_server_simulator(
     std::uint8_t player_count, const bim::server::config& config)
   : m_player_count(player_count)

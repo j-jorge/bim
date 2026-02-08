@@ -1,9 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #pragma once
 
-#include <bim/server/service/geolocation_service.hpp>
-#include <bim/server/service/karma_service.hpp>
-
 #include <bim/net/message/client_token.hpp>
 #include <bim/net/message/hello_ok.hpp>
 
@@ -20,6 +17,7 @@ namespace bim::net
 namespace bim::server
 {
   struct config;
+  class session_service;
   class statistics_service;
 
   class authentication_service
@@ -31,21 +29,9 @@ namespace bim::server
   public:
     authentication_service(const config& config,
                            iscool::net::socket_stream& socket,
+                           session_service& sessions,
                            statistics_service& statistics);
     ~authentication_service();
-
-    void update_karma_disconnection(iscool::net::session_id session);
-    void update_karma_short_game(iscool::net::session_id session);
-    void update_karma_good_behavior(iscool::net::session_id session);
-
-  private:
-    using session_map =
-        boost::unordered_map<bim::net::client_token, iscool::net::session_id>;
-
-    struct client_info;
-
-    using client_map =
-        boost::unordered_map<iscool::net::session_id, client_info>;
 
   private:
     void check_session(const iscool::net::endpoint& endpoint,
@@ -66,25 +52,12 @@ namespace bim::server
     void send_acknowledge_keep_alive(const iscool::net::endpoint& endpoint,
                                      iscool::net::session_id session);
 
-    void disconnect(const client_map::iterator& it);
-
-    void schedule_clean_up();
-    void clean_up();
-
   private:
-    geolocation_service m_geoloc;
-    karma_service m_karma;
+    session_service& m_session_service;
     statistics_service& m_statistics;
 
     const iscool::net::socket_stream& m_socket;
     iscool::net::message_stream m_message_stream;
-    iscool::net::session_id m_next_session_id;
-
-    session_map m_sessions;
-    client_map m_clients;
-
-    iscool::schedule::scoped_connection m_clean_up_connection;
-    std::chrono::seconds m_clean_up_interval;
 
     iscool::net::message_pool m_message_pool;
 

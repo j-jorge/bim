@@ -3,9 +3,9 @@
 #include <bim/server/tests/new_test_config.hpp>
 
 #include <bim/server/config.hpp>
-#include <bim/server/service/authentication_service.hpp>
 #include <bim/server/service/game_info.hpp>
 #include <bim/server/service/game_service.hpp>
+#include <bim/server/service/session_service.hpp>
 #include <bim/server/service/statistics_service.hpp>
 
 #include <iscool/net/socket_stream.hpp>
@@ -19,10 +19,9 @@ TEST(game_service, new_game)
   bim::server::statistics_service statistics(config);
 
   iscool::net::socket_stream socket_stream(12345);
-  bim::server::authentication_service authentication_service({}, socket_stream,
-                                                             statistics);
+  bim::server::session_service session_service(config, statistics);
 
-  bim::server::game_service service({}, socket_stream, authentication_service,
+  bim::server::game_service service({}, socket_stream, session_service,
                                     statistics);
   const bim::game::feature_flags features = (bim::game::feature_flags)42;
 

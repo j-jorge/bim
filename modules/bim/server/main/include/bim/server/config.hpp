@@ -18,9 +18,14 @@ namespace bim::server
     std::uint64_t random_seed;
 
     /**
-     * Time interval at which we remove the sessions from the authentication.
+     * Time interval at which we check and remove inactive sessions.
      */
-    std::chrono::seconds authentication_clean_up_interval;
+    std::chrono::seconds session_clean_up_interval;
+
+    /**
+     * Inactivity delay after which a session becomes eligible for removal.
+     */
+    std::chrono::seconds session_removal_delay;
 
     /**
      * Time interval at which we remove the encounters from the matchmaking.
