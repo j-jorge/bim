@@ -21,21 +21,16 @@ namespace iscool::net
   class message_channel;
 }
 
-namespace bim::game
-{
-  class contest_result;
-}
-
 namespace bim::net
 {
   class game_update_from_server;
+  struct contest_result;
 
   class game_update_exchange
   {
     DECLARE_VOID_SIGNAL(started, m_started)
     DECLARE_SIGNAL(void(const server_update&), updated, m_updated)
-    DECLARE_SIGNAL(void(const bim::game::contest_result&), game_over,
-                   m_game_over)
+    DECLARE_SIGNAL(void(const contest_result&), game_over, m_game_over)
 
   public:
     game_update_exchange(iscool::net::message_channel& channel,

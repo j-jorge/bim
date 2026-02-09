@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #pragma once
 
+#include <bim/server/service/game_reward_availability_fwd.hpp>
+
 #include <bim/net/message/client_token.hpp>
 #include <bim/net/message/encounter_id.hpp>
 
@@ -48,7 +50,8 @@ namespace bim::server
   public:
     matchmaking_service(const config& config,
                         iscool::net::socket_stream& socket,
-                        game_service& game_service);
+                        game_service& game_service,
+                        game_reward_availability reward_availability);
     ~matchmaking_service();
 
     bim::net::encounter_id new_encounter(const iscool::net::endpoint& endpoint,
@@ -110,6 +113,7 @@ namespace bim::server
   private:
     iscool::net::message_stream m_message_stream;
     game_service& m_game_service;
+    const game_reward_availability m_reward_availability;
 
     encounter_map m_encounters;
     bim::net::encounter_id m_next_encounter_id;

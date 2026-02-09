@@ -239,9 +239,6 @@ bim::app::config::config()
                                  + bim::net::protocol_version))
   , remote_config_update_interval(std::chrono::hours(1))
   , version_update_interval(std::chrono::days(1))
-  , coins_per_victory(50)
-  , coins_per_defeat(10)
-  , coins_per_draw(10)
   , discord_url("https://discord.gg/HqJtXB8Czy")
 {
   game_feature_price[bim::game::feature_flags::falling_blocks] = 50;
@@ -285,15 +282,6 @@ std::optional<bim::app::config> bim::app::load_config(const Json::Value& json)
     return std::nullopt;
 
   if (!parse_server_list(result, json["game-servers"]))
-    return std::nullopt;
-
-  if (!read_value(result.coins_per_victory, json, "coins-per-victory"))
-    return std::nullopt;
-
-  if (!read_value(result.coins_per_defeat, json, "coins-per-defeat"))
-    return std::nullopt;
-
-  if (!read_value(result.coins_per_draw, json, "coins-per-draw"))
     return std::nullopt;
 
   if (!parse_game_feature_prices(result, json, "game-feature-prices"))

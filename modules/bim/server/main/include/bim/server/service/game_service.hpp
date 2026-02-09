@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #pragma once
 
+#include <bim/server/service/game_reward_availability_fwd.hpp>
+
 #include <bim/game/constant/max_player_count.hpp>
 #include <bim/game/feature_flags_fwd.hpp>
 
@@ -43,7 +45,8 @@ namespace bim::server
     game_info
     new_game(std::uint8_t player_count, bim::game::feature_flags features,
              const std::array<iscool::net::session_id,
-                              bim::game::g_max_player_count>& sessions);
+                              bim::game::g_max_player_count>& sessions,
+             game_reward_availability reward_availability);
 
     void process(const iscool::net::endpoint& endpoint,
                  const iscool::net::message& message);
@@ -74,8 +77,7 @@ namespace bim::server
                       iscool::net::session_id session,
                       iscool::net::channel_id channel,
                       std::size_t player_index, const game& game);
-    void record_game_over(iscool::net::channel_id channel,
-                          const game& game) const;
+    void record_game_over(iscool::net::channel_id channel, game& game) const;
     void send_game_over(const iscool::net::endpoint& endpoint,
                         iscool::net::session_id session,
                         iscool::net::channel_id channel, const game& game);
@@ -107,6 +109,14 @@ namespace bim::server
     const int m_disconnection_lateness_threshold_in_ticks;
     const int m_disconnection_earliness_threshold_in_ticks;
     const std::chrono::seconds m_disconnection_inactivity_delay;
+
+    const std::uint16_t m_coins_per_victory;
+    const std::uint16_t m_coins_per_defeat;
+    const std::uint16_t m_coins_per_draw;
+
+    const std::uint16_t m_coins_per_short_game_victory;
+    const std::uint16_t m_coins_per_short_game_defeat;
+    const std::uint16_t m_coins_per_short_game_draw;
 
     iscool::net::message_pool m_message_pool;
   };

@@ -1,9 +1,10 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #pragma once
 
+#include <bim/net/contest_result.hpp>
+
 #include <bim/game/archive_storage.hpp>
 #include <bim/game/constant/max_player_count.hpp>
-#include <bim/game/contest_result.hpp>
 #include <bim/game/entity_world_map.hpp>
 #include <bim/game/tick_counter.hpp>
 
@@ -33,7 +34,7 @@ namespace bim::net
     std::uint32_t local_tick() const;
     std::uint32_t confirmed_tick() const;
 
-    bim::game::contest_result run(std::chrono::nanoseconds elapsed_wall_time);
+    contest_result run(std::chrono::nanoseconds elapsed_wall_time);
 
   private:
     struct history_entry;
@@ -76,6 +77,7 @@ namespace bim::net
     bim::game::archive_storage m_last_confirmed_archive;
     bim::game::entity_world_map m_last_confirmed_entity_map;
 
-    std::optional<bim::game::contest_result> m_contest_result;
+    std::optional<contest_result> m_contest_result;
+    std::uint16_t m_coins_reward;
   };
 }

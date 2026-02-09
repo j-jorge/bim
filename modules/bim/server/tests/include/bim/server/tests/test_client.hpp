@@ -3,6 +3,7 @@
 
 #include <bim/net/exchange/authentication_exchange.hpp>
 #include <bim/net/exchange/new_game_exchange.hpp>
+#include <bim/net/message/game_name.hpp>
 
 #include <bim/game/contest_result.hpp>
 
@@ -46,6 +47,7 @@ namespace bim::server::tests
 
     void authenticate();
     void new_game();
+    void new_game(const bim::net::game_name& name);
     void tick(std::chrono::nanoseconds d);
 
     bool is_in_game() const;
@@ -61,6 +63,7 @@ namespace bim::server::tests
     std::unique_ptr<bim::net::contest_runner> contest_runner;
     std::unique_ptr<bim::game::contest> contest;
     bim::game::contest_result result;
+    int coins_reward;
     int player_index;
 
   private:

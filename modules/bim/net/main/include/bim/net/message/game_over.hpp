@@ -9,6 +9,7 @@
 
 namespace bim::net
 {
-  DECLARE_RAW_MESSAGE(game_over, message_type::game_over,
-                      ((std::uint8_t)(winner_index)));
+  DECLARE_RAW_MESSAGE(
+      game_over, message_type::game_over,
+      ((std::uint8_t)(winner_index))((std::uint16_t)(coins_reward)));
 }

@@ -16,10 +16,11 @@ static void
 update_preferences_v0_to_v1(iscool::preferences::local_preferences& p,
                             const bim::app::config& config)
 {
-  // Version 1 introduced the coins for each completed game.
-  std::int64_t coins =
-      bim::app::victories_in_arena(p) * config.coins_per_victory
-      + bim::app::defeats_in_arena(p) * config.coins_per_defeat;
+  // Version 1 introduced the coins for each completed game. It was then
+  // decided by the game server and removed from the configuration. We apply
+  // the last used values here.
+  std::int64_t coins = bim::app::victories_in_arena(p) * 50
+                       + bim::app::defeats_in_arena(p) * 10;
 
   // Game features are purchased with coins.
   const bim::game::feature_flags features =

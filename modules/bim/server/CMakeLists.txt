@@ -41,6 +41,7 @@ endif()
 add_executable(server-tests
   tests/src/bim/server/authentication.cpp
   tests/src/bim/server/game_creation.cpp
+  tests/src/bim/server/game_reward.cpp
   tests/src/bim/server/game_update.cpp
   tests/src/bim/server/hello.cpp
   tests/src/bim/server/karma_blacklisting.cpp

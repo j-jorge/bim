@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/net/exchange/game_update_exchange.hpp>
 
+#include <bim/net/contest_result.hpp>
+
 #include <bim/net/message/game_over.hpp>
 #include <bim/net/message/game_update_from_server.hpp>
 #include <bim/net/message/ready.hpp>
@@ -8,7 +10,6 @@
 #include <bim/net/message/try_deserialize_message.hpp>
 
 #include <bim/game/constant/max_player_count.hpp>
-#include <bim/game/contest_result.hpp>
 
 #include <bim/assume.hpp>
 
@@ -244,9 +245,11 @@ void bim::net::game_update_exchange::dispatch_game_over(
     }
 
   const std::uint8_t winner = message->get_winner_index();
+  const std::uint16_t coins_reward = message->get_coins_reward();
 
   if (winner == bim::game::g_max_player_count)
-    m_game_over(bim::game::contest_result::create_draw());
+    m_game_over(contest_result{ bim::game::contest_result::create_draw(),
+                                coins_reward });
   else
     {
       if (winner >= m_player_count)
@@ -256,6 +259,7 @@ void bim::net::game_update_exchange::dispatch_game_over(
           return;
         }
 
-      m_game_over(bim::game::contest_result::create_game_over(winner));
+      m_game_over(contest_result{
+          bim::game::contest_result::create_game_over(winner), coins_reward });
     }
 }

@@ -28,10 +28,6 @@ namespace bim::app
     std::chrono::hours remote_config_update_interval;
     std::chrono::hours version_update_interval;
 
-    int coins_per_victory;
-    int coins_per_defeat;
-    int coins_per_draw;
-
     bim::bit_map<bim::game::feature_flags, std::int16_t> game_feature_price;
     std::int16_t game_feature_slot_price[g_game_feature_slot_count];
 

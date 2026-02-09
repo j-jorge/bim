@@ -36,12 +36,8 @@ namespace bim
   {
     class keep_alive_exchange;
     class session_handler;
+    struct contest_result;
     struct game_launch_event;
-  }
-
-  namespace game
-  {
-    class contest_result;
   }
 }
 
@@ -134,7 +130,7 @@ namespace bim::axmol::app
     void animate_matchmaking_to_game(const bim::net::game_launch_event& event);
     void animate_matchmaking_to_lobby();
 
-    void animate_game_to_end_game(const bim::game::contest_result& result);
+    void animate_game_to_end_game(const bim::net::contest_result& result);
     void animate_end_game_to_lobby();
     void animate_end_game_to_matchmaking();
 
@@ -155,7 +151,7 @@ namespace bim::axmol::app
     void display_online_game(const bim::net::game_launch_event& event);
     void online_game_displayed();
 
-    void display_end_game(const bim::game::contest_result& result);
+    void display_end_game(const bim::net::contest_result& result);
     void end_game_displayed();
 
     void display_shop();

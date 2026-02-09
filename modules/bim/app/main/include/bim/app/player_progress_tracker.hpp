@@ -3,9 +3,9 @@
 
 #include <cstdint>
 
-namespace bim::game
+namespace bim::net
 {
-  class contest_result;
+  struct contest_result;
 }
 
 namespace iscool::preferences
@@ -16,24 +16,21 @@ namespace iscool::preferences
 namespace bim::app
 {
   class analytics_service;
-  struct config;
 
   class player_progress_tracker
   {
   public:
     player_progress_tracker(
         analytics_service& analytics,
-        iscool::preferences::local_preferences& local_preferences,
-        const config& config);
+        iscool::preferences::local_preferences& local_preferences);
 
     ~player_progress_tracker();
 
-    void game_over_in_public_arena(const bim::game::contest_result& result,
+    void game_over_in_public_arena(const bim::net::contest_result& result,
                                    std::uint8_t local_player_index);
 
   private:
     analytics_service& m_analytics;
     iscool::preferences::local_preferences& m_preferences;
-    const config& m_config;
   };
 }

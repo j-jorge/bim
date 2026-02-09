@@ -18,16 +18,11 @@ namespace bim
   namespace app
   {
     class analytics_service;
-    struct config;
-  }
-
-  namespace game
-  {
-    class contest_result;
   }
 
   namespace net
   {
+    struct contest_result;
     struct game_launch_event;
   }
 }
@@ -57,7 +52,6 @@ namespace bim::axmol::app
             ((const bim::axmol::widget::context*)(widget_context))         //
             ((bim::app::analytics_service*)(analytics))                    //
             ((iscool::preferences::local_preferences*)(local_preferences)) //
-            ((const bim::app::config*)(config))                            //
             ),
         ic_context_no_properties);
 
@@ -69,7 +63,7 @@ namespace bim::axmol::app
     const bim::axmol::widget::named_node_group& display_nodes() const;
 
     void game_started(const bim::net::game_launch_event& event);
-    void displaying(const bim::game::contest_result& result);
+    void displaying(const bim::net::contest_result& result);
     void displayed();
     void closing();
 

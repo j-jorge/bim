@@ -12,11 +12,9 @@
 #include <bim/axmol/widget/ui/button.hpp>
 
 #include <bim/app/analytics/button_clicked.hpp>
-#include <bim/app/config.hpp>
 
+#include <bim/net/contest_result.hpp>
 #include <bim/net/exchange/game_launch_event.hpp>
-
-#include <bim/game/contest_result.hpp>
 
 #include <iscool/i18n/gettext.hpp>
 #include <iscool/signals/implement_signal.hpp>
@@ -89,29 +87,19 @@ void bim::axmol::app::end_game::game_started(
 }
 
 void bim::axmol::app::end_game::displaying(
-    const bim::game::contest_result& result)
+    const bim::net::contest_result& result)
 {
   const iscool::style::declaration* action_style;
-  int reward;
 
-  if (!result.has_a_winner())
-    {
-      action_style = &m_action_draw;
-      reward = m_context.get_config()->coins_per_draw;
-    }
-  else if (result.winning_player() == m_player_index)
-    {
-      action_style = &m_action_win;
-      reward = m_context.get_config()->coins_per_victory;
-    }
+  if (!result.game_result.has_a_winner())
+    action_style = &m_action_draw;
+  else if (result.game_result.winning_player() == m_player_index)
+    action_style = &m_action_win;
   else
-    {
-      action_style = &m_action_lose;
-      reward = m_context.get_config()->coins_per_defeat;
-    }
+    action_style = &m_action_lose;
 
   m_controls->reward_label->setString(
-      "+" + iscool::i18n::numeric::to_string(reward));
+      "+" + iscool::i18n::numeric::to_string(result.coins_reward));
   m_main_actions.stop();
 
   bim::axmol::widget::apply_actions(m_main_actions,

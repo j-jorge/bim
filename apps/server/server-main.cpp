@@ -406,6 +406,30 @@ static command_line parse_command_line(int argc, char* argv[])
       "game-service-max-duration-for-short-game",
       boost::program_options::value<std::int64_t>(),
       "The duration in seconds under which the game over makes a short game.");
+  game_options.add_options()(
+      "game-service-coins-per-victory",
+      boost::program_options::value<std::uint16_t>(),
+      "Coins reward for the winner of a game in random matchmaking.");
+  game_options.add_options()(
+      "game-service-coins-per-defeat",
+      boost::program_options::value<std::uint16_t>(),
+      "Coins reward for the losers of a game in random matchmaking.");
+  game_options.add_options()(
+      "game-service-coins-per-draw",
+      boost::program_options::value<std::uint16_t>(),
+      "Coins reward for all players of a draw game in random matchmaking.");
+  game_options.add_options()("game-service-coins-per-short-game-victory",
+                             boost::program_options::value<std::uint16_t>(),
+                             "Coins reward for the winner of a game in random "
+                             "matchmaking when the game was short.");
+  game_options.add_options()("game-service-coins-per-short-game-defeat",
+                             boost::program_options::value<std::uint16_t>(),
+                             "Coins reward for the losers of a game in random "
+                             "matchmaking when the game was short.");
+  game_options.add_options()("game-service-coins-per-short-game-draw",
+                             boost::program_options::value<std::uint16_t>(),
+                             "Coins reward for all players of a draw game in "
+                             "random matchmaking when the game was short.");
 
   game_options.add_options()(
       "enable-contest-timeline-recording",
@@ -499,6 +523,14 @@ static command_line parse_command_line(int argc, char* argv[])
   parse_config_option(game_service_disconnection_earliness_threshold_in_ticks);
   parse_config_option(game_service_disconnection_inactivity_delay);
   parse_config_option(game_service_max_duration_for_short_game);
+
+  parse_config_option(game_service_coins_per_victory);
+  parse_config_option(game_service_coins_per_defeat);
+  parse_config_option(game_service_coins_per_draw);
+
+  parse_config_option(game_service_coins_per_short_game_victory);
+  parse_config_option(game_service_coins_per_short_game_defeat);
+  parse_config_option(game_service_coins_per_short_game_draw);
 
   parse_config_option(enable_contest_timeline_recording);
 

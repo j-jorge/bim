@@ -86,9 +86,10 @@ struct bim::server::matchmaking_service::encounter_info
 
 bim::server::matchmaking_service::matchmaking_service(
     const config& config, iscool::net::socket_stream& socket,
-    game_service& game_service)
+    game_service& game_service, game_reward_availability reward_availability)
   : m_message_stream(socket)
   , m_game_service(game_service)
+  , m_reward_availability(reward_availability)
   , m_next_encounter_id(1)
   , m_clean_up_interval(config.matchmaking_clean_up_interval)
   , m_message_pool(64)
@@ -246,7 +247,8 @@ void bim::server::matchmaking_service::mark_as_ready(
                    m_random);
 
       game = m_game_service.new_game(encounter.player_count,
-                                     encounter.combine_features(), sessions);
+                                     encounter.combine_features(), sessions,
+                                     m_reward_availability);
       encounter.channel = game->channel;
 
       ic_log(iscool::log::nature::info(), "matchmaking_service",

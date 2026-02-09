@@ -27,8 +27,6 @@
 #include <bim/net/exchange/keep_alive_exchange.hpp>
 #include <bim/net/session_handler.hpp>
 
-#include <bim/game/contest_result.hpp>
-
 #include <iscool/i18n/gettext.hpp>
 #include <iscool/log/log.hpp>
 #include <iscool/log/nature/info.hpp>
@@ -64,8 +62,7 @@ bim::axmol::app::screen_wheel::screen_wheel(
   , m_controls(*context.get_widget_context(),
                *style.get_declaration("widgets"))
   , m_player_progress_tracker(new bim::app::player_progress_tracker(
-        *context.get_analytics(), *context.get_local_preferences(),
-        *context.get_config()))
+        *context.get_analytics(), *context.get_local_preferences()))
   , m_lobby(new lobby(context, *style.get_declaration("lobby")))
   , m_matchmaking(
         new matchmaking(context, *style.get_declaration("matchmaking")))
@@ -205,7 +202,7 @@ void bim::axmol::app::screen_wheel::wire_permanent_connections()
       });
 
   m_online_game->connect_to_game_over(
-      [this](const bim::game::contest_result& result)
+      [this](const bim::net::contest_result& result)
       {
         animate_game_to_end_game(result);
       });
@@ -378,7 +375,7 @@ void bim::axmol::app::screen_wheel::animate_matchmaking_to_lobby()
 }
 
 void bim::axmol::app::screen_wheel::animate_game_to_end_game(
-    const bim::game::contest_result& result)
+    const bim::net::contest_result& result)
 {
   m_inputs.erase(m_online_game->input_node());
   m_online_game->closing();
@@ -508,7 +505,7 @@ void bim::axmol::app::screen_wheel::online_game_displayed()
 }
 
 void bim::axmol::app::screen_wheel::display_end_game(
-    const bim::game::contest_result& result)
+    const bim::net::contest_result& result)
 {
   m_context.get_analytics()->screen(
       "end-game", { { "coins", std::to_string(bim::app::coins_balance(

@@ -70,6 +70,25 @@ void bim::server::tests::test_client::new_game()
   m_new_game.start(*session);
 }
 
+void bim::server::tests::test_client::new_game(const bim::net::game_name& name)
+{
+  ASSERT_TRUE(!!session);
+
+  m_message_channel.reset();
+  m_game_update.reset();
+  contest.reset();
+  started = std::nullopt;
+
+  m_game_proposal_connection = m_new_game.connect_to_game_proposal(
+      [this](int) -> void
+      {
+        m_game_proposal_connection.disconnect();
+        m_new_game.accept({});
+      });
+
+  m_new_game.start(*session, name);
+}
+
 void bim::server::tests::test_client::launch_game(
     iscool::net::message_stream& stream,
     const bim::net::game_launch_event& event)
@@ -110,7 +129,10 @@ void bim::server::tests::test_client::set_action(
 void bim::server::tests::test_client::tick(std::chrono::nanoseconds d)
 {
   ASSERT_NE(nullptr, contest_runner);
-  result = contest_runner->run(d);
+  const bim::net::contest_result r = contest_runner->run(d);
+
+  result = r.game_result;
+  coins_reward = r.coins_reward;
 }
 
 bool bim::server::tests::test_client::is_in_game() const

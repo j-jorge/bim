@@ -176,6 +176,12 @@ new_game_test::new_game_test()
           bim::server::config config = bim::server::tests::new_test_config();
           config.session_removal_delay = std::chrono::minutes(10);
           config.session_clean_up_interval = std::chrono::minutes(3);
+          config.game_service_coins_per_victory = 100;
+          config.game_service_coins_per_defeat = 200;
+          config.game_service_coins_per_draw = 300;
+          config.game_service_coins_per_short_game_victory = 10;
+          config.game_service_coins_per_short_game_defeat = 20;
+          config.game_service_coins_per_short_game_draw = 30;
           return config;
         }())
   , m_server(m_config)

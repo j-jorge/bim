@@ -34,7 +34,6 @@ namespace bim::axmol::widget
 namespace bim::game
 {
   class contest;
-  class contest_result;
   struct animation_state;
   struct fractional_position_on_grid;
   struct invisibility_state;
@@ -48,6 +47,7 @@ namespace bim::app
 
 namespace bim::net
 {
+  struct contest_result;
   class contest_runner;
   struct game_launch_event;
   class game_update_exchange;
@@ -94,7 +94,7 @@ namespace bim::axmol::app
 
   class online_game
   {
-    DECLARE_SIGNAL(void(const bim::game::contest_result&), game_over,
+    DECLARE_SIGNAL(void(const bim::net::contest_result&), game_over,
                    m_game_over)
 
     ic_declare_context(

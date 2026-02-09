@@ -41,6 +41,7 @@ namespace bim::server::tests
     iscool::net::message_stream m_message_stream;
 
   public:
+    const bim::server::config config;
     std::array<bim::server::tests::test_client, 4> clients;
   };
 }
