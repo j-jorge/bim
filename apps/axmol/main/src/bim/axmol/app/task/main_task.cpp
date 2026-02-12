@@ -283,6 +283,8 @@ void bim::axmol::app::main_task::connect_to_game_server()
 
   if (env_server)
     server_host = env_server;
+  else if (bim::built_for_developers)
+    server_host = "bim.jorge.st:30000";
   else
     server_host = m_config.game_server;
 
