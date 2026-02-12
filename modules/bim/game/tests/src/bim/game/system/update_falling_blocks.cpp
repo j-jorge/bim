@@ -96,7 +96,7 @@ TEST(bim_game_update_falling_blocks, triggers_the_bombs)
       bim::game::update_timers(registry, tick_duration);
       bim::game::update_falling_blocks(context, registry, entity_map);
       bim::game::trigger_crushed_timers(registry);
-      bim::game::update_bombs(registry, arena, entity_map);
+      bim::game::update_bombs(context, registry, arena, entity_map);
     }
 
   EXPECT_GE(bomb_timer.duration.count(), 0);

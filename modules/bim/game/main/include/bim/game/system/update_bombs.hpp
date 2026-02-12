@@ -6,8 +6,9 @@
 namespace bim::game
 {
   class arena;
+  class context;
   class entity_world_map;
 
-  void update_bombs(entt::registry& registry, arena& arena,
-                    entity_world_map& entity_map);
+  void update_bombs(const context& context, entt::registry& registry,
+                    arena& arena, entity_world_map& entity_map);
 }

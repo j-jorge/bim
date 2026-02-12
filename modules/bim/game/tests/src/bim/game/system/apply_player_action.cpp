@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/game/system/apply_player_action.hpp>
 
-#include <bim/game/animation/animation_catalog.hpp>
 #include <bim/game/arena.hpp>
 #include <bim/game/cell_edge.hpp>
 #include <bim/game/cell_neighborhood.hpp>
@@ -17,11 +16,11 @@
 #include <bim/game/context/context.hpp>
 #include <bim/game/context/fill_context.hpp>
 #include <bim/game/context/player_animations.hpp>
-#include <bim/game/context/register_player_animations.hpp>
 #include <bim/game/entity_world_map.hpp>
 #include <bim/game/factory/bomb.hpp>
 #include <bim/game/factory/crate.hpp>
 #include <bim/game/factory/player.hpp>
+#include <bim/game/system/animator.hpp>
 #include <bim/game/system/refresh_bomb_inventory.hpp>
 #include <bim/game/system/remove_dead_objects.hpp>
 #include <bim/game/system/update_bombs.hpp>
@@ -99,8 +98,7 @@ bim_game_apply_player_action_test::bim_game_apply_player_action_test()
   : m_arena(5, 5)
   , m_entity_map(m_arena.width(), m_arena.height())
 {
-  bim::game::animation_catalog animation_catalog;
-  bim::game::register_player_animations(m_context, animation_catalog);
+  bim::game::fill_context(m_context);
   m_player_animations = m_context.get<const bim::game::player_animations>();
 
   /*
@@ -857,7 +855,7 @@ TEST_F(bim_game_apply_player_action_test, drop_bomb_decreases_inventory)
       m_registry.storage<bim::game::timer>().get(bomb_entity);
   // Explode the bombs. The player should get his inventory back.
   bim::game::update_timers(m_registry, timer.duration);
-  bim::game::update_bombs(m_registry, m_arena, m_entity_map);
+  bim::game::update_bombs(m_context, m_registry, m_arena, m_entity_map);
   bim::game::remove_dead_objects(m_registry, m_entity_map);
   bim::game::refresh_bomb_inventory(m_registry);
   EXPECT_EQ(2, player.bomb_available);
@@ -1168,13 +1166,16 @@ TEST(bim_game_apply_player_action, cannot_walk_through_bombs)
 
   // Trigger the bomb.
   bim::game::update_timers(registry, std::chrono::milliseconds(12));
-  bim::game::update_bombs(registry, arena, entity_map);
+  bim::game::update_bombs(context, registry, arena, entity_map);
 
   // Update the flames until they disappear.
   for (int i = 0; i != 100; ++i)
     {
-      bim::game::update_timers(registry, std::chrono::milliseconds(12));
-      update_flames(registry, entity_map);
+      constexpr std::chrono::milliseconds d(12);
+
+      bim::game::update_timers(registry, d);
+      bim::game::animator(context, registry, d);
+      bim::game::update_flames(context, registry, entity_map);
       bim::game::remove_dead_objects(registry, entity_map);
 
       if (registry.storage<bim::game::flame>().empty())

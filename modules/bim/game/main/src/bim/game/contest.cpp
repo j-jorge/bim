@@ -247,9 +247,10 @@ bim::game::contest_result bim::game::contest::tick()
 
   run_system_s(trigger_crushed_timers, *m_registry);
 
-  run_system_s(update_bombs, *m_registry, *m_arena, *m_entity_world_map);
+  run_system_s(update_bombs, *m_context, *m_registry, *m_arena,
+               *m_entity_world_map);
 
-  run_system_s(update_flames, *m_registry, *m_entity_world_map);
+  run_system_s(update_flames, *m_context, *m_registry, *m_entity_world_map);
   run_system_s(update_invincibility_state, *m_registry);
   run_system_s(update_shields, *m_registry);
 

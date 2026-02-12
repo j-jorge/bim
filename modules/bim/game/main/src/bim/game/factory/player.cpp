@@ -6,7 +6,6 @@
 #include <bim/game/component/player.hpp>
 #include <bim/game/component/player_action_queue.hpp>
 #include <bim/game/component/shallow.hpp>
-#include <bim/game/component/timer.hpp>
 #include <bim/game/entity_world_map.hpp>
 
 #include <entt/entity/registry.hpp>

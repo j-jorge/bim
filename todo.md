@@ -1,6 +1,5 @@
 # Next
 
-- Animate the flames.
 - Animate the burning crates.
 - Display the game features in the output of bim-player.
 - Review the client's startup steps.

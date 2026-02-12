@@ -7,7 +7,9 @@
 
 namespace bim::game
 {
+  class context;
   class entity_world_map;
 
-  void update_flames(entt::registry& registry, entity_world_map& entity_map);
+  void update_flames(const context& context, entt::registry& registry,
+                     entity_world_map& entity_map);
 }

@@ -6,8 +6,10 @@
 #include <bim/axmol/input/tree.hpp>
 #include <bim/axmol/widget/declare_controls_struct.hpp>
 
+#include <bim/game/animation/animation_id.hpp>
 #include <bim/game/cell_edge_fwd.hpp>
 #include <bim/game/cell_neighborhood_fwd.hpp>
+#include <bim/game/component/flame_direction_fwd.hpp>
 
 #include <bim/bit_map.hpp>
 
@@ -19,7 +21,7 @@
 
 #include <entt/entity/fwd.hpp>
 
-#include <boost/unordered/unordered_map.hpp>
+#include <boost/unordered/unordered_flat_map.hpp>
 
 #include <array>
 #include <chrono>
@@ -27,6 +29,7 @@
 
 namespace bim::axmol::widget
 {
+  struct animation;
   class animation_cache;
   class context;
 }
@@ -124,6 +127,15 @@ namespace bim::axmol::app
   private:
     struct fence;
 
+    using flame_animation_map =
+        boost::unordered_flat_map<bim::game::animation_id,
+                                  const bim::axmol::widget::animation*>;
+    using flame_animation_per_direction =
+        std::array<flame_animation_map, bim::game::flame_direction_count>;
+    using flame_direction_per_segment =
+        std::array<flame_animation_per_direction,
+                   bim::game::flame_segment_count>;
+
   private:
     void create_power_up_shader(std::vector<ax::Sprite*>& sprites,
                                 ax::backend::Program& p);
@@ -204,6 +216,7 @@ namespace bim::axmol::app
     std::vector<ax::Sprite*> m_crates;
     std::vector<ax::Sprite*> m_bombs;
     std::vector<ax::Sprite*> m_flames;
+    flame_direction_per_segment m_flame_animations;
     std::vector<ax::Sprite*> m_bomb_power_ups;
     std::vector<ax::Sprite*> m_flame_power_ups;
     std::vector<ax::Sprite*> m_invisibility_power_ups;
@@ -216,10 +229,6 @@ namespace bim::axmol::app
     std::unique_ptr<fog_display> m_fog;
 
     std::vector<int> m_z_order;
-
-    const std::string m_flame_center_asset_name;
-    const std::string m_flame_arm_asset_name;
-    const std::string m_flame_end_asset_name;
 
     const float m_arena_width_in_blocks;
     arena_display_config m_display_config;

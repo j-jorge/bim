@@ -19,7 +19,8 @@
 
 #include <boost/container/static_vector.hpp>
 
-static bool burn(entt::registry& registry, const bim::game::arena& arena,
+static bool burn(const bim::game::context& context, entt::registry& registry,
+                 const bim::game::arena& arena,
                  bim::game::entity_world_map& entity_map, std::uint8_t x,
                  std::uint8_t y, bim::game::flame_direction direction,
                  bim::game::flame_segment segment)
@@ -31,19 +32,21 @@ static bool burn(entt::registry& registry, const bim::game::arena& arena,
   bool flames_go_through = true;
 
   for (const entt::entity entity : entities)
-    {
-      flames_go_through &=
-          registry.storage<bim::game::shallow>().contains(entity);
-      registry.emplace_or_replace<bim::game::burning>(entity);
-    }
+    if (!registry.storage<bim::game::shallow>().contains(entity))
+      {
+        flames_go_through = false;
+        registry.emplace_or_replace<bim::game::burning>(entity);
+        break;
+      }
 
   if (flames_go_through)
-    bim::game::flame_factory(registry, x, y, direction, segment);
+    bim::game::flame_factory(context, registry, x, y, direction, segment);
 
   return flames_go_through;
 }
 
-static void create_flames(entt::registry& registry,
+static void create_flames(const bim::game::context& context,
+                          entt::registry& registry,
                           const bim::game::arena& arena,
                           bim::game::entity_world_map& entity_map,
                           bim::game::position_on_grid p, std::uint8_t strength)
@@ -51,7 +54,7 @@ static void create_flames(entt::registry& registry,
   // On the left.
   for (std::uint8_t offset = 1; offset <= strength; ++offset)
     if ((p.x < offset)
-        || !burn(registry, arena, entity_map, p.x - offset, p.y,
+        || !burn(context, registry, arena, entity_map, p.x - offset, p.y,
                  bim::game::flame_direction::left,
                  (offset == strength) ? bim::game::flame_segment::tip
                                       : bim::game::flame_segment::arm))
@@ -61,7 +64,7 @@ static void create_flames(entt::registry& registry,
   for (std::uint8_t offset = 1, width = arena.width(); offset <= strength;
        ++offset)
     if ((p.x + offset == width)
-        || !burn(registry, arena, entity_map, p.x + offset, p.y,
+        || !burn(context, registry, arena, entity_map, p.x + offset, p.y,
                  bim::game::flame_direction::right,
                  (offset == strength) ? bim::game::flame_segment::tip
                                       : bim::game::flame_segment::arm))
@@ -70,7 +73,7 @@ static void create_flames(entt::registry& registry,
   // Above.
   for (std::uint8_t offset = 1; offset <= strength; ++offset)
     if ((p.y < offset)
-        || !burn(registry, arena, entity_map, p.x, p.y - offset,
+        || !burn(context, registry, arena, entity_map, p.x, p.y - offset,
                  bim::game::flame_direction::up,
                  (offset == strength) ? bim::game::flame_segment::tip
                                       : bim::game::flame_segment::arm))
@@ -80,14 +83,15 @@ static void create_flames(entt::registry& registry,
   for (std::uint8_t offset = 1, height = arena.height(); offset <= strength;
        ++offset)
     if ((p.y + offset == height)
-        || !burn(registry, arena, entity_map, p.x, p.y + offset,
+        || !burn(context, registry, arena, entity_map, p.x, p.y + offset,
                  bim::game::flame_direction::down,
                  (offset == strength) ? bim::game::flame_segment::tip
                                       : bim::game::flame_segment::arm))
       break;
 
   // Starting point, the direction does not matter.
-  bim::game::flame_factory(registry, p.x, p.y, bim::game::flame_direction::up,
+  bim::game::flame_factory(context, registry, p.x, p.y,
+                           bim::game::flame_direction::up,
                            bim::game::flame_segment::origin);
 
   // Put something where the bomb was, in order to stop the propagation of the
@@ -100,7 +104,8 @@ static void create_flames(entt::registry& registry,
   entity_map.put_entity(e, p.x, p.y);
 }
 
-void bim::game::update_bombs(entt::registry& registry, arena& arena,
+void bim::game::update_bombs(const context& context, entt::registry& registry,
+                             arena& arena,
                              bim::game::entity_world_map& entity_map)
 {
   registry.view<bomb, timer, burning>().each(
@@ -128,7 +133,8 @@ void bim::game::update_bombs(entt::registry& registry, arena& arena,
         if (t.duration.count() > 0)
           return;
 
-        create_flames(registry, arena, entity_map, position, b.strength);
+        create_flames(context, registry, arena, entity_map, position,
+                      b.strength);
         entity_map.erase_entity(e, position.x, position.y);
         registry.emplace_or_replace<dead>(e);
       });

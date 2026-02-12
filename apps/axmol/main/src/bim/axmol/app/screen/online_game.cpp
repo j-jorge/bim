@@ -6,6 +6,7 @@
 #include <bim/axmol/app/fog_display.hpp>
 #include <bim/axmol/app/widget/player.hpp>
 
+#include <bim/axmol/widget/animation/animation.hpp>
 #include <bim/axmol/widget/animation/animation_cache.hpp>
 #include <bim/axmol/widget/apply_bounds.hpp>
 #include <bim/axmol/widget/apply_display.hpp>
@@ -60,6 +61,7 @@
 #include <bim/game/contest.hpp>
 #include <bim/game/contest_fingerprint.hpp>
 #include <bim/game/context/context.hpp>
+#include <bim/game/context/flame_animations.hpp>
 #include <bim/game/context/player_animations.hpp>
 #include <bim/game/level_generation.hpp>
 #include <bim/game/player_action.hpp>
@@ -152,9 +154,6 @@ bim::axmol::app::online_game::online_game(
                     &*style.get_declaration("display.player-4") }
   , m_animation_cache(new bim::axmol::widget::animation_cache())
   , m_fog(new fog_display(context, *style.get_declaration("fog-display")))
-  , m_flame_center_asset_name(*style.get_string("flame-center-asset-name"))
-  , m_flame_arm_asset_name(*style.get_string("flame-arm-asset-name"))
-  , m_flame_end_asset_name(*style.get_string("flame-end-asset-name"))
   , m_arena_width_in_blocks(*style.get_number("arena-width-in-blocks"))
 {
   m_animation_cache->load("animations.json"sv);
@@ -400,6 +399,46 @@ void bim::axmol::app::online_game::displaying(
 
   for (int i = 0; i != player_count; ++i)
     m_players[i]->configure(*m_animation_cache, player_animations, i);
+
+  {
+    const bim::game::flame_animations& animations =
+        m_contest->context().get<const bim::game::flame_animations>();
+    const bim::game::animation_id ids[] = { animations.warm_up,
+                                            animations.burn,
+                                            animations.cool_down };
+    constexpr std::string_view id_names[] = { "warm_up", "burn", "cool_down" };
+    constexpr bim::game::flame_direction all_directions[] = {
+      bim::game::flame_direction::right, bim::game::flame_direction::down,
+      bim::game::flame_direction::left, bim::game::flame_direction::up
+    };
+    constexpr bim::game::flame_segment all_segments[] = {
+      bim::game::flame_segment::tip, bim::game::flame_segment::arm,
+      bim::game::flame_segment::origin
+    };
+
+    std::string buffer;
+    buffer.reserve(64);
+
+    for (bim::game::flame_segment s : all_segments)
+      for (bim::game::flame_direction d : all_directions)
+        {
+          m_flame_animations[(int)s][(int)d].clear();
+
+          for (std::size_t i = 0, n = std::size(ids); i != n; ++i)
+            {
+              buffer.clear();
+              buffer += "flame_";
+              buffer += bim::game::to_string(s);
+              buffer += '_';
+              buffer += bim::game::to_string(d);
+              buffer += '_';
+              buffer += id_names[i];
+
+              m_flame_animations[(int)s][(int)d][ids[i]] =
+                  &m_animation_cache->get(buffer);
+            }
+        }
+  }
 
   m_update_exchange.reset(
       new bim::net::game_update_exchange(*m_game_channel, player_count));
@@ -967,59 +1006,25 @@ void bim::axmol::app::online_game::display_flames()
   const entt::registry& registry = m_contest->registry();
   std::size_t asset_index = 0;
 
-  registry.view<bim::game::position_on_grid, bim::game::flame>().each(
-      [this, &asset_index](const bim::game::position_on_grid& p,
-                           const bim::game::flame& f) -> void
-      {
-        ax::Sprite& s = *m_flames[asset_index];
-        // Changing the sprite frame changes the sprite size, thus we must
-        // restore it ourselves.
-        ax::Vec2 size = s.getContentSize();
-
-        display_at(p.y, s,
-                   m_display_config.grid_position_to_displayed_block_center(
-                       p.x, p.y));
-
-        switch (f.segment)
+  registry
+      .view<bim::game::position_on_grid, bim::game::flame,
+            bim::game::animation_state>()
+      .each(
+          [this, &asset_index](const bim::game::position_on_grid& p,
+                               const bim::game::flame& f,
+                               const bim::game::animation_state& a) -> void
           {
-          case bim::game::flame_segment::origin:
-            s.setSpriteFrame(m_flame_center_asset_name);
-            s.setRotation(0);
-            break;
-          case bim::game::flame_segment::arm:
-            {
-              s.setSpriteFrame(m_flame_arm_asset_name);
+            ax::Sprite& s = *m_flames[asset_index];
+            m_flame_animations[(int)f.segment][(int)f.direction][a.model]
+                ->apply(s, a);
 
-              if (bim::game::is_vertical(f.direction))
-                s.setRotation(90);
-              else
-                s.setRotation(0);
-              break;
-            }
-          case bim::game::flame_segment::tip:
-            {
-              s.setSpriteFrame(m_flame_end_asset_name);
-              switch (f.direction)
-                {
-                case bim::game::flame_direction::right:
-                  s.setRotation(0);
-                  break;
-                case bim::game::flame_direction::down:
-                  s.setRotation(90);
-                  break;
-                case bim::game::flame_direction::left:
-                  s.setRotation(180);
-                  break;
-                case bim::game::flame_direction::up:
-                  s.setRotation(270);
-                  break;
-                }
-            }
-          }
+            display_at(
+                p.y, s,
+                m_display_config.grid_position_to_displayed_block_center(p.x,
+                                                                         p.y));
 
-        s.setContentSize(size);
-        ++asset_index;
-      });
+            ++asset_index;
+          });
 
   bim::axmol::widget::hide_while_visible(m_flames, asset_index);
 }

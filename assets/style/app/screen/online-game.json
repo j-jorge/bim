@@ -250,10 +250,7 @@
     ],
 
     "crate/frame": "sprites/crate.png",
-    "flame/frame": "sprites/flame-center.png",
-    "flame-center-asset-name": "sprites/flame-center.png",
-    "flame-arm-asset-name": "sprites/flame-arm.png",
-    "flame-end-asset-name": "sprites/flame-end.png",
+    "flame/frame": "sprites/flame/center-5.png",
     "fog-of-war/frame": "sprites/fog/00000000.png",
 
     "power-up-bomb/frame": "sprites/power-up-bomb.png",

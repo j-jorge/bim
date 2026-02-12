@@ -823,5 +823,298 @@
       "sprites/player/shield/4-walk-side-6.png",
       "sprites/player/shield/4-walk-side-5-7.png"
     ]
+  },
+
+  "flame_origin_left_warm_up": {
+    "aliases": [
+      "flame_origin_right_warm_up",
+      "flame_origin_up_warm_up",
+      "flame_origin_down_warm_up"
+    ],
+    "frame_duration.ms": 30,
+    "loop": false,
+    "frames": [
+      "sprites/flame/center-0.png",
+      "sprites/flame/center-1.png",
+      "sprites/flame/center-2.png"
+    ]
+  },
+
+  "flame_origin_left_burn": {
+    "aliases": [
+      "flame_origin_right_burn",
+      "flame_origin_up_burn",
+      "flame_origin_down_burn"
+    ],
+    "frame_duration.ms": 30,
+    "loop": false,
+    "frames": [
+      "sprites/flame/center-3.png",
+      "sprites/flame/center-4.png",
+      {
+        "name": "sprites/flame/center-5.png",
+        "duration.ms": 425
+      },
+      "sprites/flame/center-6.png",
+      "sprites/flame/center-7.png"
+    ]
+  },
+
+  "flame_origin_left_cool_down": {
+    "aliases": [
+      "flame_origin_right_cool_down",
+      "flame_origin_up_cool_down",
+      "flame_origin_down_cool_down"
+    ],
+    "frame_duration.ms": 30,
+    "loop": false,
+    "frames": [
+      "sprites/flame/center-8.png",
+      "sprites/flame/center-9.png",
+      "sprites/flame/center-10.png"
+    ]
+  },
+
+  "flame_arm_left_warm_up": {
+    "aliases": [
+      "flame_arm_right_warm_up"
+    ],
+    "frame_duration.ms": 30,
+    "loop": false,
+    "frames": [
+      "sprites/flame/arm-0-10.png",
+      "sprites/flame/arm-1-9.png",
+      "sprites/flame/arm-2-8.png"
+    ]
+  },
+
+  "flame_arm_left_burn": {
+    "aliases": [
+      "flame_arm_right_burn"
+    ],
+    "frame_duration.ms": 30,
+    "loop": false,
+    "frames": [
+      "sprites/flame/arm-3-7.png",
+      "sprites/flame/arm-4-6.png",
+      {
+        "name": "sprites/flame/arm-5.png",
+        "duration.ms": 425
+      },
+      "sprites/flame/arm-4-6.png",
+      "sprites/flame/arm-3-7.png"
+    ]
+  },
+
+  "flame_arm_left_cool_down": {
+    "aliases": [
+      "flame_arm_right_cool_down"
+    ],
+    "frame_duration.ms": 30,
+    "loop": false,
+    "frames": [
+      "sprites/flame/arm-2-8.png",
+      "sprites/flame/arm-1-9.png",
+      "sprites/flame/arm-0-10.png"
+    ]
+  },
+
+  "flame_arm_up_warm_up": {
+    "aliases": [
+      "flame_arm_down_warm_up"
+    ],
+    "angle.degrees": 90,
+    "frame_duration.ms": 30,
+    "loop": false,
+    "frames": [
+      "sprites/flame/arm-0-10.png",
+      "sprites/flame/arm-1-9.png",
+      "sprites/flame/arm-2-8.png"
+    ]
+  },
+
+  "flame_arm_up_burn": {
+    "aliases": [
+      "flame_arm_down_burn"
+    ],
+    "angle.degrees": 90,
+    "frame_duration.ms": 30,
+    "loop": false,
+    "frames": [
+      "sprites/flame/arm-3-7.png",
+      "sprites/flame/arm-4-6.png",
+      {
+        "name": "sprites/flame/arm-5.png",
+        "duration.ms": 425
+      },
+      "sprites/flame/arm-4-6.png",
+      "sprites/flame/arm-3-7.png"
+    ]
+  },
+
+  "flame_arm_up_cool_down": {
+    "aliases": [
+      "flame_arm_down_cool_down"
+    ],
+    "angle.degrees": 90,
+    "frame_duration.ms": 30,
+    "loop": false,
+    "frames": [
+      "sprites/flame/arm-2-8.png",
+      "sprites/flame/arm-1-9.png",
+      "sprites/flame/arm-0-10.png"
+    ]
+  },
+
+  "flame_tip_left_warm_up": {
+    "frame_duration.ms": 30,
+    "loop": false,
+    "flip.x": true,
+    "frames": [
+      "sprites/flame/end-0-10.png",
+      "sprites/flame/end-1-9.png",
+      "sprites/flame/end-2-8.png"
+    ]
+  },
+
+  "flame_tip_left_burn": {
+    "frame_duration.ms": 30,
+    "loop": false,
+    "flip.x": true,
+    "frames": [
+      "sprites/flame/end-3-7.png",
+      "sprites/flame/end-4-6.png",
+      {
+        "name": "sprites/flame/end-5.png",
+        "duration.ms": 425
+      },
+      "sprites/flame/end-4-6.png",
+      "sprites/flame/end-3-7.png"
+    ]
+  },
+
+  "flame_tip_left_cool_down": {
+    "frame_duration.ms": 30,
+    "loop": false,
+    "flip.x": true,
+    "frames": [
+      "sprites/flame/end-2-8.png",
+      "sprites/flame/end-1-9.png",
+      "sprites/flame/end-0-10.png"
+    ]
+  },
+
+  "flame_tip_right_warm_up": {
+    "frame_duration.ms": 30,
+    "loop": false,
+    "frames": [
+      "sprites/flame/end-0-10.png",
+      "sprites/flame/end-1-9.png",
+      "sprites/flame/end-2-8.png"
+    ]
+  },
+
+  "flame_tip_right_burn": {
+    "frame_duration.ms": 30,
+    "loop": false,
+    "frames": [
+      "sprites/flame/end-3-7.png",
+      "sprites/flame/end-4-6.png",
+      {
+        "name": "sprites/flame/end-5.png",
+        "duration.ms": 425
+      },
+      "sprites/flame/end-4-6.png",
+      "sprites/flame/end-3-7.png"
+    ]
+  },
+
+  "flame_tip_right_cool_down": {
+    "frame_duration.ms": 30,
+    "loop": false,
+    "frames": [
+      "sprites/flame/end-2-8.png",
+      "sprites/flame/end-1-9.png",
+      "sprites/flame/end-0-10.png"
+    ]
+  },
+
+  "flame_tip_up_warm_up": {
+    "frame_duration.ms": 30,
+    "loop": false,
+    "flip.x": true,
+    "angle.degrees": 90,
+    "frames": [
+      "sprites/flame/end-0-10.png",
+      "sprites/flame/end-1-9.png",
+      "sprites/flame/end-2-8.png"
+    ]
+  },
+
+  "flame_tip_up_burn": {
+    "frame_duration.ms": 30,
+    "loop": false,
+    "flip.x": true,
+    "angle.degrees": 90,
+    "frames": [
+      "sprites/flame/end-3-7.png",
+      "sprites/flame/end-4-6.png",
+      {
+        "name": "sprites/flame/end-5.png",
+        "duration.ms": 425
+      },
+      "sprites/flame/end-4-6.png",
+      "sprites/flame/end-3-7.png"
+    ]
+  },
+
+  "flame_tip_up_cool_down": {
+    "frame_duration.ms": 30,
+    "loop": false,
+    "flip.x": true,
+    "angle.degrees": 90,
+    "frames": [
+      "sprites/flame/end-2-8.png",
+      "sprites/flame/end-1-9.png",
+      "sprites/flame/end-0-10.png"
+    ]
+  },
+
+  "flame_tip_down_warm_up": {
+    "frame_duration.ms": 30,
+    "loop": false,
+    "angle.degrees": 90,
+    "frames": [
+      "sprites/flame/end-0-10.png",
+      "sprites/flame/end-1-9.png",
+      "sprites/flame/end-2-8.png"
+    ]
+  },
+
+  "flame_tip_down_burn": {
+    "frame_duration.ms": 30,
+    "loop": false,
+    "angle.degrees": 90,
+    "frames": [
+      "sprites/flame/end-3-7.png",
+      "sprites/flame/end-4-6.png",
+      {
+        "name": "sprites/flame/end-5.png",
+        "duration.ms": 425
+      },
+      "sprites/flame/end-4-6.png",
+      "sprites/flame/end-3-7.png"
+    ]
+  },
+
+  "flame_tip_down_cool_down": {
+    "frame_duration.ms": 30,
+    "loop": false,
+    "angle.degrees": 90,
+    "frames": [
+      "sprites/flame/end-2-8.png",
+      "sprites/flame/end-1-9.png",
+      "sprites/flame/end-0-10.png"
+    ]
   }
 }

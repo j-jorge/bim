@@ -32,7 +32,9 @@ add_library(bim_game
   main/src/bim/game/component/shield.cpp
 
   main/src/bim/game/context/fill_context.cpp
+  main/src/bim/game/context/flame_animations.cpp
   main/src/bim/game/context/player_animations.cpp
+  main/src/bim/game/context/register_flame_animations.cpp
   main/src/bim/game/context/register_player_animations.cpp
 
   main/src/bim/game/factory/arena_reduction.cpp

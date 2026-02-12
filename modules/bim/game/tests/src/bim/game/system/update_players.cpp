@@ -9,12 +9,15 @@
 #include <bim/game/component/flame.hpp>
 #include <bim/game/component/flame_direction.hpp>
 #include <bim/game/component/position_on_grid.hpp>
+#include <bim/game/constant/flame_duration.hpp>
 #include <bim/game/context/context.hpp>
 #include <bim/game/context/fill_context.hpp>
 #include <bim/game/context/player_animations.hpp>
 #include <bim/game/factory/flame.hpp>
 #include <bim/game/factory/player.hpp>
+#include <bim/game/system/animator.hpp>
 #include <bim/game/system/update_flames.hpp>
+#include <bim/game/system/update_timers.hpp>
 
 #include <entt/entity/registry.hpp>
 
@@ -30,9 +33,11 @@ TEST(bim_game_update_players, death_on_flame_collision)
   const int arena_height = 3;
   bim::game::entity_world_map entity_map(arena_width, arena_height);
 
-  bim::game::flame_factory(registry, 1, 0, bim::game::flame_direction::up,
+  bim::game::flame_factory(context, registry, 1, 0,
+                           bim::game::flame_direction::up,
                            bim::game::flame_segment::tip);
-  bim::game::flame_factory(registry, 1, 1, bim::game::flame_direction::up,
+  bim::game::flame_factory(context, registry, 1, 1,
+                           bim::game::flame_direction::up,
                            bim::game::flame_segment::tip);
 
   const bim::game::player_animations& player_animations =
@@ -51,7 +56,9 @@ TEST(bim_game_update_players, death_on_flame_collision)
           bim::game::player_factory(registry, entity_map, 2, 0, 1,
                                     player_animations.idle_down));
 
-  bim::game::update_flames(registry, entity_map);
+  bim::game::update_timers(registry, bim::game::g_flame_duration / 2);
+  bim::game::animator(context, registry, bim::game::g_flame_duration / 2);
+  bim::game::update_flames(context, registry, entity_map);
   bim::game::update_players(context, registry);
 
   EXPECT_EQ(player_animations.burn, player_on_flame.model);
@@ -69,11 +76,14 @@ TEST(bim_game_update_players, death_of_multiple_players_on_same_flame)
   const int arena_height = 3;
   bim::game::entity_world_map entity_map(arena_width, arena_height);
 
-  bim::game::flame_factory(registry, 1, 0, bim::game::flame_direction::up,
+  bim::game::flame_factory(context, registry, 1, 0,
+                           bim::game::flame_direction::up,
                            bim::game::flame_segment::tip);
-  bim::game::flame_factory(registry, 1, 1, bim::game::flame_direction::up,
+  bim::game::flame_factory(context, registry, 1, 1,
+                           bim::game::flame_direction::up,
                            bim::game::flame_segment::tip);
-  bim::game::flame_factory(registry, 1, 2, bim::game::flame_direction::up,
+  bim::game::flame_factory(context, registry, 1, 2,
+                           bim::game::flame_direction::up,
                            bim::game::flame_segment::tip);
 
   const bim::game::player_animations& player_animations =
@@ -94,7 +104,9 @@ TEST(bim_game_update_players, death_of_multiple_players_on_same_flame)
                                   player_animations.idle_down))
   };
 
-  bim::game::update_flames(registry, entity_map);
+  bim::game::update_timers(registry, bim::game::g_flame_duration / 2);
+  bim::game::animator(context, registry, bim::game::g_flame_duration / 2);
+  bim::game::update_flames(context, registry, entity_map);
   bim::game::update_players(context, registry);
 
   EXPECT_EQ(player_animations.burn, player_state[0]->model);

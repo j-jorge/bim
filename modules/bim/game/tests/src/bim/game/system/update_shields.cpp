@@ -11,13 +11,16 @@
 #include <bim/game/component/flame_direction.hpp>
 #include <bim/game/component/position_on_grid.hpp>
 #include <bim/game/component/shield.hpp>
+#include <bim/game/constant/flame_duration.hpp>
 #include <bim/game/context/context.hpp>
 #include <bim/game/context/fill_context.hpp>
 #include <bim/game/context/player_animations.hpp>
 #include <bim/game/factory/flame.hpp>
 #include <bim/game/factory/player.hpp>
+#include <bim/game/system/animator.hpp>
 #include <bim/game/system/update_flames.hpp>
 #include <bim/game/system/update_players.hpp>
+#include <bim/game/system/update_timers.hpp>
 
 #include <entt/entity/registry.hpp>
 
@@ -37,7 +40,8 @@ TEST(bim_game_update_shields, save_player_from_first_hit)
   const int y = 1;
 
   // We have one flame, that is going to burn the player.
-  bim::game::flame_factory(registry, x, y, bim::game::flame_direction::up,
+  bim::game::flame_factory(context, registry, x, y,
+                           bim::game::flame_direction::up,
                            bim::game::flame_segment::tip);
 
   const bim::game::player_animations& player_animations =
@@ -57,7 +61,10 @@ TEST(bim_game_update_shields, save_player_from_first_hit)
 
   // We update the flames. The player is going to be hit and should lose its
   // shield.
-  bim::game::update_flames(registry, entity_map);
+  bim::game::update_timers(registry, bim::game::g_flame_duration / 2);
+  bim::game::animator(context, registry, bim::game::g_flame_duration / 2);
+  bim::game::update_flames(context, registry, entity_map);
+
   // Player is in a flame -> player is burning.
   EXPECT_TRUE(registry.storage<bim::game::burning>().contains(player_entity));
   EXPECT_TRUE(bim::game::has_shield(registry, player_entity));

@@ -126,9 +126,6 @@ CC-BY-SA 3.0
 
 assets/sprites/bomb.png
 assets/sprites/crate.png
-assets/sprites/flame-arm.png
-assets/sprites/flame-center.png
-assets/sprites/flame-end.png
 Aryeom.
 CC-BY-SA 4.0.
 
@@ -215,6 +212,29 @@ assets/sprites/features/invisibility.png
 assets/sprites/features/padlock.png
 assets/sprites/features/plus.png
 assets/sprites/features/shield.png
+assets/sprites/flame/arm-0-10.png
+assets/sprites/flame/arm-1-9.png
+assets/sprites/flame/arm-2-8.png
+assets/sprites/flame/arm-3-7.png
+assets/sprites/flame/arm-4-6.png
+assets/sprites/flame/arm-5.png
+assets/sprites/flame/center-0.png
+assets/sprites/flame/center-1.png
+assets/sprites/flame/center-10.png
+assets/sprites/flame/center-2.png
+assets/sprites/flame/center-3.png
+assets/sprites/flame/center-4.png
+assets/sprites/flame/center-5.png
+assets/sprites/flame/center-6.png
+assets/sprites/flame/center-7.png
+assets/sprites/flame/center-8.png
+assets/sprites/flame/center-9.png
+assets/sprites/flame/end-0-10.png
+assets/sprites/flame/end-1-9.png
+assets/sprites/flame/end-2-8.png
+assets/sprites/flame/end-3-7.png
+assets/sprites/flame/end-4-6.png
+assets/sprites/flame/end-5.png
 assets/sprites/fog/00000000.png
 assets/sprites/fog/00000001.png
 assets/sprites/fog/00000010.png
