@@ -27,6 +27,9 @@ namespace bim::axmol::widget
     const animation& get(const std::string_view& name) const;
 
   private:
-    iscool::strings::unordered_string_map<animation> m_animations;
+    using animation_map = iscool::strings::unordered_string_map<animation>;
+
+  private:
+    animation_map m_animations;
   };
 }

@@ -28,4 +28,5 @@ void bim::axmol::widget::animation::apply(
 
   sprite.setSpriteFrame(frame->sprite_frame);
   sprite.setFlippedX(frame->flip_x);
+  sprite.setRotation(frame->angle);
 }

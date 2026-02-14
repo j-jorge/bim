@@ -23,6 +23,7 @@ namespace bim::axmol::widget
     {
       ax::SpriteFrame* sprite_frame;
       std::chrono::milliseconds display_date;
+      float angle;
       bool flip_x;
     };
 

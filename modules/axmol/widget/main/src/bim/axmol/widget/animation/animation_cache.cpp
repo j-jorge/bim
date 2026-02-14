@@ -4,10 +4,12 @@
 #include <bim/axmol/widget/animation/animation.hpp>
 
 #include <iscool/json/cast_bool.hpp>
+#include <iscool/json/cast_float.hpp>
 #include <iscool/json/cast_string.hpp>
 #include <iscool/json/cast_uint.hpp>
 #include <iscool/json/from_file.hpp>
 #include <iscool/json/is_of_type_bool.hpp>
+#include <iscool/json/is_of_type_float.hpp>
 #include <iscool/json/is_of_type_string.hpp>
 #include <iscool/json/is_of_type_uint.hpp>
 #include <iscool/log/log.hpp>
@@ -52,8 +54,23 @@ void bim::axmol::widget::animation_cache::load(const Json::Value& config)
         }
 
       const Json::Value& value = *it;
-      std::chrono::milliseconds default_duration{};
 
+      float default_angle = 0;
+      const Json::Value* const json_angle = value.find("angle.degrees");
+
+      if (json_angle)
+        {
+          if (!iscool::json::is_of_type<float>(*json_angle))
+            {
+              ic_log(iscool::log::nature::error(), "animation_cache",
+                     "Angle is not a float '{}'.", key);
+              continue;
+            }
+
+          default_angle = iscool::json::cast<float>(*json_angle);
+        }
+
+      std::chrono::milliseconds default_duration{};
       const Json::Value* const json_duration = value.find("frame_duration.ms");
 
       if (json_duration)
@@ -105,6 +122,8 @@ void bim::axmol::widget::animation_cache::load(const Json::Value& config)
           animation::frame animation_frame;
 
           bool frame_flip_x = default_flip_x;
+          std::chrono::milliseconds frame_duration = default_duration;
+          float frame_angle = default_angle;
 
           if (iscool::json::is_of_type<std::string>(json_frame))
             sprite_frame_name = iscool::json::cast<std::string>(json_frame);
@@ -129,20 +148,44 @@ void bim::axmol::widget::animation_cache::load(const Json::Value& config)
 
               sprite_frame_name = iscool::json::cast<std::string>(*frame_name);
 
+              const Json::Value* const angle =
+                  json_frame.find("angle.degrees");
+
+              if (angle)
+                {
+                  if (iscool::json::is_of_type<float>(*angle))
+                    frame_angle = iscool::json::cast<float>(*angle);
+                  else
+                    ic_log(iscool::log::nature::error(), "animation_cache",
+                           "Angle is not a float for frame #{} in '{}'.",
+                           fit.index(), key);
+                }
+
               const Json::Value* const flip_x = json_frame.find("flip.x");
 
               if (flip_x)
                 {
-                  if (!iscool::json::is_of_type<bool>(*flip_x))
-                    {
-                      ic_log(iscool::log::nature::error(), "animation_cache",
-                             "X-axis Flip flag is not a boolean in frame #{} "
-                             "in {}.",
-                             fit.index(), key);
-                      continue;
-                    }
+                  if (iscool::json::is_of_type<bool>(*flip_x))
+                    frame_flip_x = iscool::json::cast<bool>(*flip_x);
+                  else
+                    ic_log(iscool::log::nature::error(), "animation_cache",
+                           "X-axis Flip flag is not a boolean in frame #{} "
+                           "in {}.",
+                           fit.index(), key);
+                }
 
-                  frame_flip_x = iscool::json::cast<bool>(*flip_x);
+              const Json::Value* const duration =
+                  json_frame.find("duration.ms");
+
+              if (duration)
+                {
+                  if (iscool::json::is_of_type<std::uint32_t>(*duration))
+                    frame_duration = std::chrono::milliseconds(
+                        iscool::json::cast<std::uint32_t>(*duration));
+                  else
+                    ic_log(iscool::log::nature::error(), "animation_cache",
+                           "Duration is not a uint32_t in frame #{} in '{}'.",
+                           fit.index(), key);
                 }
             }
 
@@ -157,8 +200,9 @@ void bim::axmol::widget::animation_cache::load(const Json::Value& config)
 
           animation_frame.sprite_frame = sprite_frame;
           animation_frame.display_date = display_date;
+          animation_frame.angle = frame_angle;
           animation_frame.flip_x = frame_flip_x;
-          display_date += default_duration;
+          display_date += frame_duration;
           a.frames.push_back(animation_frame);
         }
 
@@ -179,6 +223,28 @@ void bim::axmol::widget::animation_cache::load(const Json::Value& config)
         }
 
       a.total_duration = total_duration;
+
+      const Json::Value* const aliases = value.find("aliases");
+
+      if (aliases)
+        for (Json::Value::const_iterator ait = aliases->begin(),
+                                         aeit = aliases->end();
+             ait != aeit; ++ait)
+          {
+            const Json::Value& json_alias = *ait;
+
+            if (iscool::json::is_of_type<std::string>(json_alias))
+              m_animations.emplace(iscool::json::cast<std::string>(json_alias),
+                                   a);
+            else
+              {
+                ic_log(iscool::log::nature::error(), "animation_cache",
+                       "Unexpected type for alias #{} in {}.", ait.index(),
+                       key);
+                continue;
+              }
+          }
+
       m_animations.emplace(key, std::move(a));
     }
 }
@@ -186,6 +252,15 @@ void bim::axmol::widget::animation_cache::load(const Json::Value& config)
 const bim::axmol::widget::animation&
 bim::axmol::widget::animation_cache::get(const std::string_view& name) const
 {
-  assert(m_animations.find(name) != m_animations.end());
-  return m_animations.find(name)->second;
+  const animation_map::const_iterator it = m_animations.find(name);
+
+#ifndef NDEBUG
+  if (it == m_animations.end())
+    ic_log(iscool::log::nature::error(), "animation_cache",
+           "Unknown animation '{}'.", name);
+
+#endif
+
+  assert(it != m_animations.end());
+  return it->second;
 }
