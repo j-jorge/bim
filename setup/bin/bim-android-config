@@ -93,10 +93,16 @@ do
             echo c++_static
             ;;
         --target-sdk-version)
-            path="$(find "$android_root"/sdk/build-tools/ \
-                         -mindepth 1 -maxdepth 1 -type d \
-                         | head -n 1)"
-            basename "$path" | cut -d. -f1
+            readarray -t paths < <(find "$android_root"/sdk/build-tools/ \
+                                        -mindepth 1 -maxdepth 1 -type d)
+            if [[ "${#paths[@]}" -ne 1 ]]
+            then
+                printf 'Unepected build tools count, need 1, got %s.\n' \
+                       "${#paths[@]}" >&2
+                printf ' - %s\n' "${paths[@]}" >&2
+                exit 1
+            fi
+            basename "${paths[0]}" | cut -d. -f1
             ;;
         --toolchain)
             find "$android_root"/sdk -name "android.toolchain.cmake" \
