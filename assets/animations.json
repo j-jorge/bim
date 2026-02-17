@@ -853,7 +853,7 @@
       "sprites/flame/center-4.png",
       {
         "name": "sprites/flame/center-5.png",
-        "duration.ms": 425
+        "duration.ms": 500
       },
       "sprites/flame/center-6.png",
       "sprites/flame/center-7.png"
@@ -899,7 +899,7 @@
       "sprites/flame/arm-4-6.png",
       {
         "name": "sprites/flame/arm-5.png",
-        "duration.ms": 425
+        "duration.ms": 500
       },
       "sprites/flame/arm-4-6.png",
       "sprites/flame/arm-3-7.png"
@@ -945,7 +945,7 @@
       "sprites/flame/arm-4-6.png",
       {
         "name": "sprites/flame/arm-5.png",
-        "duration.ms": 425
+        "duration.ms": 500
       },
       "sprites/flame/arm-4-6.png",
       "sprites/flame/arm-3-7.png"
@@ -986,7 +986,7 @@
       "sprites/flame/end-4-6.png",
       {
         "name": "sprites/flame/end-5.png",
-        "duration.ms": 425
+        "duration.ms": 500
       },
       "sprites/flame/end-4-6.png",
       "sprites/flame/end-3-7.png"
@@ -1022,7 +1022,7 @@
       "sprites/flame/end-4-6.png",
       {
         "name": "sprites/flame/end-5.png",
-        "duration.ms": 425
+        "duration.ms": 500
       },
       "sprites/flame/end-4-6.png",
       "sprites/flame/end-3-7.png"
@@ -1061,7 +1061,7 @@
       "sprites/flame/end-4-6.png",
       {
         "name": "sprites/flame/end-5.png",
-        "duration.ms": 425
+        "duration.ms": 500
       },
       "sprites/flame/end-4-6.png",
       "sprites/flame/end-3-7.png"
@@ -1100,7 +1100,7 @@
       "sprites/flame/end-4-6.png",
       {
         "name": "sprites/flame/end-5.png",
-        "duration.ms": 425
+        "duration.ms": 500
       },
       "sprites/flame/end-4-6.png",
       "sprites/flame/end-3-7.png"
