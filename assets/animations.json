@@ -1116,5 +1116,42 @@
       "sprites/flame/end-1-9.png",
       "sprites/flame/end-0-10.png"
     ]
+  },
+
+  "crate.idle": {
+    "frame_duration.ms": 100,
+    "frames": [
+      "sprites/crate/idle.png"
+    ]
+  },
+
+  "crate.burn": {
+    "frame_duration.ms": 45,
+    "frames": [
+      "sprites/crate/burning-0.png",
+      "sprites/crate/burning-1.png",
+      "sprites/crate/burning-2.png",
+      "sprites/crate/burning-3.png",
+      "sprites/crate/burning-4.png",
+      "sprites/crate/burning-5.png"
+    ]
+  },
+
+  "smoke.in_out": {
+    "frame_duration.ms": 30,
+    "loop": false,
+    "frames": [
+      "sprites/smoke/smoke-0.png",
+      "sprites/smoke/smoke-1.png",
+      "sprites/smoke/smoke-2.png",
+      "sprites/smoke/smoke-3.png",
+      "sprites/smoke/smoke-4.png",
+      "sprites/smoke/smoke-5.png",
+      "sprites/smoke/smoke-6.png",
+      "sprites/smoke/smoke-7.png",
+      "sprites/smoke/smoke-8.png",
+      "sprites/smoke/smoke-9.png",
+      "sprites/smoke/smoke-10.png"
+    ]
   }
 }

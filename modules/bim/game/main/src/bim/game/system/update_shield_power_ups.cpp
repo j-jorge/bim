@@ -1,14 +1,11 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/game/system/update_shield_power_ups.hpp>
 
-#include <bim/game/component/burning.hpp>
 #include <bim/game/component/dead.hpp>
 #include <bim/game/component/fractional_position_on_grid.hpp>
 #include <bim/game/component/player.hpp>
-#include <bim/game/component/position_on_grid.hpp>
 #include <bim/game/component/shield.hpp>
 #include <bim/game/component/shield_power_up.hpp>
-#include <bim/game/constant/max_bomb_strength.hpp>
 #include <bim/game/entity_world_map.hpp>
 
 #include <entt/entity/registry.hpp>
@@ -40,13 +37,6 @@ static void check_shield_power_up_player_collision(
 void bim::game::update_shield_power_ups(entt::registry& registry,
                                         entity_world_map& entity_map)
 {
-  registry.view<shield_power_up, burning, position_on_grid>().each(
-      [&](entt::entity e, position_on_grid position) -> void
-      {
-        entity_map.erase_entity(e, position.x, position.y);
-        registry.emplace<dead>(e);
-      });
-
   registry.view<player, fractional_position_on_grid>().each(
       [&](entt::entity e, const player&,
           fractional_position_on_grid position) -> void

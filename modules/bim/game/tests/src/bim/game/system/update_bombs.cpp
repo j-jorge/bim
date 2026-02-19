@@ -458,10 +458,10 @@ TEST(update_bombs, burning_crates)
                           std::chrono::milliseconds(0));
 
   const entt::entity walls[] = {
-    bim::game::crate_factory(registry, entity_map, 2, 1),
-    bim::game::crate_factory(registry, entity_map, 4, 2),
-    bim::game::crate_factory(registry, entity_map, 5, 2),
-    bim::game::crate_factory(registry, entity_map, 2, 5)
+    bim::game::crate_factory(context, registry, entity_map, 2, 1),
+    bim::game::crate_factory(context, registry, entity_map, 4, 2),
+    bim::game::crate_factory(context, registry, entity_map, 5, 2),
+    bim::game::crate_factory(context, registry, entity_map, 2, 5)
   };
 
   bim::game::update_timers(registry, std::chrono::milliseconds(12));

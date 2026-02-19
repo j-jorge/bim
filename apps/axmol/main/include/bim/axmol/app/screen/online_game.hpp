@@ -127,11 +127,11 @@ namespace bim::axmol::app
   private:
     struct fence;
 
-    using flame_animation_map =
+    using animation_map =
         boost::unordered_flat_map<bim::game::animation_id,
                                   const bim::axmol::widget::animation*>;
     using flame_animation_per_direction =
-        std::array<flame_animation_map, bim::game::flame_direction_count>;
+        std::array<animation_map, bim::game::flame_direction_count>;
     using flame_direction_per_segment =
         std::array<flame_animation_per_direction,
                    bim::game::flame_segment_count>;
@@ -159,7 +159,8 @@ namespace bim::axmol::app
     void display_walls();
     void display_fences(bim::game::cell_edge mask);
     void display_falling_blocks();
-    void display_crates();
+    template <typename Layer>
+    void display_animations();
     void display_players();
     void display_player(bool local_still_alive, entt::entity e,
                         const bim::game::player& player,
@@ -210,10 +211,14 @@ namespace bim::axmol::app
                  bim::game::cell_edge_count>
         m_fence_assets;
 
+    animation_map m_animations;
+
+    std::vector<ax::Sprite*> m_animation_sprites;
+    std::size_t m_animation_sprite_index;
+
     std::vector<ax::Sprite*> m_walls;
     std::vector<ax::Sprite*> m_falling_blocks;
     std::vector<ax::Sprite*> m_falling_blocks_shadows;
-    std::vector<ax::Sprite*> m_crates;
     std::vector<ax::Sprite*> m_bombs;
     std::vector<ax::Sprite*> m_flames;
     flame_direction_per_segment m_flame_animations;

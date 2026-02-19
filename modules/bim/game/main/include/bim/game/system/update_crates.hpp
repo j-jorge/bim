@@ -3,11 +3,9 @@
 
 #include <entt/entity/fwd.hpp>
 
-#include <chrono>
-
 namespace bim::game
 {
-  class entity_world_map;
+  class context;
 
-  void update_crates(entt::registry& registry, entity_world_map& entity_map);
+  void update_crates(const context& context, entt::registry& registry);
 }

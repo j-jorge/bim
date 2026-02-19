@@ -1,6 +1,5 @@
 # Next
 
-- Animate the burning crates.
 - Display the game features in the output of bim-player.
 - Review the client's startup steps.
 - Visual bug for stats with zero victories.
@@ -19,7 +18,8 @@
 
 # Nice to have
 
-- Add a timed_to_death component: dead when timer is zero.
+- Compute the client's ping on the server, use it to handle disconnections.
+- Move the context out of the contest. It's the same for every contest.
 - Set UBSAN_OPTIONS and co. to stop the tests on failure.
 - Why does --console-log on server-tests only works for the first test?
 - Robots, for the tests.

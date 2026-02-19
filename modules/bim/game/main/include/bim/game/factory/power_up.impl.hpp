@@ -4,6 +4,7 @@
 #include <bim/game/factory/power_up.hpp>
 
 #include <bim/game/component/position_on_grid.hpp>
+#include <bim/game/component/power_up.hpp>
 #include <bim/game/entity_world_map.hpp>
 
 #include <entt/entity/registry.hpp>
@@ -18,6 +19,7 @@ namespace bim::game
     const entt::entity entity = registry.create();
 
     registry.emplace<PowerUpComponent>(entity);
+    registry.emplace<power_up>(entity);
     registry.emplace<position_on_grid>(entity, x, y);
 
     entity_map.put_entity(entity, x, y);

@@ -9,7 +9,7 @@
 
 #include <entt/entity/registry.hpp>
 
-entt::entity bim::game::flame_factory(const bim::game::context& context,
+entt::entity bim::game::flame_factory(const context& context,
                                       entt::registry& registry, std::uint8_t x,
                                       std::uint8_t y,
                                       flame_direction direction,
@@ -18,7 +18,7 @@ entt::entity bim::game::flame_factory(const bim::game::context& context,
   const entt::entity entity = registry.create();
 
   const bim::game::animation_id initial_state =
-      context.get<const bim::game::flame_animations>().warm_up;
+      context.get<const flame_animations>().warm_up;
 
   registry.emplace<animation_state>(entity, initial_state,
                                     std::chrono::seconds());

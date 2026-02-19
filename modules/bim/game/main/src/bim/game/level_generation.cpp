@@ -112,9 +112,9 @@ void bim::game::generate_basic_level_structure(arena& arena)
 }
 
 void bim::game::insert_random_crates(
-    arena& arena, entity_world_map& entity_map, entt::registry& registry,
-    random_generator& random_generator, std::uint8_t crate_probability,
-    feature_flags features,
+    const context& context, arena& arena, entity_world_map& entity_map,
+    entt::registry& registry, random_generator& random_generator,
+    std::uint8_t crate_probability, feature_flags features,
     std::span<const position_on_grid> forbidden_positions)
 {
   const int width = arena.width();
@@ -141,7 +141,8 @@ void bim::game::insert_random_crates(
                                              position_on_grid(x, y))
           && (random(random_generator) < crate_probability))
         {
-          crates.emplace_back(crate_factory(registry, entity_map, x, y));
+          crates.emplace_back(
+              crate_factory(context, registry, entity_map, x, y));
 
           if (valid_invisibility_power_up_position(x, y, width, height))
             ++count_for_invisibility;

@@ -6,6 +6,7 @@
 #include <bim/game/component/bomb_power_up.hpp>
 #include <bim/game/component/bomb_power_up_spawner.hpp>
 #include <bim/game/component/burning.hpp>
+#include <bim/game/component/dead.hpp>
 #include <bim/game/component/flame_power_up.hpp>
 #include <bim/game/component/flame_power_up_spawner.hpp>
 #include <bim/game/component/invisibility_power_up.hpp>
@@ -44,7 +45,7 @@ using spawner_and_power_ups = testing::Types<
 
 TYPED_TEST_SUITE(update_power_up_spawners_test, spawner_and_power_ups);
 
-TYPED_TEST(update_power_up_spawners_test, burning)
+TYPED_TEST(update_power_up_spawners_test, spawn_on_death)
 {
   using spawner_type = TypeParam::spawner;
   using power_up_type = TypeParam::power_up;
@@ -54,7 +55,7 @@ TYPED_TEST(update_power_up_spawners_test, burning)
 
   const entt::entity entity = registry.create();
   registry.emplace<spawner_type>(entity);
-  registry.emplace<bim::game::burning>(entity);
+  registry.emplace<bim::game::dead>(entity);
   registry.emplace<bim::game::position_on_grid>(entity, 1, 2);
 
   bim::game::update_power_up_spawners<spawner_type>(registry, entity_map);

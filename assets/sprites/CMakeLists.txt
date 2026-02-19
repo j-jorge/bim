@@ -27,7 +27,6 @@ set(sprites
 )
 set(sprites_crop
   "sprites/bomb.png"
-  "sprites/crate.png"
   "sprites/fence-down.png"
   "sprites/fence-left.png"
   "sprites/fence-right.png"
@@ -38,6 +37,14 @@ set(sprites_crop
   "sprites/power-up-shield.png"
   "sprites/solid-wall.png"
   "sprites/transparent.png"
+
+  "sprites/crate/burning-0.png"
+  "sprites/crate/burning-1.png"
+  "sprites/crate/burning-2.png"
+  "sprites/crate/burning-3.png"
+  "sprites/crate/burning-4.png"
+  "sprites/crate/burning-5.png"
+  "sprites/crate/idle.png"
 
   "sprites/features/background-blue.png"
   "sprites/features/background-green.png"
@@ -241,6 +248,18 @@ set(sprites_crop
   "sprites/player/shield/4-walk-side-2.png"
   "sprites/player/shield/4-walk-side-5-7.png"
   "sprites/player/shield/4-walk-side-6.png"
+
+  "sprites/smoke/smoke-0.png"
+  "sprites/smoke/smoke-1.png"
+  "sprites/smoke/smoke-2.png"
+  "sprites/smoke/smoke-3.png"
+  "sprites/smoke/smoke-4.png"
+  "sprites/smoke/smoke-5.png"
+  "sprites/smoke/smoke-6.png"
+  "sprites/smoke/smoke-7.png"
+  "sprites/smoke/smoke-8.png"
+  "sprites/smoke/smoke-9.png"
+  "sprites/smoke/smoke-10.png"
 
   "sprites/ui/bomb-button.png"
   "sprites/ui/directional-pad-left.png"

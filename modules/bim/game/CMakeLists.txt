@@ -31,11 +31,14 @@ add_library(bim_game
   main/src/bim/game/component/player_action_queue.cpp
   main/src/bim/game/component/shield.cpp
 
+  main/src/bim/game/context/crate_animations.cpp
   main/src/bim/game/context/fill_context.cpp
   main/src/bim/game/context/flame_animations.cpp
   main/src/bim/game/context/player_animations.cpp
+  main/src/bim/game/context/register_crate_animations.cpp
   main/src/bim/game/context/register_flame_animations.cpp
   main/src/bim/game/context/register_player_animations.cpp
+  main/src/bim/game/context/register_vfx_animations.cpp
 
   main/src/bim/game/factory/arena_reduction.cpp
   main/src/bim/game/factory/bomb.cpp
@@ -48,6 +51,7 @@ add_library(bim_game
   main/src/bim/game/factory/main_timer.cpp
   main/src/bim/game/factory/player.cpp
   main/src/bim/game/factory/power_up.cpp
+  main/src/bim/game/factory/smoke_vfx.cpp
   main/src/bim/game/factory/wall.cpp
 
   main/src/bim/game/system/animator.cpp
@@ -67,6 +71,7 @@ add_library(bim_game
   main/src/bim/game/system/update_invisibility_state.cpp
   main/src/bim/game/system/update_players.cpp
   main/src/bim/game/system/update_power_up_spawners.cpp
+  main/src/bim/game/system/update_power_ups.cpp
   main/src/bim/game/system/update_shields.cpp
   main/src/bim/game/system/update_shield_power_ups.cpp
   main/src/bim/game/system/update_timers.cpp

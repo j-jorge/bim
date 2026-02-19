@@ -6,6 +6,7 @@
 #include <bim/game/component/player.hpp>
 #include <bim/game/component/position_on_grid.hpp>
 #include <bim/game/context/context.hpp>
+#include <bim/game/context/fill_context.hpp>
 #include <bim/game/entity_world_map.hpp>
 #include <bim/game/factory/player.hpp>
 #include <bim/game/random_generator.hpp>
@@ -74,10 +75,13 @@ TEST_P(bim_game_level_generation_test, random_crates)
 
   bim::game::generate_basic_level_structure(arena);
 
+  bim::game::context context;
+  bim::game::fill_context(context);
+
   entt::registry registry;
   bim::game::random_generator random(1234);
-  bim::game::insert_random_crates(arena, entity_map, registry, random, 50, {},
-                                  {});
+  bim::game::insert_random_crates(context, arena, entity_map, registry, random,
+                                  50, {}, {});
 
   int free_cell_count = 0;
 
@@ -127,6 +131,9 @@ TEST(bim_game_insert_random_crates, no_crate_in_forbidden_positions)
   bim::game::arena arena(width, height);
   bim::game::entity_world_map entity_map(width, height);
 
+  bim::game::context context;
+  bim::game::fill_context(context);
+
   entt::registry registry;
   constexpr int player_count = 5;
 
@@ -141,8 +148,8 @@ TEST(bim_game_insert_random_crates, no_crate_in_forbidden_positions)
   bim::game::random_generator random(1234);
 
   // Insert crates with a 100% probability, i.e. create a crate every time.
-  bim::game::insert_random_crates(arena, entity_map, registry, random, 100, {},
-                                  forbidden_positions);
+  bim::game::insert_random_crates(context, arena, entity_map, registry, random,
+                                  100, {}, forbidden_positions);
 
   for (int y = 0; y != height; ++y)
     for (int x = 0; x != width; ++x)

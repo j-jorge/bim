@@ -7,9 +7,10 @@
 
 namespace bim::game
 {
+  class context;
   class entity_world_map;
 
-  entt::entity crate_factory(entt::registry& registry,
+  entt::entity crate_factory(const context& context, entt::registry& registry,
                              entity_world_map& entity_map, std::uint8_t x,
                              std::uint8_t y);
 }

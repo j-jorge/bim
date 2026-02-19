@@ -2,11 +2,9 @@
 #include <bim/game/system/update_bomb_power_ups.hpp>
 
 #include <bim/game/component/bomb_power_up.hpp>
-#include <bim/game/component/burning.hpp>
 #include <bim/game/component/dead.hpp>
 #include <bim/game/component/fractional_position_on_grid.hpp>
 #include <bim/game/component/player.hpp>
-#include <bim/game/component/position_on_grid.hpp>
 #include <bim/game/constant/max_bomb_count_per_player.hpp>
 #include <bim/game/entity_world_map.hpp>
 
@@ -43,13 +41,6 @@ static void check_bomb_power_up_player_collision(
 void bim::game::update_bomb_power_ups(entt::registry& registry,
                                       entity_world_map& entity_map)
 {
-  registry.view<bomb_power_up, burning, position_on_grid>().each(
-      [&](entt::entity e, position_on_grid position) -> void
-      {
-        entity_map.erase_entity(e, position.x, position.y);
-        registry.emplace<dead>(e);
-      });
-
   registry.view<player, fractional_position_on_grid>().each(
       [&](entt::entity, player& p,
           fractional_position_on_grid position) -> void

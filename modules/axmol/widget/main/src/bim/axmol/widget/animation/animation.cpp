@@ -14,6 +14,14 @@ void bim::axmol::widget::animation::apply(
 
   std::chrono::milliseconds t = state.elapsed_time;
 
+  if (t.count() < 0)
+    {
+      sprite.setOpacity(0);
+      return;
+    }
+
+  sprite.setOpacity(255);
+
   if (total_duration.count() > 0)
     t = t % total_duration;
 

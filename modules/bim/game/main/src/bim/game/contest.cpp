@@ -34,6 +34,7 @@
 #include <bim/game/system/update_invisibility_state.hpp>
 #include <bim/game/system/update_players.hpp>
 #include <bim/game/system/update_power_up_spawners.hpp>
+#include <bim/game/system/update_power_ups.hpp>
 #include <bim/game/system/update_shield_power_ups.hpp>
 #include <bim/game/system/update_shields.hpp>
 #include <bim/game/system/update_timers.hpp>
@@ -188,9 +189,9 @@ bim::game::contest::contest(const contest_fingerprint& fingerprint,
   if (!!(fingerprint.features & feature_flags::fences))
     insert_random_fences(*m_arena, random, forbidden_positions);
 
-  insert_random_crates(*m_arena, *m_entity_world_map, *m_registry, random,
-                       fingerprint.crate_probability, fingerprint.features,
-                       forbidden_positions);
+  insert_random_crates(*m_context, *m_arena, *m_entity_world_map, *m_registry,
+                       random, fingerprint.crate_probability,
+                       fingerprint.features, forbidden_positions);
 
   if (!!(fingerprint.features & feature_flags::falling_blocks))
     arena_reduction_factory(*m_registry, std::chrono::minutes(2));
@@ -254,7 +255,7 @@ bim::game::contest_result bim::game::contest::tick()
   run_system_s(update_invincibility_state, *m_registry);
   run_system_s(update_shields, *m_registry);
 
-  run_system_s(update_crates, *m_registry, *m_entity_world_map);
+  run_system_s(update_crates, *m_context, *m_registry);
   run_system_s(update_invisibility_state, *m_context, *m_registry);
 
   run_system_t(bomb_power_up_spawner, update_power_up_spawners, *m_registry,
@@ -266,6 +267,7 @@ bim::game::contest_result bim::game::contest::tick()
   run_system_t(shield_power_up_spawner, update_power_up_spawners, *m_registry,
                *m_entity_world_map);
 
+  run_system_s(update_power_ups, *m_registry, *m_entity_world_map);
   run_system_s(update_bomb_power_ups, *m_registry, *m_entity_world_map);
   run_system_s(update_flame_power_ups, *m_registry, *m_entity_world_map);
   run_system_s(update_invisibility_power_ups, *m_registry,

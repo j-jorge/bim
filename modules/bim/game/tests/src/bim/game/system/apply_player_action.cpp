@@ -140,7 +140,7 @@ void bim_game_apply_player_action_test::create_obstacle(
                               std::chrono::milliseconds(0));
       break;
     case obstacle::crate:
-      bim::game::crate_factory(m_registry, m_entity_map, x, y);
+      bim::game::crate_factory(m_context, m_registry, m_entity_map, x, y);
       break;
     case obstacle::fence:
       if (edges != bim::game::cell_edge::none)
@@ -1240,7 +1240,7 @@ TEST(bim_game_apply_player_action, cannot_walk_through_crates)
     .....
   */
   const entt::entity crate_entity =
-      bim::game::crate_factory(registry, entity_map, x, y);
+      bim::game::crate_factory(context, registry, entity_map, x, y);
 
   const bim::game::player_animations& player_animations =
       context.get<const bim::game::player_animations>();
@@ -1297,7 +1297,9 @@ TEST(bim_game_apply_player_action, cannot_walk_through_crates)
 
   // Now remove the crates.
   registry.emplace<bim::game::burning>(crate_entity);
-  bim::game::update_crates(registry, entity_map);
+  bim::game::update_crates(context, registry);
+  bim::game::animator(context, registry, std::chrono::seconds(1));
+  bim::game::remove_dead_objects(registry, entity_map);
 
   // Then move the players where the crate was.
   for (int i = 0; i != bim::game::g_player_steps_per_cell; ++i)

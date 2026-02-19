@@ -11,6 +11,7 @@
 namespace bim::game
 {
   class arena;
+  class context;
   class entity_world_map;
   class random_generator;
   struct position_on_grid;
@@ -22,8 +23,8 @@ namespace bim::game
 
   void generate_basic_level_structure(arena& arena);
   void
-  insert_random_crates(arena& arena, entity_world_map& entity_map,
-                       entt::registry& registry,
+  insert_random_crates(const context& context, arena& arena,
+                       entity_world_map& entity_map, entt::registry& registry,
                        random_generator& random_generator,
                        std::uint8_t crate_probability, feature_flags features,
                        std::span<const position_on_grid> forbidden_positions);

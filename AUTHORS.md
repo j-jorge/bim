@@ -125,10 +125,16 @@ From https://commons.wikimedia.org/wiki/File:2-Dice-Icon.svg
 CC-BY-SA 3.0
 
 assets/sprites/bomb.png
-assets/sprites/crate.png
+assets/sprites/crate/idle.png
 Aryeom.
 CC-BY-SA 4.0.
 
+assets/sprites/crate/burning-0.png
+assets/sprites/crate/burning-1.png
+assets/sprites/crate/burning-2.png
+assets/sprites/crate/burning-3.png
+assets/sprites/crate/burning-4.png
+assets/sprites/crate/burning-5.png
 assets/sprites/player/1-walk-back-0-4.png
 assets/sprites/player/1-walk-back-1-3-m5-m7.png
 assets/sprites/player/1-walk-back-2-m6.png
@@ -435,6 +441,17 @@ assets/sprites/player/shield/4-walk-side-5-7.png
 assets/sprites/player/shield/4-walk-side-6.png
 assets/sprites/popup/popup-border-146-146.png
 assets/sprites/popup/popup-fill-146-146.png
+assets/sprites/smoke/smoke-0.png
+assets/sprites/smoke/smoke-1.png
+assets/sprites/smoke/smoke-2.png
+assets/sprites/smoke/smoke-3.png
+assets/sprites/smoke/smoke-4.png
+assets/sprites/smoke/smoke-5.png
+assets/sprites/smoke/smoke-6.png
+assets/sprites/smoke/smoke-7.png
+assets/sprites/smoke/smoke-8.png
+assets/sprites/smoke/smoke-9.png
+assets/sprites/smoke/smoke-10.png
 assets/sprites/transparent.png
 assets/sprites/ui/bomb-button.png
 assets/sprites/ui/directional-pad-down.png
