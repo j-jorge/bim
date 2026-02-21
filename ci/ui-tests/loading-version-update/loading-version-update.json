@@ -1,0 +1,17 @@
+{
+  "actions": [
+    {
+      "kind": "wait",
+      "event": "popup-shown"
+    },
+    {
+      "kind": "capture",
+      "file": "game-update-popup.png"
+    },
+    {
+      "kind": "click",
+      "node": "overlay/container/client_container/yes_button",
+      "event": "loaded"
+    }
+  ]
+}

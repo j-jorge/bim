@@ -87,16 +87,18 @@ namespace bim::axmol::app
     void start();
 
   private:
+    struct steps;
+
+  private:
     void resources_loaded();
 
-    void start_optimistic();
-    void start_fresh();
+    void try_create_ui();
     void create_ui();
 
-    bool load_config();
-    void config_ready();
     void fetch_remote_config();
     void validate_remote_config(const std::string_view& str);
+    void load_local_config();
+    void config_ready();
 
     bool display_version_update_message();
     void connect_to_game_server();
@@ -121,6 +123,6 @@ namespace bim::axmol::app
 
     bim::app::config m_config;
 
-    bool m_is_forcing_config_update;
+    std::uint8_t m_done_steps;
   };
 }

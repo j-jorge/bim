@@ -1,0 +1,8 @@
+{
+  "actions": [
+    {
+      "kind": "wait",
+      "event": "loaded"
+    }
+  ]
+}

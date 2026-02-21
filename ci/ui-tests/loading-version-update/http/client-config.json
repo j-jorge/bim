@@ -1,0 +1,9 @@
+{
+  "game-servers": [
+    {
+      "host": "localhost:12345"
+    }
+  ],
+
+  "most-recent-version": 500
+}

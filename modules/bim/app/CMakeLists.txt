@@ -10,7 +10,6 @@ set(main_sources
   main/src/bim/app/preference/arena_stats.cpp
   main/src/bim/app/preference/audio.cpp
   main/src/bim/app/preference/controls.cpp
-  main/src/bim/app/preference/date_of_next_config_update.cpp
   main/src/bim/app/preference/date_of_next_version_update_message.cpp
   main/src/bim/app/preference/feature_flags.cpp
   main/src/bim/app/preference/haptic.cpp
