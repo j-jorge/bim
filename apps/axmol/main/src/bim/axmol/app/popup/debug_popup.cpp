@@ -24,7 +24,6 @@
 
 #include <bim/app/analytics/coins_transaction.hpp>
 #include <bim/app/preference/arena_stats.hpp>
-#include <bim/app/preference/date_of_next_config_update.hpp>
 #include <bim/app/preference/date_of_next_version_update_message.hpp>
 #include <bim/app/preference/feature_flags.hpp>
 #include <bim/app/preference/wallet.hpp>
@@ -158,21 +157,9 @@ void bim::axmol::app::debug_popup::show()
   add_text_item("Defeats in arena",
                 std::to_string(bim::app::defeats_in_arena(preferences)));
 
-  const std::chrono::hours now = iscool::time::now<std::chrono::hours>();
   {
-    const std::chrono::hours d =
-        bim::app::date_of_next_config_update(preferences);
+    const std::chrono::hours now = iscool::time::now<std::chrono::hours>();
 
-    add_button_item("Config update in " + std::to_string((d - now).count())
-                        + " h.",
-                    [&preferences, now]() -> void
-                    {
-                      bim::app::date_of_next_config_update(
-                          preferences,
-                          std::chrono::duration_cast<std::chrono::hours>(now));
-                    });
-  }
-  {
     const std::chrono::hours d =
         bim::app::date_of_next_version_update_message(preferences);
 

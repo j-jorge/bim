@@ -9,7 +9,6 @@
 
 #include <bim/app/analytics/error.hpp>
 #include <bim/app/analytics_service.hpp>
-#include <bim/app/preference/date_of_next_config_update.hpp>
 #include <bim/app/preference/date_of_next_version_update_message.hpp>
 #include <bim/app/preference/update_preferences.hpp>
 
@@ -38,6 +37,25 @@
 #include <cstdlib>
 #include <fstream>
 
+/*
+  The opening process looks like this:
+
+  load_config   load_resources
+       |               |
+       +-------+-------+
+               |
+           create_ui
+     display_version_update
+     connect_to_game_server
+               |
+             open
+*/
+struct bim::axmol::app::main_task::steps
+{
+  static constexpr std::uint8_t config = 1 << 0;
+  static constexpr std::uint8_t resources = 1 << 1;
+};
+
 static std::string cached_remote_config_file()
 {
   return iscool::files::get_writable_path() + "/remote-config.json";
@@ -59,49 +77,35 @@ bim::axmol::app::main_task::~main_task() = default;
 
 void bim::axmol::app::main_task::start()
 {
+  m_done_steps = 0;
+
   m_loader_connection = m_loading_screen->connect_to_done(
       [this]()
       {
         resources_loaded();
       });
   m_loading_screen->start();
+
+  fetch_remote_config();
 }
 
 void bim::axmol::app::main_task::resources_loaded()
 {
+  m_done_steps |= steps::resources;
   m_context.get_audio()->play_music("menu", iscool::audio::loop_mode::forever);
 
-  if (load_config())
-    start_optimistic();
-  else
-    start_fresh();
+  try_create_ui();
 }
 
-/// Set up the game by considering that the configuration is in a good state.
-void bim::axmol::app::main_task::start_optimistic()
+void bim::axmol::app::main_task::try_create_ui()
 {
-  m_is_forcing_config_update = false;
-  bim::app::update_preferences(*m_context.get_local_preferences(), m_config);
-
-  if (iscool::time::now<std::chrono::hours>()
-      >= bim::app::date_of_next_config_update(
-          *m_context.get_local_preferences()))
-    fetch_remote_config();
+  if (m_done_steps != (steps::resources | steps::config))
+    return;
 
   create_ui();
 
   if (!display_version_update_message())
     connect_to_game_server();
-}
-
-/**
- * Fetch the remote config and wait for it before going on with the
- * initialization.
- */
-void bim::axmol::app::main_task::start_fresh()
-{
-  m_is_forcing_config_update = true;
-  fetch_remote_config();
 }
 
 void bim::axmol::app::main_task::create_ui()
@@ -124,36 +128,6 @@ void bim::axmol::app::main_task::create_ui()
   m_loading_screen->stop();
 }
 
-bool bim::axmol::app::main_task::load_config()
-{
-  const std::string remote_config_file = cached_remote_config_file();
-
-  if (iscool::files::full_path_exists(remote_config_file))
-    {
-      std::optional<bim::app::config> config =
-          bim::app::load_config(iscool::json::from_file(remote_config_file));
-
-      if (config)
-        {
-          m_config = std::move(*config);
-          return true;
-        }
-    }
-
-  return false;
-}
-
-void bim::axmol::app::main_task::config_ready()
-{
-  assert(m_is_forcing_config_update);
-  update_preferences(*m_context.get_local_preferences(), m_config);
-
-  create_ui();
-
-  if (!display_version_update_message())
-    connect_to_game_server();
-}
-
 void bim::axmol::app::main_task::fetch_remote_config()
 {
   ic_log(iscool::log::nature::info(), "main_task", "Updating config.");
@@ -161,9 +135,7 @@ void bim::axmol::app::main_task::fetch_remote_config()
   auto on_result = [this](const std::vector<char>& response) -> void
   {
     validate_remote_config(std::string_view(response.begin(), response.end()));
-
-    if (m_is_forcing_config_update)
-      config_ready();
+    config_ready();
   };
 
   auto on_error = [this](const std::vector<char>& response) -> void
@@ -172,8 +144,8 @@ void bim::axmol::app::main_task::fetch_remote_config()
            "Failed to fetch remote config {}.",
            std::string(response.begin(), response.end()));
 
-    if (m_is_forcing_config_update)
-      config_ready();
+    load_local_config();
+    config_ready();
   };
 
   m_config_request_connections = iscool::http::get(
@@ -205,8 +177,7 @@ void bim::axmol::app::main_task::validate_remote_config(
       return;
     }
 
-  if (m_is_forcing_config_update)
-    m_config = *config;
+  m_config = *config;
 
   const std::string tmp_path =
       iscool::files::get_writable_path() + "/remote-config.json.tmp";
@@ -227,11 +198,31 @@ void bim::axmol::app::main_task::validate_remote_config(
     }
 
   ic_log(iscool::log::nature::info(), "main_task", "Config updated.");
+}
 
-  bim::app::date_of_next_config_update(
-      *m_context.get_local_preferences(),
-      iscool::time::now<std::chrono::hours>()
-          + config->remote_config_update_interval);
+void bim::axmol::app::main_task::load_local_config()
+{
+  const std::string remote_config_file = cached_remote_config_file();
+
+  if (!iscool::files::full_path_exists(remote_config_file))
+    return;
+
+  std::optional<bim::app::config> config =
+      bim::app::load_config(iscool::json::from_file(remote_config_file));
+
+  if (!config)
+    return;
+
+  m_config = std::move(*config);
+}
+
+void bim::axmol::app::main_task::config_ready()
+{
+  m_done_steps |= steps::config;
+
+  bim::app::update_preferences(*m_context.get_local_preferences(), m_config);
+
+  try_create_ui();
 }
 
 bool bim::axmol::app::main_task::display_version_update_message()
@@ -294,20 +285,9 @@ void bim::axmol::app::main_task::connect_to_game_server()
 void bim::axmol::app::main_task::game_server_connection_error(
     bim::net::authentication_error_code error_code)
 {
-  if ((error_code == bim::net::authentication_error_code::bad_protocol)
-      && !m_is_forcing_config_update)
-    {
-      ic_log(iscool::log::nature::info(), "main_task",
-             "Bad protocol. Forcing a config update.");
-
-      start_fresh();
-    }
-  else
-    {
-      m_message_popup->show(fmt::format(
-          fmt::runtime(ic_gettext("Failed to authenticate with the "
-                                  "game server. Error code {}.")),
-          std::underlying_type_t<bim::net::authentication_error_code>(
-              error_code)));
-    }
+  m_message_popup->show(
+      fmt::format(fmt::runtime(ic_gettext("Failed to authenticate with the "
+                                          "game server. Error code {}.")),
+                  std::underlying_type_t<bim::net::authentication_error_code>(
+                      error_code)));
 }
