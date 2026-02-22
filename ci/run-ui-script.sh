@@ -177,6 +177,12 @@ working_directory=()
 
 for script in "${scripts[@]}"
 do
+    if [[ ! -r "$script" ]]
+    then
+        echo "File does not exist or is not readable: '$script'." >&2
+        exit 1
+    fi
+
     if jq '.actions[] | select(.kind == "capture")' "$script" \
             | grep --quiet .
     then
