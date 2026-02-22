@@ -4,9 +4,9 @@ set -euo pipefail
 
 [[ "${bim_target_platform:-}" == "linux" ]] || exit 0
 
-: "${cpptrace_repository:=https://github.com/j-jorge/cpptrace}"
+: "${cpptrace_repository:=https://github.com/jeremy-rifkin/cpptrace}"
 : "${cpptrace_version:=1.0.4}"
-package_revision=4
+package_revision=5
 version="$cpptrace_version"-"$package_revision"
 build_type=release
 
@@ -19,7 +19,7 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd)"
 . "$script_dir"/set-package-vars.sh cpptrace "$build_type"
 
 bim-git-clone-repository \
-    "$cpptrace_repository" "v$cpptrace_version" "$source_dir"
+    "$cpptrace_repository" "dev" "$source_dir"
 
 bim-cmake-build \
         --build-dir "$build_dir" \
@@ -35,15 +35,15 @@ bim-cmake-build \
 
 # There's no substitution here.
 # shellcheck disable=SC2016
-sed 's,set_target_properties(cpptrace::.\+,find_library(libunwind_path unwind REQUIRED)\nmessage(STATUS "libunwind: ${libunwind_path}")\n&,' \
-    -i \
-    "${install_dir}/lib/cmake/cpptrace/cpptrace-targets.cmake"
+# sed 's,set_target_properties(cpptrace::.\+,find_library(libunwind_path unwind REQUIRED)\nmessage(STATUS "libunwind: ${libunwind_path}")\n&,' \
+#     -i \
+#     "${install_dir}/lib/cmake/cpptrace/cpptrace-targets.cmake"
 
 # There's no substitution here.
 # shellcheck disable=SC2016
-sed 's,;-L/[^>]\+unwind>,;\\$<LINK_ONLY:${libunwind_path}>,' \
-    -i \
-    "${install_dir}/lib/cmake/cpptrace/cpptrace-targets.cmake"
+# sed 's,;-L/[^>]\+unwind>,;\\$<LINK_ONLY:${libunwind_path}>,' \
+#     -i \
+#     "${install_dir}/lib/cmake/cpptrace/cpptrace-targets.cmake"
 
 bim-package-and-install \
     "$install_dir" cpptrace "$version" "$build_type" libunwind
