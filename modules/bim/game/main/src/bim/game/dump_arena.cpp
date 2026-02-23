@@ -470,21 +470,22 @@ void bim::game::dump_arena(const arena& arena,
     printf("\n");
   };
 
-  if (!bombs.empty())
-    {
-      print_arena_line(' ');
-      printf("bombs(x, y, player, strength):\n");
-
-      while ((arena_print_y != h) && (bomb_print_i != bombs.size()))
-        {
-          print_arena_line(' ');
-          print_bombs_line();
-        }
-    }
-
   while (arena_print_y != h)
     print_arena_line('\n');
 
-  while (bomb_print_i != bombs.size())
-    print_bombs_line();
+  int bomb_lines = 0;
+  if (!bombs.empty())
+    {
+      printf("bombs(x, y, player, strength): ");
+      while (bomb_print_i != bombs.size())
+        {
+          print_bombs_line();
+          ++bomb_lines;
+        }
+    }
+
+  // Try to keep a fixed number of lines after the arena, it makes paging
+  // easier.
+  for (; bomb_lines < 3; ++bomb_lines)
+    printf("\n");
 }
