@@ -1,6 +1,5 @@
 # Next
 
-- Visual bug for stats with zero victories.
 - Share the logs when sending an e-mail.
 - Display the host in the debug menu.
 - Game state's CRC to be checked by the server.
