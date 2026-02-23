@@ -4,6 +4,7 @@
 #include <bim/game/contest_result.hpp>
 #include <bim/game/contest_timeline.hpp>
 #include <bim/game/dump_arena.hpp>
+#include <bim/game/feature_flags.hpp>
 
 #include <cerrno>
 #include <cstdio>
@@ -17,10 +18,42 @@ static void dump_timeline(const bim::game::contest_timeline& timeline)
   const bim::game::contest_fingerprint& fingerprint = timeline.fingerprint();
 
   const std::string page_separator(80, '-');
-  std::cout << "Tick count: " << timeline.tick_count() << ".\n"
-            << "Game seed: " << fingerprint.seed << ".\n"
-            << "Player count: " << (int)fingerprint.player_count << ".\n"
-            << page_separator << '\n';
+  std::cout << "Tick count: " << timeline.tick_count() << '\n'
+            << "Game seed: " << fingerprint.seed << '\n'
+            << "Player count: " << (int)fingerprint.player_count << '\n'
+            << "Features: (0x" << std::hex << (int)fingerprint.features
+            << ") [" << std::dec;
+
+  const char* separator = "";
+  for (bim::game::feature_flags f : bim::game::g_all_game_feature_flags)
+    {
+      if (!(fingerprint.features & f))
+        continue;
+
+      std::cout << separator;
+      separator = ", ";
+
+      switch (f)
+        {
+        case bim::game::feature_flags::falling_blocks:
+          std::cout << "falling_blocks";
+          break;
+        case bim::game::feature_flags::fog_of_war:
+          std::cout << "fog_of_war";
+          break;
+        case bim::game::feature_flags::invisibility:
+          std::cout << "invisibility";
+          break;
+        case bim::game::feature_flags::shield:
+          std::cout << "shield";
+          break;
+        case bim::game::feature_flags::fences:
+          std::cout << "fences";
+          break;
+        }
+    }
+
+  std::cout << "]\n" << page_separator << '\n';
 
   bim::game::contest contest(fingerprint);
 

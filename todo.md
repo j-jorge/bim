@@ -1,6 +1,5 @@
 # Next
 
-- Display the game features in the output of bim-player.
 - Visual bug for stats with zero victories.
 - Share the logs when sending an e-mail.
 - Display the host in the debug menu.
