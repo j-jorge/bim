@@ -12,6 +12,16 @@ if ((CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     -fno-omit-frame-pointer
   )
 
+  option(BIM_GENERIC_HARDWARE
+    "Compile for a generic hardware architecture (compilers's default)."
+    OFF
+  )
+  message("Targeting Generic hardware: ${BIM_GENERIC_HARDWARE}")
+
+  if (NOT BIM_BUILDING_FOR_ANDROID AND NOT BIM_GENERIC_HARDWARE)
+    add_compile_options(-march=x86-64-v3)
+  endif()
+
   # F-Droid requires identical binaries between its build and the
   # reference APK, thus we need a reproducible build for Android
   # release builds. We are going to drop the build ID in this case as
