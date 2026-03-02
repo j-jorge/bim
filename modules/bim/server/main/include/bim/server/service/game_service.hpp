@@ -3,6 +3,7 @@
 
 #include <bim/server/service/game_reward_availability_fwd.hpp>
 
+#include <bim/game/archive_storage.hpp>
 #include <bim/game/constant/max_player_count.hpp>
 #include <bim/game/feature_flags_fwd.hpp>
 
@@ -97,6 +98,8 @@ namespace bim::server
     session_to_channel_map m_session_to_channel;
     std::mt19937_64 m_random;
 
+    bim::game::archive_storage m_checksum_buffer;
+
     iscool::schedule::scoped_connection m_clean_up_connection;
     const std::chrono::seconds m_clean_up_interval;
 
@@ -117,6 +120,8 @@ namespace bim::server
     const std::uint16_t m_coins_per_short_game_victory;
     const std::uint16_t m_coins_per_short_game_defeat;
     const std::uint16_t m_coins_per_short_game_draw;
+
+    const bool m_checksum_validation;
 
     iscool::net::message_pool m_message_pool;
   };

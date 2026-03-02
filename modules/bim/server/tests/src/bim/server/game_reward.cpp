@@ -39,6 +39,7 @@ game_reward_test::game_reward_test()
                     config.game_service_coins_per_short_game_victory = 10;
                     config.game_service_coins_per_short_game_defeat = 20;
                     config.game_service_coins_per_short_game_draw = 30;
+
                     return config;
                   }())
 {}

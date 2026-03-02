@@ -100,6 +100,12 @@ namespace bim::server
      */
     std::uint16_t game_service_coins_per_short_game_draw;
 
+    /**
+     * Should we check the checksum of the game state against the checksum sent
+     * by the clients.
+     */
+    bool game_service_enable_checksum_validation;
+
     /** Path to the folder where to store the contest timelines. */
     std::string contest_timeline_folder;
 

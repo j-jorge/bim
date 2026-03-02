@@ -39,14 +39,16 @@ namespace bim::net
 
     void start();
 
-    void push(const bim::game::player_action& action);
+    void push(const bim::game::player_action& action,
+              std::uint32_t checksum_tick, std::uint32_t checksum);
+    void send();
 
   private:
     void deserialize(const iscool::net::message& message);
     void dispatch_start();
 
     bool append_to_current_update(const bim::game::player_action& action);
-    void send();
+    void internal_send();
 
     void confirm_game_tick(const iscool::net::message& m);
 

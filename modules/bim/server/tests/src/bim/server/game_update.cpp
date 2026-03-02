@@ -169,7 +169,13 @@ void game_update_test::client::launch_game(
 }
 
 game_update_test::game_update_test()
-  : m_config(bim::server::tests::new_test_config())
+  : m_config(
+        []() -> bim::server::config
+          {
+            bim::server::config config = bim::server::tests::new_test_config();
+            config.game_service_enable_checksum_validation = false;
+            return config;
+          }())
   , m_server(m_config)
   , m_socket_stream("localhost:" + std::to_string(m_config.port),
                     iscool::net::socket_mode::client{})
@@ -262,11 +268,11 @@ TEST_P(game_update_test, game_instant)
   };
 
   int player_to_action_index[std::size(actions)] = {};
-
   for (int i = 0; i != player_count; ++i)
     {
       player_to_action_index[*m_clients[i].m_player_index] = i;
-      m_clients[i].m_game_update->push(actions[i]);
+      m_clients[i].m_game_update->push(actions[i], 0, 0);
+      m_clients[i].m_game_update->send();
     }
 
   wait();
@@ -332,8 +338,11 @@ TEST_P(game_update_test, player_two_is_late)
     {
       player_to_action_index[*m_clients[client_index].m_player_index] =
           client_index;
-      m_clients[client_index].m_game_update->push(bim::game::player_action{
-          .movement = movements[client_index][0], .drop_bomb = false });
+      m_clients[client_index].m_game_update->push(
+          bim::game::player_action{ .movement = movements[client_index][0],
+                                    .drop_bomb = false },
+          0, 0);
+      m_clients[client_index].m_game_update->send();
     }
 
   wait();
@@ -380,8 +389,14 @@ TEST_P(game_update_test, player_two_is_late)
     {
       for (int client_index = 0; client_index != player_count; ++client_index)
         if (client_index != 1)
-          m_clients[client_index].m_game_update->push(bim::game::player_action{
-              .movement = movements[client_index][tick], .drop_bomb = false });
+          {
+            m_clients[client_index].m_game_update->push(
+                bim::game::player_action{ .movement =
+                                              movements[client_index][tick],
+                                          .drop_bomb = false },
+                0, 0);
+            m_clients[client_index].m_game_update->send();
+          }
 
       wait();
 
@@ -391,8 +406,13 @@ TEST_P(game_update_test, player_two_is_late)
 
   // Suddenly, player index=1 sends his actions.
   for (int tick = 1; tick != tick_count; ++tick)
-    m_clients[1].m_game_update->push(bim::game::player_action{
-        .movement = movements[1][tick], .drop_bomb = false });
+    {
+      m_clients[1].m_game_update->push(
+          bim::game::player_action{ .movement = movements[1][tick],
+                                    .drop_bomb = false },
+          0, 0);
+      m_clients[1].m_game_update->send();
+    }
 
   wait();
 

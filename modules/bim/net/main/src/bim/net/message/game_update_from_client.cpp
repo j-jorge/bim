@@ -14,7 +14,7 @@ bim::net::game_update_from_client::game_update_from_client(
   iscool::net::byte_array_reader reader(raw_content);
   std::uint8_t size;
 
-  reader >> from_tick >> size;
+  reader >> checksum_tick >> checksum >> from_tick >> size;
   actions.resize(size);
 
   iscool::net::byte_array_bit_reader bits(reader);
@@ -29,7 +29,8 @@ void bim::net::game_update_from_client::build_message(
   message.reset(get_type());
 
   iscool::net::byte_array& content = message.get_content();
-  content << from_tick << (std::uint8_t)actions.size();
+  content << checksum_tick << checksum << from_tick
+          << (std::uint8_t)actions.size();
 
   iscool::net::byte_array_bit_inserter bits(content);
 

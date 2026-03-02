@@ -24,6 +24,8 @@ namespace bim::net
     void build_message(iscool::net::message& message) const;
 
   public:
+    std::uint32_t checksum_tick;
+    std::uint32_t checksum;
     std::uint32_t from_tick;
     std::vector<bim::game::player_action> actions;
   };

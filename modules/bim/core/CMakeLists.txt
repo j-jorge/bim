@@ -1,7 +1,10 @@
 configure_file(version.hpp.in include/bim/version.hpp @ONLY)
 configure_file(tracy.hpp.in include/bim/tracy.hpp @ONLY)
 
-set(library_files "main/src/bim/template_instantiations.cpp")
+set(library_files
+  main/src/bim/crc32.cpp
+  main/src/bim/template_instantiations.cpp
+)
 
 if (BIM_ENABLE_TRACY)
   set(library_files ${library_files} "main/src/bim/new_delete.cpp")
@@ -15,32 +18,38 @@ target_include_directories(
   ${CMAKE_CURRENT_BINARY_DIR}/include
 )
 
+target_link_libraries(bim_core PRIVATE Boost::boost)
+
 if (BIM_ENABLE_TRACY)
   target_link_libraries(bim_core PUBLIC Tracy::TracyClient)
 endif()
 
-if (NOT BIM_BUILD_TESTS)
-  return()
+if (BIM_BUILD_TESTS)
+  add_library(bim_gtest_main
+    tests/src/gtest-main/gtest_main.cpp
+  )
+  target_link_libraries(
+    bim_gtest_main
+    PRIVATE
+    GTest::gtest
+    iscool_log
+  )
+
+  add_executable(core-tests
+    tests/src/bim/core/bit_map.cpp
+    tests/src/bim/core/table_2d.cpp
+  )
+  target_link_libraries(
+    core-tests
+    PRIVATE
+    bim_core
+    GTest::gtest
+    bim_gtest_main
+  )
 endif()
 
-add_library(bim_gtest_main
-  tests/src/gtest-main/gtest_main.cpp
-)
-target_link_libraries(
-  bim_gtest_main
-  PRIVATE
-  GTest::gtest
-  iscool_log
-)
-
-add_executable(core-tests
-  tests/src/bim/core/bit_map.cpp
-  tests/src/bim/core/table_2d.cpp
-)
-target_link_libraries(
-  core-tests
-  PRIVATE
-  bim_core
-  GTest::gtest
-  bim_gtest_main
+add_benchmark(
+  crc32-benchmark
+  SOURCES benchmarks/src/bim/crc32.cpp
+  LINK bim_core
 )

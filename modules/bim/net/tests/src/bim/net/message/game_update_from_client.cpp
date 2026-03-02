@@ -13,6 +13,8 @@ TEST(bim_net_game_update_from_client, serialization)
             source.get_type());
 
   source.from_tick = 24;
+  source.checksum = 42;
+  source.checksum_tick = 4242;
 
   source.actions.push_back({ bim::game::player_movement::idle, false });
   source.actions.push_back({ bim::game::player_movement::left, false });
@@ -35,6 +37,8 @@ TEST(bim_net_game_update_from_client, serialization)
   const bim::net::game_update_from_client deserialized(message.get_content());
 
   EXPECT_EQ(24, deserialized.from_tick);
+  EXPECT_EQ(42, deserialized.checksum);
+  EXPECT_EQ(4242, deserialized.checksum_tick);
 
   ASSERT_EQ(10, deserialized.actions.size());
 

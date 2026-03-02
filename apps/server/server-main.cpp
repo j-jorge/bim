@@ -430,6 +430,9 @@ static command_line parse_command_line(int argc, char* argv[])
                              boost::program_options::value<std::uint16_t>(),
                              "Coins reward for all players of a draw game in "
                              "random matchmaking when the game was short.");
+  game_options.add_options()("game-service-enable-checksum-validation",
+                             "Should we check the checksum of the game state "
+                             "against the checksum sent by the clients.");
 
   game_options.add_options()(
       "enable-contest-timeline-recording",
@@ -531,6 +534,8 @@ static command_line parse_command_line(int argc, char* argv[])
   parse_config_option(game_service_coins_per_short_game_victory);
   parse_config_option(game_service_coins_per_short_game_defeat);
   parse_config_option(game_service_coins_per_short_game_draw);
+
+  parse_config_option(game_service_enable_checksum_validation);
 
   parse_config_option(enable_contest_timeline_recording);
 

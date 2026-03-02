@@ -19,6 +19,10 @@
     {
       "version": 14,
       "host": "bim.jorge.st:20812"
+    },
+    {
+      "version": 15,
+      "host": "bim.jorge.st:30000"
     }
   ],
   "cpv": 50,

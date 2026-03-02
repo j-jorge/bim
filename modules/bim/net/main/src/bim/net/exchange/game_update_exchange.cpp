@@ -38,6 +38,8 @@ bim::net::game_update_exchange::game_update_exchange(
 {
   m_channel_signal_connection = m_message_channel.connect_to_message(std::bind(
       &game_update_exchange::deserialize, this, std::placeholders::_2));
+
+  m_current_update.from_tick = 0;
 }
 
 bim::net::game_update_exchange::~game_update_exchange() = default;
@@ -51,15 +53,22 @@ void bim::net::game_update_exchange::start()
 }
 
 void bim::net::game_update_exchange::push(
-    const bim::game::player_action& action)
+    const bim::game::player_action& action, std::uint32_t checksum_tick,
+    std::uint32_t checksum)
 {
+  m_current_update.checksum_tick = checksum_tick;
+  m_current_update.checksum = checksum;
+
   m_action_queue.emplace_back(action);
 
   if (append_to_current_update(action))
     m_current_update.build_message(m_client_out_message);
+}
 
+void bim::net::game_update_exchange::send()
+{
   if (!m_send_connection.connected())
-    send();
+    internal_send();
 }
 
 void bim::net::game_update_exchange::deserialize(
@@ -87,6 +96,8 @@ void bim::net::game_update_exchange::dispatch_start()
   m_monitor->set_play_state();
 
   m_current_update.from_tick = 0;
+  m_current_update.checksum_tick = 0;
+  m_current_update.checksum = 0;
 
   m_current_update.actions.clear();
   m_current_update.actions.reserve(32);
@@ -111,12 +122,12 @@ bool bim::net::game_update_exchange::append_to_current_update(
   return true;
 }
 
-void bim::net::game_update_exchange::send()
+void bim::net::game_update_exchange::internal_send()
 {
   m_message_channel.send(m_client_out_message);
 
   m_send_connection = iscool::schedule::delayed_call(
-      std::bind(&game_update_exchange::send, this),
+      std::bind(&game_update_exchange::internal_send, this),
       std::chrono::milliseconds(15));
 }
 
@@ -194,6 +205,7 @@ void bim::net::game_update_exchange::store_server_frames(
   bim_assume(m_player_count <= bim::game::g_max_player_count);
 
   m_server_update.from_tick = message.from_tick;
+  m_server_update.final_checksum = message.final_checksum;
 
   for (int player_index = 0; player_index != m_player_count; ++player_index)
     {
@@ -210,9 +222,12 @@ void bim::net::game_update_exchange::store_server_frames(
 
 void bim::net::game_update_exchange::remove_server_confirmed_actions()
 {
-  std::size_t tick_count = m_server_update.actions[0].size();
+  // Get the largest number of tick processed by the players on the server. In
+  // the general case it's the same number for each player, except if a player
+  // dies in between, in which case it will have fewer ticks.
+  std::size_t tick_count = 0;
 
-  for (int player_index = 1; player_index != m_player_count; ++player_index)
+  for (int player_index = 0; player_index != m_player_count; ++player_index)
     if (m_server_update.actions[player_index].size() > tick_count)
       tick_count = m_server_update.actions[player_index].size();
 
@@ -223,6 +238,9 @@ void bim::net::game_update_exchange::remove_server_confirmed_actions()
 
   m_action_queue.erase(m_action_queue.begin(),
                        m_action_queue.begin() + tick_count);
+
+  if (m_action_queue.empty())
+    return;
 
   for (const bim::game::player_action& action : m_action_queue)
     if (!append_to_current_update(action))

@@ -3,9 +3,11 @@
 
 #include <bim/game/cell_neighborhood_fwd.hpp>
 
+#include <cstdint>
+
 namespace bim::game
 {
-  enum class fog_state
+  enum class fog_state : std::uint8_t
   {
     /// The fog is appearing, i.e. going toward full opacity.
     roll_in,

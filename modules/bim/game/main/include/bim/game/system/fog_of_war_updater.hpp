@@ -9,13 +9,14 @@
 #include <entt/entity/fwd.hpp>
 
 #include <chrono>
+#include <cstdint>
 
 namespace bim::game
 {
   class arena;
   struct fog_of_war;
   struct timer;
-  enum class fog_state;
+  enum class fog_state : std::uint8_t;
 
   namespace detail
   {

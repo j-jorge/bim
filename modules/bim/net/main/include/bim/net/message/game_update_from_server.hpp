@@ -27,6 +27,9 @@ namespace bim::net
     /** Tick from which to play the following actions apply. */
     std::uint32_t from_tick;
 
+    /** Checksum of the game state at tick from_tick. */
+    std::uint32_t final_checksum;
+
     /** The actual actions, per player. */
     std::vector<std::vector<bim::game::player_action>> actions;
   };
