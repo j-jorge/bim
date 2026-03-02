@@ -25,6 +25,7 @@ namespace bim::net
 
   public:
     std::uint32_t from_tick;
+    std::uint32_t from_checksum;
     std::vector<bim::game::player_action> actions;
   };
 }

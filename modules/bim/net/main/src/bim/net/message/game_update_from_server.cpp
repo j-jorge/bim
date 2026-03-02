@@ -14,7 +14,7 @@ bim::net::game_update_from_server::game_update_from_server(
   iscool::net::byte_array_reader reader(raw_content);
   std::uint8_t player_count;
 
-  reader >> from_tick >> player_count;
+  reader >> from_tick >> final_checksum >> player_count;
   actions.resize(player_count);
 
   for (std::vector<bim::game::player_action>& v : actions)
@@ -41,7 +41,7 @@ void bim::net::game_update_from_server::build_message(
   const std::uint8_t player_count = actions.size();
   assert(player_count > 0);
 
-  content << from_tick << player_count;
+  content << from_tick << final_checksum << player_count;
 
   for (const std::vector<bim::game::player_action>& v : actions)
     {

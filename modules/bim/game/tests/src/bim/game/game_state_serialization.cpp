@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-#include <bim/game/input_archive.hpp>
-#include <bim/game/output_archive.hpp>
+#include <bim/game/game_state_serialization.hpp>
 
 #include <bim/game/component/bomb.hpp>
 #include <bim/game/component/flame.hpp>
@@ -10,11 +9,10 @@
 #include <bim/game/component/timer.hpp>
 
 #include <entt/entity/registry.hpp>
-#include <entt/entity/snapshot.hpp>
 
 #include <gtest/gtest.h>
 
-TEST(bim_game_archive, pod_components_multiple_steps)
+TEST(bim_game_game_state_serialization, pod_components_multiple_steps)
 {
   entt::registry registry;
   entt::entity entities[] = { registry.create(), registry.create(),
@@ -32,30 +30,14 @@ TEST(bim_game_archive, pod_components_multiple_steps)
                                      bim::game::flame_segment::tip);
 
   bim::game::archive_storage bytes;
-  bim::game::output_archive out(bytes);
-
-  entt::snapshot(registry)
-      .get<entt::entity>(out)
-      .get<bim::game::bomb>(out)
-      .get<bim::game::position_on_grid>(out)
-      .get<bim::game::player>(out)
-      .get<bim::game::flame>(out)
-      .get<bim::game::timer>(out);
+  bim::game::serialize_state(bytes, registry);
 
   registry.clear();
 
   for (std::size_t i = 0; i != std::size(entities); ++i)
     EXPECT_FALSE(registry.valid(entities[i])) << "i=" << i;
 
-  bim::game::input_archive in(&bytes[0]);
-  // It is essential to keep the order indentical to above.
-  entt::snapshot_loader(registry)
-      .get<entt::entity>(in)
-      .get<bim::game::bomb>(in)
-      .get<bim::game::position_on_grid>(in)
-      .get<bim::game::player>(in)
-      .get<bim::game::flame>(in)
-      .get<bim::game::timer>(in);
+  bim::game::deserialize_state(registry, bytes);
 
   for (std::size_t i = 0; i != std::size(entities); ++i)
     EXPECT_TRUE(registry.valid(entities[i])) << "i=" << i;

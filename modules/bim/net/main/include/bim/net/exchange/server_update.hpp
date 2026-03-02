@@ -13,6 +13,7 @@ namespace bim::net
   struct server_update
   {
     std::uint32_t from_tick;
+    std::uint32_t final_checksum;
     std::array<std::vector<bim::game::player_action>,
                bim::game::g_max_player_count>
         actions;

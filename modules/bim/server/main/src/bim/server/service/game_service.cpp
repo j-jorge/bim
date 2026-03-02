@@ -23,10 +23,12 @@
 #include <bim/game/constant/max_player_count.hpp>
 #include <bim/game/contest.hpp>
 #include <bim/game/contest_result.hpp>
+#include <bim/game/game_state_serialization.hpp>
 #include <bim/game/kick_event.hpp>
 #include <bim/game/player_action.hpp>
 
 #include <bim/assume.hpp>
+#include <bim/crc32.hpp>
 
 #include <iscool/log/log.hpp>
 #include <iscool/log/nature/info.hpp>
@@ -36,6 +38,10 @@
 #include <algorithm>
 #include <array>
 #include <limits>
+
+#ifndef NDEBUG
+  #include <print>
+#endif
 
 static constexpr std::uint8_t g_crate_probability = 80;
 
@@ -68,11 +74,11 @@ struct bim::server::game_service::game
   /*
     In short, the communication works as follows:
     - The clients send their actions,
-    - The server answer with the actions of all clients.
+    - The server answers with the actions of all clients.
 
     In order to send the actions of the other clients we need to keep a range
     of player actions for each player. When a client sends its updates, we know
-    his reference point in the simulation, and the sequence of actions they
+    their reference point in the simulation, and the sequence of actions they
     executed (and thus the number of steps in the simulation). Their reference
     point in the simulation is based on completed_tick_count_per_player, the
     actions are stored in actions. When the game starts,
@@ -89,6 +95,37 @@ struct bim::server::game_service::game
     tick. We store the count of ticks that have been confirmed by all players
     (i.e. the index of the tick at which must be applied the first action in
     each of the vectors in actions below) in completed_tick_count_all.
+
+    You know something is wrong in a software when the comments contains ASCII
+    art.
+
+    +---------------------------------------+
+    |               Legend                  |
+    +---------------------------------------+
+    | ~ The player knows the action of      |
+    |   the other players at this tick.     |
+    | - The player has predicted the action |
+    |   of the other players at this tick.  |
+    +---------------------------------------+
+
+                  +- completed_tick_count_all
+                  |
+                  |  +- completed_tick_count_per_player[0]
+                  |  |
+                  |  | +- simulation_tick
+                  |  | |
+                  |  | |
+                  |  | |
+                  |  v |
+    Player #0 ~~~~~~~---------->
+                  |    v
+    Player #1 ~~~~~---->
+                  |       actions[2]
+                  | ______|___
+                  v/          \
+    Player #2 ~~~~------------->
+
+    Player #3 ~~~~~~~~~~---->
   */
 
 public:
@@ -136,24 +173,29 @@ public:
 
   simulation_state update()
   {
-    const simulation_state result = drop_old_actions();
-    align_simulation_tick();
+    const simulation_state result = align_simulation_tick();
+
+    drop_old_actions();
 
     return result;
+  }
+
+  void compute_checksum(bim::game::archive_storage& checksum_buffer)
+  {
+    bim::game::serialize_state(checksum_buffer, contest.registry());
+    simulation_checksum = bim::crc32(checksum_buffer);
   }
 
 private:
   /**
    * Remove from the action list all actions that have been confirmed by all
    * players. This updates the globally-confirmed state of the simulation.
-   *
-   * \return True if the simulation has been updated, false otherwise.
    */
-  simulation_state drop_old_actions()
+  void drop_old_actions()
   {
-    // Offset is the number of ticks that have been processed by all active
-    // clients, since completed_tick_count_all.
-    std::size_t offset = std::numeric_limits<std::size_t>::max();
+    // This offset is the number of ticks that have been processed by all
+    // active clients, since completed_tick_count_all.
+    std::size_t offset_to_all = std::numeric_limits<std::size_t>::max();
 
     bim_assume(player_count >= 2);
     bim_assume(player_count <= bim::game::g_max_player_count);
@@ -164,20 +206,13 @@ private:
          ++player_index)
       if (active[player_index])
         {
-          const std::size_t player_offset =
+          const std::size_t player_offset_to_all =
               completed_tick_count_per_player[player_index]
               - completed_tick_count_all;
 
-          if (player_offset < offset)
-            offset = player_offset;
+          if (player_offset_to_all < offset_to_all)
+            offset_to_all = player_offset_to_all;
         }
-
-    if (offset == 0)
-      return contest_result.still_running() ? simulation_state::frozen
-                                            : simulation_state::flushing;
-
-    // Play the ticks reached by all players.
-    const bool game_over_reached = seal_player_actions(offset);
 
     // Actually remove the actions.
     for (std::uint8_t player_index = 0; player_index != player_count;
@@ -188,12 +223,48 @@ private:
 
         // Inactive players may not have "offset" actions, so we must restrict
         // the removal to what we actually have.
-        player_actions.erase(player_actions.begin(),
-                             player_actions.begin()
-                                 + std::min(offset, player_actions.size()));
+        player_actions.erase(
+            player_actions.begin(),
+            player_actions.begin()
+                + std::min(offset_to_all, player_actions.size()));
       }
 
-    completed_tick_count_all += offset;
+    completed_tick_count_all += offset_to_all;
+    assert(completed_tick_count_all <= simulation_tick);
+  }
+
+  /**
+   * Update the simulation to the highest step simulated by all players.
+   */
+  simulation_state align_simulation_tick()
+  {
+    std::uint32_t offset_to_simulation =
+        std::numeric_limits<std::uint32_t>::max();
+
+    bim_assume(player_count >= 2);
+    bim_assume(player_count <= bim::game::g_max_player_count);
+
+    for (std::uint8_t player_index = 0; player_index != player_count;
+         ++player_index)
+      if (active[player_index])
+        {
+          const std::size_t player_offset_to_simulation =
+              completed_tick_count_all + actions[player_index].size()
+              - simulation_tick;
+
+          if (player_offset_to_simulation < offset_to_simulation)
+            offset_to_simulation = player_offset_to_simulation;
+        }
+
+    if (offset_to_simulation == 0)
+      return contest_result.still_running() ? simulation_state::frozen
+                                            : simulation_state::flushing;
+
+    // Play the ticks reached by all players.
+    const bool game_over_reached = seal_player_actions(offset_to_simulation);
+
+    simulation_tick += offset_to_simulation;
+    assert(simulation_tick >= completed_tick_count_all);
 
     if (game_over_reached)
       return simulation_state::over;
@@ -205,36 +276,16 @@ private:
   }
 
   /**
-   * Update simulation_tick to the highest step confirmed by all players.
-   */
-  void align_simulation_tick()
-  {
-    std::uint32_t simulation_offset =
-        std::numeric_limits<std::uint32_t>::max();
-
-    bim_assume(player_count >= 2);
-    bim_assume(player_count <= bim::game::g_max_player_count);
-
-    for (std::uint8_t player_index = 0; player_index != player_count;
-         ++player_index)
-      if (active[player_index])
-        {
-          const std::uint32_t tick_count = actions[player_index].size();
-
-          if (tick_count < simulation_offset)
-            simulation_offset = tick_count;
-        }
-
-    simulation_tick = completed_tick_count_all + simulation_offset;
-  }
-
-  /**
    * Run some ticks known to have been reached by all players.
    * \param count The number of ticks to play.
    */
   bool seal_player_actions(std::size_t count)
   {
     bool reached_game_over = false;
+
+    assert(simulation_tick > completed_tick_count_all);
+    const std::size_t action_base_index =
+        simulation_tick - completed_tick_count_all;
 
     for (std::size_t i = 0; i != count; ++i)
       {
@@ -245,10 +296,15 @@ private:
         for (int p = 0; p != player_count; ++p)
           if (player_actions[p])
             {
-              if (i < actions[p].size())
-                *player_actions[p] = actions[p][i];
-              else if (i == actions[p].size())
+              if (!active[p])
                 bim::game::kick_player(contest.registry(), p);
+              else
+                {
+                  const std::size_t action_index = action_base_index + i;
+
+                  assert(action_index < actions[p].size());
+                  *player_actions[p] = actions[p][action_index];
+                }
             }
 
         if (timeline_writer)
@@ -260,13 +316,35 @@ private:
           {
             reached_game_over = true;
             contest_result = tick_result;
-            game_over_tick = completed_tick_count_all + i;
+            game_over_tick = simulation_tick + i;
             timeline_writer = {};
           }
       }
 
     return reached_game_over;
   }
+
+#ifndef NDEBUG
+  void dump() const
+  {
+    std::println("still_running={}", contest_result.still_running());
+    if (!contest_result.still_running())
+      std::println("game_over_tick={}", game_over_tick);
+
+    std::println("active=[{}, {}, {}, {}]", active[0], active[1], active[2],
+                 active[3]);
+    std::println("completed_tick_count_all={}", completed_tick_count_all);
+    std::println("completed_tick_count_per_player=[{}, {}, {}, {}]",
+                 completed_tick_count_per_player[0],
+                 completed_tick_count_per_player[1],
+                 completed_tick_count_per_player[2],
+                 completed_tick_count_per_player[3]);
+    std::println("actions=[{}, {}, {}, {}]", actions[0].size(),
+                 actions[1].size(), actions[2].size(), actions[3].size());
+    std::println("simulation_tick={}", simulation_tick);
+    std::println();
+  }
+#endif
 
 public:
   std::uint64_t seed;
@@ -283,6 +361,9 @@ public:
    * actions[i].size()).
    */
   std::uint32_t simulation_tick;
+
+  /** Checksum of the game state at simulation_tick. */
+  std::uint32_t simulation_checksum;
 
   /**
    * The tick confirmed by every client, i.e. each client knows the actions of
@@ -408,6 +489,7 @@ bim::server::game_info bim::server::game_service::new_game(
                                          sessions))
           .first->second;
 
+  game.compute_checksum(m_checksum_buffer);
   game.reward_availability = reward_availability;
 
   for (int i = 0; i != player_count; ++i)
@@ -559,8 +641,9 @@ void bim::server::game_service::push_update(
     queue_actions(*update, player_index, game);
 
   bool do_send_actions = true;
+  const simulation_state state = game.update();
 
-  switch (game.update())
+  switch (state)
     {
     case simulation_state::frozen:
       check_drop_desynchronized_player(channel, game, now);
@@ -579,6 +662,9 @@ void bim::server::game_service::push_update(
         }
       break;
     }
+
+  if (state != simulation_state::frozen)
+    game.compute_checksum(m_checksum_buffer);
 
   // Keep sending the actions to the player to notify it about any updates,
   // even if the game could not be updated. Even if one player is frozen we
@@ -669,7 +755,10 @@ void bim::server::game_service::queue_actions(
 
   const std::size_t tick_count = message.actions.size();
 
-  std::size_t tick_index =
+  // Index of the first new tick in the received actions: The tick validated by
+  // everybody, plus the actions from this specific player, minus the starting
+  // point from this update.
+  const std::size_t tick_index =
       game.completed_tick_count_all + local_actions.size() - message.from_tick;
   bim_assume(tick_index <= tick_count);
 
@@ -707,6 +796,7 @@ void bim::server::game_service::send_actions(
 
   bim::net::game_update_from_server message;
   message.from_tick = completed_tick_count_for_player;
+  message.final_checksum = game.simulation_checksum;
   message.actions.resize(game.player_count);
 
   for (std::uint8_t player = 0; player != game.player_count; ++player)

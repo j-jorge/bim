@@ -13,6 +13,7 @@ TEST(bim_net_game_update_from_server, serialization)
             source.get_type());
 
   source.from_tick = 24;
+  source.final_checksum = 42;
 
   source.actions.resize(4);
 
@@ -39,6 +40,7 @@ TEST(bim_net_game_update_from_server, serialization)
   const bim::net::game_update_from_server deserialized(message.get_content());
 
   EXPECT_EQ(24, deserialized.from_tick);
+  EXPECT_EQ(42, deserialized.final_checksum);
 
   ASSERT_EQ(4, deserialized.actions.size());
 

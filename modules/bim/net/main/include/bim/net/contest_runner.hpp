@@ -67,7 +67,10 @@ namespace bim::net
     std::array<std::vector<bim::game::player_action>,
                bim::game::g_max_player_count>
         m_server_actions;
+    std::uint32_t m_server_checksum;
+
     std::uint32_t m_last_confirmed_tick;
+    std::uint32_t m_last_confirmed_checksum;
     std::uint32_t m_last_completed_tick;
 
     std::array<std::vector<bim::game::player_action>,

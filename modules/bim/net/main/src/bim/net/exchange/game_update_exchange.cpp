@@ -38,6 +38,8 @@ bim::net::game_update_exchange::game_update_exchange(
 {
   m_channel_signal_connection = m_message_channel.connect_to_message(std::bind(
       &game_update_exchange::deserialize, this, std::placeholders::_2));
+
+  m_current_update.from_tick = 0;
 }
 
 bim::net::game_update_exchange::~game_update_exchange() = default;
@@ -60,6 +62,13 @@ void bim::net::game_update_exchange::push(
 
   if (!m_send_connection.connected())
     send();
+}
+
+void bim::net::game_update_exchange::checksum(std::uint32_t tick,
+                                              std::uint32_t checksum)
+{
+  assert(tick == m_current_update.from_tick);
+  m_current_update.from_checksum = checksum;
 }
 
 void bim::net::game_update_exchange::deserialize(
@@ -87,6 +96,7 @@ void bim::net::game_update_exchange::dispatch_start()
   m_monitor->set_play_state();
 
   m_current_update.from_tick = 0;
+  m_current_update.from_checksum = 0;
 
   m_current_update.actions.clear();
   m_current_update.actions.reserve(32);
@@ -194,6 +204,7 @@ void bim::net::game_update_exchange::store_server_frames(
   bim_assume(m_player_count <= bim::game::g_max_player_count);
 
   m_server_update.from_tick = message.from_tick;
+  m_server_update.final_checksum = message.final_checksum;
 
   for (int player_index = 0; player_index != m_player_count; ++player_index)
     {
@@ -210,9 +221,12 @@ void bim::net::game_update_exchange::store_server_frames(
 
 void bim::net::game_update_exchange::remove_server_confirmed_actions()
 {
-  std::size_t tick_count = m_server_update.actions[0].size();
+  // Get the largest number of tick processed by the players on the server. In
+  // the general case it's the same number for each player, except if a player
+  // dies in between, in which case it will have fewer ticks.
+  std::size_t tick_count = 0;
 
-  for (int player_index = 1; player_index != m_player_count; ++player_index)
+  for (int player_index = 0; player_index != m_player_count; ++player_index)
     if (m_server_update.actions[player_index].size() > tick_count)
       tick_count = m_server_update.actions[player_index].size();
 

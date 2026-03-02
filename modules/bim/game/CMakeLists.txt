@@ -12,11 +12,10 @@ add_library(bim_game
   main/src/bim/game/dump_arena.cpp
   main/src/bim/game/entity_world_map.cpp
   main/src/bim/game/feature_flags.cpp
-  main/src/bim/game/input_archive.cpp
+  main/src/bim/game/game_state_serialization.cpp
   main/src/bim/game/kick_event.cpp
   main/src/bim/game/level_generation.cpp
   main/src/bim/game/navigation_check.cpp
-  main/src/bim/game/output_archive.cpp
   main/src/bim/game/player_action.cpp
   main/src/bim/game/random_generator.cpp
   main/src/bim/game/tick_counter.cpp
@@ -81,12 +80,12 @@ target_link_libraries(bim_game PUBLIC bim_core iscool_net EnTT::EnTT)
 
 if (BIM_BUILD_TESTS)
   add_executable(game-tests
-    tests/src/bim/game/archive.cpp
     tests/src/bim/game/arena.cpp
     tests/src/bim/game/check_game_over.cpp
     tests/src/bim/game/contest.cpp
     tests/src/bim/game/contest_timeline.cpp
     tests/src/bim/game/entity_world_map.cpp
+    tests/src/bim/game/game_state_serialization.cpp
     tests/src/bim/game/level_generation.cpp
     tests/src/bim/game/navigation_check.cpp
     tests/src/bim/game/player_action.cpp
@@ -125,17 +124,8 @@ if (BIM_BUILD_TESTS)
   )
 endif()
 
-if (BIM_BUILD_BENCHMARKS)
-  add_executable(
-    navigation-check-benchmark
-    benchmarks/src/bim/game/navigation_check.cpp
-  )
-  target_link_libraries(
-    navigation-check-benchmark
-    PRIVATE
-    bim_game
-    benchmark::benchmark
-    benchmark::benchmark_main
-  )
-  add_dependencies(benchmarks navigation-check-benchmark)
-endif()
+add_benchmark(
+  navigation-check-benchmark
+  SOURCES benchmarks/src/bim/game/navigation_check.cpp
+  LINK bim_game
+)

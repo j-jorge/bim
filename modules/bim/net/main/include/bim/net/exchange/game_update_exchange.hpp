@@ -40,6 +40,7 @@ namespace bim::net
     void start();
 
     void push(const bim::game::player_action& action);
+    void checksum(std::uint32_t tick, std::uint32_t checksum);
 
   private:
     void deserialize(const iscool::net::message& message);
