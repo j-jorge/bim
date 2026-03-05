@@ -6,6 +6,8 @@
 #include <bim/game/dump_arena.hpp>
 #include <bim/game/feature_flags.hpp>
 
+#include <iscool/log/enable_console_log.hpp>
+
 #include <cerrno>
 #include <cstdio>
 #include <cstdlib>
@@ -96,6 +98,8 @@ static void usage(std::string_view program_name)
 
 int main(int argc, char* argv[])
 {
+  iscool::log::enable_console_log();
+
   for (int i = 1; i != argc; ++i)
     {
       const std::string_view arg = argv[i];
