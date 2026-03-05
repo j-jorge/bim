@@ -90,14 +90,14 @@ bool bim::game::load_contest_timeline(contest_timeline& timeline, std::FILE* f)
   if (timeline.m_fingerprint.player_count == 0)
     {
       ic_log(iscool::log::nature::error(), "load_contest_timeline",
-             "there is no player in this game.");
+             "There is no player in this game.");
       return false;
     }
 
-  if (timeline.m_fingerprint.player_count >= bim::game::g_max_player_count)
+  if (timeline.m_fingerprint.player_count > bim::game::g_max_player_count)
     {
       ic_log(iscool::log::nature::error(), "load_contest_timeline",
-             "there are too many players in this game, I cannot handle more "
+             "There are too many players in this game, I cannot handle more "
              "than {}.",
              bim::game::g_max_player_count);
       return false;
