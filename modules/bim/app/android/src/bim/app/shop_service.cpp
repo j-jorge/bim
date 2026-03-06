@@ -22,27 +22,27 @@ bim::app::shop_service::shop_service()
         std::function<void(
             const iscool::jni::hash_map<jstring, jstring>& products)>(
             [this](const iscool::jni::hash_map<jstring, jstring>& products)
-            {
-              dispatch_products_ready(products);
-            }))
+              {
+                dispatch_products_ready(products);
+              }))
   , m_products_error_from_java(std::function<void()>(
         [this]()
-        {
-          m_products_error();
-        }))
+          {
+            m_products_error();
+          }))
   , m_purchase_completed_from_java(
         std::function<void(const std::string&, int quantity,
                            const std::string&)>(
             [this](const std::string& product_id, int quantity,
                    const std::string& token)
-            {
-              m_purchase_completed(product_id, quantity, token);
-            }))
+              {
+                m_purchase_completed(product_id, quantity, token);
+              }))
   , m_purchase_error_from_java(std::function<void()>(
         [this]()
-        {
-          m_purchase_error();
-        }))
+          {
+            m_purchase_error();
+          }))
 {
   const iscool::jni::static_method<void> set_callbacks(
       iscool::jni::get_static_method<void>("bim/app/ShopService",

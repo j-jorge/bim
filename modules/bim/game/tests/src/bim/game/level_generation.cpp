@@ -96,9 +96,9 @@ TEST_P(bim_game_level_generation_test, random_crates)
 
   registry.view<bim::game::position_on_grid, bim::game::crate>().each(
       [&crate_count](const bim::game::position_on_grid&) -> void
-      {
-        ++crate_count;
-      });
+        {
+          ++crate_count;
+        });
 
   EXPECT_LT(0, crate_count);
   EXPECT_LE(crate_count, free_cell_count);

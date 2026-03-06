@@ -98,14 +98,14 @@ bim::axmol::app::debug_popup::debug_popup(
 {
   m_controls->close_button->connect_to_clicked(
       [this]()
-      {
-        m_popup->hide();
-      });
+        {
+          m_popup->hide();
+        });
   m_escape->connect_to_released(
       [this]()
-      {
-        m_popup->hide();
-      });
+        {
+          m_popup->hide();
+        });
 }
 
 bim::axmol::app::debug_popup::~debug_popup() = default;
@@ -131,19 +131,19 @@ void bim::axmol::app::debug_popup::show()
       add_title("WALLET");
       add_button_item("Get 10 coins.",
                       [this]() -> void
-                      {
-                        coin_transaction(10);
-                      });
+                        {
+                          coin_transaction(10);
+                        });
       add_button_item("Get 100 coins.",
                       [this]() -> void
-                      {
-                        coin_transaction(100);
-                      });
+                        {
+                          coin_transaction(100);
+                        });
       add_button_item("Lose 100 coins.",
                       [this]() -> void
-                      {
-                        coin_transaction(-100);
-                      });
+                        {
+                          coin_transaction(-100);
+                        });
     }
 
   add_title("PREFERENCES");
@@ -163,14 +163,14 @@ void bim::axmol::app::debug_popup::show()
     const std::chrono::hours d =
         bim::app::date_of_next_version_update_message(preferences);
 
-    add_button_item("Version check in " + std::to_string((d - now).count())
-                        + " h.",
-                    [&preferences, now]() -> void
-                    {
-                      bim::app::date_of_next_version_update_message(
-                          preferences,
-                          std::chrono::duration_cast<std::chrono::hours>(now));
-                    });
+    add_button_item(
+        "Version check in " + std::to_string((d - now).count()) + " h.",
+        [&preferences, now]() -> void
+          {
+            bim::app::date_of_next_version_update_message(
+                preferences,
+                std::chrono::duration_cast<std::chrono::hours>(now));
+          });
   }
 
   add_title("SYSTEM");
@@ -187,10 +187,10 @@ void bim::axmol::app::debug_popup::add_fps_entry()
 
   add_toggle_item("Show FPS", director.isStatsDisplay(),
                   [&director]() -> bool
-                  {
-                    director.setStatsDisplay(!director.isStatsDisplay());
-                    return director.isStatsDisplay();
-                  });
+                    {
+                      director.setStatsDisplay(!director.isStatsDisplay());
+                      return director.isStatsDisplay();
+                    });
 }
 
 void bim::axmol::app::debug_popup::add_feature_item(
@@ -201,14 +201,14 @@ void bim::axmol::app::debug_popup::add_feature_item(
          & flag);
 
   const auto toggle_flag = [this, flag]() -> bool
-  {
-    const bim::game::feature_flags new_flags =
-        bim::app::available_feature_flags(*m_context.get_local_preferences())
-        ^ flag;
-    bim::app::available_feature_flags(*m_context.get_local_preferences(),
-                                      new_flags);
-    return !!(new_flags & flag);
-  };
+    {
+      const bim::game::feature_flags new_flags =
+          bim::app::available_feature_flags(*m_context.get_local_preferences())
+          ^ flag;
+      bim::app::available_feature_flags(*m_context.get_local_preferences(),
+                                        new_flags);
+      return !!(new_flags & flag);
+    };
 
   add_toggle_item(label, available, toggle_flag);
 }
@@ -247,9 +247,9 @@ void bim::axmol::app::debug_popup::add_toggle_item(
   t.set_state(state);
   t.connect_to_clicked(
       [&t, do_toggle = std::move(do_toggle)]() -> void
-      {
-        t.set_state(do_toggle());
-      });
+        {
+          t.set_state(do_toggle());
+        });
 
   add_item(controls.all_nodes, m_toggle_item_bounds);
 }

@@ -23,24 +23,24 @@ void bim::axmol::action::register_actions(dynamic_factory& factory)
   factory.register_action(                                                    \
       #name,                                                                  \
       [](const colour_chart&, const iscool::style::declaration& style)        \
-      {                                                                       \
-        return name##_from_style(style);                                      \
-      })
+        {                                                                     \
+          return name##_from_style(style);                                    \
+        })
 #define register_action_2(name)                                               \
   factory.register_action(#name,                                              \
                           [](const colour_chart& colours,                     \
                              const iscool::style::declaration& style)         \
-                          {                                                   \
-                            return name##_from_style(colours, style);         \
-                          })
+                            {                                                 \
+                              return name##_from_style(colours, style);       \
+                            })
 #define register_action_3(name)                                               \
   factory.register_action(#name,                                              \
                           [&factory](const colour_chart& colours,             \
                                      const iscool::style::declaration& style) \
-                          {                                                   \
-                            return name##_from_style(factory, colours,        \
-                                                     style);                  \
-                          })
+                            {                                                 \
+                              return name##_from_style(factory, colours,      \
+                                                       style);                \
+                            })
 
   register_action_1(delay);
   register_action_1(fade);
@@ -54,23 +54,23 @@ void bim::axmol::action::register_actions(dynamic_factory& factory)
   factory.register_action(
       "hide",
       [](const colour_chart&, const iscool::style::declaration&)
-      {
-        return ax::Hide::create();
-      });
+        {
+          return ax::Hide::create();
+        });
 
   factory.register_action(
       "show",
       [](const colour_chart&, const iscool::style::declaration&)
-      {
-        return ax::Show::create();
-      });
+        {
+          return ax::Show::create();
+        });
 
   factory.register_action(
       "move",
       [](const colour_chart&, const iscool::style::declaration& style)
-      {
-        return maybe_wrap_in_easing_function(*move::create(style), style);
-      });
+        {
+          return maybe_wrap_in_easing_function(*move::create(style), style);
+        });
 
 #undef register_action_3
 #undef register_action_2

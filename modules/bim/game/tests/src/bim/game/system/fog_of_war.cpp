@@ -62,12 +62,12 @@ fog_map(int arena_width, int arena_height, const entt::registry& registry)
   registry.view<bim::game::fog_of_war, bim::game::position_on_grid>().each(
       [&](const bim::game::fog_of_war& f,
           const bim::game::position_on_grid& p) -> void
-      {
-        EXPECT_FALSE(seen(p.x, p.y));
-        seen(p.x, p.y) = true;
+        {
+          EXPECT_FALSE(seen(p.x, p.y));
+          seen(p.x, p.y) = true;
 
-        result(p.x, p.y) = f.neighborhood;
-      });
+          result(p.x, p.y) = f.neighborhood;
+        });
 
   return result;
 }

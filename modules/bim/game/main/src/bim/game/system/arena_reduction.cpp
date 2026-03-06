@@ -35,37 +35,37 @@ bim::game::arena_reduction::arena_reduction(const arena& arena)
 
   const auto horizontal_scan = [this, width, &availability](int y, int first,
                                                             int last) -> int
-  {
-    const int inc = (last < first) ? -1 : 1;
-    const int n = inc * (last - first) + 1;
+    {
+      const int inc = (last < first) ? -1 : 1;
+      const int n = inc * (last - first) + 1;
 
-    for (int i = 0; i != n; ++i, first += inc)
-      if (availability[y * width + first])
-        {
-          m_fall_order.emplace_back(first, y);
-          availability[y * width + first] = false;
-          return 1;
-        }
+      for (int i = 0; i != n; ++i, first += inc)
+        if (availability[y * width + first])
+          {
+            m_fall_order.emplace_back(first, y);
+            availability[y * width + first] = false;
+            return 1;
+          }
 
-    return 0;
-  };
+      return 0;
+    };
 
   const auto vertical_scan = [this, width, &availability](int x, int first,
                                                           int last) -> int
-  {
-    const int inc = (last < first) ? -1 : 1;
-    const int n = inc * (last - first) + 1;
+    {
+      const int inc = (last < first) ? -1 : 1;
+      const int n = inc * (last - first) + 1;
 
-    for (int i = 0; i != n; ++i, first += inc)
-      if (availability[first * width + x])
-        {
-          m_fall_order.emplace_back(x, first);
-          availability[first * width + x] = false;
-          return 1;
-        }
+      for (int i = 0; i != n; ++i, first += inc)
+        if (availability[first * width + x])
+          {
+            m_fall_order.emplace_back(x, first);
+            availability[first * width + x] = false;
+            return 1;
+          }
 
-    return 0;
-  };
+      return 0;
+    };
 
   while ((vertical_first <= vertical_last)
          && (horizontal_first <= horizontal_last))
@@ -96,16 +96,17 @@ void bim::game::arena_reduction::update(entt::registry& registry,
 {
   registry.view<arena_reduction_state, timer>().each(
       [&, this](arena_reduction_state& state, timer& t) -> void
-      {
-        if (t.duration.count() > 0)
-          return;
+        {
+          if (t.duration.count() > 0)
+            return;
 
-        if (state.index_of_next_fall >= m_fall_order.size())
-          return;
+          if (state.index_of_next_fall >= m_fall_order.size())
+            return;
 
-        t.duration = g_falling_block_duration;
-        falling_block_factory(registry, m_fall_order[state.index_of_next_fall],
-                              g_falling_block_duration);
-        ++state.index_of_next_fall;
-      });
+          t.duration = g_falling_block_duration;
+          falling_block_factory(registry,
+                                m_fall_order[state.index_of_next_fall],
+                                g_falling_block_duration);
+          ++state.index_of_next_fall;
+        });
 }

@@ -15,7 +15,7 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    container: "ubuntu:25.10"
+    container: "debian:forky"
 
     steps:
       - name: Checkout repository
@@ -24,7 +24,7 @@ jobs:
       - name: Install dependencies
         run: >
           apt-get update ;
-          apt-get install --yes black clang-format shellcheck yamllint ;
+          apt-get install --yes black clang-format-21 shellcheck yamllint ;
 
       - name: Check repository state
         run: ./ci/repository-health.sh

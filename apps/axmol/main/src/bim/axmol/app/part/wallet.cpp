@@ -48,9 +48,9 @@ bim::axmol::app::wallet::wallet(const context& context,
 {
   m_controls->wallet_button->connect_to_clicked(
       [this]() -> void
-      {
-        m_clicked();
-      });
+        {
+          m_clicked();
+        });
 }
 
 bim::axmol::app::wallet::~wallet() = default;
@@ -108,9 +108,9 @@ void bim::axmol::app::wallet::animate_cash_flow(
   ax::ActionInterval* const update_label = ax::ActionFloat::create(
       update_label_duration_seconds, 0, 1,
       [this, from_amount, to_amount](float t) -> void
-      {
-        update_balance_label(from_amount, to_amount, t);
-      });
+        {
+          update_balance_label(from_amount, to_amount, t);
+        });
 
   if (to_amount <= from_amount)
     {
@@ -189,13 +189,13 @@ void bim::axmol::app::wallet::spawn_coins(
       *ax::Sequence::create(ax::Spawn::create(move_actions),
                             ax::CallFunc::create(
                                 [this, slots]() -> void
-                                {
-                                  for (const node_pool::slot& slot : slots)
-                                    {
-                                      (*slot.value)->removeFromParent();
-                                      m_coins.release(slot.id);
-                                    }
-                                }),
+                                  {
+                                    for (const node_pool::slot& slot : slots)
+                                      {
+                                        (*slot.value)->removeFromParent();
+                                        m_coins.release(slot.id);
+                                      }
+                                  }),
                             &update_label_action, nullptr));
 }
 

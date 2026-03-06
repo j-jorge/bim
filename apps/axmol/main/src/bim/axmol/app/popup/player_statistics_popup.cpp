@@ -48,16 +48,16 @@ bim::axmol::app::player_statistics_popup::player_statistics_popup(
 
   m_escape->connect_to_released(
       [this]()
-      {
-        m_popup->hide();
-      });
+        {
+          m_popup->hide();
+        });
 
   m_inputs.push_back(m_tap);
   m_tap->connect_to_release(
       [this]()
-      {
-        m_popup->hide();
-      });
+        {
+          m_popup->hide();
+        });
 }
 
 bim::axmol::app::player_statistics_popup::~player_statistics_popup() = default;

@@ -182,10 +182,10 @@ void bim::game::fog_of_war_updater::build_maps(entt::registry& registry)
 
   registry.view<fog_of_war, timer, position_on_grid>().each(
       [&](fog_of_war& fog, timer& t, const position_on_grid& position) -> void
-      {
-        m_tables[fog.player_index].fog(position.x, position.y) = &fog;
-        m_tables[fog.player_index].timer(position.x, position.y) = &t;
-      });
+        {
+          m_tables[fog.player_index].fog(position.x, position.y) = &fog;
+          m_tables[fog.player_index].timer(position.x, position.y) = &t;
+        });
 }
 
 void bim::game::fog_of_war_updater::uncover_around_flames(
@@ -193,10 +193,10 @@ void bim::game::fog_of_war_updater::uncover_around_flames(
 {
   registry.view<flame, position_on_grid>().each(
       [&](const flame&, const position_on_grid& position) -> void
-      {
-        m_blown(position.x, position.y) = true;
-        detail::blow(p, position.x, position.y);
-      });
+        {
+          m_blown(position.x, position.y) = true;
+          detail::blow(p, position.x, position.y);
+        });
 }
 
 void bim::game::fog_of_war_updater::update_opacity_from_timers(

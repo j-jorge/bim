@@ -40,18 +40,18 @@ static void validate_distribution(const bim::table_2d<int>& sum_per_cell,
   ASSERT_NE(0, expected_count_per_cell);
 
   const auto print_failure = [=, &sum_per_cell](int cx, int cy) -> void
-  {
-    for (int y = 0; y != height; ++y)
-      {
-        for (int x = 0; x != width; ++x)
-          if ((y == cy) && (x == cx))
-            printf(" [%.3d]", sum_per_cell(x, y));
-          else
-            printf("  %.3d ", sum_per_cell(x, y));
+    {
+      for (int y = 0; y != height; ++y)
+        {
+          for (int x = 0; x != width; ++x)
+            if ((y == cy) && (x == cx))
+              printf(" [%.3d]", sum_per_cell(x, y));
+            else
+              printf("  %.3d ", sum_per_cell(x, y));
 
-        printf("\n");
-      }
-  };
+          printf("\n");
+        }
+    };
 
   for (int y = 0; y != height; ++y)
     for (int x = 0; x != width; ++x)
@@ -138,22 +138,22 @@ void bim_game_contest_power_up_distribution::run_test(
             [&usable_cells_ref](
                 const bim::game::fractional_position_on_grid& p,
                 const bim::game::player&) -> void
-            {
-              const int x = p.grid_aligned_x();
-              const int y = p.grid_aligned_y();
+              {
+                const int x = p.grid_aligned_x();
+                const int y = p.grid_aligned_y();
 
-              usable_cells_ref(x - 1, y - 1) = false;
-              usable_cells_ref(x, y - 1) = false;
-              usable_cells_ref(x + 1, y - 1) = false;
+                usable_cells_ref(x - 1, y - 1) = false;
+                usable_cells_ref(x, y - 1) = false;
+                usable_cells_ref(x + 1, y - 1) = false;
 
-              usable_cells_ref(x - 1, y) = false;
-              usable_cells_ref(x, y) = false;
-              usable_cells_ref(x + 1, y) = false;
+                usable_cells_ref(x - 1, y) = false;
+                usable_cells_ref(x, y) = false;
+                usable_cells_ref(x + 1, y) = false;
 
-              usable_cells_ref(x - 1, y + 1) = false;
-              usable_cells_ref(x, y + 1) = false;
-              usable_cells_ref(x + 1, y + 1) = false;
-            });
+                usable_cells_ref(x - 1, y + 1) = false;
+                usable_cells_ref(x, y + 1) = false;
+                usable_cells_ref(x + 1, y + 1) = false;
+              });
   }
 
   bim::table_2d<int> sum_per_cell(arena_width, arena_height, 0);
@@ -238,25 +238,25 @@ INSTANTIATE_TEST_SUITE_P(
                     bim::game::feature_flags::fences),
     [](const testing::TestParamInfo<
         bim_game_contest_power_up_distribution::ParamType>& info)
-    {
-      std::string result;
-      const char* separator = "";
+      {
+        std::string result;
+        const char* separator = "";
 
-      if (!!(info.param & bim::game::feature_flags::invisibility))
-        {
-          result += "invisibility";
-          separator = "_";
-        }
-      if (!!(info.param & bim::game::feature_flags::shield))
-        {
-          result += separator;
-          result += "shield";
-          separator = "_";
-        }
-      if (!!(info.param & bim::game::feature_flags::fences))
-        {
-          result += separator;
-          result += "fences";
-        }
-      return result;
-    });
+        if (!!(info.param & bim::game::feature_flags::invisibility))
+          {
+            result += "invisibility";
+            separator = "_";
+          }
+        if (!!(info.param & bim::game::feature_flags::shield))
+          {
+            result += separator;
+            result += "shield";
+            separator = "_";
+          }
+        if (!!(info.param & bim::game::feature_flags::fences))
+          {
+            result += separator;
+            result += "fences";
+          }
+        return result;
+      });

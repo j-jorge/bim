@@ -32,8 +32,8 @@ void bim::game::collect_player_actions(std::span<player_action*> actions,
   registry.view<bim::game::player, bim::game::player_action>().each(
       [actions](const bim::game::player& player,
                 bim::game::player_action& action)
-      {
-        assert(player.index < actions.size());
-        actions[player.index] = &action;
-      });
+        {
+          assert(player.index < actions.size());
+          actions[player.index] = &action;
+        });
 }

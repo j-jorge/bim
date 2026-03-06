@@ -80,14 +80,14 @@ void bim::axmol::widget::texture::onEnter()
 
   schedule(
       [=, this](float dt)
-      {
-        ax::Sprite& s = *m_controls->sprite;
+        {
+          ax::Sprite& s = *m_controls->sprite;
 
-        ax::Rect r = s.getTextureRect();
-        r.origin += dt * m_scroll;
+          ax::Rect r = s.getTextureRect();
+          r.origin += dt * m_scroll;
 
-        s.setTextureRect(r);
-      },
+          s.setTextureRect(r);
+        },
       g_texture_scroll_tag);
 }
 

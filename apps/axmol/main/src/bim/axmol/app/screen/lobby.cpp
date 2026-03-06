@@ -80,9 +80,9 @@ bim::axmol::app::lobby::lobby(const context& context,
 
   m_hello_exchange->connect_to_updated(
       [this](const bim::net::hello_ok& message)
-      {
-        update_server_stats(message);
-      });
+        {
+          update_server_stats(message);
+        });
 
   if (m_context.get_enable_debug())
     enable_debug();
@@ -90,63 +90,63 @@ bim::axmol::app::lobby::lobby(const context& context,
   m_inputs.push_back(m_wallet->input_node());
   m_wallet->connect_to_clicked(
       [this]()
-      {
-        open_shop_from_wallet();
-      });
+        {
+          open_shop_from_wallet();
+        });
 
   m_inputs.push_back(m_controls->shop_button->input_node());
   m_controls->shop_button->connect_to_clicked(
       [this]()
-      {
-        open_shop_from_button();
-      });
+        {
+          open_shop_from_button();
+        });
 
   m_inputs.push_back(m_controls->game_features_button->input_node());
   m_controls->game_features_button->connect_to_clicked(
       [this]()
-      {
-        open_game_features();
-      });
+        {
+          open_game_features();
+        });
 
   m_inputs.push_back(m_controls->stats_button->input_node());
   m_controls->stats_button->connect_to_clicked(
       [this]()
-      {
-        open_player_stats();
-      });
+        {
+          open_player_stats();
+        });
 
   m_debug_tap->connect_to_release(
       [this]() -> void
-      {
-        increment_debug_activator_counter();
-      });
+        {
+          increment_debug_activator_counter();
+        });
   m_inputs.push_back(std::move(m_debug_tap));
 
   m_inputs.push_back(m_controls->debug_button->input_node());
   m_controls->debug_button->connect_to_clicked(
       [this]()
-      {
-        show_debug();
-      });
+        {
+          show_debug();
+        });
 
   m_inputs.push_back(m_controls->settings_button->input_node());
   m_controls->settings_button->connect_to_clicked(
       [this]()
-      {
-        show_settings();
-      });
+        {
+          show_settings();
+        });
   m_settings->connect_to_reset(
       [this]()
-      {
-        m_reset();
-      });
+        {
+          m_reset();
+        });
 
   m_inputs.push_back(m_controls->play_button->input_node());
   m_controls->play_button->connect_to_clicked(
       [this]()
-      {
-        play_online();
-      });
+        {
+          play_online();
+        });
 }
 
 bim::axmol::app::lobby::~lobby() = default;
@@ -181,9 +181,9 @@ void bim::axmol::app::lobby::displaying()
 
   m_session_connection = session_handler.connect_to_connected(
       [this]()
-      {
-        apply_connected_state();
-      });
+        {
+          apply_connected_state();
+        });
   apply_connected_state();
 }
 

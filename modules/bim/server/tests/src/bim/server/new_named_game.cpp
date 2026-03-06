@@ -72,16 +72,16 @@ new_game_test::client::client(bim::server::tests::fake_scheduler& scheduler,
 {
   m_authentication.connect_to_authenticated(
       [this, &message_stream](iscool::net::session_id session) -> void
-      {
-        m_message_channel.reset(
-            new iscool::net::message_channel(message_stream, session, 0));
-      });
+        {
+          m_message_channel.reset(
+              new iscool::net::message_channel(message_stream, session, 0));
+        });
 
   m_authentication.connect_to_error(
       [](bim::net::authentication_error_code) -> void
-      {
-        EXPECT_TRUE(false);
-      });
+        {
+          EXPECT_TRUE(false);
+        });
 }
 
 void new_game_test::client::authenticate()
@@ -106,19 +106,19 @@ void new_game_test::client::send_new_named_game_request(
       m_message_channel->connect_to_message(
           [this, token](const iscool::net::endpoint&,
                         const iscool::net::message& message) -> void
-          {
-            if (message.get_type() != bim::net::message_type::game_on_hold)
-              return;
+            {
+              if (message.get_type() != bim::net::message_type::game_on_hold)
+                return;
 
-            std::optional<bim::net::game_on_hold> answer =
-                bim::net::try_deserialize_message<bim::net::game_on_hold>(
-                    message);
+              std::optional<bim::net::game_on_hold> answer =
+                  bim::net::try_deserialize_message<bim::net::game_on_hold>(
+                      message);
 
-            if (answer->get_request_token() != token)
-              return;
+              if (answer->get_request_token() != token)
+                return;
 
-            game_on_hold_answer = std::move(*answer);
-          });
+              game_on_hold_answer = std::move(*answer);
+            });
 
   ASSERT_NE(nullptr, m_message_channel);
 
@@ -143,19 +143,19 @@ void new_game_test::client::send_accept_named_game(
       m_message_channel->connect_to_message(
           [this, token](const iscool::net::endpoint&,
                         const iscool::net::message& message) -> void
-          {
-            if (message.get_type() != bim::net::message_type::launch_game)
-              return;
+            {
+              if (message.get_type() != bim::net::message_type::launch_game)
+                return;
 
-            std::optional<bim::net::launch_game> answer =
-                bim::net::try_deserialize_message<bim::net::launch_game>(
-                    message);
+              std::optional<bim::net::launch_game> answer =
+                  bim::net::try_deserialize_message<bim::net::launch_game>(
+                      message);
 
-            if (answer->get_request_token() != token)
-              return;
+              if (answer->get_request_token() != token)
+                return;
 
-            launch_game_answer = std::move(*answer);
-          });
+              launch_game_answer = std::move(*answer);
+            });
 
   ASSERT_NE(nullptr, m_message_channel);
 
@@ -172,18 +172,18 @@ void new_game_test::client::send_accept_named_game(
 new_game_test::new_game_test()
   : m_config(
         []()
-        {
-          bim::server::config config = bim::server::tests::new_test_config();
-          config.session_removal_delay = std::chrono::minutes(10);
-          config.session_clean_up_interval = std::chrono::minutes(3);
-          config.game_service_coins_per_victory = 100;
-          config.game_service_coins_per_defeat = 200;
-          config.game_service_coins_per_draw = 300;
-          config.game_service_coins_per_short_game_victory = 10;
-          config.game_service_coins_per_short_game_defeat = 20;
-          config.game_service_coins_per_short_game_draw = 30;
-          return config;
-        }())
+          {
+            bim::server::config config = bim::server::tests::new_test_config();
+            config.session_removal_delay = std::chrono::minutes(10);
+            config.session_clean_up_interval = std::chrono::minutes(3);
+            config.game_service_coins_per_victory = 100;
+            config.game_service_coins_per_defeat = 200;
+            config.game_service_coins_per_draw = 300;
+            config.game_service_coins_per_short_game_victory = 10;
+            config.game_service_coins_per_short_game_defeat = 20;
+            config.game_service_coins_per_short_game_draw = 30;
+            return config;
+          }())
   , m_server(m_config)
   , m_socket_stream("localhost:" + std::to_string(m_config.port),
                     iscool::net::socket_mode::client{})

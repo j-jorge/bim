@@ -76,19 +76,19 @@ bim::axmol::app::language_popup::language_popup(
   m_inputs.push_back(m_escape);
 
   const auto close = [this]()
-  {
-    m_message_connexion.disconnect();
-    m_popup->hide();
-  };
+    {
+      m_message_connexion.disconnect();
+      m_popup->hide();
+    };
 
   m_controls->close_button->connect_to_clicked(close);
   m_escape->connect_to_released(close);
 
   m_controls->add_language->setOpenUrlHandler(
       [this](std::string_view url)
-      {
-        open_url(url);
-      });
+        {
+          open_url(url);
+        });
 
   const iscool::style::declaration& list_item_container_style =
       *style.get_declaration("list-item");
@@ -122,9 +122,9 @@ bim::axmol::app::language_popup::language_popup(
       b.enable(preferred_language != language);
       b.connect_to_clicked(
           [this, language]() -> void
-          {
-            confirm_language(language);
-          });
+            {
+              confirm_language(language);
+            });
 
       const bim::axmol::ref_ptr<bim::axmol::widget::passive_node> item =
           bim::axmol::widget::factory<bim::axmol::widget::passive_node>::
@@ -147,9 +147,9 @@ void bim::axmol::app::language_popup::confirm_language(
 {
   m_message_connexion = m_message->connect_to_ok(
       [this, language]() -> void
-      {
-        switch_to_language(language);
-      });
+        {
+          switch_to_language(language);
+        });
   m_message->show_yes_no(
       ic_gettext("Do you really want to change the language setting?"));
 }

@@ -43,8 +43,8 @@ void bim::game::update_invisibility_power_ups(
   registry.view<player, fractional_position_on_grid>().each(
       [&](entt::entity e, player&,
           fractional_position_on_grid position) -> void
-      {
-        check_invisibility_power_up_player_collision(registry, entity_map, e,
-                                                     position);
-      });
+        {
+          check_invisibility_power_up_player_collision(registry, entity_map, e,
+                                                       position);
+        });
 }

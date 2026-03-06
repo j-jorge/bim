@@ -28,36 +28,36 @@ TEST(karma_blacklisting, blacklisted_on_short_games)
   bim::server::tests::client_server_simulator simulator(player_count, config);
 
   const auto player_1_short_game_scenario = [&]() -> void
-  {
-    simulator.join_game();
+    {
+      simulator.join_game();
 
-    // Warm up, everyone is idle.
-    for (std::size_t tick_index = 0;
-         tick_index != 2 * bim::game::player_action_queue::queue_size;
-         ++tick_index)
+      // Warm up, everyone is idle.
+      for (std::size_t tick_index = 0;
+           tick_index != 2 * bim::game::player_action_queue::queue_size;
+           ++tick_index)
+        simulator.tick();
+
+      // One player intentionally dies.
+      simulator.clients[1].set_action(bim::game::player_action{
+          .movement = bim::game::player_movement::idle, .drop_bomb = true });
       simulator.tick();
 
-    // One player intentionally dies.
-    simulator.clients[1].set_action(bim::game::player_action{
-        .movement = bim::game::player_movement::idle, .drop_bomb = true });
-    simulator.tick();
+      simulator.clients[1].set_action({});
 
-    simulator.clients[1].set_action({});
+      // Then wait for the bombs to to be applied, i.e. until they get out of
+      // the queue.
+      for (std::size_t tick_index = 0;
+           tick_index != bim::game::player_action_queue::queue_size;
+           ++tick_index)
+        simulator.tick();
 
-    // Then wait for the bombs to to be applied, i.e. until they get out of the
-    // queue.
-    for (std::size_t tick_index = 0;
-         tick_index != bim::game::player_action_queue::queue_size;
-         ++tick_index)
-      simulator.tick();
+      // Wait for the game to end.
+      for (int i = 0; (i != 10) && simulator.clients[0].result.still_running();
+           ++i)
+        simulator.tick(std::chrono::seconds(1));
 
-    // Wait for the game to end.
-    for (int i = 0; (i != 10) && simulator.clients[0].result.still_running();
-         ++i)
-      simulator.tick(std::chrono::seconds(1));
-
-    EXPECT_FALSE(simulator.clients[0].result.still_running());
-  };
+      EXPECT_FALSE(simulator.clients[0].result.still_running());
+    };
 
   simulator.authenticate();
 
@@ -98,26 +98,26 @@ TEST(karma_blacklisting, blacklisted_on_disconnections)
   bim::server::tests::client_server_simulator simulator(player_count, config);
 
   const auto player_1_disconnection_scenario = [&]() -> void
-  {
-    simulator.join_game();
+    {
+      simulator.join_game();
 
-    // Warm up, everyone is idle.
-    for (std::size_t tick_index = 0;
-         tick_index != 2 * bim::game::player_action_queue::queue_size;
-         ++tick_index)
-      simulator.tick();
+      // Warm up, everyone is idle.
+      for (std::size_t tick_index = 0;
+           tick_index != 2 * bim::game::player_action_queue::queue_size;
+           ++tick_index)
+        simulator.tick();
 
-    // One player leaves.
-    simulator.clients[1].leave_game();
+      // One player leaves.
+      simulator.clients[1].leave_game();
 
-    // Then wait for the automatic disconnection.
-    simulator.tick(std::chrono::seconds(6));
+      // Then wait for the automatic disconnection.
+      simulator.tick(std::chrono::seconds(6));
 
-    EXPECT_FALSE(simulator.clients[0].result.still_running());
-    ASSERT_TRUE(simulator.clients[0].result.has_a_winner());
-    EXPECT_EQ(simulator.clients[0].player_index,
-              simulator.clients[0].result.winning_player());
-  };
+      EXPECT_FALSE(simulator.clients[0].result.still_running());
+      ASSERT_TRUE(simulator.clients[0].result.has_a_winner());
+      EXPECT_EQ(simulator.clients[0].player_index,
+                simulator.clients[0].result.winning_player());
+    };
 
   simulator.authenticate();
 

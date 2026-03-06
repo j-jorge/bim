@@ -123,15 +123,15 @@ void bim::game::dump_arena(const arena& arena,
 
   registry.view<fractional_position_on_grid>().each(
       [&](fractional_position_on_grid pos) -> void
-      {
-        arena_str[pos.grid_aligned_y()][pos.grid_aligned_x()] = "?";
-      });
+        {
+          arena_str[pos.grid_aligned_y()][pos.grid_aligned_x()] = "?";
+        });
 
   registry.view<position_on_grid>().each(
       [&](position_on_grid pos) -> void
-      {
-        arena_str[pos.y][pos.x] = "?";
-      });
+        {
+          arena_str[pos.y][pos.x] = "?";
+        });
 
   const entt::registry::storage_for_type<solid>* const solids =
       registry.storage<solid>();
@@ -170,78 +170,78 @@ void bim::game::dump_arena(const arena& arena,
   registry.view<player, fractional_position_on_grid>().each(
       [&](entt::entity e, const player& p,
           fractional_position_on_grid pos) -> void
-      {
-        arena_str[pos.grid_aligned_y()][pos.grid_aligned_x()] =
-            "ABCD"[p.index];
-        if (players.size() <= p.index)
-          players.resize(p.index + 1);
+        {
+          arena_str[pos.grid_aligned_y()][pos.grid_aligned_x()] =
+              "ABCD"[p.index];
+          if (players.size() <= p.index)
+            players.resize(p.index + 1);
 
-        valid[p.index] = true;
-        players[p.index] = p;
-        player_entities[p.index] = e;
-        player_position[p.index] = pos;
-      });
+          valid[p.index] = true;
+          players[p.index] = p;
+          player_entities[p.index] = e;
+          player_position[p.index] = pos;
+        });
 
   const int player_count = players.size();
 
   registry.view<flame, position_on_grid>().each(
       [&](const flame& f, position_on_grid pos) -> void
-      {
-        switch (f.segment)
-          {
-          case flame_segment::origin:
-            arena_str[pos.y][pos.x] = "+";
-            break;
-          case flame_segment::arm:
-            switch (f.direction)
-              {
-              case flame_direction::right:
-              case flame_direction::left:
-                arena_str[pos.y][pos.x] = "-";
-                break;
-              case flame_direction::up:
-              case flame_direction::down:
-                arena_str[pos.y][pos.x] = "|";
-                break;
-              }
-            break;
-          case flame_segment::tip:
-            switch (f.direction)
-              {
-              case flame_direction::right:
-                arena_str[pos.y][pos.x] = ">";
-                break;
-              case flame_direction::left:
-                arena_str[pos.y][pos.x] = "<";
-                break;
-              case flame_direction::up:
-                arena_str[pos.y][pos.x] = "^";
-                break;
-              case flame_direction::down:
-                arena_str[pos.y][pos.x] = "v";
-                break;
-              }
-            break;
-          }
-      });
+        {
+          switch (f.segment)
+            {
+            case flame_segment::origin:
+              arena_str[pos.y][pos.x] = "+";
+              break;
+            case flame_segment::arm:
+              switch (f.direction)
+                {
+                case flame_direction::right:
+                case flame_direction::left:
+                  arena_str[pos.y][pos.x] = "-";
+                  break;
+                case flame_direction::up:
+                case flame_direction::down:
+                  arena_str[pos.y][pos.x] = "|";
+                  break;
+                }
+              break;
+            case flame_segment::tip:
+              switch (f.direction)
+                {
+                case flame_direction::right:
+                  arena_str[pos.y][pos.x] = ">";
+                  break;
+                case flame_direction::left:
+                  arena_str[pos.y][pos.x] = "<";
+                  break;
+                case flame_direction::up:
+                  arena_str[pos.y][pos.x] = "^";
+                  break;
+                case flame_direction::down:
+                  arena_str[pos.y][pos.x] = "v";
+                  break;
+                }
+              break;
+            }
+        });
 
   registry.view<flame_power_up, position_on_grid>().each(
       [&](position_on_grid pos) -> void
-      {
-        arena_str[pos.y][pos.x] = "F";
-      });
+        {
+          arena_str[pos.y][pos.x] = "F";
+        });
 
   registry.view<invisibility_power_up, position_on_grid>().each(
       [&](position_on_grid pos) -> void
-      {
-        arena_str[pos.y][pos.x] = "I";
-      });
+        {
+          arena_str[pos.y][pos.x] = "I";
+        });
 
   registry.view<shield_power_up, position_on_grid>().each(
       [&](position_on_grid pos) -> void
-      {
-        arena_str[pos.y][pos.x] = "S";
-      });
+        {
+          arena_str[pos.y][pos.x] = "S";
+        });
 
   struct bomb_state
   {
@@ -255,40 +255,41 @@ void bim::game::dump_arena(const arena& arena,
 
   registry.view<bomb, position_on_grid>().each(
       [&](const bomb& b, position_on_grid pos) -> void
-      {
-        arena_str[pos.y][pos.x] = "ó";
-        bombs.emplace_back(b.strength, b.player_index, pos.x, pos.y);
-      });
+        {
+          arena_str[pos.y][pos.x] = "ó";
+          bombs.emplace_back(b.strength, b.player_index, pos.x, pos.y);
+        });
 
   std::sort(bombs.begin(), bombs.end(),
             [](bomb_state lhs, bomb_state rhs) -> bool
-            {
-              return (lhs.y < rhs.y) || ((lhs.y == rhs.y) && (lhs.x < rhs.x));
-            });
+              {
+                return (lhs.y < rhs.y)
+                       || ((lhs.y == rhs.y) && (lhs.x < rhs.x));
+              });
 
   registry.view<bomb_power_up, position_on_grid>().each(
       [&](position_on_grid pos) -> void
-      {
-        arena_str[pos.y][pos.x] = "Ó";
-      });
+        {
+          arena_str[pos.y][pos.x] = "Ó";
+        });
 
   int arena_print_y = 0;
   const auto print_arena_line = [&arena_str, &arena_print_y, w,
                                  h](char eol) -> void
-  {
-    if (arena_print_y >= h)
-      {
-        printf("%*c", w + 2, eol);
-        return;
-      }
+    {
+      if (arena_print_y >= h)
+        {
+          printf("%*c", w + 2, eol);
+          return;
+        }
 
-    printf("%x", arena_print_y);
-    for (int x = 0; x != w; ++x)
-      printf("%s", arena_str[arena_print_y][x].c_str());
-    printf("%c", eol);
+      printf("%x", arena_print_y);
+      for (int x = 0; x != w; ++x)
+        printf("%s", arena_str[arena_print_y][x].c_str());
+      printf("%c", eol);
 
-    ++arena_print_y;
-  };
+      ++arena_print_y;
+    };
 
   printf(" ");
   for (int i = 0; i != w; ++i)
@@ -376,47 +377,47 @@ void bim::game::dump_arena(const arena& arena,
 
   registry.view<player, player_action>().each(
       [&queued_actions](const player& p, const player_action& action)
-      {
-        queued_actions[p.index] = action;
-      });
+        {
+          queued_actions[p.index] = action;
+        });
 
   const auto print_actions =
       [&, player_count](
           const char* title,
           const std::array<player_action, g_max_player_count>& actions) -> void
-  {
-    print_arena_line(' ');
-    printf("%-15s", title);
-    for (int i = 0; i != player_count; ++i)
-      if (!valid[i])
-        printf("       xx");
-      else
-        {
-          char d = '.';
+    {
+      print_arena_line(' ');
+      printf("%-15s", title);
+      for (int i = 0; i != player_count; ++i)
+        if (!valid[i])
+          printf("       xx");
+        else
+          {
+            char d = '.';
 
-          switch (actions[i].movement)
-            {
-            case player_movement::idle:
-              d = '.';
-              break;
-            case player_movement::up:
-              d = '^';
-              break;
-            case player_movement::down:
-              d = 'v';
-              break;
-            case player_movement::left:
-              d = '<';
-              break;
-            case player_movement::right:
-              d = '>';
-              break;
-            };
+            switch (actions[i].movement)
+              {
+              case player_movement::idle:
+                d = '.';
+                break;
+              case player_movement::up:
+                d = '^';
+                break;
+              case player_movement::down:
+                d = 'v';
+                break;
+              case player_movement::left:
+                d = '<';
+                break;
+              case player_movement::right:
+                d = '>';
+                break;
+              };
 
-          printf("       %c%c", d, actions[i].drop_bomb ? 'b' : '.');
-        }
-    printf("\n");
-  };
+            printf("       %c%c", d, actions[i].drop_bomb ? 'b' : '.');
+          }
+      printf("\n");
+    };
 
   print_actions("queued actions", queued_actions);
 
@@ -424,9 +425,9 @@ void bim::game::dump_arena(const arena& arena,
 
   registry.view<player, player_action_queue>().each(
       [&player_actions](const player& p, const player_action_queue& queue)
-      {
-        player_actions[p.index] = queue.m_queue[0].action;
-      });
+        {
+          player_actions[p.index] = queue.m_queue[0].action;
+        });
 
   print_actions("action", player_actions);
 
@@ -435,10 +436,10 @@ void bim::game::dump_arena(const arena& arena,
 
   registry.view<player, kicked>().each(
       [&kick_events, &print_kick_events](const player& p)
-      {
-        kick_events[p.index] = true;
-        print_kick_events = true;
-      });
+        {
+          kick_events[p.index] = true;
+          print_kick_events = true;
+        });
 
   if (print_kick_events)
     {
@@ -451,24 +452,24 @@ void bim::game::dump_arena(const arena& arena,
 
   std::size_t bomb_print_i = 0;
   const auto print_bombs_line = [&bombs, &bomb_print_i]() -> void
-  {
-    for (int i = 0; i != 4; ++i)
-      {
-        if (bomb_print_i >= bombs.size())
-          break;
+    {
+      for (int i = 0; i != 4; ++i)
+        {
+          if (bomb_print_i >= bombs.size())
+            break;
 
-        const bomb_state b = bombs[bomb_print_i];
-        ++bomb_print_i;
+          const bomb_state b = bombs[bomb_print_i];
+          ++bomb_print_i;
 
-        if (i != 0)
-          printf(" ");
+          if (i != 0)
+            printf(" ");
 
-        printf("(%d, %d, %d, %d)", (int)b.x, (int)b.y, (int)b.player,
-               (int)b.strength);
-      }
+          printf("(%d, %d, %d, %d)", (int)b.x, (int)b.y, (int)b.player,
+                 (int)b.strength);
+        }
 
-    printf("\n");
-  };
+      printf("\n");
+    };
 
   while (arena_print_y != h)
     print_arena_line('\n');

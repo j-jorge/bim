@@ -262,17 +262,17 @@ std::optional<bim::app::config> bim::app::load_config(const Json::Value& json)
       json["most-recent-version"], bim::version_major);
 
   const auto read_hours = [&json](std::chrono::hours& r, const char* n) -> bool
-  {
-    std::uint64_t h = r.count();
+    {
+      std::uint64_t h = r.count();
 
-    if (read_value(h, json, n))
-      {
-        r = std::chrono::hours(h);
-        return true;
-      }
+      if (read_value(h, json, n))
+        {
+          r = std::chrono::hours(h);
+          return true;
+        }
 
-    return false;
-  };
+      return false;
+    };
 
   if (!read_hours(result.remote_config_update_interval,
                   "config-update-interval"))

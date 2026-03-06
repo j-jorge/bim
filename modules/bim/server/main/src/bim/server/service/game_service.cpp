@@ -773,13 +773,13 @@ void bim::server::game_service::record_game_over(
 
   const auto fill_rewards =
       [&game](std::uint16_t victory, std::uint16_t defeat)
-  {
-    for (int i = 0; i != game.player_count; ++i)
-      if (game.active[i])
-        game.reward_coins[i] = (i == game.winner_index) ? victory : defeat;
-      else
-        game.reward_coins[i] = 0;
-  };
+    {
+      for (int i = 0; i != game.player_count; ++i)
+        if (game.active[i])
+          game.reward_coins[i] = (i == game.winner_index) ? victory : defeat;
+        else
+          game.reward_coins[i] = 0;
+    };
 
   if (game.reward_availability == game_reward_availability::unavailable)
     game.reward_coins.fill(0);
@@ -905,9 +905,9 @@ void bim::server::game_service::schedule_clean_up()
 {
   m_clean_up_connection = iscool::schedule::delayed_call(
       [this]() -> void
-      {
-        clean_up();
-      },
+        {
+          clean_up();
+        },
       m_clean_up_interval);
 }
 

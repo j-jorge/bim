@@ -41,37 +41,38 @@ bim::axmol::widget::button_behavior::button_behavior(
 {
   m_tap_observer->connect_to_enter(
       [this]()
-      {
-        input_press();
-      });
+        {
+          input_press();
+        });
   m_tap_observer->connect_to_leave(
       [this]()
-      {
-        input_release();
-      });
+        {
+          input_release();
+        });
   m_tap_observer->connect_to_release(
       [this]()
-      {
-        click();
-      });
+        {
+          click();
+        });
 
   m_inputs.attach_to_root(m_tap_observer);
 
   const auto set_optional_action =
       [&, this](bim::axmol::ref_ptr<ax::Action>& action,
                 const char* name) -> void
-  {
-    const iscool::optional<const iscool::style::declaration&> action_style =
-        style.get_declaration(name);
+    {
+      const iscool::optional<const iscool::style::declaration&> action_style =
+          style.get_declaration(name);
 
-    if (!action_style)
-      return;
+      if (!action_style)
+        return;
 
-    bim::axmol::ref_ptr<ax::FiniteTimeAction> action_from_style =
-        context.action_factory.create(context.colors, *action_style);
+      bim::axmol::ref_ptr<ax::FiniteTimeAction> action_from_style =
+          context.action_factory.create(context.colors, *action_style);
 
-    action = ax::TargetedAction::create(&m_container, action_from_style.get());
-  };
+      action =
+          ax::TargetedAction::create(&m_container, action_from_style.get());
+    };
 
   set_optional_action(m_action_pressed, "action.pressed");
   set_optional_action(m_action_released, "action.released");

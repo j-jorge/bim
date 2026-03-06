@@ -36,22 +36,23 @@ bim::axmol::widget::peephole::peephole(
         ax::EaseBackOut::create(ax::ActionFloat::create(
             style.get_number("scale-in-seconds", 1), 0, 1,
             [this](float f)
-            {
-              scale_sprite(m_initial_scale, m_wait_scale, f);
-            })),
+              {
+                scale_sprite(m_initial_scale, m_wait_scale, f);
+              })),
         ax::CallFunc::create(
             [this]() -> void
-            {
-              m_shown();
-            }),
+              {
+                m_shown();
+              }),
         nullptr))
   , m_action_reveal(ax::EaseCubicActionOut::create(ax::Spawn::create(
         ax::FadeOut::create(style.get_number("fade-out-seconds", 1)),
         ax::ActionFloat::create(style.get_number("fade-out-seconds", 1), 0, 1,
                                 [this](float f) -> void
-                                {
-                                  scale_sprite(m_wait_scale, m_final_scale, f);
-                                }),
+                                  {
+                                    scale_sprite(m_wait_scale, m_final_scale,
+                                                 f);
+                                  }),
         nullptr)))
 {
   ax::Sprite& sprite = *m_controls->sprite;

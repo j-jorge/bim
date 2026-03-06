@@ -207,9 +207,9 @@ void bim::server::geolocation_service::schedule_clean_up()
 {
   m_clean_up_connection = iscool::schedule::delayed_call(
       [this]() -> void
-      {
-        clean_up();
-      },
+        {
+          clean_up();
+        },
       m_clean_up_interval);
 }
 
@@ -245,9 +245,9 @@ void bim::server::geolocation_service::schedule_update()
 {
   m_update_connection = iscool::schedule::delayed_call(
       [this]() -> void
-      {
-        update_mmdb();
-      },
+        {
+          update_mmdb();
+        },
       m_update_interval);
 }
 

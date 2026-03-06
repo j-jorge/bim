@@ -85,66 +85,66 @@ bim::axmol::app::shop::shop(const context& context,
   m_inputs.push_back(m_escape);
   m_escape->connect_to_released(
       [this]()
-      {
-        dispatch_back();
-      });
+        {
+          dispatch_back();
+        });
 
   m_inputs.push_back(m_controls->back_button->input_node());
   m_controls->back_button->connect_to_clicked(
       [this]()
-      {
-        dispatch_back();
-      });
+        {
+          dispatch_back();
+        });
 
   m_inputs.push_back(m_controls->coins_1_button->input_node());
   m_controls->coins_1_button->connect_to_clicked(
       [this]()
-      {
-        start_purchase(0);
-      });
+        {
+          start_purchase(0);
+        });
 
   m_inputs.push_back(m_controls->coins_2_button->input_node());
   m_controls->coins_2_button->connect_to_clicked(
       [this]()
-      {
-        start_purchase(1);
-      });
+        {
+          start_purchase(1);
+        });
 
   m_inputs.push_back(m_controls->coins_3_button->input_node());
   m_controls->coins_3_button->connect_to_clicked(
       [this]()
-      {
-        start_purchase(2);
-      });
+        {
+          start_purchase(2);
+        });
 
   m_inputs.push_back(m_controls->coins_4_button->input_node());
   m_controls->coins_4_button->connect_to_clicked(
       [this]()
-      {
-        start_purchase(3);
-      });
+        {
+          start_purchase(3);
+        });
 
   m_products_connection = m_shop->connect_to_products_ready(
       [this](const std::unordered_map<std::string, std::string>& products)
-      {
-        products_ready(products);
-      });
+        {
+          products_ready(products);
+        });
   m_products_error_connection = m_shop->connect_to_products_error(
       [this]()
-      {
-        products_error();
-      });
+        {
+          products_error();
+        });
   m_purchase_connection = m_shop->connect_to_purchase_completed(
       [this](std::string_view product, std::size_t quantity,
              std::string_view token)
-      {
-        purchase_completed(product, quantity, token);
-      });
+        {
+          purchase_completed(product, quantity, token);
+        });
   m_purchase_error_connection = m_shop->connect_to_purchase_error(
       [this]()
-      {
-        purchase_error();
-      });
+        {
+          purchase_error();
+        });
 
   if (bim::app::is_shop_supported())
     fetch_products();

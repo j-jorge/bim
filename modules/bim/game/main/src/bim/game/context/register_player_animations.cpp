@@ -30,9 +30,9 @@ void bim::game::register_player_animations(context& context,
     animation_specifications p;
     p.duration = std::chrono::seconds(1);
     p.dispatch_completion = [](entt::registry& r, entt::entity e) -> void
-    {
-      r.emplace<bim::game::dead>(e);
-    };
+      {
+        r.emplace<bim::game::dead>(e);
+      };
     animations.replace_animation(result.burn, p);
   }
 
@@ -40,9 +40,9 @@ void bim::game::register_player_animations(context& context,
     animation_specifications p;
     p.duration = std::chrono::milliseconds(240);
     p.dispatch_completion = [](entt::registry& r, entt::entity e) -> void
-    {
-      r.emplace<bim::game::dead>(e);
-    };
+      {
+        r.emplace<bim::game::dead>(e);
+      };
     animations.replace_animation(result.die, p);
   }
 }

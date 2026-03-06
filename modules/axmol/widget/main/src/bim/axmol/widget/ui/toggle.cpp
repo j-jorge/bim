@@ -49,19 +49,19 @@ bim::axmol::widget::toggle::toggle(const bim::axmol::widget::context& context,
 
   m_tap_observer->connect_to_enter(
       [this]()
-      {
-        input_press();
-      });
+        {
+          input_press();
+        });
   m_tap_observer->connect_to_leave(
       [this]()
-      {
-        input_release();
-      });
+        {
+          input_release();
+        });
   m_tap_observer->connect_to_release(
       [this]()
-      {
-        toggle_state();
-      });
+        {
+          toggle_state();
+        });
 
   m_inputs.attach_to_root(m_tap_observer);
 }

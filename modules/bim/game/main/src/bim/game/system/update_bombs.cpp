@@ -110,32 +110,32 @@ void bim::game::update_bombs(const context& context, entt::registry& registry,
 {
   registry.view<bomb, timer, burning>().each(
       [&](const bomb&, timer& t) -> void
-      {
-        t.duration = std::chrono::seconds(0);
-      });
+        {
+          t.duration = std::chrono::seconds(0);
+        });
 
   // Remove the flame blockers we don't need.
   registry.view<flame_blocker, position_on_grid, timer>().each(
       [&](entt::entity e, const position_on_grid& position,
           const timer& t) -> void
-      {
-        if (t.duration.count() == 0)
-          {
-            entity_map.erase_entity(e, position.x, position.y);
-            registry.emplace_or_replace<dead>(e);
-          }
-      });
+        {
+          if (t.duration.count() == 0)
+            {
+              entity_map.erase_entity(e, position.x, position.y);
+              registry.emplace_or_replace<dead>(e);
+            }
+        });
 
   registry.view<bomb, position_on_grid, timer>().each(
       [&](entt::entity e, const bomb& b, const position_on_grid& position,
           const timer& t) -> void
-      {
-        if (t.duration.count() > 0)
-          return;
+        {
+          if (t.duration.count() > 0)
+            return;
 
-        create_flames(context, registry, arena, entity_map, position,
-                      b.strength);
-        entity_map.erase_entity(e, position.x, position.y);
-        registry.emplace_or_replace<dead>(e);
-      });
+          create_flames(context, registry, arena, entity_map, position,
+                        b.strength);
+          entity_map.erase_entity(e, position.x, position.y);
+          registry.emplace_or_replace<dead>(e);
+        });
 }

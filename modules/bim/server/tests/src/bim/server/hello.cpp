@@ -51,12 +51,12 @@ protected:
 hello_test::hello_test()
   : m_config(
         []() -> bim::server::config
-        {
-          bim::server::config config = bim::server::tests::new_test_config();
-          config.name = "hello_test";
+          {
+            bim::server::config config = bim::server::tests::new_test_config();
+            config.name = "hello_test";
 
-          return config;
-        }())
+            return config;
+          }())
   , m_server(m_config)
   , m_socket_stream("localhost:" + std::to_string(m_config.port),
                     iscool::net::socket_mode::client{})

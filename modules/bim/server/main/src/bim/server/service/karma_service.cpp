@@ -102,10 +102,10 @@ void bim::server::karma_service::schedule_review()
 {
   m_review_connection = iscool::schedule::delayed_call(
       [this]() -> void
-      {
-        review();
-        schedule_review();
-      },
+        {
+          review();
+          schedule_review();
+        },
       m_review_interval);
 }
 

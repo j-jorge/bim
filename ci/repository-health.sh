@@ -88,7 +88,7 @@ custom_command_test()
 }
 
 run_test "Validating C++/Java/JSON formatting." \
-         clang-format \
+         clang-format-21 \
          --dry-run \
          --Werror \
          -- \

@@ -53,17 +53,17 @@ bim::axmol::app::end_game::end_game(const context& context,
 
   m_controls->revenge_button->connect_to_clicked(
       [this]()
-      {
-        dispatch_revenge();
-      });
+        {
+          dispatch_revenge();
+        });
 
   m_inputs.push_back(m_controls->quit_button->input_node());
 
   m_controls->quit_button->connect_to_clicked(
       [this]()
-      {
-        dispatch_quit();
-      });
+        {
+          dispatch_quit();
+        });
 }
 
 bim::axmol::app::end_game::~end_game() = default;

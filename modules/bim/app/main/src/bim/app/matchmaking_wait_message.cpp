@@ -47,10 +47,10 @@ void bim::app::matchmaking_wait_message::start()
 
   m_connection = iscool::schedule::delayed_call(
       [this]() -> void
-      {
-        schedule_tick();
-        dispatch_updated();
-      });
+        {
+          schedule_tick();
+          dispatch_updated();
+        });
 
   m_monitor->set_started_state();
 }
@@ -184,9 +184,9 @@ void bim::app::matchmaking_wait_message::schedule_tick()
 
   m_connection = iscool::schedule::delayed_call(
       [this]() -> void
-      {
-        tick();
-      },
+        {
+          tick();
+        },
       delay);
 }
 

@@ -61,22 +61,22 @@ TEST(animator, dispatch_completion)
   specs.next = anims[1];
   specs.dispatch_completion = [&anim_completed, e](entt::registry& r,
                                                    entt::entity entity) -> void
-  {
-    EXPECT_EQ(e, entity);
-    EXPECT_FALSE(anim_completed[0]);
-    anim_completed[0] = true;
-  };
+    {
+      EXPECT_EQ(e, entity);
+      EXPECT_FALSE(anim_completed[0]);
+      anim_completed[0] = true;
+    };
   catalog.replace_animation(anims[0], specs);
 
   specs.duration = std::chrono::seconds(2);
   specs.next = anims[0];
   specs.dispatch_completion = [&anim_completed, e](entt::registry& r,
                                                    entt::entity entity) -> void
-  {
-    EXPECT_EQ(e, entity);
-    EXPECT_FALSE(anim_completed[1]);
-    anim_completed[1] = true;
-  };
+    {
+      EXPECT_EQ(e, entity);
+      EXPECT_FALSE(anim_completed[1]);
+      anim_completed[1] = true;
+    };
   catalog.replace_animation(anims[1], specs);
 
   const bim::game::animation_state& s =

@@ -44,20 +44,20 @@ void bim::axmol::app::player::configure(
 
   auto add_shield_animation = [&](bim::game::animation_id id,
                                   std::string_view n) mutable -> void
-  {
-    name = "shield_";
-    name += n;
-    name += suffix;
-    m_shield_animations[id] = &animation_cache.get(name);
-  };
+    {
+      name = "shield_";
+      name += n;
+      name += suffix;
+      m_shield_animations[id] = &animation_cache.get(name);
+    };
 
   auto add_animation = [&](bim::game::animation_id id,
                            std::string_view n) mutable -> void
-  {
-    name = n;
-    name += suffix;
-    m_animations[id] = &animation_cache.get(name);
-  };
+    {
+      name = n;
+      name += suffix;
+      m_animations[id] = &animation_cache.get(name);
+    };
 
 #define add_animation_n(n) add_animation(player_animations.n, #n)
 #define add_shield_animation_n(n)                                             \

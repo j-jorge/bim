@@ -77,15 +77,15 @@ game_creation_test::client::client(
 {
   m_authentication.connect_to_authenticated(
       [this](iscool::net::session_id session) -> void
-      {
-        m_session = session;
-      });
+        {
+          m_session = session;
+        });
 
   m_authentication.connect_to_error(
       [](bim::net::authentication_error_code) -> void
-      {
-        EXPECT_TRUE(false);
-      });
+        {
+          EXPECT_TRUE(false);
+        });
 
   m_new_game.connect_to_launch_game(
       std::bind(&client::launch_game, this, std::placeholders::_1));
@@ -108,10 +108,10 @@ void game_creation_test::client::new_game_auto_accept(
 
   m_game_proposal_connection = m_new_game.connect_to_game_proposal(
       [this, features](int) -> void
-      {
-        m_game_proposal_connection.disconnect();
-        m_new_game.accept(features);
-      });
+        {
+          m_game_proposal_connection.disconnect();
+          m_new_game.accept(features);
+        });
 
   m_new_game.start(*m_session, name);
 }
@@ -123,10 +123,10 @@ void game_creation_test::client::new_game_auto_accept(
 
   m_game_proposal_connection = m_new_game.connect_to_game_proposal(
       [this, features](int) -> void
-      {
-        m_game_proposal_connection.disconnect();
-        m_new_game.accept(features);
-      });
+        {
+          m_game_proposal_connection.disconnect();
+          m_new_game.accept(features);
+        });
 
   m_new_game.start(*m_session);
 }
@@ -160,16 +160,17 @@ void game_creation_test::client::launch_game(
 game_creation_test::game_creation_test()
   : m_config(
         [this]() -> bim::server::config
-        {
-          bim::server::config config = bim::server::tests::new_test_config();
-          // Short delay for the tests where one player never accept the game.
-          config.random_game_auto_start_delay = std::chrono::seconds(10);
+          {
+            bim::server::config config = bim::server::tests::new_test_config();
+            // Short delay for the tests where one player never accept the
+            // game.
+            config.random_game_auto_start_delay = std::chrono::seconds(10);
 
-          config.enable_statistics_log = true;
-          config.statistics_log_file = m_statistics.log_file();
+            config.enable_statistics_log = true;
+            config.statistics_log_file = m_statistics.log_file();
 
-          return config;
-        }())
+            return config;
+          }())
   , m_server(m_config)
   , m_socket_stream("localhost:" + std::to_string(m_config.port),
                     iscool::net::socket_mode::client{})

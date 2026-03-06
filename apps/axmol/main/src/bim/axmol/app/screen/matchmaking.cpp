@@ -90,32 +90,32 @@ bim::axmol::app::matchmaking::matchmaking(
 
   m_controls->ready_button->connect_to_clicked(
       [this]()
-      {
-        accept_game();
-      });
+        {
+          accept_game();
+        });
 
   m_controls->discord_button->connect_to_clicked(
       [this]()
-      {
-        open_discord();
-      });
+        {
+          open_discord();
+        });
 
   m_escape->connect_to_released(
       [this]()
-      {
-        dispatch_back();
-      });
+        {
+          dispatch_back();
+        });
   m_controls->back_button->connect_to_clicked(
       [this]()
-      {
-        dispatch_back();
-      });
+        {
+          dispatch_back();
+        });
 
   m_wait_message->connect_to_updated(
       [this](std::string_view m) -> void
-      {
-        m_controls->wait_message->setString(m);
-      });
+        {
+          m_controls->wait_message->setString(m);
+        });
 }
 
 bim::axmol::app::matchmaking::~matchmaking() = default;
@@ -158,14 +158,14 @@ void bim::axmol::app::matchmaking::displayed()
 {
   m_game_proposal_connection = m_new_game->connect_to_game_proposal(
       [this](unsigned player_count)
-      {
-        update_display_with_game_proposal(player_count);
-      });
+        {
+          update_display_with_game_proposal(player_count);
+        });
   m_launch_connection = m_new_game->connect_to_launch_game(
       [this](const bim::net::game_launch_event& event)
-      {
-        launch_game(event);
-      });
+        {
+          launch_game(event);
+        });
 
   assert(m_context.get_session_handler()->connected());
   m_new_game->start(m_context.get_session_handler()->session_id());

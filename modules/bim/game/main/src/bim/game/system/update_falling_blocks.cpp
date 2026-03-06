@@ -36,10 +36,10 @@ void bim::game::update_falling_blocks(const context& context,
   registry.view<timer, falling_block, position_on_grid>().each(
       [&](entt::entity e, const timer& t,
           const position_on_grid& position) -> void
-      {
-        if (t.duration.count() > 0)
-          return;
+        {
+          if (t.duration.count() > 0)
+            return;
 
-        seal_falling_block(context, registry, entity_map, e, position);
-      });
+          seal_falling_block(context, registry, entity_map, e, position);
+        });
 }

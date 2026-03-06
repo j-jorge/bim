@@ -24,9 +24,9 @@ bim::game::random_generator::operator()()
   // https://prng.di.unimi.it/xoshiro256plusplus.c.
 
   constexpr auto rotl = [](std::uint64_t x, int k) -> std::uint64_t
-  {
-    return (x << k) | (x >> (64 - k));
-  };
+    {
+      return (x << k) | (x >> (64 - k));
+    };
 
   const std::uint64_t result = rotl(m_state[0] + m_state[3], 23) + m_state[0];
   const std::uint64_t t = m_state[1] << 17;

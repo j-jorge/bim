@@ -14,39 +14,39 @@
 
 static const std::array<std::string, bim::app::g_game_feature_slot_count>
     g_flag_in_slot_property_name = []()
-{
-  std::array<std::string, bim::app::g_game_feature_slot_count> result;
-  const std::string_view prefix = "feature_flags.slot_";
+  {
+    std::array<std::string, bim::app::g_game_feature_slot_count> result;
+    const std::string_view prefix = "feature_flags.slot_";
 
-  for (int i = 0; i != bim::app::g_game_feature_slot_count; ++i)
-    {
-      const std::string v = std::to_string(i);
-      result[i].reserve(prefix.size() + v.size() + 1);
-      result[i] = prefix;
-      result[i] += v;
-    }
+    for (int i = 0; i != bim::app::g_game_feature_slot_count; ++i)
+      {
+        const std::string v = std::to_string(i);
+        result[i].reserve(prefix.size() + v.size() + 1);
+        result[i] = prefix;
+        result[i] += v;
+      }
 
-  return result;
-}();
+    return result;
+  }();
 
 static const std::array<std::string, bim::app::g_game_feature_slot_count>
     g_available_slot_property_name = []()
-{
-  std::array<std::string, bim::app::g_game_feature_slot_count> result;
-  const std::string_view prefix = "feature_flags.slot_";
-  const std::string_view suffix = ".available";
+  {
+    std::array<std::string, bim::app::g_game_feature_slot_count> result;
+    const std::string_view prefix = "feature_flags.slot_";
+    const std::string_view suffix = ".available";
 
-  for (int i = 0; i != bim::app::g_game_feature_slot_count; ++i)
-    {
-      const std::string v = std::to_string(i);
-      result[i].reserve(prefix.size() + v.size() + suffix.size() + 1);
-      result[i] = prefix;
-      result[i] += v;
-      result[i] += suffix;
-    }
+    for (int i = 0; i != bim::app::g_game_feature_slot_count; ++i)
+      {
+        const std::string v = std::to_string(i);
+        result[i].reserve(prefix.size() + v.size() + suffix.size() + 1);
+        result[i] = prefix;
+        result[i] += v;
+        result[i] += suffix;
+      }
 
-  return result;
-}();
+    return result;
+  }();
 
 bim::game::feature_flags bim::app::available_feature_flags(
     const iscool::preferences::local_preferences& p)

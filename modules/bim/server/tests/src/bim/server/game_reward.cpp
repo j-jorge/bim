@@ -24,23 +24,23 @@ protected:
 game_reward_test::game_reward_test()
   : m_simulator(GetParam(),
                 []()
-                {
-                  bim::server::config config =
-                      bim::server::tests::new_test_config();
+                  {
+                    bim::server::config config =
+                        bim::server::tests::new_test_config();
 
-                  config.game_service_max_duration_for_short_game =
-                      std::chrono::seconds(10);
-                  config.game_service_disconnection_inactivity_delay =
-                      std::chrono::seconds(50);
+                    config.game_service_max_duration_for_short_game =
+                        std::chrono::seconds(10);
+                    config.game_service_disconnection_inactivity_delay =
+                        std::chrono::seconds(50);
 
-                  config.game_service_coins_per_victory = 100;
-                  config.game_service_coins_per_defeat = 200;
-                  config.game_service_coins_per_draw = 300;
-                  config.game_service_coins_per_short_game_victory = 10;
-                  config.game_service_coins_per_short_game_defeat = 20;
-                  config.game_service_coins_per_short_game_draw = 30;
-                  return config;
-                }())
+                    config.game_service_coins_per_victory = 100;
+                    config.game_service_coins_per_defeat = 200;
+                    config.game_service_coins_per_draw = 300;
+                    config.game_service_coins_per_short_game_victory = 10;
+                    config.game_service_coins_per_short_game_defeat = 20;
+                    config.game_service_coins_per_short_game_draw = 30;
+                    return config;
+                  }())
 {}
 
 void game_reward_test::drop_bombs_wait_game_over(int player_count,
@@ -70,13 +70,13 @@ void game_reward_test::drop_bombs_wait_game_over(int player_count,
 
   // Wait for the game to end.
   const auto still_running = [this, player_count]() -> bool
-  {
-    for (int i = 0; i != player_count; ++i)
-      if (m_simulator.clients[i].result.still_running())
-        return true;
+    {
+      for (int i = 0; i != player_count; ++i)
+        if (m_simulator.clients[i].result.still_running())
+          return true;
 
-    return false;
-  };
+      return false;
+    };
 
   for (int i = 0; (i != 10) && still_running(); ++i)
     m_simulator.tick(std::chrono::seconds(1));

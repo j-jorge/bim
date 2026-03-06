@@ -65,9 +65,9 @@ generate_power_up_spawners(entt::registry& registry,
                                       population_size, needed,
                                       random_generator,
                                       [](entt::entity) -> bool
-                                      {
-                                        return true;
-                                      });
+                                        {
+                                          return true;
+                                        });
 }
 
 void bim::game::generate_basic_level_structure(arena& arena)
@@ -164,12 +164,13 @@ void bim::game::insert_random_crates(
         registry, crates, crate_count, count_for_invisibility,
         g_invisibility_power_up_count_in_level, random_generator,
         [=, &registry](entt::entity e) -> bool
-        {
-          const position_on_grid p =
-              registry.storage<position_on_grid>().get(e);
+          {
+            const position_on_grid p =
+                registry.storage<position_on_grid>().get(e);
 
-          return valid_invisibility_power_up_position(p.x, p.y, width, height);
-        });
+            return valid_invisibility_power_up_position(p.x, p.y, width,
+                                                        height);
+          });
 
   // The shield power-ups.
   if (!!(features & feature_flags::shield))

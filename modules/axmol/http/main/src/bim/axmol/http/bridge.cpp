@@ -28,15 +28,15 @@ static void send_request(const iscool::http::request& request)
   ax_request->setCompleteCallback(
       [=](ax::network::HttpClient*,
           ax::network::HttpResponse* response) -> void
-      {
-        const auto& ax_buffer = *response->getResponseData();
-        std::vector<char> data(std::begin(ax_buffer), std::end(ax_buffer));
+        {
+          const auto& ax_buffer = *response->getResponseData();
+          std::vector<char> data(std::begin(ax_buffer), std::end(ax_buffer));
 
-        request.get_response_handler()(iscool::http::response(
-            response->getResponseCode(), std::move(data)));
+          request.get_response_handler()(iscool::http::response(
+              response->getResponseCode(), std::move(data)));
 
-        response->getHttpRequest()->release();
-      });
+          response->getHttpRequest()->release();
+        });
 
   ax::network::HttpClient::getInstance()->send(ax_request);
 }

@@ -15,8 +15,8 @@ void bim::game::update_power_up_spawners(entt::registry& registry,
 {
   registry.view<dead, PowerUpSpawner, position_on_grid>().each(
       [&](entt::entity, position_on_grid position) -> void
-      {
-        power_up_factory<typename PowerUpSpawner::power_up_type>(
-            registry, entity_map, position.x, position.y);
-      });
+        {
+          power_up_factory<typename PowerUpSpawner::power_up_type>(
+              registry, entity_map, position.x, position.y);
+        });
 }

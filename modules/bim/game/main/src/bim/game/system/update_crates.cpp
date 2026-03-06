@@ -18,14 +18,14 @@ void bim::game::update_crates(const context& context, entt::registry& registry)
   registry.view<crate, burning, position_on_grid, animation_state>().each(
       [&](entt::entity e, position_on_grid position,
           animation_state& state) -> void
-      {
-        if (state.model != animations.idle)
-          return;
+        {
+          if (state.model != animations.idle)
+            return;
 
-        state.transition_to(animations.burn);
+          state.transition_to(animations.burn);
 
-        // Smoke with a short delay.
-        in_out_smoke_vfx_factory(context, registry, position.x, position.y,
-                                 std::chrono::milliseconds(-4 * 45));
-      });
+          // Smoke with a short delay.
+          in_out_smoke_vfx_factory(context, registry, position.x, position.y,
+                                   std::chrono::milliseconds(-4 * 45));
+        });
 }

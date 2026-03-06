@@ -42,9 +42,9 @@ void bim::game::register_flame_animations(context& context,
     animation_specifications p;
     p.duration = cool_down_duration;
     p.dispatch_completion = [](entt::registry& r, entt::entity e) -> void
-    {
-      r.emplace<dead>(e);
-    };
+      {
+        r.emplace<dead>(e);
+      };
     animations.replace_animation(result.cool_down, p);
   }
 }

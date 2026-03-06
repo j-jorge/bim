@@ -38,9 +38,9 @@ void bim::axmol::action::runner::run(ax::Action& action)
 
   ax::Director::getInstance()->getScheduler()->schedule(
       [this](float elapsed_time)
-      {
-        update(elapsed_time);
-      },
+        {
+          update(elapsed_time);
+        },
       this, 0, false, m_scheduler_key);
 
   m_update_scheduled = true;

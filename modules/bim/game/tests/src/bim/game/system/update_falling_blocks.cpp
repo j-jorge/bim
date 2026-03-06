@@ -111,23 +111,23 @@ TEST(bim_game_update_falling_blocks, triggers_the_bombs)
 
   registry.view<bim::game::flame, bim::game::position_on_grid>().each(
       [&](const bim::game::flame&, const bim::game::position_on_grid& p)
-      {
-        if ((p.x == position.x + 1) && (p.y == position.y))
-          {
-            EXPECT_FALSE(flame_right);
-            flame_right = true;
-          }
-        else if ((p.x == position.x - 1) && (p.y == position.y))
-          {
-            EXPECT_FALSE(flame_left);
-            flame_left = true;
-          }
-        else if ((p.x == position.x) && (p.y == position.y + 1))
-          {
-            EXPECT_FALSE(flame_down);
-            flame_down = true;
-          }
-      });
+        {
+          if ((p.x == position.x + 1) && (p.y == position.y))
+            {
+              EXPECT_FALSE(flame_right);
+              flame_right = true;
+            }
+          else if ((p.x == position.x - 1) && (p.y == position.y))
+            {
+              EXPECT_FALSE(flame_left);
+              flame_left = true;
+            }
+          else if ((p.x == position.x) && (p.y == position.y + 1))
+            {
+              EXPECT_FALSE(flame_down);
+              flame_down = true;
+            }
+        });
 
   EXPECT_TRUE(flame_left);
   EXPECT_TRUE(flame_right);

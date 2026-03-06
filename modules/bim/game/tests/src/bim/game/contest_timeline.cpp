@@ -48,17 +48,17 @@ TEST(bim_game_contest_timeline, write_and_read)
     action_pointers.fill(nullptr);
 
     const auto tick = [&]() -> void
-    {
-      std::array<bim::game::player_action, player_count> actions{};
+      {
+        std::array<bim::game::player_action, player_count> actions{};
 
-      for (int i = 0; i != player_count; ++i)
-        if (action_pointers[i])
-          actions[i] = *action_pointers[i];
+        for (int i = 0; i != player_count; ++i)
+          if (action_pointers[i])
+            actions[i] = *action_pointers[i];
 
-      writer.push(contest.registry());
-      ++tick_count;
-      contest.tick();
-    };
+        writer.push(contest.registry());
+        ++tick_count;
+        contest.tick();
+      };
 
     for (int i = 0; i != 20; ++i)
       {
@@ -101,13 +101,13 @@ TEST(bim_game_contest_timeline, write_and_read)
         .each(
             [&](const bim::game::bomb& b,
                 const bim::game::position_on_grid& p) -> void
-            {
-              EXPECT_EQ(2, p.x);
-              EXPECT_EQ(5, p.y);
-              EXPECT_EQ(1, b.strength);
-              EXPECT_EQ(1, b.player_index);
-              ++bomb_count;
-            });
+              {
+                EXPECT_EQ(2, p.x);
+                EXPECT_EQ(5, p.y);
+                EXPECT_EQ(1, b.strength);
+                EXPECT_EQ(1, b.player_index);
+                ++bomb_count;
+              });
     EXPECT_EQ(1, bomb_count);
 
     int in_game_player_count = 0;
@@ -116,32 +116,36 @@ TEST(bim_game_contest_timeline, write_and_read)
         .each(
             [&](const bim::game::player& p,
                 const bim::game::fractional_position_on_grid& pos) -> void
-            {
-              ++in_game_player_count;
+              {
+                ++in_game_player_count;
 
-              if (p.index == 0)
-                {
-                  EXPECT_EQ(
-                      bim::game::fractional_position_on_grid::value_type(2.5),
-                      pos.x);
-                  EXPECT_EQ(
-                      bim::game::fractional_position_on_grid::value_type(1.5),
-                      pos.y);
-                  EXPECT_EQ(1, p.bomb_available);
-                }
-              else if (p.index == 1)
-                {
-                  EXPECT_EQ(bim::game::fractional_position_on_grid::value_type(
-                                2.1875),
-                            pos.x);
-                  EXPECT_EQ(
-                      bim::game::fractional_position_on_grid::value_type(5.5),
-                      pos.y);
-                  EXPECT_EQ(0, p.bomb_available);
-                }
-              else
-                EXPECT_TRUE(false) << "p.index=" << (int)p.index;
-            });
+                if (p.index == 0)
+                  {
+                    EXPECT_EQ(
+                        bim::game::fractional_position_on_grid::value_type(
+                            2.5),
+                        pos.x);
+                    EXPECT_EQ(
+                        bim::game::fractional_position_on_grid::value_type(
+                            1.5),
+                        pos.y);
+                    EXPECT_EQ(1, p.bomb_available);
+                  }
+                else if (p.index == 1)
+                  {
+                    EXPECT_EQ(
+                        bim::game::fractional_position_on_grid::value_type(
+                            2.1875),
+                        pos.x);
+                    EXPECT_EQ(
+                        bim::game::fractional_position_on_grid::value_type(
+                            5.5),
+                        pos.y);
+                    EXPECT_EQ(0, p.bomb_available);
+                  }
+                else
+                  EXPECT_TRUE(false) << "p.index=" << (int)p.index;
+              });
     EXPECT_EQ(2, in_game_player_count);
   }
 
@@ -176,13 +180,13 @@ TEST(bim_game_contest_timeline, write_and_read)
   contest.registry().view<bim::game::bomb, bim::game::position_on_grid>().each(
       [&](const bim::game::bomb& b,
           const bim::game::position_on_grid& p) -> void
-      {
-        EXPECT_EQ(2, p.x);
-        EXPECT_EQ(5, p.y);
-        EXPECT_EQ(1, b.strength);
-        EXPECT_EQ(1, b.player_index);
-        ++bomb_count;
-      });
+        {
+          EXPECT_EQ(2, p.x);
+          EXPECT_EQ(5, p.y);
+          EXPECT_EQ(1, b.strength);
+          EXPECT_EQ(1, b.player_index);
+          ++bomb_count;
+        });
   EXPECT_EQ(1, bomb_count);
 
   int in_game_player_count = 0;
@@ -191,32 +195,32 @@ TEST(bim_game_contest_timeline, write_and_read)
       .each(
           [&](const bim::game::player& p,
               const bim::game::fractional_position_on_grid& pos) -> void
-          {
-            ++in_game_player_count;
+            {
+              ++in_game_player_count;
 
-            if (p.index == 0)
-              {
-                EXPECT_EQ(
-                    bim::game::fractional_position_on_grid::value_type(2.5),
-                    pos.x);
-                EXPECT_EQ(
-                    bim::game::fractional_position_on_grid::value_type(1.5),
-                    pos.y);
-                EXPECT_EQ(1, p.bomb_available);
-              }
-            else if (p.index == 1)
-              {
-                EXPECT_EQ(
-                    bim::game::fractional_position_on_grid::value_type(2.1875),
-                    pos.x);
-                EXPECT_EQ(
-                    bim::game::fractional_position_on_grid::value_type(5.5),
-                    pos.y);
-                EXPECT_EQ(0, p.bomb_available);
-              }
-            else
-              EXPECT_TRUE(false) << "p.index=" << (int)p.index;
-          });
+              if (p.index == 0)
+                {
+                  EXPECT_EQ(
+                      bim::game::fractional_position_on_grid::value_type(2.5),
+                      pos.x);
+                  EXPECT_EQ(
+                      bim::game::fractional_position_on_grid::value_type(1.5),
+                      pos.y);
+                  EXPECT_EQ(1, p.bomb_available);
+                }
+              else if (p.index == 1)
+                {
+                  EXPECT_EQ(bim::game::fractional_position_on_grid::value_type(
+                                2.1875),
+                            pos.x);
+                  EXPECT_EQ(
+                      bim::game::fractional_position_on_grid::value_type(5.5),
+                      pos.y);
+                  EXPECT_EQ(0, p.bomb_available);
+                }
+              else
+                EXPECT_TRUE(false) << "p.index=" << (int)p.index;
+            });
   EXPECT_EQ(2, in_game_player_count);
 }
 
@@ -246,17 +250,17 @@ TEST(bim_game_contest_timeline, kick_event)
         action_pointers;
 
     const auto tick = [&]() -> bim::game::contest_result
-    {
-      std::array<bim::game::player_action, player_count> actions{};
+      {
+        std::array<bim::game::player_action, player_count> actions{};
 
-      for (int i = 0; i != player_count; ++i)
-        if (action_pointers[i])
-          actions[i] = *action_pointers[i];
+        for (int i = 0; i != player_count; ++i)
+          if (action_pointers[i])
+            actions[i] = *action_pointers[i];
 
-      writer.push(contest.registry());
-      ++tick_count;
-      return contest.tick();
-    };
+        writer.push(contest.registry());
+        ++tick_count;
+        return contest.tick();
+      };
 
     for (int i = 0; i != 20; ++i)
       {
@@ -368,17 +372,17 @@ TEST(bim_game_contest_timeline, three_players_dead_or_kicked)
         action_pointers;
 
     const auto tick = [&]() -> bim::game::contest_result
-    {
-      std::array<bim::game::player_action, player_count> actions{};
+      {
+        std::array<bim::game::player_action, player_count> actions{};
 
-      for (int i = 0; i != player_count; ++i)
-        if (action_pointers[i])
-          actions[i] = *action_pointers[i];
+        for (int i = 0; i != player_count; ++i)
+          if (action_pointers[i])
+            actions[i] = *action_pointers[i];
 
-      writer.push(contest.registry());
-      ++tick_count;
-      return contest.tick();
-    };
+        writer.push(contest.registry());
+        ++tick_count;
+        return contest.tick();
+      };
 
     for (int i = 0; i != 20; ++i)
       {

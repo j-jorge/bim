@@ -384,10 +384,10 @@ void bim::server::matchmaking_service::schedule_clean_up()
 {
   m_clean_up_connection = iscool::schedule::delayed_call(
       [this]() -> void
-      {
-        clean_up();
-        schedule_clean_up();
-      },
+        {
+          clean_up();
+          schedule_clean_up();
+        },
       m_clean_up_interval);
 }
 

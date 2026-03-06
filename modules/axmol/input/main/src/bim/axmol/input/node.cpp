@@ -89,9 +89,9 @@ void bim::axmol::input::node::erase(const touch_observer_pointer& observer)
 
   const std::shared_ptr<touch_observer> pointer = observer.lock();
   const auto predicate = [&pointer](const node_pointer& p) -> bool
-  {
-    return p->m_touch_observer.lock() == pointer;
-  };
+    {
+      return p->m_touch_observer.lock() == pointer;
+    };
 
   const children_vector::iterator it =
       std::ranges::find_if(m_children, predicate);
@@ -107,9 +107,9 @@ void bim::axmol::input::node::erase(const key_observer_pointer& observer)
 
   const std::shared_ptr<key_observer> pointer = observer.lock();
   const auto predicate = [&pointer](const node_pointer& p) -> bool
-  {
-    return p->m_key_observer.lock() == pointer;
-  };
+    {
+      return p->m_key_observer.lock() == pointer;
+    };
 
   const children_vector::iterator it =
       std::ranges::find_if(m_children, predicate);
@@ -132,35 +132,37 @@ void bim::axmol::input::node::clear()
 void bim::axmol::input::node::touch_pressed(touch_event& touch)
 {
   const auto enter = [&touch](node& n) -> bool
-  {
-    const std::shared_ptr<touch_observer> observer = n.m_touch_observer.lock();
+    {
+      const std::shared_ptr<touch_observer> observer =
+          n.m_touch_observer.lock();
 
-    if (!observer)
-      return true;
+      if (!observer)
+        return true;
 
-    std::uint16_t m = 0;
+      std::uint16_t m = 0;
 
-    if (observer->may_process(touch))
-      {
-        const int id = touch.get()->getID();
-        assert(id >= 0);
-        assert((size_t)id < sizeof(m_touch_pressed_mask) * 8);
-        m = 1 << id;
-      }
+      if (observer->may_process(touch))
+        {
+          const int id = touch.get()->getID();
+          assert(id >= 0);
+          assert((size_t)id < sizeof(m_touch_pressed_mask) * 8);
+          m = 1 << id;
+        }
 
-    n.m_touch_pressed_mask |= m;
-    return m != 0;
-  };
+      n.m_touch_pressed_mask |= m;
+      return m != 0;
+    };
 
   const auto visit = [&touch](const node& n)
-  {
-    const std::shared_ptr<touch_observer> observer = n.m_touch_observer.lock();
+    {
+      const std::shared_ptr<touch_observer> observer =
+          n.m_touch_observer.lock();
 
-    if (!observer)
-      return;
+      if (!observer)
+        return;
 
-    observer->pressed(touch);
-  };
+      observer->pressed(touch);
+    };
 
   depth_first_scan(enter, visit);
 }
@@ -168,20 +170,21 @@ void bim::axmol::input::node::touch_pressed(touch_event& touch)
 void bim::axmol::input::node::touch_moved(touch_event& touch)
 {
   const auto enter = [&touch](const node& n) -> bool
-  {
-    return ((n.m_touch_pressed_mask & (1 << touch.get()->getID())) != 0)
-           || !n.m_touch_observer.lock();
-  };
+    {
+      return ((n.m_touch_pressed_mask & (1 << touch.get()->getID())) != 0)
+             || !n.m_touch_observer.lock();
+    };
 
   const auto visit = [&](const node& n)
-  {
-    const std::shared_ptr<touch_observer> observer = n.m_touch_observer.lock();
+    {
+      const std::shared_ptr<touch_observer> observer =
+          n.m_touch_observer.lock();
 
-    if (!observer)
-      return;
+      if (!observer)
+        return;
 
-    observer->moved(touch);
-  };
+      observer->moved(touch);
+    };
 
   depth_first_scan(enter, visit);
 }
@@ -189,22 +192,23 @@ void bim::axmol::input::node::touch_moved(touch_event& touch)
 void bim::axmol::input::node::touch_released(touch_event& touch)
 {
   const auto enter = [&touch](const node& n) -> bool
-  {
-    return ((n.m_touch_pressed_mask & (1 << touch.get()->getID())) != 0)
-           || !n.m_touch_observer.lock();
-  };
+    {
+      return ((n.m_touch_pressed_mask & (1 << touch.get()->getID())) != 0)
+             || !n.m_touch_observer.lock();
+    };
 
   const auto visit = [&touch](node& n)
-  {
-    n.m_touch_pressed_mask &= ~(1 << touch.get()->getID());
+    {
+      n.m_touch_pressed_mask &= ~(1 << touch.get()->getID());
 
-    const std::shared_ptr<touch_observer> observer = n.m_touch_observer.lock();
+      const std::shared_ptr<touch_observer> observer =
+          n.m_touch_observer.lock();
 
-    if (!observer)
-      return;
+      if (!observer)
+        return;
 
-    observer->released(touch);
-  };
+      observer->released(touch);
+    };
 
   depth_first_scan(enter, visit);
 }
@@ -212,22 +216,23 @@ void bim::axmol::input::node::touch_released(touch_event& touch)
 void bim::axmol::input::node::touch_cancelled(touch_event& touch)
 {
   const auto enter = [&touch](const node& n) -> bool
-  {
-    return ((n.m_touch_pressed_mask & (1 << touch.get()->getID())) != 0)
-           || !n.m_touch_observer.lock();
-  };
+    {
+      return ((n.m_touch_pressed_mask & (1 << touch.get()->getID())) != 0)
+             || !n.m_touch_observer.lock();
+    };
 
   const auto visit = [&touch](node& n) -> void
-  {
-    n.m_touch_pressed_mask &= ~(1 << touch.get()->getID());
+    {
+      n.m_touch_pressed_mask &= ~(1 << touch.get()->getID());
 
-    const std::shared_ptr<touch_observer> observer = n.m_touch_observer.lock();
+      const std::shared_ptr<touch_observer> observer =
+          n.m_touch_observer.lock();
 
-    if (!observer)
-      return;
+      if (!observer)
+        return;
 
-    observer->cancelled(touch);
-  };
+      observer->cancelled(touch);
+    };
 
   depth_first_scan(enter, visit);
 }
@@ -235,16 +240,16 @@ void bim::axmol::input::node::touch_cancelled(touch_event& touch)
 void bim::axmol::input::node::key_pressed(const key_event_view& keys)
 {
   const auto enter = [](const node& n) -> bool
-  {
-    return true;
-  };
+    {
+      return true;
+    };
   const auto visit = [&keys](node& n)
-  {
-    const std::shared_ptr<key_observer> observer = n.m_key_observer.lock();
+    {
+      const std::shared_ptr<key_observer> observer = n.m_key_observer.lock();
 
-    if (observer)
-      observer->pressed(keys);
-  };
+      if (observer)
+        observer->pressed(keys);
+    };
 
   depth_first_scan(enter, visit);
 }
@@ -252,16 +257,16 @@ void bim::axmol::input::node::key_pressed(const key_event_view& keys)
 void bim::axmol::input::node::key_released(const key_event_view& keys)
 {
   const auto enter = [](const node& n) -> bool
-  {
-    return true;
-  };
+    {
+      return true;
+    };
   const auto visit = [&keys](node& n)
-  {
-    const std::shared_ptr<key_observer> observer = n.m_key_observer.lock();
+    {
+      const std::shared_ptr<key_observer> observer = n.m_key_observer.lock();
 
-    if (observer)
-      observer->released(keys);
-  };
+      if (observer)
+        observer->released(keys);
+    };
 
   depth_first_scan(enter, visit);
 }

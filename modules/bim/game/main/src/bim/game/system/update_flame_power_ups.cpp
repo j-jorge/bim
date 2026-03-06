@@ -41,8 +41,8 @@ void bim::game::update_flame_power_ups(entt::registry& registry,
   registry.view<player, fractional_position_on_grid>().each(
       [&](entt::entity, player& p,
           fractional_position_on_grid position) -> void
-      {
-        check_flame_power_up_player_collision(registry, entity_map, p,
-                                              position);
-      });
+        {
+          check_flame_power_up_player_collision(registry, entity_map, p,
+                                                position);
+        });
 }

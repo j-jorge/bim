@@ -124,22 +124,22 @@ bim::axmol::app::screen_wheel::screen_wheel(
 
   m_message_popup->connect_to_ok(
       [this]() -> void
-      {
-        m_reset();
-      });
+        {
+          m_reset();
+        });
 
   m_lobby->connect_to_reset(
       [this]() -> void
-      {
-        m_reset();
-      });
+        {
+          m_reset();
+        });
 
   m_session_handler_connection =
       m_context.get_session_handler()->connect_to_connected(
           [this]()
-          {
-            connect_keep_alive();
-          });
+            {
+              connect_keep_alive();
+            });
 
   connect_keep_alive();
 
@@ -179,70 +179,70 @@ void bim::axmol::app::screen_wheel::wire_permanent_connections()
 {
   m_lobby->connect_to_play(
       [this]()
-      {
-        animate_lobby_to_matchmaking();
-      });
+        {
+          animate_lobby_to_matchmaking();
+        });
 
   m_lobby->connect_to_game_features(
       [this]()
-      {
-        animate_lobby_to_game_features();
-      });
+        {
+          animate_lobby_to_game_features();
+        });
 
   m_matchmaking->connect_to_start_game(
       [this](const bim::net::game_launch_event& event)
-      {
-        animate_matchmaking_to_game(event);
-      });
+        {
+          animate_matchmaking_to_game(event);
+        });
 
   m_matchmaking->connect_to_back(
       [this]()
-      {
-        animate_matchmaking_to_lobby();
-      });
+        {
+          animate_matchmaking_to_lobby();
+        });
 
   m_online_game->connect_to_game_over(
       [this](const bim::net::contest_result& result)
-      {
-        animate_game_to_end_game(result);
-      });
+        {
+          animate_game_to_end_game(result);
+        });
 
   m_end_game->connect_to_quit(
       [this]()
-      {
-        animate_end_game_to_lobby();
-      });
+        {
+          animate_end_game_to_lobby();
+        });
 
   m_end_game->connect_to_revenge(
       [this]()
-      {
-        animate_end_game_to_matchmaking();
-      });
+        {
+          animate_end_game_to_matchmaking();
+        });
 
   m_shop->connect_to_back(
       [this]()
-      {
-        assert(m_leave_shop != nullptr);
-        (this->*m_leave_shop)();
-      });
+        {
+          assert(m_leave_shop != nullptr);
+          (this->*m_leave_shop)();
+        });
 
   m_lobby->connect_to_shop(
       [this](shop_intent intent)
-      {
-        animate_lobby_to_shop(intent);
-      });
+        {
+          animate_lobby_to_shop(intent);
+        });
 
   m_game_features->connect_to_back(
       [this]()
-      {
-        animate_game_features_to_lobby();
-      });
+        {
+          animate_game_features_to_lobby();
+        });
 
   m_game_features->connect_to_shop(
       [this](shop_intent intent)
-      {
-        animate_game_features_to_shop(intent);
-      });
+        {
+          animate_game_features_to_shop(intent);
+        });
 }
 
 void bim::axmol::app::screen_wheel::connect_keep_alive()
@@ -256,9 +256,9 @@ void bim::axmol::app::screen_wheel::connect_keep_alive()
   m_silently_reconnect = true;
   m_keep_alive_connection = m_keep_alive->connect_to_disconnected(
       [this]() -> void
-      {
-        disconnected();
-      });
+        {
+          disconnected();
+        });
   m_keep_alive->start(session_handler.session_id());
 }
 
@@ -293,12 +293,12 @@ void bim::axmol::app::screen_wheel::configure_screen_transitions()
 
   const auto set_screen_direction =
       [this](const ax::Node* from, const ax::Node* to, float dx, float dy)
-  {
-    m_screen_to_screen_direction(m_screen_index[from], m_screen_index[to]) =
-        ax::Vec2(dx, dy);
-    m_screen_to_screen_direction(m_screen_index[to], m_screen_index[from]) =
-        ax::Vec2(-dx, -dy);
-  };
+    {
+      m_screen_to_screen_direction(m_screen_index[from], m_screen_index[to]) =
+          ax::Vec2(dx, dy);
+      m_screen_to_screen_direction(m_screen_index[to], m_screen_index[from]) =
+          ax::Vec2(-dx, -dy);
+    };
 
   set_screen_direction(lobby, shop, -1, 0);
   set_screen_direction(lobby, game_features, -1, 0);
@@ -337,11 +337,11 @@ void bim::axmol::app::screen_wheel::switch_view(ax::Node& new_view)
       ax::MoveBy::create(animation_duration, enter_translation)));
 
   const auto remove_old_view = [this, &new_view]() -> void
-  {
-    m_active_view->removeFromParent();
-    m_active_view = &new_view;
-    (this->*m_displayed[m_screen_index[&new_view]])();
-  };
+    {
+      m_active_view->removeFromParent();
+      m_active_view = &new_view;
+      (this->*m_displayed[m_screen_index[&new_view]])();
+    };
 
   m_active_view->runAction(
       ax::Sequence::create(ax::EaseCircleActionOut::create(ax::MoveBy::create(
@@ -582,9 +582,9 @@ bool bim::axmol::app::screen_wheel::can_open_shop(shop_intent intent)
     {
       m_message_connection = m_yes_no_popup->connect_to_ok(
           []()
-          {
-            iscool::system::open_url("https://github.com/sponsors/j-jorge");
-          });
+            {
+              iscool::system::open_url("https://github.com/sponsors/j-jorge");
+            });
 
       m_yes_no_popup->show_yes_no(ic_gettext(
           "The shop is not available on this platform, yet you can support "

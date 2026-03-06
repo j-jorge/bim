@@ -11,10 +11,10 @@ void bim::game::update_shields(entt::registry& registry)
 {
   registry.view<burning, shield>().each(
       [&](entt::entity e) -> void
-      {
-        registry.erase<burning>(e);
-        registry.erase<shield>(e);
+        {
+          registry.erase<burning>(e);
+          registry.erase<shield>(e);
 
-        invincibility_state_factory(registry, e, std::chrono::seconds(5));
-      });
+          invincibility_state_factory(registry, e, std::chrono::seconds(5));
+        });
 }
