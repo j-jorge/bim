@@ -153,6 +153,8 @@ public:
 
     for (int i = 0; i != player_count; ++i)
       actions[i].reserve(32);
+
+    push_game_state_checksum();
   }
 
   bim::game::contest_fingerprint contest_fingerprint() const
@@ -178,12 +180,6 @@ public:
     drop_old_actions();
 
     return result;
-  }
-
-  void compute_checksum(bim::game::archive_storage& checksum_buffer)
-  {
-    bim::game::serialize_state(checksum_buffer, contest.registry());
-    simulation_checksum = bim::crc32(checksum_buffer);
   }
 
 private:
@@ -228,6 +224,9 @@ private:
             player_actions.begin()
                 + std::min(offset_to_all, player_actions.size()));
       }
+
+    simulation_checksum.erase(simulation_checksum.begin(),
+                              simulation_checksum.begin() + offset_to_all);
 
     completed_tick_count_all += offset_to_all;
     assert(completed_tick_count_all <= simulation_tick);
@@ -283,7 +282,7 @@ private:
   {
     bool reached_game_over = false;
 
-    assert(simulation_tick > completed_tick_count_all);
+    assert(simulation_tick >= completed_tick_count_all);
     const std::size_t action_base_index =
         simulation_tick - completed_tick_count_all;
 
@@ -311,6 +310,7 @@ private:
           timeline_writer.push(contest.registry());
 
         const bim::game::contest_result tick_result = contest.tick();
+        push_game_state_checksum();
 
         if (contest_result.still_running() && !tick_result.still_running())
           {
@@ -322,6 +322,12 @@ private:
       }
 
     return reached_game_over;
+  }
+
+  void push_game_state_checksum()
+  {
+    bim::game::serialize_state(m_checksum_buffer, contest.registry());
+    simulation_checksum.push_back(bim::crc32(m_checksum_buffer));
   }
 
 #ifndef NDEBUG
@@ -362,9 +368,6 @@ public:
    */
   std::uint32_t simulation_tick;
 
-  /** Checksum of the game state at simulation_tick. */
-  std::uint32_t simulation_checksum;
-
   /**
    * The tick confirmed by every client, i.e. each client knows the actions of
    * every player up to this point. This is the minimum of
@@ -387,6 +390,9 @@ public:
              bim::game::g_max_player_count>
       actions;
 
+  /** Checksum of the game state at simulation_tick. */
+  std::vector<std::uint32_t> simulation_checksum;
+
   std::array<std::chrono::nanoseconds, bim::game::g_max_player_count>
       release_player_at_this_date;
 
@@ -402,6 +408,9 @@ public:
   bim::game::contest contest;
 
   bim::game::contest_timeline_writer timeline_writer;
+
+private:
+  bim::game::archive_storage m_checksum_buffer;
 };
 
 bim::server::game_service::game_service(const config& config,
@@ -489,7 +498,6 @@ bim::server::game_info bim::server::game_service::new_game(
                                          sessions))
           .first->second;
 
-  game.compute_checksum(m_checksum_buffer);
   game.reward_availability = reward_availability;
 
   for (int i = 0; i != player_count; ++i)
@@ -663,9 +671,6 @@ void bim::server::game_service::push_update(
       break;
     }
 
-  if (state != simulation_state::frozen)
-    game.compute_checksum(m_checksum_buffer);
-
   // Keep sending the actions to the player to notify it about any updates,
   // even if the game could not be updated. Even if one player is frozen we
   // must keep them updated.
@@ -796,7 +801,9 @@ void bim::server::game_service::send_actions(
 
   bim::net::game_update_from_server message;
   message.from_tick = completed_tick_count_for_player;
-  message.final_checksum = game.simulation_checksum;
+  message.final_checksum =
+      game.simulation_checksum[game.simulation_tick
+                               - game.completed_tick_count_all];
   message.actions.resize(game.player_count);
 
   for (std::uint8_t player = 0; player != game.player_count; ++player)
