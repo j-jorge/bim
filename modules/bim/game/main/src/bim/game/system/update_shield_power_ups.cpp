@@ -40,8 +40,8 @@ void bim::game::update_shield_power_ups(entt::registry& registry,
   registry.view<player, fractional_position_on_grid>().each(
       [&](entt::entity e, const player&,
           fractional_position_on_grid position) -> void
-      {
-        check_shield_power_up_player_collision(registry, entity_map, e,
-                                               position);
-      });
+        {
+          check_shield_power_up_player_collision(registry, entity_map, e,
+                                                 position);
+        });
 }

@@ -20,17 +20,17 @@ jobs:
     strategy:
       matrix:
         # Last LTS and last non-LTS.
-        container: ["ubuntu:24.04", "ubuntu:25.10"]
+        container: ["debian:forky", "ubuntu:25.10"]
         build_type: [release, debug]
         # Can't use Clang 21 on Ubuntu 25.10 as it is missing
         # LLVMgold.so, necessary for LTO builds.
-        compiler: [g++, clang-18, clang-20]
+        compiler: [g++, clang-20, clang-21]
         maybe_incremental: [--incremental, ""]
         exclude:
-          - container: "ubuntu:24.04"
+          - container: "debian:forky"
             compiler: clang-20
           - container: "ubuntu:25.10"
-            compiler: clang-18
+            compiler: clang-21
 
     steps:
       - name: Cache dependencies
@@ -69,17 +69,8 @@ jobs:
       - name: Valgrind tests
         if: |
           (matrix.maybe_incremental == '')
-          && (matrix.container == 'ubuntu:25.10')
+          && (matrix.container == 'debian:forky')
           && (matrix.build_type == 'release')
           && (matrix.compiler == 'g++')
         run: >
           ./ci/run-test-programs.sh --use-valgrind build/linux/release
-
-      - name: Archive artifacts
-        if: |
-          (matrix.maybe_incremental == '')
-          && (matrix.container == 'ubuntu:25.10')
-        uses: actions/upload-artifact@v4
-        with:
-          name: server-${{matrix.build_type}}-${{matrix.compiler}}
-          path: build/linux/*/apps/server/bim-server

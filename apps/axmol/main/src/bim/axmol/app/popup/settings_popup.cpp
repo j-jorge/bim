@@ -104,80 +104,80 @@ bim::axmol::app::settings_popup::settings_popup(
 
   m_controls->close_button->connect_to_clicked(
       [this]()
-      {
-        m_popup->hide();
-      });
+        {
+          m_popup->hide();
+        });
 
   m_escape->connect_to_released(
       [this]()
-      {
-        m_popup->hide();
-      });
+        {
+          m_popup->hide();
+        });
 
   m_controls->language_button->connect_to_clicked(
       [this]()
-      {
-        show_language_selection();
-      });
+        {
+          show_language_selection();
+        });
   m_language_popup->connect_to_reset(
       [this]()
-      {
-        m_reset();
-      });
+        {
+          m_reset();
+        });
 
   m_controls->bluesky_button->connect_to_clicked(
       [this]()
-      {
-        open_bluesky();
-      });
+        {
+          open_bluesky();
+        });
 
   m_controls->github_button->connect_to_clicked(
       [this]()
-      {
-        open_github();
-      });
+        {
+          open_github();
+        });
 
   m_controls->mail_button->connect_to_clicked(
       [this]()
-      {
-        open_mail();
-      });
+        {
+          open_mail();
+        });
 
   m_controls->share_button->connect_to_clicked(
       [this]()
-      {
-        open_share();
-      });
+        {
+          open_share();
+        });
 
   m_controls->music->connect_to_clicked(
       [this]()
-      {
-        set_music_preference();
-      });
+        {
+          set_music_preference();
+        });
 
   m_controls->sound_effects->connect_to_clicked(
       [this]()
-      {
-        set_sound_effects_preference();
-      });
+        {
+          set_sound_effects_preference();
+        });
 
   m_controls->vibrations->connect_to_clicked(
       [this]()
-      {
-        set_vibrations_preference();
-      });
+        {
+          set_vibrations_preference();
+        });
 
   m_controls->d_pad_position->connect_to_clicked(
       [this]()
-      {
-        set_d_pad_position_preference();
-      });
+        {
+          set_d_pad_position_preference();
+        });
 
   m_controls->d_pad_kind->connect_to_clicked(
       [this]()
-      {
-        set_d_pad_kind_preference();
-      });
+        {
+          set_d_pad_kind_preference();
+        });
 }
 
 bim::axmol::app::settings_popup::~settings_popup() = default;

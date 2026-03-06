@@ -42,15 +42,15 @@ static void check_positions(
       registry.view<bim::game::falling_block, bim::game::position_on_grid>()
           .each(
               [&](bim::game::position_on_grid p) -> void
-              {
-                if (p != expected_positions[i])
-                  return;
+                {
+                  if (p != expected_positions[i])
+                    return;
 
-                ++falling_block_count;
-                EXPECT_EQ(1, falling_block_count)
-                    << "i=" << i << ", p=(" << (int)p.x << ", " << (int)p.y
-                    << ')';
-              });
+                  ++falling_block_count;
+                  EXPECT_EQ(1, falling_block_count)
+                      << "i=" << i << ", p=(" << (int)p.x << ", " << (int)p.y
+                      << ')';
+                });
 
       EXPECT_EQ(1, falling_block_count) << "i=" << i << ", expected_position=("
                                         << (int)expected_positions[i].x << ", "

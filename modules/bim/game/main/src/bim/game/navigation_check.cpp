@@ -34,9 +34,9 @@ bool bim::game::navigation_check::reachable(arena& arena, std::uint8_t from_x,
   m_pending.emplace_back(from_x, from_y);
 
   const auto sq_dist = [=](int x, int y) -> int
-  {
-    return (x - to_x) * (x - to_x) + (y - to_y) * (y - to_y);
-  };
+    {
+      return (x - to_x) * (x - to_x) + (y - to_y) * (y - to_y);
+    };
 
   while (!m_pending.empty())
     {

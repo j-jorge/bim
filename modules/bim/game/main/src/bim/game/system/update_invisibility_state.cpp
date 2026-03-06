@@ -19,13 +19,13 @@ void bim::game::update_invisibility_state(const context& context,
   registry.view<invisibility_state, player, animation_state>().each(
       [&](entt::entity e, invisibility_state& s, const player&,
           const animation_state& a) -> void
-      {
-        const timer& t = registry.get<timer>(s.entity);
+        {
+          const timer& t = registry.get<timer>(s.entity);
 
-        if ((t.duration.count() == 0) || !animations.is_alive(a.model))
-          {
-            registry.emplace<dead>(s.entity);
-            registry.erase<invisibility_state>(e);
-          }
-      });
+          if ((t.duration.count() == 0) || !animations.is_alive(a.model))
+            {
+              registry.emplace<dead>(s.entity);
+              registry.erase<invisibility_state>(e);
+            }
+        });
 }

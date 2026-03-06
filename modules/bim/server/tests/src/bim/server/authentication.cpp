@@ -53,13 +53,13 @@ protected:
 authentication_test::authentication_test()
   : m_config(
         [this]() -> bim::server::config
-        {
-          bim::server::config config = bim::server::tests::new_test_config();
-          config.enable_statistics_log = true;
-          config.statistics_log_file = m_statistics.log_file();
+          {
+            bim::server::config config = bim::server::tests::new_test_config();
+            config.enable_statistics_log = true;
+            config.statistics_log_file = m_statistics.log_file();
 
-          return config;
-        }())
+            return config;
+          }())
   , m_server(m_config)
   , m_socket_stream("localhost:" + std::to_string(m_config.port),
                     iscool::net::socket_mode::client{})

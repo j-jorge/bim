@@ -324,9 +324,9 @@ void bim::axmol::app::detail::persistent_systems::listen_to_frame_event()
           ->getEventDispatcher()
           ->addCustomEventListener(ax::Director::EVENT_AFTER_DRAW,
                                    [this](ax::EventCustom*)
-                                   {
-                                     m_application.tick();
-                                   });
+                                     {
+                                       m_application.tick();
+                                     });
 }
 
 void bim::axmol::app::detail::persistent_systems::remove_frame_event_listener()
@@ -345,10 +345,10 @@ void bim::axmol::app::detail::persistent_systems::start_root_scene()
 
   m_clean_up_connection = m_root_scene->connect_to_clean_up(
       [this]() -> void
-      {
-        m_clean_up_connection.disconnect();
-        m_application.clean_up();
-      });
+        {
+          m_clean_up_connection.disconnect();
+          m_application.clean_up();
+        });
 
   ax::Director& director = *ax::Director::getInstance();
 
@@ -480,16 +480,16 @@ bim::axmol::app::application::application(
 
   m_reset_key_observer->connect_to_released(
       [this]()
-      {
-        reset();
-      });
+        {
+          reset();
+        });
 
   m_input_root.push_back(m_screen_capture_key_observer);
   m_screen_capture_key_observer->connect_to_released(
       [this]()
-      {
-        capture_screen();
-      });
+        {
+          capture_screen();
+        });
 
   m_context.set_enable_debug(enable_debug);
 }
@@ -514,9 +514,9 @@ bool bim::axmol::app::application::applicationDidFinishLaunching()
 
   m_launch_connection = iscool::schedule::delayed_call(
       [this]()
-      {
-        complete_launch();
-      });
+        {
+          complete_launch();
+        });
 
   return true;
 }
@@ -578,9 +578,9 @@ void bim::axmol::app::application::reset()
 
   m_launch_connection = iscool::schedule::delayed_call(
       [this]()
-      {
-        complete_launch();
-      });
+        {
+          complete_launch();
+        });
 }
 
 void bim::axmol::app::application::set_up_file_utils()
@@ -656,11 +656,11 @@ void bim::axmol::app::application::launch_game()
       *m_session_systems->root_style().get_declaration("main-task")));
   m_main_task->connect_to_reset(
       [this]() -> void
-      {
-        ic_log(iscool::log::nature::info(), g_log_context,
-               "Resetting the game.");
-        reset();
-      });
+        {
+          ic_log(iscool::log::nature::info(), g_log_context,
+                 "Resetting the game.");
+          reset();
+        });
 
   m_main_task->start();
 }
@@ -693,10 +693,10 @@ void bim::axmol::app::application::start_script()
       m_script_info->timeout));
   m_script_director->connect_to_done(
       [this](script_director::result r)
-      {
-        m_script_info->passed = (r == script_director::result::ok);
-        end();
-      });
+        {
+          m_script_info->passed = (r == script_director::result::ok);
+          end();
+        });
 #endif
 }
 
@@ -709,11 +709,11 @@ void bim::axmol::app::application::capture_screen() const
 {
   ax::utils::captureScreen(
       [](ax::RefPtr<ax::Image> image) -> void
-      {
-        std::ostringstream oss;
-        const std::time_t t = std::time(nullptr);
-        oss << std::put_time(std::gmtime(&t), "%Y-%m-%d_%H-%M-%S") << ".png";
+        {
+          std::ostringstream oss;
+          const std::time_t t = std::time(nullptr);
+          oss << std::put_time(std::gmtime(&t), "%Y-%m-%d_%H-%M-%S") << ".png";
 
-        image->saveToFile(oss.str());
-      });
+          image->saveToFile(oss.str());
+        });
 }

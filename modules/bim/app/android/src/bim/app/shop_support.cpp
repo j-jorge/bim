@@ -7,13 +7,13 @@
 bool bim::app::is_shop_supported()
 {
   static bool result = []() -> bool
-  {
-    iscool::jni::static_method<jboolean> method(
-        iscool::jni::get_static_method<jboolean>("bim/app/ShopService",
-                                                 "supported", "()Z"));
+    {
+      iscool::jni::static_method<jboolean> method(
+          iscool::jni::get_static_method<jboolean>("bim/app/ShopService",
+                                                   "supported", "()Z"));
 
-    return method();
-  }();
+      return method();
+    }();
 
   return result;
 }

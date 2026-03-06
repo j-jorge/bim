@@ -63,18 +63,18 @@ bim::axmol::app::script_director::script_director(
   , m_timeout(timeout)
   , m_event_connection(events.connect_to_event(
         [this](std::string_view name)
-        {
-          check_event(name);
-        }))
+          {
+            check_event(name);
+          }))
 {
   const auto fail = [this]()
-  {
-    m_tick_connection = iscool::schedule::delayed_call(
-        [this]()
-        {
-          m_done(result::fail);
-        });
-  };
+    {
+      m_tick_connection = iscool::schedule::delayed_call(
+          [this]()
+            {
+              m_done(result::fail);
+            });
+    };
 
   const Json::Value script = iscool::json::from_file(script_file);
 
@@ -102,19 +102,19 @@ bim::axmol::app::script_director::script_director(
   const auto action_property_to_string = [&](std::string& result,
                                              const Json::Value& action,
                                              const std::string& key, int i)
-  {
-    const Json::Value& value = action[key];
+    {
+      const Json::Value& value = action[key];
 
-    if (!value.isString())
-      {
-        ic_log(iscool::log::nature::error(), "script_director",
-               "{}: action {}'s '{}' is not a string.", script_file, key, i);
-        return false;
-      }
+      if (!value.isString())
+        {
+          ic_log(iscool::log::nature::error(), "script_director",
+                 "{}: action {}'s '{}' is not a string.", script_file, key, i);
+          return false;
+        }
 
-    result = value.asString();
-    return true;
-  };
+      result = value.asString();
+      return true;
+    };
 
   std::uint8_t next_screenshot_number = 0;
 
@@ -210,9 +210,9 @@ void bim::axmol::app::script_director::schedule_tick()
   // Sets a delay to ensure that it won't run in the same game tick.
   m_tick_connection = iscool::schedule::delayed_call(
       [this]()
-      {
-        tick();
-      },
+        {
+          tick();
+        },
       std::chrono::seconds(0));
 }
 
@@ -285,9 +285,9 @@ void bim::axmol::app::script_director::capture(
 {
   ax::utils::captureScreen(
       [=](ax::RefPtr<ax::Image> image) -> void
-      {
-        image->saveToFile(file_name.c_str());
-      });
+        {
+          image->saveToFile(file_name.c_str());
+        });
 }
 
 bool bim::axmol::app::script_director::click(
@@ -442,9 +442,9 @@ void bim::axmol::app::script_director::schedule_timeout()
 {
   m_timeout_connection = iscool::schedule::delayed_call(
       [this]()
-      {
-        timeout();
-      },
+        {
+          timeout();
+        },
       m_timeout);
 }
 

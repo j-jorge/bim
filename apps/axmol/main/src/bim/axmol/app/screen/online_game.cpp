@@ -170,14 +170,14 @@ bim::axmol::app::online_game::online_game(
 
   m_controls->peephole->connect_to_shown(
       [this]() -> void
-      {
-        m_update_exchange->start();
-      });
+        {
+          m_update_exchange->start();
+        });
 
   const auto request_drop_bomb = [this]()
-  {
-    m_bomb_drop_requested = true;
-  };
+    {
+      m_bomb_drop_requested = true;
+    };
 
   m_controls->bomb_button->connect_to_pressed(request_drop_bomb);
   m_controls->bomb_button->cancel_on_swipe(false);
@@ -191,9 +191,9 @@ bim::axmol::app::online_game::online_game(
 
   m_controls->directional_pad->connect_to_pressed(
       [haptic = context.get_haptic_feedback()]() -> void
-      {
-        haptic->click();
-      });
+        {
+          haptic->click();
+        });
 
   const bim::axmol::widget::context& widget_context =
       *m_context.get_widget_context();
@@ -460,16 +460,16 @@ void bim::axmol::app::online_game::displaying(
       new bim::net::game_update_exchange(*m_game_channel, player_count));
   m_update_exchange->connect_to_started(
       [this]() -> void
-      {
-        m_controls->peephole->reveal();
-        m_controls->bomb_button->enable(true);
-        m_keyboard_gamepad->enable(true);
-        m_last_tick_date =
-            iscool::time::monotonic_now<std::chrono::nanoseconds>();
-        m_game_start_date = m_last_tick_date;
-        m_context.get_event_dispatcher()->dispatch("game-started");
-        schedule_tick();
-      });
+        {
+          m_controls->peephole->reveal();
+          m_controls->bomb_button->enable(true);
+          m_keyboard_gamepad->enable(true);
+          m_last_tick_date =
+              iscool::time::monotonic_now<std::chrono::nanoseconds>();
+          m_game_start_date = m_last_tick_date;
+          m_context.get_event_dispatcher()->dispatch("game-started");
+          schedule_tick();
+        });
   m_contest_runner.reset(new bim::net::contest_runner(
       *m_contest, *m_update_exchange, event.player_index, player_count));
 
@@ -599,9 +599,9 @@ void bim::axmol::app::online_game::schedule_tick()
 
   m_tick_connection = iscool::schedule::delayed_call(
       [this]() -> void
-      {
-        tick();
-      },
+        {
+          tick();
+        },
       update_interval);
 }
 
@@ -817,12 +817,12 @@ void bim::axmol::app::online_game::display_walls()
 
   registry.view<bim::game::position_on_grid, bim::game::wall>().each(
       [this, &asset_index](const bim::game::position_on_grid& p) -> void
-      {
-        display_at(p.y, *m_walls[asset_index],
-                   m_display_config.grid_position_to_displayed_block_center(
-                       p.x, p.y));
-        ++asset_index;
-      });
+        {
+          display_at(p.y, *m_walls[asset_index],
+                     m_display_config.grid_position_to_displayed_block_center(
+                         p.x, p.y));
+          ++asset_index;
+        });
 
   bim::axmol::widget::hide_while_visible(m_walls, asset_index);
 }
@@ -871,27 +871,28 @@ void bim::axmol::app::online_game::display_falling_blocks()
       .each(
           [this, &asset_index](const bim::game::position_on_grid& p,
                                const bim::game::timer& t) -> void
-          {
-            const ax::Vec2 start =
-                m_display_config.grid_position_to_displayed_block_center(
-                    p.x, p.y - 1);
-            const ax::Vec2 end =
-                m_display_config.grid_position_to_displayed_block_center(p.x,
-                                                                         p.y);
-            const float remaining_ratio =
-                std::chrono::duration_cast<std::chrono::duration<float>>(
-                    t.duration)
-                    .count()
-                / std::chrono::duration_cast<std::chrono::duration<float>>(
-                      bim::game::g_falling_block_duration)
-                      .count();
-            const ax::Vec2 display_position(
-                start + (end - start) * (1 - remaining_ratio));
+            {
+              const ax::Vec2 start =
+                  m_display_config.grid_position_to_displayed_block_center(
+                      p.x, p.y - 1);
+              const ax::Vec2 end =
+                  m_display_config.grid_position_to_displayed_block_center(
+                      p.x, p.y);
+              const float remaining_ratio =
+                  std::chrono::duration_cast<std::chrono::duration<float>>(
+                      t.duration)
+                      .count()
+                  / std::chrono::duration_cast<std::chrono::duration<float>>(
+                        bim::game::g_falling_block_duration)
+                        .count();
+              const ax::Vec2 display_position(
+                  start + (end - start) * (1 - remaining_ratio));
 
-            display_at(p.y, *m_falling_blocks_shadows[asset_index], end);
-            display_at(p.y, *m_falling_blocks[asset_index], display_position);
-            ++asset_index;
-          });
+              display_at(p.y, *m_falling_blocks_shadows[asset_index], end);
+              display_at(p.y, *m_falling_blocks[asset_index],
+                         display_position);
+              ++asset_index;
+            });
 
   bim::axmol::widget::hide_while_visible(m_falling_blocks, asset_index);
   bim::axmol::widget::hide_while_visible(m_falling_blocks_shadows,
@@ -910,16 +911,16 @@ void bim::axmol::app::online_game::display_animations()
       .each(
           [this](const bim::game::position_on_grid& p,
                  const bim::game::animation_state& state) -> void
-          {
-            ax::Sprite& s = *m_animation_sprites[m_animation_sprite_index];
-            m_animations[state.model]->apply(s, state);
+            {
+              ax::Sprite& s = *m_animation_sprites[m_animation_sprite_index];
+              m_animations[state.model]->apply(s, state);
 
-            display_at(
-                p.y, s,
-                m_display_config.grid_position_to_displayed_block_center(p.x,
-                                                                         p.y));
-            ++m_animation_sprite_index;
-          });
+              display_at(
+                  p.y, s,
+                  m_display_config.grid_position_to_displayed_block_center(
+                      p.x, p.y));
+              ++m_animation_sprite_index;
+            });
 }
 
 void bim::axmol::app::online_game::display_players()
@@ -948,9 +949,9 @@ void bim::axmol::app::online_game::display_players()
            local_still_alive](entt::entity e, const bim::game::player& player,
                               const bim::game::fractional_position_on_grid& p,
                               const bim::game::animation_state& a) -> void
-          {
-            display_player(local_still_alive, e, player, p, a);
-          });
+            {
+              display_player(local_still_alive, e, player, p, a);
+            });
 }
 
 void bim::axmol::app::online_game::display_player(
@@ -1006,24 +1007,24 @@ void bim::axmol::app::online_game::display_bombs()
           [this, &asset_index](const bim::game::position_on_grid& p,
                                const bim::game::bomb& b,
                                const bim::game::timer& t) -> void
-          {
-            ax::Sprite& s = *m_bombs[asset_index];
+            {
+              ax::Sprite& s = *m_bombs[asset_index];
 
-            display_at(
-                p.y, s,
-                m_display_config.grid_position_to_displayed_block_center(p.x,
-                                                                         p.y));
+              display_at(
+                  p.y, s,
+                  m_display_config.grid_position_to_displayed_block_center(
+                      p.x, p.y));
 
-            const size_t f =
-                (t.duration > std::chrono::seconds(1)) ? 300 : 100;
+              const size_t f =
+                  (t.duration > std::chrono::seconds(1)) ? 300 : 100;
 
-            if (t.duration.count() / f % 2 == 0)
-              s.setScale(1.1);
-            else
-              s.setScale(1);
+              if (t.duration.count() / f % 2 == 0)
+                s.setScale(1.1);
+              else
+                s.setScale(1);
 
-            ++asset_index;
-          });
+              ++asset_index;
+            });
 
   bim::axmol::widget::hide_while_visible(m_bombs, asset_index);
 }
@@ -1042,18 +1043,18 @@ void bim::axmol::app::online_game::display_flames()
           [this, &asset_index](const bim::game::position_on_grid& p,
                                const bim::game::flame& f,
                                const bim::game::animation_state& a) -> void
-          {
-            ax::Sprite& s = *m_flames[asset_index];
-            m_flame_animations[(int)f.segment][(int)f.direction][a.model]
-                ->apply(s, a);
+            {
+              ax::Sprite& s = *m_flames[asset_index];
+              m_flame_animations[(int)f.segment][(int)f.direction][a.model]
+                  ->apply(s, a);
 
-            display_at(
-                p.y, s,
-                m_display_config.grid_position_to_displayed_block_center(p.x,
-                                                                         p.y));
+              display_at(
+                  p.y, s,
+                  m_display_config.grid_position_to_displayed_block_center(
+                      p.x, p.y));
 
-            ++asset_index;
-          });
+              ++asset_index;
+            });
 
   bim::axmol::widget::hide_while_visible(m_flames, asset_index);
 }
@@ -1070,12 +1071,12 @@ void bim::axmol::app::online_game::display_power_ups(
   registry.view<bim::game::position_on_grid, T>().each(
       [this, &assets,
        &asset_index](const bim::game::position_on_grid& p) -> void
-      {
-        display_at(p.y, *assets[asset_index],
-                   m_display_config.grid_position_to_displayed_block_center(
-                       p.x, p.y));
-        ++asset_index;
-      });
+        {
+          display_at(p.y, *assets[asset_index],
+                     m_display_config.grid_position_to_displayed_block_center(
+                         p.x, p.y));
+          ++asset_index;
+        });
 
   bim::axmol::widget::hide_while_visible(assets, asset_index);
 }
@@ -1088,17 +1089,17 @@ void bim::axmol::app::online_game::display_main_timer()
 
   registry.view<bim::game::timer, bim::game::game_timer>().each(
       [this](const bim::game::timer& t) -> void
-      {
-        const int duration_in_second =
-            std::chrono::duration_cast<std::chrono::seconds>(t.duration)
-                .count();
+        {
+          const int duration_in_second =
+              std::chrono::duration_cast<std::chrono::seconds>(t.duration)
+                  .count();
 
-        const int seconds = duration_in_second % 60;
-        const int minutes = duration_in_second / 60;
+          const int seconds = duration_in_second % 60;
+          const int minutes = duration_in_second / 60;
 
-        m_controls->timer->setString(
-            fmt::format("{:02}:{:02}", minutes, seconds));
-      });
+          m_controls->timer->setString(
+              fmt::format("{:02}:{:02}", minutes, seconds));
+        });
 }
 
 void bim::axmol::app::online_game::display_at(std::size_t arena_y,

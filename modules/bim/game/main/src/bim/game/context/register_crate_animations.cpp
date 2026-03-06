@@ -20,9 +20,9 @@ void bim::game::register_crate_animations(context& context,
     animation_specifications p;
     p.duration = std::chrono::milliseconds(270);
     p.dispatch_completion = [](entt::registry& r, entt::entity e) -> void
-    {
-      r.emplace<dead>(e);
-    };
+      {
+        r.emplace<dead>(e);
+      };
     animations.replace_animation(result.burn, p);
   }
 }

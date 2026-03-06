@@ -14,8 +14,8 @@ void bim::game::update_power_ups(entt::registry& registry,
 {
   registry.view<power_up, burning, position_on_grid>().each(
       [&](entt::entity e, position_on_grid position) -> void
-      {
-        entity_map.erase_entity(e, position.x, position.y);
-        registry.emplace<dead>(e);
-      });
+        {
+          entity_map.erase_entity(e, position.x, position.y);
+          registry.emplace<dead>(e);
+        });
 }

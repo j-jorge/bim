@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 
 set -euo pipefail
 
@@ -94,25 +94,15 @@ function update_alternative_compiler()
     update-alternatives --set c++ /usr/bin/"$cxx_bin"
 }
 
-# Debian Bookworm, which is used for the build images by F-Droid, uses
-# a version of GCC too old for Bim!. We are going to install the
-# version from Trixie as a workaround.
-if [[ "$compiler" = g++ ]] && distribution_is debian bookworm
+# Ubuntu 25.10 uses G++ 15 but the installed stdlibc++ is 13… We need
+# libstdc++-15 for better support of C++23.
+if distribution_is ubuntu questing
 then
-    echo "deb https://deb.debian.org/debian trixie main" \
-         > /etc/apt/sources.list.d/trixie.list
-    apt-get update
-    apt-get install -y -t trixie g++-14
-
-    update_alternative_compiler gcc-14 g++-14
-
-    update_needed=0
-else
-    packages=("$compiler")
-    update_needed=1
+    packages+=(libstdc++-15-dev)
 fi
 
-packages+=(autoconf
+packages+=("$compiler"
+           autoconf
            automake
            bzip2
            ccache
@@ -159,10 +149,7 @@ case "$target_platform" in
         ;;
 esac
 
-if ((update_needed == 1))
-then
-    apt-get update
-fi
+apt-get update
 
 DEBIAN_FRONTEND=noninteractive \
     apt-get install --no-install-recommends --yes "${packages[@]}"

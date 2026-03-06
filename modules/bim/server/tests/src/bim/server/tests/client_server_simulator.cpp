@@ -47,13 +47,13 @@ void bim::server::tests::client_server_simulator::join_game()
   // the server.
   wait(
       [this]() -> bool
-      {
-        for (int i = 0; i != m_player_count; ++i)
-          if (!clients[i].started)
-            return false;
+        {
+          for (int i = 0; i != m_player_count; ++i)
+            if (!clients[i].started)
+              return false;
 
-        return true;
-      });
+          return true;
+        });
 
   for (int i = 0; i != m_player_count; ++i)
     EXPECT_TRUE(clients[i].is_in_game()) << "i=" << i;
@@ -78,14 +78,15 @@ void bim::server::tests::client_server_simulator::tick(std::size_t tick_count)
           clients[i].contest_runner->confirmed_tick() + tick_count;
 
   const auto all_synchronized = [this, &expected_tick]() -> bool
-  {
-    for (int i = 0; i != m_player_count; ++i)
-      if (clients[i].is_in_game()
-          && (clients[i].contest_runner->confirmed_tick() != expected_tick[i]))
-        return false;
+    {
+      for (int i = 0; i != m_player_count; ++i)
+        if (clients[i].is_in_game()
+            && (clients[i].contest_runner->confirmed_tick()
+                != expected_tick[i]))
+          return false;
 
-    return true;
-  };
+      return true;
+    };
 
   for (std::size_t t = 0; t != tick_count; ++t)
     {

@@ -30,14 +30,14 @@ bim::axmol::widget::soft_stick::soft_stick(
 {
   m_soft_stick_input->connect_to_move(
       [this](const ax::Vec2& world_position)
-      {
-        move_stick_to(world_position);
-      });
+        {
+          move_stick_to(world_position);
+        });
   m_soft_stick_input->connect_to_up(
       [this]()
-      {
-        move_stick_to(m_default_stick_world_position);
-      });
+        {
+          move_stick_to(m_default_stick_world_position);
+        });
 
   m_inputs.attach_to_root(m_soft_stick_input);
 }

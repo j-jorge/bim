@@ -38,10 +38,10 @@ bim::axmol::widget::soft_pad::soft_pad(
 {
   m_soft_pad_input->connect_to_changed(
       [this]()
-      {
-        if (update_display())
-          m_pressed();
-      });
+        {
+          if (update_display())
+            m_pressed();
+        });
 
   m_inputs.attach_to_root(m_soft_pad_input);
 }

@@ -120,45 +120,45 @@ bim::axmol::app::game_features::game_features(
 
   m_wallet->connect_to_clicked(
       [this]()
-      {
-        open_shop_from_wallet();
-      });
+        {
+          open_shop_from_wallet();
+        });
 
   m_escape->connect_to_released(
       [this]()
-      {
-        cancel_or_quit();
-      });
+        {
+          cancel_or_quit();
+        });
 
   m_controls->back_button->connect_to_clicked(
       [this]()
-      {
-        dispatch_back();
-      });
+        {
+          dispatch_back();
+        });
 
   m_message_popup->connect_to_ok(
       [this]()
-      {
-        open_shop_from_shortage();
-      });
+        {
+          open_shop_from_shortage();
+        });
 
   m_controls->random_button->connect_to_clicked(
       [this]()
-      {
-        select_random_features();
-      });
+        {
+          select_random_features();
+        });
 
   m_controls->erase_button->connect_to_clicked(
       [this]()
-      {
-        start_erase_mode();
-      });
+        {
+          start_erase_mode();
+        });
 
   m_tap->connect_to_release(
       [this]()
-      {
-        cancel();
-      });
+        {
+          cancel();
+        });
 
   const iscool::preferences::local_preferences& preferences =
       *m_context.get_local_preferences();
@@ -172,9 +172,9 @@ bim::axmol::app::game_features::game_features(
 
       m_slot[i]->connect_to_clicked(
           [this, i]()
-          {
-            select_slot(i);
-          });
+            {
+              select_slot(i);
+            });
     }
 
   const iscool::style::declaration& row_container_style =
@@ -199,34 +199,35 @@ bim::axmol::app::game_features::game_features(
 
   std::size_t row_count = 0;
   const auto add_list_row = [&]()
-  {
-    bim::axmol::ref_ptr<bim::axmol::widget::passive_node> item =
-        bim::axmol::widget::factory<bim::axmol::widget::passive_node>::create(
-            widget_context, row_container_style);
+    {
+      bim::axmol::ref_ptr<bim::axmol::widget::passive_node> item =
+          bim::axmol::widget::factory<
+              bim::axmol::widget::passive_node>::create(widget_context,
+                                                        row_container_style);
 
-    item->setName(fmt::format("row-{}", row_count));
-    item->fill(row_controls, row_bounds);
-    row_controls.clear();
-    m_controls->list->push_back(*item);
-    ++row_count;
-  };
+      item->setName(fmt::format("row-{}", row_count));
+      item->fill(row_controls, row_bounds);
+      row_controls.clear();
+      m_controls->list->push_back(*item);
+      ++row_count;
+    };
 
   const auto new_button = [&](std::size_t& index,
                               const iscool::style::declaration& style,
                               bool available) -> game_feature_button&
-  {
-    bim::axmol::ref_ptr<game_feature_button> button(
-        game_feature_button::create(widget_context, style));
-    button->setName(fmt::format("feature-{}", index));
-    button->available(available);
-    row_controls[node_names[index % buttons_per_row]] = button;
-    ++index;
+    {
+      bim::axmol::ref_ptr<game_feature_button> button(
+          game_feature_button::create(widget_context, style));
+      button->setName(fmt::format("feature-{}", index));
+      button->available(available);
+      row_controls[node_names[index % buttons_per_row]] = button;
+      ++index;
 
-    if (index % buttons_per_row == 0)
-      add_list_row();
+      if (index % buttons_per_row == 0)
+        add_list_row();
 
-    return *button;
-  };
+      return *button;
+    };
 
   const iscool::style::declaration& item_selection_action_style =
       *style.get_declaration("action.item-selection");
@@ -258,9 +259,9 @@ bim::axmol::app::game_features::game_features(
 
       button.connect_to_clicked(
           [this, f]()
-          {
-            select_feature(f);
-          });
+            {
+              select_feature(f);
+            });
     }
 
   for (; i < button_count;)

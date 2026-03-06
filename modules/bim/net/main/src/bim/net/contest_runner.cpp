@@ -80,9 +80,9 @@ bim::net::contest_runner::contest_runner(bim::game::contest& contest,
 
   update_exchange.connect_to_game_over(
       [this](const contest_result& result) -> void
-      {
-        m_contest_result = result;
-      });
+        {
+          m_contest_result = result;
+        });
 }
 
 std::uint32_t bim::net::contest_runner::local_tick() const
@@ -200,13 +200,13 @@ void bim::net::contest_runner::apply_server_actions(entt::registry& registry)
       registry.view<bim::game::player, bim::game::player_action>().each(
           [this, tick](const bim::game::player& p,
                        bim::game::player_action& action) -> void
-          {
-            const std::vector<bim::game::player_action>& actions =
-                m_server_actions[p.index];
+            {
+              const std::vector<bim::game::player_action>& actions =
+                  m_server_actions[p.index];
 
-            if (tick < actions.size())
-              action = actions[tick];
-          });
+              if (tick < actions.size())
+                action = actions[tick];
+            });
 
       for (int i = 0; i != m_player_count; ++i)
         if (tick == kick_tick[i])
@@ -298,9 +298,9 @@ void bim::net::contest_runner::apply_actions_for_current_tick(
   registry.view<bim::game::player, bim::game::player_action>().each(
       [this](const bim::game::player& p,
              bim::game::player_action& action) -> void
-      {
-        action = m_unconfirmed_actions[p.index].back();
-      });
+        {
+          action = m_unconfirmed_actions[p.index].back();
+        });
 }
 
 template <typename Archive, typename Snapshot>

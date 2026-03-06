@@ -73,10 +73,10 @@ void bim::axmol::app::popup::show(
       m_action_runner, *m_context.get_widget_context(), m_controls->all_nodes,
       m_style_action_show,
       [this, inputs]()
-      {
-        m_inputs.push_back(inputs);
-        m_context.get_event_dispatcher()->dispatch("popup-shown");
-      });
+        {
+          m_inputs.push_back(inputs);
+          m_context.get_event_dispatcher()->dispatch("popup-shown");
+        });
 }
 
 void bim::axmol::app::popup::hide()

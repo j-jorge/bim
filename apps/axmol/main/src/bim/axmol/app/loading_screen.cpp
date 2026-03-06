@@ -72,9 +72,9 @@ void bim::axmol::app::loading_screen::start()
 
   m_start_connection = iscool::schedule::delayed_call(
       [this]()
-      {
-        load_resources();
-      });
+        {
+          load_resources();
+        });
 }
 
 void bim::axmol::app::loading_screen::stop()
@@ -86,9 +86,9 @@ void bim::axmol::app::loading_screen::stop()
                                     *m_context.get_widget_context(),
                                     m_controls->all_nodes, m_action_done,
                                     [this]()
-                                    {
-                                      stopped();
-                                    });
+                                      {
+                                        stopped();
+                                      });
 }
 
 void bim::axmol::app::loading_screen::load_resources()
@@ -116,19 +116,19 @@ void bim::axmol::app::loading_screen::load_translations()
   std::string selected_language;
 
   const auto check_language_code = [&](std::string_view c) -> bool
-  {
-    translations_file = "i18n/";
-    translations_file += c;
-    translations_file += ".mo";
+    {
+      translations_file = "i18n/";
+      translations_file += c;
+      translations_file += ".mo";
 
-    if (iscool::files::file_exists(translations_file))
-      {
-        selected_language = c;
-        return true;
-      }
+      if (iscool::files::file_exists(translations_file))
+        {
+          selected_language = c;
+          return true;
+        }
 
-    return false;
-  };
+      return false;
+    };
 
   const iscool::language_name language =
       bim::app::user_language(*m_context.get_local_preferences());
@@ -154,9 +154,9 @@ void bim::axmol::app::loading_screen::load_translations()
 
       if (std::ranges::any_of(languages,
                               [&](const Json::Value& v)
-                              {
-                                return selected_language == v.asCString();
-                              }))
+                                {
+                                  return selected_language == v.asCString();
+                                }))
         for (const Json::Value& substitution : alias["substitutions"])
           {
             m_context.get_widget_context()->fonts.set_alias(
@@ -181,9 +181,9 @@ void bim::axmol::app::loading_screen::load_textures()
   for (const Json::Value& r : textures)
     cache.addImageAsync(r.asString(),
                         [this](ax::Texture2D*)
-                        {
-                          one_loaded_texture();
-                        });
+                          {
+                            one_loaded_texture();
+                          });
 }
 
 void bim::axmol::app::loading_screen::load_sprite_sheets()

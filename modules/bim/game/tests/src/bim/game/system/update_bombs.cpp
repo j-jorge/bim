@@ -43,21 +43,21 @@ static std::vector<std::string> flames_map(const bim::game::arena& arena,
   registry.view<bim::game::flame, bim::game::position_on_grid>().each(
       [&](entt::entity e, bim::game::flame f,
           bim::game::position_on_grid p) -> void
-      {
-        if (f.segment == bim::game::flame_segment::origin)
-          result[p.y][p.x] = 'B';
-        else if (bim::game::is_horizontal(f.direction))
-          {
-            if (f.segment == bim::game::flame_segment::tip)
-              result[p.y][p.x] = 'h';
-            else
-              result[p.y][p.x] = 'H';
-          }
-        else if (f.segment == bim::game::flame_segment::tip)
-          result[p.y][p.x] = 'v';
-        else
-          result[p.y][p.x] = 'V';
-      });
+        {
+          if (f.segment == bim::game::flame_segment::origin)
+            result[p.y][p.x] = 'B';
+          else if (bim::game::is_horizontal(f.direction))
+            {
+              if (f.segment == bim::game::flame_segment::tip)
+                result[p.y][p.x] = 'h';
+              else
+                result[p.y][p.x] = 'H';
+            }
+          else if (f.segment == bim::game::flame_segment::tip)
+            result[p.y][p.x] = 'v';
+          else
+            result[p.y][p.x] = 'V';
+        });
 
   return result;
 }

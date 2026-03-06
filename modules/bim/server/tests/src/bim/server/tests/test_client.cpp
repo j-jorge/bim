@@ -21,21 +21,21 @@ bim::server::tests::test_client::test_client(
 {
   m_authentication.connect_to_authenticated(
       [this](iscool::net::session_id session) -> void
-      {
-        this->session = session;
-      });
+        {
+          this->session = session;
+        });
 
   m_authentication.connect_to_error(
       [this](bim::net::authentication_error_code code) -> void
-      {
-        authentication_error = code;
-      });
+        {
+          authentication_error = code;
+        });
 
   m_new_game.connect_to_launch_game(
       [this, &message_stream](const bim::net::game_launch_event& event) -> void
-      {
-        launch_game(message_stream, event);
-      });
+        {
+          launch_game(message_stream, event);
+        });
 }
 
 bim::server::tests::test_client::~test_client() = default;
@@ -62,10 +62,10 @@ void bim::server::tests::test_client::new_game()
 
   m_game_proposal_connection = m_new_game.connect_to_game_proposal(
       [this](int) -> void
-      {
-        m_game_proposal_connection.disconnect();
-        m_new_game.accept({});
-      });
+        {
+          m_game_proposal_connection.disconnect();
+          m_new_game.accept({});
+        });
 
   m_new_game.start(*session);
 }
@@ -81,10 +81,10 @@ void bim::server::tests::test_client::new_game(const bim::net::game_name& name)
 
   m_game_proposal_connection = m_new_game.connect_to_game_proposal(
       [this](int) -> void
-      {
-        m_game_proposal_connection.disconnect();
-        m_new_game.accept({});
-      });
+        {
+          m_game_proposal_connection.disconnect();
+          m_new_game.accept({});
+        });
 
   m_new_game.start(*session, name);
 }
@@ -108,9 +108,9 @@ void bim::server::tests::test_client::launch_game(
 
   m_game_update->connect_to_started(
       [this]() -> void
-      {
-        started.emplace(true);
-      });
+        {
+          started.emplace(true);
+        });
 
   m_game_update->start();
 }

@@ -40,15 +40,15 @@ bool bim::game::load_contest_timeline(contest_timeline& timeline, std::FILE* f)
     }
 
   const auto read = []<typename T>(FILE* f, T& d) -> bool
-  {
-    if (std::fread(&d, sizeof(char), sizeof(d), f) != sizeof(d))
-      return false;
+    {
+      if (std::fread(&d, sizeof(char), sizeof(d), f) != sizeof(d))
+        return false;
 
-    d = (T)iscool::net::to_host_endianness(
-        (typename iscool::meta::underlying_type<T>::type)d);
+      d = (T)iscool::net::to_host_endianness(
+          (typename iscool::meta::underlying_type<T>::type)d);
 
-    return true;
-  };
+      return true;
+    };
 
   std::uint32_t file_version;
 

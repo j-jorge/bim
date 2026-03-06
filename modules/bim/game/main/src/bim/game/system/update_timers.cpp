@@ -11,19 +11,19 @@ void bim::game::update_timers(entt::registry& registry,
 {
   registry.view<timer>().each(
       [elapsed_time](timer& t)
-      {
-        if (t.duration <= elapsed_time)
-          t.duration = {};
-        else
-          t.duration -= elapsed_time;
-      });
+        {
+          if (t.duration <= elapsed_time)
+            t.duration = {};
+          else
+            t.duration -= elapsed_time;
+        });
 }
 
 void bim::game::trigger_crushed_timers(entt::registry& registry)
 {
   registry.view<timer, crushed>().each(
       [](timer& t)
-      {
-        t.duration = {};
-      });
+        {
+          t.duration = {};
+        });
 }

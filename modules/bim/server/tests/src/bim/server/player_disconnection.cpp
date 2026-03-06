@@ -131,11 +131,11 @@ TEST_P(player_disconnection_state, players_quit_earliness_threshold)
   // Update all active players individually. We must reach and go farther than
   // the tick reached by the inactive players for the game over to kick in.
   const auto update_active_players = [&]() -> void
-  {
-    for (int i = 0; i != player_count; ++i)
-      if (!is_disconnected[i])
-        simulator.tick(i, ticks_for_disconnection + 1);
-  };
+    {
+      for (int i = 0; i != player_count; ++i)
+        if (!is_disconnected[i])
+          simulator.tick(i, ticks_for_disconnection + 1);
+    };
 
   update_active_players();
 

@@ -19,16 +19,16 @@ bim::net::session_handler::session_handler()
 {
   m_authentication_connection = m_authentication.connect_to_authenticated(
       [this](iscool::net::session_id session) -> void
-      {
-        m_session_id = session;
-        m_connected();
-      });
+        {
+          m_session_id = session;
+          m_connected();
+        });
   m_authentication_error_connection = m_authentication.connect_to_error(
       [this](authentication_error_code c) -> void
-      {
-        m_session_id = std::nullopt;
-        m_authentication_error(c);
-      });
+        {
+          m_session_id = std::nullopt;
+          m_authentication_error(c);
+        });
 
 #if BIM_ENABLE_TRACY
   TracyPlotConfig("Bytes in", tracy::PlotFormatType::Memory, true, false, 0);
@@ -36,10 +36,11 @@ bim::net::session_handler::session_handler()
 
   m_socket_stream.connect_to_received(
       [this](const iscool::net::endpoint&, const iscool::net::byte_array&)
-      {
-        TracyPlot("Bytes in", (std::int64_t)m_socket_stream.received_bytes());
-        TracyPlot("Bytes out", (std::int64_t)m_socket_stream.sent_bytes());
-      });
+        {
+          TracyPlot("Bytes in",
+                    (std::int64_t)m_socket_stream.received_bytes());
+          TracyPlot("Bytes out", (std::int64_t)m_socket_stream.sent_bytes());
+        });
 #endif
 }
 

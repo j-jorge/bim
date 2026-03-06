@@ -171,9 +171,9 @@ void bim::server::statistics_service::schedule_file_dump()
 
   m_file_dump_connection = iscool::schedule::delayed_call(
       [this]() -> void
-      {
-        dump_stats_to_file();
-      },
+        {
+          dump_stats_to_file();
+        },
       m_file_dump_delay);
 }
 
@@ -218,15 +218,15 @@ void bim::server::statistics_service::schedule_statistics_tick()
 
   m_statistics_tick_connection = iscool::schedule::delayed_call(
       [this]() -> void
-      {
-        const std::chrono::seconds now =
-            iscool::time::now<std::chrono::seconds>();
+        {
+          const std::chrono::seconds now =
+              iscool::time::now<std::chrono::seconds>();
 
-        m_active_sessions.tick(now);
-        m_players_in_games.tick(now);
-        m_games.tick(now);
+          m_active_sessions.tick(now);
+          m_players_in_games.tick(now);
+          m_games.tick(now);
 
-        schedule_statistics_tick();
-      },
+          schedule_statistics_tick();
+        },
       std::chrono::minutes(1));
 }

@@ -39,15 +39,15 @@ bim::axmol::app::message_popup::message_popup(
 
   m_controls->yes_button->connect_to_clicked(
       [this]()
-      {
-        m_popup->hide();
-        m_ok();
-      });
+        {
+          m_popup->hide();
+          m_ok();
+        });
   m_controls->no_button->connect_to_clicked(
       [this]()
-      {
-        m_popup->hide();
-      });
+        {
+          m_popup->hide();
+        });
 }
 
 bim::axmol::app::message_popup::~message_popup() = default;

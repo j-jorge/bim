@@ -38,9 +38,9 @@ void bim::net::hello_exchange::start()
   else
     m_refresh_connection = iscool::schedule::delayed_call(
         [this]()
-        {
-          refresh();
-        },
+          {
+            refresh();
+          },
         g_hello_ok_refresh_interval - (now - m_last_update));
 }
 
@@ -67,9 +67,9 @@ void bim::net::hello_exchange::send_message()
 {
   m_send_message_connection = iscool::schedule::delayed_call(
       [this]()
-      {
-        send_message();
-      },
+        {
+          send_message();
+        },
       std::chrono::seconds(1));
   m_message_channel.send(m_client_message);
 }
@@ -97,9 +97,9 @@ void bim::net::hello_exchange::check_ok(const iscool::net::message& m)
 
   m_refresh_connection = iscool::schedule::delayed_call(
       [this]()
-      {
-        refresh();
-      },
+        {
+          refresh();
+        },
       g_hello_ok_refresh_interval);
 
   m_updated(*message);

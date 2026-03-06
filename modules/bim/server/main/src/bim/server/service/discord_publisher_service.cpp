@@ -106,9 +106,9 @@ void bim::server::discord_publisher_service::run_thread(std::string url)
         std::unique_lock<std::mutex> lock(m_mutex);
         m_condition.wait(lock,
                          [this]()
-                         {
-                           return m_task != task::wait;
-                         });
+                           {
+                             return m_task != task::wait;
+                           });
         t = m_task.exchange(task::wait);
       }
 

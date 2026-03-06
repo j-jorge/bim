@@ -81,9 +81,9 @@ void bim::axmol::app::main_task::start()
 
   m_loader_connection = m_loading_screen->connect_to_done(
       [this]()
-      {
-        resources_loaded();
-      });
+        {
+          resources_loaded();
+        });
   m_loading_screen->start();
 
   fetch_remote_config();
@@ -121,9 +121,9 @@ void bim::axmol::app::main_task::create_ui()
       new screen_wheel(m_context, *m_style.get_declaration("screen-wheel")));
   m_screen_wheel->connect_to_reset(
       [this]() -> void
-      {
-        m_reset();
-      });
+        {
+          m_reset();
+        });
 
   m_loading_screen->stop();
 }
@@ -133,20 +133,21 @@ void bim::axmol::app::main_task::fetch_remote_config()
   ic_log(iscool::log::nature::info(), "main_task", "Updating config.");
 
   auto on_result = [this](const std::vector<char>& response) -> void
-  {
-    validate_remote_config(std::string_view(response.begin(), response.end()));
-    config_ready();
-  };
+    {
+      validate_remote_config(
+          std::string_view(response.begin(), response.end()));
+      config_ready();
+    };
 
   auto on_error = [this](const std::vector<char>& response) -> void
-  {
-    ic_log(iscool::log::nature::warning(), "main_task",
-           "Failed to fetch remote config {}.",
-           std::string(response.begin(), response.end()));
+    {
+      ic_log(iscool::log::nature::warning(), "main_task",
+             "Failed to fetch remote config {}.",
+             std::string(response.begin(), response.end()));
 
-    load_local_config();
-    config_ready();
-  };
+      load_local_config();
+      config_ready();
+    };
 
   m_config_request_connections = iscool::http::get(
       "https://bim.jorge.st/client-config.json", on_result, on_error);
@@ -242,10 +243,10 @@ bool bim::axmol::app::main_task::display_version_update_message()
 
   m_message_connection = m_message_popup->connect_to_ok(
       [this]() -> void
-      {
-        m_message_connection.disconnect();
-        connect_to_game_server();
-      });
+        {
+          m_message_connection.disconnect();
+          connect_to_game_server();
+        });
 
   m_message_popup->show(ic_gettext("A new version of Bim! is available! "
                                    "Please update as soon as possible."));
@@ -258,16 +259,16 @@ void bim::axmol::app::main_task::connect_to_game_server()
   m_session_authentication_error_connection =
       m_session_handler.connect_to_authentication_error(
           [this](bim::net::authentication_error_code error_code)
-          {
-            const std::string error = std::to_string(
-                std::underlying_type_t<bim::net::authentication_error_code>(
-                    error_code));
-            m_context.get_analytics()->event(
-                "error", { { "cause", "authentication-error" },
-                           { "error-code", error } });
+            {
+              const std::string error = std::to_string(
+                  std::underlying_type_t<bim::net::authentication_error_code>(
+                      error_code));
+              m_context.get_analytics()->event(
+                  "error", { { "cause", "authentication-error" },
+                             { "error-code", error } });
 
-            game_server_connection_error(error_code);
-          });
+              game_server_connection_error(error_code);
+            });
 
   const char* const env_server = std::getenv("BIM_GAME_SERVER_HOST");
   std::string_view server_host;

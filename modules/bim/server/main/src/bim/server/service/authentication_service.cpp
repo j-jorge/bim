@@ -45,10 +45,10 @@ bim::server::authentication_service::authentication_service(
 
   socket.connect_to_received(
       [this](const iscool::net::endpoint&, const iscool::net::byte_array&)
-      {
-        TracyPlot("Bytes in", (std::int64_t)m_socket.received_bytes());
-        TracyPlot("Bytes out", (std::int64_t)m_socket.sent_bytes());
-      });
+        {
+          TracyPlot("Bytes in", (std::int64_t)m_socket.received_bytes());
+          TracyPlot("Bytes out", (std::int64_t)m_socket.sent_bytes());
+        });
 #endif
 }
 

@@ -12,15 +12,15 @@ void bim::game::update_invincibility_state(entt::registry& registry)
 {
   registry.view<invincibility_state>().each(
       [&](entt::entity e, invincibility_state& s) -> void
-      {
-        const timer& t = registry.get<timer>(s.entity);
+        {
+          const timer& t = registry.get<timer>(s.entity);
 
-        if (t.duration.count() == 0)
-          {
-            registry.emplace<dead>(s.entity);
-            registry.erase<invincibility_state>(e);
-          }
-        else
-          registry.remove<burning>(e);
-      });
+          if (t.duration.count() == 0)
+            {
+              registry.emplace<dead>(s.entity);
+              registry.erase<invincibility_state>(e);
+            }
+          else
+            registry.remove<burning>(e);
+        });
 }

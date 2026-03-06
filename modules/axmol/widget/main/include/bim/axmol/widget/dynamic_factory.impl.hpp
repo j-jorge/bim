@@ -16,7 +16,7 @@ void bim::axmol::widget::dynamic_factory::register_widget(
       type,
       [](const context& c, const iscool::style::declaration& style)
           -> bim::axmol::ref_ptr<ax::Node>
-      {
-        return factory<T>::create(c, style);
-      });
+        {
+          return factory<T>::create(c, style);
+        });
 }

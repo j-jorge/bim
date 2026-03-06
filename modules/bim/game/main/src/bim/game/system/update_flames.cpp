@@ -20,9 +20,10 @@ void bim::game::update_flames(const context& context, entt::registry& registry,
   registry.view<flame, position_on_grid, animation_state>().each(
       [&](const flame& f, const position_on_grid& position,
           const animation_state& state) -> void
-      {
-        if (animations.is_burning(state.model))
-          for (entt::entity e : entity_map.entities_at(position.x, position.y))
-            registry.emplace_or_replace<burning>(e);
-      });
+        {
+          if (animations.is_burning(state.model))
+            for (entt::entity e :
+                 entity_map.entities_at(position.x, position.y))
+              registry.emplace_or_replace<burning>(e);
+        });
 }

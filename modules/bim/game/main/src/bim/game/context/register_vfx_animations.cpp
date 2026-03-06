@@ -19,9 +19,9 @@ void bim::game::register_vfx_animations(context& context,
     animation_specifications p;
     p.duration = std::chrono::milliseconds(330);
     p.dispatch_completion = [](entt::registry& r, entt::entity e) -> void
-    {
-      r.emplace<bim::game::dead>(e);
-    };
+      {
+        r.emplace<bim::game::dead>(e);
+      };
     animations.replace_animation(smoke.in_out, p);
   }
 }

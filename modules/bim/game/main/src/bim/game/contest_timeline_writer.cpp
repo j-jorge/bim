@@ -80,11 +80,11 @@ bim::game::contest_timeline_writer::contest_timeline_writer(
            "Could not write the magic number.");
 
   const auto write = []<typename T>(FILE* f, T d) -> bool
-  {
-    auto s = iscool::net::to_network_endianness(
-        (typename iscool::meta::underlying_type<T>::type)d);
-    return std::fwrite(&s, sizeof(char), sizeof(s), f) == sizeof(s);
-  };
+    {
+      auto s = iscool::net::to_network_endianness(
+          (typename iscool::meta::underlying_type<T>::type)d);
+      return std::fwrite(&s, sizeof(char), sizeof(s), f) == sizeof(s);
+    };
 
   const std::uint32_t file_version = 2;
 

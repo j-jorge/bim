@@ -26,12 +26,12 @@ bim::game::check_game_over(const context& context,
   registry.view<player, animation_state>(entt::exclude<dead>)
       .each(
           [&](const player& p, const animation_state& state)
-          {
-            ++player_count;
-            winner = p.index;
+            {
+              ++player_count;
+              winner = p.index;
 
-            one_player_is_dying |= !animations.is_alive(state.model);
-          });
+              one_player_is_dying |= !animations.is_alive(state.model);
+            });
 
   if (one_player_is_dying)
     return contest_result::create_still_running();
@@ -48,10 +48,10 @@ bim::game::check_game_over(const context& context,
 
   registry.view<timer, game_timer>().each(
       [&](const timer& t)
-      {
-        if (t.duration.count() == 0)
-          time_is_up = true;
-      });
+        {
+          if (t.duration.count() == 0)
+            time_is_up = true;
+        });
 
   if (time_is_up)
     return contest_result::create_draw();

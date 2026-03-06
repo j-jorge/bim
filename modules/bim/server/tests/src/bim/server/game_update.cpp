@@ -84,22 +84,22 @@ game_update_test::client::client(bim::server::tests::fake_scheduler& scheduler,
 
   m_authentication.connect_to_authenticated(
       [this](iscool::net::session_id session) -> void
-      {
-        m_session = session;
-      });
+        {
+          m_session = session;
+        });
 
   m_authentication.connect_to_error(
       [](bim::net::authentication_error_code) -> void
-      {
-        EXPECT_TRUE(false);
-      });
+        {
+          EXPECT_TRUE(false);
+        });
 
   m_game_proposal_connection = m_new_game.connect_to_game_proposal(
       [this](int) -> void
-      {
-        m_game_proposal_connection.disconnect();
-        m_new_game.accept({});
-      });
+        {
+          m_game_proposal_connection.disconnect();
+          m_new_game.accept({});
+        });
 
   m_new_game.connect_to_launch_game(std::bind(&client::launch_game, this,
                                               std::ref(message_stream),
@@ -138,32 +138,32 @@ void game_update_test::client::launch_game(
 
   m_game_update->connect_to_started(
       [this]() -> void
-      {
-        m_started.emplace(true);
-      });
+        {
+          m_started.emplace(true);
+        });
   m_game_update->connect_to_updated(
       [this, player_count = event.fingerprint.player_count](
           const bim::net::server_update& update) -> void
-      {
-        for (std::size_t i = 0; i != player_count; ++i)
-          {
-            EXPECT_EQ(m_all_updates.from_tick
-                          + m_all_updates.actions[i].size(),
-                      update.from_tick)
-                << "i=" << i
-                << ", m_all_updates.from_tick=" << m_all_updates.from_tick
-                << ", m_all_updates.actions[i].size()="
-                << m_all_updates.actions[i].size();
+        {
+          for (std::size_t i = 0; i != player_count; ++i)
+            {
+              EXPECT_EQ(m_all_updates.from_tick
+                            + m_all_updates.actions[i].size(),
+                        update.from_tick)
+                  << "i=" << i
+                  << ", m_all_updates.from_tick=" << m_all_updates.from_tick
+                  << ", m_all_updates.actions[i].size()="
+                  << m_all_updates.actions[i].size();
 
-            m_all_updates.actions[i].insert(m_all_updates.actions[i].end(),
-                                            update.actions[i].begin(),
-                                            update.actions[i].end());
-          }
+              m_all_updates.actions[i].insert(m_all_updates.actions[i].end(),
+                                              update.actions[i].begin(),
+                                              update.actions[i].end());
+            }
 
-        for (std::size_t i = player_count; i != m_all_updates.actions.size();
-             ++i)
-          EXPECT_TRUE(m_all_updates.actions[i].empty()) << "i=" << i;
-      });
+          for (std::size_t i = player_count; i != m_all_updates.actions.size();
+               ++i)
+            EXPECT_TRUE(m_all_updates.actions[i].empty()) << "i=" << i;
+        });
 
   m_game_update->start();
 }
@@ -193,22 +193,22 @@ void game_update_test::join_game(int player_count,
   // the server.
   wait(
       [this, player_count]() -> bool
-      {
-        for (int i = 0; i != player_count; ++i)
-          if (!m_clients[i].m_started)
-            return false;
+        {
+          for (int i = 0; i != player_count; ++i)
+            if (!m_clients[i].m_started)
+              return false;
 
-        return true;
-      });
+          return true;
+        });
 }
 
 void game_update_test::wait()
 {
   wait(
       []() -> bool
-      {
-        return false;
-      });
+        {
+          return false;
+        });
 }
 
 void game_update_test::wait(const std::function<bool()>& ready)
@@ -339,38 +339,38 @@ TEST_P(game_update_test, player_two_is_late)
   wait();
 
   const auto check_actions = [=, this](std::uint32_t expected_tick)
-  {
-    for (int client_index = 0; client_index != player_count; ++client_index)
-      {
-        EXPECT_EQ(expected_tick,
-                  m_clients[client_index].m_all_updates.from_tick)
-            << "client_index=" << client_index;
-        ASSERT_EQ(4, m_clients[client_index].m_all_updates.actions.size())
-            << "client_index=" << client_index;
+    {
+      for (int client_index = 0; client_index != player_count; ++client_index)
+        {
+          EXPECT_EQ(expected_tick,
+                    m_clients[client_index].m_all_updates.from_tick)
+              << "client_index=" << client_index;
+          ASSERT_EQ(4, m_clients[client_index].m_all_updates.actions.size())
+              << "client_index=" << client_index;
 
-        // Each player sees a state for all players.
-        for (int player_index = 0; player_index != player_count;
-             ++player_index)
-          {
-            const std::vector<bim::game::player_action>& server_actions =
-                m_clients[client_index].m_all_updates.actions[player_index];
+          // Each player sees a state for all players.
+          for (int player_index = 0; player_index != player_count;
+               ++player_index)
+            {
+              const std::vector<bim::game::player_action>& server_actions =
+                  m_clients[client_index].m_all_updates.actions[player_index];
 
-            ASSERT_EQ(expected_tick + 1, server_actions.size())
-                << "client_index=" << client_index
-                << ", player_index=" << player_index;
+              ASSERT_EQ(expected_tick + 1, server_actions.size())
+                  << "client_index=" << client_index
+                  << ", player_index=" << player_index;
 
-            const int j = player_to_action_index[player_index];
-            EXPECT_EQ(movements[j][expected_tick],
-                      server_actions[expected_tick].movement)
-                << "client_index=" << client_index
-                << ", player_index=" << player_index << ", j=" << j;
+              const int j = player_to_action_index[player_index];
+              EXPECT_EQ(movements[j][expected_tick],
+                        server_actions[expected_tick].movement)
+                  << "client_index=" << client_index
+                  << ", player_index=" << player_index << ", j=" << j;
 
-            EXPECT_FALSE(server_actions[expected_tick].drop_bomb)
-                << "client_index=" << client_index
-                << ", player_index=" << player_index;
-          }
-      }
-  };
+              EXPECT_FALSE(server_actions[expected_tick].drop_bomb)
+                  << "client_index=" << client_index
+                  << ", player_index=" << player_index;
+            }
+        }
+    };
 
   // Test the state observed by each player.
   check_actions(0);

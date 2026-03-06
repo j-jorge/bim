@@ -427,19 +427,19 @@ void bim::game::apply_player_action(const context& context,
               player_action& scheduled_action,
               player_action_queue& action_queue,
               animation_state& state) -> void
-          {
-            if (!animations.is_alive(state.model))
-              {
-                scheduled_action = {};
-                return;
-              }
+            {
+              if (!animations.is_alive(state.model))
+                {
+                  scheduled_action = {};
+                  return;
+                }
 
-            const queued_action action = action_queue.enqueue(
-                scheduled_action, position.grid_aligned_x(),
-                position.grid_aligned_y());
+              const queued_action action = action_queue.enqueue(
+                  scheduled_action, position.grid_aligned_x(),
+                  position.grid_aligned_y());
 
-            scheduled_action = {};
-            apply_player_actions(registry, arena, entity_map, animations, e,
-                                 player, position, action, state);
-          });
+              scheduled_action = {};
+              apply_player_actions(registry, arena, entity_map, animations, e,
+                                   player, position, action, state);
+            });
 }
