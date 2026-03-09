@@ -7,280 +7,306 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2026-03-10 12:09+0000\n"
+"Last-Translator: Sergey Potapenko <sergey.potapenko@gmail.com>\n"
+"Language-Team: Russian <https://hosted.weblate.org/projects/bim/gettext-"
+"files/ru/>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Weblate 5.17-dev\n"
 
 msgid "Please wait"
-msgstr ""
+msgstr "Пожалуйста, подождите"
 
 msgid "You have been disconnected :("
-msgstr ""
+msgstr "Вы отключились :("
 
 msgid ""
 "The shop is not available on this platform, yet you can support the "
 "developers with donations! Should I open the donations page?"
 msgstr ""
+"Магазин пока недоступен, но вы можете поддержать разработчиков донатом. Мне "
+"открыть страницу пожертвований?"
 
 msgid "Do you really want to change the language setting?"
-msgstr ""
+msgstr "Вы действительно хотите изменить настройки языка?"
 
 #, c++-format
 msgid "Version {}"
-msgstr ""
+msgstr "Версия {}"
 
 msgid "Feedback about Bim!"
-msgstr ""
+msgstr "Отзыв о Bim!"
 
 msgid ""
 "Come play a game of Bim! https://play.google.com/store/apps/details?"
 "id=bim.app"
 msgstr ""
+"Переходи играть в Bim! https://play.google.com/store/apps/details?id=bim.app"
 
 msgid "You need more coins to purchase this item!"
-msgstr ""
+msgstr "Вам нужно больше монет, чтобы купить этот товар!"
 
 #, c++-format
 msgid "Customize your games with up to {} feature."
 msgid_plural "Customize your games with up to {} features."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Разнообразь свою игру {} особенностью."
+msgstr[1] "Разнообразь свою игру {} особенностями."
+msgstr[2] "Разнообразь свою игру {} особенностями."
 
 msgid "Falling blocks reduce the arena after two minutes!"
-msgstr ""
+msgstr "Падающие блоки уменьшают арену, у вас есть две минуты!"
 
 msgid "Fences block the players, but the flames can go through!"
-msgstr ""
+msgstr "Заборы блокируют игроков, но пламя может пройти!"
 
 msgid "A thick fog covers the arena. You can't see were you did not go!"
-msgstr ""
+msgstr "Густой туман покрывает арену. Ты ничего не увидишь, пока не походишь!"
 
 msgid ""
 "Find the invisibility power up to disappear from the screen of all other "
 "players!"
 msgstr ""
+"Найдите значок невидимости, чтобы исчезнуть с экрана всех других игроков!"
 
 msgid "Find this incredibly strong barrel, it will save you from one hit!"
-msgstr ""
+msgstr "Найдите значок прочной бочки, она избавит вас от одного удара!"
 
 #, c++-format
 msgid "{} game being played right now."
 msgid_plural "{} games being played right now."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{} игра сыграна только что."
+msgstr[1] "{} игры сыграны только что."
+msgstr[2] "{} игр сыграно только что."
 
 #, c++-format
 msgid "{} player connected right now."
 msgid_plural "{} players connected right now."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{} игрок присоединился только что."
+msgstr[1] "{} игрока(-ов) присоединилось только что."
+msgstr[2] "{} игроков присоединилось только что."
 
 #, c++-format
 msgid "{} game played in the last hour."
 msgid_plural "{} games played in the last hour."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{} игра сыграна за последний час."
+msgstr[1] "{} игры сыграно за последний час."
+msgstr[2] "{} игр сыграно за последний час."
 
 #, c++-format
 msgid "{} player connected in the last hour."
 msgid_plural "{} players connected in the last hour."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{} игрок присоединился за последний час."
+msgstr[1] "{} игрока присоединилось за последний час."
+msgstr[2] "{} игроков присоединилось за последний час."
 
 #, c++-format
 msgid "{} game played in the last 24 hours."
 msgid_plural "{} games played in the last 24 hours."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{} игр сыграно за последние 24 часа."
+msgstr[1] "{} игры сыграно за последние 24 часа."
+msgstr[2] "{} игр сыграно за последние 24 часа."
 
 #, c++-format
 msgid "{} player connected in the last 24 hours."
 msgid_plural "{} players connected in the last 24 hours."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{} игрок присоединился за последние 24 часа."
+msgstr[1] "{} игрока присоединились за последние 24 часа."
+msgstr[2] "{} игроков присоединились за последние 24 часа."
 
 #, c++-format
 msgid "{} game played in the last 30 days."
 msgid_plural "{} games played in the last 30 days."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{} игра сыграна за последние 30 дней."
+msgstr[1] "{} игры сыграны за последние 30 дней."
+msgstr[2] "{} игр сыграно за последние 30 дней."
 
 #, c++-format
 msgid "{} player connected in the last 30 days."
 msgid_plural "{} players connected in the last 30 days."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{} игрок присоединился за последние 30 дней."
+msgstr[1] "{} игрока присоединились за последние 30 дней."
+msgstr[2] "{} игроков присоединились за последние 30 дней."
 
 #, c++-format
 msgid "Connected to {}."
-msgstr ""
+msgstr "Присоединиться к {}."
 
 msgid "An error occurred. The purchase could not be completed."
-msgstr ""
+msgstr "Произошла ошибка. Покупка не может быть завершена."
 
 msgid "A new version of Bim! is available! Please update as soon as possible."
-msgstr ""
+msgstr "Доступна новая версия Bim!! Пожалуйста, обновите как можно скорее."
 
 #, c++-format
 msgid "Failed to authenticate with the game server. Error code {}."
-msgstr ""
+msgstr "Не удалось аутентифицироваться с сервером игры. Код ошибки {}."
 
 msgid "Cancel"
-msgstr ""
+msgstr "Отменить"
 
 msgid "OK"
-msgstr ""
+msgstr "Хорошо"
 
 msgid ""
 "NEW\n"
 "GAME"
 msgstr ""
+"НОВАЯ\n"
+"ИГРА"
 
 msgid ""
 "Start a new game\n"
 "and get your revenge!"
 msgstr ""
+"Начать новую игру\n"
+"и отомстить!"
 
 msgid ""
 "Was it pure luck?\n"
 "Confirm your skills in a new game!"
 msgstr ""
+"Это была чистая удача?\n"
+"Подтвердите свои навыки в новой игре!"
 
 msgid "Draw game!"
-msgstr ""
+msgstr "Ничья!"
 
 msgid "You lost!"
-msgstr ""
+msgstr "Вы проиграли!"
 
 msgid "You won!"
-msgstr ""
+msgstr "Вы выиграли!"
 
 msgid "ERASE"
-msgstr ""
+msgstr "УБРАТЬ"
 
 msgid "RANDOM"
-msgstr ""
+msgstr "СЛУЧАЙНЫЙ"
 
 msgid "Off"
-msgstr ""
+msgstr "Выключить"
 
 msgid "On"
-msgstr ""
+msgstr "Включить"
 
 msgid "Defeats"
-msgstr ""
+msgstr "Поражения"
 
 msgid "Draws"
-msgstr ""
+msgstr "Ничья"
 
 msgid "Games"
-msgstr ""
+msgstr "Игр"
 
 msgid "Victories"
-msgstr ""
+msgstr "Побед"
 
 msgid "Your statistics"
-msgstr ""
+msgstr "Ваша статистика"
 
 msgid "Success rate"
-msgstr ""
+msgstr "Показатель успешности"
 
 msgid "No"
-msgstr ""
+msgstr "Нет"
 
 msgid "Yes"
-msgstr ""
+msgstr "Да"
 
 msgid ""
 "Is your language missing? Add it on <a href='https://hosted.weblate.org/"
 "projects/bim/gettext-files/'>Weblate</a>!"
 msgstr ""
+"Ваш язык отсутствует? Добавьте его на <a href='https://hosted.weblate.org/"
+"projects/bim/gettext-files/'>Weblate</a>!"
 
 msgid "Language"
-msgstr ""
+msgstr "Язык"
 
 msgid "Directions kind"
-msgstr ""
+msgstr "Направления вида"
 
 msgid "Directional pad, at a fixed position on the screen."
-msgstr ""
+msgstr "Панель управления, в фиксированном положении на экране."
 
 msgid "Analog stick, it pops where you tap and follows the drag."
 msgstr ""
+"Аналоговый джойстик, он появляется в месте касания и следует за движением."
 
 msgid "Controls"
-msgstr ""
+msgstr "Управление"
 
 msgid "Directions on the left, actions on the right."
-msgstr ""
+msgstr "Направления движения слева, действия справа."
 
 msgid "Directions on the right, actions on the left."
-msgstr ""
+msgstr "Направления движения справа, действия слева."
 
 msgid "D-pad"
-msgstr ""
+msgstr "Крестовина"
 
 msgid "Stick"
-msgstr ""
+msgstr "Джойстик"
 
 msgid "Music"
-msgstr ""
+msgstr "Музыка"
 
 msgid "Sound effects"
-msgstr ""
+msgstr "Звуковые эффекты"
 
 msgid "Settings"
-msgstr ""
+msgstr "Настройки"
 
 msgid "Vibrations"
-msgstr ""
+msgstr "Вибрация"
 
 msgid "Features"
-msgstr ""
+msgstr "Функции"
 
 msgid "PLAY ONLINE"
-msgstr ""
+msgstr "ИГРАТЬ ОНЛАЙН"
 
 msgid "SHOP"
-msgstr ""
+msgstr "МАГАЗИН"
 
 msgid "STATISTICS"
-msgstr ""
+msgstr "СТАТИСТИКА"
 
 msgid "ALPHA VERSION"
-msgstr ""
+msgstr "АЛЬФА ВЕРСИЯ"
 
 msgid "Join our Discord to meet other players."
-msgstr ""
+msgstr "Присоединяйтесь к нашему Discord, чтобы встретиться с другими игроками."
 
 msgid "You can start a two-players game now or wait for more players!"
-msgstr ""
+msgstr "Вы можете начать игру вдвоем сейчас или подождать больше игроков!"
 
 msgid "You can start a three-players game now or wait for more players!"
-msgstr ""
+msgstr "Вы можете начать игру троем сейчас или подождать больше игроков!"
 
 msgid "Start the game now!"
-msgstr ""
+msgstr "Начни игру сейчас!"
 
 msgid "FIGHT!"
-msgstr ""
+msgstr "БИТВА!"
 
 msgid ""
 "Waiting for your opponents…\n"
 "Tell your friends to join!"
 msgstr ""
+"В ожидании ваших соперников...\n"
+"Скажите своим друзьям, чтобы они присоединились!"
 
 msgid "Online Game"
-msgstr ""
+msgstr "Онлайн игра"
 
 msgid "×1000"
-msgstr ""
+msgstr "×1000"
 
 msgid "LOADING…"
-msgstr ""
+msgstr "ЗАГРУЗКА…"
