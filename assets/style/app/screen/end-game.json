@@ -85,6 +85,7 @@
             "parent": "stripe",
             "text.i18n":
                 "Was it pure luck?\nConfirm your skills in a new game!",
+            "overflow": "shrink",
             "z-order": 30
           }
         ],
@@ -95,6 +96,7 @@
             "instantiate": "ax::Label",
             "parent": "stripe",
             "text.i18n": "You lost!",
+            "overflow": "shrink",
             "z-order": 30
           }
         ],

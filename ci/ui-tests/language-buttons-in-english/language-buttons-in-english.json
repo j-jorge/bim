@@ -178,6 +178,20 @@
     },
     {
       "kind": "click",
+      "node": "overlay/language/client_container/list/view////ru_RU",
+      "event": "popup-shown"
+    },
+    {
+      "kind": "capture",
+      "file": "russian.png"
+    },
+    {
+      "kind": "click",
+      "node": "overlay/container/client_container/no_button",
+      "event": "popup-hidden"
+    },
+    {
+      "kind": "click",
       "node": "overlay/language/client_container/list/view////uk_UA",
       "event": "popup-shown"
     },

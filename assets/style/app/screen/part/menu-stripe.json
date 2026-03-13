@@ -32,6 +32,7 @@
       {
         "instantiate": "ax::Label",
         "parent": "stripe",
+        "overflow": "shrink",
         "z-order": 30
       }
     ]

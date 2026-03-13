@@ -157,6 +157,7 @@ all_directories=(br-FR
                  oc-FR
                  pt-PT
                  pt-BR
+                 ru-RU
                  tr-TR
                  uk-UA
                 )

@@ -9,6 +9,7 @@
     "instantiate": "ax::Label",
     "font.size": 38,
     "font.color": "desert-storm",
-    "align.horizontal": "center"
+    "align.horizontal": "center",
+    "line-spacing": -20
   }
 }

@@ -41,14 +41,16 @@
         "label-off": [
           "layout/fill",
           {
-            "reference": "background"
+            "reference": "background",
+            "width.percents": 95
           }
         ],
 
         "label-on": [
           "layout/fill",
           {
-            "reference": "background"
+            "reference": "background",
+            "width.percents": 95
           }
         ]
       }

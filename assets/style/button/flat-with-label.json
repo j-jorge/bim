@@ -48,7 +48,8 @@
         "label": [
           "layout/fill",
           {
-            "reference": "background"
+            "reference": "background",
+            "width.percents": 95
           }
         ]
       }

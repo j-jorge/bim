@@ -106,7 +106,8 @@
         "success-rate-title": [
           "app/screen/lobby/stat-title",
           {
-            "text.i18n": "Success rate"
+            "text.i18n": "Success rate",
+            "overflow": "shrink"
           }
         ],
 
@@ -316,7 +317,8 @@
             "anchor.x": 0.5,
             "anchor.y": 0.5,
             "anchor.reference.x": 0.8,
-            "anchor.reference.y": 0.78
+            "anchor.reference.y": 0.78,
+            "width.percents": 30
           }
         ],
 
