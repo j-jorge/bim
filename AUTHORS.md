@@ -54,6 +54,10 @@ assets/i18n/pt_BR.po
 OlliesGudh, samuel0220, via Weblate.
 CC-BY-SA 4.0.
 
+assets/i18n/ru.po
+Sergey Potapenko, via Weblate
+CC-BY-SA 4.0.
+
 assets/i18n/tr.po
 AsetSiya, Metin, via Weblate.
 CC-BY-SA 4.0.

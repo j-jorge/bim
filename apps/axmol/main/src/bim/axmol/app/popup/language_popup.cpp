@@ -107,7 +107,8 @@ bim::axmol::app::language_popup::language_popup(
          iscool::language_name::fr_FR, iscool::language_name::kab_DZ,
          iscool::language_name::ko_KR, iscool::language_name::oc_FR,
          iscool::language_name::pt_PT, iscool::language_name::pt_BR,
-         iscool::language_name::tr_TR, iscool::language_name::uk_UA })
+         iscool::language_name::ru_RU, iscool::language_name::tr_TR,
+         iscool::language_name::uk_UA })
     {
       language_list_item_controls controls(*context.get_widget_context(),
                                            button_item_controls);
