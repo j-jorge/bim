@@ -27,6 +27,11 @@ namespace bim::axmol::widget
   class context;
 }
 
+namespace bim::net
+{
+  class session_handler;
+}
+
 namespace bim::app
 {
   class analytics_service;
@@ -44,6 +49,7 @@ namespace bim::axmol::app
     ic_declare_context(
         m_context,
         ic_context_declare_parent_properties(                              //
+            ((bim::net::session_handler*)(session_handler))                //
             ((const bim::axmol::widget::context*)(widget_context))         //
             ((main_scene*)(main_scene))                                    //
             ((bim::app::analytics_service*)(analytics))                    //

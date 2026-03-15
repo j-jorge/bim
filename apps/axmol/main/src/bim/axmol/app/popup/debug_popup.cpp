@@ -30,6 +30,8 @@
 
 #include <bim/game/feature_flags.hpp>
 
+#include <bim/net/session_handler.hpp>
+
 #include <bim/version.hpp>
 
 #include <iscool/preferences/local_preferences.hpp>
@@ -124,9 +126,10 @@ void bim::axmol::app::debug_popup::show()
       add_title("FEATURES");
       add_feature_item("Falling blocks",
                        bim::game::feature_flags::falling_blocks);
-      add_feature_item("Shield", bim::game::feature_flags::shield);
+      add_feature_item("Fences", bim::game::feature_flags::fences);
       add_feature_item("Fog of war", bim::game::feature_flags::fog_of_war);
       add_feature_item("Invisibility", bim::game::feature_flags::invisibility);
+      add_feature_item("Shield", bim::game::feature_flags::shield);
 
       add_title("WALLET");
       add_button_item("Get 10 coins.",
@@ -172,6 +175,8 @@ void bim::axmol::app::debug_popup::show()
                 std::chrono::duration_cast<std::chrono::hours>(now));
           });
   }
+
+  add_text_item("Game server", m_context.get_session_handler()->host());
 
   add_title("SYSTEM");
   add_fps_entry();
@@ -285,10 +290,15 @@ void bim::axmol::app::debug_popup::coin_transaction(int amount) const
 {
   bim::app::coins_transaction(*m_context.get_analytics(), "debug", amount);
 
+  iscool::preferences::local_preferences& preferences =
+      *m_context.get_local_preferences();
+
   if (amount >= 0)
-    bim::app::add_coins(*m_context.get_local_preferences(), amount);
+    bim::app::add_coins(preferences, amount);
   else
-    bim::app::consume_coins(*m_context.get_local_preferences(), -amount);
+    bim::app::consume_coins(
+        preferences,
+        std::min<int64_t>(-amount, bim::app::coins_balance(preferences)));
 
   const ax::Node& n = *m_controls->close_button;
 

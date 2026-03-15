@@ -23,6 +23,8 @@ namespace bim::net
     session_handler();
     ~session_handler();
 
+    const std::string& host() const;
+
     void connect(std::string_view host);
     void reconnect();
 

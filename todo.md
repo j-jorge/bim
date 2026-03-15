@@ -1,8 +1,5 @@
 # Next
 
-- Share the logs when sending an e-mail.
-- Display the host in the debug menu.
-
 # Client
 
 # Server

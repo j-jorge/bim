@@ -46,6 +46,11 @@ bim::net::session_handler::session_handler()
 
 bim::net::session_handler::~session_handler() = default;
 
+const std::string& bim::net::session_handler::host() const
+{
+  return m_host;
+}
+
 void bim::net::session_handler::connect(std::string_view host)
 {
   m_host = host;
