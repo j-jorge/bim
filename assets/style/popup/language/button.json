@@ -6,12 +6,18 @@
   },
 
   "style": {
-    "widgets/checkmark": [
+    "widgets": [
       {
-        "instantiate": "ax::Sprite",
-        "frame": "sprites/menu/checkmark.png",
-        "color": "cod-gray",
-        "z-order": 10
+        "checkmark": [
+          {
+            "instantiate": "ax::Sprite",
+            "frame": "sprites/menu/checkmark.png",
+            "color": "cod-gray",
+            "z-order": 10
+          }
+        ],
+
+        "label/font.substitutable": false
       }
     ],
 

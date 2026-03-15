@@ -101,7 +101,10 @@ bim::axmol::app::language_popup::language_popup(
   const iscool::language_name preferred_language =
       bim::app::user_language(*context.get_local_preferences());
 
-  for (iscool::language_name language :
+  const iscool::style::declaration& korean_button_item_controls =
+      *style.get_declaration("list-item-controls.ko");
+
+  for (const iscool::language_name language :
        { iscool::language_name::br_FR, iscool::language_name::de_DE,
          iscool::language_name::en_GB, iscool::language_name::es_ES,
          iscool::language_name::fr_FR, iscool::language_name::kab_DZ,
@@ -110,8 +113,11 @@ bim::axmol::app::language_popup::language_popup(
          iscool::language_name::ru_RU, iscool::language_name::tr_TR,
          iscool::language_name::uk_UA })
     {
-      language_list_item_controls controls(*context.get_widget_context(),
-                                           button_item_controls);
+      language_list_item_controls controls(
+          *context.get_widget_context(),
+          (language == iscool::language_name::ko_KR)
+              ? korean_button_item_controls
+              : button_item_controls);
       bim::axmol::widget::button& b = *controls.button;
       b.setName(iscool::to_string(language));
 

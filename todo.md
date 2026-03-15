@@ -1,6 +1,5 @@
 # Next
 
-- Fix missing fonts in the language selection dialog.
 - Share the logs when sending an e-mail.
 - Display the host in the debug menu.
 

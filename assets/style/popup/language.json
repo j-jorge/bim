@@ -23,6 +23,17 @@
       }
     ],
 
+    "list-item-controls.ko": [
+      {
+        "button": [
+          "popup/language/button",
+          {
+            "widgets/label/font.file": "font/NotoSansKR-ExtraBold.ttf"
+          }
+        ]
+      }
+    ],
+
     "list-item-bounds": [
       {
         "button": [
