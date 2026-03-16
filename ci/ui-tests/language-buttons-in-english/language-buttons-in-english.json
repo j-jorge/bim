@@ -191,6 +191,11 @@
       "event": "popup-hidden"
     },
     {
+      "kind": "swipe",
+      "from-node": "overlay/language/client_container/list/view////tr_TR",
+      "to-node": "overlay/language/client_container/list/view////fr_FR"
+    },
+    {
       "kind": "click",
       "node": "overlay/language/client_container/list/view////uk_UA",
       "event": "popup-shown"
