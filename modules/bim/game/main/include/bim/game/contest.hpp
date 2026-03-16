@@ -29,8 +29,6 @@ namespace bim::game
 
   public:
     explicit contest(const contest_fingerprint& fingerprint);
-    contest(const contest_fingerprint& fingerprint,
-            std::uint8_t local_player_index);
     ~contest();
 
     contest_result tick();

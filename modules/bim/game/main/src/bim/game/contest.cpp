@@ -105,13 +105,8 @@ add_players(const bim::game::context& context, entt::registry& registry,
 
 static void add_fog_of_war(entt::registry& registry, std::uint8_t player_count,
                            std::uint8_t arena_width, std::uint8_t arena_height,
-                           std::uint64_t seed)
+                           bim::game::random_generator& random)
 {
-  // We use an independent random number generator for the fog. The server does
-  // not generate it so using the main one would cause a different set-up for
-  // the clients and the server.
-  bim::game::random_generator random(seed);
-
   // Avoid removing cells on the borders as well as on the 9 cells in each
   // corner (where the players are located by default). The removed cells are
   // the same for all players.
@@ -163,11 +158,6 @@ static void add_fog_of_war(entt::registry& registry, std::uint8_t player_count,
 }
 
 bim::game::contest::contest(const contest_fingerprint& fingerprint)
-  : contest(fingerprint, fingerprint.player_count)
-{}
-
-bim::game::contest::contest(const contest_fingerprint& fingerprint,
-                            std::uint8_t local_player_index)
   : m_registry(new entt::registry())
   , m_context(new bim::game::context())
   , m_arena(new bim::game::arena(fingerprint.arena_width,
@@ -198,13 +188,9 @@ bim::game::contest::contest(const contest_fingerprint& fingerprint,
   else
     main_timer_factory(*m_registry, std::chrono::minutes(3));
 
-  // The fog of war is a local feature, it has no impact on simulations run
-  // elsewhere. Consequently we instantiate it only if there is a local player.
-  if ((local_player_index < fingerprint.player_count)
-      && !!(fingerprint.features & feature_flags::fog_of_war))
+  if (!!(fingerprint.features & feature_flags::fog_of_war))
     add_fog_of_war(*m_registry, fingerprint.player_count,
-                   fingerprint.arena_width, fingerprint.arena_height,
-                   fingerprint.seed);
+                   fingerprint.arena_width, fingerprint.arena_height, random);
 
   m_arena_reduction.reset(new arena_reduction(*m_arena));
   m_fog_of_war.reset(

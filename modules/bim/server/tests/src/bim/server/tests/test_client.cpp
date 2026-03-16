@@ -101,7 +101,7 @@ void bim::server::tests::test_client::launch_game(
       new iscool::net::message_channel(stream, *session, event.channel));
   m_game_update.reset(new bim::net::game_update_exchange(
       *m_message_channel, event.fingerprint.player_count));
-  contest.reset(new bim::game::contest(event.fingerprint, player_index));
+  contest.reset(new bim::game::contest(event.fingerprint));
   contest_runner.reset(new bim::net::contest_runner(
       *contest, *m_game_update, event.player_index,
       event.fingerprint.player_count));

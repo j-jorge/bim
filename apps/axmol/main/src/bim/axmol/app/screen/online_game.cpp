@@ -390,8 +390,7 @@ void bim::axmol::app::online_game::displaying(
       *m_style_player[std::min<std::size_t>(event.player_index,
                                             m_style_player.size())]);
 
-  m_contest.reset(
-      new bim::game::contest(event.fingerprint, event.player_index));
+  m_contest.reset(new bim::game::contest(event.fingerprint));
   m_game_channel.reset(new iscool::net::message_channel(
       m_context.get_session_handler()->message_stream(),
       m_context.get_session_handler()->session_id(), event.channel));
