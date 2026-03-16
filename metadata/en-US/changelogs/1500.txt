@@ -1,0 +1,4 @@
+ - Animate the burning crates.
+ - Animate the flames.
+ - New translations: Korean, Russian.
+ - Updated translations: Breton, Occitan, Portuguese (Brazil), Ukrainian.

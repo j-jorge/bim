@@ -1,0 +1,4 @@
+- Animations pour les flammes.
+- Animations pour les caisses qui brûlent.
+- Ajout de traductions en coréen et russe.
+- Mise à jour des traductions en breton, occitan, brésilien, ukrainien.
