@@ -8,6 +8,7 @@
   "game-service-coins-per-short-game-victory": 0,
   "game-service-coins-per-short-game-defeat": 0,
   "game-service-coins-per-short-game-draw": 0,
+  "game-service-max-duration-for-short-game": 30,
 
   "enable-geolocation": true,
   "geolocation-clean-up-interval": 86400,
@@ -16,5 +17,7 @@
 
   "enable-statistics-log": true,
   "enable-rolling-statistics": true,
-  "statistics-log-file": "/opt/bim/persistent/log/statistics.txt"
+  "statistics-log-file": "/opt/bim/persistent/log/statistics.txt",
+
+  "enable-karma": true
 }
