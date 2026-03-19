@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-12-11 15:00+0000\n"
-"Last-Translator: Mariano Portal <devsiderio@tutanota.com>\n"
+"PO-Revision-Date: 2026-03-20 09:09+0000\n"
+"Last-Translator: Francisco Serrador <fserrador@gmail.com>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/bim/gettext-"
 "files/es/>\n"
 "Language: es\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.15-dev\n"
+"X-Generator: Weblate 5.17-dev\n"
 
 msgid "Please wait"
 msgstr "Por favor, espera"
@@ -62,6 +62,8 @@ msgstr "¡Los bloques que caen reducen la arena después de dos minutos!"
 
 msgid "Fences block the players, but the flames can go through!"
 msgstr ""
+"Las vallas bloquean el paso a los jugadores, ¡pero las llamas pueden "
+"atravesarlas!"
 
 msgid "A thick fog covers the arena. You can't see were you did not go!"
 msgstr "Una espesa niebla cubre la arena. ¡No puedes ver donde no has ido!"
@@ -70,8 +72,9 @@ msgid ""
 "Find the invisibility power up to disappear from the screen of all other "
 "players!"
 msgstr ""
+"¡Encuentra el potenciador de invisibilidad para desaparecer de la pantalla "
+"de todos los demás jugadores!"
 
-#, fuzzy
 msgid "Find this incredibly strong barrel, it will save you from one hit!"
 msgstr ""
 "¡Encuentra este barril increíblemente resistente, te salvará de un golpe!"
@@ -79,215 +82,230 @@ msgstr ""
 #, c++-format
 msgid "{} game being played right now."
 msgid_plural "{} games being played right now."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{} juego que se está jugando ahora mismo."
+msgstr[1] "{} juegos que se está jugando ahora mismo."
 
 #, c++-format
 msgid "{} player connected right now."
 msgid_plural "{} players connected right now."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{} jugador conectado en este momento."
+msgstr[1] "{} jugadores conectado en este momento."
 
 #, c++-format
 msgid "{} game played in the last hour."
 msgid_plural "{} games played in the last hour."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{} juego jugado en la última hora."
+msgstr[1] "{} juegos jugados en la última hora."
 
 #, c++-format
 msgid "{} player connected in the last hour."
 msgid_plural "{} players connected in the last hour."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{} jugador conectado en la última hora."
+msgstr[1] "{} jugadores conectados en la última hora."
 
 #, c++-format
 msgid "{} game played in the last 24 hours."
 msgid_plural "{} games played in the last 24 hours."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{} juego jugado en las últimas 24 horas."
+msgstr[1] "{} juegos jugados en las últimas 24 horas."
 
 #, c++-format
 msgid "{} player connected in the last 24 hours."
 msgid_plural "{} players connected in the last 24 hours."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{} jugador conectado en las últimas 24 horas."
+msgstr[1] "{} jugadores conectados en las últimas 24 horas."
 
 #, c++-format
 msgid "{} game played in the last 30 days."
 msgid_plural "{} games played in the last 30 days."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{} juego jugado en los últimos 30 días."
+msgstr[1] "{} juegos jugados en los últimos 30 días."
 
 #, c++-format
 msgid "{} player connected in the last 30 days."
 msgid_plural "{} players connected in the last 30 days."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{} jugador/a conectado/a en los últimos 30 días."
+msgstr[1] "{} jugadores/as conectados/as en los últimos 30 días."
 
 #, c++-format
 msgid "Connected to {}."
-msgstr ""
+msgstr "Conectado a {}."
 
 msgid "An error occurred. The purchase could not be completed."
-msgstr ""
+msgstr "Se ha producido un error. No se ha podido completar la compra."
 
 msgid "A new version of Bim! is available! Please update as soon as possible."
 msgstr ""
+"¡Ya está disponible una versión de Bim nueva! Actualízala lo antes posible."
 
 #, c++-format
 msgid "Failed to authenticate with the game server. Error code {}."
 msgstr ""
+"No fue posible autenticar con el servidor del juego. Código de error {}."
 
 msgid "Cancel"
-msgstr ""
+msgstr "Cancelar"
 
 msgid "OK"
-msgstr ""
+msgstr "Aceptar"
 
 msgid ""
 "NEW\n"
 "GAME"
 msgstr ""
+"JUEGO\n"
+"NUEVO"
 
 msgid ""
 "Start a new game\n"
 "and get your revenge!"
 msgstr ""
+"Inicia un juego nuevo y\n"
+"¡logra tu revancha!"
 
 msgid ""
 "Was it pure luck?\n"
 "Confirm your skills in a new game!"
 msgstr ""
+"¿Fue pura suerte?\n"
+"¡Pon a prueba tus habilidades en una partida nueva!"
 
 msgid "Draw game!"
-msgstr ""
+msgstr "¡Juego de dibujo!"
 
 msgid "You lost!"
-msgstr ""
+msgstr "¡Has perdido!"
 
 msgid "You won!"
-msgstr ""
+msgstr "¡Tú ganas!"
 
 msgid "ERASE"
-msgstr ""
+msgstr "BORRAR"
 
 msgid "RANDOM"
-msgstr ""
+msgstr "ALEATORIO"
 
 msgid "Off"
-msgstr ""
+msgstr "Apagar"
 
 msgid "On"
-msgstr ""
+msgstr "Encender"
 
 msgid "Defeats"
-msgstr ""
+msgstr "Derrotas"
 
 msgid "Draws"
-msgstr ""
+msgstr "Dibujos"
 
 msgid "Games"
-msgstr ""
+msgstr "Juegos"
 
 msgid "Victories"
-msgstr ""
+msgstr "Victorias"
 
 msgid "Your statistics"
-msgstr ""
+msgstr "Tus estadísticas"
 
 msgid "Success rate"
-msgstr ""
+msgstr "Tasa de logros"
 
 msgid "No"
-msgstr ""
+msgstr "No"
 
 msgid "Yes"
-msgstr ""
+msgstr "Sí"
 
 msgid ""
 "Is your language missing? Add it on <a href='https://hosted.weblate.org/"
 "projects/bim/gettext-files/'>Weblate</a>!"
 msgstr ""
+"¿Falta tu idioma? ¡Agrégalo en <a href='https://hosted.weblate.org/projects/"
+"bim/gettext-files/'>Weblate</a>!"
 
 msgid "Language"
-msgstr ""
+msgstr "Idioma"
 
 msgid "Directions kind"
-msgstr ""
+msgstr "Familia de direcciones"
 
 msgid "Directional pad, at a fixed position on the screen."
-msgstr ""
+msgstr "Panel direccional, en una posición fija en la pantalla."
 
 msgid "Analog stick, it pops where you tap and follows the drag."
-msgstr ""
+msgstr "El joystick analógico responde al toque y sigue el movimiento."
 
 msgid "Controls"
-msgstr ""
+msgstr "Controles"
 
 msgid "Directions on the left, actions on the right."
-msgstr ""
+msgstr "Direcciones a la izquierda, acciones a la derecha."
 
 msgid "Directions on the right, actions on the left."
-msgstr ""
+msgstr "Direcciones a la derecha, instrucciones a la izquierda."
 
 msgid "D-pad"
-msgstr ""
+msgstr "D-pad"
 
 msgid "Stick"
-msgstr ""
+msgstr "Bastón"
 
 msgid "Music"
-msgstr ""
+msgstr "Música"
 
 msgid "Sound effects"
-msgstr ""
+msgstr "Efectos de sonido"
 
 msgid "Settings"
-msgstr ""
+msgstr "Ajustes"
 
 msgid "Vibrations"
-msgstr ""
+msgstr "Vibraciones"
 
 msgid "Features"
-msgstr ""
+msgstr "Características"
 
 msgid "PLAY ONLINE"
-msgstr ""
+msgstr "JUGAR EN LÍNEA"
 
 msgid "SHOP"
-msgstr ""
+msgstr "TIENDA"
 
 msgid "STATISTICS"
-msgstr ""
+msgstr "ESTADÍSTICAS"
 
 msgid "ALPHA VERSION"
-msgstr ""
+msgstr "VERSIÓN ALFA"
 
 msgid "Join our Discord to meet other players."
-msgstr ""
+msgstr "Únete a nuestra Discord para encontrarse con otros jugadores."
 
 msgid "You can start a two-players game now or wait for more players!"
 msgstr ""
+"¡Puedes iniciar un juego con dos jugadores ahora o esperar a varios "
+"jugadores!"
 
 msgid "You can start a three-players game now or wait for more players!"
 msgstr ""
+"¡Ahora puedes iniciar un juego con tres jugadores o esperar más jugadores!"
 
 msgid "Start the game now!"
-msgstr ""
+msgstr "¡Iniciar el juego ahora!"
 
 msgid "FIGHT!"
-msgstr ""
+msgstr "¡LUCHA!"
 
 msgid ""
 "Waiting for your opponents…\n"
 "Tell your friends to join!"
 msgstr ""
+"Esperando a tus oponentes…\n"
+"¡Dile a tus amigos que se unan!"
 
 msgid "Online Game"
-msgstr ""
+msgstr "Juego en línea"
 
 msgid "×1000"
-msgstr ""
+msgstr "×1.000"
 
 msgid "LOADING…"
-msgstr ""
+msgstr "CARGANDO…"
