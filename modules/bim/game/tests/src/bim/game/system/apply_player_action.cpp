@@ -13,6 +13,7 @@
 #include <bim/game/component/player_action_queue.hpp>
 #include <bim/game/component/player_movement.hpp>
 #include <bim/game/component/timer.hpp>
+#include <bim/game/constant/player_steps_per_cell.hpp>
 #include <bim/game/context/context.hpp>
 #include <bim/game/context/fill_context.hpp>
 #include <bim/game/context/player_animations.hpp>

@@ -91,8 +91,7 @@ bim::game::arena_reduction::arena_reduction(const arena& arena)
 
 bim::game::arena_reduction::~arena_reduction() = default;
 
-void bim::game::arena_reduction::update(entt::registry& registry,
-                                        arena& arena) const
+void bim::game::arena_reduction::update(entt::registry& registry) const
 {
   registry.view<arena_reduction_state, timer>().each(
       [&, this](arena_reduction_state& state, timer& t) -> void
