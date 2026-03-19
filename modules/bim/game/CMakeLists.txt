@@ -1,6 +1,7 @@
 add_library(bim_game
   STATIC
   main/src/bim/game/arena.cpp
+  main/src/bim/game/bot.cpp
   main/src/bim/game/cell_edge.cpp
   main/src/bim/game/cell_neighborhood.cpp
   main/src/bim/game/check_game_over.cpp
@@ -12,8 +13,10 @@ add_library(bim_game
   main/src/bim/game/dump_arena.cpp
   main/src/bim/game/entity_world_map.cpp
   main/src/bim/game/feature_flags.cpp
+  main/src/bim/game/feature_flags_string.cpp
   main/src/bim/game/game_state_checksum.cpp
   main/src/bim/game/game_state_serialization.cpp
+  main/src/bim/game/is_solid.cpp
   main/src/bim/game/kick_event.cpp
   main/src/bim/game/level_generation.cpp
   main/src/bim/game/navigation_check.cpp
@@ -58,6 +61,7 @@ add_library(bim_game
   main/src/bim/game/system/apply_player_action.cpp
   main/src/bim/game/system/arena_reduction.cpp
   main/src/bim/game/system/fog_of_war_updater.cpp
+  main/src/bim/game/system/move_player.cpp
   main/src/bim/game/system/refresh_bomb_inventory.cpp
   main/src/bim/game/system/remove_dead_objects.cpp
   main/src/bim/game/system/update_bomb_power_ups.cpp
@@ -86,6 +90,7 @@ if (BIM_BUILD_TESTS)
     tests/src/bim/game/contest.cpp
     tests/src/bim/game/contest_timeline.cpp
     tests/src/bim/game/entity_world_map.cpp
+    tests/src/bim/game/feature_flags_string.cpp
     tests/src/bim/game/game_state_checksum.cpp
     tests/src/bim/game/game_state_serialization.cpp
     tests/src/bim/game/level_generation.cpp

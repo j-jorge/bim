@@ -5,6 +5,7 @@
 #include <bim/game/contest_timeline.hpp>
 #include <bim/game/dump_arena.hpp>
 #include <bim/game/feature_flags.hpp>
+#include <bim/game/feature_flags_string.hpp>
 
 #include <iscool/log/enable_console_log.hpp>
 
@@ -32,27 +33,8 @@ static void dump_timeline(const bim::game::contest_timeline& timeline)
       if (!(fingerprint.features & f))
         continue;
 
-      std::cout << separator;
+      std::cout << separator << bim::game::to_simple_string(f);
       separator = ", ";
-
-      switch (f)
-        {
-        case bim::game::feature_flags::falling_blocks:
-          std::cout << "falling_blocks";
-          break;
-        case bim::game::feature_flags::fog_of_war:
-          std::cout << "fog_of_war";
-          break;
-        case bim::game::feature_flags::invisibility:
-          std::cout << "invisibility";
-          break;
-        case bim::game::feature_flags::shield:
-          std::cout << "shield";
-          break;
-        case bim::game::feature_flags::fences:
-          std::cout << "fences";
-          break;
-        }
     }
 
   std::cout << "]\n" << page_separator << '\n';

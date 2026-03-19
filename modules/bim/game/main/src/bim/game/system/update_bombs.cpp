@@ -17,8 +17,6 @@
 
 #include <entt/entity/registry.hpp>
 
-#include <boost/container/static_vector.hpp>
-
 static bool burn(const bim::game::context& context, entt::registry& registry,
                  const bim::game::arena& arena,
                  bim::game::entity_world_map& entity_map, std::uint8_t x,

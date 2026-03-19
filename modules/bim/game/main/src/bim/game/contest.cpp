@@ -227,8 +227,7 @@ bim::game::contest_result bim::game::contest::tick()
   run_system_s(apply_player_action, *m_context, *m_registry, *m_arena,
                *m_entity_world_map);
 
-  run_system("arena_reduction",
-             m_arena_reduction->update(*m_registry, *m_arena));
+  run_system("arena_reduction", m_arena_reduction->update(*m_registry));
   run_system_s(update_falling_blocks, *m_context, *m_registry,
                *m_entity_world_map);
 

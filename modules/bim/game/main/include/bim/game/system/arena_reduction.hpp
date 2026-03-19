@@ -21,7 +21,7 @@ namespace bim::game
      * If zero, pop a block, increment index_of_next_fall, set
      * delay_until_next_fall.
      */
-    void update(entt::registry& registry, arena& arena) const;
+    void update(entt::registry& registry) const;
 
   private:
     std::vector<position_on_grid> m_fall_order;
