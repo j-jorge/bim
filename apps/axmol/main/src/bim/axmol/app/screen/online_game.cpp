@@ -54,6 +54,7 @@
 #include <bim/game/component/shield_power_up.hpp>
 #include <bim/game/component/timer.hpp>
 #include <bim/game/component/wall.hpp>
+#include <bim/game/constant/bomb_near_explosion_duration.hpp>
 #include <bim/game/constant/default_arena_size.hpp>
 #include <bim/game/constant/falling_block_duration.hpp>
 #include <bim/game/constant/fence_count_ratio.hpp>
@@ -1015,7 +1016,9 @@ void bim::axmol::app::online_game::display_bombs()
                       p.x, p.y));
 
               const size_t f =
-                  (t.duration > std::chrono::seconds(1)) ? 300 : 100;
+                  (t.duration > bim::game::g_bomb_near_explosion_duration)
+                      ? 300
+                      : 100;
 
               if (t.duration.count() / f % 2 == 0)
                 s.setScale(1.1);

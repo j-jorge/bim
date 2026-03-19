@@ -3,6 +3,8 @@
 
 #include <entt/entity/fwd.hpp>
 
+#include <cstdio>
+
 namespace bim::game
 {
   class arena;
@@ -11,4 +13,7 @@ namespace bim::game
 
   void dump_arena(const arena& arena, const entity_world_map& entity_map,
                   const context& context, const entt::registry& registry);
+  void dump_arena(std::FILE* f, const arena& arena,
+                  const entity_world_map& entity_map, const context& context,
+                  const entt::registry& registry);
 }

@@ -1,7 +1,6 @@
 # Next
 
 - Do not update the fog if there is no fog.
-- Standalone application with a bot playing offline.
 - Standalone application with a bot playing online.
 - Wire a bot in the game server for when nobody is available.
 

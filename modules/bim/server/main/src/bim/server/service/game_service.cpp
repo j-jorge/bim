@@ -20,6 +20,7 @@
 #include <bim/game/component/player.hpp>
 #include <bim/game/component/player_action.hpp>
 #include <bim/game/constant/default_arena_size.hpp>
+#include <bim/game/constant/default_crate_probability.hpp>
 #include <bim/game/constant/max_player_count.hpp>
 #include <bim/game/contest.hpp>
 #include <bim/game/contest_result.hpp>
@@ -37,8 +38,6 @@
 #include <algorithm>
 #include <array>
 #include <limits>
-
-static constexpr std::uint8_t g_crate_probability = 80;
 
 namespace
 {
@@ -137,7 +136,7 @@ public:
     , contest({ .seed = seed,
                 .features = features,
                 .player_count = player_count,
-                .crate_probability = g_crate_probability,
+                .crate_probability = bim::game::g_default_crate_probability,
                 .arena_width = bim::game::g_default_arena_width,
                 .arena_height = bim::game::g_default_arena_height })
   {
@@ -156,7 +155,7 @@ public:
     return { .seed = seed,
              .features = features,
              .player_count = player_count,
-             .crate_probability = g_crate_probability,
+             .crate_probability = bim::game::g_default_crate_probability,
              .arena_width = contest.arena().width(),
              .arena_height = contest.arena().height() };
   }

@@ -32,36 +32,36 @@
 #include <string>
 #include <vector>
 
-static void dump_column(bool valid, float value)
+static void dump_column(std::FILE* f, bool valid, float value)
 {
   if (valid)
-    printf("%10.4f", value);
+    fprintf(f, "%10.4f", value);
   else
-    printf("         x");
+    fprintf(f, "         x");
 }
 
-static void dump_column(bool valid, int value)
+static void dump_column(std::FILE* f, bool valid, int value)
 {
   if (valid)
-    printf("%10d", value);
+    fprintf(f, "%10d", value);
   else
-    printf("         x");
+    fprintf(f, "         x");
 }
 
-static void dump_column_hex(bool valid, int value)
+static void dump_column_hex(std::FILE* f, bool valid, int value)
 {
   if (valid)
-    printf("%10x", value);
+    fprintf(f, "%10x", value);
   else
-    printf("         x");
+    fprintf(f, "         x");
 }
 
-static void dump_column(bool valid, const char* value)
+static void dump_column(std::FILE* f, bool valid, const char* value)
 {
   if (valid)
-    printf("%10s", value);
+    fprintf(f, "%10s", value);
   else
-    printf("         x");
+    fprintf(f, "         x");
 }
 
 static const char* animation_name(const bim::game::context& context,
@@ -93,7 +93,7 @@ static const char* animation_name(const bim::game::context& context,
     return "walk_down";
 
   if (animation->model == animations.walk_left)
-    return "walk_deft";
+    return "walk_left";
 
   if (animation->model == animations.walk_right)
     return "walk_right";
@@ -111,6 +111,14 @@ static const char* animation_name(const bim::game::context& context,
 }
 
 void bim::game::dump_arena(const arena& arena,
+                           const entity_world_map& entity_map,
+                           const context& context,
+                           const entt::registry& registry)
+{
+  dump_arena(stdout, arena, entity_map, context, registry);
+}
+
+void bim::game::dump_arena(std::FILE* f, const arena& arena,
                            const entity_world_map& entity_map,
                            const context& context,
                            const entt::registry& registry)
@@ -274,104 +282,104 @@ void bim::game::dump_arena(const arena& arena,
         });
 
   int arena_print_y = 0;
-  const auto print_arena_line = [&arena_str, &arena_print_y, w,
+  const auto print_arena_line = [f, &arena_str, &arena_print_y, w,
                                  h](char eol) -> void
     {
       if (arena_print_y >= h)
         {
-          printf("%*c", w + 2, eol);
+          fprintf(f, "%*c", w + 2, eol);
           return;
         }
 
-      printf("%x", arena_print_y);
+      fprintf(f, "%x", arena_print_y);
       for (int x = 0; x != w; ++x)
-        printf("%s", arena_str[arena_print_y][x].c_str());
-      printf("%c", eol);
+        fprintf(f, "%s", arena_str[arena_print_y][x].c_str());
+      fprintf(f, "%c", eol);
 
       ++arena_print_y;
     };
 
-  printf(" ");
+  fprintf(f, " ");
   for (int i = 0; i != w; ++i)
-    printf("%x", i);
+    fprintf(f, "%x", i);
 
-  printf(" %-15s", "player_index");
+  fprintf(f, " %-15s", "player_index");
   for (int i = 0; i != player_count; ++i)
-    dump_column(valid[i], (int)players[i].index);
-  printf("\n");
-
-  print_arena_line(' ');
-  printf("%-15s", "player_entity");
-  for (int i = 0; i != player_count; ++i)
-    dump_column_hex(valid[i], (int)player_entities[i]);
-  printf("\n");
+    dump_column(f, valid[i], (int)players[i].index);
+  fprintf(f, "\n");
 
   print_arena_line(' ');
-  printf("%-15s", "animation");
+  fprintf(f, "%-15s", "player_entity");
   for (int i = 0; i != player_count; ++i)
-    dump_column(valid[i],
+    dump_column_hex(f, valid[i], (int)player_entities[i]);
+  fprintf(f, "\n");
+
+  print_arena_line(' ');
+  fprintf(f, "%-15s", "animation");
+  for (int i = 0; i != player_count; ++i)
+    dump_column(f, valid[i],
                 animation_name(context, player_entities[i], registry));
-  printf("\n");
+  fprintf(f, "\n");
 
   print_arena_line(' ');
-  printf("%-15s", "bomb_capacity");
+  fprintf(f, "%-15s", "bomb_capacity");
   for (int i = 0; i != player_count; ++i)
-    dump_column(valid[i], (int)players[i].bomb_capacity);
-  printf("\n");
+    dump_column(f, valid[i], (int)players[i].bomb_capacity);
+  fprintf(f, "\n");
 
   print_arena_line(' ');
-  printf("%-15s", "bomb_available");
+  fprintf(f, "%-15s", "bomb_available");
   for (int i = 0; i != player_count; ++i)
-    dump_column(valid[i], (int)players[i].bomb_available);
-  printf("\n");
+    dump_column(f, valid[i], (int)players[i].bomb_available);
+  fprintf(f, "\n");
 
   print_arena_line(' ');
-  printf("%-15s", "bomb_strength");
+  fprintf(f, "%-15s", "bomb_strength");
   for (int i = 0; i != player_count; ++i)
-    dump_column(valid[i], (int)players[i].bomb_strength);
-  printf("\n");
+    dump_column(f, valid[i], (int)players[i].bomb_strength);
+  fprintf(f, "\n");
 
   print_arena_line(' ');
-  printf("%-15s", "invisible");
+  fprintf(f, "%-15s", "invisible");
   for (int i = 0; i != player_count; ++i)
-    dump_column(valid[i], (int)is_invisible(registry, player_entities[i]));
-  printf("\n");
+    dump_column(f, valid[i], (int)is_invisible(registry, player_entities[i]));
+  fprintf(f, "\n");
 
   print_arena_line(' ');
-  printf("%-15s", "shield");
+  fprintf(f, "%-15s", "shield");
   for (int i = 0; i != player_count; ++i)
-    dump_column(valid[i], (int)has_shield(registry, player_entities[i]));
-  printf("\n");
+    dump_column(f, valid[i], (int)has_shield(registry, player_entities[i]));
+  fprintf(f, "\n");
 
   print_arena_line(' ');
-  printf("%-15s", "invincible");
+  fprintf(f, "%-15s", "invincible");
   for (int i = 0; i != player_count; ++i)
-    dump_column(valid[i], (int)is_invincible(registry, player_entities[i]));
-  printf("\n");
+    dump_column(f, valid[i], (int)is_invincible(registry, player_entities[i]));
+  fprintf(f, "\n");
 
   print_arena_line(' ');
-  printf("%-15s", "x");
+  fprintf(f, "%-15s", "x");
   for (int i = 0; i != player_count; ++i)
-    dump_column(valid[i], player_position[i].x_float());
-  printf("\n");
+    dump_column(f, valid[i], player_position[i].x_float());
+  fprintf(f, "\n");
 
   print_arena_line(' ');
-  printf("%-15s", "y");
+  fprintf(f, "%-15s", "y");
   for (int i = 0; i != player_count; ++i)
-    dump_column(valid[i], player_position[i].y_float());
-  printf("\n");
+    dump_column(f, valid[i], player_position[i].y_float());
+  fprintf(f, "\n");
 
   print_arena_line(' ');
-  printf("%-15s", "x_grid");
+  fprintf(f, "%-15s", "x_grid");
   for (int i = 0; i != player_count; ++i)
-    dump_column(valid[i], (int)player_position[i].grid_aligned_x());
-  printf("\n");
+    dump_column(f, valid[i], (int)player_position[i].grid_aligned_x());
+  fprintf(f, "\n");
 
   print_arena_line(' ');
-  printf("%-15s", "y_grid");
+  fprintf(f, "%-15s", "y_grid");
   for (int i = 0; i != player_count; ++i)
-    dump_column(valid[i], (int)player_position[i].grid_aligned_y());
-  printf("\n");
+    dump_column(f, valid[i], (int)player_position[i].grid_aligned_y());
+  fprintf(f, "\n");
 
   std::array<player_action, g_max_player_count> queued_actions;
 
@@ -382,15 +390,15 @@ void bim::game::dump_arena(const arena& arena,
         });
 
   const auto print_actions =
-      [&, player_count](
+      [&, f, player_count](
           const char* title,
           const std::array<player_action, g_max_player_count>& actions) -> void
     {
       print_arena_line(' ');
-      printf("%-15s", title);
+      fprintf(f, "%-15s", title);
       for (int i = 0; i != player_count; ++i)
         if (!valid[i])
-          printf("       xx");
+          fprintf(f, "       xx");
         else
           {
             char d = '.';
@@ -414,9 +422,9 @@ void bim::game::dump_arena(const arena& arena,
                 break;
               };
 
-            printf("       %c%c", d, actions[i].drop_bomb ? 'b' : '.');
+            fprintf(f, "       %c%c", d, actions[i].drop_bomb ? 'b' : '.');
           }
-      printf("\n");
+      fprintf(f, "\n");
     };
 
   print_actions("queued actions", queued_actions);
@@ -444,14 +452,14 @@ void bim::game::dump_arena(const arena& arena,
   if (print_kick_events)
     {
       print_arena_line(' ');
-      printf("%-15s", "kicked");
+      fprintf(f, "%-15s", "kicked");
       for (int i = 0; i != player_count; ++i)
-        printf("%9d", (int)kick_events[i]);
-      printf("\n");
+        fprintf(f, "%9d", (int)kick_events[i]);
+      fprintf(f, "\n");
     }
 
   std::size_t bomb_print_i = 0;
-  const auto print_bombs_line = [&bombs, &bomb_print_i]() -> void
+  const auto print_bombs_line = [f, &bombs, &bomb_print_i]() -> void
     {
       for (int i = 0; i != 4; ++i)
         {
@@ -462,13 +470,13 @@ void bim::game::dump_arena(const arena& arena,
           ++bomb_print_i;
 
           if (i != 0)
-            printf(" ");
+            fprintf(f, " ");
 
-          printf("(%d, %d, %d, %d)", (int)b.x, (int)b.y, (int)b.player,
-                 (int)b.strength);
+          fprintf(f, "(%d, %d, %d, %d)", (int)b.x, (int)b.y, (int)b.player,
+                  (int)b.strength);
         }
 
-      printf("\n");
+      fprintf(f, "\n");
     };
 
   while (arena_print_y != h)
@@ -477,7 +485,7 @@ void bim::game::dump_arena(const arena& arena,
   int bomb_lines = 0;
   if (!bombs.empty())
     {
-      printf("bombs(x, y, player, strength): ");
+      fprintf(f, "bombs(x, y, player, strength): ");
       while (bomb_print_i != bombs.size())
         {
           print_bombs_line();
@@ -488,5 +496,5 @@ void bim::game::dump_arena(const arena& arena,
   // Try to keep a fixed number of lines after the arena, it makes paging
   // easier.
   for (; bomb_lines < 3; ++bomb_lines)
-    printf("\n");
+    fprintf(f, "\n");
 }

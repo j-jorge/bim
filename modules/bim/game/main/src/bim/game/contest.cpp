@@ -188,7 +188,7 @@ bim::game::contest::contest(const contest_fingerprint& fingerprint)
   if (!!(fingerprint.features & feature_flags::falling_blocks))
     arena_reduction_factory(*m_registry, std::chrono::minutes(2));
   else
-    main_timer_factory(*m_registry, std::chrono::minutes(3));
+    main_timer_factory(*m_registry, max_game_duration);
 
   main_clock_factory(*m_registry);
 
@@ -232,8 +232,7 @@ bim::game::contest_result bim::game::contest::tick()
   run_system_s(apply_player_action, *m_context, *m_registry, *m_arena,
                *m_entity_world_map);
 
-  run_system("arena_reduction",
-             m_arena_reduction->update(*m_registry, *m_arena));
+  run_system("arena_reduction", m_arena_reduction->update(*m_registry));
   run_system_s(update_falling_blocks, *m_context, *m_registry,
                *m_entity_world_map);
 

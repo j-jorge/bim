@@ -9,8 +9,6 @@ namespace bim::game
   class context;
   class entity_world_map;
 
-  constexpr int g_player_steps_per_cell = 16;
-
   void apply_player_action(const context& context, entt::registry& registry,
                            const arena& arena,
                            bim::game::entity_world_map& entity_map);

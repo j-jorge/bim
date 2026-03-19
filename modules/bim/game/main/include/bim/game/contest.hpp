@@ -24,6 +24,8 @@ namespace bim::game
   class contest
   {
   public:
+    static constexpr std::chrono::minutes max_game_duration =
+        std::chrono::minutes(3);
     static constexpr std::chrono::milliseconds tick_interval =
         std::chrono::milliseconds(20);
 

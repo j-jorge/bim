@@ -32,7 +32,7 @@ static void check_positions(
       bim::game::update_timers(registry, tick_duration);
 
       stop = (t.duration.count() == 0);
-      reduction.update(registry, arena);
+      reduction.update(registry);
     }
 
   for (std::size_t i = 0; i != expected_positions.size(); ++i)
@@ -63,7 +63,7 @@ static void check_positions(
           bim::game::update_timers(registry, tick_duration);
 
           stop = (t.duration.count() == 0);
-          reduction.update(registry, arena);
+          reduction.update(registry);
         }
     }
 }
