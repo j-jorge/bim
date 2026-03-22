@@ -26,8 +26,11 @@ Mirko P., via Weblate.
 CC-BY-SA 4.0.
 
 assets/i18n/it.po
-assets/i18n/es.po
 Mariano Portal, via Weblate.
+CC-BY-SA 4.0.
+
+assets/i18n/es.po
+Mariano Portal, Francisco Serrador, via Weblate.
 CC-BY-SA 4.0.
 
 assets/i18n/fr.po
