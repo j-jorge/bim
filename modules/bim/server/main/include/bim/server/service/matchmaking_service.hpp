@@ -56,21 +56,23 @@ namespace bim::server
 
     bim::net::encounter_id new_encounter(const iscool::net::endpoint& endpoint,
                                          iscool::net::session_id session,
-                                         bim::net::client_token request_token);
+                                         bim::net::client_token request_token,
+                                         bim::game::feature_flags features);
     bool refresh_encounter(bim::net::encounter_id encounter_id,
                            const iscool::net::endpoint& endpoint,
                            iscool::net::session_id session,
-                           bim::net::client_token request_token);
+                           bim::net::client_token request_token,
+                           bim::game::feature_flags features);
     std::optional<join_encounter_result>
     add_in_any_encounter(const iscool::net::endpoint& endpoint,
                          iscool::net::session_id session,
-                         bim::net::client_token request_token);
+                         bim::net::client_token request_token,
+                         bim::game::feature_flags features);
 
     void mark_as_ready(const iscool::net::endpoint& endpoint,
                        iscool::net::session_id session,
                        bim::net::encounter_id encounter_id,
                        bim::net::client_token request_token,
-                       bim::game::feature_flags features,
                        try_start_mode try_start);
 
     std::span<const bim::net::encounter_id> garbage_encounters() const;
@@ -89,6 +91,7 @@ namespace bim::server
                            const iscool::net::endpoint& endpoint,
                            iscool::net::session_id session,
                            bim::net::client_token request_token,
+                           bim::game::feature_flags features,
                            std::size_t session_index);
 
     void send_game_on_hold(const iscool::net::endpoint& endpoint,

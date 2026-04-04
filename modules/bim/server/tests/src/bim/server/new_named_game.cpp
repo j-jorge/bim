@@ -213,8 +213,9 @@ TEST_F(new_game_test, answer_is_game_on_hold)
   m_clients[0].authenticate();
 
   const bim::net::client_token token = new_client_token();
+  constexpr bim::game::feature_flags features{};
   m_clients[0].send_new_named_game_request(
-      bim::net::new_named_game_request(token, { 'a', 'b', 'c' }));
+      bim::net::new_named_game_request(token, features, { 'a', 'b', 'c' }));
 
   ASSERT_TRUE(!!m_clients[0].game_on_hold_answer);
 
@@ -230,11 +231,12 @@ TEST_F(new_game_test, join_game)
 
   bim::net::client_token tokens[] = { new_client_token(), new_client_token(),
                                       new_client_token(), new_client_token() };
+  constexpr bim::game::feature_flags features{};
   const bim::net::game_name game_name = { 'j', 'o', 'i', 'n' };
 
   // First player connects.
   m_clients[0].send_new_named_game_request(
-      bim::net::new_named_game_request(tokens[0], game_name));
+      bim::net::new_named_game_request(tokens[0], features, game_name));
 
   ASSERT_TRUE(!!m_clients[0].game_on_hold_answer);
 
@@ -243,7 +245,7 @@ TEST_F(new_game_test, join_game)
 
   // Second player connects.
   m_clients[1].send_new_named_game_request(
-      bim::net::new_named_game_request(tokens[1], game_name));
+      bim::net::new_named_game_request(tokens[1], features, game_name));
 
   ASSERT_TRUE(!!m_clients[1].game_on_hold_answer);
 
@@ -254,7 +256,7 @@ TEST_F(new_game_test, join_game)
 
   // First player keep asking for a game
   m_clients[0].send_new_named_game_request(
-      bim::net::new_named_game_request(tokens[0], game_name));
+      bim::net::new_named_game_request(tokens[0], features, game_name));
 
   ASSERT_TRUE(!!m_clients[0].game_on_hold_answer);
   EXPECT_EQ(tokens[0], m_clients[0].game_on_hold_answer->get_request_token());
@@ -264,7 +266,7 @@ TEST_F(new_game_test, join_game)
 
   // Third player connects.
   m_clients[2].send_new_named_game_request(
-      bim::net::new_named_game_request(tokens[2], game_name));
+      bim::net::new_named_game_request(tokens[2], features, game_name));
 
   ASSERT_TRUE(!!m_clients[2].game_on_hold_answer);
 
@@ -273,7 +275,7 @@ TEST_F(new_game_test, join_game)
 
   // Fourth player connects.
   m_clients[3].send_new_named_game_request(
-      bim::net::new_named_game_request(tokens[3], game_name));
+      bim::net::new_named_game_request(tokens[3], features, game_name));
 
   ASSERT_TRUE(!!m_clients[3].game_on_hold_answer);
 
@@ -287,7 +289,7 @@ TEST_F(new_game_test, join_game)
   // Refresh the request for all players.
   for (int i = 0; i != 4; ++i)
     m_clients[i].send_new_named_game_request(
-        bim::net::new_named_game_request(tokens[i], game_name));
+        bim::net::new_named_game_request(tokens[i], features, game_name));
 
   // Every player should see four players.
   for (int i = 0; i != 4; ++i)
@@ -316,6 +318,7 @@ TEST_F(new_game_test, player_leaving_on_new_game)
   for (int i = 0; i != 4; ++i)
     m_clients[i].authenticate();
 
+  constexpr bim::game::feature_flags features{};
   const bim::net::game_name game_name = { 'k', 'i', 'c', 'k' };
 
   // Do the game request twice such that the first players know about the last
@@ -323,7 +326,8 @@ TEST_F(new_game_test, player_leaving_on_new_game)
   for (int j = 0; j != 2; ++j)
     for (int i = 0; i != 4; ++i)
       m_clients[i].send_new_named_game_request(
-          bim::net::new_named_game_request(new_client_token(), game_name));
+          bim::net::new_named_game_request(new_client_token(), features,
+                                           game_name));
 
   // All clients are connected and should now see four players.
   for (int i = 0; i != 4; ++i)
@@ -344,7 +348,8 @@ TEST_F(new_game_test, player_leaving_on_new_game)
       for (int i = 0; i != 4; ++i)
         if (i != inactive_index)
           m_clients[i].send_new_named_game_request(
-              bim::net::new_named_game_request(new_client_token(), game_name));
+              bim::net::new_named_game_request(new_client_token(), features,
+                                               game_name));
     }
 
   // All the players that have sent updates should see three players.
@@ -374,13 +379,12 @@ TEST_F(new_game_test, accept_named_game)
   for (int i = 0; i != 4; ++i)
     m_clients[i].authenticate();
 
+  constexpr bim::game::feature_flags features{};
   const bim::net::game_name game_name = { 'a', 'c', 'c', 'e', 'p', 't' };
 
   for (int i = 0; i != 4; ++i)
-    m_clients[i].send_new_named_game_request(
-        bim::net::new_named_game_request(new_client_token(), game_name));
-
-  constexpr bim::game::feature_flags features{};
+    m_clients[i].send_new_named_game_request(bim::net::new_named_game_request(
+        new_client_token(), features, game_name));
 
   // One iteration for each client to notify the server.
   for (int i = 0; i != 4; ++i)
@@ -388,7 +392,7 @@ TEST_F(new_game_test, accept_named_game)
       ASSERT_TRUE(!!m_clients[i].game_on_hold_answer) << "i=" << i;
       m_clients[i].send_accept_named_game(bim::net::accept_named_game(
           new_client_token(),
-          m_clients[i].game_on_hold_answer->get_encounter_id(), features));
+          m_clients[i].game_on_hold_answer->get_encounter_id()));
     }
 
   // One iteration for each client get the launch_game.
@@ -397,7 +401,7 @@ TEST_F(new_game_test, accept_named_game)
       ASSERT_TRUE(!!m_clients[i].game_on_hold_answer) << "i=" << i;
       m_clients[i].send_accept_named_game(bim::net::accept_named_game(
           new_client_token(),
-          m_clients[i].game_on_hold_answer->get_encounter_id(), features));
+          m_clients[i].game_on_hold_answer->get_encounter_id()));
     }
 
   // Now we should have a launch_game for four players.
@@ -422,6 +426,7 @@ TEST_F(new_game_test, player_leaving_on_accept_named_game)
   for (int i = 0; i != 4; ++i)
     m_clients[i].authenticate();
 
+  constexpr bim::game::feature_flags features{};
   const bim::net::game_name game_name = { 'k', 'i', 'c', 'k' };
 
   // Do the game request twice such that the first players know about the last
@@ -429,7 +434,8 @@ TEST_F(new_game_test, player_leaving_on_accept_named_game)
   for (int j = 0; j != 2; ++j)
     for (int i = 0; i != 4; ++i)
       m_clients[i].send_new_named_game_request(
-          bim::net::new_named_game_request(new_client_token(), game_name));
+          bim::net::new_named_game_request(new_client_token(), features,
+                                           game_name));
 
   // All clients are connected and should now see four players.
   for (int i = 0; i != 4; ++i)
@@ -440,7 +446,6 @@ TEST_F(new_game_test, player_leaving_on_accept_named_game)
     }
 
   const int inactive_index = 2;
-  constexpr bim::game::feature_flags features{};
 
   // Let the time pass to trigger the kicking of the inactive players.
   for (int t = 0; t != 3; ++t)
@@ -452,7 +457,7 @@ TEST_F(new_game_test, player_leaving_on_accept_named_game)
         if (i != inactive_index)
           m_clients[i].send_accept_named_game(bim::net::accept_named_game(
               new_client_token(),
-              m_clients[i].game_on_hold_answer->get_encounter_id(), features));
+              m_clients[i].game_on_hold_answer->get_encounter_id()));
     }
 
   // All the players that have sent updates should have received a launch_game
@@ -484,18 +489,18 @@ TEST_F(new_game_test, no_single_player_game)
 {
   m_clients[0].authenticate();
 
+  constexpr bim::game::feature_flags features{};
   const bim::net::game_name game_name = { 's', 'i', 'n', 'g', 'l', 'e' };
 
-  m_clients[0].send_new_named_game_request(
-      bim::net::new_named_game_request(new_client_token(), game_name));
+  m_clients[0].send_new_named_game_request(bim::net::new_named_game_request(
+      new_client_token(), features, game_name));
 
   ASSERT_TRUE(!!m_clients[0].game_on_hold_answer);
   EXPECT_EQ(1, m_clients[0].game_on_hold_answer->get_player_count());
 
-  constexpr bim::game::feature_flags features{};
   m_clients[0].send_accept_named_game(bim::net::accept_named_game(
-      new_client_token(), m_clients[0].game_on_hold_answer->get_encounter_id(),
-      features));
+      new_client_token(),
+      m_clients[0].game_on_hold_answer->get_encounter_id()));
 
   // Now we should not have a launch_game for our player.
   ASSERT_FALSE(!!m_clients[0].launch_game_answer);
@@ -505,19 +510,20 @@ TEST_F(new_game_test, no_single_player_game)
     be a launch_game message. */
 TEST_F(new_game_test, late_second_player)
 {
-  const bim::net::game_name game_name = { 'l', 'a', 't', 'e' };
   constexpr bim::game::feature_flags features{};
+  const bim::net::game_name game_name = { 'l', 'a', 't', 'e' };
 
   for (int i = 0; i != 2; ++i)
     {
       m_clients[i].authenticate();
 
       m_clients[i].send_new_named_game_request(
-          bim::net::new_named_game_request(new_client_token(), game_name));
+          bim::net::new_named_game_request(new_client_token(), features,
+                                           game_name));
 
       m_clients[i].send_accept_named_game(bim::net::accept_named_game(
           new_client_token(),
-          m_clients[i].game_on_hold_answer->get_encounter_id(), features));
+          m_clients[i].game_on_hold_answer->get_encounter_id()));
     }
 
   // The first player only knows about him.
@@ -536,8 +542,8 @@ TEST_F(new_game_test, late_second_player)
   // Accept again for the first player to trigger an answer from the server.
   ASSERT_TRUE(!!m_clients[0].game_on_hold_answer);
   m_clients[0].send_accept_named_game(bim::net::accept_named_game(
-      new_client_token(), m_clients[0].game_on_hold_answer->get_encounter_id(),
-      features));
+      new_client_token(),
+      m_clients[0].game_on_hold_answer->get_encounter_id()));
 
   // Now the first player should have received a launch_game.
   ASSERT_TRUE(!!m_clients[0].launch_game_answer);
@@ -550,14 +556,15 @@ TEST_F(new_game_test, late_second_player)
     too long. */
 TEST_F(new_game_test, idle_causes_new_game)
 {
+  constexpr bim::game::feature_flags features{};
   const bim::net::game_name game_name = { 'i', 'd', 'l', 'e' };
 
   for (int i = 0; i != 4; ++i)
     m_clients[i].authenticate();
 
   for (int i = 0; i != 4; ++i)
-    m_clients[i].send_new_named_game_request(
-        bim::net::new_named_game_request(new_client_token(), game_name));
+    m_clients[i].send_new_named_game_request(bim::net::new_named_game_request(
+        new_client_token(), features, game_name));
 
   // All the players are grouped in the same game by the server.
   ASSERT_TRUE(!!m_clients[0].game_on_hold_answer);
@@ -577,8 +584,8 @@ TEST_F(new_game_test, idle_causes_new_game)
 
   // Try to join the same game.
   for (int i = 0; i != 4; ++i)
-    m_clients[i].send_new_named_game_request(
-        bim::net::new_named_game_request(new_client_token(), game_name));
+    m_clients[i].send_new_named_game_request(bim::net::new_named_game_request(
+        new_client_token(), features, game_name));
 
   // The encounter id should have changed.
   for (int i = 0; i != 4; ++i)
@@ -595,22 +602,23 @@ TEST_F(new_game_test, max_players_in_game)
   for (int i = 0; i != 8; ++i)
     m_clients[i].authenticate();
 
+  constexpr bim::game::feature_flags features{};
   const bim::net::game_name game_name = { 's', 'm', 'a', 'l', 'l' };
 
   // First batch of players.
   for (int i = 0; i != 4; ++i)
-    m_clients[i].send_new_named_game_request(
-        bim::net::new_named_game_request(new_client_token(), game_name));
+    m_clients[i].send_new_named_game_request(bim::net::new_named_game_request(
+        new_client_token(), features, game_name));
 
   // Twice for each player to receive the player count.
   for (int i = 0; i != 4; ++i)
-    m_clients[i].send_new_named_game_request(
-        bim::net::new_named_game_request(new_client_token(), game_name));
+    m_clients[i].send_new_named_game_request(bim::net::new_named_game_request(
+        new_client_token(), features, game_name));
 
   // Second batch of players.
   for (int i = 4; i != 8; ++i)
-    m_clients[i].send_new_named_game_request(
-        bim::net::new_named_game_request(new_client_token(), game_name));
+    m_clients[i].send_new_named_game_request(bim::net::new_named_game_request(
+        new_client_token(), features, game_name));
 
   // The clients from the first batch are in the game.
   for (int i = 0; i != 4; ++i)
@@ -631,15 +639,14 @@ TEST_F(new_game_test, different_game_different_channels)
   for (int i = 0; i != 4; ++i)
     m_clients[i].authenticate();
 
+  constexpr bim::game::feature_flags features{};
   const bim::net::game_name game_names[2] = {
     { 'g', 'a', 'm', 'e', '_', '0' }, { 'g', 'a', 'm', 'e', '_', '1' }
   };
 
   for (int i = 0; i != 4; ++i)
     m_clients[i].send_new_named_game_request(bim::net::new_named_game_request(
-        new_client_token(), game_names[i % 2]));
-
-  constexpr bim::game::feature_flags features{};
+        new_client_token(), features, game_names[i % 2]));
 
   // One iteration for each client to notify the server.
   for (int i = 0; i != 4; ++i)
@@ -647,7 +654,7 @@ TEST_F(new_game_test, different_game_different_channels)
       ASSERT_TRUE(!!m_clients[i].game_on_hold_answer) << "i=" << i;
       m_clients[i].send_accept_named_game(bim::net::accept_named_game(
           new_client_token(),
-          m_clients[i].game_on_hold_answer->get_encounter_id(), features));
+          m_clients[i].game_on_hold_answer->get_encounter_id()));
     }
 
   // One iteration for each client get the launch_game.
@@ -656,7 +663,7 @@ TEST_F(new_game_test, different_game_different_channels)
       ASSERT_TRUE(!!m_clients[i].game_on_hold_answer) << "i=" << i;
       m_clients[i].send_accept_named_game(bim::net::accept_named_game(
           new_client_token(),
-          m_clients[i].game_on_hold_answer->get_encounter_id(), features));
+          m_clients[i].game_on_hold_answer->get_encounter_id()));
     }
 
   // Now we should have a launch_game for each pair of players.

@@ -5,5 +5,5 @@
 
 namespace bim::net
 {
-  constexpr version protocol_version = 12;
+  constexpr version protocol_version = 13;
 }

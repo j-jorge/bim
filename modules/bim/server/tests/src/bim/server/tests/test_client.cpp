@@ -64,10 +64,10 @@ void bim::server::tests::test_client::new_game()
       [this](int) -> void
         {
           m_game_proposal_connection.disconnect();
-          m_new_game.accept({});
+          m_new_game.accept();
         });
 
-  m_new_game.start(*session);
+  m_new_game.start(*session, {});
 }
 
 void bim::server::tests::test_client::new_game(const bim::net::game_name& name)
@@ -83,10 +83,10 @@ void bim::server::tests::test_client::new_game(const bim::net::game_name& name)
       [this](int) -> void
         {
           m_game_proposal_connection.disconnect();
-          m_new_game.accept({});
+          m_new_game.accept();
         });
 
-  m_new_game.start(*session, name);
+  m_new_game.start(*session, {}, name);
 }
 
 void bim::server::tests::test_client::launch_game(

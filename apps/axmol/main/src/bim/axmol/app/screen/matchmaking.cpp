@@ -168,7 +168,9 @@ void bim::axmol::app::matchmaking::displayed()
         });
 
   assert(m_context.get_session_handler()->connected());
-  m_new_game->start(m_context.get_session_handler()->session_id());
+  m_new_game->start(
+      m_context.get_session_handler()->session_id(),
+      bim::app::enabled_feature_flags(*m_context.get_local_preferences()));
 }
 
 void bim::axmol::app::matchmaking::closing()
@@ -194,7 +196,9 @@ void bim::axmol::app::matchmaking::update_display_with_game_proposal(
     {
       m_launch_monitor->set_off_state();
       m_new_game->stop();
-      m_new_game->start(m_context.get_session_handler()->session_id());
+      m_new_game->start(
+          m_context.get_session_handler()->session_id(),
+          bim::app::enabled_feature_flags(*m_context.get_local_preferences()));
       m_controls->ready_button->enable(true);
     }
 
@@ -254,8 +258,7 @@ void bim::axmol::app::matchmaking::accept_game()
 {
   m_launch_monitor->set_launch_state();
   m_controls->ready_button->enable(false);
-  m_new_game->accept(
-      bim::app::enabled_feature_flags(*m_context.get_local_preferences()));
+  m_new_game->accept();
 }
 
 void bim::axmol::app::matchmaking::launch_game(

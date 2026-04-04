@@ -5,6 +5,8 @@
 #include <bim/net/message/game_name.hpp>
 #include <bim/net/message/message_type.hpp>
 
+#include <bim/game/feature_flags_fwd.hpp>
+
 #include <iscool/net/byte_array_serialization/byte_array_array_serialization.hpp>
 #include <iscool/net/message/raw_message.hpp>
 
@@ -14,6 +16,7 @@ namespace bim::net
 {
   DECLARE_RAW_MESSAGE(new_named_game_request,
                       message_type::new_named_game_request,
-                      ((client_token)(request_token)) //
+                      ((client_token)(request_token))        //
+                      ((bim::game::feature_flags)(features)) //
                       ((game_name)(name)));
 }

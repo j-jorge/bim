@@ -98,7 +98,7 @@ game_update_test::client::client(bim::server::tests::fake_scheduler& scheduler,
       [this](int) -> void
         {
           m_game_proposal_connection.disconnect();
-          m_new_game.accept({});
+          m_new_game.accept();
         });
 
   m_new_game.connect_to_launch_game(std::bind(&client::launch_game, this,
@@ -120,7 +120,7 @@ void game_update_test::client::new_game(const bim::net::game_name& name)
 {
   ASSERT_TRUE(!!m_session);
 
-  m_new_game.start(*m_session, name);
+  m_new_game.start(*m_session, {}, name);
 }
 
 void game_update_test::client::launch_game(

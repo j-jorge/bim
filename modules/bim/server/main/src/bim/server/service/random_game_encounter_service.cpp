@@ -45,7 +45,8 @@ void bim::server::random_game_encounter_service::process(
       const bim::net::encounter_id encounter_id = it->second;
 
       if (m_matchmaking_service.refresh_encounter(encounter_id, endpoint,
-                                                  session, request_token))
+                                                  session, request_token,
+                                                  request.get_features()))
         return;
     }
 
@@ -53,8 +54,8 @@ void bim::server::random_game_encounter_service::process(
          "Trying to add session {} in existing encounter.", session);
 
   const std::optional<matchmaking_service::join_encounter_result> encounter =
-      m_matchmaking_service.add_in_any_encounter(endpoint, session,
-                                                 request_token);
+      m_matchmaking_service.add_in_any_encounter(
+          endpoint, session, request_token, request.get_features());
 
   bool send_notification = true;
 
@@ -69,8 +70,8 @@ void bim::server::random_game_encounter_service::process(
       send_notification &= (encounter->player_count == 1);
     }
   else
-    m_session_to_encounter[session] =
-        m_matchmaking_service.new_encounter(endpoint, session, request_token);
+    m_session_to_encounter[session] = m_matchmaking_service.new_encounter(
+        endpoint, session, request_token, request.get_features());
 
   if (send_notification)
     m_discord.send_matchmaking_notification();
@@ -105,7 +106,7 @@ void bim::server::random_game_encounter_service::mark_as_ready(
 
   m_matchmaking_service.mark_as_ready(endpoint, session, encounter_id,
                                       message.get_request_token(),
-                                      message.get_features(), try_start_mode);
+                                      try_start_mode);
 
   clean_up();
 }

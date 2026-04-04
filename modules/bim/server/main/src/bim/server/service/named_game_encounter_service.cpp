@@ -60,8 +60,7 @@ void bim::server::named_game_encounter_service::mark_as_ready(
 
   m_matchmaking_service.mark_as_ready(
       endpoint, session, message.get_encounter_id(),
-      message.get_request_token(), message.get_features(),
-      matchmaking_service::try_start_mode::wait);
+      message.get_request_token(), matchmaking_service::try_start_mode::wait);
 
   clean_up();
 }
@@ -76,7 +75,8 @@ void bim::server::named_game_encounter_service::create_encounter(
 
   const bim::net::encounter_id encounter_id =
       m_matchmaking_service.new_encounter(endpoint, session,
-                                          request.get_request_token());
+                                          request.get_request_token(),
+                                          request.get_features());
 
   m_encounter_ids[name] = encounter_id;
 
@@ -92,7 +92,8 @@ void bim::server::named_game_encounter_service::update_encounter(
     bim::net::encounter_id encounter_id)
 {
   m_matchmaking_service.refresh_encounter(encounter_id, endpoint, session,
-                                          request.get_request_token());
+                                          request.get_request_token(),
+                                          request.get_features());
 }
 
 void bim::server::named_game_encounter_service::clean_up()

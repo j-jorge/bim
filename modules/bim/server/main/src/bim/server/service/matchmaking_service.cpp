@@ -47,13 +47,13 @@ struct bim::server::matchmaking_service::encounter_info
     return result;
   }
 
-  void insert(iscool::net::session_id session)
+  void insert(iscool::net::session_id session, bim::game::feature_flags f)
   {
     assert(player_count < sessions.size());
 
     const std::size_t new_index = player_count;
     ++player_count;
-    features[new_index] = {};
+    features[new_index] = f;
     sessions[new_index] = session;
     release_at_this_date[new_index] = matchmaking_date_for_next_release();
     ready[new_index] = 0;
@@ -104,7 +104,7 @@ bim::server::matchmaking_service::~matchmaking_service() = default;
 
 bim::net::encounter_id bim::server::matchmaking_service::new_encounter(
     const iscool::net::endpoint& endpoint, iscool::net::session_id session,
-    bim::net::client_token request_token)
+    bim::net::client_token request_token, bim::game::feature_flags features)
 {
   ic_log(iscool::log::nature::info(), "matchmaking_service",
          "Creating new encounter {} on request of session {}.",
@@ -119,6 +119,7 @@ bim::net::encounter_id bim::server::matchmaking_service::new_encounter(
   encounter.player_count = 1;
   encounter.sessions[0] = session;
   encounter.features.fill({});
+  encounter.features[0] = features;
   encounter.release_at_this_date[0] = matchmaking_date_for_next_release();
   encounter.ready.fill(false);
 
@@ -130,7 +131,8 @@ bim::net::encounter_id bim::server::matchmaking_service::new_encounter(
 
 bool bim::server::matchmaking_service::refresh_encounter(
     bim::net::encounter_id encounter_id, const iscool::net::endpoint& endpoint,
-    iscool::net::session_id session, bim::net::client_token request_token)
+    iscool::net::session_id session, bim::net::client_token request_token,
+    bim::game::feature_flags features)
 {
   const encounter_map::iterator it = m_encounters.find(encounter_id);
 
@@ -146,7 +148,7 @@ bool bim::server::matchmaking_service::refresh_encounter(
     return false;
 
   refresh_encounter(encounter_id, encounter, endpoint, session, request_token,
-                    existing_index);
+                    features, existing_index);
   return true;
 }
 
@@ -157,7 +159,7 @@ bool bim::server::matchmaking_service::refresh_encounter(
 std::optional<bim::server::matchmaking_service::join_encounter_result>
 bim::server::matchmaking_service::add_in_any_encounter(
     const iscool::net::endpoint& endpoint, iscool::net::session_id session,
-    bim::net::client_token request_token)
+    bim::net::client_token request_token, bim::game::feature_flags features)
 {
   for (auto& [encounter_id, encounter] : m_encounters)
     {
@@ -169,7 +171,7 @@ bim::server::matchmaking_service::add_in_any_encounter(
       assert(session_index == encounter.player_count);
 
       refresh_encounter(encounter_id, encounter, endpoint, session,
-                        request_token, session_index);
+                        request_token, features, session_index);
       return join_encounter_result{ encounter_id, encounter.player_count };
     }
 
@@ -179,7 +181,7 @@ bim::server::matchmaking_service::add_in_any_encounter(
 void bim::server::matchmaking_service::mark_as_ready(
     const iscool::net::endpoint& endpoint, iscool::net::session_id session,
     bim::net::encounter_id encounter_id, bim::net::client_token request_token,
-    bim::game::feature_flags features, try_start_mode try_start)
+    try_start_mode try_start)
 {
   const encounter_map::iterator it = m_encounters.find(encounter_id);
 
@@ -209,10 +211,6 @@ void bim::server::matchmaking_service::mark_as_ready(
     {
       // The game has not started yet, thus we can still update de player list.
       remove_inactive_sessions(encounter_id, encounter);
-
-      // The features cannot change if the game has started, so we update them
-      // only if it has not started.
-      encounter.features[existing_index] = features;
 
       if (try_start == try_start_mode::now)
         remove_non_ready_players(encounter_id, encounter);
@@ -294,7 +292,8 @@ void bim::server::matchmaking_service::drop_garbage()
 void bim::server::matchmaking_service::refresh_encounter(
     bim::net::encounter_id encounter_id, encounter_info& encounter,
     const iscool::net::endpoint& endpoint, iscool::net::session_id session,
-    bim::net::client_token request_token, std::size_t session_index)
+    bim::net::client_token request_token, bim::game::feature_flags features,
+    std::size_t session_index)
 {
   ic_log(iscool::log::nature::info(), "matchmaking_service",
          "Refreshing encounter {} with {} players on request of session {}.",
@@ -303,6 +302,7 @@ void bim::server::matchmaking_service::refresh_encounter(
   // Update for a player on hold.
   if (session_index < encounter.player_count)
     {
+      encounter.features[session_index] = features;
       encounter.release_at_this_date[session_index] =
           matchmaking_date_for_next_release();
       remove_inactive_sessions(encounter_id, encounter);
@@ -312,7 +312,7 @@ void bim::server::matchmaking_service::refresh_encounter(
       remove_inactive_sessions(encounter_id, encounter);
 
       if (encounter.player_count != encounter.sessions.size())
-        encounter.insert(session);
+        encounter.insert(session, features);
       else
         // The encounter is full, we can't do anything for the requesting
         // session.

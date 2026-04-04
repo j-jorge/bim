@@ -28,9 +28,11 @@ namespace bim::net
     explicit new_game_exchange(const iscool::net::message_stream& stream);
     ~new_game_exchange();
 
-    void start(iscool::net::session_id session, const game_name& name);
-    void start(iscool::net::session_id session);
-    void accept(bim::game::feature_flags features);
+    void start(iscool::net::session_id session,
+               bim::game::feature_flags features, const game_name& name);
+    void start(iscool::net::session_id session,
+               bim::game::feature_flags features);
+    void accept();
     void stop();
 
   private:

@@ -36,6 +36,7 @@ bim::net::new_game_exchange::new_game_exchange(
 bim::net::new_game_exchange::~new_game_exchange() = default;
 
 void bim::net::new_game_exchange::start(iscool::net::session_id session,
+                                        bim::game::feature_flags features,
                                         const game_name& name)
 {
   ic_log(iscool::log::nature::info(), "new_game_exchange",
@@ -45,11 +46,13 @@ void bim::net::new_game_exchange::start(iscool::net::session_id session,
   m_monitor->set_start_named_state();
 
   internal_start(session);
-  new_named_game_request(m_token, name).build_message(m_client_message);
+  new_named_game_request(m_token, features, name)
+      .build_message(m_client_message);
   tick();
 }
 
-void bim::net::new_game_exchange::start(iscool::net::session_id session)
+void bim::net::new_game_exchange::start(iscool::net::session_id session,
+                                        bim::game::feature_flags features)
 {
   ic_log(iscool::log::nature::info(), "new_game_exchange",
          "Requesting random game in session {}.", session);
@@ -57,11 +60,11 @@ void bim::net::new_game_exchange::start(iscool::net::session_id session)
   m_monitor->set_start_random_state();
 
   internal_start(session);
-  new_random_game_request(m_token).build_message(m_client_message);
+  new_random_game_request(m_token, features).build_message(m_client_message);
   tick();
 }
 
-void bim::net::new_game_exchange::accept(bim::game::feature_flags features)
+void bim::net::new_game_exchange::accept()
 {
   assert(!!m_encounter_id);
 
@@ -73,13 +76,13 @@ void bim::net::new_game_exchange::accept(bim::game::feature_flags features)
   if (m_monitor->is_start_named_state())
     {
       m_monitor->set_accept_named_state();
-      accept_named_game(m_token, *m_encounter_id, features)
+      accept_named_game(m_token, *m_encounter_id)
           .build_message(m_client_message);
     }
   else
     {
       m_monitor->set_accept_random_state();
-      accept_random_game(m_token, *m_encounter_id, features)
+      accept_random_game(m_token, *m_encounter_id)
           .build_message(m_client_message);
     }
 }
