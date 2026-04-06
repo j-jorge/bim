@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #pragma once
 
+#include <bim/server/service/bot_availability_fwd.hpp>
 #include <bim/server/service/game_reward_availability_fwd.hpp>
 
 #include <bim/game/archive_storage.hpp>
@@ -47,7 +48,8 @@ namespace bim::server
     new_game(std::uint8_t player_count, bim::game::feature_flags features,
              const std::array<iscool::net::session_id,
                               bim::game::g_max_player_count>& sessions,
-             game_reward_availability reward_availability);
+             game_reward_availability reward_availability,
+             bot_availability bot);
 
     void process(const iscool::net::endpoint& endpoint,
                  const iscool::net::message& message);

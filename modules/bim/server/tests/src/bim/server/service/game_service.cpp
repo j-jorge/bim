@@ -3,6 +3,7 @@
 #include <bim/server/tests/new_test_config.hpp>
 
 #include <bim/server/config.hpp>
+#include <bim/server/service/bot_availability.hpp>
 #include <bim/server/service/game_info.hpp>
 #include <bim/server/service/game_reward_availability.hpp>
 #include <bim/server/service/game_service.hpp>
@@ -10,6 +11,8 @@
 #include <bim/server/service/statistics_service.hpp>
 
 #include <iscool/net/socket_stream.hpp>
+
+#include <algorithm>
 
 #include <gtest/gtest.h>
 
@@ -28,14 +31,19 @@ TEST(game_service, new_game)
 
   const bim::server::game_info game =
       service.new_game(4, features, { 11, 22, 33, 44 },
-                       bim::server::game_reward_availability::available);
+                       bim::server::game_reward_availability::available,
+                       bim::server::bot_availability::unavailable);
+
+  // The server shuffles the sessions. We sort them back for the checks.
+  std::array<iscool::net::session_id, 4> sorted_sessions(game.sessions);
+  std::sort(sorted_sessions.begin(), sorted_sessions.end());
 
   EXPECT_EQ(4, game.fingerprint.player_count);
   EXPECT_EQ(features, game.fingerprint.features);
-  EXPECT_EQ(11, game.sessions[0]);
-  EXPECT_EQ(22, game.sessions[1]);
-  EXPECT_EQ(33, game.sessions[2]);
-  EXPECT_EQ(44, game.sessions[3]);
+  EXPECT_EQ(11, sorted_sessions[0]);
+  EXPECT_EQ(22, sorted_sessions[1]);
+  EXPECT_EQ(33, sorted_sessions[2]);
+  EXPECT_EQ(44, sorted_sessions[3]);
 
   EXPECT_NE(44, game.channel);
   EXPECT_FALSE(!!service.find_game(44));
@@ -47,10 +55,10 @@ TEST(game_service, new_game)
 
   EXPECT_EQ(4, game_opt->fingerprint.player_count);
   EXPECT_EQ(features, game_opt->fingerprint.features);
-  EXPECT_EQ(11, game_opt->sessions[0]);
-  EXPECT_EQ(22, game_opt->sessions[1]);
-  EXPECT_EQ(33, game_opt->sessions[2]);
-  EXPECT_EQ(44, game_opt->sessions[3]);
+  EXPECT_EQ(game.sessions[0], game_opt->sessions[0]);
+  EXPECT_EQ(game.sessions[1], game_opt->sessions[1]);
+  EXPECT_EQ(game.sessions[2], game_opt->sessions[2]);
+  EXPECT_EQ(game.sessions[3], game_opt->sessions[3]);
 
   std::this_thread::sleep_for(std::chrono::seconds(0));
   scheduler.tick(std::chrono::minutes(10));

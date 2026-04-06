@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/game/is_solid.hpp>
 
+#include <bim/game/component/solid.hpp>
 #include <bim/game/entity_world_map.hpp>
 
 #include <entt/entity/registry.hpp>

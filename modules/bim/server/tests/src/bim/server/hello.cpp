@@ -132,7 +132,7 @@ TEST_F(hello_test, stats)
     client.authenticate();
 
   for (int i = 0; i != 3; ++i)
-    clients[i].new_game();
+    clients[i].new_game_auto_accept();
 
   int started_count = 0;
   for (int i = 0; (i != 500) && (started_count != 3); ++i)

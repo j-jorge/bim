@@ -353,11 +353,23 @@ static command_line parse_command_line(int argc, char* argv[])
 
   boost::program_options::options_description matchmaking_options(
       "Matchmaking config options");
+  matchmaking_options.add_options()("enable-bots",
+                                    "Whether or not we use bots as opponents "
+                                    "for players who cannot be matched.");
   matchmaking_options.add_options()(
       "matchmaking-clean-up-interval",
       boost::program_options::value<std::int64_t>(),
       "Time interval in seconds at which we remove the "
       "encounters from the matchmaking.");
+  matchmaking_options.add_options()(
+      "matchmaking-delay-for-bot",
+      boost::program_options::value<std::int64_t>(),
+      "How long to wait before proposing a bot in a random opopnent request.");
+  matchmaking_options.add_options()(
+      "matchmaking-delay-for-release",
+      boost::program_options::value<std::int64_t>(),
+      "How long to wait before removing a player for an opponent request if "
+      "they don't tell us that they are ready.");
   matchmaking_options.add_options()(
       "random-game-auto-start-delay",
       boost::program_options::value<std::int64_t>(),
@@ -519,7 +531,10 @@ static command_line parse_command_line(int argc, char* argv[])
   parse_config_option(name);
   parse_config_option(session_clean_up_interval);
   parse_config_option(session_removal_delay);
+  parse_config_option(enable_bots);
   parse_config_option(matchmaking_clean_up_interval);
+  parse_config_option(matchmaking_delay_for_bot);
+  parse_config_option(matchmaking_delay_for_release);
   parse_config_option(random_game_auto_start_delay);
   parse_config_option(game_service_clean_up_interval);
   parse_config_option(game_service_disconnection_lateness_threshold_in_ticks);

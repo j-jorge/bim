@@ -41,7 +41,7 @@ void bim::server::tests::client_server_simulator::authenticate()
 void bim::server::tests::client_server_simulator::join_game()
 {
   for (int i = 0; i != m_player_count; ++i)
-    clients[i].new_game();
+    clients[i].new_game_auto_accept();
 
   // Let the time pass such that the messages can move between the clients and
   // the server.

@@ -2,6 +2,7 @@
 #include <bim/server/service/matchmaking_service.hpp>
 
 #include <bim/server/config.hpp>
+#include <bim/server/service/bot_availability.hpp>
 #include <bim/server/service/game_info.hpp>
 #include <bim/server/service/game_service.hpp>
 
@@ -21,12 +22,6 @@
 #include <cassert>
 #include <optional>
 
-static std::chrono::nanoseconds matchmaking_date_for_next_release()
-{
-  return iscool::time::now<std::chrono::nanoseconds>()
-         + std::chrono::seconds(5);
-}
-
 struct bim::server::matchmaking_service::encounter_info
 {
   std::uint8_t player_count;
@@ -34,6 +29,8 @@ struct bim::server::matchmaking_service::encounter_info
   std::array<iscool::net::session_id, bim::game::g_max_player_count> sessions;
   std::array<std::chrono::nanoseconds, bim::game::g_max_player_count>
       release_at_this_date;
+  std::array<std::chrono::nanoseconds, bim::game::g_max_player_count>
+      date_for_bot;
   std::array<bool, bim::game::g_max_player_count> ready;
   std::optional<iscool::net::channel_id> channel;
 
@@ -55,7 +52,6 @@ struct bim::server::matchmaking_service::encounter_info
     ++player_count;
     features[new_index] = f;
     sessions[new_index] = session;
-    release_at_this_date[new_index] = matchmaking_date_for_next_release();
     ready[new_index] = 0;
     channel = std::nullopt;
   }
@@ -71,6 +67,8 @@ struct bim::server::matchmaking_service::encounter_info
     std::copy(release_at_this_date.begin() + i + 1,
               release_at_this_date.begin() + player_count,
               release_at_this_date.begin() + i);
+    std::copy(date_for_bot.begin() + i + 1,
+              date_for_bot.begin() + player_count, date_for_bot.begin() + i);
     std::copy(ready.begin() + i + 1, ready.begin() + player_count,
               ready.begin() + i);
     --player_count;
@@ -86,14 +84,17 @@ struct bim::server::matchmaking_service::encounter_info
 
 bim::server::matchmaking_service::matchmaking_service(
     const config& config, iscool::net::socket_stream& socket,
-    game_service& game_service, game_reward_availability reward_availability)
+    game_service& game_service, game_reward_availability reward_availability,
+    bot_availability bot)
   : m_message_stream(socket)
   , m_game_service(game_service)
   , m_reward_availability(reward_availability)
   , m_next_encounter_id(1)
+  , m_enable_bots(config.enable_bots && (bot == bot_availability::available))
+  , m_delay_for_bot(config.matchmaking_delay_for_bot)
+  , m_delay_for_release(config.matchmaking_delay_for_release)
   , m_clean_up_interval(config.matchmaking_clean_up_interval)
   , m_message_pool(64)
-  , m_random(config.random_seed)
 {
   m_done_encounters.reserve(8);
 
@@ -113,6 +114,9 @@ bim::net::encounter_id bim::server::matchmaking_service::new_encounter(
   const bim::net::encounter_id encounter_id = m_next_encounter_id;
   ++m_next_encounter_id;
 
+  const std::chrono::nanoseconds now =
+      iscool::time::now<std::chrono::nanoseconds>();
+
   assert(m_encounters.find(encounter_id) == m_encounters.end());
   encounter_info& encounter = m_encounters[encounter_id];
 
@@ -120,7 +124,8 @@ bim::net::encounter_id bim::server::matchmaking_service::new_encounter(
   encounter.sessions[0] = session;
   encounter.features.fill({});
   encounter.features[0] = features;
-  encounter.release_at_this_date[0] = matchmaking_date_for_next_release();
+  encounter.release_at_this_date[0] = now + m_delay_for_release;
+  encounter.date_for_bot[0] = now + m_delay_for_bot;
   encounter.ready.fill(false);
 
   send_game_on_hold(endpoint, request_token, session, encounter_id,
@@ -203,8 +208,10 @@ void bim::server::matchmaking_service::mark_as_ready(
       return;
     }
 
-  encounter.release_at_this_date[existing_index] =
-      matchmaking_date_for_next_release();
+  const std::chrono::nanoseconds now =
+      iscool::time::now<std::chrono::nanoseconds>();
+
+  encounter.release_at_this_date[existing_index] = now + m_delay_for_release;
   encounter.ready[existing_index] = true;
 
   if (!encounter.channel)
@@ -220,10 +227,26 @@ void bim::server::matchmaking_service::mark_as_ready(
   for (int i = 0; i != encounter.player_count; ++i)
     ready_count += encounter.ready[i];
 
-  if ((ready_count != encounter.player_count) || (ready_count <= 1))
+  // The default is to start the game when we have at least two players in the
+  // encounter and that all of them are ready. We may relax the two players
+  // constraint if bots are allowed, in which case we need a single player.
+  int required_players;
+  bool enable_bot = false;
+
+  if (encounter.player_count >= 2)
+    required_players = encounter.player_count;
+  else if (m_enable_bots && (now >= encounter.date_for_bot[existing_index]))
+    {
+      required_players = 1;
+      enable_bot = true;
+    }
+  else
+    required_players = 2;
+
+  if (ready_count != required_players)
     {
       send_game_on_hold(endpoint, request_token, session, encounter_id,
-                        encounter.player_count);
+                        encounter.player_count + enable_bot);
       return;
     }
 
@@ -239,20 +262,17 @@ void bim::server::matchmaking_service::mark_as_ready(
     }
   else
     {
-      std::array<iscool::net::session_id, bim::game::g_max_player_count>
-          sessions(encounter.sessions);
-      std::shuffle(sessions.begin(), sessions.begin() + encounter.player_count,
-                   m_random);
-
-      game = m_game_service.new_game(encounter.player_count,
-                                     encounter.combine_features(), sessions,
-                                     m_reward_availability);
+      game = m_game_service.new_game(
+          encounter.player_count, encounter.combine_features(),
+          encounter.sessions, m_reward_availability,
+          enable_bot ? bot_availability::available
+                     : bot_availability::unavailable);
       encounter.channel = game->channel;
 
       ic_log(iscool::log::nature::info(), "matchmaking_service",
-             "Channel for encounter {} is {}, seed {}, features={:x}.",
+             "Channel for encounter {} is {}, seed {}, features={:x}, bot={}.",
              it->first, game->channel, game->fingerprint.seed,
-             bim::to_underlying(game->fingerprint.features));
+             bim::to_underlying(game->fingerprint.features), enable_bot);
     }
 
   const bim::game::contest_fingerprint& fingerprint = game->fingerprint;
@@ -299,12 +319,15 @@ void bim::server::matchmaking_service::refresh_encounter(
          "Refreshing encounter {} with {} players on request of session {}.",
          encounter_id, (int)encounter.player_count, session);
 
+  const std::chrono::nanoseconds now =
+      iscool::time::now<std::chrono::nanoseconds>();
+
   // Update for a player on hold.
   if (session_index < encounter.player_count)
     {
       encounter.features[session_index] = features;
       encounter.release_at_this_date[session_index] =
-          matchmaking_date_for_next_release();
+          now + m_delay_for_release;
       remove_inactive_sessions(encounter_id, encounter);
     }
   else
@@ -312,16 +335,32 @@ void bim::server::matchmaking_service::refresh_encounter(
       remove_inactive_sessions(encounter_id, encounter);
 
       if (encounter.player_count != encounter.sessions.size())
-        encounter.insert(session, features);
+        {
+          encounter.insert(session, features);
+
+          encounter.release_at_this_date[session_index] =
+              now + m_delay_for_release;
+          encounter.date_for_bot[session_index] = now + m_delay_for_bot;
+        }
       else
         // The encounter is full, we can't do anything for the requesting
         // session.
         return;
     }
 
-  if (encounter.player_count != 0)
-    send_game_on_hold(endpoint, request_token, session, encounter_id,
-                      encounter.player_count);
+  int player_count = encounter.player_count;
+
+  if (player_count != 0)
+    {
+      // Pretend there's two players if we have only one player and we have
+      // reached the date to provide them a bot.
+      if ((player_count == 1) && m_enable_bots
+          && (now >= encounter.date_for_bot[session_index]))
+        ++player_count;
+
+      send_game_on_hold(endpoint, request_token, session, encounter_id,
+                        player_count);
+    }
 }
 
 void bim::server::matchmaking_service::send_game_on_hold(

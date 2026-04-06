@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #pragma once
 
+#include <bim/server/service/bot_availability_fwd.hpp>
 #include <bim/server/service/game_reward_availability_fwd.hpp>
 
 #include <bim/net/message/client_token.hpp>
@@ -15,7 +16,6 @@
 #include <boost/unordered/unordered_map.hpp>
 
 #include <optional>
-#include <random>
 #include <span>
 #include <string>
 #include <vector>
@@ -51,7 +51,8 @@ namespace bim::server
     matchmaking_service(const config& config,
                         iscool::net::socket_stream& socket,
                         game_service& game_service,
-                        game_reward_availability reward_availability);
+                        game_reward_availability reward_availability,
+                        bot_availability b);
     ~matchmaking_service();
 
     bim::net::encounter_id new_encounter(const iscool::net::endpoint& endpoint,
@@ -121,14 +122,16 @@ namespace bim::server
     encounter_map m_encounters;
     bim::net::encounter_id m_next_encounter_id;
 
+    const bool m_enable_bots;
+    const std::chrono::seconds m_delay_for_bot;
+    const std::chrono::seconds m_delay_for_release;
+
     iscool::schedule::scoped_connection m_clean_up_connection;
-    std::chrono::seconds m_clean_up_interval;
+    const std::chrono::seconds m_clean_up_interval;
 
     std::vector<kick_session_event> m_done_sessions;
     std::vector<bim::net::encounter_id> m_done_encounters;
 
     iscool::net::message_pool m_message_pool;
-
-    std::mt19937_64 m_random;
   };
 }

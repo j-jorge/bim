@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/server/service/game_service.hpp>
 
+#include <bim/server/service/bot_availability.hpp>
 #include <bim/server/service/game_reward_availability.hpp>
 
 #include <bim/server/config.hpp>
@@ -17,6 +18,7 @@
 #include <bim/net/message/try_deserialize_message.hpp>
 
 #include <bim/game/arena.hpp>
+#include <bim/game/bot.hpp>
 #include <bim/game/component/player.hpp>
 #include <bim/game/component/player_action.hpp>
 #include <bim/game/constant/default_arena_size.hpp>
@@ -117,15 +119,19 @@ struct bim::server::game_service::game
                   | ______|___
                   v/          \
     Player #2 ~~~~------------->
-
-    Player #3 ~~~~~~~~~~---->
+                          actions[3]
+                    ______|_
+                   /        \
+    Player #3 ~~~~~~~~~~----->
   */
 
 public:
   game(std::uint8_t player_count, std::uint64_t seed,
        bim::game::feature_flags features,
        const std::array<iscool::net::session_id,
-                        bim::game::g_max_player_count>& sessions)
+                        bim::game::g_max_player_count>& sessions,
+       game_reward_availability reward_availability,
+       std::optional<std::uint8_t> bot_index)
     : seed(seed)
     , features(features)
     , player_count(player_count)
@@ -133,6 +139,7 @@ public:
     , simulation_tick(0)
     , completed_tick_count_all(0)
     , contest_result(bim::game::contest_result::create_still_running())
+    , reward_availability(reward_availability)
     , contest({ .seed = seed,
                 .features = features,
                 .player_count = player_count,
@@ -148,6 +155,15 @@ public:
       actions[i].reserve(32);
 
     push_game_state_checksum();
+
+    bot.fill(false);
+
+    if (bot_index)
+      {
+        bot[*bot_index] = true;
+        m_bot.reset(new bim::game::bot(*bot_index, contest.arena().width(),
+                                       contest.arena().height(), seed));
+      }
   }
 
   bim::game::contest_fingerprint contest_fingerprint() const
@@ -238,7 +254,9 @@ private:
 
     for (std::uint8_t player_index = 0; player_index != player_count;
          ++player_index)
-      if (active[player_index])
+      // Ignore the bots, as their actions will be computed in
+      // seal_player_actions() below.
+      if (active[player_index] && !bot[player_index])
         {
           const std::size_t player_offset_to_simulation =
               completed_tick_count_all + actions[player_index].size()
@@ -294,6 +312,12 @@ private:
                 {
                   const std::size_t action_index = action_base_index + i;
 
+                  if (m_bot && (p == m_bot->player_index()))
+                    {
+                      assert(action_index == actions[p].size());
+                      actions[p].push_back(m_bot->think(contest));
+                    }
+
                   assert(action_index < actions[p].size());
                   *player_actions[p] = actions[p][action_index];
                 }
@@ -331,6 +355,7 @@ public:
   std::array<iscool::net::session_id, bim::game::g_max_player_count> sessions;
   std::array<bool, bim::game::g_max_player_count> ready;
   std::array<bool, bim::game::g_max_player_count> active;
+  std::array<bool, bim::game::g_max_player_count> bot;
 
   /**
    * The tick reached by every player. At this point, the clients may not know
@@ -355,8 +380,8 @@ public:
       completed_tick_count_per_player;
 
   /**
-   * The actions to apply starting from completed_tick_count_per_player, for
-   * each player. One player_action per tick.
+   * The actions to apply starting from completed_tick_count_all, for each
+   * player. One player_action per tick.
    */
   std::array<std::vector<bim::game::player_action>,
              bim::game::g_max_player_count>
@@ -380,6 +405,9 @@ public:
   bim::game::contest contest;
 
   bim::game::contest_timeline_writer timeline_writer;
+
+private:
+  std::unique_ptr<bim::game::bot> m_bot;
 };
 
 bim::server::game_service::game_service(const config& config,
@@ -453,10 +481,37 @@ bim::server::game_info bim::server::game_service::new_game(
     std::uint8_t player_count, bim::game::feature_flags features,
     const std::array<iscool::net::session_id, bim::game::g_max_player_count>&
         sessions,
-    game_reward_availability reward_availability)
+    game_reward_availability reward_availability, bot_availability bot)
 {
   const iscool::net::channel_id channel = m_next_game_channel;
   ++m_next_game_channel;
+
+  std::array<iscool::net::session_id, bim::game::g_max_player_count>
+      final_sessions(sessions);
+
+  std::shuffle(final_sessions.begin(), final_sessions.begin() + player_count,
+               m_random);
+
+  std::optional<std::uint8_t> bot_index;
+
+  if (bot == bot_availability::available)
+    {
+      assert(player_count == 1);
+
+      bot_index =
+          std::uniform_int_distribution<int>(0, player_count)(m_random);
+      std::copy_backward(final_sessions.begin() + *bot_index,
+                         final_sessions.begin() + player_count,
+                         final_sessions.begin() + player_count + 1);
+      final_sessions[*bot_index] = m_session_service.new_bot_session();
+      ++player_count;
+    }
+
+#ifndef NDEBUG
+  for (std::size_t i = 0, n = player_count; i != n - 1; ++i)
+    for (std::size_t j = i + 1; j != n; ++j)
+      assert(final_sessions[i] != final_sessions[j]);
+#endif
 
   ic_log(iscool::log::nature::info(), "game_service",
          "Creating new game {} for {} players.", channel, (int)player_count);
@@ -465,13 +520,12 @@ bim::server::game_info bim::server::game_service::new_game(
       m_games
           .emplace(std::piecewise_construct, std::forward_as_tuple(channel),
                    std::forward_as_tuple(player_count, m_random(), features,
-                                         sessions))
+                                         final_sessions, reward_availability,
+                                         bot_index))
           .first->second;
 
-  game.reward_availability = reward_availability;
-
   for (int i = 0; i != player_count; ++i)
-    m_session_to_channel[sessions[i]] = channel;
+    m_session_to_channel[final_sessions[i]] = channel;
 
   const std::chrono::nanoseconds now =
       iscool::time::now<std::chrono::nanoseconds>();
@@ -484,6 +538,11 @@ bim::server::game_info bim::server::game_service::new_game(
       game.release_player_at_this_date[i] =
           now + m_disconnection_inactivity_delay;
     }
+
+  // No release date for bots.
+  if (bot_index)
+    game.release_player_at_this_date[*bot_index] =
+        std::chrono::nanoseconds::max();
 
   const bim::game::contest_fingerprint contest_fingerprint =
       game.contest_fingerprint();
@@ -566,7 +625,7 @@ void bim::server::game_service::mark_as_ready(
   for (int i = 0; i != game.player_count; ++i)
     {
       ready_count += game.ready[i];
-      active_count += game.active[i];
+      active_count += game.active[i] - game.bot[i];
     }
 
   if (ready_count != active_count)
@@ -678,11 +737,23 @@ std::optional<std::size_t> bim::server::game_service::validate_message(
     const game& game) const
 {
   if (player_index >= game.player_count)
-    return std::nullopt;
+    {
+      ic_log(
+          iscool::log::nature::info(), "game_service",
+          "Ignoring message: player is out of bounds, session={}, player={}.",
+          session, player_index);
+      return std::nullopt;
+    }
 
   // The player has been disconnected on the server's decision.
   if (!game.active[player_index])
-    return std::nullopt;
+    {
+      ic_log(
+          iscool::log::nature::info(), "game_service",
+          "Ignoring message: player is disconnected, session={}, player={}.",
+          session, player_index);
+      return std::nullopt;
+    }
 
   // A message from the player's past, maybe it took a longer path on the
   // network.
@@ -716,7 +787,8 @@ std::optional<std::size_t> bim::server::game_service::validate_message(
   // update.
   if (message.from_tick + tick_count <= player_tick)
     {
-      // This happens quite frequently, so no log for it.
+      // This happens quite frequently, so no log for it. We return a tick
+      // count to send an answer to the client and keep the exchange alive.
       return 0;
     }
 
@@ -883,12 +955,12 @@ void bim::server::game_service::record_game_over(
     {
       // In doubt, we do not update the karma of the winner.
       for (int i = 0; i != game.player_count; ++i)
-        if (i != game.winner_index)
+        if ((i != game.winner_index) && !game.bot[i])
           m_session_service.update_karma_short_game(game.sessions[i]);
     }
   else
     for (int i = 0; i != game.player_count; ++i)
-      if (game.active[i])
+      if (game.active[i] && !game.bot[i])
         m_session_service.update_karma_good_behavior(game.sessions[i]);
 }
 
@@ -919,6 +991,9 @@ void bim::server::game_service::check_drop_desynchronized_player(
                "Kicking out player={}, session={}, from game_id={}, due to "
                "lateness. No news since {}.",
                i, game.sessions[i], channel, m_disconnection_inactivity_delay);
+
+        assert(!game.bot[i]);
+
         game.active[i] = false;
         m_session_service.update_karma_disconnection(game.sessions[i]);
       }
@@ -928,10 +1003,10 @@ void bim::server::game_service::check_drop_desynchronized_player(
   int player_count = 0;
 
   for (int i = 0; i != game.player_count; ++i)
-    if (game.active[i])
+    if (game.active[i] && !game.bot[i])
       {
         player_tick[player_count] =
-            game.completed_tick_count_per_player[i] + game.actions[i].size();
+            game.completed_tick_count_all + game.actions[i].size();
         player_index[player_count] = i;
         ++player_count;
 
@@ -963,6 +1038,9 @@ void bim::server::game_service::check_drop_desynchronized_player(
              i, game.sessions[i], channel, slowest_tick,
              second_slowest_tick - slowest_tick, second_slowest_tick,
              m_disconnection_lateness_threshold_in_ticks);
+
+      assert(!game.bot[i]);
+
       game.active[i] = false;
       m_session_service.update_karma_disconnection(game.sessions[i]);
       return;
@@ -983,6 +1061,9 @@ void bim::server::game_service::check_drop_desynchronized_player(
              i, game.sessions[i], channel, fastest_tick,
              fastest_tick - second_fastest_tick, second_fastest_tick,
              m_disconnection_earliness_threshold_in_ticks);
+
+      assert(!game.bot[i]);
+
       game.active[i] = false;
       m_session_service.update_karma_disconnection(game.sessions[i]);
     }

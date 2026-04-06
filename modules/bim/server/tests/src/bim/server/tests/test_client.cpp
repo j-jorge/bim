@@ -47,8 +47,10 @@ void bim::server::tests::test_client::authenticate()
 
   m_authentication.start();
 
-  for (int i = 0; (i != 10) && !session; ++i)
+  for (int i = 0; (i != 100) && !session; ++i)
     m_scheduler.tick(std::chrono::milliseconds(20));
+
+  ASSERT_TRUE(!!session);
 }
 
 void bim::server::tests::test_client::new_game()
@@ -59,18 +61,24 @@ void bim::server::tests::test_client::new_game()
   m_game_update.reset();
   contest.reset();
   started = std::nullopt;
+  player_count_proposal = std::nullopt;
 
   m_game_proposal_connection = m_new_game.connect_to_game_proposal(
-      [this](int) -> void
+      [this](int player_count) -> void
         {
-          m_game_proposal_connection.disconnect();
-          m_new_game.accept();
+          player_count_proposal = player_count;
         });
 
   m_new_game.start(*session, {});
 }
 
-void bim::server::tests::test_client::new_game(const bim::net::game_name& name)
+void bim::server::tests::test_client::new_game_auto_accept()
+{
+  new_game_auto_accept({});
+}
+
+void bim::server::tests::test_client::new_game_auto_accept(
+    bim::game::feature_flags f)
 {
   ASSERT_TRUE(!!session);
 
@@ -78,52 +86,44 @@ void bim::server::tests::test_client::new_game(const bim::net::game_name& name)
   m_game_update.reset();
   contest.reset();
   started = std::nullopt;
+  player_count_proposal = std::nullopt;
 
   m_game_proposal_connection = m_new_game.connect_to_game_proposal(
-      [this](int) -> void
+      [this](int player_count) -> void
         {
-          m_game_proposal_connection.disconnect();
-          m_new_game.accept();
+          player_count_proposal = player_count;
+          accept_game();
+        });
+
+  m_new_game.start(*session, f);
+}
+
+void bim::server::tests::test_client::new_game_auto_accept(
+    const bim::net::game_name& name)
+{
+  ASSERT_TRUE(!!session);
+
+  m_message_channel.reset();
+  m_game_update.reset();
+  contest.reset();
+  started = std::nullopt;
+  player_count_proposal = std::nullopt;
+
+  m_game_proposal_connection = m_new_game.connect_to_game_proposal(
+      [this](int player_count) -> void
+        {
+          player_count_proposal = player_count;
+          accept_game();
         });
 
   m_new_game.start(*session, {}, name);
 }
 
-void bim::server::tests::test_client::launch_game(
-    iscool::net::message_stream& stream,
-    const bim::net::game_launch_event& event)
+void bim::server::tests::test_client::accept_game()
 {
-  EXPECT_TRUE(!!session);
-
-  player_index = event.player_index;
-
-  m_message_channel.reset(
-      new iscool::net::message_channel(stream, *session, event.channel));
-  m_game_update.reset(new bim::net::game_update_exchange(
-      *m_message_channel, event.fingerprint.player_count));
-  contest.reset(new bim::game::contest(event.fingerprint));
-  contest_runner.reset(new bim::net::contest_runner(
-      *contest, *m_game_update, event.player_index,
-      event.fingerprint.player_count));
-
-  m_game_update->connect_to_started(
-      [this]() -> void
-        {
-          started.emplace(true);
-        });
-
-  m_game_update->start();
-}
-
-void bim::server::tests::test_client::set_action(
-    const bim::game::player_action& action)
-{
-  bim::game::player_action* const p = bim::game::find_player_action_by_index(
-      contest->registry(), player_index);
-
-  ASSERT_NE(nullptr, p) << "player_index=" << player_index;
-
-  *p = action;
+  m_game_proposal_connection.disconnect();
+  result = bim::game::contest_result::create_still_running();
+  m_new_game.accept();
 }
 
 void bim::server::tests::test_client::tick(std::chrono::nanoseconds d)
@@ -144,4 +144,42 @@ void bim::server::tests::test_client::leave_game()
 {
   started = std::nullopt;
   m_game_update.reset();
+}
+
+void bim::server::tests::test_client::set_action(
+    const bim::game::player_action& action)
+{
+  bim::game::player_action* const p = bim::game::find_player_action_by_index(
+      contest->registry(), player_index);
+
+  ASSERT_NE(nullptr, p) << "player_index=" << player_index;
+
+  *p = action;
+}
+
+void bim::server::tests::test_client::launch_game(
+    iscool::net::message_stream& stream,
+    const bim::net::game_launch_event& event)
+{
+  EXPECT_TRUE(!!session);
+
+  player_index = event.player_index;
+  game_launch_event = event;
+
+  m_message_channel.reset(
+      new iscool::net::message_channel(stream, *session, event.channel));
+  m_game_update.reset(new bim::net::game_update_exchange(
+      *m_message_channel, event.fingerprint.player_count));
+  contest.reset(new bim::game::contest(event.fingerprint));
+  contest_runner.reset(new bim::net::contest_runner(
+      *contest, *m_game_update, event.player_index,
+      event.fingerprint.player_count));
+
+  m_game_update->connect_to_started(
+      [this]() -> void
+        {
+          started.emplace(true);
+        });
+
+  m_game_update->start();
 }
