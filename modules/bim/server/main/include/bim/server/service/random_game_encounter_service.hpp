@@ -51,6 +51,8 @@ namespace bim::server
         boost::unordered_map<bim::net::encounter_id, std::chrono::nanoseconds>;
 
   private:
+    void check_auto_start();
+
     void clean_up();
 
   private:
@@ -61,6 +63,6 @@ namespace bim::server
     session_to_encounter_map m_session_to_encounter;
     auto_start_date_map m_auto_start_date;
 
-    std::chrono::seconds m_auto_start_delay;
+    const std::chrono::seconds m_auto_start_delay;
   };
 }

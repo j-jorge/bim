@@ -2,7 +2,6 @@
 
 - Do not update the fog if there is no fog.
 - Standalone application with a bot playing online.
-- Wire a bot in the game server for when nobody is available.
 
 # Client
 
@@ -12,6 +11,7 @@
 
 # Nice to have
 
+- Pass -Wno-stringop-overflow and -Wno-alloc-size-larger-than to GCC globally.
 - Compute the client's ping on the server, use it to handle disconnections.
 - Move the context out of the contest. It's the same for every contest.
 - Set UBSAN_OPTIONS and co. to stop the tests on failure.

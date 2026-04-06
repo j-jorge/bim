@@ -26,6 +26,8 @@ namespace bim::server
     session_service(const config& config, statistics_service& statistics);
     ~session_service();
 
+    iscool::net::session_id new_bot_session();
+
     std::optional<iscool::net::session_id>
     create_or_refresh_session(const boost::asio::ip::address& address,
                               bim::net::client_token token);
@@ -57,7 +59,8 @@ namespace bim::server
     karma_service m_karma;
     statistics_service& m_statistics;
 
-    iscool::net::session_id m_next_session_id;
+    iscool::net::session_id m_next_real_session_id;
+    iscool::net::session_id m_next_bot_session_id;
 
     session_map m_sessions;
     client_map m_clients;

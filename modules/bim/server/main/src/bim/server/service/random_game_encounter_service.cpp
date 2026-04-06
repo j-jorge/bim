@@ -2,6 +2,7 @@
 #include <bim/server/service/random_game_encounter_service.hpp>
 
 #include <bim/server/config.hpp>
+#include <bim/server/service/bot_availability.hpp>
 #include <bim/server/service/discord_publisher_service.hpp>
 #include <bim/server/service/game_reward_availability.hpp>
 #include <bim/server/service/game_service.hpp>
@@ -19,7 +20,8 @@ bim::server::random_game_encounter_service::random_game_encounter_service(
   : m_game_service(game_service)
   , m_discord(discord)
   , m_matchmaking_service(config, socket, game_service,
-                          game_reward_availability::available)
+                          game_reward_availability::available,
+                          bot_availability::available)
   , m_auto_start_delay(config.random_game_auto_start_delay)
 {}
 

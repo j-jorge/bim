@@ -45,10 +45,12 @@ add_executable(server-tests
   tests/src/bim/server/game_update.cpp
   tests/src/bim/server/hello.cpp
   tests/src/bim/server/karma_blacklisting.cpp
-  tests/src/bim/server/player_disconnection.cpp
+  tests/src/bim/server/many_games.cpp
   tests/src/bim/server/new_named_game.cpp
   tests/src/bim/server/new_game_after_game_over.cpp
+  tests/src/bim/server/player_disconnection.cpp
   tests/src/bim/server/rolling_statistics.cpp
+  tests/src/bim/server/server_bots.cpp
 
   tests/src/bim/server/service/game_info.cpp
   tests/src/bim/server/service/game_service.cpp

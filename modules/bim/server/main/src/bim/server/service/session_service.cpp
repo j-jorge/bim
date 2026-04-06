@@ -10,6 +10,8 @@
 #include <iscool/signals/implement_signal.hpp>
 #include <iscool/time/now.hpp>
 
+#include <cassert>
+
 struct bim::server::session_service::client_info
 {
   boost::asio::ip::address address;
@@ -17,12 +19,16 @@ struct bim::server::session_service::client_info
   std::chrono::nanoseconds release_at_this_date;
 };
 
+static constexpr iscool::net::session_id g_bot_min_session =
+    std::numeric_limits<iscool::net::session_id>::max() / 2 + 1;
+
 bim::server::session_service::session_service(const config& config,
                                               statistics_service& statistics)
   : m_geoloc(config)
   , m_karma(config)
   , m_statistics(statistics)
-  , m_next_session_id(1)
+  , m_next_real_session_id(1)
+  , m_next_bot_session_id(g_bot_min_session)
   , m_clean_up_interval(config.session_clean_up_interval)
   , m_session_removal_delay(config.session_removal_delay)
 {
@@ -31,6 +37,23 @@ bim::server::session_service::session_service(const config& config,
 
 bim::server::session_service::~session_service() = default;
 
+iscool::net::session_id bim::server::session_service::new_bot_session()
+{
+  const iscool::net::session_id result = m_next_bot_session_id;
+
+  if (m_next_bot_session_id
+      == std::numeric_limits<iscool::net::session_id>::max())
+    {
+      ic_log(iscool::log::nature::info(), "session_service",
+             "Max bot session reached, looping.");
+      m_next_bot_session_id = g_bot_min_session;
+    }
+  else
+    ++m_next_bot_session_id;
+
+  return result;
+}
+
 std::optional<iscool::net::session_id>
 bim::server::session_service::create_or_refresh_session(
     const boost::asio::ip::address& address, bim::net::client_token token)
@@ -38,7 +61,14 @@ bim::server::session_service::create_or_refresh_session(
   if (!m_karma.allowed(address))
     return std::nullopt;
 
-  const iscool::net::session_id session = m_next_session_id;
+  if (m_next_real_session_id == g_bot_min_session)
+    {
+      ic_log(iscool::log::nature::info(), "session_service",
+             "Max session reached, no new session can be created.");
+      return std::nullopt;
+    }
+
+  const iscool::net::session_id session = m_next_real_session_id;
 
   session_map::const_iterator it;
   bool inserted;
@@ -57,7 +87,7 @@ bim::server::session_service::create_or_refresh_session(
          it->second, token, address_info.id, address_info.country_code,
          address_info.country);
 
-  ++m_next_session_id;
+  ++m_next_real_session_id;
 
   client_info client{ .address = address,
                       .token = token,
@@ -72,6 +102,8 @@ bim::server::session_service::create_or_refresh_session(
 bool bim::server::session_service::refresh_session(
     iscool::net::session_id session)
 {
+  assert(session < g_bot_min_session);
+
   const client_map::iterator it = m_clients.find(session);
 
   if (it == m_clients.end())
@@ -85,6 +117,8 @@ bool bim::server::session_service::refresh_session(
 void bim::server::session_service::update_karma_disconnection(
     iscool::net::session_id session)
 {
+  assert(session < g_bot_min_session);
+
   const client_map::iterator it = m_clients.find(session);
 
   if (it == m_clients.end())
@@ -100,6 +134,8 @@ void bim::server::session_service::update_karma_disconnection(
 void bim::server::session_service::update_karma_short_game(
     iscool::net::session_id session)
 {
+  assert(session < g_bot_min_session);
+
   const client_map::iterator it = m_clients.find(session);
 
   if (it == m_clients.end())
@@ -113,6 +149,8 @@ void bim::server::session_service::update_karma_short_game(
 void bim::server::session_service::update_karma_good_behavior(
     iscool::net::session_id session)
 {
+  assert(session < g_bot_min_session);
+
   const client_map::iterator it = m_clients.find(session);
 
   if (it == m_clients.end())

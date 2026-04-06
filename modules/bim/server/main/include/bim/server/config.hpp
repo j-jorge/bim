@@ -28,9 +28,26 @@ namespace bim::server
     std::chrono::seconds session_removal_delay;
 
     /**
+     * Whether or not we use bots as opponents for players who cannot be
+     * matched.
+     */
+    bool enable_bots;
+
+    /**
      * Time interval at which we remove the encounters from the matchmaking.
      */
     std::chrono::seconds matchmaking_clean_up_interval;
+
+    /**
+     * How long to wait before removing a player for an opponent request if
+     * they don't tell us that they are ready.
+     */
+    std::chrono::seconds matchmaking_delay_for_release;
+
+    /**
+     * How long to wait before proposing a bot in a random opopnent request.
+     */
+    std::chrono::seconds matchmaking_delay_for_bot;
 
     /**
      * How long to wait for the players to be ready before automatically
