@@ -7,6 +7,7 @@
 #include <bim/game/component/bomb_power_up.hpp>
 #include <bim/game/component/bomb_power_up_spawner.hpp>
 #include <bim/game/component/burning.hpp>
+#include <bim/game/component/clock.hpp>
 #include <bim/game/component/crate.hpp>
 #include <bim/game/component/crushed.hpp>
 #include <bim/game/component/dead.hpp>
@@ -17,6 +18,7 @@
 #include <bim/game/component/flame_power_up_spawner.hpp>
 #include <bim/game/component/fog_of_war.hpp>
 #include <bim/game/component/fractional_position_on_grid.hpp>
+#include <bim/game/component/game_clock.hpp>
 #include <bim/game/component/game_timer.hpp>
 #include <bim/game/component/invincibility_state.hpp>
 #include <bim/game/component/invisibility_power_up.hpp>

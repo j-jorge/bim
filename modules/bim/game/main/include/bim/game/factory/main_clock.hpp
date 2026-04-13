@@ -7,6 +7,5 @@
 
 namespace bim::game
 {
-  entt::entity main_timer_factory(entt::registry& registry,
-                                  std::chrono::milliseconds delay);
+  entt::entity main_clock_factory(entt::registry& registry);
 }

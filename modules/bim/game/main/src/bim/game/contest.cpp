@@ -14,6 +14,7 @@
 #include <bim/game/entity_world_map.hpp>
 #include <bim/game/factory/arena_reduction.hpp>
 #include <bim/game/factory/fog_of_war.hpp>
+#include <bim/game/factory/main_clock.hpp>
 #include <bim/game/factory/main_timer.hpp>
 #include <bim/game/factory/player.hpp>
 #include <bim/game/feature_flags.hpp>
@@ -25,6 +26,7 @@
 #include <bim/game/system/remove_dead_objects.hpp>
 #include <bim/game/system/update_bomb_power_ups.hpp>
 #include <bim/game/system/update_bombs.hpp>
+#include <bim/game/system/update_clocks.hpp>
 #include <bim/game/system/update_crates.hpp>
 #include <bim/game/system/update_falling_blocks.hpp>
 #include <bim/game/system/update_flame_power_ups.hpp>
@@ -188,6 +190,8 @@ bim::game::contest::contest(const contest_fingerprint& fingerprint)
   else
     main_timer_factory(*m_registry, std::chrono::minutes(3));
 
+  main_clock_factory(*m_registry);
+
   if (!!(fingerprint.features & feature_flags::fog_of_war))
     add_fog_of_war(*m_registry, fingerprint.player_count,
                    fingerprint.arena_width, fingerprint.arena_height, random);
@@ -221,6 +225,7 @@ bim::game::contest_result bim::game::contest::tick()
 #define run_system_t(t, f, ...) run_system(#t, f<t>(__VA_ARGS__))
 
   run_system_s(refresh_bomb_inventory, *m_registry);
+  run_system_s(update_clocks, *m_registry, tick_interval);
   run_system_s(update_timers, *m_registry, tick_interval);
   run_system_s(animator, *m_context, *m_registry, tick_interval);
 

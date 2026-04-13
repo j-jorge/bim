@@ -10,6 +10,7 @@ bim_game_x_component(animation_state)                   //
     bim_game_x_component(bomb_power_up)                 //
     bim_game_x_component(bomb_power_up_spawner)         //
     bim_game_x_component(burning)                       //
+    bim_game_x_component(clock)                         //
     bim_game_x_component(crate)                         //
     bim_game_x_component(crushed)                       //
     bim_game_x_component(dead)                          //
@@ -20,6 +21,7 @@ bim_game_x_component(animation_state)                   //
     bim_game_x_component(flame_power_up_spawner)        //
     bim_game_x_component(fog_of_war)                    //
     bim_game_x_component(fractional_position_on_grid)   //
+    bim_game_x_component(game_clock)                    //
     bim_game_x_component(game_timer)                    //
     bim_game_x_component(invincibility_state)           //
     bim_game_x_component(invisibility_power_up)         //

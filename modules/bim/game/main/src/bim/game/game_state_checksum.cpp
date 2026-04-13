@@ -86,6 +86,12 @@ static void update_checksum(checksum_state& checksum_state,
 }
 
 static void update_checksum(checksum_state& checksum_state,
+                            const bim::game::clock& c)
+{
+  push_checksum_bytes(checksum_state, c.date.count());
+}
+
+static void update_checksum(checksum_state& checksum_state,
                             const bim::game::flame& c)
 {
   push_checksum_bytes(checksum_state, c.direction);

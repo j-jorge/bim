@@ -48,6 +48,7 @@ add_library(bim_game
   main/src/bim/game/factory/fog_of_war.cpp
   main/src/bim/game/factory/invincibility_state.cpp
   main/src/bim/game/factory/invisibility_state.cpp
+  main/src/bim/game/factory/main_clock.cpp
   main/src/bim/game/factory/main_timer.cpp
   main/src/bim/game/factory/player.cpp
   main/src/bim/game/factory/power_up.cpp
@@ -62,6 +63,7 @@ add_library(bim_game
   main/src/bim/game/system/remove_dead_objects.cpp
   main/src/bim/game/system/update_bomb_power_ups.cpp
   main/src/bim/game/system/update_bombs.cpp
+  main/src/bim/game/system/update_clocks.cpp
   main/src/bim/game/system/update_crates.cpp
   main/src/bim/game/system/update_falling_blocks.cpp
   main/src/bim/game/system/update_flame_power_ups.cpp
@@ -105,6 +107,7 @@ if (BIM_BUILD_TESTS)
     tests/src/bim/game/system/remove_dead_objects.cpp
     tests/src/bim/game/system/update_bomb_power_ups.cpp
     tests/src/bim/game/system/update_bombs.cpp
+    tests/src/bim/game/system/update_clocks.cpp
     tests/src/bim/game/system/update_crates.cpp
     tests/src/bim/game/system/update_falling_blocks.cpp
     tests/src/bim/game/system/update_flame_power_ups.cpp
