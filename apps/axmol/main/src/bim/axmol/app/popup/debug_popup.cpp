@@ -32,7 +32,7 @@
 
 #include <bim/net/session_handler.hpp>
 
-#include <bim/version.hpp>
+#include <bim/dev.hpp>
 
 #include <iscool/preferences/local_preferences.hpp>
 #include <iscool/system/language_name.hpp>

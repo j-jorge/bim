@@ -22,8 +22,6 @@ namespace bim
 #endif
       ;
 
-  constexpr bool built_for_developers = BIM_DEV;
-
 #undef BIM_DEV
 #undef BIM_ANDROID_DEV
 #undef BIM_PURE_FOSS

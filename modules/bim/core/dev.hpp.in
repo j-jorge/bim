@@ -1,0 +1,17 @@
+#pragma once
+
+namespace bim
+{
+#cmakedefine01 BIM_ANDROID_DEV
+
+#if BIM_ANDROID_DEV || !defined(NDEBUG)
+  #define BIM_DEV 1
+#else
+  #define BIM_DEV 0
+#endif
+
+  constexpr bool built_for_developers = BIM_DEV;
+
+#undef BIM_DEV
+#undef BIM_ANDROID_DEV
+}

@@ -1,5 +1,6 @@
-configure_file(version.hpp.in include/bim/version.hpp @ONLY)
+configure_file(dev.hpp.in include/bim/dev.hpp @ONLY)
 configure_file(tracy.hpp.in include/bim/tracy.hpp @ONLY)
+configure_file(version.hpp.in include/bim/version.hpp @ONLY)
 
 set(library_files
   main/src/bim/crc32.cpp
