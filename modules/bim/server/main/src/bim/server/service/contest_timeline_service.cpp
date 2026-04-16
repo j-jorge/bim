@@ -31,9 +31,11 @@ bim::game::contest_timeline_writer bim::server::contest_timeline_service::open(
   // to discriminate.
 
   const std::time_t t = std::time(nullptr);
+  std::tm tm;
+  gmtime_r(&t, &tm);
   std::ostringstream oss;
-  oss << std::put_time(std::gmtime(&t), "%Y%m%d_%H%M%S") << '_' << getpid()
-      << '_' << this << '_' << std::setfill('0') << std::setw(10) << channel;
+  oss << std::put_time(&tm, "%Y%m%d_%H%M%S") << '_' << getpid() << '_' << this
+      << '_' << std::setfill('0') << std::setw(10) << channel;
   const std::string base_file_name(std::move(oss).str());
   std::string file_path;
   file_path.reserve(m_directory.size() + sizeof('/') + base_file_name.size()

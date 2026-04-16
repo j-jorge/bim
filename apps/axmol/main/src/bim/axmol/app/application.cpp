@@ -712,7 +712,9 @@ void bim::axmol::app::application::capture_screen() const
         {
           std::ostringstream oss;
           const std::time_t t = std::time(nullptr);
-          oss << std::put_time(std::gmtime(&t), "%Y-%m-%d_%H-%M-%S") << ".png";
+          std::tm tm;
+          gmtime_r(&t, &tm);
+          oss << std::put_time(&tm, "%Y-%m-%d_%H-%M-%S") << ".png";
 
           image->saveToFile(oss.str());
         });
