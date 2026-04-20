@@ -62,7 +62,7 @@ void bim_game_bot_test::SetUp()
 void bim_game_bot_test::TearDown()
 {
   if (HasFailure())
-    printf("Seed is %lu", m_seed);
+    printf("Seed is %lu.\n", m_seed);
 }
 
 TEST_P(bim_game_bot_test, think)
@@ -89,8 +89,12 @@ TEST_P(bim_game_bot_test, think)
 
   bim::game::contest_result result =
       bim::game::contest_result::create_still_running();
-  const std::size_t max_iterations = bim::game::contest::max_game_duration
-                                     / bim::game::contest::tick_interval;
+
+  // We add a small delay to the max duration to let the final animations
+  // finish.
+  const std::size_t max_iterations =
+      (bim::game::contest::max_game_duration + std::chrono::seconds(1))
+      / bim::game::contest::tick_interval;
 
   std::vector<bim::game::player_action*> actions(player_count);
 
