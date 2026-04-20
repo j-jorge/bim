@@ -32,6 +32,7 @@ server_bots_test::server_bots_test()
 
             config.enable_bots = true;
             config.matchmaking_delay_for_bot = std::chrono::seconds(1);
+            config.random_game_auto_start_delay = std::chrono::seconds(5);
 
             return config;
           }())
@@ -139,4 +140,35 @@ TEST_F(server_bots_test, human_replaces_the_bot)
   // The players should be in the same game.
   EXPECT_EQ(m_clients[0].game_launch_event->channel,
             m_clients[1].game_launch_event->channel);
+}
+
+TEST_F(server_bots_test, bot_replaces_the_human)
+{
+  m_clients[0].authenticate();
+  m_clients[1].authenticate();
+
+  // Start a game request for both players, they should be matched. Only the
+  // first player accepts the game.
+  // server.
+  m_clients[0].new_game_auto_accept();
+  m_clients[1].new_game();
+
+  // Let the time pass such that the messages can move between the clients and
+  // the server.
+  for (int i = 0; i != 10; ++i)
+    {
+      m_scheduler.tick(std::chrono::seconds(1));
+
+      if (!!m_clients[0].game_launch_event
+          && !!m_clients[1].player_count_proposal)
+        break;
+    }
+
+  // The first player is in a game, a bot should have been provided.
+  ASSERT_TRUE(!!m_clients[0].player_count_proposal);
+  ASSERT_TRUE(!!m_clients[0].game_launch_event);
+
+  // The second player is not in a game.
+  ASSERT_TRUE(!!m_clients[1].player_count_proposal);
+  ASSERT_FALSE(!!m_clients[1].game_launch_event);
 }
