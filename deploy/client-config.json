@@ -1,6 +1,6 @@
 {
-  "mrv": 13,
-  "most-recent-version": 13,
+  "mrv": 15,
+  "most-recent-version": 15,
   "rcui": 24,
   "remote-config-update-interval": 24,
   "vui": 24,
@@ -23,6 +23,10 @@
     {
       "version": 15,
       "host": "bim.jorge.st:20813"
+    },
+    {
+      "version": 16,
+      "host": "bim.jorge.st:20814"
     }
   ],
   "cpv": 50,
