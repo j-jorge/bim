@@ -1,0 +1,1 @@
+The game server may spawn a bot if no opponent is available.
