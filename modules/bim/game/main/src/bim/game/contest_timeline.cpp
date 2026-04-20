@@ -3,7 +3,10 @@
 
 #include <bim/game/component/player.hpp>
 #include <bim/game/component/player_action.hpp>
+#include <bim/game/contest_timeline_serialization.hpp>
 #include <bim/game/kick_event.hpp>
+
+#include <bim/assume.hpp>
 
 #include <iscool/log/log.hpp>
 #include <iscool/log/nature/error.hpp>
@@ -22,17 +25,18 @@ bim::game::contest_timeline::~contest_timeline() = default;
 bool bim::game::load_contest_timeline(contest_timeline& timeline, std::FILE* f)
 {
   char buffer[4096];
-  constexpr const char expected_magic[] = { 'B', 'I', 'M', '!' };
-  constexpr std::size_t magic_length = sizeof(expected_magic);
 
-  if (std::fread(buffer, sizeof(char), magic_length, f) != magic_length)
+  namespace constants = bim::game::contest_timeline_serialization;
+
+  if (std::fread(buffer, sizeof(char), constants::magic_length, f)
+      != constants::magic_length)
     {
       ic_log(iscool::log::nature::error(), "load_contest_timeline",
              "Could not read magic number from file.");
       return false;
     }
 
-  if (std::strncmp(buffer, expected_magic, magic_length) != 0)
+  if (std::strncmp(buffer, constants::magic, constants::magic_length) != 0)
     {
       ic_log(iscool::log::nature::error(), "load_contest_timeline",
              "Magic number does not match.");
@@ -59,12 +63,28 @@ bool bim::game::load_contest_timeline(contest_timeline& timeline, std::FILE* f)
       return false;
     }
 
-  if (file_version != 2)
+  if (file_version < 2)
     {
       ic_log(iscool::log::nature::error(), "load_contest_timeline",
              "Unsupported file format version {}.", file_version);
       return false;
     }
+
+  if (file_version >= 3)
+    {
+      std::uint32_t version;
+
+      if (!read(f, version))
+        {
+          ic_log(iscool::log::nature::error(), "load_contest_timeline",
+                 "Failed to read the application version.");
+          return false;
+        }
+
+      timeline.m_game_version = version;
+    }
+  else
+    timeline.m_game_version = 0;
 
   if (!read(f, timeline.m_fingerprint.seed))
     {
@@ -124,6 +144,25 @@ bool bim::game::load_contest_timeline(contest_timeline& timeline, std::FILE* f)
       return false;
     }
 
+  if (file_version >= 3)
+    {
+      std::uint8_t bot_mask;
+
+      if (!read(f, bot_mask))
+        {
+          ic_log(iscool::log::nature::error(), "load_contest_timeline",
+                 "Failed to read the bot mask.");
+          return false;
+        }
+
+      bim_assume(timeline.m_bot.size() <= sizeof(bot_mask) * CHAR_BIT);
+
+      for (std::size_t i = 0; i != timeline.m_bot.size(); ++i)
+        timeline.m_bot[i] = bot_mask & (1 << i);
+    }
+  else
+    timeline.m_bot.fill(false);
+
   timeline.m_kick_event_count = 0;
 
   const int player_count = timeline.m_fingerprint.player_count;
@@ -173,10 +212,21 @@ bool bim::game::load_contest_timeline(contest_timeline& timeline, std::FILE* f)
   return std::feof(f);
 }
 
+int bim::game::contest_timeline::game_version() const
+{
+  return m_game_version;
+}
+
 const bim::game::contest_fingerprint&
 bim::game::contest_timeline::fingerprint() const
 {
   return m_fingerprint;
+}
+
+const bim::game::per_player_array<bool>&
+bim::game::contest_timeline::bot() const
+{
+  return m_bot;
 }
 
 std::size_t bim::game::contest_timeline::tick_count() const

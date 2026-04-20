@@ -22,7 +22,8 @@ bim::server::contest_timeline_service::contest_timeline_service(
 
 bim::game::contest_timeline_writer bim::server::contest_timeline_service::open(
     iscool::net::channel_id channel,
-    const bim::game::contest_fingerprint& contest)
+    const bim::game::contest_fingerprint& contest,
+    const bim::game::per_player_array<bool>& bot)
 {
   // We are going to try to build a unique name for the file, even if multiple
   // instances are writing the same game channel. We use the process id and the
@@ -63,5 +64,5 @@ bim::game::contest_timeline_writer bim::server::contest_timeline_service::open(
   if (!file)
     return {};
 
-  return bim::game::contest_timeline_writer(file, contest);
+  return bim::game::contest_timeline_writer(file, contest, bot);
 }

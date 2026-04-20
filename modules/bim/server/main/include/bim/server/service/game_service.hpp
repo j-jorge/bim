@@ -7,6 +7,7 @@
 #include <bim/game/archive_storage.hpp>
 #include <bim/game/constant/max_player_count.hpp>
 #include <bim/game/feature_flags_fwd.hpp>
+#include <bim/game/per_player_array.hpp>
 
 #include <iscool/net/message_pool.hpp>
 #include <iscool/net/message_stream.hpp>
@@ -44,12 +45,10 @@ namespace bim::server
 
     std::optional<game_info> find_game(iscool::net::channel_id channel) const;
 
-    game_info
-    new_game(std::uint8_t player_count, bim::game::feature_flags features,
-             const std::array<iscool::net::session_id,
-                              bim::game::g_max_player_count>& sessions,
-             game_reward_availability reward_availability,
-             bot_availability bot);
+    game_info new_game(
+        std::uint8_t player_count, bim::game::feature_flags features,
+        const bim::game::per_player_array<iscool::net::session_id>& sessions,
+        game_reward_availability reward_availability, bot_availability bot);
 
     void process(const iscool::net::endpoint& endpoint,
                  const iscool::net::message& message);

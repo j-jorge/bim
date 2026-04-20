@@ -6,8 +6,10 @@
 #include <bim/game/component/player_action.hpp>
 #include <bim/game/constant/max_player_count.hpp>
 #include <bim/game/contest_fingerprint.hpp>
+#include <bim/game/contest_timeline_serialization.hpp>
 
 #include <bim/assume.hpp>
+#include <bim/version.hpp>
 
 #include <iscool/log/log.hpp>
 #include <iscool/log/nature/error.hpp>
@@ -67,15 +69,19 @@ bim::game::contest_timeline_writer::contest_timeline_writer()
 {}
 
 bim::game::contest_timeline_writer::contest_timeline_writer(
-    std::FILE* file, const contest_fingerprint& contest)
+    std::FILE* file, const contest_fingerprint& contest,
+    const per_player_array<bool>& bot)
   : m_file(file)
   , m_player_count(contest.player_count)
 {
   if (!m_file)
     return;
 
-  constexpr const char magic[] = { 'B', 'I', 'M', '!' };
-  if (std::fwrite(magic, sizeof(char), sizeof(magic), m_file) != sizeof(magic))
+  namespace constants = bim::game::contest_timeline_serialization;
+
+  if (std::fwrite(constants::magic, sizeof(char), constants::magic_length,
+                  m_file)
+      != constants::magic_length)
     ic_log(iscool::log::nature::error(), "contest_timeline_writer",
            "Could not write the magic number.");
 
@@ -86,11 +92,13 @@ bim::game::contest_timeline_writer::contest_timeline_writer(
       return std::fwrite(&s, sizeof(char), sizeof(s), f) == sizeof(s);
     };
 
-  const std::uint32_t file_version = 2;
-
-  if (!write(m_file, file_version))
+  if (!write(m_file, constants::file_version))
     ic_log(iscool::log::nature::error(), "contest_timeline_writer",
            "Could not write the file format version.");
+
+  if (!write(m_file, (std::uint32_t)bim::version_major))
+    ic_log(iscool::log::nature::error(), "contest_timeline_writer",
+           "Could not write the game version.");
 
   if (!write(m_file, contest.seed))
     ic_log(iscool::log::nature::error(), "contest_timeline_writer",
@@ -115,6 +123,16 @@ bim::game::contest_timeline_writer::contest_timeline_writer(
   if (!write(m_file, contest.arena_height))
     ic_log(iscool::log::nature::error(), "contest_timeline_writer",
            "Could not write the arena's height.");
+
+  std::uint8_t bot_mask = 0;
+  bim_assume(bot.size() <= sizeof(bot_mask) * CHAR_BIT);
+
+  for (std::size_t i = 0; i != bot.size(); ++i)
+    bot_mask |= (std::uint8_t)bot[i] << i;
+
+  if (!write(m_file, bot_mask))
+    ic_log(iscool::log::nature::error(), "contest_timeline_writer",
+           "Could not write the bot mask.");
 }
 
 bim::game::contest_timeline_writer::contest_timeline_writer(

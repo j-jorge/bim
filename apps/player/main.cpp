@@ -7,6 +7,8 @@
 #include <bim/game/feature_flags.hpp>
 #include <bim/game/feature_flags_string.hpp>
 
+#include <bim/version.hpp>
+
 #include <iscool/log/enable_console_log.hpp>
 
 #include <cerrno>
@@ -21,10 +23,35 @@ static void dump_timeline(const bim::game::contest_timeline& timeline)
   const bim::game::contest_fingerprint& fingerprint = timeline.fingerprint();
 
   const std::string page_separator(80, '-');
+
+  std::cout << "Game version: " << timeline.game_version();
+
+  if (timeline.game_version() != bim::version_major)
+    std::cout << " (!= " << bim::version_major << ')';
+
+  std::cout << '\n';
   std::cout << "Tick count: " << timeline.tick_count() << '\n'
             << "Game seed: " << fingerprint.seed << '\n'
             << "Player count: " << (int)fingerprint.player_count << '\n'
-            << "Features: (0x" << std::hex << (int)fingerprint.features
+            << "Bot index: ";
+
+  {
+    const char* separator = "";
+
+    for (std::size_t i = 0; i != timeline.bot().size(); ++i)
+      if (timeline.bot()[i])
+        {
+          std::cout << separator << i;
+          separator = ", ";
+        }
+
+    if (separator[0] == '\0')
+      std::cout << "none";
+
+    std::cout << '\n';
+  }
+
+  std::cout << "Features: (0x" << std::hex << (int)fingerprint.features
             << ") [" << std::dec;
 
   const char* separator = "";

@@ -15,6 +15,8 @@
 #include <bim/game/kick_event.hpp>
 #include <bim/game/player_action.hpp>
 
+#include <bim/version.hpp>
+
 #include <entt/entity/registry.hpp>
 
 #include <cstdio>
@@ -32,6 +34,8 @@ TEST(bim_game_contest_timeline, write_and_read)
     .arena_width = 5,
     .arena_height = 7
   };
+  const bim::game::per_player_array<bool> original_bot = { true, true, false,
+                                                           true };
 
   int tick_count = 0;
   int buffer_size;
@@ -41,7 +45,8 @@ TEST(bim_game_contest_timeline, write_and_read)
     bim::game::contest contest(original_fingerprint);
 
     std::FILE* const f = fmemopen(buffer, sizeof(buffer), "w");
-    bim::game::contest_timeline_writer writer(f, original_fingerprint);
+    bim::game::contest_timeline_writer writer(f, original_fingerprint,
+                                              original_bot);
 
     std::array<bim::game::player_action*, bim::game::g_max_player_count>
         action_pointers;
@@ -155,6 +160,11 @@ TEST(bim_game_contest_timeline, write_and_read)
   EXPECT_TRUE(bim::game::load_contest_timeline(timeline, f));
   std::fclose(f);
 
+  EXPECT_EQ(bim::version_major, timeline.game_version());
+
+  for (std::size_t i = 0; i != original_bot.size(); ++i)
+    EXPECT_EQ(original_bot[i], timeline.bot()[i]) << "i=" << i;
+
   EXPECT_EQ(tick_count, timeline.tick_count());
 
   EXPECT_EQ(original_fingerprint.seed, timeline.fingerprint().seed);
@@ -235,6 +245,8 @@ TEST(bim_game_contest_timeline, kick_event)
     .arena_width = 5,
     .arena_height = 7
   };
+  const bim::game::per_player_array<bool> original_bot = { false, false, true,
+                                                           false };
 
   int tick_count = 0;
   size_t buffer_size;
@@ -244,7 +256,8 @@ TEST(bim_game_contest_timeline, kick_event)
     bim::game::contest contest(original_fingerprint);
 
     std::FILE* const f = fmemopen(buffer, sizeof(buffer), "w");
-    bim::game::contest_timeline_writer writer(f, original_fingerprint);
+    bim::game::contest_timeline_writer writer(f, original_fingerprint,
+                                              original_bot);
 
     std::array<bim::game::player_action*, bim::game::g_max_player_count>
         action_pointers;
@@ -315,6 +328,11 @@ TEST(bim_game_contest_timeline, kick_event)
   EXPECT_TRUE(bim::game::load_contest_timeline(timeline, f));
   std::fclose(f);
 
+  EXPECT_EQ(bim::version_major, timeline.game_version());
+
+  for (std::size_t i = 0; i != original_bot.size(); ++i)
+    EXPECT_EQ(original_bot[i], timeline.bot()[i]) << "i=" << i;
+
   EXPECT_EQ(tick_count, timeline.tick_count());
 
   EXPECT_EQ(original_fingerprint.seed, timeline.fingerprint().seed);
@@ -357,6 +375,8 @@ TEST(bim_game_contest_timeline, three_players_dead_or_kicked)
     .arena_width = 5,
     .arena_height = 7
   };
+  const bim::game::per_player_array<bool> original_bot = { false, true, false,
+                                                           false };
 
   int tick_count = 0;
   size_t buffer_size;
@@ -366,7 +386,8 @@ TEST(bim_game_contest_timeline, three_players_dead_or_kicked)
     bim::game::contest contest(original_fingerprint);
 
     std::FILE* const f = fmemopen(buffer, sizeof(buffer), "w");
-    bim::game::contest_timeline_writer writer(f, original_fingerprint);
+    bim::game::contest_timeline_writer writer(f, original_fingerprint,
+                                              original_bot);
 
     std::array<bim::game::player_action*, bim::game::g_max_player_count>
         action_pointers;
@@ -455,6 +476,11 @@ TEST(bim_game_contest_timeline, three_players_dead_or_kicked)
   std::FILE* f = fmemopen(buffer, buffer_size, "r");
   EXPECT_TRUE(bim::game::load_contest_timeline(timeline, f));
   std::fclose(f);
+
+  EXPECT_EQ(bim::version_major, timeline.game_version());
+
+  for (std::size_t i = 0; i != original_bot.size(); ++i)
+    EXPECT_EQ(original_bot[i], timeline.bot()[i]) << "i=" << i;
 
   EXPECT_EQ(tick_count, timeline.tick_count());
 

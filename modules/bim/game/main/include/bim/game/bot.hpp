@@ -5,6 +5,7 @@
 #include <bim/game/constant/max_player_count.hpp>
 #include <bim/game/feature_flags_fwd.hpp>
 #include <bim/game/navigation_check.hpp>
+#include <bim/game/per_player_array.hpp>
 #include <bim/game/random_generator.hpp>
 
 #include <entt/fwd.hpp>
@@ -52,9 +53,6 @@ namespace bim::game
       bool power_up;
       bool opponent_in_danger;
     };
-
-    template <typename T>
-    using per_player_array = std::array<T, g_max_player_count>;
 
   private:
     bool can_start(const contest& contest) const;

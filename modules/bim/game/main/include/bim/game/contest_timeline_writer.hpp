@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #pragma once
 
+#include <bim/game/per_player_array.hpp>
+
 #include <entt/entity/fwd.hpp>
 
 #include <cstdio>
@@ -15,7 +17,8 @@ namespace bim::game
   public:
     contest_timeline_writer();
     contest_timeline_writer(std::FILE* file,
-                            const contest_fingerprint& contest);
+                            const contest_fingerprint& contest,
+                            const per_player_array<bool>& bot);
     contest_timeline_writer(const contest_timeline_writer&) = delete;
     contest_timeline_writer(contest_timeline_writer&& that) noexcept;
     ~contest_timeline_writer();

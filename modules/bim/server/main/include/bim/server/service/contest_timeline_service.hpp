@@ -2,6 +2,7 @@
 #pragma once
 
 #include <bim/game/contest_timeline_writer.hpp>
+#include <bim/game/per_player_array.hpp>
 
 #include <iscool/net/message/channel_id.hpp>
 
@@ -23,7 +24,8 @@ namespace bim::server
 
     bim::game::contest_timeline_writer
     open(iscool::net::channel_id channel,
-         const bim::game::contest_fingerprint& contest);
+         const bim::game::contest_fingerprint& contest,
+         const bim::game::per_player_array<bool>& bot);
 
   private:
     const std::string m_directory;

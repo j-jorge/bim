@@ -248,7 +248,15 @@ int main(int argc, char* argv[])
 
   if (options.timeline)
     {
-      bim::game::contest_timeline_writer writer(output_file, fingerprint);
+      bim::game::per_player_array<bool> bot;
+
+      for (int i = 0; i != fingerprint.player_count; ++i)
+        bot[i] = true;
+
+      for (std::size_t i = fingerprint.player_count; i != bot.size(); ++i)
+        bot[i] = false;
+
+      bim::game::contest_timeline_writer writer(output_file, fingerprint, bot);
 
       run_contest(bots, contest,
                   [&]()
