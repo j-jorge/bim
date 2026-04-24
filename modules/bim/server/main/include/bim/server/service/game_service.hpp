@@ -4,7 +4,6 @@
 #include <bim/server/service/bot_availability_fwd.hpp>
 #include <bim/server/service/game_reward_availability_fwd.hpp>
 
-#include <bim/game/archive_storage.hpp>
 #include <bim/game/constant/max_player_count.hpp>
 #include <bim/game/feature_flags_fwd.hpp>
 #include <bim/game/per_player_array.hpp>
@@ -98,8 +97,6 @@ namespace bim::server
     game_map m_games;
     session_to_channel_map m_session_to_channel;
     std::mt19937_64 m_random;
-
-    bim::game::archive_storage m_checksum_buffer;
 
     iscool::schedule::scoped_connection m_clean_up_connection;
     const std::chrono::seconds m_clean_up_interval;
