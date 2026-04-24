@@ -697,9 +697,24 @@ int main(int argc, char* argv[])
       FrameMark;
 
       const clock::time_point end = clock::now();
+      const std::chrono::milliseconds tick_duration =
+          std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
 
-      if (end - start < tick_interval)
-        std::this_thread::sleep_for(tick_interval - (end - start));
+      if (tick_duration < tick_interval)
+        {
+          if (tick_interval - tick_duration <= 20 * tick_interval / 100)
+            ic_log(iscool::log::nature::info(), "server",
+                   "Stressed. Tick took {} of {} ({}%).", tick_duration,
+                   tick_interval,
+                   (int)(tick_duration.count() * 100) / tick_interval.count());
+
+          std::this_thread::sleep_for(tick_interval - (end - start));
+        }
+      else
+        ic_log(iscool::log::nature::info(), "server",
+               "Overloaded. Tick took {} but should be under {} ({}%).",
+               tick_duration, tick_interval,
+               (int)(tick_duration.count() * 100) / tick_interval.count());
     }
 
   ic_log(iscool::log::nature::info(), "server", "Quit.");
