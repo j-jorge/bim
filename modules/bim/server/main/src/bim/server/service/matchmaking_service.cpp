@@ -435,6 +435,8 @@ void bim::server::matchmaking_service::clean_up()
   const std::chrono::nanoseconds now =
       iscool::time::now<std::chrono::nanoseconds>();
 
+  const std::size_t old_encounter_count = m_encounters.size();
+
   for (encounter_map::iterator it = m_encounters.begin(),
                                eit = m_encounters.end();
        it != eit;)
@@ -460,4 +462,8 @@ void bim::server::matchmaking_service::clean_up()
           ++it;
         }
     }
+
+  ic_log(iscool::log::nature::info(), "matchmaking_service",
+         "Encounter clean up {} -> {}, done {}.", old_encounter_count,
+         m_encounters.size(), m_done_encounters.size());
 }

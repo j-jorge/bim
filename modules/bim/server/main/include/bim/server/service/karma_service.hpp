@@ -28,6 +28,9 @@ namespace bim::server
 
     bool allowed(const boost::asio::ip::address& address) const;
 
+    void add(const boost::asio::ip::address& address);
+    void remove(const boost::asio::ip::address& address);
+
     update_result disconnection(const boost::asio::ip::address& address);
     update_result short_game(const boost::asio::ip::address& address);
     update_result good_behavior(const boost::asio::ip::address& address);

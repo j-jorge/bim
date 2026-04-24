@@ -95,6 +95,7 @@ bim::server::session_service::create_or_refresh_session(
 
   m_clients.emplace(session, std::move(client));
   m_statistics.record_session_connected();
+  m_karma.add(address);
 
   return session;
 }
@@ -189,7 +190,8 @@ void bim::server::session_service::clean_up()
 {
   const std::chrono::nanoseconds now =
       iscool::time::now<std::chrono::nanoseconds>();
-  std::uint64_t disconnected_count = 0;
+
+  const std::size_t old_client_count = m_clients.size();
 
   for (client_map::iterator it = m_clients.begin(), eit = m_clients.end();
        it != eit;)
@@ -198,11 +200,15 @@ void bim::server::session_service::clean_up()
         ic_log(iscool::log::nature::info(), "session_service",
                "Disconnected {}.", it->first);
         m_sessions.erase(it->second.token);
+        m_karma.remove(it->second.address);
         it = m_clients.erase(it);
-        ++disconnected_count;
       }
     else
       ++it;
 
-  m_statistics.record_session_disconnected(disconnected_count);
+  ic_log(iscool::log::nature::info(), "session_service",
+         "Session clean up {} -> {}.", old_client_count, m_clients.size());
+
+  m_statistics.record_session_disconnected(old_client_count
+                                           - m_clients.size());
 }

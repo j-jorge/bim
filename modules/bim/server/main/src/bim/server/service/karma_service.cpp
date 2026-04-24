@@ -13,6 +13,7 @@
 struct bim::server::karma_service::client_info
 {
   std::chrono::minutes let_go_at_this_date;
+  std::uint64_t session_count;
   std::int8_t karma;
 };
 
@@ -45,6 +46,34 @@ bool bim::server::karma_service::allowed(
   return (it == m_client.end()) || (it->second.karma >= 0);
 }
 
+void bim::server::karma_service::add(const boost::asio::ip::address& address)
+{
+  if (!m_enabled)
+    return;
+
+  const client_map::iterator it =
+      m_client
+          .try_emplace(address, client_info{ .session_count = 0,
+                                             .karma = m_initial_karma })
+          .first;
+
+  ++it->second.session_count;
+}
+
+void bim::server::karma_service::remove(
+    const boost::asio::ip::address& address)
+{
+  if (!m_enabled)
+    return;
+
+  const client_map::iterator it = m_client.find(address);
+
+  if (it == m_client.end())
+    return;
+
+  --it->second.session_count;
+}
+
 bim::server::karma_service::update_result
 bim::server::karma_service::disconnection(
     const boost::asio::ip::address& address)
@@ -72,9 +101,9 @@ bim::server::karma_service::add_karma(const boost::asio::ip::address& address,
   if (!m_enabled)
     return update_result::accept;
 
-  const client_map::iterator it =
-      m_client.try_emplace(address, client_info{ .karma = m_initial_karma })
-          .first;
+  const client_map::iterator it = m_client.find(address);
+  assert(it != m_client.end());
+
   it->second.karma = std::max(-128, std::min(it->second.karma + karma, 127));
 
   if (it->second.karma >= 0)
@@ -113,9 +142,13 @@ void bim::server::karma_service::review()
 {
   const std::chrono::minutes now = iscool::time::now<std::chrono::minutes>();
 
+  const std::size_t old_client_count = m_client.size();
+
   for (client_map::iterator it = m_client.begin(), eit = m_client.end();
        it != eit;)
-    if ((it->second.karma < 0) && (it->second.let_go_at_this_date <= now))
+    if ((it->second.karma >= 0) && (it->second.session_count == 0))
+      it = m_client.erase(it);
+    else if ((it->second.karma < 0) && (it->second.let_go_at_this_date <= now))
       {
         ic_log(iscool::log::nature::info(), "karma_service",
                "Reopening the doors for {}.", it->first.to_string());
@@ -123,4 +156,7 @@ void bim::server::karma_service::review()
       }
     else
       ++it;
+
+  ic_log(iscool::log::nature::info(), "karma_service",
+         "Client clean up {} -> {}.", old_client_count, m_client.size());
 }

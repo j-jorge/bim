@@ -28,8 +28,13 @@ TEST(karma_service, enabled)
   const boost::asio::ip::address_v4 a_3(0x03030303);
 
   EXPECT_TRUE(karma.allowed(a_1));
+  karma.add(a_1);
+
   EXPECT_TRUE(karma.allowed(a_2));
+  karma.add(a_2);
+
   EXPECT_TRUE(karma.allowed(a_3));
+  karma.add(a_3);
 
   karma.disconnection(a_1);
   // karma = 7
@@ -117,8 +122,13 @@ TEST(karma_service, disabled)
   const boost::asio::ip::address_v4 a_3(0x03030303);
 
   EXPECT_TRUE(karma.allowed(a_1));
+  karma.add(a_1);
+
   EXPECT_TRUE(karma.allowed(a_2));
+  karma.add(a_2);
+
   EXPECT_TRUE(karma.allowed(a_3));
+  karma.add(a_3);
 
   karma.disconnection(a_1);
   karma.short_game(a_2);

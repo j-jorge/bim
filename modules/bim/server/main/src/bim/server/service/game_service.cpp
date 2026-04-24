@@ -1077,6 +1077,7 @@ void bim::server::game_service::clean_up()
 {
   const std::chrono::nanoseconds now =
       iscool::time::now<std::chrono::nanoseconds>();
+  const std::size_t old_game_count = m_games.size();
 
   for (game_map::iterator it = m_games.begin(); it != m_games.end();)
     if (it->second.release_game_at_this_date <= now)
@@ -1086,6 +1087,9 @@ void bim::server::game_service::clean_up()
       }
     else
       ++it;
+
+  ic_log(iscool::log::nature::info(), "game_service",
+         "Game clean up {} -> {}.", old_game_count, m_games.size());
 
   schedule_clean_up();
 }
