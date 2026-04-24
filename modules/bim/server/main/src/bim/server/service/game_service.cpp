@@ -678,7 +678,7 @@ void bim::server::game_service::push_update(
              game.simulation_checksum[update->checksum_tick
                                       - game.completed_tick_count_all]);
 
-      if (m_checksum_validation)
+      if (m_checksum_validation && game.contest_result.still_running())
         {
           game.active[player_index] = false;
           m_session_service.update_karma_disconnection(session);
