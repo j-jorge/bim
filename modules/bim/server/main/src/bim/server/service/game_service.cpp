@@ -675,7 +675,7 @@ void bim::server::game_service::push_update(
              "checksum_tick={}, remote=0x{:08x}, local=0x{:08x}.",
              session, (int)player_index, update->from_tick,
              update->checksum_tick, update->checksum,
-             game.simulation_checksum[update->from_tick
+             game.simulation_checksum[update->checksum_tick
                                       - game.completed_tick_count_all]);
 
       if (m_checksum_validation)
