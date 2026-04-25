@@ -265,7 +265,10 @@ private:
             offset_to_simulation = player_offset_to_simulation;
         }
 
-    if (offset_to_simulation == 0)
+    assert(offset_to_simulation != std::numeric_limits<std::uint32_t>::max());
+
+    if ((offset_to_simulation == 0)
+        || (offset_to_simulation == std::numeric_limits<std::uint32_t>::max()))
       return contest_result.still_running() ? simulation_state::frozen
                                             : simulation_state::flushing;
 
@@ -670,18 +673,20 @@ void bim::server::game_service::push_update(
           != game.simulation_checksum[update->checksum_tick
                                       - game.completed_tick_count_all]))
     {
-      ic_log(iscool::log::nature::info(), "game_service",
-             "Player is desynchronized, session={}, player={}, from_tick={}, "
-             "checksum_tick={}, remote=0x{:08x}, local=0x{:08x}.",
-             session, (int)player_index, update->from_tick,
-             update->checksum_tick, update->checksum,
-             game.simulation_checksum[update->checksum_tick
-                                      - game.completed_tick_count_all]);
+      ic_log(
+          iscool::log::nature::info(), "game_service",
+          "Player is desynchronized, session={}, channel={}, player={}, "
+          "from_tick={}, checksum_tick={}, remote=0x{:08x}, local=0x{:08x}.",
+          session, channel, (int)player_index, update->from_tick,
+          update->checksum_tick, update->checksum,
+          game.simulation_checksum[update->checksum_tick
+                                   - game.completed_tick_count_all]);
 
       if (m_checksum_validation && game.contest_result.still_running())
         {
           game.active[player_index] = false;
           m_session_service.update_karma_disconnection(session);
+          return;
         }
     }
 
