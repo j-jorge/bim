@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-04-23 19:09+0000\n"
+"PO-Revision-Date: 2026-04-29 15:09+0000\n"
 "Last-Translator: Michael Moroni <michaelmoroni@disroot.org>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/bim/gettext-"
 "files/it/>\n"
@@ -98,36 +98,38 @@ msgstr[1] ""
 #, c++-format
 msgid "{} game played in the last 24 hours."
 msgid_plural "{} games played in the last 24 hours."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{} gioco giocato nelle ultime 24 ore."
+msgstr[1] "{} giochi giocati nelle ultime 24 ore."
 
 #, c++-format
 msgid "{} player connected in the last 24 hours."
 msgid_plural "{} players connected in the last 24 hours."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{} giocatore connesso nelle ultime 24 ore."
+msgstr[1] "{} giocatori connessi nelle ultime 24 ore."
 
 #, c++-format
 msgid "{} game played in the last 30 days."
 msgid_plural "{} games played in the last 30 days."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{} gioco giocato negli ultimi 30 giorni."
+msgstr[1] "{} giochi giocati negli ultimi 30 giorni."
 
 #, c++-format
 msgid "{} player connected in the last 30 days."
 msgid_plural "{} players connected in the last 30 days."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{} giocatore connesso negli ultimi 30 giorni."
+msgstr[1] "{} giocatori connessi negli ultimi 30 giorni."
 
 #, c++-format
 msgid "Connected to {}."
-msgstr ""
+msgstr "Connesso a {}."
 
 msgid "An error occurred. The purchase could not be completed."
-msgstr ""
+msgstr "C'è stato un errore. L'acquisto non può essere completato."
 
 msgid "A new version of Bim! is available! Please update as soon as possible."
 msgstr ""
+"Una nuova versione di Bim! è disponibile. Per favore effettua "
+"l'aggiornamento il prima possibile."
 
 #, c++-format
 msgid "Failed to authenticate with the game server. Error code {}."
