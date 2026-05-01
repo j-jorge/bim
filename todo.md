@@ -16,3 +16,4 @@
   - include-what-you-use
   - clang-tidy
 - Flood the server with random messages.
+- Bot improvement: don't pick the invisibility if the bot is already invisible.
