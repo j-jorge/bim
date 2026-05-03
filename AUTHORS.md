@@ -26,7 +26,7 @@ Mirko P., via Weblate.
 CC-BY-SA 4.0.
 
 assets/i18n/it.po
-Mariano Portal, via Weblate.
+Michael Moroni, Mariano Portal, via Weblate.
 CC-BY-SA 4.0.
 
 assets/i18n/es.po
@@ -62,7 +62,7 @@ Sergey Potapenko, via Weblate
 CC-BY-SA 4.0.
 
 assets/i18n/tr.po
-AsetSiya, Metin, via Weblate.
+Oğuz Ersen, AsetSiya, Metin, via Weblate.
 CC-BY-SA 4.0.
 
 assets/i18n/uk.po
