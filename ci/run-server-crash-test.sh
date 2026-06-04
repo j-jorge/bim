@@ -48,7 +48,7 @@ test_crash()
 
     if "$bim_server" --testing-crash 2>&1 \
             | grep --quiet \
-                   '^#[0-9].\+ in crash_handler\((int)\)\? at .\+/apps/server/server-main.cpp:'
+                   '^#[0-9].\+ in crash_handler\((int)\)\? at .\+/apps/server/main_server.cpp:'
     then
         echo "test_crash: OK"
         pass_count=$((pass_count + 1))
@@ -64,7 +64,7 @@ test_throw()
 
     if "$bim_server" --testing-throw 2>&1 \
             | grep --quiet \
-                   '^#[0-9].\+ in force_throw\(()\)\? at .\+/apps/server/server-main.cpp:'
+                   '^#[0-9].\+ in force_throw\(()\)\? at .\+/apps/server/main_server.cpp:'
     then
         echo "test_throw: OK"
         pass_count=$((pass_count + 1))

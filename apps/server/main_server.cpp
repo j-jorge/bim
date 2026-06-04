@@ -1,4 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
+#include "http_worker.hpp"
+
 #include <bim/server/config.hpp>
 #include <bim/server/server.hpp>
 
@@ -7,6 +9,7 @@
 #include <bim/tracy.hpp>
 #include <bim/version.hpp>
 
+#include <iscool/http/setup.hpp>
 #include <iscool/json/cast_bool.hpp>
 #include <iscool/json/cast_uint16.hpp>
 #include <iscool/json/cast_uint64.hpp>
@@ -25,8 +28,6 @@
 #include <boost/program_options.hpp>
 
 #include <cpptrace/cpptrace.hpp>
-
-#include <curl/curl.h>
 
 #include <chrono>
 #include <csignal>
@@ -655,19 +656,17 @@ int main(int argc, char* argv[])
   iscool::schedule::manual_scheduler scheduler;
   iscool::schedule::initialize(scheduler.get_delayed_call_delegate());
 
+  http_worker http;
+  iscool::http::initialize(
+      [&http](const iscool::http::request& request)
+        {
+          http.push(request);
+        });
+
   std::cout << "Press Ctrl+C to exit.\n";
   ic_log(iscool::log::nature::info(), "server", "Bim! {}.", bim::version);
   ic_log(iscool::log::nature::info(), "server", "Running on port {}.",
          command_line.options->config.port);
-
-  if (command_line.options->config.enable_discord_matchmaking_notifications)
-    {
-      const CURLcode result = curl_global_init(CURL_GLOBAL_ALL);
-
-      if (result != CURLE_OK)
-        ic_log(iscool::log::nature::error(), "server",
-               "Failed to initialize CURL {}.", curl_easy_strerror(result));
-    }
 
   bim::server::server server(command_line.options->config);
 
@@ -686,6 +685,8 @@ int main(int argc, char* argv[])
 
       if (slice_duration >= std::chrono::milliseconds(1))
         {
+          http.dispatch_responses();
+
           const std::chrono::milliseconds update_ms =
               std::chrono::duration_cast<std::chrono::milliseconds>(
                   slice_duration);
@@ -719,10 +720,8 @@ int main(int argc, char* argv[])
 
   ic_log(iscool::log::nature::info(), "server", "Quit.");
 
+  iscool::http::finalize();
   iscool::schedule::finalize();
-
-  if (command_line.options->config.enable_discord_matchmaking_notifications)
-    curl_global_cleanup();
 
   return EXIT_SUCCESS;
 }

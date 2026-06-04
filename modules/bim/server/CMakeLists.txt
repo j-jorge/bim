@@ -3,7 +3,6 @@ if (NOT BIM_BUILD_SERVER)
 endif()
 
 find_package(maxminddb REQUIRED)
-find_package(CURL REQUIRED)
 
 add_library(bim_server
   STATIC
@@ -30,8 +29,8 @@ target_link_libraries(
   bim_server
   PUBLIC
   bim_net
+  iscool_http
   maxminddb::maxminddb
-  CURL::libcurl
 )
 
 if (NOT BIM_BUILD_TESTS)
