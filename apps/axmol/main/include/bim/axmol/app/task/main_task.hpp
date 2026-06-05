@@ -52,6 +52,11 @@ namespace bim::app
   class analytics_service;
 }
 
+namespace Json
+{
+  class Value;
+}
+
 namespace bim::axmol::app
 {
   class application_event_dispatcher;
@@ -96,7 +101,7 @@ namespace bim::axmol::app
     void create_ui();
 
     void fetch_remote_config();
-    void validate_remote_config(const std::string_view& str);
+    void validate_remote_config(const Json::Value& json_config);
     void load_local_config();
     void config_ready();
 

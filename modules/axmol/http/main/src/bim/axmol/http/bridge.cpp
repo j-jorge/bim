@@ -6,22 +6,21 @@
 
 #include <axmol/network/HttpClient.h>
 
-static void send_request(const iscool::http::request& request)
+static void send_request(iscool::http::request request)
 {
   ax::network::HttpRequest* const ax_request(new ax::network::HttpRequest());
 
-  ax_request->setUrl(request.get_url());
+  ax_request->setUrl(request.url);
 
-  switch (request.get_type())
+  switch (request.request_type)
     {
     case iscool::http::request::type::get:
       ax_request->setRequestType(ax::network::HttpRequest::Type::GET);
       break;
     case iscool::http::request::type::post:
       ax_request->setRequestType(ax::network::HttpRequest::Type::POST);
-      ax_request->setHeaders(request.get_headers());
-      ax_request->setRequestData(request.get_body().c_str(),
-                                 request.get_body().size());
+      ax_request->setHeaders(request.headers);
+      ax_request->setRequestData(request.body.c_str(), request.body.size());
       break;
     }
 
@@ -29,11 +28,11 @@ static void send_request(const iscool::http::request& request)
       [=](ax::network::HttpClient*,
           ax::network::HttpResponse* response) -> void
         {
-          const auto& ax_buffer = *response->getResponseData();
-          std::vector<char> data(std::begin(ax_buffer), std::end(ax_buffer));
+          const yasio::sbyte_buffer& ax_buffer = *response->getResponseData();
+          std::span<const char> data(ax_buffer.data(), ax_buffer.size());
 
-          request.get_response_handler()(iscool::http::response(
-              response->getResponseCode(), std::move(data)));
+          request.result_handler(
+              iscool::http::response(response->getResponseCode(), data));
 
           response->getHttpRequest()->release();
         });

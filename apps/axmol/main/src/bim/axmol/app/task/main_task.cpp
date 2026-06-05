@@ -21,10 +21,9 @@
 #include <iscool/files/full_path_exists.hpp>
 #include <iscool/files/get_writable_path.hpp>
 #include <iscool/files/rename_file.hpp>
-#include <iscool/http/send.hpp>
+#include <iscool/http/json/send.hpp>
 #include <iscool/i18n/gettext.hpp>
 #include <iscool/json/from_file.hpp>
-#include <iscool/json/parse_string.hpp>
 #include <iscool/json/write_to_stream.hpp>
 #include <iscool/log/log.hpp>
 #include <iscool/log/nature/info.hpp>
@@ -133,14 +132,13 @@ void bim::axmol::app::main_task::fetch_remote_config()
 {
   ic_log(iscool::log::nature::info(), "main_task", "Updating config.");
 
-  auto on_result = [this](const std::vector<char>& response) -> void
+  auto on_result = [this](const Json::Value& response) -> void
     {
-      validate_remote_config(
-          std::string_view(response.begin(), response.end()));
+      validate_remote_config(response);
       config_ready();
     };
 
-  auto on_error = [this](const std::vector<char>& response) -> void
+  auto on_error = [this](std::span<const char> response) -> void
     {
       ic_log(iscool::log::nature::warning(), "main_task",
              "Failed to fetch remote config {}.",
@@ -150,19 +148,17 @@ void bim::axmol::app::main_task::fetch_remote_config()
       config_ready();
     };
 
-  m_config_request_connections = iscool::http::get(
+  m_config_request_connections = iscool::http::json::get(
       "https://bim.jorge.st/client-config.json", on_result, on_error);
 }
 
 void bim::axmol::app::main_task::validate_remote_config(
-    const std::string_view& str)
+    const Json::Value& json_config)
 {
-  const Json::Value json_config = iscool::json::parse_string(std::string(str));
-
   if (!json_config)
     {
       ic_log(iscool::log::nature::warning(), "main_task",
-             "Failed to parse remote config {}.", str);
+             "Remote config is null.");
 
       bim::app::error(*m_context.get_analytics(), "config-parse-error");
       return;
@@ -173,9 +169,14 @@ void bim::axmol::app::main_task::validate_remote_config(
 
   if (!config)
     {
-      ic_log(iscool::log::nature::warning(), "main_task",
-             "Failed to load remote config from Json {}.", str);
       bim::app::error(*m_context.get_analytics(), "config-load-error");
+
+      std::ostringstream oss;
+      iscool::json::write_to_stream(oss, json_config);
+
+      ic_log(iscool::log::nature::warning(), "main_task",
+             "Failed to load remote config from Json {}.", oss.str());
+
       return;
     }
 
@@ -188,7 +189,7 @@ void bim::axmol::app::main_task::validate_remote_config(
   if (!iscool::json::write_to_stream(f, json_config))
     {
       ic_log(iscool::log::nature::warning(), "main_task",
-             "Failed to save remote config {}.", str);
+             "Failed to save remote config.");
       return;
     }
 
