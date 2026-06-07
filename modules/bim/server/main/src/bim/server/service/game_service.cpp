@@ -1093,8 +1093,9 @@ void bim::server::game_service::clean_up()
     else
       ++it;
 
-  ic_log(iscool::log::nature::info(), "game_service",
-         "Game clean up {} -> {}.", old_game_count, m_games.size());
+  if (old_game_count != m_games.size())
+    ic_log(iscool::log::nature::info(), "game_service",
+           "Game clean up {} -> {}.", old_game_count, m_games.size());
 
   schedule_clean_up();
 }

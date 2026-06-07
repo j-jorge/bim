@@ -157,6 +157,7 @@ void bim::server::karma_service::review()
     else
       ++it;
 
-  ic_log(iscool::log::nature::info(), "karma_service",
-         "Client clean up {} -> {}.", old_client_count, m_client.size());
+  if (old_client_count != m_client.size())
+    ic_log(iscool::log::nature::info(), "karma_service",
+           "Client clean up {} -> {}.", old_client_count, m_client.size());
 }

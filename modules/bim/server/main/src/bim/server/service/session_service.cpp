@@ -206,9 +206,12 @@ void bim::server::session_service::clean_up()
     else
       ++it;
 
-  ic_log(iscool::log::nature::info(), "session_service",
-         "Session clean up {} -> {}.", old_client_count, m_clients.size());
+  if (old_client_count != m_clients.size())
+    {
+      ic_log(iscool::log::nature::info(), "session_service",
+             "Session clean up {} -> {}.", old_client_count, m_clients.size());
 
-  m_statistics.record_session_disconnected(old_client_count
-                                           - m_clients.size());
+      m_statistics.record_session_disconnected(old_client_count
+                                               - m_clients.size());
+    }
 }

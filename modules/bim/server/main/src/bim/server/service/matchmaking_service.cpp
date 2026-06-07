@@ -463,7 +463,8 @@ void bim::server::matchmaking_service::clean_up()
         }
     }
 
-  ic_log(iscool::log::nature::info(), "matchmaking_service",
-         "Encounter clean up {} -> {}, done {}.", old_encounter_count,
-         m_encounters.size(), m_done_encounters.size());
+  if (old_encounter_count != m_encounters.size())
+    ic_log(iscool::log::nature::info(), "matchmaking_service",
+           "Encounter clean up {} -> {}, done {}.", old_encounter_count,
+           m_encounters.size(), m_done_encounters.size());
 }
