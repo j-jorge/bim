@@ -2,6 +2,7 @@
 #pragma once
 
 #include <bim/server/service/authentication_service.hpp>
+#include <bim/server/service/business_registration_service.hpp>
 #include <bim/server/service/game_service.hpp>
 #include <bim/server/service/lobby_service.hpp>
 #include <bim/server/service/matchmaking_service.hpp>
@@ -26,6 +27,7 @@ namespace bim::server
   private:
     iscool::net::socket_stream m_socket;
 
+    business_registration_service m_business_registration;
     statistics_service m_statistics;
     session_service m_session_service;
     authentication_service m_authentication_service;

@@ -11,6 +11,7 @@
 
 bim::server::server::server(const config& config)
   : m_socket(config.port)
+  , m_business_registration(config)
   , m_statistics(config)
   , m_session_service(config, m_statistics)
   , m_authentication_service(config, m_socket, m_session_service, m_statistics)

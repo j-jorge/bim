@@ -272,6 +272,16 @@ static command_line parse_command_line(int argc, char* argv[])
   config_options.add_options()(
       "name", boost::program_options::value<std::string>(),
       "The name of the server, as sent to the clients.");
+  config_options.add_options()("host",
+                               boost::program_options::value<std::string>(),
+                               "The public address of the device hosting this "
+                               "server, without the port.");
+  config_options.add_options()(
+      "business-url", boost::program_options::value<std::string>(),
+      "Address of the business server, to which we register.");
+  config_options.add_options()(
+      "business-token", boost::program_options::value<std::string>(),
+      "Token to pass to the business server for authenticated requests.");
   all_options.add(config_options);
 
   boost::program_options::options_description statistics_options(
@@ -530,6 +540,9 @@ static command_line parse_command_line(int argc, char* argv[])
 
   parse_config_option(port);
   parse_config_option(name);
+  parse_config_option(host);
+  parse_config_option(business_url);
+  parse_config_option(business_token);
   parse_config_option(session_clean_up_interval);
   parse_config_option(session_removal_delay);
   parse_config_option(enable_bots);

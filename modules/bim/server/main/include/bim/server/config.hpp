@@ -166,8 +166,19 @@ namespace bim::server
     /** Path to the folder where to store the server stats. */
     std::string statistics_log_file;
 
+    /** Address of the business server, to which we register. */
+    std::string business_url;
+
+    /** Token to pass to the business server for authenticated requests. */
+    std::string business_token;
+
     /** The name of the server, as sent to the clients. */
     std::string name;
+
+    /**
+     * The public address of the device hosting this server, without the port.
+     */
+    std::string host;
 
     /**
      * Whether or not we send notifications to a Discord channel when players
