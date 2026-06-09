@@ -4,6 +4,7 @@
 #include <bim/net/message/protocol_version.hpp>
 
 #include <bim/game/feature_flags.hpp>
+#include <bim/game/feature_flags_string.hpp>
 
 #include <bim/bit_map.impl.hpp>
 #include <bim/version.hpp>
@@ -16,125 +17,10 @@
 #include <iscool/json/is_of_type_string.hpp>
 #include <iscool/json/is_of_type_uint.hpp>
 #include <iscool/log/log.hpp>
+#include <iscool/log/nature/error.hpp>
 #include <iscool/log/nature/warning.hpp>
 
 #include <type_traits>
-
-static bool parse_server_list(bim::app::config& result,
-                              const Json::Value& servers)
-{
-  if (!servers.isArray())
-    {
-      ic_log(iscool::log::nature::warning(), "config",
-             "Server list is not an array.");
-      return false;
-    }
-
-  std::string app_version_host;
-  std::string protocol_version_host;
-  std::string default_host;
-
-  for (const Json::Value& server : servers)
-    {
-      if (!server.isObject() || !iscool::json::is_member("host", server))
-        continue;
-
-      const Json::Value& host = server["host"];
-
-      if (!iscool::json::is_of_type<std::string>(host))
-        continue;
-
-      std::string host_str = iscool::json::cast<std::string>(host);
-
-      const bool has_app_version = iscool::json::is_member("version", server);
-      const bool has_protocol_version =
-          iscool::json::is_member("protocol", server);
-
-      if (has_app_version)
-        {
-          const Json::Value& version = server["version"];
-
-          if (iscool::json::is_of_type<unsigned int>(version))
-            {
-              const int v = iscool::json::cast<unsigned int>(version);
-              if (v == bim::version_major)
-                app_version_host = host_str;
-            }
-        }
-
-      if (has_protocol_version)
-        {
-          const Json::Value& version = server["protocol"];
-
-          if (iscool::json::is_of_type<bim::net::version>(version))
-            {
-              const bim::net::version v =
-                  iscool::json::cast<bim::net::version>(version);
-              if (v == bim::net::protocol_version)
-                protocol_version_host = std::move(host_str);
-            }
-        }
-
-      if (!has_app_version && !has_protocol_version)
-        default_host = std::move(host_str);
-    }
-
-  if (!app_version_host.empty())
-    result.game_server = std::move(app_version_host);
-  else if (!protocol_version_host.empty())
-    result.game_server = std::move(protocol_version_host);
-  else if (!default_host.empty())
-    result.game_server = std::move(default_host);
-  else
-    ic_log(iscool::log::nature::warning(), "config",
-           "No game server configured.");
-
-  return true;
-}
-
-static bool parse_shop_products(bim::app::config& result,
-                                const Json::Value& products)
-{
-  if (products.isNull())
-    return true;
-
-  if (!products.isArray())
-    {
-      ic_log(iscool::log::nature::warning(), "config",
-             "Shop products is not an array.");
-      return false;
-    }
-
-  const std::size_t product_count = products.size();
-
-  std::vector<std::string> shop_products;
-  shop_products.reserve(product_count);
-
-  std::vector<int> shop_product_coins;
-  shop_product_coins.reserve(product_count);
-
-  for (const Json::Value& item : products)
-    {
-      if (!item.isObject() || !iscool::json::is_member("product-id", item)
-          || !iscool::json::is_member("coins", item))
-        continue;
-
-      const Json::Value& id = item["product-id"];
-      const Json::Value& coins = item["coins"];
-
-      if (!iscool::json::is_of_type<std::string>(id)
-          || !iscool::json::is_of_type<int>(coins))
-        continue;
-
-      shop_products.push_back(iscool::json::cast<std::string>(id));
-      shop_product_coins.push_back(iscool::json::cast<int>(coins));
-    }
-
-  result.shop_products.swap(shop_products);
-  result.shop_product_coins.swap(shop_product_coins);
-
-  return true;
-}
 
 template <typename T>
 static bool read_value(T& r, const Json::Value& json, const char* n)
@@ -146,7 +32,7 @@ static bool read_value(T& r, const Json::Value& json, const char* n)
 
   if (!iscool::json::is_of_type<T>(v))
     {
-      ic_log(iscool::log::nature::warning(), "config",
+      ic_log(iscool::log::nature::error(), "config",
              "Incorrect type for '%s'.", n);
       return false;
     }
@@ -156,77 +42,224 @@ static bool read_value(T& r, const Json::Value& json, const char* n)
   return true;
 }
 
-static bool parse_game_feature_prices(bim::app::config& result,
-                                      const Json::Value& json, const char* n)
+static bool read_hours(std::chrono::hours& r, const Json::Value& json,
+                       const char* n)
+{
+  std::uint64_t h = r.count();
+
+  if (read_value(h, json, n))
+    {
+      r = std::chrono::hours(h);
+      return true;
+    }
+
+  return false;
+};
+
+static bool parse_misc(bim::app::config& result, const Json::Value& json,
+                       const char* n)
 {
   if (!iscool::json::is_member(n, json))
-    return true;
-
-  const Json::Value& prices = json[n];
-
-  if (!prices.isObject())
     {
-      ic_log(iscool::log::nature::warning(), "config",
-             "Game feature prices is not an object.");
+      ic_log(iscool::log::nature::error(), "config",
+             "Missing misc entry in config.");
       return false;
     }
 
-  if (!read_value(
-          result.game_feature_price[bim::game::feature_flags::falling_blocks],
-          prices, "falling-blocks"))
+  const Json::Value& misc = json[n];
+
+  if (!misc.isObject())
+    {
+      ic_log(iscool::log::nature::error(), "config", "Misc is not an object.");
+      return false;
+    }
+
+  if (!read_value(result.most_recent_version, misc, "most_recent_version"))
     return false;
 
-  if (!read_value(result.game_feature_price[bim::game::feature_flags::shield],
-                  prices, "shield"))
-    return false;
-
-  if (!read_value(
-          result.game_feature_price[bim::game::feature_flags::invisibility],
-          prices, "invisibility"))
-    return false;
-
-  if (!read_value(result.game_feature_price[bim::game::feature_flags::fences],
-                  prices, "fences"))
-    return false;
-
-  if (!read_value(
-          result.game_feature_price[bim::game::feature_flags::fog_of_war],
-          prices, "fog-of-war"))
+  if (!read_hours(result.version_update_interval, misc,
+                  "version_update_interval"))
     return false;
 
   return true;
 }
 
-static bool parse_game_feature_slot_prices(bim::app::config& result,
-                                           const Json::Value& json,
-                                           const char* n)
+static bool parse_server_list(bim::app::config& result,
+                              const Json::Value& json, const char* n)
 {
   if (!iscool::json::is_member(n, json))
-    return true;
-
-  const Json::Value& prices = json[n];
-
-  if (!prices.isArray())
     {
-      ic_log(iscool::log::nature::warning(), "config",
-             "Game feature slot prices is not an array.");
+      ic_log(iscool::log::nature::error(), "config",
+             "Missing server list entry in config.");
       return false;
     }
 
-  const Json::Value::ArrayIndex count = std::min<Json::Value::ArrayIndex>(
-      prices.size(), bim::app::g_game_feature_slot_count);
+  const Json::Value& hosts = json[n];
 
-  using value_type = std::decay_t<decltype(result.game_feature_slot_price[0])>;
-
-  for (Json::Value::ArrayIndex i = 0; i != count; ++i)
+  if (!hosts.isArray())
     {
-      const Json::Value& v = prices[i];
+      ic_log(iscool::log::nature::warning(), "config",
+             "Server list is not an array.");
+      return false;
+    }
 
-      if (!iscool::json::is_of_type<value_type>(v))
-        ic_log(iscool::log::nature::warning(), "config",
-               "Incorrect type for game feature slot price #{}.", i);
-      else
-        result.game_feature_slot_price[i] = iscool::json::cast<value_type>(v);
+  if (hosts.empty())
+    {
+      ic_log(iscool::log::nature::warning(), "config",
+             "No game server in client config.");
+      return true;
+    }
+
+  result.game_server = iscool::json::cast<std::string>(hosts[0]);
+
+  return true;
+}
+
+static bool parse_game_features(bim::app::config& result,
+                                const Json::Value& json, const char* n)
+{
+  if (!iscool::json::is_member(n, json))
+    {
+      ic_log(iscool::log::nature::error(), "config",
+             "Missing game features in config.");
+      return false;
+    }
+
+  const Json::Value& entries = json[n];
+
+  if (!entries.isArray())
+    {
+      ic_log(iscool::log::nature::warning(), "config",
+             "Game features is not an array.");
+      return false;
+    }
+
+  for (Json::Value::ArrayIndex i = 0, count = entries.size(); i != count; ++i)
+    {
+      const Json::Value& entry = entries[i];
+
+      if (!entry.isObject())
+        {
+          ic_log(iscool::log::nature::error(), "config",
+                 "Game feature entry #{} is not an object.", i);
+          return false;
+        }
+
+      std::string feature_name;
+
+      if (!read_value(feature_name, entry, "id"))
+        return false;
+
+      const std::optional<bim::game::feature_flags> flag =
+          bim::game::from_simple_string(feature_name);
+
+      if (!flag)
+        {
+          ic_log(iscool::log::nature::warning(), "config",
+                 "Game feature entry #{} references unknown flag {}.", i,
+                 feature_name);
+          continue;
+        }
+
+      if (!read_value(result.game_feature_price[*flag], entry, "coins"))
+        return false;
+    }
+
+  return true;
+}
+
+static bool parse_game_feature_slots(bim::app::config& result,
+                                     const Json::Value& json, const char* n)
+{
+  if (!iscool::json::is_member(n, json))
+    {
+      ic_log(iscool::log::nature::error(), "config",
+             "Missing game feature slots in config.");
+      return false;
+    }
+
+  const Json::Value& entries = json[n];
+
+  if (!entries.isArray())
+    {
+      ic_log(iscool::log::nature::warning(), "config",
+             "Game feature slots is not an array.");
+      return false;
+    }
+
+  for (Json::Value::ArrayIndex i = 0, count = entries.size(); i != count; ++i)
+    {
+      const Json::Value& entry = entries[i];
+
+      if (!entry.isObject())
+        {
+          ic_log(iscool::log::nature::error(), "config",
+                 "Game feature entry #{} is not an object.", i);
+          return false;
+        }
+
+      std::size_t index;
+
+      if (!read_value(index, entry, "index"))
+        return false;
+
+      if (index >= std::size(result.game_feature_slot_price))
+        {
+          ic_log(iscool::log::nature::warning(), "config",
+                 "Game feature slot #{} references unknown slot #{}.", i,
+                 index);
+          continue;
+        }
+
+      if (!read_value(result.game_feature_slot_price[index], entry, "coins"))
+        return false;
+    }
+
+  return true;
+}
+
+static bool parse_shop_products(bim::app::config& result,
+                                const Json::Value& json, const char* n)
+{
+  if (!iscool::json::is_member(n, json))
+    {
+      ic_log(iscool::log::nature::error(), "config",
+             "Missing shop in config.");
+      return false;
+    }
+
+  const Json::Value& entries = json[n];
+
+  if (!entries.isArray())
+    {
+      ic_log(iscool::log::nature::warning(), "config",
+             "Shop products is not an array.");
+      return false;
+    }
+
+  for (Json::Value::ArrayIndex i = 0, count = entries.size(); i != count; ++i)
+    {
+      const Json::Value& entry = entries[i];
+
+      if (!entry.isObject())
+        {
+          ic_log(iscool::log::nature::error(), "config",
+                 "Shop entry #{} is not an object.", i);
+          return false;
+        }
+
+      std::string id;
+
+      if (!read_value(id, entry, "id"))
+        return false;
+
+      int coins;
+
+      if (!read_value(coins, entry, "coins"))
+        return false;
+
+      result.shop_products.emplace_back(std::move(id));
+      result.shop_product_coins.emplace_back(coins);
     }
 
   return true;
@@ -237,9 +270,7 @@ bim::app::config::config()
   , game_server("bim.jorge.st:"
                 + std::to_string(20000 + bim::version_major * 100
                                  + bim::net::protocol_version))
-  , remote_config_update_interval(std::chrono::hours(1))
   , version_update_interval(std::chrono::days(1))
-  , discord_url("https://discord.gg/HqJtXB8Czy")
 {
   game_feature_price[bim::game::feature_flags::falling_blocks] = 50;
   game_feature_price[bim::game::feature_flags::shield] = 250;
@@ -258,42 +289,19 @@ std::optional<bim::app::config> bim::app::load_config(const Json::Value& json)
 
   config result;
 
-  result.most_recent_version = iscool::json::cast<unsigned int>(
-      json["most-recent-version"], bim::version_major);
-
-  const auto read_hours = [&json](std::chrono::hours& r, const char* n) -> bool
-    {
-      std::uint64_t h = r.count();
-
-      if (read_value(h, json, n))
-        {
-          r = std::chrono::hours(h);
-          return true;
-        }
-
-      return false;
-    };
-
-  if (!read_hours(result.remote_config_update_interval,
-                  "config-update-interval"))
+  if (!parse_misc(result, json, "misc"))
     return std::nullopt;
 
-  if (!read_hours(result.version_update_interval, "version-update-interval"))
+  if (!parse_server_list(result, json, "game_servers"))
     return std::nullopt;
 
-  if (!parse_server_list(result, json["game-servers"]))
+  if (!parse_game_features(result, json, "game_features"))
     return std::nullopt;
 
-  if (!parse_game_feature_prices(result, json, "game-feature-prices"))
+  if (!parse_game_feature_slots(result, json, "game_feature_slots"))
     return std::nullopt;
 
-  if (!parse_game_feature_slot_prices(result, json, "game-feature-slot-price"))
-    return std::nullopt;
-
-  if (!parse_shop_products(result, json["shop"]))
-    return std::nullopt;
-
-  if (!read_value(result.discord_url, json, "discord"))
+  if (!parse_shop_products(result, json, "shop"))
     return std::nullopt;
 
   return result;

@@ -15,7 +15,6 @@
 #include <bim/axmol/input/observer/single_key_observer.hpp>
 
 #include <bim/app/analytics/button_clicked.hpp>
-#include <bim/app/config.hpp>
 #include <bim/app/constant/game_feature_slot_count.hpp>
 #include <bim/app/matchmaking_wait_message.hpp>
 #include <bim/app/preference/feature_flags.hpp>
@@ -275,7 +274,7 @@ void bim::axmol::app::matchmaking::open_discord() const
     return;
 
   button_clicked(*m_context.get_analytics(), "discord", "matchmaking");
-  iscool::system::open_url(m_context.get_config()->discord_url);
+  iscool::system::open_url("https://discord.gg/HqJtXB8Czy");
 }
 
 void bim::axmol::app::matchmaking::dispatch_back() const

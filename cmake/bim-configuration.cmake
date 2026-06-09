@@ -1,3 +1,4 @@
+
 set(BIM_GENERATED_ASSETS_DIR
   "${CMAKE_BINARY_DIR}/assets/generated"
   CACHE
@@ -50,6 +51,23 @@ option(
 )
 message(STATUS "Building with FOSS software only: ${BIM_PURE_FOSS}")
 
+if(BIM_ANDROID_DEV)
+  set(bim_business_server_url "https://bim-stage.jorge.st")
+elseif(CMAKE_BUILD_TYPE STREQUAL "Release"
+    AND BIM_TARGET STREQUAL "android")
+  set(bim_business_server_url "https://bim-prod.jorge.st")
+else()
+  set(bim_business_server_url "http://localhost:4209")
+endif()
+
+set(BIM_BUSINESS_SERVER_URL
+  ${bim_business_server_url}
+  CACHE
+  STRING
+  "URL of the business server targeted by this build."
+)
+unset(bim_business_server_url)
+message(STATUS "Business server is '${BIM_BUSINESS_SERVER_URL}'.")
 
 if(BIM_TARGET STREQUAL "android")
   set(BIM_ANDROID_GENERATED_RES_DIR

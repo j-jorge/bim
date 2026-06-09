@@ -27,6 +27,7 @@
 #include <bim/axmol/ref_ptr.impl.hpp>
 
 #include <bim/app/analytics_service.hpp>
+#include <bim/app/business_url.hpp>
 #include <bim/app/preference/audio.hpp>
 #include <bim/app/preference/haptic.hpp>
 
@@ -156,6 +157,8 @@ bim::axmol::app::detail::persistent_systems::persistent_systems(
   : m_application(app)
   , m_style_cache(m_colors)
 {
+  start_log_system();
+
   set_up_colour_chart();
 
   bim::axmol::action::register_actions(m_action_factory);
@@ -165,7 +168,6 @@ bim::axmol::app::detail::persistent_systems::persistent_systems(
   m_application.m_context.set_analytics(&m_analytics);
   m_application.m_context.set_event_dispatcher(&m_event_dispatcher);
 
-  start_log_system();
   start_display();
   start_social();
   start_haptic_feedback();
@@ -506,6 +508,9 @@ bool bim::axmol::app::application::applicationDidFinishLaunching()
       "launched",
       { { "language",
           iscool::to_string(iscool::system::get_language_name()) } });
+
+  ic_log(iscool::log::nature::info(), g_log_context,
+         "Business server is '{}'.", bim::app::business_url);
 
   m_session_systems.reset(new detail::session_systems(*this));
 

@@ -9,8 +9,11 @@
 
 #include <bim/app/analytics/error.hpp>
 #include <bim/app/analytics_service.hpp>
+#include <bim/app/business_url.hpp>
 #include <bim/app/preference/date_of_next_version_update_message.hpp>
 #include <bim/app/preference/update_preferences.hpp>
+
+#include <bim/net/message/protocol_version.hpp>
 
 #include <bim/dev.hpp>
 #include <bim/tracy.hpp>
@@ -31,6 +34,8 @@
 #include <iscool/signals/implement_signal.hpp>
 #include <iscool/style/loader.hpp>
 #include <iscool/time/now.hpp>
+
+#include <json/value.h>
 
 #include <fmt/format.h>
 
@@ -148,8 +153,12 @@ void bim::axmol::app::main_task::fetch_remote_config()
       config_ready();
     };
 
-  m_config_request_connections = iscool::http::json::get(
-      "https://bim.jorge.st/client-config.json", on_result, on_error);
+  Json::Value body;
+  body["client_version_major"] = bim::version_major;
+  body["game_server_protocol_version"] = bim::net::protocol_version;
+
+  m_config_request_connections = iscool::http::json::post(
+      bim::app::business_url + "/client/config", body, on_result, on_error);
 }
 
 void bim::axmol::app::main_task::validate_remote_config(

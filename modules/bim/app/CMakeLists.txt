@@ -1,4 +1,5 @@
 set(main_sources
+  main/src/bim/app/business_url.cpp
   main/src/bim/app/config.cpp
   main/src/bim/app/matchmaking_wait_message.cpp
   main/src/bim/app/player_progress_tracker.cpp
@@ -18,6 +19,17 @@ set(main_sources
   main/src/bim/app/preference/wallet.cpp
 )
 
+set_source_files_properties(
+  main/src/bim/app/business_url.cpp
+  PROPERTIES
+  COMPILE_DEFINITIONS
+  # We must quote the URL in the preprocessor definition in order to
+  # produce a C-string as soon as possible. This is because the URL
+  # contains a double slash (https://) which is otherwise interpreted
+  # as a comment, thus causing the removal of the rest of the URL.
+  "BIM_BUSINESS_SERVER_URL_STR=\"${BIM_BUSINESS_SERVER_URL}\""
+)
+
 if (BIM_BUILDING_FOR_ANDROID)
   set(platform_sources
     android/src/bim/app/analytics_service.cpp
@@ -35,7 +47,12 @@ else()
 endif()
 
 add_library(bim_app STATIC ${main_sources} ${platform_sources})
-target_include_directories(bim_app PUBLIC main/include ${platform_includes})
+target_include_directories(
+  bim_app
+  PUBLIC
+  main/include
+  ${platform_includes}
+)
 
 target_link_libraries(bim_app
   PUBLIC

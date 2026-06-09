@@ -25,7 +25,6 @@ namespace bim::app
 
     int most_recent_version;
     std::string game_server;
-    std::chrono::hours remote_config_update_interval;
     std::chrono::hours version_update_interval;
 
     bim::bit_map<bim::game::feature_flags, std::int16_t> game_feature_price;
@@ -33,8 +32,6 @@ namespace bim::app
 
     std::vector<std::string> shop_products;
     std::vector<int> shop_product_coins;
-
-    std::string discord_url;
   };
 
   std::optional<config> load_config(const Json::Value& json);

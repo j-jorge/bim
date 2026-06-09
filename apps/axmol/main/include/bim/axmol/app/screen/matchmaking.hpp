@@ -21,7 +21,6 @@ namespace bim::axmol::widget
 
 namespace bim::app
 {
-  struct config;
   class analytics_service;
   class matchmaking_wait_message;
 }
@@ -62,7 +61,6 @@ namespace bim::axmol::app
             ((application_event_dispatcher*)(event_dispatcher))            //
             ((bim::net::session_handler*)(session_handler))                //
             ((iscool::preferences::local_preferences*)(local_preferences)) //
-            ((const bim::app::config*)(config))                            //
             ),
         ic_context_no_properties);
 
