@@ -42,10 +42,9 @@ msgid "Feedback about Bim!"
 msgstr "Feedback su Bim!"
 
 msgid ""
-"Come play a game of Bim! https://play.google.com/store/apps/details?"
-"id=bim.app"
+"Come play a game of Bim! {}"
 msgstr ""
-"Vieni a giocare a Bim! https://play.google.com/store/apps/details?id=bim.app"
+"Vieni a giocare a Bim! {}"
 
 msgid "You need more coins to purchase this item!"
 msgstr "Hai bisogno di più monete per acquistare questo elemento!"
@@ -202,8 +201,8 @@ msgid "Yes"
 msgstr ""
 
 msgid ""
-"Is your language missing? Add it on <a href='https://hosted.weblate.org/"
-"projects/bim/gettext-files/'>Weblate</a>!"
+"Is your language missing? Add it on <a href='#"
+"'>Weblate</a>!"
 msgstr ""
 
 msgid "Language"

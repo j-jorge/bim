@@ -40,12 +40,9 @@ msgstr "Version {}"
 msgid "Feedback about Bim!"
 msgstr "Feedback zu Bim!"
 
-msgid ""
-"Come play a game of Bim! https://play.google.com/store/apps/details?"
-"id=bim.app"
-msgstr ""
-"Komm und spiel eine Runde Bim! https://play.google.com/store/apps/details?"
-"id=bim.app"
+#, c++-format
+msgid "Come play a game of Bim! {}"
+msgstr "Komm und spiel eine Runde Bim! {}"
 
 msgid "You need more coins to purchase this item!"
 msgstr "Sie benötigen mehr Münzen, um diesen Artikel zu kaufen!"
@@ -218,8 +215,8 @@ msgid "Yes"
 msgstr ""
 
 msgid ""
-"Is your language missing? Add it on <a href='https://hosted.weblate.org/"
-"projects/bim/gettext-files/'>Weblate</a>!"
+"Is your language missing? Add it on <a href='#"
+"'>Weblate</a>!"
 msgstr ""
 
 msgid "Language"

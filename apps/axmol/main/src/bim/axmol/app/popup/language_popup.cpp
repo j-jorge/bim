@@ -87,7 +87,10 @@ bim::axmol::app::language_popup::language_popup(
   m_controls->add_language->setOpenUrlHandler(
       [this](std::string_view url)
         {
-          open_url(url);
+          // URL is kept here as the translators don't have to translate it,
+          // and could make mistakes while manipulating the string. We expect
+          // the add_language control to have a single link.
+          open_url("https://hosted.weblate.org/projects/bim/gettext-files/");
         });
 
   const iscool::style::declaration& list_item_container_style =

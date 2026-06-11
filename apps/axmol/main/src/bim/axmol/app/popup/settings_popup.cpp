@@ -322,7 +322,7 @@ void bim::axmol::app::settings_popup::open_share()
 {
   bim::app::button_clicked(*m_context.get_analytics(), "share", "settings");
   m_context.get_social()->share_message(
-      ic_gettext("Come play a game of Bim! "
-                 "https://play.google.com/store/apps/details?id=bim.app"));
+      fmt::format(fmt::runtime(ic_gettext("Come play a game of Bim! {}")),
+                  "https://play.google.com/store/apps/details?id=bim.app"));
   m_context.get_event_dispatcher()->dispatch("share");
 }
