@@ -10,7 +10,6 @@ TEST(bim_bit_map, eight_bits)
   };
   bim::bit_map<test, char> m;
 
-  m[test(0)] = 'a';
   m[test(1 << 0)] = 'b';
   m[test(1 << 1)] = 'c';
   m[test(1 << 2)] = 'd';
@@ -20,7 +19,6 @@ TEST(bim_bit_map, eight_bits)
   m[test(1 << 6)] = 'h';
   m[test(1 << 7)] = 'i';
 
-  EXPECT_EQ('a', m[test(0)]);
   EXPECT_EQ('b', m[test(1 << 0)]);
   EXPECT_EQ('c', m[test(1 << 1)]);
   EXPECT_EQ('d', m[test(1 << 2)]);

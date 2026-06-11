@@ -5,7 +5,7 @@
 
 namespace bim
 {
-  template <typename E, typename T, int M = sizeof(E) * 8 + 1>
+  template <typename E, typename T, int M = sizeof(E) * 8>
   class bit_map
   {
   public:
