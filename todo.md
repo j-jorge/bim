@@ -7,7 +7,6 @@
 - Standalone application with a bot playing online.
 - Compute the client's ping on the server, use it to handle disconnections.
 - Move the context out of the contest. It's the same for every contest.
-- Set UBSAN_OPTIONS and co. to stop the tests on failure.
 - Why does --console-log on server-tests only works for the first test?
 - Opt-in for the console-log in Android builds.
 - Room full for named games?

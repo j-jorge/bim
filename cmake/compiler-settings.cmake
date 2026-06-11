@@ -48,6 +48,7 @@ if ((CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     add_link_options(
       -fsanitize=address
       -fsanitize=undefined
+      -fno-sanitize-recover=all
       -static-libasan
       -static-libubsan
     )
