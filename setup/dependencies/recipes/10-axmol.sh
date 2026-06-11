@@ -9,7 +9,7 @@ set -euo pipefail
 
 : "${axmol_repository:=https://github.com/j-jorge/axmol/}"
 : "${axmol_version:=2.11.2.1j}"
-package_revision=1
+package_revision=6
 version="$axmol_version"-"$package_revision"
 flavor="$bim_build_type"
 

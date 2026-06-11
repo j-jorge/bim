@@ -51,11 +51,24 @@ check_option_is_set "--install-dir" "${install_dir:-}"
 check_option_is_set "--source-dir" "${source_dir:-}"
 
 build()
-{
+(
     local local_build_dir="$1"
     shift
 
     mkdir --parents "$local_build_dir"
+
+    if [[ "$bim_package_install_platform" == linux ]] \
+       && (cc -v 2>/dev/null | grep --quiet '^gcc version')
+    then
+        # Set those flags globally because GCC reports too many false
+        # positives and even if we set them in the current project's CMake
+        # files they would be triggered from dependencies.
+        local gcc_flags="-Wno-stringop-overflow -Wno-alloc-size-larger-than"
+
+        export CFLAGS="$gcc_flags ${CFLAGS:-}"
+        export CXXFLAGS="$gcc_flags ${CXXFLAGS:-}"
+        export LDFLAGS="$gcc_flags ${LDFLAGS:-}"
+    fi
 
     cd "$local_build_dir"
 
@@ -70,7 +83,7 @@ build()
           "$@"
 
     cmake --build . --target install --parallel
-}
+)
 
 build_android_arch()
 {

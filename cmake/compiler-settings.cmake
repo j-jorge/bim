@@ -31,12 +31,12 @@ if ((CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     add_link_options("LINKER:--build-id=none")
   endif()
 
-  if ((CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-      AND (CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 13))
-    # This error is reported on some calls to std::vector::push_back()
-    # for which I cannot find any problem, so either I do not
-    # understand or it is a false positive.
-    add_compile_options(-Wno-stringop-overflow)
+  if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    # Those warnings are bogus.
+    add_compile_options(
+      -Wno-stringop-overflow
+      -Wno-alloc-size-larger-than
+    )
   endif()
 
   option(BIM_ADDRESS_SANITIZER "Compile with AddressSanitizer enabled" OFF)

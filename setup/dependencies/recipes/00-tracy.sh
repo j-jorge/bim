@@ -12,7 +12,7 @@ set -euo pipefail
 # the final product.
 [[ "$bim_product_mode" = 0 ]] || exit 0
 
-package_revision=4
+package_revision=5
 version="$tracy_version"-"$package_revision"
 build_type=release
 

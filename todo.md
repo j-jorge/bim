@@ -5,7 +5,6 @@
 - Hot reload of the config on the server.
 - Do not update the fog if there is no fog.
 - Standalone application with a bot playing online.
-- Pass -Wno-stringop-overflow and -Wno-alloc-size-larger-than to GCC globally.
 - Compute the client's ping on the server, use it to handle disconnections.
 - Move the context out of the contest. It's the same for every contest.
 - Set UBSAN_OPTIONS and co. to stop the tests on failure.
