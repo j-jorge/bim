@@ -19,24 +19,21 @@ jobs:
 
     strategy:
       matrix:
-        # Last LTS and last non-LTS.
-        container: ["debian:forky", "ubuntu:25.10"]
+        # We want to test stable compilers (typically from Debian) and
+        # recent compilers (typically from Ubuntu).
+        container: ["debian:forky", "ubuntu:26.04"]
         build_type: [release, debug]
-        # Can't use Clang 21 on Ubuntu 25.10 as it is missing
-        # LLVMgold.so, necessary for LTO builds.
-        compiler: [g++, clang-20, clang-21]
+        compiler: [g++, clang-22]
         maybe_incremental: [--incremental, ""]
         exclude:
           - container: "debian:forky"
-            compiler: clang-20
-          - container: "ubuntu:25.10"
-            compiler: clang-21
+            compiler: clang-22
 
     steps:
       - name: Cache dependencies
         if: |
           (matrix.maybe_incremental != '')
-          || (matrix.container != 'ubuntu:25.10')
+          || (matrix.container != 'ubuntu:26.04')
           || (matrix.build_type != 'debug')
           || (matrix.compiler != 'g++')
         uses: actions/cache@v4
