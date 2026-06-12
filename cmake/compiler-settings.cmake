@@ -125,3 +125,5 @@ if(NOT post_build_strip_defined)
 endif()
 
 unset(post_build_strip_defined)
+
+message(STATUS "CXX flags are: ${CMAKE_CXX_FLAGS}")

@@ -11,6 +11,7 @@ host_prefix="$backroom"/host
 python_virtual_environment_path="$host_prefix"/python
 build_type=release
 incremental_build=0
+optimized_debug=0
 target_platform=linux
 tag=
 build_steps=()
@@ -60,6 +61,9 @@ Where OPTIONS is
   --incremental
      Do an incremental build, i.e. disable the unity build. This is
      useful if you need your build to take longer than necessary.
+  --optimized-debug
+     If --build-type is 'debug', then enable compiler optimizations
+     with -Og.
   --product
      Do not build the developer's tools.
   --target-platform P
@@ -123,6 +127,9 @@ do
             ;;
         --incremental)
             incremental_build=1
+            ;;
+        --optimized-debug)
+            optimized_debug=1
             ;;
         --product)
             product_mode=1
@@ -327,7 +334,7 @@ configure()
     cmake_options=()
     case "$build_type" in
         asan)
-            cmake_options=(-DCMAKE_BUILD_TYPE=Debug
+            cmake_options=(-DCMAKE_BUILD_TYPE=RelWithDebInfo
                            -DBIM_ADDRESS_SANITIZER=ON)
             ;;
         debug)
@@ -400,6 +407,16 @@ launch_tests()
 
     return "$result"
 }
+
+if [[ "$build_type" == release ]]
+then
+    export CFLAGS="${CFLAGS:-} -O3"
+    export CXXFLAGS="${CXXFLAGS:-} -O3"
+elif [[ "$build_type" == debug ]] && (( optimized_debug == 1 ))
+then
+    export CFLAGS="${CFLAGS:-} -Og"
+    export CXXFLAGS="${CXXFLAGS:-} -Og"
+fi
 
 set_up_host_prefix
 

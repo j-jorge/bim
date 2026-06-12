@@ -60,6 +60,18 @@ jobs:
           ./setup.sh
           --target-platform linux
           --build-type ${{matrix.build_type}} ${{matrix.maybe_incremental}}
+          --build-steps dependencies configure build
+
+      - name: Launch tests
+        if: |
+          (matrix.maybe_incremental == '')
+          && (matrix.container == 'debian:forky')
+          && (matrix.compiler == 'g++')
+        run: >
+          ./setup.sh
+          --target-platform linux
+          --build-type ${{matrix.build_type}}
+          --build-steps test
 
       # Valgrind tests runs for a single configuration only because
       # they are very slow.

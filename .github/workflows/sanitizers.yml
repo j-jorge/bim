@@ -39,14 +39,6 @@ jobs:
           --compiler g++
           --target-platform linux
 
-      # Older versions of ThreadSanitizer are not compatible with ASLR
-      # on some recent Linux distributions, thus we reduce the entropy
-      # until we can upgrade for a newer version. See
-      # https://github.com/google/sanitizers/issues/1716
-      - name: ASLR fix
-        run: >
-          sysctl vm.mmap_rnd_bits=28
-
       - name: Launch build
         run: >
           ./setup.sh
