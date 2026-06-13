@@ -15,9 +15,6 @@ namespace bim::app
         std::pair<std::string_view, std::string_view>, 2>;
 
   public:
-    analytics_service();
-    ~analytics_service();
-
     void event(std::string_view name);
     void event(std::string_view name, const property_list& properties);
 

@@ -117,6 +117,28 @@ if ((CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     message(STATUS "Disabling LTO explicitly.")
     add_link_options(-fno-lto)
   endif()
+
+  set(clang_tidy_default_value $ENV{BIM_ENABLE_CLANG_TIDY})
+  if(NOT clang_tidy_default_value)
+    set(clang_tidy_default_value FALSE)
+  endif()
+
+  option(
+    BIM_ENABLE_CLANG_TIDY
+    "Run clang-tidy during the build."
+    ${clang_tidy_default_value}
+  )
+  unset(clang_tidy_default_value)
+
+  if(BIM_ENABLE_CLANG_TIDY)
+    find_program(clang_tidy clang-tidy-22 REQUIRED)
+    set(
+      CMAKE_CXX_CLANG_TIDY
+      ${clang_tidy}
+      -extra-arg=-Wno-unknown-warning-option
+      --warnings-as-errors=*
+    )
+  endif()
 endif()
 
 if(NOT post_build_strip_defined)

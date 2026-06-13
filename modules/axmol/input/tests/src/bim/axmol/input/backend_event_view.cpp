@@ -18,7 +18,7 @@ TEST(bim_axmol_input_backend_event_view_test, consume_all)
   backend_event events[] = { backend_event('a'), backend_event('b'),
                              backend_event('c') };
 
-  backend_event_view view(events);
+  const backend_event_view view(events);
   EXPECT_FALSE(view.is_fully_consumed());
 
   (view.begin() + 1)->consume();
@@ -38,7 +38,7 @@ TEST(bim_axmol_input_backend_event_view_test, consume_one_by_one)
   backend_event events[] = { backend_event('a'), backend_event('b'),
                              backend_event('c') };
 
-  backend_event_view view(events);
+  const backend_event_view view(events);
 
   EXPECT_FALSE(view.is_fully_consumed());
   events[0].consume();
@@ -59,7 +59,7 @@ TEST(bim_axmol_input_backend_event_view_test, size)
   backend_event events[] = { backend_event('a'), backend_event('b'),
                              backend_event('c') };
 
-  backend_event_view view(events);
+  const backend_event_view view(events);
 
   EXPECT_EQ(std::size_t(3), view.size());
   EXPECT_FALSE(view.empty());

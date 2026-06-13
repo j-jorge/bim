@@ -91,10 +91,6 @@ namespace bim::axmol::app
                 bool enable_debug, script_info* script);
     ~application();
 
-    bool applicationDidFinishLaunching() override;
-    void applicationDidEnterBackground() override;
-    void applicationWillEnterForeground() override;
-
   private:
     struct screen_config
     {
@@ -103,6 +99,10 @@ namespace bim::axmol::app
     };
 
   private:
+    bool applicationDidFinishLaunching() override;
+    void applicationDidEnterBackground() override;
+    void applicationWillEnterForeground() override;
+
     void complete_launch();
 
     void clean_up();

@@ -17,7 +17,7 @@ TEST(bim_game_check_game_over, no_player)
   bim::game::context context;
   bim::game::fill_context(context);
 
-  entt::registry registry;
+  const entt::registry registry;
 
   const bim::game::contest_result result =
       bim::game::check_game_over(context, registry);

@@ -261,7 +261,7 @@ void bim::axmol::app::shop::purchase_completed(std::string_view product,
 {
   const bim::app::config& config = *m_context.get_config();
 
-  for (std::size_t i : m_index_in_products)
+  for (const std::size_t i : m_index_in_products)
     if (config.shop_products[i] == product)
       {
         m_context.get_analytics()->event(

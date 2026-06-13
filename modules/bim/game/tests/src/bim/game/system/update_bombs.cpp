@@ -41,8 +41,7 @@ static std::vector<std::string> flames_map(const bim::game::arena& arena,
                                   std::string(arena.width(), ' '));
 
   registry.view<bim::game::flame, bim::game::position_on_grid>().each(
-      [&](entt::entity e, bim::game::flame f,
-          bim::game::position_on_grid p) -> void
+      [&](bim::game::flame f, bim::game::position_on_grid p) -> void
         {
           if (f.segment == bim::game::flame_segment::origin)
             result[p.y][p.x] = 'B';
@@ -65,7 +64,7 @@ static std::vector<std::string> flames_map(const bim::game::arena& arena,
 TEST(update_bombs, delay)
 {
   entt::registry registry;
-  bim::game::arena arena(3, 3);
+  const bim::game::arena arena(3, 3);
   bim::game::entity_world_map entity_map(arena.width(), arena.height());
   constexpr std::uint8_t x = 0;
   constexpr std::uint8_t y = 0;
@@ -75,7 +74,7 @@ TEST(update_bombs, delay)
   const entt::entity entity =
       bim::game::bomb_factory(registry, entity_map, x, y, strength,
                               player_index, std::chrono::milliseconds(24));
-  bim::game::timer& timer = registry.get<bim::game::timer>(entity);
+  const bim::game::timer& timer = registry.get<bim::game::timer>(entity);
 
   EXPECT_EQ(std::chrono::milliseconds(24), timer.duration);
 }

@@ -127,6 +127,6 @@ void bim::net::hello_ok::build_message(iscool::net::message& message) const
 
   content << hello_record_id::name << (std::uint8_t)name.size();
 
-  for (char c : name)
+  for (const char c : name)
     content << (std::uint8_t)c;
 }

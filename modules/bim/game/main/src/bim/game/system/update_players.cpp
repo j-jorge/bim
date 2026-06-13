@@ -18,16 +18,15 @@ void bim::game::update_players(const context& context,
 {
   const player_animations& animations = context.get<const player_animations>();
 
-  registry.view<player, fractional_position_on_grid, animation_state>().each(
-      [&](entt::entity e, const player&, fractional_position_on_grid position,
-          animation_state& state) -> void
+  registry.view<player>().each(
+      [&](entt::entity e, const player&) -> void
         {
           if (registry.storage<kicked>().contains(e))
             registry.emplace<dead>(e);
         });
 
   registry.view<player, burning, animation_state>().each(
-      [&](entt::entity e, const player&, animation_state& state) -> void
+      [&](const player&, animation_state& state) -> void
         {
           if (animations.is_alive(state.model))
             state.transition_to(animations.burn);

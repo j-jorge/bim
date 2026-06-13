@@ -51,7 +51,7 @@ public:
 
 private:
   // Functions from TableViewDataSource.
-  ax::Size tableCellSizeForIndex(ax::extension::TableView* table,
+  ax::Size tableCellSizeForIndex(ax::extension::TableView*,
                                  ssize_t index) override
   {
     return m_items[index]->getContentSize();
@@ -87,7 +87,7 @@ private:
     return cell;
   }
 
-  ssize_t numberOfCellsInTableView(ax::extension::TableView* table) override
+  ssize_t numberOfCellsInTableView(ax::extension::TableView*) override
   {
     return m_items.size();
   }
@@ -99,7 +99,7 @@ private:
     // Nothing to do, it is handled in our input tree.
   }
 
-  void tableCellWillRecycle(ax::extension::TableView* table,
+  void tableCellWillRecycle(ax::extension::TableView*,
                             ax::extension::TableViewCell* cell) override
   {
     cell->removeAllChildren();

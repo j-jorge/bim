@@ -29,7 +29,7 @@ namespace bim::server
   class matchmaking_service
   {
   public:
-    enum class try_start_mode
+    enum class try_start_mode : std::uint8_t
     {
       wait,
       now

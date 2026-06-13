@@ -239,7 +239,7 @@ void bim::axmol::input::node::touch_cancelled(touch_event& touch)
 
 void bim::axmol::input::node::key_pressed(const key_event_view& keys)
 {
-  const auto enter = [](const node& n) -> bool
+  const auto enter = [](const node&) -> bool
     {
       return true;
     };
@@ -256,7 +256,7 @@ void bim::axmol::input::node::key_pressed(const key_event_view& keys)
 
 void bim::axmol::input::node::key_released(const key_event_view& keys)
 {
-  const auto enter = [](const node& n) -> bool
+  const auto enter = [](const node&) -> bool
     {
       return true;
     };
@@ -339,7 +339,7 @@ void bim::axmol::input::node::string_id(std::ostream& stream) const
     stream << "null";
   else
     {
-      touch_observer* const touch = m_touch_observer.lock().get();
+      const touch_observer* const touch = m_touch_observer.lock().get();
       stream << '(' << typeid(*touch).name() << ':' << touch << ')';
     }
 
@@ -349,7 +349,7 @@ void bim::axmol::input::node::string_id(std::ostream& stream) const
     stream << "null";
   else
     {
-      key_observer* const key = m_key_observer.lock().get();
+      const key_observer* const key = m_key_observer.lock().get();
       stream << '(' << typeid(*key).name() << ':' << key << ')';
     }
 }

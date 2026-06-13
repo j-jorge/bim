@@ -553,18 +553,16 @@ bool bim::game::bot::find_goal(
   log_map("distances", m_distance);
 
   if (m_state == state::reach_for_safety)
-    return find_safety_goal(contest, bot_position);
+    return find_safety_goal();
 
   if ((crate_count > 0) || (unknown_count > 0))
     return find_exploration_goal(contest, opponent_is_valid, player_positions,
                                  bot_player);
 
-  return find_attack_goal(contest, opponent_is_valid, player_positions,
-                          bot_player);
+  return find_attack_goal(opponent_is_valid, player_positions);
 }
 
-bool bim::game::bot::find_safety_goal(const contest& contest,
-                                      const position_on_grid& bot_position)
+bool bim::game::bot::find_safety_goal()
 {
   log_event("New goal: safety.");
   m_candidate_goals.clear();
@@ -625,7 +623,7 @@ bool bim::game::bot::update_safety_goal(const contest& contest,
 
   const int old_goal_distance = m_distance(m_goal->target.x, m_goal->target.y);
   int shortest_distance = old_goal_distance;
-  int old_danger_count =
+  const int old_danger_count =
       (old_goal_distance >= navigation_check::unreachable)
           ? std::numeric_limits<int>::max()
           : sum_to(m_goal->target.x, m_goal->target.y, m_immediate_danger_map);
@@ -746,9 +744,8 @@ bool bim::game::bot::find_exploration_goal(
 }
 
 bool bim::game::bot::find_attack_goal(
-    const contest& contest, const per_player_array<bool>& opponent_is_valid,
-    const per_player_array<position_on_grid>& player_positions,
-    const player& bot_player)
+    const per_player_array<bool>& opponent_is_valid,
+    const per_player_array<position_on_grid>& player_positions)
 {
   log_event("New goal: attack.");
   // Find the nearest opponent.
@@ -1355,12 +1352,10 @@ void bim::game::bot::log_goal() const
     {
       s[p.y][p.x] = c;
 
-      if (c == '9')
+      if ((c == '9') || (c == 'Z'))
         c = 'a';
       else if (c == 'z')
         c = 'A';
-      else if (c == 'Z')
-        c = 'a';
       else
         ++c;
     }

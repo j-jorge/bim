@@ -175,7 +175,7 @@ update_checksum_for_component(checksum_state& checksum_state,
   std::uint16_t n = 0;
 
   if constexpr (std::is_empty_v<T>)
-    for (entt::entity e : all_entities)
+    for (const entt::entity e : all_entities)
       {
         const entt::registry::storage_for_type<T>* const storage =
             registry.storage<T>();
@@ -187,7 +187,7 @@ update_checksum_for_component(checksum_state& checksum_state,
         ++n;
       }
   else
-    for (entt::entity e : all_entities)
+    for (const entt::entity e : all_entities)
       {
         const T* const c = registry.try_get<T>(e);
 

@@ -17,38 +17,31 @@
 #include <iostream>
 #include <sstream>
 
-namespace bim
+namespace bim::game
 {
-  namespace game
+  static std::ostream& operator<<(std::ostream& os, cell_neighborhood n)
   {
-    std::ostream& operator<<(std::ostream& os, bim::game::cell_neighborhood n)
-    {
-      const char* const names[] = { "left",      "right",     "up",
-                                    "down",      "up_left",   "up_right",
-                                    "down_left", "down_right" };
+    const char* const names[] = { "left",      "right",     "up",
+                                  "down",      "up_left",   "up_right",
+                                  "down_left", "down_right" };
 
-      const bim::game::cell_neighborhood values[] = {
-        bim::game::cell_neighborhood::left,
-        bim::game::cell_neighborhood::right,
-        bim::game::cell_neighborhood::up,
-        bim::game::cell_neighborhood::down,
-        bim::game::cell_neighborhood::up_left,
-        bim::game::cell_neighborhood::up_right,
-        bim::game::cell_neighborhood::down_left,
-        bim::game::cell_neighborhood::down_right
-      };
+    const cell_neighborhood values[] = {
+      cell_neighborhood::left,      cell_neighborhood::right,
+      cell_neighborhood::up,        cell_neighborhood::down,
+      cell_neighborhood::up_left,   cell_neighborhood::up_right,
+      cell_neighborhood::down_left, cell_neighborhood::down_right
+    };
 
-      const char* separator = "[";
+    const char* separator = "[";
 
-      for (std::size_t i = 0; i != std::size(names); ++i)
-        if (!!(n & values[i]))
-          {
-            os << separator << ' ' << names[i] << ' ';
-            separator = "|";
-          }
+    for (std::size_t i = 0; i != std::size(names); ++i)
+      if (!!(n & values[i]))
+        {
+          os << separator << ' ' << names[i] << ' ';
+          separator = "|";
+        }
 
-      return os << ']';
-    }
+    return os << ']';
   }
 }
 

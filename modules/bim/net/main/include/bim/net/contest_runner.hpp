@@ -47,7 +47,7 @@ namespace bim::net
     void apply_server_actions(entt::registry& registry);
     void save_contest_state(entt::registry& registry);
     void drop_confirmed_actions();
-    void apply_unconfirmed_actions(entt::registry& registry);
+    void apply_unconfirmed_actions();
     void apply_actions_for_current_tick(
         entt::registry& registry,
         const bim::game::player_action& local_player_action);

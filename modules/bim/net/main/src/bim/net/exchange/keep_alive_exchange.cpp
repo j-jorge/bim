@@ -28,8 +28,10 @@ void bim::net::keep_alive_exchange::start(iscool::net::session_id session)
   m_retry_count = g_max_retry_count;
 
   m_channel_signal_connection = m_message_channel.connect_to_message(
-      std::bind(&keep_alive_exchange::interpret_received_message, this,
-                std::placeholders::_2));
+      [this](const iscool::net::endpoint&, const iscool::net::message&)
+        {
+          m_retry_count = g_max_retry_count;
+        });
 
   tick();
 }
@@ -56,10 +58,4 @@ void bim::net::keep_alive_exchange::tick()
 
   --m_retry_count;
   m_message_channel.send(m_client_message);
-}
-
-void bim::net::keep_alive_exchange::interpret_received_message(
-    const iscool::net::message& message)
-{
-  m_retry_count = g_max_retry_count;
 }

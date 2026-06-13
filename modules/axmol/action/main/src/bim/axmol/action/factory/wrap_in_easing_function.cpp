@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/axmol/action/factory/wrap_in_easing_function.hpp>
 
-#include <bim/assume.hpp>
+#include <bim/unreachable.hpp>
 
 #include <iscool/style/declaration.hpp>
 
@@ -33,7 +33,7 @@ bim::axmol::action::wrap_in_easing_function(ax::ActionInterval& action,
   test_easing(quintic, QuinticAction);
   test_easing(sine, Sine);
 
-  bim_assume(false);
+  bim_unreachable;
   return nullptr;
 }
 

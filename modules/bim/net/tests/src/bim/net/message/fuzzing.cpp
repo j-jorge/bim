@@ -20,7 +20,9 @@
 #include <bim/net/message/start.hpp>
 #include <bim/net/message/try_deserialize_message.hpp>
 
+#include <charconv>
 #include <cstdlib>
+#include <cstring>
 #include <limits>
 #include <random>
 
@@ -31,17 +33,27 @@ class fuzzed_message_deserialization_test : public testing::Test
 {
 public:
   fuzzed_message_deserialization_test()
+    : m_seed_source(std::random_device()())
+  {}
+
+protected:
+  void SetUp() override
   {
     const char* const seed = std::getenv("BIM_TEST_SEED");
 
     if (seed)
       {
-        m_first_seed = std::atoi(seed);
+        const char* const end = seed + std::strlen(seed);
+        const std::from_chars_result r =
+            std::from_chars(seed, end, m_first_seed);
+
+        ASSERT_EQ(std::errc{}, r.ec);
+        ASSERT_EQ(end, r.ptr);
+
         m_loops = 1;
       }
     else
       {
-        m_seed_source = std::mt19937(std::random_device()());
         m_first_seed = random();
         m_loops = 100;
       }

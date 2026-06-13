@@ -38,7 +38,7 @@ TEST(bim_game_game_state_checksum, compare_serialization_checksum)
   bim::game::archive_storage archive;
   bim::game::serialize_state(archive, registry);
 
-  bim::game::archive_storage final_state;
+  const bim::game::archive_storage final_state;
   {
     // Directly update the registry and compute the checksum. This would be the
     // behavior on the server.

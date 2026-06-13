@@ -17,7 +17,7 @@ static void check_bomb_power_up_player_collision(
   const std::uint8_t x = position.grid_aligned_x();
   const std::uint8_t y = position.grid_aligned_y();
 
-  for (entt::entity maybe_bomb_power_up : entity_map.entities_at(x, y))
+  for (const entt::entity maybe_bomb_power_up : entity_map.entities_at(x, y))
     {
       if (registry.storage<bim::game::dead>().contains(maybe_bomb_power_up))
         continue;

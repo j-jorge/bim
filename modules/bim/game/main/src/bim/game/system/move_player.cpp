@@ -11,7 +11,7 @@
 #include <bim/game/entity_world_map.hpp>
 #include <bim/game/is_solid.hpp>
 
-#include <bim/assume.hpp>
+#include <bim/unreachable.hpp>
 
 #include <entt/entity/registry.hpp>
 
@@ -315,7 +315,7 @@ void bim::game::move_player(fractional_position_on_grid& position,
                 y_decimal, y_floor, position);
       break;
     case player_movement::idle:
-      bim_assume(false);
+      bim_unreachable;
       break;
     }
 }

@@ -41,7 +41,7 @@ public:
   bim_game_apply_player_action_test();
 
 protected:
-  enum class obstacle
+  enum class obstacle : std::uint8_t
   {
     bomb,
     crate,
@@ -192,11 +192,11 @@ void bim_game_apply_player_action_test::run_all_forward_move_tests(
     bim::game::player_movement movement, bim::game::animation_id end_state,
     float end_x, float end_y)
 {
-  bim::game::arena arena = m_arena;
-  bim::game::entity_world_map entity_map = m_entity_map;
+  const bim::game::arena arena = m_arena;
+  const bim::game::entity_world_map entity_map = m_entity_map;
 
-  for (obstacle o : { obstacle::bomb, obstacle::crate, obstacle::fence,
-                      obstacle::static_wall })
+  for (const obstacle o : { obstacle::bomb, obstacle::crate, obstacle::fence,
+                            obstacle::static_wall })
     {
       m_registry.clear();
       m_arena = arena;
@@ -234,7 +234,7 @@ void bim_game_apply_player_action_test::run_forward_move_test(
                                      m_entity_map);
     }
 
-  bim::game::animation_state& state =
+  const bim::game::animation_state& state =
       m_registry.storage<bim::game::animation_state>().get(player);
   EXPECT_EQ(end_state, state.model);
 
@@ -250,11 +250,11 @@ void bim_game_apply_player_action_test::run_all_dodge_move_tests(
     bim::game::player_movement second_move, bim::game::animation_id end_state,
     float end_x, float end_y)
 {
-  bim::game::arena arena = m_arena;
-  bim::game::entity_world_map entity_map = m_entity_map;
+  const bim::game::arena arena = m_arena;
+  const bim::game::entity_world_map entity_map = m_entity_map;
 
-  for (obstacle o : { obstacle::bomb, obstacle::crate, obstacle::fence,
-                      obstacle::static_wall })
+  for (const obstacle o : { obstacle::bomb, obstacle::crate, obstacle::fence,
+                            obstacle::static_wall })
     {
       m_registry.clear();
       m_arena = arena;
@@ -295,7 +295,7 @@ void bim_game_apply_player_action_test::run_dodge_move_test(
                                      m_entity_map);
     }
 
-  bim::game::animation_state& state =
+  const bim::game::animation_state& state =
       m_registry.storage<bim::game::animation_state>().get(player);
   EXPECT_EQ(end_state, state.model);
 
@@ -322,12 +322,12 @@ void bim_game_apply_player_action_test::run_all_cannot_dodge_tests(
   };
   static_assert(std::size(side_edges) == std::size(side_obstacles));
 
-  bim::game::arena arena = m_arena;
-  bim::game::entity_world_map entity_map = m_entity_map;
+  const bim::game::arena arena = m_arena;
+  const bim::game::entity_world_map entity_map = m_entity_map;
 
-  for (obstacle front : all_obstacles)
+  for (const obstacle front : all_obstacles)
     for (std::size_t i = 0; i != std::size(side_edges); ++i)
-      for (obstacle corner : all_obstacles)
+      for (const obstacle corner : all_obstacles)
         {
           m_registry.clear();
           m_arena = arena;
@@ -808,7 +808,7 @@ TEST_F(bim_game_apply_player_action_test, drop_bomb_decreases_inventory)
   const bim::game::bomb* bomb = nullptr;
   entt::entity bomb_entity = entt::null;
 
-  for (entt::entity e : entities)
+  for (const entt::entity e : entities)
     if (m_registry.storage<bim::game::bomb>().contains(e))
       {
         bomb_entity = e;
@@ -852,7 +852,7 @@ TEST_F(bim_game_apply_player_action_test, drop_bomb_decreases_inventory)
           .entities_at(position.grid_aligned_x(), position.grid_aligned_y())
           .empty());
 
-  bim::game::timer timer =
+  const bim::game::timer timer =
       m_registry.storage<bim::game::timer>().get(bomb_entity);
   // Explode the bombs. The player should get his inventory back.
   bim::game::update_timers(m_registry, timer.duration);
@@ -952,7 +952,7 @@ TEST_F(bim_game_apply_player_action_test, drop_bomb_flood)
       m_registry.storage<bim::game::player_action>().get(player_entity);
 
   // Keep dropping bombs at each iteration while moving down.
-  for (bim::game::fractional_position_on_grid& position =
+  for (const bim::game::fractional_position_on_grid& position =
            m_registry.storage<bim::game::fractional_position_on_grid>().get(
                player_entity);
        position.grid_aligned_y() != start_y + 2;)
@@ -1057,7 +1057,7 @@ TEST_F(bim_game_apply_player_action_test, cannot_drop_bomb_on_existing_bomb)
         << "i=" << i;
 
   const bim::game::bomb* bomb = nullptr;
-  for (entt::entity e : entities)
+  for (const entt::entity e : entities)
     if (m_registry.storage<bim::game::bomb>().contains(e))
       {
         bomb = &m_registry.storage<bim::game::bomb>().get(e);
@@ -1222,7 +1222,7 @@ TEST(bim_game_apply_player_action, cannot_walk_through_crates)
   bim::game::fill_context(context);
 
   entt::registry registry;
-  bim::game::arena arena(5, 5);
+  const bim::game::arena arena(5, 5);
   bim::game::entity_world_map entity_map(arena.width(), arena.height());
   constexpr std::uint8_t x = 2;
   constexpr std::uint8_t y = 2;

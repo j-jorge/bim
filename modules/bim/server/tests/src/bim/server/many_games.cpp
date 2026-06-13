@@ -69,7 +69,7 @@ TEST_F(many_games_test, run)
   std::vector<bim::game::feature_flags> all_feature_flags_combined;
   all_feature_flags_combined.push_back({});
 
-  for (bim::game::feature_flags f : bim::game::g_all_game_feature_flags)
+  for (const bim::game::feature_flags f : bim::game::g_all_game_feature_flags)
     for (std::size_t i = 0, n = all_feature_flags_combined.size(); i != n; ++i)
       all_feature_flags_combined.push_back(all_feature_flags_combined[i] | f);
 

@@ -509,7 +509,7 @@ TEST(bim_game_navigation_check, paths_out)
   bim::game::wall_factory(registry, entity_map, 4, 5);
   arena.set_static_wall(5, 5, bim::game::cell_neighborhood::none);
 
-  bim::table_2d<bool> allowed(arena_width, arena_height, true);
+  const bim::table_2d<bool> allowed(arena_width, arena_height, true);
 
   // Inside.
   bim::game::navigation_check nav;

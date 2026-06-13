@@ -43,7 +43,7 @@ static void apply_styling(const bim::axmol::widget::context& context,
 
   if (s.reference)
     {
-      styling_queue::iterator r = queue.find(s.reference);
+      const styling_queue::iterator r = queue.find(s.reference);
 
       // If the reference is in the queue then it must be processed before the
       // current node. Otherwise the reference may either be the parent node or

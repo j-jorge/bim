@@ -13,7 +13,7 @@
 bim::game::navigation_check::navigation_check() = default;
 bim::game::navigation_check::~navigation_check() = default;
 
-enum class bim::game::navigation_check::scan_loop_policy
+enum class bim::game::navigation_check::scan_loop_policy : std::uint8_t
 {
   allow,
   forbid
@@ -76,7 +76,7 @@ void bim::game::navigation_check::paths(
   previous(from_x, from_y) = position_on_grid(from_x, from_y);
 
   // There's no pruning when searching the paths, so enter always returns true.
-  const auto enter = [](int x, int y) -> bool
+  const auto enter = [](int, int) -> bool
     {
       return true;
     };

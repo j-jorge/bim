@@ -17,7 +17,7 @@ namespace bim::game
     std::uint8_t winning_player() const;
 
   private:
-    enum class state;
+    enum class state : std::uint8_t;
 
   private:
     std::uint8_t m_winning_player;

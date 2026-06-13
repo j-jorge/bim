@@ -24,13 +24,13 @@
 
 #include <fmt/format.h>
 
-static void dump_node(ax::Node& n, int indent)
+static void dump_node(const ax::Node& n, int indent)
 {
   const std::string_view name = n.getName();
 
   printf("%*s- %*s\n", indent, "", (int)name.size(), name.data());
 
-  for (ax::Node* c : n.getChildren())
+  for (const ax::Node* const c : n.getChildren())
     dump_node(*c, indent + 2);
 }
 
@@ -284,7 +284,7 @@ void bim::axmol::app::script_director::capture(
     const std::string& file_name) const
 {
   ax::utils::captureScreen(
-      [=](ax::RefPtr<ax::Image> image) -> void
+      [=](const ax::RefPtr<ax::Image>& image) -> void
         {
           image->saveToFile(file_name.c_str());
         });
@@ -295,7 +295,7 @@ bool bim::axmol::app::script_director::click(
 {
   ax::Director& director = *ax::Director::getInstance();
 
-  ax::Node* const n =
+  const ax::Node* const n =
       bim::axmol::find_child_by_path(*director.getRunningScene(), node_path);
 
   if (n == nullptr)
@@ -330,7 +330,7 @@ bool bim::axmol::app::script_director::swipe(
 {
   ax::Director& director = *ax::Director::getInstance();
 
-  ax::Node* const from = bim::axmol::find_child_by_path(
+  const ax::Node* const from = bim::axmol::find_child_by_path(
       *director.getRunningScene(), from_node_path);
 
   if (from == nullptr)
@@ -343,7 +343,7 @@ bool bim::axmol::app::script_director::swipe(
       return false;
     }
 
-  ax::Node* const to = bim::axmol::find_child_by_path(
+  const ax::Node* const to = bim::axmol::find_child_by_path(
       *director.getRunningScene(), to_node_path);
 
   if (to == nullptr)
@@ -399,7 +399,7 @@ void bim::axmol::app::script_director::press(ax::Touch& touch) const
 
   ax::EventTouch event;
   event.setEventCode(ax::EventTouch::EventCode::BEGAN);
-  event.setTouches(std::move(touches));
+  event.setTouches(touches);
 
   ax::Director::getInstance()->getEventDispatcher()->dispatchEvent(&event);
 }
@@ -411,7 +411,7 @@ void bim::axmol::app::script_director::move(ax::Touch& touch) const
 
   ax::EventTouch event;
   event.setEventCode(ax::EventTouch::EventCode::MOVED);
-  event.setTouches(std::move(touches));
+  event.setTouches(touches);
 
   ax::Director::getInstance()->getEventDispatcher()->dispatchEvent(&event);
 }
@@ -423,7 +423,7 @@ void bim::axmol::app::script_director::release(ax::Touch& touch) const
 
   ax::EventTouch event;
   event.setEventCode(ax::EventTouch::EventCode::ENDED);
-  event.setTouches(std::move(touches));
+  event.setTouches(touches);
 
   ax::Director::getInstance()->getEventDispatcher()->dispatchEvent(&event);
 }

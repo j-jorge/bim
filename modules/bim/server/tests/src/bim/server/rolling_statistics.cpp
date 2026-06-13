@@ -5,8 +5,8 @@
 
 TEST(rolling_statistics_test, empty_is_zero)
 {
-  bim::server::rolling_statistics stats(std::chrono::minutes(1),
-                                        std::chrono::minutes(10));
+  const bim::server::rolling_statistics stats(std::chrono::minutes(1),
+                                              std::chrono::minutes(10));
   EXPECT_EQ(0, stats.total());
 }
 

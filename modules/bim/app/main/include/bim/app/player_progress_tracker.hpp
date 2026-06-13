@@ -24,8 +24,6 @@ namespace bim::app
         analytics_service& analytics,
         iscool::preferences::local_preferences& local_preferences);
 
-    ~player_progress_tracker();
-
     void game_over_in_public_arena(const bim::net::contest_result& result,
                                    std::uint8_t local_player_index);
 

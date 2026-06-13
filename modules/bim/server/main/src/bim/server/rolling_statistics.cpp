@@ -29,7 +29,7 @@ void bim::server::rolling_statistics::push(std::chrono::nanoseconds now,
 
   std::size_t i = 0;
 
-  for (std::size_t n = m_dates.size();
+  for (const std::size_t n = m_dates.size();
        (i != n) && (now - m_dates[i] > m_window_duration); ++i)
     ;
 

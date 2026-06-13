@@ -17,11 +17,11 @@ namespace bim::game
     entity_world_map();
     entity_world_map(std::uint8_t width, std::uint8_t height);
     entity_world_map(const entity_world_map& that);
-    entity_world_map(entity_world_map&& that);
+    entity_world_map(entity_world_map&& that) noexcept;
     ~entity_world_map();
 
     entity_world_map& operator=(const entity_world_map& that);
-    entity_world_map& operator=(entity_world_map&& that);
+    entity_world_map& operator=(entity_world_map&& that) noexcept;
 
     std::span<const entt::entity> entities_at(std::uint8_t x,
                                               std::uint8_t y) const;

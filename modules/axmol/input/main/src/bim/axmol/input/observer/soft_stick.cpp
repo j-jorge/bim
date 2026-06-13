@@ -79,7 +79,7 @@ void bim::axmol::input::soft_stick::do_moved(touch_event& touch)
 
   touch.consume();
 
-  ax::Vec2 position = touch.get()->getLocation();
+  const ax::Vec2 position = touch.get()->getLocation();
   constraint_drag(position);
 
   m_move(position);

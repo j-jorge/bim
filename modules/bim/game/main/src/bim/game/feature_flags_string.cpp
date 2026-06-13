@@ -3,7 +3,7 @@
 
 #include <bim/game/feature_flags.hpp>
 
-#include <bim/assume.hpp>
+#include <bim/unreachable.hpp>
 
 std::string_view bim::game::to_simple_string(feature_flags f)
 {
@@ -21,9 +21,7 @@ std::string_view bim::game::to_simple_string(feature_flags f)
       return "fences";
     }
 
-  bim_assume(false);
-
-  return "?";
+  bim_unreachable;
 }
 
 std::optional<bim::game::feature_flags>

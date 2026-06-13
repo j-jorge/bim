@@ -92,7 +92,7 @@ void bim::server::business_registration_service::hello_ok(
 
       if (response != Json::nullValue)
         {
-          const Json::Value json_delay = response["callback_delay_seconds"];
+          const Json::Value& json_delay = response["callback_delay_seconds"];
 
           if (iscool::json::is_of_type<std::uint32_t>(json_delay))
             {

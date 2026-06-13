@@ -35,5 +35,3 @@ bim::axmol::display::main_view::main_view(std::string_view title,
                                         .multisamplingCount = 0 };
   ax::RenderView::setGfxContextAttrs(gfx_context_attrs);
 }
-
-bim::axmol::display::main_view::~main_view() = default;

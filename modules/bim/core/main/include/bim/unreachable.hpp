@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #pragma once
 
+#define bim_unreachable __builtin_unreachable()
+
 #ifdef NDEBUG
   #define bim_unreachable_in_release __builtin_unreachable()
 #else

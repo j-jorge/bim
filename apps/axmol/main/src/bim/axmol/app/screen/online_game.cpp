@@ -112,7 +112,7 @@
 #include <cassert>
 
 template <typename T>
-static void hide_all(std::vector<T*> nodes)
+static void hide_all(const std::vector<T*>& nodes)
 {
   for (T* const n : nodes)
     n->setVisible(false);
@@ -339,7 +339,7 @@ bim::axmol::app::online_game::nodes() const
 
 void bim::axmol::app::online_game::attached()
 {
-  ax::Node& arena = *m_controls->arena;
+  const ax::Node& arena = *m_controls->arena;
   const ax::Vec2 arena_view_size = arena.getContentSize();
   const ax::Vec2 arena_anchor_point = arena.getAnchorPoint();
 
@@ -422,8 +422,8 @@ void bim::axmol::app::online_game::displaying(
     std::string buffer;
     buffer.reserve(64);
 
-    for (bim::game::flame_segment s : all_segments)
-      for (bim::game::flame_direction d : all_directions)
+    for (const bim::game::flame_segment s : all_segments)
+      for (const bim::game::flame_direction d : all_directions)
         {
           m_flame_animations[(int)s][(int)d].clear();
 
@@ -1005,7 +1005,7 @@ void bim::axmol::app::online_game::display_bombs()
       .view<bim::game::position_on_grid, bim::game::bomb, bim::game::timer>()
       .each(
           [this, &asset_index](const bim::game::position_on_grid& p,
-                               const bim::game::bomb& b,
+                               const bim::game::bomb&,
                                const bim::game::timer& t) -> void
             {
               ax::Sprite& s = *m_bombs[asset_index];

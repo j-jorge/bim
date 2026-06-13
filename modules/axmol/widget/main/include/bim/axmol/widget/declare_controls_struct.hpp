@@ -24,6 +24,6 @@ constexpr size_t ref_ptr_size = sizeof(void*);
 #define bim_declare_controls_struct(type, member, count)                      \
   struct type;                                                                \
   const iscool::memory::pimpl<                                                \
-      type, count * sizeof(bim::axmol::ref_ptr<ax::Node>)                     \
+      type, (count) * sizeof(bim::axmol::ref_ptr<ax::Node>)                   \
                 + sizeof(bim::axmol::widget::named_node_group)>               \
       member

@@ -11,7 +11,7 @@ bim::game::animation_catalog::~animation_catalog() = default;
 
 bim::game::animation_id bim::game::animation_catalog::new_animation()
 {
-  animation_id result = m_animations.size();
+  const animation_id result = m_animations.size();
   m_animations.emplace_back();
   return result;
 }

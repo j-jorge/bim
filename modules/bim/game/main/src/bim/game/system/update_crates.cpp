@@ -16,8 +16,7 @@ void bim::game::update_crates(const context& context, entt::registry& registry)
   const crate_animations& animations = context.get<const crate_animations>();
 
   registry.view<crate, burning, position_on_grid, animation_state>().each(
-      [&](entt::entity e, position_on_grid position,
-          animation_state& state) -> void
+      [&](position_on_grid position, animation_state& state) -> void
         {
           if (state.model != animations.idle)
             return;

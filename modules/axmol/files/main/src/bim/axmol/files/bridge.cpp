@@ -34,7 +34,8 @@ bim::axmol::files::bridge::~bridge()
 std::unique_ptr<std::istream>
 bim::axmol::files::bridge::delegates::read_file(const std::string& path) const
 {
-  ax::Data file_content(ax::FileUtils::getInstance()->getDataFromFile(path));
+  const ax::Data file_content(
+      ax::FileUtils::getInstance()->getDataFromFile(path));
 
   if (file_content.isNull())
     return std::unique_ptr<std::istream>(new std::istringstream());

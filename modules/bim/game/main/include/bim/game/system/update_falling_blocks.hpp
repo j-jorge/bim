@@ -5,9 +5,8 @@
 
 namespace bim::game
 {
-  class context;
   class entity_world_map;
 
-  void update_falling_blocks(const context& context, entt::registry& registry,
+  void update_falling_blocks(entt::registry& registry,
                              entity_world_map& entity_map);
 }

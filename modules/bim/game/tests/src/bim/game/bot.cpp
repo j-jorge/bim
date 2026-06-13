@@ -23,7 +23,7 @@ static std::vector<bim::game::feature_flags> all_feature_flags_combined()
   std::vector<bim::game::feature_flags> result;
   result.push_back({});
 
-  for (bim::game::feature_flags f : bim::game::g_all_game_feature_flags)
+  for (const bim::game::feature_flags f : bim::game::g_all_game_feature_flags)
     {
       for (std::size_t i = 0, n = result.size(); i != n; ++i)
         result.push_back(result[i] | f);
@@ -35,7 +35,7 @@ static std::vector<bim::game::feature_flags> all_feature_flags_combined()
 class bim_game_bot_test
   : public testing::TestWithParam<std::tuple<int, bim::game::feature_flags>>
 {
-public:
+protected:
   void SetUp() override;
   void TearDown() override;
 
@@ -70,7 +70,7 @@ TEST_P(bim_game_bot_test, think)
   const std::uint8_t player_count = std::get<0>(GetParam());
   const bim::game::feature_flags feature_flags = std::get<1>(GetParam());
 
-  bim::game::contest_fingerprint fingerprint = {
+  const bim::game::contest_fingerprint fingerprint = {
     .seed = m_seed,
     .features = feature_flags,
     .player_count = player_count,

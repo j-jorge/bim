@@ -6,7 +6,7 @@
 
 #include <axmol/network/HttpClient.h>
 
-static void send_request(iscool::http::request request)
+static void send_request(const iscool::http::request& request)
 {
   ax::network::HttpRequest* const ax_request(new ax::network::HttpRequest());
 
@@ -29,7 +29,7 @@ static void send_request(iscool::http::request request)
           ax::network::HttpResponse* response) -> void
         {
           const yasio::sbyte_buffer& ax_buffer = *response->getResponseData();
-          std::span<const char> data(ax_buffer.data(), ax_buffer.size());
+          const std::span<const char> data(ax_buffer.data(), ax_buffer.size());
 
           request.result_handler(
               iscool::http::response(response->getResponseCode(), data));

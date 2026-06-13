@@ -59,7 +59,7 @@ TEST(animator, dispatch_completion)
   bim::game::animation_specifications specs;
   specs.duration = std::chrono::seconds(1);
   specs.next = anims[1];
-  specs.dispatch_completion = [&anim_completed, e](entt::registry& r,
+  specs.dispatch_completion = [&anim_completed, e](const entt::registry&,
                                                    entt::entity entity) -> void
     {
       EXPECT_EQ(e, entity);
@@ -70,7 +70,7 @@ TEST(animator, dispatch_completion)
 
   specs.duration = std::chrono::seconds(2);
   specs.next = anims[0];
-  specs.dispatch_completion = [&anim_completed, e](entt::registry& r,
+  specs.dispatch_completion = [&anim_completed, e](const entt::registry&,
                                                    entt::entity entity) -> void
     {
       EXPECT_EQ(e, entity);

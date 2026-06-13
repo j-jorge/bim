@@ -154,7 +154,7 @@ void new_game_test::client::send_accept_named_game(
               if (answer->get_request_token() != token)
                 return;
 
-              launch_game_answer = std::move(*answer);
+              launch_game_answer = *answer;
             });
 
   ASSERT_NE(nullptr, m_message_channel);

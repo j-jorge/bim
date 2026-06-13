@@ -72,7 +72,7 @@ void bim::axmol::widget::apply_actions(bim::axmol::action::runner& runner,
                                        const named_node_group& nodes,
                                        const iscool::style::declaration& style)
 {
-  bim::axmol::ref_ptr<ax::Spawn> action =
+  const bim::axmol::ref_ptr<ax::Spawn> action =
       create_actions(context, nodes, style);
 
   if (action)
@@ -83,13 +83,14 @@ void bim::axmol::widget::apply_actions(bim::axmol::action::runner& runner,
                                        const context& context,
                                        const named_node_group& nodes,
                                        const iscool::style::declaration& style,
-                                       std::function<void()> on_done)
+                                       const std::function<void()>& on_done)
 {
   assert(on_done);
 
-  bim::axmol::ref_ptr<ax::Spawn> action =
+  const bim::axmol::ref_ptr<ax::Spawn> action =
       create_actions(context, nodes, style);
-  bim::axmol::ref_ptr<ax::CallFunc> callback(ax::CallFunc::create(on_done));
+  const bim::axmol::ref_ptr<ax::CallFunc> callback(
+      ax::CallFunc::create(on_done));
 
   if (action)
     runner.run(*ax::Sequence::create(action.get(), callback.get(), nullptr));

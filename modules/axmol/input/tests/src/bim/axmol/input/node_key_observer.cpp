@@ -33,15 +33,13 @@ key_observer_mockup::key_observer_mockup(std::string name,
   , m_calls(calls)
 {}
 
-void key_observer_mockup::do_pressed(
-    const bim::axmol::input::key_event_view& keys)
+void key_observer_mockup::do_pressed(const bim::axmol::input::key_event_view&)
 {
   m_calls.push_back(m_name);
   ++m_pressed_call_count;
 }
 
-void key_observer_mockup::do_released(
-    const bim::axmol::input::key_event_view& keys)
+void key_observer_mockup::do_released(const bim::axmol::input::key_event_view&)
 {
   assert(false);
 }
@@ -55,13 +53,13 @@ protected:
 static void simulate_key_press(bim::axmol::input::node& node)
 {
   bim::axmol::input::key_event events(ax::EventKeyboard::KeyCode::KEY_BACK);
-  bim::axmol::input::key_event_view keys(std::span(&events, 1));
+  const bim::axmol::input::key_event_view keys(std::span(&events, 1));
   node.key_pressed(keys);
 }
 
 TEST_F(node_key_observer_test, root)
 {
-  std::shared_ptr<key_observer_mockup> observer(
+  const std::shared_ptr<key_observer_mockup> observer(
       std::make_shared<key_observer_mockup>("root", m_calls));
   bim::axmol::input::node node(observer);
 
@@ -77,11 +75,11 @@ TEST_F(node_key_observer_test, child_order)
 {
   bim::axmol::input::node root;
 
-  std::shared_ptr<key_observer_mockup> observer_1(
+  const std::shared_ptr<key_observer_mockup> observer_1(
       std::make_shared<key_observer_mockup>("child_1", m_calls));
   root.push_back(observer_1);
 
-  std::shared_ptr<key_observer_mockup> observer_2(
+  const std::shared_ptr<key_observer_mockup> observer_2(
       std::make_shared<key_observer_mockup>("child_2", m_calls));
   root.push_back(observer_2);
 
@@ -97,17 +95,17 @@ TEST_F(node_key_observer_test, child_order)
 
 TEST_F(node_key_observer_test, depth_order)
 {
-  std::shared_ptr<key_observer_mockup> observer_1(
+  const std::shared_ptr<key_observer_mockup> observer_1(
       std::make_shared<key_observer_mockup>("root", m_calls));
   bim::axmol::input::node root(observer_1);
 
-  std::shared_ptr<key_observer_mockup> observer_2(
+  const std::shared_ptr<key_observer_mockup> observer_2(
       std::make_shared<key_observer_mockup>("child", m_calls));
-  bim::axmol::input::node_pointer child(
+  const bim::axmol::input::node_pointer child(
       new bim::axmol::input::node(observer_2));
   root.push_back(child);
 
-  std::shared_ptr<key_observer_mockup> observer_3(
+  const std::shared_ptr<key_observer_mockup> observer_3(
       std::make_shared<key_observer_mockup>("grandchild", m_calls));
   child->push_back(observer_3);
 
@@ -127,11 +125,11 @@ TEST_F(node_key_observer_test, clear)
 {
   bim::axmol::input::node root;
 
-  std::shared_ptr<key_observer_mockup> observer_1(
+  const std::shared_ptr<key_observer_mockup> observer_1(
       std::make_shared<key_observer_mockup>("child_1", m_calls));
   root.push_back(observer_1);
 
-  std::shared_ptr<key_observer_mockup> observer_2(
+  const std::shared_ptr<key_observer_mockup> observer_2(
       std::make_shared<key_observer_mockup>("child_2", m_calls));
   root.push_back(observer_2);
 
@@ -147,11 +145,11 @@ TEST_F(node_key_observer_test, uniqueness)
 {
   bim::axmol::input::node root;
 
-  std::shared_ptr<key_observer_mockup> observer_1(
+  const std::shared_ptr<key_observer_mockup> observer_1(
       std::make_shared<key_observer_mockup>("child_1", m_calls));
   root.push_back(observer_1);
 
-  std::shared_ptr<key_observer_mockup> observer_2(
+  const std::shared_ptr<key_observer_mockup> observer_2(
       std::make_shared<key_observer_mockup>("child_2", m_calls));
   root.push_back(observer_2);
 

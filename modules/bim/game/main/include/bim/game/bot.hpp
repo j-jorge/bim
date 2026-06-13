@@ -82,8 +82,7 @@ namespace bim::game
                    const per_player_array<position_on_grid>& player_positions,
                    const player& bot_player, int crate_count,
                    int unknown_count);
-    bool find_safety_goal(const contest& contest,
-                          const position_on_grid& bot_position);
+    bool find_safety_goal();
     bool update_safety_goal(const contest& contest,
                             const position_on_grid& bot_position);
     bool find_exploration_goal(
@@ -92,10 +91,8 @@ namespace bim::game
         const per_player_array<position_on_grid>& player_positions,
         const player& bot_player);
     bool find_attack_goal(
-        const contest& contest,
         const per_player_array<bool>& opponent_is_valid,
-        const per_player_array<position_on_grid>& player_positions,
-        const player& bot_player);
+        const per_player_array<position_on_grid>& player_positions);
 
     goal
     analyze_cell(int& reward, const contest& contest,

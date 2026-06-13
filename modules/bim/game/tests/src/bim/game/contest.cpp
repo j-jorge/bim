@@ -156,6 +156,8 @@ void bim_game_contest_power_up_distribution::run_test(
               });
   }
 
+  // Go home clang-tidy, the variable is modified in the loop below.
+  // NOLINTNEXTLINE(misc-const-correctness)
   bim::table_2d<int> sum_per_cell(arena_width, arena_height, 0);
 
   for (std::size_t i = 0; i != iterations; ++i)

@@ -115,7 +115,7 @@ void bim::server::random_game_encounter_service::mark_as_ready(
 
 void bim::server::random_game_encounter_service::clean_up()
 {
-  for (bim::net::encounter_id encounter_id :
+  for (const bim::net::encounter_id encounter_id :
        m_matchmaking_service.garbage_encounters())
     m_auto_start_date.erase(encounter_id);
 

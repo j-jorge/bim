@@ -14,7 +14,7 @@ TEST(update_timers, duration)
   entt::registry registry;
 
   const entt::entity entity = registry.create();
-  bim::game::timer& timer = registry.emplace<bim::game::timer>(
+  const bim::game::timer& timer = registry.emplace<bim::game::timer>(
       entity, std::chrono::milliseconds(24));
 
   EXPECT_EQ(std::chrono::milliseconds(24), timer.duration);

@@ -173,8 +173,8 @@ static command_line parse_command_line(int argc, char* argv[])
       return command_line{ .options = std::nullopt, .valid = true };
     }
 
-  boost::program_options::variables_map::const_iterator asset_directories =
-      variables.find("assets");
+  const boost::program_options::variables_map::const_iterator
+      asset_directories = variables.find("assets");
 
   if (asset_directories == variables.end())
     {
@@ -231,7 +231,7 @@ static command_line parse_command_line(int argc, char* argv[])
 
 int main(int argc, char* argv[])
 {
-  const ::command_line command_line = parse_command_line(argc, argv);
+  ::command_line command_line = parse_command_line(argc, argv);
 
   if (!command_line.valid)
     return EXIT_FAILURE;
@@ -239,7 +239,7 @@ int main(int argc, char* argv[])
   if (!command_line.options)
     return EXIT_SUCCESS;
 
-  const ::options& options = *command_line.options;
+  ::options options = std::move(*command_line.options);
 
   if (!options.app_dir.empty())
     ax::FileUtils::getInstance()->setWritablePath(options.app_dir);
@@ -265,11 +265,12 @@ int main(int argc, char* argv[])
                                             options.number_screenshots,
                                             false };
 
-  bim::axmol::app::application app(options.asset_directories,
-                                   ax::Size(options.screen_resolution.width,
-                                            options.screen_resolution.height),
-                                   options.screen_scale, options.enable_debug,
-                                   scripted ? &script_info : nullptr);
+  const bim::axmol::app::application app(
+      options.asset_directories,
+      ax::Size(options.screen_resolution.width,
+               options.screen_resolution.height),
+      options.screen_scale, options.enable_debug,
+      scripted ? &script_info : nullptr);
 
   const int result = axmol::Application::getInstance()->run();
 

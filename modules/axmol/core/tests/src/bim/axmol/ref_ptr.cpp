@@ -41,6 +41,8 @@ TYPED_TEST(bim_axmol_ref_ptr_test, copy_construct_null)
   using source_type = typename TypeParam::second_type;
 
   const bim::axmol::ref_ptr<source_type> source;
+  // The copy is intentional, this is the test.
+  // NOLINTNEXTLINE(performance-unnecessary-copy-initialization)
   const bim::axmol::ref_ptr<target_type> target(source);
 
   EXPECT_EQ(nullptr, target.get());
@@ -56,6 +58,8 @@ TYPED_TEST(bim_axmol_ref_ptr_test, copy_construct_non_null)
   ASSERT_EQ(ptr, source.get());
   EXPECT_EQ(2, source->getReferenceCount());
 
+  // The copy is intentional, this is the test.
+  // NOLINTNEXTLINE(performance-unnecessary-copy-initialization)
   const bim::axmol::ref_ptr<target_type> target(source);
 
   EXPECT_EQ(source.get(), target.get());
@@ -70,6 +74,8 @@ TYPED_TEST(bim_axmol_ref_ptr_test, move_construct_null)
   bim::axmol::ref_ptr<source_type> source;
   const bim::axmol::ref_ptr<target_type> target(std::move(source));
 
+  // We are testing the behavior of the move constructor here.
+  // NOLINTNEXTLINE(bugprone-use-after-move)
   EXPECT_EQ(nullptr, source.get());
   EXPECT_EQ(nullptr, target.get());
 }
@@ -86,6 +92,9 @@ TYPED_TEST(bim_axmol_ref_ptr_test, move_construct_non_null)
   const bim::axmol::ref_ptr<target_type> target(std::move(source));
 
   EXPECT_EQ(ptr, target.get());
+
+  // We are testing the behavior of the move constructor here.
+  // NOLINTNEXTLINE(bugprone-use-after-move)
   EXPECT_EQ(nullptr, source.get());
   EXPECT_EQ(2, target->getReferenceCount());
 }
@@ -156,7 +165,7 @@ TYPED_TEST(bim_axmol_ref_ptr_test, assign_copy_ref_ptr_null)
   EXPECT_EQ(1, ptr->getReferenceCount());
 
   bim::axmol::ref_ptr<target_type> target(ptr);
-  bim::axmol::ref_ptr<source_type> null;
+  const bim::axmol::ref_ptr<source_type> null;
   EXPECT_EQ(2, ptr->getReferenceCount());
 
   target = null;
@@ -176,7 +185,7 @@ TYPED_TEST(bim_axmol_ref_ptr_test, assign_copy_ref_ptr_non_null)
   EXPECT_EQ(1, source_ptr->getReferenceCount());
 
   bim::axmol::ref_ptr<target_type> target(target_ptr);
-  bim::axmol::ref_ptr<source_type> source(source_ptr);
+  const bim::axmol::ref_ptr<source_type> source(source_ptr);
 
   EXPECT_EQ(2, target_ptr->getReferenceCount());
   EXPECT_EQ(2, source_ptr->getReferenceCount());
@@ -223,7 +232,11 @@ TYPED_TEST(bim_axmol_ref_ptr_test, assign_move_ref_ptr_non_null)
   EXPECT_EQ(2, source_ptr->getReferenceCount());
 
   target = std::move(source);
+
   EXPECT_EQ(source_ptr, target.get());
+
+  // We are testing the behavior of the move assignment operator here.
+  // NOLINTNEXTLINE(bugprone-use-after-move)
   EXPECT_EQ(nullptr, source.get());
   EXPECT_EQ(1, target_ptr->getReferenceCount());
   EXPECT_EQ(2, source_ptr->getReferenceCount());
@@ -236,7 +249,7 @@ TYPED_TEST(bim_axmol_ref_ptr_test, equality_and_difference)
   using source_type = typename TypeParam::second_type;
 
   bim::axmol::ref_ptr<target_type> target(source_type::create());
-  bim::axmol::ref_ptr<source_type> source(source_type::create());
+  const bim::axmol::ref_ptr<source_type> source(source_type::create());
 
   EXPECT_TRUE(target == target);
   EXPECT_TRUE(source == source);

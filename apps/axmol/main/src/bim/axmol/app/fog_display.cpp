@@ -88,7 +88,7 @@ bim::axmol::app::fog_display::fog_display(
     }
 
   std::string sprite_frame_name = "sprites/fog/";
-  int name_offset = sprite_frame_name.size();
+  const int name_offset = sprite_frame_name.size();
   sprite_frame_name += "00000000.png";
   char* const neighborhood_string = &sprite_frame_name[name_offset];
 

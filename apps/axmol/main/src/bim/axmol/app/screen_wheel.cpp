@@ -247,7 +247,7 @@ void bim::axmol::app::screen_wheel::wire_permanent_connections()
 
 void bim::axmol::app::screen_wheel::connect_keep_alive()
 {
-  bim::net::session_handler& session_handler =
+  const bim::net::session_handler& session_handler =
       *m_context.get_session_handler();
 
   if (!session_handler.connected())

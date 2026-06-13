@@ -43,7 +43,7 @@
 
 namespace
 {
-  enum class simulation_state
+  enum class simulation_state : std::uint8_t
   {
     /// The simulation could not be updated.
     frozen,

@@ -5,7 +5,7 @@
 
 TEST(bim_net_launch_game, serialization)
 {
-  bim::net::launch_game source(
+  const bim::net::launch_game source(
       0x1122334455667788, 0xfedcba9876543210, 0x11111111,
       (bim::game::feature_flags)0x22222222, 4, 3, 0xfe, 0xef, 0xff);
 

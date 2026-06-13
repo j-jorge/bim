@@ -62,7 +62,7 @@ TEST(update_bomb_power_ups, two_players_only_one_gets_the_power_up)
                               bim::game::animation_id{})
   };
 
-  bim::game::player* players[2] = {
+  const bim::game::player* const players[2] = {
     &registry.get<bim::game::player>(player_entity[0]),
     &registry.get<bim::game::player>(player_entity[1])
   };

@@ -34,8 +34,7 @@ void bim::axmol::input::touch_observer::unplugged()
   do_unplugged();
 }
 
-bool bim::axmol::input::touch_observer::do_may_process(
-    touch_event& touch) const
+bool bim::axmol::input::touch_observer::do_may_process(touch_event&) const
 {
   return true;
 }

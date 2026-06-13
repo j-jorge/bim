@@ -23,8 +23,6 @@ namespace bim::net
   private:
     void tick();
 
-    void interpret_received_message(const iscool::net::message& message);
-
   private:
     iscool::net::message_channel m_message_channel;
 

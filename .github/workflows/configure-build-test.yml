@@ -73,6 +73,16 @@ jobs:
           --build-type ${{matrix.build_type}}
           --build-steps test
 
+      - name: Clang-tidy
+        if: |
+          (matrix.maybe_incremental == '')
+          && (matrix.container == 'ubuntu:26.04')
+          && (matrix.compiler == 'clang-22')
+        run: >
+          ninja -C build/linux/${{matrix.build_type}} clean
+          && cmake build/linux/${{matrix.build_type}} -DBIM_ENABLE_CLANG_TIDY=ON
+          && ninja -C build/linux/${{matrix.build_type}}
+
       # Valgrind tests runs for a single configuration only because
       # they are very slow.
       - name: Valgrind tests

@@ -14,7 +14,7 @@ bool bim::game::is_solid(const entt::registry& registry,
       registry.storage<solid>();
 
   if (solids)
-    for (entt::entity e : entity_map.entities_at(arena_x, arena_y))
+    for (const entt::entity e : entity_map.entities_at(arena_x, arena_y))
       if (solids->contains(e))
         return true;
 

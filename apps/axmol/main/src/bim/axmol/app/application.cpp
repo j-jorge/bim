@@ -178,13 +178,20 @@ bim::axmol::app::detail::persistent_systems::persistent_systems(
 
 bim::axmol::app::detail::persistent_systems::~persistent_systems()
 {
-  stop_root_scene();
-  remove_frame_event_listener();
-  stop_audio();
-  stop_haptic_feedback();
-  stop_social();
-  stop_display();
-  stop_log_system();
+  try
+    {
+      stop_root_scene();
+      remove_frame_event_listener();
+      stop_audio();
+      stop_haptic_feedback();
+      stop_social();
+      stop_display();
+      stop_log_system();
+    }
+  catch (const std::format_error& e)
+    {
+      printf("ERROR: %s: %s\n", __PRETTY_FUNCTION__, e.what());
+    }
 }
 
 void bim::axmol::app::detail::persistent_systems::set_up_colour_chart()
@@ -376,10 +383,17 @@ bim::axmol::app::detail::session_systems::session_systems(application& app)
 
 bim::axmol::app::detail::session_systems::~session_systems()
 {
-  stop_inputs();
-  stop_main_scene();
-  stop_styles();
-  stop_widgets();
+  try
+    {
+      stop_inputs();
+      stop_main_scene();
+      stop_styles();
+      stop_widgets();
+    }
+  catch (const std::format_error& e)
+    {
+      printf("ERROR: %s: %s\n", __PRETTY_FUNCTION__, e.what());
+    }
 
   ax::SpriteFrameCache::getInstance()->removeSpriteFrames();
   ax::backend::ProgramManager::getInstance()->unloadAllPrograms();
@@ -595,7 +609,7 @@ void bim::axmol::app::application::set_up_file_utils()
   ax::FileUtils& file_utils = *ax::FileUtils::getInstance();
 
   file_utils.setPopupNotify(false);
-  file_utils.setSearchPaths(std::move(m_asset_directories));
+  file_utils.setSearchPaths(m_asset_directories);
 }
 
 void bim::axmol::app::application::set_up_local_preferences()
@@ -637,7 +651,7 @@ void bim::axmol::app::application::flush_local_preferences()
 
 void bim::axmol::app::application::apply_local_preferences()
 {
-  iscool::preferences::local_preferences& preferences(
+  const iscool::preferences::local_preferences& preferences(
       *m_context.get_local_preferences());
 
   m_context.get_haptic_feedback()->set_enabled(
@@ -713,7 +727,7 @@ void bim::axmol::app::application::tick()
 void bim::axmol::app::application::capture_screen() const
 {
   ax::utils::captureScreen(
-      [](ax::RefPtr<ax::Image> image) -> void
+      [](const ax::RefPtr<ax::Image>& image) -> void
         {
           std::ostringstream oss;
           const std::time_t t = std::time(nullptr);

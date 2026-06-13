@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/game/component/flame_direction.hpp>
 
-#include <bim/assume.hpp>
+#include <bim/unreachable.hpp>
 
 bool bim::game::is_horizontal(flame_direction d)
 {
@@ -27,8 +27,7 @@ std::string_view bim::game::to_string(flame_direction d)
       return "up";
     }
 
-  bim_assume(false);
-  return "";
+  bim_unreachable;
 }
 
 std::string_view bim::game::to_string(flame_segment s)
@@ -43,6 +42,5 @@ std::string_view bim::game::to_string(flame_segment s)
       return "origin";
     }
 
-  bim_assume(false);
-  return "";
+  bim_unreachable;
 }

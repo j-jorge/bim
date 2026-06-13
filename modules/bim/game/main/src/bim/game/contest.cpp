@@ -96,8 +96,8 @@ add_players(const bim::game::context& context, entt::registry& registry,
       bim::game::player_factory(registry, entity_map, i, player_x, player_y,
                                 initial_state);
 
-      for (int y : { -1, 0, 1 })
-        for (int x : { -1, 0, 1 })
+      for (const int y : { -1, 0, 1 })
+        for (const int x : { -1, 0, 1 })
           positions_around_players.push_back(
               bim::game::position_on_grid(player_x + x, player_y + y));
     }
@@ -125,7 +125,7 @@ static void add_fog_of_war(entt::registry& registry, std::uint8_t player_count,
            i = 0;
        (cells_to_exclude != 0) && (i < arena_width * arena_height); ++i)
     {
-      uniform_u8_distribution d(1, available_cells);
+      const uniform_u8_distribution d(1, available_cells);
 
       if (d(random) > cells_to_exclude)
         --available_cells;
@@ -198,7 +198,7 @@ bim::game::contest::contest(const contest_fingerprint& fingerprint)
 
   m_arena_reduction.reset(new arena_reduction(*m_arena));
   m_fog_of_war.reset(
-      new fog_of_war_updater(*m_registry, *m_arena, fingerprint.player_count));
+      new fog_of_war_updater(*m_arena, fingerprint.player_count));
 }
 
 bim::game::contest::~contest() = default;
@@ -233,8 +233,7 @@ bim::game::contest_result bim::game::contest::tick()
                *m_entity_world_map);
 
   run_system("arena_reduction", m_arena_reduction->update(*m_registry));
-  run_system_s(update_falling_blocks, *m_context, *m_registry,
-               *m_entity_world_map);
+  run_system_s(update_falling_blocks, *m_registry, *m_entity_world_map);
 
   run_system_s(trigger_crushed_timers, *m_registry);
 
@@ -276,7 +275,7 @@ bim::game::contest_result bim::game::contest::tick()
 #ifndef NDEBUG
   for (std::size_t y = 0; y != m_arena->height(); ++y)
     for (std::size_t x = 0; x != m_arena->width(); ++x)
-      for (entt::entity e : m_entity_world_map->entities_at(x, y))
+      for (const entt::entity e : m_entity_world_map->entities_at(x, y))
         assert(m_registry->valid(e));
 #endif
 

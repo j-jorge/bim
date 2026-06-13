@@ -66,7 +66,7 @@ static std::string feature_list()
 
 namespace bim::game
 {
-  std::istream& operator>>(std::istream& in, feature_flags& flags)
+  static std::istream& operator>>(std::istream& in, feature_flags& flags)
   {
     flags = {};
     std::string s;
@@ -90,7 +90,7 @@ namespace bim::game
     return in;
   }
 
-  std::ostream& operator<<(std::ostream& out, feature_flags flags)
+  static std::ostream& operator<<(std::ostream& out, feature_flags flags)
   {
     const char* separator = "";
 

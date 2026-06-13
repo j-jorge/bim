@@ -42,6 +42,8 @@ void bim::axmol::widget::instantiate_widgets(
       if (!type)
         continue;
 
+      // node is moved below, thus it cannot be const.
+      // NOLINTNEXTLINE(misc-const-correctness)
       ref_ptr<ax::Node> node =
           context.factory.create(*type, context, *d.second);
 

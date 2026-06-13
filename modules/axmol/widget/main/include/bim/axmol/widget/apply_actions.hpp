@@ -25,5 +25,5 @@ namespace bim::axmol::widget
   void apply_actions(bim::axmol::action::runner& runner,
                      const context& context, const named_node_group& nodes,
                      const iscool::style::declaration& style,
-                     std::function<void()> on_done);
+                     const std::function<void()>& on_done);
 }

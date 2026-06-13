@@ -162,7 +162,7 @@ void bim::game::dump_arena(std::FILE* f, const arena& arena,
           arena_str[y][x] = "!";
 
         if (solids)
-          for (entt::entity e : entities)
+          for (const entt::entity e : entities)
             if (solids->contains(e))
               {
                 arena_str[y][x] = "░";

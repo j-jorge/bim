@@ -16,15 +16,15 @@ bim::game::entity_world_map::entity_world_map(std::uint8_t width,
 
 bim::game::entity_world_map::entity_world_map(const entity_world_map& that) =
     default;
-bim::game::entity_world_map::entity_world_map(entity_world_map&& that) =
-    default;
+bim::game::entity_world_map::entity_world_map(
+    entity_world_map&& that) noexcept = default;
 bim::game::entity_world_map::~entity_world_map() = default;
 
 bim::game::entity_world_map&
 bim::game::entity_world_map::operator=(const entity_world_map& that) = default;
 
-bim::game::entity_world_map&
-bim::game::entity_world_map::operator=(entity_world_map&& that) = default;
+bim::game::entity_world_map& bim::game::entity_world_map::operator=(
+    entity_world_map&& that) noexcept = default;
 
 std::span<const entt::entity>
 bim::game::entity_world_map::entities_at(std::uint8_t x, std::uint8_t y) const

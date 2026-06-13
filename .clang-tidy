@@ -1,0 +1,62 @@
+---
+Checks: |
+  -*,
+  bugprone-*,
+  # Too many occurrences and workarounds are cumbersome.
+  -bugprone-easily-swappable-parameters,
+  # Too many reports about u8 * u8 being casted into a size_t. It's
+  # okay, u8 * u8 is performed as i32 * i32 and is in range
+  # [0..65335], it will fit in a size_t.
+  -bugprone-implicit-widening-of-multiplication-result
+  # Happens too frequently in cases where parentheses would actually
+  # change the meaning.
+  -bugprone-macro-parentheses
+  # Too many reports, most of them benign.
+  -bugprone-narrowing-conversions,
+  # Dubious check. The fix would be to add a `default: break;` in the
+  # switches, which is noise.
+  -bugprone-switch-missing-default-case,
+  # If there's an exception on initialization there's not much to
+  # do. Let's crash.
+  -bugprone-throwing-static-initialization,
+  # Too many occurrences, mostly in tests. Contrary to what the
+  # documuntation claims, calls to ASSERT_TRUE(optional.has_value())
+  # are not detected.
+  -bugprone-unchecked-optional-access,
+  misc-*,
+  # I prefer static functions over functions in anonymous namespace as
+  # it makes it clear at the definition point that the function is
+  # local to the current compilatino unit. Otherwise the reader has to
+  # know that an anonymous namespace has been opened hundreds lines
+  # above.
+  -misc-use-anonymous-namespace,
+  # There's a couple of recursive functions that I will keep, notably
+  # when walking the children of an ax::Node.
+  -misc-no-recursion,
+  # I see no problem with that.
+  -misc-non-private-member-variables-in-classes,
+  # No rationale in the doc. I barely use inheritance and the
+  # occurrences are related to Axmol. Let's keep the code as it is.
+  -misc-multiple-inheritance,
+  performance-*,
+  portability-*,
+  # I'm okay with not supporting compilers that do not support #pragma
+  # once.
+  -portability-avoid-pragma-once,
+
+CheckOptions:
+  # Those are bit masks and are thus allowed to be set to zero.
+  bugprone-invalid-enum-default-initialization.IgnoredEnums: |
+    ::bim::axmol::style::bounds_property_flags;
+    ::bim::axmol::style::display_property_flags;
+    ::bim::game::feature_flags
+  bugprone-exception-escape.CheckMain: false
+  misc-non-private-member-variables-in-classes.IgnoreClassesWithAllMemberVariablesBeingPublic: true
+  # feature_flags is intentionally large to keep room for future
+  # features. Its size impacts the client-server protocol.
+  performance-enum-size.EnumIgnoreList: ::bim::game::feature_flags
+  # public to private seems quite common.
+  misc-override-with-different-visibility.DisallowedVisibilityChange: widening
+  # Too many occurrences in GoogleTests and I don't want to wrap all
+  # tests in an anonymous namespace.
+  misc-use-internal-linkage.AnalyzeTypes: false

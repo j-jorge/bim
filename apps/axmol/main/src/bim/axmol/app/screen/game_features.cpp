@@ -62,6 +62,7 @@
 IMPLEMENT_SIGNAL(bim::axmol::app::game_features, back, m_back);
 IMPLEMENT_SIGNAL(bim::axmol::app::game_features, shop, m_shop);
 
+// NOLINTNEXTLINE(bugprone-branch-clone)
 ic_implement_state_monitor(bim::axmol::app::game_features, m_monitor, idle,
                            ((idle)((erase_slot)(assign_slot))) //
                            ((erase_slot)((idle)))              //
@@ -200,7 +201,7 @@ bim::axmol::app::game_features::game_features(
   std::size_t row_count = 0;
   const auto add_list_row = [&]()
     {
-      bim::axmol::ref_ptr<bim::axmol::widget::passive_node> item =
+      const bim::axmol::ref_ptr<bim::axmol::widget::passive_node> item =
           bim::axmol::widget::factory<
               bim::axmol::widget::passive_node>::create(widget_context,
                                                         row_container_style);
@@ -216,7 +217,7 @@ bim::axmol::app::game_features::game_features(
                               const iscool::style::declaration& style,
                               bool available) -> game_feature_button&
     {
-      bim::axmol::ref_ptr<game_feature_button> button(
+      const bim::axmol::ref_ptr<game_feature_button> button(
           game_feature_button::create(widget_context, style));
       button->setName(fmt::format("feature-{}", index));
       button->available(available);
@@ -236,7 +237,7 @@ bim::axmol::app::game_features::game_features(
       bim::app::available_feature_flags(preferences);
 
   std::size_t i = 0;
-  for (bim::game::feature_flags f :
+  for (const bim::game::feature_flags f :
        { bim::game::feature_flags::falling_blocks,
          bim::game::feature_flags::fences, bim::game::feature_flags::shield,
          bim::game::feature_flags::invisibility,
@@ -272,7 +273,7 @@ bim::axmol::app::game_features::game_features(
 
   const iscool::style::declaration& bottom_filler_style =
       *style.get_declaration("list-bottom-filler-bounds");
-  bim::axmol::ref_ptr<ax::Node> filler(ax::Node::create());
+  const bim::axmol::ref_ptr<ax::Node> filler(ax::Node::create());
   m_controls->list->push_back(*filler, bottom_filler_style);
 }
 
@@ -534,7 +535,7 @@ void bim::axmol::app::game_features::update_affordability()
       bim::app::coins_balance(*m_context.get_local_preferences());
   const bim::app::config& config = *m_context.get_config();
 
-  for (bim::game::feature_flags f : bim::game::g_all_game_feature_flags)
+  for (const bim::game::feature_flags f : bim::game::g_all_game_feature_flags)
     {
       const std::int16_t price = config.game_feature_price[f];
       m_catalog[f]->affordable(price <= coins);

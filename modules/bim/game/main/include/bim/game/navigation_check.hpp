@@ -43,7 +43,7 @@ namespace bim::game
                 const bim::table_2d<bool>& forbidden);
 
   private:
-    enum class scan_loop_policy;
+    enum class scan_loop_policy : std::uint8_t;
 
     template <scan_loop_policy ScanLoopPolicy, typename Enter, typename Visit,
               typename Distance>

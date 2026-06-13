@@ -57,7 +57,7 @@ void bim::axmol::input::flow::key_pressed(ax::EventKeyboard::KeyCode key,
   m_key_event_storage.clear();
   m_key_event_storage.push_back(key_event(key));
 
-  key_event_view events(m_key_event_storage);
+  const key_event_view events(m_key_event_storage);
   m_root.key_pressed(events);
 }
 
@@ -69,7 +69,7 @@ void bim::axmol::input::flow::key_released(ax::EventKeyboard::KeyCode key,
   m_key_event_storage.clear();
   m_key_event_storage.push_back(key_event(key));
 
-  key_event_view events(m_key_event_storage);
+  const key_event_view events(m_key_event_storage);
   m_root.key_released(events);
 }
 

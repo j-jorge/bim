@@ -43,8 +43,7 @@ update_preferences_v0_to_v1(iscool::preferences::local_preferences& p,
 }
 
 static void
-update_preferences_v1_to_v2(iscool::preferences::local_preferences& p,
-                            const bim::app::config& config)
+update_preferences_v1_to_v2(iscool::preferences::local_preferences& p)
 {
   // v2 removed the enabled flags mask and introduced the feature flag slots.
   const bim::game::feature_flags enabled =
@@ -53,7 +52,7 @@ update_preferences_v1_to_v2(iscool::preferences::local_preferences& p,
 
   bim::game::feature_flags slot_0{};
 
-  for (bim::game::feature_flags f : bim::game::g_all_game_feature_flags)
+  for (const bim::game::feature_flags f : bim::game::g_all_game_feature_flags)
     if (!!(enabled & f))
       {
         slot_0 = f;
@@ -75,6 +74,6 @@ void bim::app::update_preferences(iscool::preferences::local_preferences& p,
       update_preferences_v0_to_v1(p, config);
       [[fallthrough]];
     case 1:
-      update_preferences_v1_to_v2(p, config);
+      update_preferences_v1_to_v2(p);
     }
 }

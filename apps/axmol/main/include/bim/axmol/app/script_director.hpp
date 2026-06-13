@@ -22,7 +22,7 @@ namespace bim::axmol::app
   class script_director
   {
   public:
-    enum result
+    enum class result : std::uint8_t
     {
       ok,
       fail

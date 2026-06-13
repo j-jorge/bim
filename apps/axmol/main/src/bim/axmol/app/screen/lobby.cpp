@@ -176,7 +176,7 @@ void bim::axmol::app::lobby::displaying()
       bim::app::enabled_feature_flags(*m_context.get_local_preferences()));
 
   m_wallet->enter();
-  bim::net::session_handler& session_handler =
+  const bim::net::session_handler& session_handler =
       *m_context.get_session_handler();
 
   m_session_connection = session_handler.connect_to_connected(

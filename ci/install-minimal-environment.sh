@@ -134,7 +134,8 @@ packages+=(
 if [[ "$compiler" == clang-* ]]
 then
     clang_version="${compiler/*-/}"
-    packages+=("llvm-$clang_version")
+    packages+=("clang-tidy-$clang_version"
+               "llvm-$clang_version")
 fi
 
 case "$target_platform" in

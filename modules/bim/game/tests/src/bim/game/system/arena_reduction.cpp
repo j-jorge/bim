@@ -25,7 +25,7 @@ static void check_positions(
   const entt::entity e =
       bim::game::arena_reduction_factory(registry, start_delay);
   const bim::game::timer& t = registry.storage<bim::game::timer>().get(e);
-  bim::game::arena_reduction reduction(arena);
+  const bim::game::arena_reduction reduction(arena);
 
   for (bool stop = false; !stop;)
     {

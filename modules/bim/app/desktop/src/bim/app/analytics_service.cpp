@@ -4,9 +4,6 @@
 #include <iscool/log/log.hpp>
 #include <iscool/log/nature/info.hpp>
 
-bim::app::analytics_service::analytics_service() = default;
-bim::app::analytics_service::~analytics_service() = default;
-
 void bim::app::analytics_service::event(std::string_view name)
 {
   ic_log(iscool::log::nature::info(), "analytics_service", "Event '{}'.",

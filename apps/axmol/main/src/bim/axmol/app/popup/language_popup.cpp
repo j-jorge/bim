@@ -85,7 +85,7 @@ bim::axmol::app::language_popup::language_popup(
   m_escape->connect_to_released(close);
 
   m_controls->add_language->setOpenUrlHandler(
-      [this](std::string_view url)
+      [this](std::string_view)
         {
           // URL is kept here as the translators don't have to translate it,
           // and could make mistakes while manipulating the string. We expect
@@ -116,7 +116,7 @@ bim::axmol::app::language_popup::language_popup(
          iscool::language_name::ru_RU, iscool::language_name::tr_TR,
          iscool::language_name::uk_UA })
     {
-      language_list_item_controls controls(
+      const language_list_item_controls controls(
           *context.get_widget_context(),
           (language == iscool::language_name::ko_KR)
               ? korean_button_item_controls

@@ -28,9 +28,6 @@
 
 TEST(bim_game_update_falling_blocks, inserts_wall)
 {
-  bim::game::context context;
-  bim::game::fill_context(context);
-
   entt::registry registry;
   bim::game::entity_world_map entity_map(3, 3);
 
@@ -50,7 +47,7 @@ TEST(bim_game_update_falling_blocks, inserts_wall)
           << "timer.duration=" << t.duration;
 
       stop = (t.duration.count() == 0);
-      bim::game::update_falling_blocks(context, registry, entity_map);
+      bim::game::update_falling_blocks(registry, entity_map);
     }
 
   ASSERT_EQ(1, entity_map.entities_at(position.x, position.y).size());
@@ -94,7 +91,7 @@ TEST(bim_game_update_falling_blocks, triggers_the_bombs)
       EXPECT_FALSE(registry.storage<bim::game::dead>().contains(bomb_entity));
 
       bim::game::update_timers(registry, tick_duration);
-      bim::game::update_falling_blocks(context, registry, entity_map);
+      bim::game::update_falling_blocks(registry, entity_map);
       bim::game::trigger_crushed_timers(registry);
       bim::game::update_bombs(context, registry, arena, entity_map);
     }
@@ -174,7 +171,7 @@ TEST(bim_game_update_falling_blocks, kills_the_players)
       EXPECT_TRUE(player_animations.is_alive(player_state[1]->model));
 
       bim::game::update_timers(registry, tick_duration);
-      bim::game::update_falling_blocks(context, registry, entity_map);
+      bim::game::update_falling_blocks(registry, entity_map);
       bim::game::trigger_crushed_timers(registry);
       bim::game::update_players(context, registry);
     }

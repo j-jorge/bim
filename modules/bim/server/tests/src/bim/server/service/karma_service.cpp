@@ -104,7 +104,7 @@ TEST(karma_service, enabled)
 
 TEST(karma_service, disabled)
 {
-  bim::server::tests::fake_scheduler scheduler;
+  const bim::server::tests::fake_scheduler scheduler;
 
   bim::server::config config = bim::server::tests::new_test_config();
   config.enable_karma = false;

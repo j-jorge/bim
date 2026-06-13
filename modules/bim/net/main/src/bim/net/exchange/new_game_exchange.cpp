@@ -17,6 +17,7 @@
 #include <iscool/schedule/delayed_call.hpp>
 #include <iscool/signals/implement_signal.hpp>
 
+// NOLINTNEXTLINE(bugprone-branch-clone)
 ic_implement_state_monitor(bim::net::new_game_exchange, m_monitor, idle,
                            ((idle)((start_named)(start_random)))   //
                            ((start_named)((accept_named)(stop)))   //

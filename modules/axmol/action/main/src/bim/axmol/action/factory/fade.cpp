@@ -21,5 +21,6 @@ bim::axmol::action::fade_from_style(const iscool::style::declaration& style)
   if (!from)
     return fade;
 
-  return ax::Sequence::create(ax::FadeTo::create(0, *from), fade, nullptr);
+  return ax::Sequence::create(ax::FadeTo::create(0.f, (int)(*from * 255)),
+                              fade, nullptr);
 }

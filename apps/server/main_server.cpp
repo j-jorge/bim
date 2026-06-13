@@ -111,7 +111,7 @@ static void do_signal_safe_trace(cpptrace::frame_ptr* buffer,
       // Consume the data piped by the parent, otherwise its calls to write()
       // will hang.
       char buffer[4096];
-      while (read(STDIN_FILENO, buffer, sizeof(buffer) > 0))
+      while (read(STDIN_FILENO, buffer, sizeof(buffer)) > 0)
         ;
 
       _exit(1);
@@ -147,7 +147,7 @@ static void crash_handler(int sig)
   // Display the stack trace.
   constexpr std::size_t max_stack_depth = 256;
   cpptrace::frame_ptr buffer[max_stack_depth];
-  std::size_t count =
+  const std::size_t count =
       cpptrace::safe_generate_raw_trace(buffer, max_stack_depth);
   do_signal_safe_trace(buffer, count);
 
@@ -648,7 +648,7 @@ int main(int argc, char* argv[])
 
   install_signal_handlers();
 
-  iscool::log::scoped_initializer log;
+  const iscool::log::scoped_initializer log;
 
   if (command_line.options->console_log)
     iscool::log::enable_console_log();
@@ -681,7 +681,7 @@ int main(int argc, char* argv[])
   ic_log(iscool::log::nature::info(), "server", "Running on port {}.",
          command_line.options->config.port);
 
-  bim::server::server server(command_line.options->config);
+  const bim::server::server server(command_line.options->config);
 
   using clock = std::chrono::steady_clock;
 

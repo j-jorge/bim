@@ -3,7 +3,7 @@
 
 #include <cassert>
 
-enum class bim::game::contest_result::state
+enum class bim::game::contest_result::state : std::uint8_t
 {
   still_running,
   draw,

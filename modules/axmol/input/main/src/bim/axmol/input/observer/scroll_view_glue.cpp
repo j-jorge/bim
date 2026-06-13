@@ -110,7 +110,7 @@ void bim::axmol::input::scroll_view_glue::do_unplugged()
 void bim::axmol::input::scroll_view_glue::categorize_moving_touch(
     touch_event& touch, bool& began, bool& moved)
 {
-  ax::Touch& t = *touch.get();
+  const ax::Touch& t = *touch.get();
   const int id = t.getID();
 
   // Check if we are already tracking this touch, in which case it is thus
@@ -152,7 +152,7 @@ void bim::axmol::input::scroll_view_glue::categorize_moving_touch(
 void bim::axmol::input::scroll_view_glue::categorize_released_touch(
     touch_event& touch, bool& released, bool& cancelled)
 {
-  ax::Touch& t = *touch.get();
+  const ax::Touch& t = *touch.get();
   const int id = t.getID();
 
   if (m_active_touch.erase(id) == 0)

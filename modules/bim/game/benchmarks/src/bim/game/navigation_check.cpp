@@ -16,8 +16,8 @@
 
 static void navigation_check_reachable(benchmark::State& state)
 {
-  const int arena_width = bim::game::g_default_arena_width;
-  const int arena_height = bim::game::g_default_arena_height;
+  const std::size_t arena_width = bim::game::g_default_arena_width;
+  const std::size_t arena_height = bim::game::g_default_arena_height;
 
   bim::game::arena arena(arena_width, arena_height);
   bim::game::generate_basic_level_structure(arena);
@@ -75,7 +75,7 @@ static void navigation_check_paths(benchmark::State& state)
           entity_map.put_entity(registry.create(), x, y);
         }
 
-  bim::table_2d<bool> allowed(arena.width(), arena.height(), true);
+  const bim::table_2d<bool> allowed(arena.width(), arena.height(), true);
 
   for (auto _ : state)
     for (const bim::game::position_on_grid& p : start)
@@ -97,9 +97,6 @@ static void navigation_check_exists(benchmark::State& state)
                          bim::game::g_default_arena_height);
   bim::game::generate_basic_level_structure(arena);
   bim::game::navigation_check nav;
-  bim::table_2d<std::uint8_t> distance(arena.width(), arena.height());
-  bim::table_2d<bim::game::position_on_grid> previous(arena.width(),
-                                                      arena.height());
   entt::registry registry;
   bim::game::entity_world_map entity_map(arena.width(), arena.height());
 
@@ -122,7 +119,7 @@ static void navigation_check_exists(benchmark::State& state)
           entity_map.put_entity(registry.create(), x, y);
         }
 
-  bim::table_2d<bool> forbidden(arena.width(), arena.height(), true);
+  const bim::table_2d<bool> forbidden(arena.width(), arena.height(), true);
 
   for (auto _ : state)
     for (const bim::game::position_on_grid& p : start)

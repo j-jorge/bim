@@ -39,8 +39,8 @@ static void generate_power_up_spawners(
       if ((population[i] == entt::null) || !entity_filter(population[i]))
         continue;
 
-      boost::random::uniform_int_distribution<std::uint8_t> random(1,
-                                                                   available);
+      const boost::random::uniform_int_distribution<std::uint8_t> random(
+          1, available);
 
       if (random(random_generator) <= needed)
         {
@@ -120,7 +120,7 @@ void bim::game::insert_random_crates(
   const int width = arena.width();
   const int height = arena.height();
 
-  boost::random::uniform_int_distribution<std::uint8_t> random(0, 99);
+  const boost::random::uniform_int_distribution<std::uint8_t> random(0, 99);
 
   // Generate the crates and remember their entities such that we can assign
   // them the power-up spawners after.
@@ -151,7 +151,8 @@ void bim::game::insert_random_crates(
   // Shuffle the walls before assigning the power-ups.
   for (std::size_t i = 0, n = crates.size(); i != n - 1; ++i)
     {
-      boost::random::uniform_int_distribution<std::uint8_t> random(i, n - 1);
+      const boost::random::uniform_int_distribution<std::uint8_t> random(
+          i, n - 1);
       std::swap(crates[i], crates[random(random_generator)]);
     }
 
@@ -282,11 +283,11 @@ void bim::game::insert_random_fences(
 
   const int min_allowed = 2;
   int available = candidates.size();
-  boost::random::uniform_int_distribution d(
+  const boost::random::uniform_int_distribution d(
       min_allowed, std::max(min_allowed, available / g_fence_count_ratio));
   int needed = d(random_generator);
 
-  boost::random::uniform_int_distribution side(0, 1);
+  const boost::random::uniform_int_distribution side(0, 1);
 
   for (const candidate& c : candidates)
     {

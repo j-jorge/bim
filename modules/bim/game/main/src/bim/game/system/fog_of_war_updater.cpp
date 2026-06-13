@@ -123,8 +123,7 @@ namespace bim::game::detail
   }
 }
 
-bim::game::fog_of_war_updater::fog_of_war_updater(entt::registry& registry,
-                                                  const arena& arena,
+bim::game::fog_of_war_updater::fog_of_war_updater(const arena& arena,
                                                   std::uint8_t player_count)
   : m_blown(arena.width(), arena.height())
   , m_player_count(player_count)
@@ -169,7 +168,7 @@ void bim::game::fog_of_war_updater::update_fog(entt::registry& registry,
   if (m_player_count <= 2)
     uncover_around_flames(registry, p);
 
-  update_opacity_from_timers(registry, p);
+  update_opacity_from_timers(p);
 }
 
 void bim::game::fog_of_war_updater::build_maps(entt::registry& registry)
@@ -200,7 +199,7 @@ void bim::game::fog_of_war_updater::uncover_around_flames(
 }
 
 void bim::game::fog_of_war_updater::update_opacity_from_timers(
-    entt::registry& registry, const detail::fog_properties& p) const
+    const detail::fog_properties& p) const
 {
   const std::size_t w = p.fog.width();
   const std::size_t h = p.fog.height();
@@ -264,8 +263,9 @@ void bim::game::fog_of_war_updater::update_opacity_from_timers(
                 }
 
               const std::chrono::milliseconds num = denum - t->duration;
-              f->opacity = std::max<int>(0, num.count())
-                           * fog_of_war::full_opacity / denum.count();
+              f->opacity =
+                  std::max<std::chrono::milliseconds::rep>(0, num.count())
+                  * fog_of_war::full_opacity / denum.count();
             }
             break;
           case fog_state::hiding:

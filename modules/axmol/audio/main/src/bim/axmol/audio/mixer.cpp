@@ -40,6 +40,7 @@ bim::axmol::audio::mixer::play_effect(const std::string& file_path,
   // Handling the volume of looping effects is not implemented, so we are just
   // going to forbid loops.
   assert(loop == iscool::audio::loop_mode::once);
+  (void)loop;
 
   return ax::AudioEngine::play2d(file_path, false, m_effects_muted ? 0 : 1);
 }

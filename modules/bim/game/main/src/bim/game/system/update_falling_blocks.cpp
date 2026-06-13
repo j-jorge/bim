@@ -6,14 +6,12 @@
 #include <bim/game/component/falling_block.hpp>
 #include <bim/game/component/position_on_grid.hpp>
 #include <bim/game/component/timer.hpp>
-#include <bim/game/context/context.hpp>
 #include <bim/game/entity_world_map.hpp>
 #include <bim/game/factory/wall.hpp>
 
 #include <entt/entity/registry.hpp>
 
-static void seal_falling_block(const bim::game::context& context,
-                               entt::registry& registry,
+static void seal_falling_block(entt::registry& registry,
                                bim::game::entity_world_map& entity_map,
                                entt::entity e,
                                const bim::game::position_on_grid& position)
@@ -29,8 +27,7 @@ static void seal_falling_block(const bim::game::context& context,
   wall_factory(registry, entity_map, position.x, position.y);
 }
 
-void bim::game::update_falling_blocks(const context& context,
-                                      entt::registry& registry,
+void bim::game::update_falling_blocks(entt::registry& registry,
                                       bim::game::entity_world_map& entity_map)
 {
   registry.view<timer, falling_block, position_on_grid>().each(
@@ -40,6 +37,6 @@ void bim::game::update_falling_blocks(const context& context,
           if (t.duration.count() > 0)
             return;
 
-          seal_falling_block(context, registry, entity_map, e, position);
+          seal_falling_block(registry, entity_map, e, position);
         });
 }

@@ -29,6 +29,8 @@ TEST(bim_table_2d, init)
 TEST(bim_table_2d, copy)
 {
   const bim::table_2d<int> t(3, 2, 42);
+  // Copying is part of the test.
+  // NOLINTNEXTLINE(performance-unnecessary-copy-initialization)
   const bim::table_2d<int> copied(t);
 
   EXPECT_EQ(42, copied(0, 0));

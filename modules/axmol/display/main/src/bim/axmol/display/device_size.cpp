@@ -7,7 +7,7 @@
 ax::Vec2 bim::axmol::display::device_size()
 {
   ax::Director* const director = ax::Director::getInstance();
-  ax::RenderView* const view = director->getRenderView();
+  const ax::RenderView* const view = director->getRenderView();
 
   assert(view != nullptr);
 

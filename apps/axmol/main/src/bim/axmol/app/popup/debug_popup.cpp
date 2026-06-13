@@ -269,7 +269,7 @@ void bim::axmol::app::debug_popup::add_button_item(
 
   m_inputs.push_back(b.input_node());
 
-  b.connect_to_clicked(do_action);
+  b.connect_to_clicked(std::move(do_action));
 
   add_item(controls.all_nodes, m_button_item_bounds);
 }
@@ -278,7 +278,7 @@ void bim::axmol::app::debug_popup::add_item(
     const bim::axmol::widget::named_node_group& nodes,
     const iscool::style::declaration& bounds)
 {
-  bim::axmol::ref_ptr<bim::axmol::widget::passive_node> item =
+  const bim::axmol::ref_ptr<bim::axmol::widget::passive_node> item =
       bim::axmol::widget::factory<bim::axmol::widget::passive_node>::create(
           *m_context.get_widget_context(), m_list_item_container_style);
 

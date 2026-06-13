@@ -16,7 +16,7 @@
 
 bim::axmol::ref_ptr<ax::Animation>
 bim::axmol::widget::factory<ax::Animation>::create(
-    const bim::axmol::widget::context& context,
+    const bim::axmol::widget::context&,
     const iscool::style::declaration& style)
 {
   ax::Vector<ax::AnimationFrame*> animation_frames;
@@ -67,6 +67,6 @@ bim::axmol::widget::factory<ax::Animation>::create(
           ax::AnimationFrame::create(sprite_frame, *frame_duration, {}));
     }
 
-  return ax::Animation::create(animation_frames, 1,
-                               style.get_number("loops", 1));
+  return ax::Animation::create(animation_frames, 1.f,
+                               (int)style.get_number("loops", 1));
 }

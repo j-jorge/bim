@@ -77,7 +77,7 @@ void bim::axmol::app::wallet::attached()
       *slot.value = new_coin_node();
     }
 
-  for (std::size_t i : slots)
+  for (const std::size_t i : slots)
     m_coins.release(i);
 }
 
@@ -156,7 +156,9 @@ void bim::axmol::app::wallet::spawn_coins(
   for (int i = 0; i != g_coins_per_transaction; ++i)
     {
       const bool forward = i % 2 == 0;
-      const float fx = float((i + 1) / 2) / 5;
+      const int s = (i + 1) / 2;
+      constexpr int coins_each_side = g_coins_per_transaction / 2;
+      const float fx = float(s) / coins_each_side;
       const float fy_ref = 0.6;
       const float fy_spread = 0.3;
       const float fy =
@@ -205,13 +207,13 @@ void bim::axmol::app::wallet::prepare_coin_assets(
   for (node_pool::slot& slot : slots)
     slot = m_coins.pick_available();
 
-  for (node_pool::slot& slot : slots)
+  for (const node_pool::slot& slot : slots)
     if (!*slot.value)
       *slot.value = new_coin_node();
 
   ax::Node& wallet = *m_controls->wallet_button;
 
-  for (node_pool::slot& slot : slots)
+  for (const node_pool::slot& slot : slots)
     {
       ax::Node& s = **slot.value;
 
@@ -231,79 +233,19 @@ ax::BezierConfig bim::axmol::app::wallet::configure_bezier(
   ax::BezierConfig bezier;
   bezier.endPosition = target_position;
 
-  if (d.x >= 0)
+  if (forward)
     {
-      if (d.y >= 0)
-        {
-          if (forward)
-            {
-              bezier.controlPoint_1.x = source_position.x + fx * d.x;
-              bezier.controlPoint_1.y = source_position.y - fy * d.y;
-              bezier.controlPoint_2.x = target_position.x - 0.4 * d.x;
-              bezier.controlPoint_2.y = source_position.y + 0.4 * d.y;
-            }
-          else
-            {
-              bezier.controlPoint_1.x = source_position.x - fx * d.x;
-              bezier.controlPoint_1.y = source_position.y - fy * d.y;
-              bezier.controlPoint_2.x = source_position.x + 0.4 * d.x;
-              bezier.controlPoint_2.y = target_position.y - 0.4 * d.y;
-            }
-        }
-      else
-        {
-          if (forward)
-            {
-              bezier.controlPoint_1.x = source_position.x + fx * d.x;
-              bezier.controlPoint_1.y = source_position.y - fy * d.y;
-              bezier.controlPoint_2.x = target_position.x - 0.4 * d.x;
-              bezier.controlPoint_2.y = source_position.y + 0.4 * d.y;
-            }
-          else
-            {
-              bezier.controlPoint_1.x = source_position.x - fx * d.x;
-              bezier.controlPoint_1.y = source_position.y - fy * d.y;
-              bezier.controlPoint_2.x = source_position.x + 0.4 * d.x;
-              bezier.controlPoint_2.y = target_position.y - 0.4 * d.y;
-            }
-        }
+      bezier.controlPoint_1.x = source_position.x + fx * d.x;
+      bezier.controlPoint_1.y = source_position.y - fy * d.y;
+      bezier.controlPoint_2.x = target_position.x - 0.4 * d.x;
+      bezier.controlPoint_2.y = source_position.y + 0.4 * d.y;
     }
   else
     {
-      if (d.y >= 0)
-        {
-          if (forward)
-            {
-              bezier.controlPoint_1.x = source_position.x + fx * d.x;
-              bezier.controlPoint_1.y = source_position.y - fy * d.y;
-              bezier.controlPoint_2.x = target_position.x - 0.4 * d.x;
-              bezier.controlPoint_2.y = source_position.y + 0.4 * d.y;
-            }
-          else
-            {
-              bezier.controlPoint_1.x = source_position.x - fx * d.x;
-              bezier.controlPoint_1.y = source_position.y - fy * d.y;
-              bezier.controlPoint_2.x = source_position.x + 0.4 * d.x;
-              bezier.controlPoint_2.y = target_position.y - 0.4 * d.y;
-            }
-        }
-      else
-        {
-          if (forward)
-            {
-              bezier.controlPoint_1.x = source_position.x + fx * d.x;
-              bezier.controlPoint_1.y = source_position.y - fy * d.y;
-              bezier.controlPoint_2.x = target_position.x - 0.4 * d.x;
-              bezier.controlPoint_2.y = source_position.y + 0.4 * d.y;
-            }
-          else
-            {
-              bezier.controlPoint_1.x = source_position.x - fx * d.x;
-              bezier.controlPoint_1.y = source_position.y - fy * d.y;
-              bezier.controlPoint_2.x = source_position.x + 0.4 * d.x;
-              bezier.controlPoint_2.y = target_position.y - 0.4 * d.y;
-            }
-        }
+      bezier.controlPoint_1.x = source_position.x - fx * d.x;
+      bezier.controlPoint_1.y = source_position.y - fy * d.y;
+      bezier.controlPoint_2.x = source_position.x + 0.4 * d.x;
+      bezier.controlPoint_2.y = target_position.y - 0.4 * d.y;
     }
 
   return bezier;

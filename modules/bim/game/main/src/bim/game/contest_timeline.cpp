@@ -169,7 +169,7 @@ bool bim::game::load_contest_timeline(contest_timeline& timeline, std::FILE* f)
   int remaining_actions_in_tick = player_count;
   std::uint32_t tick = 0;
 
-  while (std::size_t n = std::fread(buffer, 1, 4096, f))
+  while (const std::size_t n = std::fread(buffer, 1, 4096, f))
     for (std::size_t i = 0; i != n; ++i)
       {
         {

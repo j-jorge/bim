@@ -70,7 +70,7 @@ IMPLEMENT_SIGNAL(bim::axmol::app::main_task, reset, m_reset);
 
 bim::axmol::app::main_task::main_task(context context,
                                       const iscool::style::declaration& style)
-  : m_context(context)
+  : m_context(std::move(context))
   , m_loading_screen(new loading_screen(
         m_context, *style.get_declaration("loading-screen")))
 {

@@ -14,7 +14,7 @@ TEST(update_clocks, duration)
   entt::registry registry;
 
   const entt::entity entity = registry.create();
-  bim::game::clock& clock = registry.emplace<bim::game::clock>(
+  const bim::game::clock& clock = registry.emplace<bim::game::clock>(
       entity, std::chrono::milliseconds(24));
 
   EXPECT_EQ(std::chrono::milliseconds(24), clock.date);

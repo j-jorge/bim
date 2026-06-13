@@ -18,7 +18,7 @@
 
 TEST(game_service, new_game)
 {
-  bim::server::config config = bim::server::tests::new_test_config();
+  const bim::server::config config = bim::server::tests::new_test_config();
   bim::server::tests::fake_scheduler scheduler;
   bim::server::statistics_service statistics(config);
 

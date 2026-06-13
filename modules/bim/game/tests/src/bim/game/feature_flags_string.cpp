@@ -6,7 +6,7 @@
 
 TEST(bim_game_feature_flags_string, roundtrip)
 {
-  for (bim::game::feature_flags f : bim::game::g_all_game_feature_flags)
+  for (const bim::game::feature_flags f : bim::game::g_all_game_feature_flags)
     {
       const std::string_view s = bim::game::to_simple_string(f);
       const std::optional<bim::game::feature_flags> o =

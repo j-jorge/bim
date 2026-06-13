@@ -30,8 +30,7 @@ namespace bim::game
   class fog_of_war_updater
   {
   public:
-    fog_of_war_updater(entt::registry& registry, const arena& arena,
-                       std::uint8_t player_count);
+    fog_of_war_updater(const arena& arena, std::uint8_t player_count);
     ~fog_of_war_updater();
 
     const bim::table_2d<fog_of_war*>& fog(std::size_t player_index) const;
@@ -48,8 +47,7 @@ namespace bim::game
     void uncover_around_flames(entt::registry& registry,
                                const detail::fog_properties& p);
 
-    void update_opacity_from_timers(entt::registry& registry,
-                                    const detail::fog_properties& p) const;
+    void update_opacity_from_timers(const detail::fog_properties& p) const;
 
   private:
     bim::table_2d<bool> m_blown;

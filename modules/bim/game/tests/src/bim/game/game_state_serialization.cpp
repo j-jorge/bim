@@ -16,8 +16,8 @@
 TEST(bim_game_game_state_serialization, pod_components_multiple_steps)
 {
   entt::registry registry;
-  entt::entity entities[] = { registry.create(), registry.create(),
-                              registry.create(), registry.create() };
+  const entt::entity entities[] = { registry.create(), registry.create(),
+                                    registry.create(), registry.create() };
 
   registry.emplace<bim::game::bomb>(entities[0], 18);
   registry.emplace<bim::game::timer>(entities[0],

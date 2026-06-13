@@ -16,7 +16,7 @@ namespace bim::server
   class karma_service
   {
   public:
-    enum class update_result
+    enum class update_result : std::uint8_t
     {
       accept,
       kick_out

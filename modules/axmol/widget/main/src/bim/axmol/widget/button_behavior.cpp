@@ -67,7 +67,7 @@ bim::axmol::widget::button_behavior::button_behavior(
       if (!action_style)
         return;
 
-      bim::axmol::ref_ptr<ax::FiniteTimeAction> action_from_style =
+      const bim::axmol::ref_ptr<ax::FiniteTimeAction> action_from_style =
           context.action_factory.create(context.colors, *action_style);
 
       action =

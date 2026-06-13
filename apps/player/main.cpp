@@ -55,7 +55,7 @@ static void dump_timeline(const bim::game::contest_timeline& timeline)
             << ") [" << std::dec;
 
   const char* separator = "";
-  for (bim::game::feature_flags f : bim::game::g_all_game_feature_flags)
+  for (const bim::game::feature_flags f : bim::game::g_all_game_feature_flags)
     {
       if (!(fingerprint.features & f))
         continue;

@@ -75,7 +75,7 @@ private:
         if (headers)
           curl_slist_free_all(headers);
 
-        std::lock_guard lock(m_thread_shared.out_mutex);
+        const std::lock_guard lock(m_thread_shared.out_mutex);
         m_thread_shared.result_queue.emplace_back(
             std::move(request.result_handler), std::move(response_data),
             response_code);
@@ -237,7 +237,7 @@ void http_worker::dispatch_responses()
   assert(m_result_queue.empty());
 
   {
-    std::lock_guard lock(m_thread_shared.out_mutex);
+    const std::lock_guard lock(m_thread_shared.out_mutex);
     m_result_queue.swap(m_thread_shared.result_queue);
   }
 

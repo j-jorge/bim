@@ -164,7 +164,7 @@ void bim::net::contest_runner::sync_with_server(entt::registry& registry)
       drop_confirmed_actions();
     }
 
-  apply_unconfirmed_actions(registry);
+  apply_unconfirmed_actions();
 }
 
 void bim::net::contest_runner::restore_last_confirmed_state(
@@ -249,8 +249,7 @@ void bim::net::contest_runner::drop_confirmed_actions()
   actions.erase(actions.begin(), actions.end() - keep_count);
 }
 
-void bim::net::contest_runner::apply_unconfirmed_actions(
-    entt::registry& registry)
+void bim::net::contest_runner::apply_unconfirmed_actions()
 {
   for (std::size_t i = 0,
                    n = m_unconfirmed_actions[m_local_player_index].size();

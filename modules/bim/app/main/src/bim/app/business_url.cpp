@@ -2,6 +2,7 @@
 #include <bim/app/business_url.hpp>
 
 #include <cstdlib>
+#include <string>
 
 const std::string bim::app::business_url = []()
   {

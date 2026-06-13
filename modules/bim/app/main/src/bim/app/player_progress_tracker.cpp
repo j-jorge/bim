@@ -16,8 +16,6 @@ bim::app::player_progress_tracker::player_progress_tracker(
   , m_preferences(local_preferences)
 {}
 
-bim::app::player_progress_tracker::~player_progress_tracker() = default;
-
 void bim::app::player_progress_tracker::game_over_in_public_arena(
     const bim::net::contest_result& result, std::uint8_t local_player_index)
 {

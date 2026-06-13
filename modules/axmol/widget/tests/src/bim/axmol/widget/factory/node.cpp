@@ -19,13 +19,14 @@
 
 TEST(bim_axmol_widget_factory_node, factory)
 {
-  bim::axmol::colour_chart colors;
+  const bim::axmol::colour_chart colors;
   bim::axmol::style::cache style_cache(colors);
-  bim::axmol::widget::dynamic_factory widget_factory;
-  bim::axmol::action::dynamic_factory action_factory;
+  const bim::axmol::widget::dynamic_factory widget_factory;
+  const bim::axmol::action::dynamic_factory action_factory;
   bim::axmol::widget::font_catalog fonts;
-  bim::axmol::widget::context context{ colors, style_cache, widget_factory,
-                                       action_factory, fonts };
+  const bim::axmol::widget::context context{ colors, style_cache,
+                                             widget_factory, action_factory,
+                                             fonts };
 
   iscool::style::declaration style;
   style.set_number("anchor-point.x", 0.1);
