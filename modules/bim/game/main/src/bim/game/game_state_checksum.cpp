@@ -3,7 +3,6 @@
 
 #include <bim/game/all_components.hpp>
 
-#include <bim/crc32.hpp>
 #include <bim/tracy.hpp>
 
 #include <iscool/meta/underlying_type.hpp>
@@ -23,13 +22,21 @@ namespace
   };
 }
 
+static std::uint32_t sum(const char* b, std::size_t n, std::uint32_t v)
+{
+  for (std::size_t i = 0; i != n; ++i)
+    v += b[i];
+
+  return v;
+}
+
 static void push_checksum_bytes(checksum_state& checksum, const char* value,
                                 std::size_t n)
 {
   if (checksum.length + n > checksum.bytes.size())
     {
-      checksum.result = bim::crc32(
-          std::span(&checksum.bytes[0], checksum.length), checksum.result);
+      checksum.result =
+          sum(&checksum.bytes[0], checksum.length, checksum.result);
       checksum.length = 0;
     }
 
@@ -237,8 +244,7 @@ std::uint32_t bim::game::game_state_checksum(const entt::registry& registry)
   ++type_index;
 #include <bim/game/for_each_component.hpp>
 
-  checksum.result = bim::crc32(std::span(&checksum.bytes[0], checksum.length),
-                               checksum.result);
+  checksum.result = sum(&checksum.bytes[0], checksum.length, checksum.result);
 
   return checksum.result;
 }

@@ -3,7 +3,6 @@ configure_file(tracy.hpp.in include/bim/tracy.hpp @ONLY)
 configure_file(version.hpp.in include/bim/version.hpp @ONLY)
 
 set(library_files
-  main/src/bim/crc32.cpp
   main/src/bim/template_instantiations.cpp
 )
 
@@ -48,9 +47,3 @@ if (BIM_BUILD_TESTS)
     bim_gtest_main
   )
 endif()
-
-add_benchmark(
-  crc32-benchmark
-  SOURCES benchmarks/src/bim/crc32.cpp
-  LINK bim_core
-)
