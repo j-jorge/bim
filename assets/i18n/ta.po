@@ -7,276 +7,296 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2026-06-22 14:01+0000\n"
+"Last-Translator: தமிழ்நேரம் <tamilneram247@gmail.com>\n"
+"Language-Team: Tamil <https://hosted.weblate.org/projects/bim/gettext-files/"
+"ta/>\n"
 "Language: ta\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 2026.7.dev0\n"
 
 msgid "Please wait"
-msgstr ""
+msgstr "தயவுசெய்து காத்திருக்கவும்"
 
 msgid "You have been disconnected :("
-msgstr ""
+msgstr "நீங்கள் துண்டிக்கப்பட்டீர்கள் :("
 
 msgid ""
 "The shop is not available on this platform, yet you can support the "
 "developers with donations! Should I open the donations page?"
 msgstr ""
+"இந்த பிளாட்ஃபார்மில் கடை கிடைக்கவில்லை, இருப்பினும் நீங்கள் டெவலப்பர்களை நன்கொடைகள் மூலம் "
+"ஆதரிக்கலாம்! நன்கொடைகள் பக்கத்தை நான் திறக்க வேண்டுமா?"
 
 msgid "Do you really want to change the language setting?"
-msgstr ""
+msgstr "மொழி அமைப்பை உண்மையில் மாற்ற விரும்புகிறீர்களா?"
 
 #, c++-format
 msgid "Version {}"
-msgstr ""
+msgstr "பதிப்பு {}"
 
 msgid "Feedback about Bim!"
-msgstr ""
+msgstr "பிம் பற்றிய கருத்து!"
 
 #, c++-format
 msgid "Come play a game of Bim! {}"
-msgstr ""
+msgstr "பிம் விளையாட்டை விளையாட வாருங்கள்! {}"
 
 msgid "You need more coins to purchase this item!"
-msgstr ""
+msgstr "இந்த பொருளை வாங்க உங்களுக்கு அதிக நாணயங்கள் தேவை!"
 
 #, c++-format
 msgid "Customize your games with up to {} feature."
 msgid_plural "Customize your games with up to {} features."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{} நற்பொருத்தம் வரை உங்கள் கேம்களைத் தனிப்பயனாக்குங்கள்."
+msgstr[1] "{} அம்சங்களுடன் உங்கள் கேம்களைத் தனிப்பயனாக்குங்கள்."
 
 msgid "Falling blocks reduce the arena after two minutes!"
-msgstr ""
+msgstr "விழும் தொகுதிகள் இரண்டு நிமிடங்களுக்குப் பிறகு அரங்கைக் குறைக்கின்றன!"
 
 msgid "Fences block the players, but the flames can go through!"
-msgstr ""
+msgstr "வேலிகள் வீரர்களைத் தடுக்கின்றன, ஆனால் தீப்பிழம்புகள் செல்லலாம்!"
 
 msgid "A thick fog covers the arena. You can't see were you did not go!"
 msgstr ""
+"அடர்ந்த பனிமூட்டம் அரங்கை மூடியுள்ளது. நீங்கள் போகவில்லை என்றால் உங்களால் பார்க்க முடியாது!"
 
 msgid ""
 "Find the invisibility power up to disappear from the screen of all other "
 "players!"
 msgstr ""
+"மற்ற எல்லா பிளேயர்களின் திரையில் இருந்து மறைந்துவிடும் கண்ணுக்குத் தெரியாத சக்தியைக் "
+"கண்டறியவும்!"
 
 msgid "Find this incredibly strong barrel, it will save you from one hit!"
 msgstr ""
+"இந்த நம்பமுடியாத வலுவான பீப்பாயைக் கண்டுபிடி, அது ஒரு வெற்றியிலிருந்து உங்களைக் காப்பாற்றும்!"
 
 #, c++-format
 msgid "{} game being played right now."
 msgid_plural "{} games being played right now."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{} கேம் இப்போது விளையாடப்படுகிறது."
+msgstr[1] "{} கேம்கள் இப்போது விளையாடப்படுகின்றன."
 
 #, c++-format
 msgid "{} player connected right now."
 msgid_plural "{} players connected right now."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{} பிளேயர் இப்போது இணைக்கப்பட்டுள்ளது."
+msgstr[1] "{} வீரர்கள் இப்போது இணைக்கப்பட்டுள்ளனர்."
 
 #, c++-format
 msgid "{} game played in the last hour."
 msgid_plural "{} games played in the last hour."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{} ஆட்டம் கடைசி ஒரு மணி நேரத்தில் விளையாடப்பட்டது."
+msgstr[1] "கடந்த ஒரு மணி நேரத்தில் விளையாடிய {} கேம்கள்."
 
 #, c++-format
 msgid "{} player connected in the last hour."
 msgid_plural "{} players connected in the last hour."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{} பிளேயர் கடைசி ஒரு மணி நேரத்தில் இணைக்கப்பட்டது."
+msgstr[1] "கடைசி மணிநேரத்தில் {} வீரர்கள் இணைக்கப்பட்டுள்ளனர்."
 
 #, c++-format
 msgid "{} game played in the last 24 hours."
 msgid_plural "{} games played in the last 24 hours."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "கடந்த 24 மணிநேரத்தில் விளையாடிய {} கேம்."
+msgstr[1] "{} கடந்த 24 மணிநேரத்தில் விளையாடிய கேம்கள்."
 
 #, c++-format
 msgid "{} player connected in the last 24 hours."
 msgid_plural "{} players connected in the last 24 hours."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "கடந்த 24 மணிநேரத்தில் {} பிளேயர் இணைக்கப்பட்டுள்ளது."
+msgstr[1] "கடந்த 24 மணிநேரத்தில் {} வீரர்கள் இணைக்கப்பட்டுள்ளனர்."
 
 #, c++-format
 msgid "{} game played in the last 30 days."
 msgid_plural "{} games played in the last 30 days."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "கடந்த 30 நாட்களில் விளையாடிய {} கேம்."
+msgstr[1] "{} கடந்த 30 நாட்களில் விளையாடிய கேம்கள்."
 
 #, c++-format
 msgid "{} player connected in the last 30 days."
 msgid_plural "{} players connected in the last 30 days."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "கடந்த 30 நாட்களில் {} பிளேயர் இணைக்கப்பட்டுள்ளது."
+msgstr[1] "கடந்த 30 நாட்களில் {} வீரர்கள் இணைக்கப்பட்டுள்ளனர்."
 
 #, c++-format
 msgid "Connected to {}."
-msgstr ""
+msgstr "{} உடன் இணைக்கப்பட்டது."
 
 msgid "An error occurred. The purchase could not be completed."
-msgstr ""
+msgstr "பிழை ஏற்பட்டது. வாங்குதலை முடிக்க முடியவில்லை."
 
 msgid "A new version of Bim! is available! Please update as soon as possible."
-msgstr ""
+msgstr "Bim இன் புதிய பதிப்பு! கிடைக்கிறது! கூடிய விரைவில் புதுப்பிக்கவும்."
 
 #, c++-format
 msgid "Failed to authenticate with the game server. Error code {}."
-msgstr ""
+msgstr "கேம் சர்வர் மூலம் அங்கீகரிக்க முடியவில்லை. பிழைக் குறியீடு {}."
 
 msgid "Cancel"
-msgstr ""
+msgstr "ரத்துசெய்"
 
 msgid "OK"
-msgstr ""
+msgstr "சரி"
 
 msgid ""
 "NEW\n"
 "GAME"
 msgstr ""
+"புதியது \n"
+"விளையாட்டு"
 
 msgid ""
 "Start a new game\n"
 "and get your revenge!"
 msgstr ""
+"புதிய விளையாட்டைத் தொடங்குங்கள் \n"
+"மற்றும் உங்கள் பழிவாங்கும்!"
 
 msgid ""
 "Was it pure luck?\n"
 "Confirm your skills in a new game!"
 msgstr ""
+"அது தூய்மையான அதிர்ச்டமா? \n"
+"புதிய விளையாட்டில் உங்கள் திறமைகளை உறுதிப்படுத்தவும்!"
 
 msgid "Draw game!"
-msgstr ""
+msgstr "டிரா விளையாட்டு!"
 
 msgid "You lost!"
-msgstr ""
+msgstr "இழந்தாய்!"
 
 msgid "You won!"
-msgstr ""
+msgstr "நீ வென்றாய்!"
 
 msgid "ERASE"
-msgstr ""
+msgstr "அழிக்கவும்"
 
 msgid "RANDOM"
-msgstr ""
+msgstr "சீரற்ற"
 
 msgid "Off"
-msgstr ""
+msgstr "அணை"
 
 msgid "On"
-msgstr ""
+msgstr "அன்று"
 
 msgid "Defeats"
-msgstr ""
+msgstr "தோல்விகள்"
 
 msgid "Draws"
-msgstr ""
+msgstr "வரைகிறது"
 
 msgid "Games"
-msgstr ""
+msgstr "விளையாட்டுகள்"
 
 msgid "Victories"
-msgstr ""
+msgstr "வெற்றிகள்"
 
 msgid "Your statistics"
-msgstr ""
+msgstr "உங்கள் புள்ளிவிவரங்கள்"
 
 msgid "Success rate"
-msgstr ""
+msgstr "செய் விகிதம்"
 
 msgid "No"
-msgstr ""
+msgstr "இல்லை"
 
 msgid "Yes"
-msgstr ""
+msgstr "ஆம்"
 
 msgid "Is your language missing? Add it on <a href='#'>Weblate</a>!"
-msgstr ""
+msgstr "உங்கள் மொழி காணவில்லையா? <a href='#'>Weblate</a> இல் சேர்க்கவும்!"
 
 msgid "Language"
-msgstr ""
+msgstr "மொழி"
 
 msgid "Directions kind"
-msgstr ""
+msgstr "திசைகள் வகை"
 
 msgid "Directional pad, at a fixed position on the screen."
-msgstr ""
+msgstr "திசை திண்டு, திரையில் ஒரு நிலையான நிலையில்."
 
 msgid "Analog stick, it pops where you tap and follows the drag."
 msgstr ""
+"அனலாக் ச்டிக், நீங்கள் தட்டும்போது அது தோன்றும் மற்றும் இழுவைப் பின்தொடர்கிறது."
 
 msgid "Controls"
-msgstr ""
+msgstr "கட்டுப்பாடுகள்"
 
 msgid "Directions on the left, actions on the right."
-msgstr ""
+msgstr "இடதுபுறத்தில் திசைகள், வலதுபுறத்தில் செயல்கள்."
 
 msgid "Directions on the right, actions on the left."
-msgstr ""
+msgstr "வலதுபுறத்தில் திசைகள், இடதுபுறத்தில் செயல்கள்."
 
 msgid "D-pad"
-msgstr ""
+msgstr "டி-பேட்"
 
 msgid "Stick"
-msgstr ""
+msgstr "குச்சி"
 
 msgid "Music"
-msgstr ""
+msgstr "இசை"
 
 msgid "Sound effects"
-msgstr ""
+msgstr "ஒலி விளைவுகள்"
 
 msgid "Settings"
-msgstr ""
+msgstr "அமைப்புகள்"
 
 msgid "Vibrations"
-msgstr ""
+msgstr "அதிர்வுகள்"
 
 msgid "Features"
-msgstr ""
+msgstr "நற்பொருத்தங்கள்"
 
 msgid "PLAY ONLINE"
-msgstr ""
+msgstr "ஆன்லைனில் விளையாடு"
 
 msgid "SHOP"
-msgstr ""
+msgstr "கடை"
 
 msgid "STATISTICS"
-msgstr ""
+msgstr "புள்ளிவிவரங்கள்"
 
 msgid "ALPHA VERSION"
-msgstr ""
+msgstr "ஆல்பா பதிப்பு"
 
 msgid "Join our Discord to meet other players."
-msgstr ""
+msgstr "மற்ற வீரர்களைச் சந்திக்க எங்கள் டிச்கார்டில் சேரவும்."
 
 msgid "You can start a two-players game now or wait for more players!"
 msgstr ""
+"நீங்கள் இப்போது இருவர் விளையாடும் விளையாட்டைத் தொடங்கலாம் அல்லது அதிக வீரர்களுக்காக காத்திருக்கலாம்!"
 
 msgid "You can start a three-players game now or wait for more players!"
 msgstr ""
+"நீங்கள் இப்போது மூன்று பேர் விளையாடும் விளையாட்டைத் தொடங்கலாம் அல்லது அதிக வீரர்களுக்காக "
+"காத்திருக்கலாம்!"
 
 msgid "Start the game now!"
-msgstr ""
+msgstr "இப்போதே விளையாட்டைத் தொடங்குங்கள்!"
 
 msgid "FIGHT!"
-msgstr ""
+msgstr "சண்டை!"
 
 msgid ""
 "Waiting for your opponents…\n"
 "Tell your friends to join!"
 msgstr ""
+"உங்கள் எதிரிகளுக்காக காத்திருக்கிறது… \n"
+"சேர உங்கள் நண்பர்களிடம் சொல்லுங்கள்!"
 
 msgid "Online Game"
-msgstr ""
+msgstr "நிகழ்நிலை விளையாட்டு"
 
 msgid "×1000"
-msgstr ""
+msgstr "× 1000"
 
 msgid "LOADING…"
-msgstr ""
+msgstr "ஏற்றுகிறது…"
