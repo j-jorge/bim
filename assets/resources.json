@@ -8,7 +8,7 @@
       "substitutions": [
         {
           "font": "font/LuckiestGuy-Regular.ttf",
-          "substitute": "font/OpenSans-ExtraBold.ttf"
+          "substitute": "font/DaysOne-Regular.ttf"
         }
       ]
     },

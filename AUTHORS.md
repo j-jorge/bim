@@ -2,6 +2,10 @@ static-assets/font/BagelFatOne-Regular.ttf
 The Bagel Fat Project Authors, adjusted by Julien Jorge.
 SIL Open Font License 1.1.
 
+static-assets/font/DaysOne-Regular.ttf
+Jovanny Lemonad
+SIL Open Font License 1.1.
+
 static-assets/font/NotoSansKR-Regular.ttf
 static-assets/font/NotoSansKR-ExtraBold.ttf
 Adobe.
