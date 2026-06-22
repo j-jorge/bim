@@ -45,6 +45,8 @@ bim::app::user_language(const iscool::preferences::local_preferences& p)
       return iscool::language_name::pt_PT;
     case iscool::iso_639_language_code::ru:
       return iscool::language_name::ru_RU;
+    case iscool::iso_639_language_code::ta:
+      return iscool::language_name::ta_IN;
     case iscool::iso_639_language_code::tr:
       return iscool::language_name::tr_TR;
     case iscool::iso_639_language_code::uk:

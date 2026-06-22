@@ -7,6 +7,11 @@ static-assets/font/NotoSansKR-ExtraBold.ttf
 Adobe.
 SIL Open Font License 1.1.
 
+static-assets/font/NotoSansTamil-Regular.ttf
+static-assets/font/NotoSansTamil-ExtraBold.ttf
+The Noto Project Authors.
+SIL Open Font License 1.1.
+
 static-assets/font/LuckiestGuy-Regular.ttf
 Astigmatic, adjusted by Julien Jorge.
 Apache 2.0.
@@ -59,6 +64,10 @@ CC-BY-SA 4.0.
 
 assets/i18n/ru.po
 Sergey Potapenko, via Weblate
+CC-BY-SA 4.0.
+
+assets/i18n/ta.po
+தமிழ்நேரம், via Weblate.
 CC-BY-SA 4.0.
 
 assets/i18n/tr.po

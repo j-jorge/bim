@@ -35,6 +35,30 @@
           "force-italics": true
         }
       ]
+    },
+    {
+      "languages": [
+        "ta"
+      ],
+      "substitutions": [
+        {
+          "font": "font/LuckiestGuy-Regular.ttf",
+          "substitute": "font/NotoSansTamil-ExtraBold.ttf"
+        },
+        {
+          "font": "font/OpenSans-Regular.ttf",
+          "substitute": "font/NotoSansTamil-Regular.ttf"
+        },
+        {
+          "font": "font/OpenSans-ExtraBold.ttf",
+          "substitute": "font/NotoSansTamil-ExtraBold.ttf"
+        },
+        {
+          "font": "font/OpenSans-ExtraBoldItalic.ttf",
+          "substitute": "font/NotoSansTamil-ExtraBold.ttf",
+          "force-italics": true
+        }
+      ]
     }
   ],
 

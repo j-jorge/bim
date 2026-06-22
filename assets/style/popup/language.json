@@ -34,6 +34,17 @@
       }
     ],
 
+    "list-item-controls.ta": [
+      {
+        "button": [
+          "popup/language/button",
+          {
+            "widgets/label/font.file": "font/NotoSansTamil-ExtraBold.ttf"
+          }
+        ]
+      }
+    ],
+
     "list-item-bounds": [
       {
         "button": [

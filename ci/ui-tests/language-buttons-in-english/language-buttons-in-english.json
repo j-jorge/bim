@@ -164,6 +164,24 @@
     },
     {
       "kind": "click",
+      "node": "overlay/language/client_container/list/view////ta_IN",
+      "event": "popup-shown"
+    },
+    {
+      "kind": "capture",
+      "file": "tamil.png"
+    },
+    {
+      "kind": "click",
+      "node": "overlay/container/client_container/no_button",
+      "event": "popup-hidden"
+    },
+    {
+      "kind": "click",
+      "node": "overlay/language/client_container/list/view"
+    },
+    {
+      "kind": "click",
       "node": "overlay/language/client_container/list/view////tr_TR",
       "event": "popup-shown"
     },
