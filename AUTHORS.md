@@ -79,7 +79,7 @@ Oğuz Ersen, AsetSiya, Metin, via Weblate.
 CC-BY-SA 4.0.
 
 assets/i18n/uk.po
-Максим Горпиніч, Andrij Mizyk, via Weblate.
+Максим Горпиніч, Andrij Mizyk, arkeelin, via Weblate.
 CC-BY-SA 4.0.
 
 assets/sprites/menu/language.png
