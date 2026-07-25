@@ -76,7 +76,7 @@ void bim::server::business_registration_service::send_registration_request()
         {
           hello_ok(body);
         },
-      [this](std::span<const char> body)
+      [this](int status, std::span<const char> body)
         {
           hello_ko(body);
         });
@@ -121,12 +121,13 @@ void bim::server::business_registration_service::hello_ok(
 }
 
 void bim::server::business_registration_service::hello_ko(
-    std::span<const char> body)
+    int status, std::span<const char> body)
 {
   increment_retry_delay();
 
   ic_log(iscool::log::nature::error(), "business_registration_service",
-         "Failed to register: {}. Retrying in {}.", body, m_retry_delay);
+         "Failed to register: {}, {}. Retrying in {}.", status, body,
+         m_retry_delay);
 
   schedule_registration(m_retry_delay);
 }

@@ -143,11 +143,10 @@ void bim::axmol::app::main_task::fetch_remote_config()
       config_ready();
     };
 
-  auto on_error = [this](std::span<const char> response) -> void
+  auto on_error = [this](int status, std::span<const char> response) -> void
     {
       ic_log(iscool::log::nature::warning(), "main_task",
-             "Failed to fetch remote config {}.",
-             std::string(response.begin(), response.end()));
+             "Failed to fetch remote config ({}) {}.", status, response);
 
       load_local_config();
       config_ready();
