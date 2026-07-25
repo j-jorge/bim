@@ -172,6 +172,12 @@ namespace bim::server
     /** Token to pass to the business server for authenticated requests. */
     std::string business_token;
 
+    /**
+     * How long to wait between two registration attempts when we can't get the
+     * delay from the business server.
+     */
+    std::chrono::seconds business_registration_pulse_seconds;
+
     /** The name of the server, as sent to the clients. */
     std::string name;
 

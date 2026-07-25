@@ -23,8 +23,7 @@ namespace bim::server
     void schedule_registration(const std::chrono::seconds& delay);
     void send_registration_request();
     void hello_ok(std::span<const char> body);
-    void hello_ko(std::span<const char> body);
-    void increment_retry_delay();
+    void hello_ko(int status, std::span<const char> body);
 
   private:
     std::string m_url;
@@ -34,6 +33,6 @@ namespace bim::server
     iscool::schedule::scoped_connection m_registration_connection;
     iscool::signals::shared_connection_set m_request_connections;
 
-    std::chrono::seconds m_retry_delay;
+    const std::chrono::seconds m_pulse;
   };
 }

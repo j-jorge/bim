@@ -282,6 +282,11 @@ static command_line parse_command_line(int argc, char* argv[])
   config_options.add_options()(
       "business-token", boost::program_options::value<std::string>(),
       "Token to pass to the business server for authenticated requests.");
+  config_options.add_options()(
+      "business-registration-pulse-seconds",
+      boost::program_options::value<std::int64_t>(),
+      "How long to wait between two registration attempts when we can't get "
+      "the delay from the business server.");
   all_options.add(config_options);
 
   boost::program_options::options_description statistics_options(
@@ -543,6 +548,7 @@ static command_line parse_command_line(int argc, char* argv[])
   parse_config_option(host);
   parse_config_option(business_url);
   parse_config_option(business_token);
+  parse_config_option(business_registration_pulse_seconds);
   parse_config_option(session_clean_up_interval);
   parse_config_option(session_removal_delay);
   parse_config_option(enable_bots);

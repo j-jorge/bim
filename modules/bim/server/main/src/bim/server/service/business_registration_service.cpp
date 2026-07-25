@@ -24,7 +24,7 @@
 bim::server::business_registration_service::business_registration_service(
     const config& config)
   : m_url(config.business_url + "gs/hello")
-  , m_retry_delay(0)
+  , m_pulse(config.business_registration_pulse_seconds)
 {
   if (config.business_url.empty())
     {
@@ -78,7 +78,7 @@ void bim::server::business_registration_service::send_registration_request()
         },
       [this](int status, std::span<const char> body)
         {
-          hello_ko(body);
+          hello_ko(status, body);
         });
 }
 
@@ -104,36 +104,24 @@ void bim::server::business_registration_service::hello_ok(
                      "business_registration_service",
                      "Registered. Next registration in {}.", delay);
 
-              m_retry_delay = {};
               schedule_registration(delay);
               return;
             }
         }
     }
 
-  increment_retry_delay();
-
   ic_log(iscool::log::nature::error(), "business_registration_service",
          "Could not parse registration result: {}. Retrying in {}.", body,
-         m_retry_delay);
+         m_pulse);
 
-  schedule_registration(m_retry_delay);
+  schedule_registration(m_pulse);
 }
 
 void bim::server::business_registration_service::hello_ko(
     int status, std::span<const char> body)
 {
-  increment_retry_delay();
-
   ic_log(iscool::log::nature::error(), "business_registration_service",
-         "Failed to register: {}, {}. Retrying in {}.", status, body,
-         m_retry_delay);
+         "Failed to register: {}, {}. Retrying in {}.", status, body, m_pulse);
 
-  schedule_registration(m_retry_delay);
-}
-
-void bim::server::business_registration_service::increment_retry_delay()
-{
-  if (m_retry_delay < std::chrono::minutes(1))
-    m_retry_delay += std::chrono::seconds(5);
+  schedule_registration(m_pulse);
 }
