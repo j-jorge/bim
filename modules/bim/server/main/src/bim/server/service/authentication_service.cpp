@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/server/service/authentication_service.hpp>
 
+#include <bim/server/service/create_session_result.hpp>
 #include <bim/server/service/session_service.hpp>
 #include <bim/server/service/statistics_service.hpp>
 
@@ -19,9 +20,17 @@
 #include <iscool/log/log.hpp>
 #include <iscool/log/nature/info.hpp>
 #include <iscool/net/socket_stream.hpp>
+#include <iscool/schedule/delayed_call.hpp>
 #include <iscool/signals/implement_signal.hpp>
+#include <iscool/time/now.hpp>
 
 IMPLEMENT_SIGNAL(bim::server::authentication_service, message, m_message);
+
+struct bim::server::authentication_service::pending_authentication
+{
+  iscool::net::endpoint endpoint;
+  std::chrono::nanoseconds release_at_this_date;
+};
 
 bim::server::authentication_service::authentication_service(
     const config& config, iscool::net::socket_stream& socket,
@@ -31,6 +40,14 @@ bim::server::authentication_service::authentication_service(
   , m_socket(socket)
   , m_message_stream(socket)
   , m_message_pool(64)
+  , m_session_connection(sessions.connect_to_sessions_ready(
+        [this](std::span<const create_session_result> r)
+          {
+            sessions_ready(r);
+          }))
+  , m_clean_up_interval(config.authentication_clean_up_interval)
+  , m_pending_authentication_removal_delay(
+        config.pending_authentication_removal_delay)
 {
   m_hello_ok.version = bim::net::protocol_version;
   m_hello_ok.name = config.name;
@@ -50,6 +67,8 @@ bim::server::authentication_service::authentication_service(
           TracyPlot("Bytes out", (std::int64_t)m_socket.sent_bytes());
         });
 #endif
+
+  schedule_clean_up();
 }
 
 bim::server::authentication_service::~authentication_service() = default;
@@ -105,17 +124,32 @@ void bim::server::authentication_service::check_authentication(
       return;
     }
 
-  const std::optional<iscool::net::session_id> session =
-      m_session_service.create_or_refresh_session(endpoint.address(), token);
+  const create_session_result r = m_session_service.create_or_refresh_session(
+      endpoint.address(), token, message->get_session_token());
 
-  if (!session)
+  switch (r.state)
     {
-      send_refused(endpoint, client_ip_address, *message);
-      return;
+    case create_session_result_state::rejected:
+      send_refused(endpoint, client_ip_address, token);
+      break;
+    case create_session_result_state::accepted:
+      send_accepted(endpoint, token, r.session);
+      break;
+    case create_session_result_state::pending:
+      m_pending_authentication[token] = {
+        .endpoint = endpoint,
+        .release_at_this_date = iscool::time::now<std::chrono::nanoseconds>()
+                                + m_pending_authentication_removal_delay
+      };
     }
+}
 
+void bim::server::authentication_service::send_accepted(
+    const iscool::net::endpoint& endpoint, bim::net::client_token token,
+    iscool::net::session_id session)
+{
   const iscool::net::message_pool::slot s = m_message_pool.pick_available();
-  bim::net::authentication_ok(token, *session).build_message(*s.value);
+  bim::net::authentication_ok(token, session).build_message(*s.value);
 
   m_message_stream.send(endpoint, *s.value);
   m_message_pool.release(s.id);
@@ -143,13 +177,10 @@ void bim::server::authentication_service::send_bad_protocol(
 
 void bim::server::authentication_service::send_refused(
     const iscool::net::endpoint& endpoint,
-    const std::string& client_ip_address,
-    const bim::net::authentication& message)
+    const std::string& client_ip_address, bim::net::client_token token)
 {
   ic_log(iscool::log::nature::info(), "authentication_service",
-         "Authentication request from blacklisted IP {}.", client_ip_address);
-
-  const bim::net::client_token token = message.get_request_token();
+         "Authentication refused for IP {}.", client_ip_address);
 
   const iscool::net::message_pool::slot s = m_message_pool.pick_available();
   bim::net::authentication_ko(token,
@@ -201,4 +232,81 @@ void bim::server::authentication_service::send_acknowledge_keep_alive(
 
   m_message_stream.send(endpoint, *s.value, session, 0);
   m_message_pool.release(s.id);
+}
+
+void bim::server::authentication_service::sessions_ready(
+    std::span<const create_session_result> results)
+{
+  const iscool::net::message_pool::slot slot = m_message_pool.pick_available();
+
+  for (const create_session_result& r : results)
+    {
+      assert(r.state != create_session_result_state::pending);
+
+      const pending_authentication_map::iterator it =
+          m_pending_authentication.find(r.token);
+
+      if (it == m_pending_authentication.end())
+        continue;
+
+      const iscool::net::endpoint& endpoint = it->second.endpoint;
+
+      if (r.state == create_session_result_state::accepted)
+        bim::net::authentication_ok(r.token, r.session)
+            .build_message(*slot.value);
+      else
+        {
+          assert(r.state == create_session_result_state::rejected);
+
+          ic_log(iscool::log::nature::info(), "authentication_service",
+                 "Authentication refused for IP {}.",
+                 endpoint.address().to_string());
+
+          bim::net::authentication_ko(
+              r.token, bim::net::authentication_error_code::refused)
+              .build_message(*slot.value);
+        }
+
+      m_message_stream.send(endpoint, *slot.value);
+      m_pending_authentication.erase(it);
+    }
+
+  m_message_pool.release(slot.id);
+}
+
+void bim::server::authentication_service::schedule_clean_up()
+{
+  m_clean_up_connection = iscool::schedule::delayed_call(
+      [this]() -> void
+        {
+          clean_up();
+          schedule_clean_up();
+        },
+      m_clean_up_interval);
+}
+
+void bim::server::authentication_service::clean_up()
+{
+  const std::chrono::nanoseconds now =
+      iscool::time::now<std::chrono::nanoseconds>();
+
+  const std::size_t old_count = m_pending_authentication.size();
+
+  for (pending_authentication_map::iterator
+           it = m_pending_authentication.begin(),
+           eit = m_pending_authentication.end();
+       it != eit;)
+    if (it->second.release_at_this_date <= now)
+      {
+        ic_log(iscool::log::nature::info(), "authentication_service",
+               "Removing token={}.", it->first);
+        it = m_pending_authentication.erase(it);
+      }
+    else
+      ++it;
+
+  if (old_count != m_pending_authentication.size())
+    ic_log(iscool::log::nature::info(), "authentication_service",
+           "Authentication clean up {} -> {}.", old_count,
+           m_pending_authentication.size());
 }

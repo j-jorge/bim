@@ -25,10 +25,10 @@ bim::net::authentication_exchange::authentication_exchange(
 
 bim::net::authentication_exchange::~authentication_exchange() = default;
 
-void bim::net::authentication_exchange::start()
+void bim::net::authentication_exchange::start(const session_token& t)
 {
   m_token = iscool::random::rand::get_default().random<client_token>();
-  authentication(protocol_version, m_token).build_message(m_client_message);
+  authentication(protocol_version, m_token, t).build_message(m_client_message);
 
   m_channel_signal_connection = m_message_channel.connect_to_message(
       std::bind(&authentication_exchange::interpret_received_message, this,

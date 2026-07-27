@@ -48,6 +48,7 @@ namespace bim::server::tests
     ~test_client();
 
     void authenticate();
+    void authenticate(const bim::net::session_token& session_token);
     void new_game();
     void new_game_auto_accept();
     void new_game_auto_accept(bim::game::feature_flags f);

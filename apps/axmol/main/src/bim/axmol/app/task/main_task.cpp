@@ -27,9 +27,11 @@
 #include <iscool/files/rename_file.hpp>
 #include <iscool/http/json/send.hpp>
 #include <iscool/i18n/gettext.hpp>
+#include <iscool/json/cast_string.hpp>
 #include <iscool/json/from_file.hpp>
 #include <iscool/json/write_to_stream.hpp>
 #include <iscool/log/log.hpp>
+#include <iscool/log/nature/error.hpp>
 #include <iscool/log/nature/info.hpp>
 #include <iscool/log/nature/warning.hpp>
 #include <iscool/signals/implement_signal.hpp>
@@ -272,6 +274,9 @@ bool bim::axmol::app::main_task::display_version_update_message()
 
 void bim::axmol::app::main_task::connect_to_business_server()
 {
+  ic_log(iscool::log::nature::info(), "main_task",
+         "Connecting to business server at '{}'.", bim::app::business_url);
+
   const iscool::preferences::local_preferences& preferences =
       *m_context.get_local_preferences();
 
@@ -309,6 +314,10 @@ void bim::axmol::app::main_task::business_server_connection_error(
 void bim::axmol::app::main_task::connect_to_game_server(
     const std::string& session_token)
 {
+  ic_log(iscool::log::nature::info(), "main_task",
+         "Connected to business server. Session token is '{}'.",
+         session_token);
+
   m_session_authentication_error_connection =
       m_session_handler.connect_to_authentication_error(
           [this](bim::net::authentication_error_code error_code)
@@ -324,7 +333,7 @@ void bim::axmol::app::main_task::connect_to_game_server(
             });
 
   const char* const env_server = std::getenv("BIM_GAME_SERVER_HOST");
-  std::string_view server_host;
+  std::string server_host;
 
   if (env_server)
     server_host = env_server;
@@ -333,12 +342,20 @@ void bim::axmol::app::main_task::connect_to_game_server(
   else
     server_host = m_config.game_server;
 
-  m_session_handler.connect(server_host);
+  ic_log(iscool::log::nature::info(), "main_task",
+         "Connecting to game server at '{}'.", server_host);
+
+  m_session_handler.connect(server_host, session_token);
 }
 
 void bim::axmol::app::main_task::game_server_connection_error(
     bim::net::authentication_error_code error_code)
 {
+  ic_log(
+      iscool::log::nature::error(), "main_task",
+      "Failed to authenticate with the game server. Error code {}.",
+      std::underlying_type_t<bim::net::authentication_error_code>(error_code));
+
   m_message_popup->show(
       fmt::format(fmt::runtime(ic_gettext("Failed to authenticate with the "
                                           "game server. Error code {}.")),

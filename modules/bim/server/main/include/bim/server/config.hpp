@@ -18,6 +18,18 @@ namespace bim::server
     std::uint64_t random_seed;
 
     /**
+     * Time interval at which we check and remove inactive authentication
+     * requests.
+     */
+    std::chrono::seconds authentication_clean_up_interval;
+
+    /**
+     * Inactivity delay after which an authentication request becomes eligible
+     * for removal.
+     */
+    std::chrono::seconds pending_authentication_removal_delay;
+
+    /**
      * Time interval at which we check and remove inactive sessions.
      */
     std::chrono::seconds session_clean_up_interval;

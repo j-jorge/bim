@@ -42,10 +42,16 @@ bim::server::tests::test_client::~test_client() = default;
 
 void bim::server::tests::test_client::authenticate()
 {
+  authenticate({});
+}
+
+void bim::server::tests::test_client::authenticate(
+    const bim::net::session_token& session_token)
+{
   session = std::nullopt;
   authentication_error = std::nullopt;
 
-  m_authentication.start();
+  m_authentication.start(session_token);
 
   for (int i = 0; (i != 100) && !session; ++i)
     m_scheduler.tick(std::chrono::milliseconds(20));

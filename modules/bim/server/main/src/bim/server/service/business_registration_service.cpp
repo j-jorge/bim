@@ -97,8 +97,7 @@ void bim::server::business_registration_service::hello_ok(
           if (iscool::json::is_of_type<std::uint32_t>(json_delay))
             {
               const std::chrono::seconds delay(
-                  iscool::json::cast<std::uint32_t>(
-                      response["callback_delay_seconds"]));
+                  iscool::json::cast<std::uint32_t>(json_delay));
 
               ic_log(iscool::log::nature::info(),
                      "business_registration_service",
@@ -111,8 +110,8 @@ void bim::server::business_registration_service::hello_ok(
     }
 
   ic_log(iscool::log::nature::error(), "business_registration_service",
-         "Could not parse registration result: {}. Retrying in {}.", body,
-         m_pulse);
+         "Could not parse registration result: {}. Retrying in {}.",
+         std::string_view(body), m_pulse);
 
   schedule_registration(m_pulse);
 }

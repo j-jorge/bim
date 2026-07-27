@@ -51,9 +51,13 @@ const std::string& bim::net::session_handler::host() const
   return m_host;
 }
 
-void bim::net::session_handler::connect(std::string_view host)
+void bim::net::session_handler::connect(std::string host,
+                                        std::string_view session_token)
 {
-  m_host = host;
+  m_host = std::move(host);
+  m_session_token.clear();
+  m_session_token.insert(m_session_token.end(), session_token.begin(),
+                         session_token.end());
   reconnect();
 }
 
@@ -75,7 +79,7 @@ void bim::net::session_handler::reconnect()
       return;
     }
 
-  m_authentication.start();
+  m_authentication.start(m_session_token);
 }
 
 const iscool::net::message_stream&

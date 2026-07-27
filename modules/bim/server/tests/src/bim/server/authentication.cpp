@@ -12,14 +12,20 @@
 #include <bim/net/message/protocol_version.hpp>
 #include <bim/net/message/try_deserialize_message.hpp>
 
+#include <iscool/http/request.hpp>
+#include <iscool/http/setup.hpp>
+#include <iscool/json/parse_string.hpp>
 #include <iscool/log/setup.hpp>
 #include <iscool/net/message_channel.hpp>
+#include <iscool/schedule/delayed_call.hpp>
 #include <iscool/schedule/manual_scheduler.hpp>
+#include <iscool/schedule/scoped_connection.hpp>
 #include <iscool/schedule/setup.hpp>
 #include <iscool/signals/scoped_connection.hpp>
 #include <iscool/time/setup.hpp>
 
 #include <optional>
+#include <string_view>
 
 #include <gtest/gtest.h>
 
@@ -32,12 +38,16 @@ protected:
   void test_full_exchange(const bim::net::authentication& message);
 
 private:
+  void process_http_request(const iscool::http::request& r) const;
   void interpret_received_message(bim::net::client_token token,
                                   const iscool::net::message& message);
 
 protected:
+  iscool::schedule::scoped_connection m_delayed_call_connection;
+
   iscool::log::scoped_initializer m_log;
   bim::server::tests::fake_scheduler m_scheduler;
+  const iscool::http::scoped_http_delegate m_http;
   bim::server::tests::statistics_log m_statistics;
 
   const bim::server::config m_config;
@@ -51,12 +61,24 @@ protected:
 };
 
 authentication_test::authentication_test()
-  : m_config(
+  : m_http(
+        [this](const iscool::http::request& r) -> void
+          {
+            // Requests are processed with a delay in prod. Make sure we have
+            // one too.
+            m_delayed_call_connection = iscool::schedule::delayed_call(
+                [this, r]()
+                  {
+                    process_http_request(r);
+                  });
+          })
+  , m_config(
         [this]() -> bim::server::config
           {
             bim::server::config config = bim::server::tests::new_test_config();
             config.enable_statistics_log = true;
             config.statistics_log_file = m_statistics.log_file();
+            config.business_url = "biz/";
 
             return config;
           }())
@@ -86,6 +108,41 @@ void authentication_test::test_full_exchange(
     }
 }
 
+void authentication_test::process_http_request(
+    const iscool::http::request& r) const
+{
+  if (r.url == "biz/gs/hello")
+    {
+      r.result_handler(iscool::http::response{
+          200, R"({"callback_delay_seconds": 3600})" });
+      return;
+    }
+
+  if (r.url == "biz/gs/user-id")
+    {
+      const Json::Value body = iscool::json::parse_string(r.body);
+      EXPECT_TRUE(body.isObject());
+
+      Json::Value response;
+      response["tokens"] = Json::arrayValue;
+      response["user_ids"] = Json::arrayValue;
+
+      for (Json::ArrayIndex i = 0, n = body["sessions"].size(); i != n; ++i)
+        {
+          response["tokens"].append(body["tokens"][i]);
+          const std::string s = body["sessions"][i].asString();
+
+          if (s.starts_with("invalid"))
+            response["user_ids"][i] = Json::nullValue;
+          else
+            response["user_ids"][i] = std::stol(s);
+        }
+
+      r.result_handler(
+          iscool::http::response{ 200, response.toStyledString() });
+    }
+}
+
 void authentication_test::interpret_received_message(
     bim::net::client_token token, const iscool::net::message& message)
 {
@@ -96,7 +153,6 @@ void authentication_test::interpret_received_message(
         std::optional<bim::net::authentication_ok> answer =
             bim::net::try_deserialize_message<bim::net::authentication_ok>(
                 message);
-
         if (answer && (answer->get_request_token() == token))
           m_answer_ok = std::move(*answer);
         break;
@@ -119,8 +175,11 @@ TEST_F(authentication_test, ok)
   // A valid request should be accepted, the token must match.
 
   const bim::net::client_token token = 1;
-  test_full_exchange(
-      bim::net::authentication(bim::net::protocol_version, token));
+  const bim::net::session_token session_token(std::from_range_t{},
+                                              std::string_view("1"));
+
+  test_full_exchange(bim::net::authentication(bim::net::protocol_version,
+                                              token, session_token));
 
   ASSERT_TRUE(!!m_answer_ok);
   EXPECT_FALSE(!!m_answer_ko);
@@ -143,8 +202,10 @@ TEST_F(authentication_test, bad_protocol)
   // match.
 
   const bim::net::client_token token = 2;
-  test_full_exchange(
-      bim::net::authentication(2 * bim::net::protocol_version + 1, token));
+  const bim::net::session_token session_token(std::from_range_t{},
+                                              std::string_view("1"));
+  test_full_exchange(bim::net::authentication(
+      2 * bim::net::protocol_version + 1, token, session_token));
 
   EXPECT_FALSE(!!m_answer_ok);
   ASSERT_TRUE(!!m_answer_ko);
@@ -169,8 +230,10 @@ TEST_F(authentication_test, same_token_same_session)
 
   // Log in with a given token.
   const bim::net::client_token token = 3;
-  test_full_exchange(
-      bim::net::authentication(bim::net::protocol_version, token));
+  const bim::net::session_token session_token(std::from_range_t{},
+                                              std::string_view("1"));
+  test_full_exchange(bim::net::authentication(bim::net::protocol_version,
+                                              token, session_token));
 
   ASSERT_TRUE(!!m_answer_ok);
   EXPECT_FALSE(!!m_answer_ko);
@@ -181,8 +244,8 @@ TEST_F(authentication_test, same_token_same_session)
   m_answer_ok = std::nullopt;
 
   // Log in again, with the same token.
-  test_full_exchange(
-      bim::net::authentication(bim::net::protocol_version, token));
+  test_full_exchange(bim::net::authentication(bim::net::protocol_version,
+                                              token, session_token));
 
   ASSERT_TRUE(!!m_answer_ok);
   EXPECT_FALSE(!!m_answer_ko);
@@ -200,62 +263,6 @@ TEST_F(authentication_test, same_token_same_session)
   EXPECT_EQ(1, statistics[0].active_sessions);
 }
 
-TEST_F(authentication_test, different_token_different_session)
-{
-  // Using different tokens should produce different sessions.
-
-  // Log in with a given token.
-  const bim::net::client_token token_1 = 4;
-  test_full_exchange(
-      bim::net::authentication(bim::net::protocol_version, token_1));
-
-  ASSERT_TRUE(!!m_answer_ok);
-  EXPECT_FALSE(!!m_answer_ko);
-
-  EXPECT_EQ(token_1, m_answer_ok->get_request_token());
-
-  const iscool::net::session_id session = m_answer_ok->get_session_id();
-  m_answer_ok = std::nullopt;
-
-  std::size_t next_stat_index;
-
-  {
-    // Force statistics dump.
-    m_scheduler.tick(std::chrono::minutes(1));
-
-    const std::vector<bim::server::tests::statistics_log_line> statistics =
-        m_statistics.read_log_file();
-
-    ASSERT_LE(1, statistics.size());
-    EXPECT_EQ(1, statistics[0].active_sessions);
-
-    next_stat_index = statistics.size();
-  }
-
-  // Log in with another token.
-  const bim::net::client_token token_2 = 5;
-  test_full_exchange(
-      bim::net::authentication(bim::net::protocol_version, token_2));
-
-  ASSERT_TRUE(!!m_answer_ok);
-  EXPECT_FALSE(!!m_answer_ko);
-
-  EXPECT_EQ(token_2, m_answer_ok->get_request_token());
-  EXPECT_NE(session, m_answer_ok->get_session_id());
-
-  {
-    // Force statistics dump.
-    m_scheduler.tick(std::chrono::minutes(1));
-
-    const std::vector<bim::server::tests::statistics_log_line> statistics =
-        m_statistics.read_log_file();
-
-    ASSERT_LT(next_stat_index, statistics.size());
-    EXPECT_EQ(1, statistics[0].active_sessions);
-    EXPECT_EQ(2, statistics[next_stat_index].active_sessions);
-  }
-}
-
 TEST_F(authentication_test, client_disconnect)
 {
   // The client should be disconnected after a long time without
@@ -264,8 +271,10 @@ TEST_F(authentication_test, client_disconnect)
 
   // Log in with this token.
   const bim::net::client_token token = 8;
-  test_full_exchange(
-      bim::net::authentication(bim::net::protocol_version, token));
+  const bim::net::session_token session_token(std::from_range_t{},
+                                              std::string_view("1"));
+  test_full_exchange(bim::net::authentication(bim::net::protocol_version,
+                                              token, session_token));
 
   ASSERT_TRUE(!!m_answer_ok);
   EXPECT_FALSE(!!m_answer_ko);
@@ -312,8 +321,8 @@ TEST_F(authentication_test, client_disconnect)
   }
 
   // Log in again with the same token.
-  test_full_exchange(
-      bim::net::authentication(bim::net::protocol_version, token));
+  test_full_exchange(bim::net::authentication(bim::net::protocol_version,
+                                              token, session_token));
 
   ASSERT_TRUE(!!m_answer_ok);
   EXPECT_FALSE(!!m_answer_ko);

@@ -110,7 +110,7 @@ void game_update_test::client::authenticate()
 {
   EXPECT_FALSE(!!m_session);
 
-  m_authentication.start();
+  m_authentication.start({});
 
   for (int i = 0; (i != 10) && !m_session; ++i)
     m_scheduler.tick(std::chrono::seconds(1));

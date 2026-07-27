@@ -25,7 +25,7 @@ namespace bim::net
 
     const std::string& host() const;
 
-    void connect(std::string_view host);
+    void connect(std::string host, std::string_view session_token);
     void reconnect();
 
     const iscool::net::message_stream& message_stream() const;
@@ -35,6 +35,7 @@ namespace bim::net
 
   private:
     std::string m_host;
+    session_token m_session_token;
     iscool::net::socket_stream m_socket_stream;
     iscool::net::message_stream m_message_stream;
     bim::net::authentication_exchange m_authentication;

@@ -3,6 +3,7 @@
 
 #include <bim/net/message/authentication_error_code.hpp>
 #include <bim/net/message/client_token.hpp>
+#include <bim/net/message/session_token.hpp>
 
 #include <iscool/net/message/message.hpp>
 #include <iscool/net/message_channel.hpp>
@@ -21,7 +22,7 @@ namespace bim::net
     explicit authentication_exchange(iscool::net::message_stream& stream);
     ~authentication_exchange();
 
-    void start();
+    void start(const session_token& t);
     void stop();
 
   private:

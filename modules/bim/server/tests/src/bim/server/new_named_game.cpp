@@ -88,7 +88,7 @@ void new_game_test::client::authenticate()
 {
   EXPECT_EQ(nullptr, m_message_channel);
 
-  m_authentication.start();
+  m_authentication.start({});
 
   for (int i = 0; (i != 10) && !m_message_channel; ++i)
     m_scheduler.tick(std::chrono::seconds(1));

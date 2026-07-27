@@ -305,6 +305,20 @@ static command_line parse_command_line(int argc, char* argv[])
       "Path to the folder where to store the server stats.");
   all_options.add(statistics_options);
 
+  boost::program_options::options_description authentication_options(
+      "Authentication management config options");
+  authentication_options.add_options()(
+      "authentication-clean-up-interval",
+      boost::program_options::value<std::int64_t>(),
+      "Time interval in seconds at which we check and remove inactive "
+      "authentication requests.");
+  authentication_options.add_options()(
+      "pending-authentication-removal-delay",
+      boost::program_options::value<std::int64_t>(),
+      "Inactivity delay in seconds after which an authentication request "
+      "becomes eligible for removal.");
+  all_options.add(authentication_options);
+
   boost::program_options::options_description session_options(
       "Session management config options");
   session_options.add_options()(
@@ -546,11 +560,16 @@ static command_line parse_command_line(int argc, char* argv[])
   parse_config_option(port);
   parse_config_option(name);
   parse_config_option(host);
+
+  parse_config_option(authentication_clean_up_interval);
+  parse_config_option(pending_authentication_removal_delay);
+
+  parse_config_option(session_clean_up_interval);
+  parse_config_option(session_removal_delay);
+
   parse_config_option(business_url);
   parse_config_option(business_token);
   parse_config_option(business_registration_pulse_seconds);
-  parse_config_option(session_clean_up_interval);
-  parse_config_option(session_removal_delay);
   parse_config_option(enable_bots);
   parse_config_option(matchmaking_clean_up_interval);
   parse_config_option(matchmaking_delay_for_bot);

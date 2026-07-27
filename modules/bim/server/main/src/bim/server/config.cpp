@@ -4,6 +4,8 @@
 bim::server::config::config()
   : port(65535)
   , random_seed(0)
+  , authentication_clean_up_interval(std::chrono::minutes(1))
+  , pending_authentication_removal_delay(std::chrono::minutes(1))
   , session_clean_up_interval(std::chrono::minutes(3))
   , session_removal_delay(std::chrono::minutes(3))
   , enable_bots(false)
