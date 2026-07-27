@@ -138,6 +138,9 @@ if ((CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
       -extra-arg=-Wno-unknown-warning-option
       --warnings-as-errors=*
     )
+    if (CMAKE_COLOR_DIAGNOSTICS)
+      list(APPEND CMAKE_CXX_CLANG_TIDY --use-color)
+    endif()
   endif()
 endif()
 
