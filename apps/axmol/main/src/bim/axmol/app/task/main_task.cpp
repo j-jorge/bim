@@ -11,6 +11,7 @@
 #include <bim/app/analytics_service.hpp>
 #include <bim/app/business_url.hpp>
 #include <bim/app/preference/date_of_next_version_update_message.hpp>
+#include <bim/app/preference/device_id.hpp>
 #include <bim/app/preference/update_preferences.hpp>
 
 #include <bim/net/message/protocol_version.hpp>
@@ -51,6 +52,7 @@
                |
            create_ui
      display_version_update
+     connect_to_business_server
      connect_to_game_server
                |
              open
@@ -110,7 +112,7 @@ void bim::axmol::app::main_task::try_create_ui()
   create_ui();
 
   if (!display_version_update_message())
-    connect_to_game_server();
+    connect_to_business_server();
 }
 
 void bim::axmol::app::main_task::create_ui()
@@ -156,7 +158,7 @@ void bim::axmol::app::main_task::fetch_remote_config()
   body["client_version_major"] = bim::version_major;
   body["game_server_protocol_version"] = bim::net::protocol_version;
 
-  m_config_request_connections = iscool::http::json::post(
+  m_connections = iscool::http::json::post(
       bim::app::business_url + "/client/config", body, on_result, on_error);
 }
 
@@ -231,7 +233,11 @@ void bim::axmol::app::main_task::config_ready()
 {
   m_done_steps |= steps::config;
 
-  bim::app::update_preferences(*m_context.get_local_preferences(), m_config);
+  iscool::preferences::local_preferences& preferences =
+      *m_context.get_local_preferences();
+
+  bim::app::update_preferences(preferences, m_config);
+  bim::app::ensure_device_id_exists(preferences);
 
   try_create_ui();
 }
@@ -255,7 +261,7 @@ bool bim::axmol::app::main_task::display_version_update_message()
       [this]() -> void
         {
           m_message_connection.disconnect();
-          connect_to_game_server();
+          connect_to_business_server();
         });
 
   m_message_popup->show(ic_gettext("A new version of Bim! is available! "
@@ -264,7 +270,44 @@ bool bim::axmol::app::main_task::display_version_update_message()
   return true;
 }
 
-void bim::axmol::app::main_task::connect_to_game_server()
+void bim::axmol::app::main_task::connect_to_business_server()
+{
+  const iscool::preferences::local_preferences& preferences =
+      *m_context.get_local_preferences();
+
+  Json::Value body;
+  body["device_id"] = bim::app::device_id(preferences);
+
+  const auto on_result = [this](const Json::Value& r)
+    {
+      connect_to_game_server(
+          iscool::json::cast<std::string>(r["session_token"]));
+    };
+  const auto on_error = [this](int status, std::span<const char> body)
+    {
+      business_server_connection_error(status, body);
+    };
+
+  m_connections =
+      iscool::http::json::post(bim::app::business_url + "/client/authenticate",
+                               body, on_result, on_error);
+}
+
+void bim::axmol::app::main_task::business_server_connection_error(
+    int status, std::span<const char> body)
+{
+  ic_log(iscool::log::nature::error(), "main_task",
+         "Failed to connect to the business server ({}): {}.", status,
+         std::string_view(body.begin(), body.end()).substr(0, 1024));
+
+  m_message_popup->show(
+      fmt::format(fmt::runtime(ic_gettext("Failed to authenticate with the "
+                                          "business server. Status {}.")),
+                  status));
+}
+
+void bim::axmol::app::main_task::connect_to_game_server(
+    const std::string& session_token)
 {
   m_session_authentication_error_connection =
       m_session_handler.connect_to_authentication_error(

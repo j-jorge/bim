@@ -106,8 +106,12 @@ namespace bim::axmol::app
     void config_ready();
 
     bool display_version_update_message();
-    void connect_to_game_server();
 
+    void connect_to_business_server();
+    void business_server_connection_error(int status,
+                                          std::span<const char> body);
+
+    void connect_to_game_server(const std::string& session_token);
     void game_server_connection_error(
         bim::net::authentication_error_code error_code);
 
@@ -124,7 +128,7 @@ namespace bim::axmol::app
         m_session_authentication_error_connection;
     iscool::signals::scoped_connection m_message_connection;
 
-    iscool::signals::shared_connection_set m_config_request_connections;
+    iscool::signals::shared_connection_set m_connections;
 
     bim::app::config m_config;
 

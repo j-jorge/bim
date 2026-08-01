@@ -12,6 +12,7 @@ set(main_sources
   main/src/bim/app/preference/audio.cpp
   main/src/bim/app/preference/controls.cpp
   main/src/bim/app/preference/date_of_next_version_update_message.cpp
+  main/src/bim/app/preference/device_id.cpp
   main/src/bim/app/preference/feature_flags.cpp
   main/src/bim/app/preference/haptic.cpp
   main/src/bim/app/preference/update_preferences.cpp
