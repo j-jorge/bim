@@ -4,9 +4,9 @@ set -euo pipefail
 
 : "${bim_host_prefix:-}"
 
-boost_version=1.89.0
+boost_version=1.91.0
 boost_version_underscore="${boost_version//./_}"
-package_revision=6
+package_revision=1
 version="$boost_version"-"$package_revision"
 build_type=release
 
@@ -27,12 +27,16 @@ mkdir --parents "$source_dir" "$build_dir" "$install_dir"
 
 configure()
 {
-    local libraries
-    libraries="$(echo "$@" | tr ' ' ',')"
+    local args=()
+
+    if [[ $# -ne 0 ]]
+    then
+        args+=("--with-libraries=$(echo "$@" | tr ' ' ',')")
+    fi
 
     ./bootstrap.sh \
         cxxflags="-std=c++20" \
-        --with-libraries="$libraries"
+        "${args[@]}"
 }
 
 build()
@@ -78,8 +82,11 @@ using clang : android
     --sysroot=$ndk_root/toolchains/llvm/prebuilt/linux-x86_64/sysroot ;
 EOF
 
+        # Since we don't build any library for Android, we must pass
+        # --with-headers to install the headers and the CMake scripts.
         build --build-dir="$arch_build_dir" \
               --user-config="$user_config" \
+              --with-headers \
               toolset=clang-android \
               target-os=android
 
@@ -104,11 +111,10 @@ cd "$archive_basename"
 
 case "$bim_package_install_platform" in
     linux)
-        configure "program_options,system,uuid"
+        configure program_options
         build --prefix="$install_dir"
         ;;
     android)
-        configure "system,uuid"
         build_android
         ;;
 esac
