@@ -6,7 +6,7 @@ set -euo pipefail
 
 boost_version=1.89.0
 boost_version_underscore="${boost_version//./_}"
-package_revision=5
+package_revision=6
 version="$boost_version"-"$package_revision"
 build_type=release
 
@@ -104,11 +104,11 @@ cd "$archive_basename"
 
 case "$bim_package_install_platform" in
     linux)
-        configure "program_options,system"
+        configure "program_options,system,uuid"
         build --prefix="$install_dir"
         ;;
     android)
-        configure "system"
+        configure "system,uuid"
         build_android
         ;;
 esac
