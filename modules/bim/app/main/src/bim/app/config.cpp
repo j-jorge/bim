@@ -20,6 +20,8 @@
 #include <iscool/log/nature/error.hpp>
 #include <iscool/log/nature/warning.hpp>
 
+#include <json/value.h>
+
 #include <type_traits>
 
 template <typename T>
