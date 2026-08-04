@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-07-22 07:01+0000\n"
-"Last-Translator: arkeelin <kwalenkoag@gmail.com>\n"
+"PO-Revision-Date: 2026-08-05 20:01+0000\n"
+"Last-Translator: Andrij Mizyk <andm1zyk@proton.me>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/bim/gettext-"
 "files/uk/>\n"
 "Language: uk\n"
@@ -17,13 +17,13 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Weblate 2026.8.dev0\n"
+"X-Generator: Weblate 2026.8.1.dev0\n"
 
 msgid "Please wait"
 msgstr "Будь ласка, зачекайте"
 
 msgid "You have been disconnected :("
-msgstr "Стався розрив з'єднання :("
+msgstr "Стався розрив з’єднання :("
 
 msgid ""
 "The shop is not available on this platform, yet you can support the "
@@ -47,59 +47,59 @@ msgid "Come play a game of Bim! {}"
 msgstr "Нумо грати в Bim! {}"
 
 msgid "You need more coins to purchase this item!"
-msgstr "Вам потрібно більше монет, щоб придбати цей предмет!"
+msgstr "Вам потрібно більше монет, щоб купити цей предмет!"
 
 #, c++-format
 msgid "Customize your games with up to {} feature."
 msgid_plural "Customize your games with up to {} features."
-msgstr[0] "Кастомізуй свої гри {} фічою."
-msgstr[1] "Кастомізуй свої гри {} фічами."
-msgstr[2] "Кастомізуй свої гри {} фічами."
+msgstr[0] "Пристосуй свої ігри {} фічою."
+msgstr[1] "Пристосуй свої ігри {} фічами."
+msgstr[2] "Пристосуй свої ігри {} фічами."
 
 msgid "Falling blocks reduce the arena after two minutes!"
 msgstr "Падаючі блоки зменшують поле після другої хвилини!"
 
 msgid "Fences block the players, but the flames can go through!"
-msgstr "Паркани розділяють гравців, а через полум'я можна пройти!"
+msgstr "Паркани розділяють гравців, а через полум’я можна пройти!"
 
 msgid "A thick fog covers the arena. You can't see were you did not go!"
-msgstr "Густий туман накрив арену. Ти не бачиш області де ще не був!"
+msgstr "Густий туман накриває арену. Ти не бачиш області де тебе ще не було!"
 
 msgid ""
 "Find the invisibility power up to disappear from the screen of all other "
 "players!"
-msgstr "Знайди бонус невидимості, щоб зникнути з екранів інших гравці!"
+msgstr "Знайди силу невидимості, щоб зникнути з екранів інших гравці!"
 
 msgid "Find this incredibly strong barrel, it will save you from one hit!"
-msgstr "Знайди неймовірно міцну бочку, вона захистить тебе при ударі!"
+msgstr "Знайди неймовірно міцну бочку, вона захистить тебе від одного удару!"
 
 #, c++-format
 msgid "{} game being played right now."
 msgid_plural "{} games being played right now."
-msgstr[0] "{} гра проходить зараз."
-msgstr[1] "{} гри проходять зараз."
-msgstr[2] "{} ігор проходять зараз."
+msgstr[0] "Зараз проходить {} гра."
+msgstr[1] "Зараз проходить {} гри."
+msgstr[2] "Зараз проходять {} ігор."
 
 #, c++-format
 msgid "{} player connected right now."
 msgid_plural "{} players connected right now."
-msgstr[0] "{} гравець зараз під'єднаний."
-msgstr[1] "{} гравця зараз під'єднано."
-msgstr[2] "{} гравців зараз під'єднано."
+msgstr[0] "{} гравець зараз під’єднаний."
+msgstr[1] "{} гравця зараз під’єднано."
+msgstr[2] "{} гравців зараз під’єднано."
 
 #, c++-format
 msgid "{} game played in the last hour."
 msgid_plural "{} games played in the last hour."
-msgstr[0] "{} грав пройшла за останню годину."
+msgstr[0] "{} гра пройшла за останню годину."
 msgstr[1] "{} гри пройшло за останню годину."
 msgstr[2] "{} ігор пройшло за останню годину."
 
 #, c++-format
 msgid "{} player connected in the last hour."
 msgid_plural "{} players connected in the last hour."
-msgstr[0] "{} гравець під'єднався за останню годину."
-msgstr[1] "{} гравця під'єдналось за останню годину."
-msgstr[2] "{} гравців під'єдналось за останню годину."
+msgstr[0] "{} гравець під’єднався за останню годину."
+msgstr[1] "{} гравця під’єдналося за останню годину."
+msgstr[2] "{} гравців під’єдналося за останню годину."
 
 #, c++-format
 msgid "{} game played in the last 24 hours."
@@ -111,9 +111,9 @@ msgstr[2] "{} ігор пройшло за останні 24 години."
 #, c++-format
 msgid "{} player connected in the last 24 hours."
 msgid_plural "{} players connected in the last 24 hours."
-msgstr[0] "{} гравець під'єднався за останні 24 години."
-msgstr[1] "{} гравця під'єдналось за останні 24 години."
-msgstr[2] "{} гравці під'єднались за останні 24 години."
+msgstr[0] "{} гравець під’єднався за останні 24 години."
+msgstr[1] "{} гравця під’єдналося за останні 24 години."
+msgstr[2] "{} гравці під’єдналися за останні 24 години."
 
 #, c++-format
 msgid "{} game played in the last 30 days."
@@ -125,28 +125,27 @@ msgstr[2] "{} ігор пройшло за останні 30 годин."
 #, c++-format
 msgid "{} player connected in the last 30 days."
 msgid_plural "{} players connected in the last 30 days."
-msgstr[0] "{} гравець під'єднався за останні 30 годин."
-msgstr[1] "{} гравця під'єдналось за останні 30 годин."
-msgstr[2] "{} гравців під'єдналось за останні 30 годин."
+msgstr[0] "{} гравець під’єднався за останні 30 годин."
+msgstr[1] "{} гравця під’єдналося за останні 30 годин."
+msgstr[2] "{} гравців під’єдналося за останні 30 годин."
 
 #, c++-format
 msgid "Connected to {}."
-msgstr "Під'єднано до {}."
+msgstr "Під’єднано до {}."
 
 msgid "An error occurred. The purchase could not be completed."
-msgstr "Сталась помилка. Не вдалось завершити покупку."
+msgstr "Сталася помилка. Не вдалося завершити покупку."
 
 msgid "A new version of Bim! is available! Please update as soon as possible."
 msgstr "Доступна нова версія Bim! Будь ласка, онови за першої ж можливості."
 
 #, c++-format
 msgid "Failed to authenticate with the game server. Error code {}."
-msgstr "Не вдалось з'єднатись з серверами гри. Код помилки {}."
+msgstr "Не вдалося з’єднатися з серверами гри. Код помилки {}."
 
 msgid "Cancel"
 msgstr "Скасувати"
 
-#, fuzzy
 msgid "OK"
 msgstr "OK"
 
@@ -175,10 +174,10 @@ msgid "Draw game!"
 msgstr "Нічия!"
 
 msgid "You lost!"
-msgstr "Ти програв!"
+msgstr "Ви програли!"
 
 msgid "You won!"
-msgstr "Ти виграв!"
+msgstr "Ви виграли!"
 
 msgid "ERASE"
 msgstr "СТЕРТИ"
@@ -219,32 +218,29 @@ msgstr "Так"
 msgid ""
 "Is your language missing? Add it on <a href='#"
 "'>Weblate</a>!"
-msgstr "Бракує вашої мови? Додайте на <a href='#'>Weblate</a>!"
+msgstr "Відсутня ваша мова? Додайте на <a href='#'>Weblate</a>!"
 
 msgid "Language"
 msgstr "Мова"
 
-#, fuzzy
 msgid "Directions kind"
-msgstr "Напрямок"
+msgstr "Напрямки"
 
 msgid "Directional pad, at a fixed position on the screen."
 msgstr "Фіксоване розташування хрестовини керування на екрані."
 
 msgid "Analog stick, it pops where you tap and follows the drag."
 msgstr ""
-"Аналоговий стік, з'являється коли натискаєш на екран та слідує за слідує "
-"куди тягнеш."
+"Аналоговий стік, з’являється коли натискаєш на екран та слідує куди тягнеш."
 
 msgid "Controls"
 msgstr "Керування"
 
-#, fuzzy
 msgid "Directions on the left, actions on the right."
-msgstr "Ліворуч напрямок, праворуч дія."
+msgstr "Напрямки ліворуч, дії праворуч."
 
 msgid "Directions on the right, actions on the left."
-msgstr "Праворуч напрямок, ліворуч дія."
+msgstr "Напрямки праворуч, дії ліворуч."
 
 msgid "D-pad"
 msgstr "Хрестовина"
@@ -259,16 +255,16 @@ msgid "Sound effects"
 msgstr "Звукові ефекти"
 
 msgid "Settings"
-msgstr "Налаштування"
+msgstr "Параметри"
 
 msgid "Vibrations"
 msgstr "Вібрація"
 
 msgid "Features"
-msgstr "Фічі"
+msgstr "Можливості"
 
 msgid "PLAY ONLINE"
-msgstr "ГРА ОНЛАЙН"
+msgstr "ГРАТИ ОНЛАЙН"
 
 msgid "SHOP"
 msgstr "МАГАЗИН"
@@ -277,16 +273,16 @@ msgid "STATISTICS"
 msgstr "СТАТИСТИКА"
 
 msgid "ALPHA VERSION"
-msgstr "АЛЬФІА ВЕРСІЯ"
+msgstr "АЛЬФА-ВЕРСІЯ"
 
 msgid "Join our Discord to meet other players."
 msgstr "Приєднайся до Discordу, зустрінься з іншими гравцями."
 
 msgid "You can start a two-players game now or wait for more players!"
-msgstr "Можете почати гру удвох, або почекати ще гравців!"
+msgstr "Можете зіграти вдвох, або почекати на інших гравців!"
 
 msgid "You can start a three-players game now or wait for more players!"
-msgstr "Можете почти гру утрьох, або почекати ще гравців!"
+msgstr "Можете зіграти втрьох, або почекати на інших гравців!"
 
 msgid "Start the game now!"
 msgstr "Почати гру!"
@@ -298,13 +294,12 @@ msgid ""
 "Waiting for your opponents…\n"
 "Tell your friends to join!"
 msgstr ""
-"Чекаємо твої хопонентів...\n"
-"Скажи друзям під'єднатись!"
+"Чекаємо твоїх опонентів...\n"
+"Скажи друзям під’єднатися!"
 
 msgid "Online Game"
-msgstr "Оналайн Гра"
+msgstr "Гра онлайн"
 
-#, fuzzy
 msgid "×1000"
 msgstr "×1000"
 
