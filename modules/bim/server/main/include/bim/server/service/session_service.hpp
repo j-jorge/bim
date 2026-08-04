@@ -1,9 +1,13 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #pragma once
 
+#include <bim/server/business/user_id.hpp>
+
 #include <bim/server/service/create_session_result.hpp>
 #include <bim/server/service/geolocation_service.hpp>
 #include <bim/server/service/karma_service.hpp>
+
+#include <bim/business/request_headers.hpp>
 
 #include <bim/net/message/client_token.hpp>
 #include <bim/net/message/session_token.hpp>
@@ -19,7 +23,6 @@
 
 #include <json/value.h>
 
-#include <optional>
 #include <span>
 
 namespace bim::server
@@ -70,8 +73,8 @@ namespace bim::server
 
     void schedule_user_id_request();
     void fetch_user_ids();
-    void user_id_response(const Json::Value& response);
-    void user_id_error(int code, std::span<const char> body);
+    void user_id_response();
+    void user_id_error();
 
   private:
     geolocation_service m_geoloc;
@@ -89,10 +92,11 @@ namespace bim::server
     const std::chrono::seconds m_session_removal_delay;
 
     const std::string m_user_id_url;
-    std::vector<std::string> m_headers;
+    bim::business::request_headers m_request_headers;
     iscool::schedule::connection m_schedule_user_id_connection;
     iscool::signals::shared_connection_set m_user_id_connections;
     Json::Value m_user_id_business_request;
+    bim::server::business::user_id_response m_user_id_business_response;
     std::vector<create_session_result> m_create_session_dispatch;
     bool m_ongoing_user_id_business_request;
   };

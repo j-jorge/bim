@@ -310,21 +310,21 @@ TEST(session_service, user_id)
           sessions_ready = true;
           ASSERT_EQ(4, results.size());
 
-          EXPECT_EQ(bim::server::create_session_result_state::accepted,
+          EXPECT_EQ(bim::server::create_session_result_state::rejected,
                     results[0].state);
-          EXPECT_EQ(222, results[0].token);
-          EXPECT_EQ(2, results[0].session);
-          EXPECT_EQ(202, service.user_id(results[0].session));
+          EXPECT_EQ(333, results[0].token);
 
           EXPECT_EQ(bim::server::create_session_result_state::accepted,
                     results[1].state);
-          EXPECT_EQ(111, results[1].token);
-          EXPECT_EQ(1, results[1].session);
-          EXPECT_EQ(101, service.user_id(results[1].session));
+          EXPECT_EQ(222, results[1].token);
+          EXPECT_EQ(2, results[1].session);
+          EXPECT_EQ(202, service.user_id(results[1].session));
 
-          EXPECT_EQ(bim::server::create_session_result_state::rejected,
+          EXPECT_EQ(bim::server::create_session_result_state::accepted,
                     results[2].state);
-          EXPECT_EQ(333, results[2].token);
+          EXPECT_EQ(111, results[2].token);
+          EXPECT_EQ(1, results[2].session);
+          EXPECT_EQ(101, service.user_id(results[2].session));
 
           EXPECT_EQ(bim::server::create_session_result_state::accepted,
                     results[3].state);

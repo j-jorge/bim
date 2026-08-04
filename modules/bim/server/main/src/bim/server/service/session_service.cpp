@@ -4,8 +4,8 @@
 #include <bim/server/config.hpp>
 #include <bim/server/service/statistics_service.hpp>
 
-#include <iscool/http/json/send.hpp>
-#include <iscool/json/cast_int64.hpp>
+#include <bim/business/post.hpp>
+
 #include <iscool/log/log.hpp>
 #include <iscool/log/nature/error.hpp>
 #include <iscool/log/nature/info.hpp>
@@ -41,11 +41,9 @@ bim::server::session_service::session_service(const config& config,
   , m_session_removal_delay(config.session_removal_delay)
   , m_user_id_url(
         config.business_url.empty() ? "" : config.business_url + "gs/user-id")
+  , m_request_headers(config.business_token)
   , m_ongoing_user_id_business_request(false)
 {
-  if (!m_user_id_url.empty())
-    m_headers.emplace_back("Authorization: " + config.business_token);
-
   schedule_clean_up();
 }
 
@@ -305,54 +303,48 @@ void bim::server::session_service::schedule_user_id_request()
 
 void bim::server::session_service::fetch_user_ids()
 {
-  m_user_id_connections = iscool::http::json::post(
-      m_user_id_url, m_headers, m_user_id_business_request,
-      [this](const Json::Value& r)
+  m_user_id_connections = bim::business::post(
+      m_user_id_url, m_request_headers.headers, m_user_id_business_request,
+      m_user_id_business_response,
+      [this]()
         {
-          user_id_response(r);
+          user_id_response();
         },
-      [this](int code, std::span<const char> b)
+      [this]()
         {
-          user_id_error(code, b);
+          user_id_error();
         });
 
   m_user_id_business_request["tokens"].clear();
   m_user_id_business_request["sessions"].clear();
 }
 
-void bim::server::session_service::user_id_response(
-    const Json::Value& response)
+void bim::server::session_service::user_id_response()
 {
+  const std::size_t accepted_count =
+      m_user_id_business_response.accepted.size();
+
   m_create_session_dispatch.clear();
+  m_create_session_dispatch.reserve(
+      accepted_count + m_user_id_business_response.rejected.size());
 
-  const Json::Value& tokens = response["tokens"];
-  const Json::Value& users = response["user_ids"];
+  for (const bim::net::client_token token :
+       m_user_id_business_response.rejected)
+    m_create_session_dispatch.push_back(
+        { create_session_result_state::rejected, token, 0 });
 
-  for (Json::ArrayIndex i = 0, n = tokens.size(); i != n; ++i)
+  for (std::size_t i = 0; i != accepted_count; ++i)
     {
-      const bim::net::client_token token(
-          iscool::json::cast<bim::net::client_token>(tokens[i]));
-
-      const Json::Value& user = users[i];
-
-      if (user == Json::nullValue)
-        {
-          m_create_session_dispatch.push_back(
-              { create_session_result_state::rejected, token, 0 });
-          continue;
-        }
-
-      const bim::net::user_id user_id(
-          iscool::json::cast<bim::net::user_id>(users[i]));
-      assert(user_id != 0);
+      const bim::net::client_token token =
+          m_user_id_business_response.accepted[i];
+      const bim::net::user_id user_id = m_user_id_business_response.user_id[i];
 
       const session_map::const_iterator session_it = m_sessions.find(token);
 
       if (session_it == m_sessions.end())
         {
           ic_log(iscool::log::nature::info(), "session_service",
-                 "Got user ID {} for unknown token {}.", (std::int64_t)user_id,
-                 token);
+                 "Got user ID {} for unknown token {}.", user_id, token);
           continue;
         }
 
@@ -361,6 +353,7 @@ void bim::server::session_service::user_id_response(
       assert(client_it != m_clients.end());
 
       client_it->second.user_id = user_id;
+
       m_create_session_dispatch.push_back(
           { create_session_result_state::accepted, token,
             session_it->second });
@@ -375,12 +368,10 @@ void bim::server::session_service::user_id_response(
     m_sessions_ready(m_create_session_dispatch);
 }
 
-void bim::server::session_service::user_id_error(int code,
-                                                 std::span<const char> body)
+void bim::server::session_service::user_id_error()
 {
   ic_log(iscool::log::nature::info(), "session_service",
-         "Failed to fetch user IDs {}: {}", code,
-         std::string_view(body.data(), body.size()));
+         "Failed to fetch user IDs.");
   m_ongoing_user_id_business_request = false;
 
   m_user_id_connections.clear();

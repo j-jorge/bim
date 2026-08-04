@@ -1,3 +1,4 @@
+add_subdirectory(bim/business)
 add_subdirectory(bim/core)
 add_subdirectory(bim/game)
 add_subdirectory(bim/net)

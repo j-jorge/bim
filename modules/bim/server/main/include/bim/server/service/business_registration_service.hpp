@@ -5,9 +5,12 @@
 #include <iscool/signals/shared_connection_set.hpp>
 
 #include <chrono>
-#include <span>
 #include <string>
-#include <vector>
+
+namespace bim::business
+{
+  class request_headers;
+}
 
 namespace bim::server
 {
@@ -16,18 +19,18 @@ namespace bim::server
   class business_registration_service
   {
   public:
-    explicit business_registration_service(const config& config);
+    business_registration_service(
+        const config& config, const bim::business::request_headers& headers);
     ~business_registration_service();
 
   private:
     void schedule_registration(const std::chrono::seconds& delay);
     void send_registration_request();
-    void hello_ok(std::span<const char> body);
-    void hello_ko(int status, std::span<const char> body);
+    void hello_ko();
 
   private:
     std::string m_url;
-    std::vector<std::string> m_headers;
+    const bim::business::request_headers& m_request_headers;
     std::string m_body;
 
     iscool::schedule::scoped_connection m_registration_connection;

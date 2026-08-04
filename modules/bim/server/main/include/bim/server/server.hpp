@@ -9,6 +9,8 @@
 #include <bim/server/service/session_service.hpp>
 #include <bim/server/service/statistics_service.hpp>
 
+#include <bim/business/request_headers.hpp>
+
 #include <iscool/net/socket_stream.hpp>
 
 namespace bim::server
@@ -27,6 +29,7 @@ namespace bim::server
   private:
     iscool::net::socket_stream m_socket;
 
+    bim::business::request_headers m_request_headers;
     business_registration_service m_business_registration;
     statistics_service m_statistics;
     session_service m_session_service;

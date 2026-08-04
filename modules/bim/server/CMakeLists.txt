@@ -9,6 +9,10 @@ add_library(bim_server
   main/src/bim/server/config.cpp
   main/src/bim/server/rolling_statistics.cpp
   main/src/bim/server/server.cpp
+
+  main/src/bim/server/business/hello.cpp
+  main/src/bim/server/business/user_id.cpp
+
   main/src/bim/server/service/authentication_service.cpp
   main/src/bim/server/service/business_registration_service.cpp
   main/src/bim/server/service/contest_timeline_service.cpp
@@ -29,6 +33,7 @@ target_include_directories(bim_server PUBLIC main/include)
 target_link_libraries(
   bim_server
   PUBLIC
+  bim_business
   bim_net
   iscool_http
   maxminddb::maxminddb
@@ -51,6 +56,9 @@ add_executable(server-tests
   tests/src/bim/server/player_disconnection.cpp
   tests/src/bim/server/rolling_statistics.cpp
   tests/src/bim/server/server_bots.cpp
+
+  tests/src/bim/server/business/hello.cpp
+  tests/src/bim/server/business/user_id.cpp
 
   tests/src/bim/server/service/game_info.cpp
   tests/src/bim/server/service/game_service.cpp

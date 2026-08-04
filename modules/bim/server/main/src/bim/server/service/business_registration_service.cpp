@@ -1,18 +1,17 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/server/service/business_registration_service.hpp>
 
+#include <bim/server/business/hello.hpp>
+
 #include <bim/server/config.hpp>
 
 #include <bim/net/message/protocol_version.hpp>
 
-#include <bim/assume.hpp>
+#include <bim/business/post.hpp>
+#include <bim/business/request_headers.hpp>
+
 #include <bim/version.hpp>
 
-#include <iscool/http/json/headers.hpp>
-#include <iscool/http/send.hpp>
-#include <iscool/json/cast_uint.hpp>
-#include <iscool/json/is_of_type_uint.hpp>
-#include <iscool/json/parse_string.hpp>
 #include <iscool/json/write_to_string.hpp>
 #include <iscool/log/log.hpp>
 #include <iscool/log/nature/error.hpp>
@@ -22,8 +21,9 @@
 #include <json/value.h>
 
 bim::server::business_registration_service::business_registration_service(
-    const config& config)
+    const config& config, const bim::business::request_headers& headers)
   : m_url(config.business_url + "gs/hello")
+  , m_request_headers(headers)
   , m_pulse(config.business_registration_pulse_seconds)
 {
   if (config.business_url.empty())
@@ -48,10 +48,6 @@ bim::server::business_registration_service::business_registration_service(
       return;
     }
 
-  m_headers.reserve(2);
-  m_headers.emplace_back("Authorization: " + config.business_token);
-  m_headers.emplace_back(iscool::http::json::headers::content_type);
-
   schedule_registration(std::chrono::seconds::zero());
 }
 
@@ -70,57 +66,22 @@ void bim::server::business_registration_service::schedule_registration(
 }
 void bim::server::business_registration_service::send_registration_request()
 {
-  m_request_connections = iscool::http::post(
-      m_url, m_headers, m_body,
-      [this](std::span<const char> body)
+  m_request_connections = bim::business::post<business::hello_response>(
+      m_url, m_request_headers.headers, m_body,
+      [this](const business::hello_response& r)
         {
-          hello_ok(body);
+          schedule_registration(r.callback_delay);
         },
-      [this](int status, std::span<const char> body)
+      [this]()
         {
-          hello_ko(status, body);
+          hello_ko();
         });
 }
 
-void bim::server::business_registration_service::hello_ok(
-    std::span<const char> body)
-{
-  if (!body.empty())
-    {
-      const Json::Value response(iscool::json::parse_string(
-          std::string_view(body.data(), body.size())));
-
-      if (response != Json::nullValue)
-        {
-          const Json::Value& json_delay = response["callback_delay_seconds"];
-
-          if (iscool::json::is_of_type<std::uint32_t>(json_delay))
-            {
-              const std::chrono::seconds delay(
-                  iscool::json::cast<std::uint32_t>(json_delay));
-
-              ic_log(iscool::log::nature::info(),
-                     "business_registration_service",
-                     "Registered. Next registration in {}.", delay);
-
-              schedule_registration(delay);
-              return;
-            }
-        }
-    }
-
-  ic_log(iscool::log::nature::error(), "business_registration_service",
-         "Could not parse registration result: {}. Retrying in {}.",
-         std::string_view(body), m_pulse);
-
-  schedule_registration(m_pulse);
-}
-
-void bim::server::business_registration_service::hello_ko(
-    int status, std::span<const char> body)
+void bim::server::business_registration_service::hello_ko()
 {
   ic_log(iscool::log::nature::error(), "business_registration_service",
-         "Failed to register: {}, {}. Retrying in {}.", status, body, m_pulse);
+         "Failed to register. Retrying in {}.", m_pulse);
 
   schedule_registration(m_pulse);
 }
