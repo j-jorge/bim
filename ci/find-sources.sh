@@ -5,6 +5,13 @@ set -euo pipefail
 script_dir="$(dirname "${BASH_SOURCE[0]}")"
 repository_root="$(cd "$script_dir"/..; pwd)"
 
+git_exclude=()
+
+if [[ -f "$repository_root"/.git/info/exclude ]]
+then
+    git_exclude=("$repository_root"/.git/info/exclude)
+fi
+
 exclude_args=()
 
 while read -r ignored
@@ -33,7 +40,7 @@ done < <(
          --no-filename \
          '^#' \
          "$repository_root"/.gitignore \
-         "$repository_root"/.git/info/exclude
+	 "${git_exclude[@]}"
     echo .git
 )
 
