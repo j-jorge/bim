@@ -3,6 +3,7 @@
 
 #include <chrono>
 #include <cstdint>
+#include <vector>
 
 namespace bim::server
 {

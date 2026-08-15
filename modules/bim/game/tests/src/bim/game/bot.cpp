@@ -12,6 +12,7 @@
 #include <bim/game/feature_flags_string.hpp>
 #include <bim/game/player_action.hpp>
 
+#include <charconv>
 #include <cstdio>
 #include <cstring>
 #include <random>
