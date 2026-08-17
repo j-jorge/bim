@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-04-29 15:09+0000\n"
+"PO-Revision-Date: 2026-08-18 10:51+0000\n"
 "Last-Translator: Michael Moroni <michaelmoroni@disroot.org>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/bim/gettext-"
 "files/it/>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.17.1-dev\n"
+"X-Generator: Weblate 2026.9.dev0\n"
 
 msgid "Please wait"
 msgstr "Attendi per favore"
@@ -159,54 +159,54 @@ msgid "Draw game!"
 msgstr ""
 
 msgid "You lost!"
-msgstr ""
+msgstr "Hai perso!"
 
 msgid "You won!"
-msgstr ""
+msgstr "Hai vinto!"
 
 msgid "ERASE"
-msgstr ""
+msgstr "ELIMINA"
 
 msgid "RANDOM"
-msgstr ""
+msgstr "CASUALE"
 
 msgid "Off"
-msgstr ""
+msgstr "Disattivo"
 
 msgid "On"
-msgstr ""
+msgstr "Attivo"
 
 msgid "Defeats"
-msgstr ""
+msgstr "Sconfitte"
 
 msgid "Draws"
-msgstr ""
+msgstr "Pari"
 
 msgid "Games"
-msgstr ""
+msgstr "Partite"
 
 msgid "Victories"
-msgstr ""
+msgstr "Vittorie"
 
 msgid "Your statistics"
-msgstr ""
+msgstr "Le tue statistiche"
 
 msgid "Success rate"
-msgstr ""
+msgstr "Tasso di successo"
 
 msgid "No"
-msgstr ""
+msgstr "No"
 
 msgid "Yes"
-msgstr ""
+msgstr "Sì"
 
 msgid ""
 "Is your language missing? Add it on <a href='#"
 "'>Weblate</a>!"
-msgstr ""
+msgstr "Manca la tua lingua? Aggiungila su <a href='#'>Weblate</a>!"
 
 msgid "Language"
-msgstr ""
+msgstr "Lingua"
 
 msgid "Directions kind"
 msgstr ""
@@ -218,7 +218,7 @@ msgid "Analog stick, it pops where you tap and follows the drag."
 msgstr ""
 
 msgid "Controls"
-msgstr ""
+msgstr "Controlli"
 
 msgid "Directions on the left, actions on the right."
 msgstr ""
@@ -233,57 +233,62 @@ msgid "Stick"
 msgstr ""
 
 msgid "Music"
-msgstr ""
+msgstr "Musica"
 
 msgid "Sound effects"
-msgstr ""
+msgstr "Effetti sonori"
 
 msgid "Settings"
-msgstr ""
+msgstr "Impostazioni"
 
 msgid "Vibrations"
-msgstr ""
+msgstr "Vibrazione"
 
 msgid "Features"
-msgstr ""
+msgstr "Caratteristiche"
 
 msgid "PLAY ONLINE"
-msgstr ""
+msgstr "GIOCA ONLINE"
 
 msgid "SHOP"
-msgstr ""
+msgstr "NEGOZIO"
 
 msgid "STATISTICS"
-msgstr ""
+msgstr "STATISTICHE"
 
 msgid "ALPHA VERSION"
-msgstr ""
+msgstr "VERSIONE ALFA"
 
 msgid "Join our Discord to meet other players."
-msgstr ""
+msgstr "Entra su Discord per incontrare altri giocatori."
 
 msgid "You can start a two-players game now or wait for more players!"
 msgstr ""
+"Puoi iniziare una partita per due giocatori ora o aspettare altri giocatori!"
 
 msgid "You can start a three-players game now or wait for more players!"
 msgstr ""
+"Puoi iniziare una partita per tre giocatori ora o aspettare per altri "
+"giocatori!"
 
 msgid "Start the game now!"
-msgstr ""
+msgstr "Inizia la partita ora!"
 
 msgid "FIGHT!"
-msgstr ""
+msgstr "COMBATTI!"
 
 msgid ""
 "Waiting for your opponents…\n"
 "Tell your friends to join!"
 msgstr ""
+"In attesa dei tuoi avversari…\n"
+"Dì ai tuoi amici di aggiungersi!"
 
 msgid "Online Game"
-msgstr ""
+msgstr "Partita online"
 
 msgid "×1000"
-msgstr ""
+msgstr "×1000"
 
 msgid "LOADING…"
-msgstr ""
+msgstr "CARICAMENTO…"
