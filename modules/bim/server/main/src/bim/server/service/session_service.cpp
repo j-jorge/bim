@@ -108,9 +108,6 @@ bim::server::session_service::create_or_refresh_session(
                token, it->second };
     }
 
-  const geolocation_service::address_info address_info =
-      m_geoloc.lookup(address.to_string());
-
   for (std::size_t i = 0, n = session_token.size(); i != n; ++i)
     {
       const char c = session_token[i];
@@ -125,6 +122,9 @@ bim::server::session_service::create_or_refresh_session(
           return { create_session_result_state::rejected, token, 0 };
         }
     }
+
+  const geolocation_service::address_info address_info =
+      m_geoloc.lookup(address.to_string());
 
   std::string session_token_str((const char*)session_token.data(),
                                 session_token.size());
@@ -239,6 +239,7 @@ bim::server::session_service::date_for_next_release() const
 
 void bim::server::session_service::disconnect(const client_map::iterator& it)
 {
+  m_id_to_session.erase(it->first);
   m_sessions.erase(it->second.token);
   m_clients.erase(it);
 
@@ -270,6 +271,7 @@ void bim::server::session_service::clean_up()
         ic_log(iscool::log::nature::info(), "session_service",
                "Disconnected {}.", it->first);
         m_sessions.erase(it->second.token);
+        m_id_to_session.erase(it->first);
         m_karma.remove(it->second.address);
         it = m_clients.erase(it);
       }
@@ -339,7 +341,7 @@ void bim::server::session_service::user_id_response()
           m_user_id_business_response.accepted[i];
       const bim::net::user_id user_id = m_user_id_business_response.user_id[i];
 
-      const session_map::const_iterator session_it = m_sessions.find(token);
+      const session_map::iterator session_it = m_sessions.find(token);
 
       if (session_it == m_sessions.end())
         {
@@ -348,15 +350,53 @@ void bim::server::session_service::user_id_response()
           continue;
         }
 
-      const client_map::iterator client_it =
-          m_clients.find(session_it->second);
+      const iscool::net::session_id session = session_it->second;
+      id_to_session_map::iterator user_session_it;
+      bool inserted;
+
+      std::tie(user_session_it, inserted) =
+          m_id_to_session.emplace(user_id, session);
+
+      if (!inserted)
+        {
+          const iscool::net::session_id old_session = user_session_it->second;
+
+          ic_log(iscool::log::nature::info(), "session_service",
+                 "Double log-in for user ID {}. Dropping old session {}, "
+                 "switching to {}.",
+                 user_id, old_session, session);
+
+          const client_map::iterator it = m_clients.find(old_session);
+
+          if (it != m_clients.end())
+            {
+              m_sessions.erase(it->second.token);
+              m_clients.erase(it);
+            }
+
+          user_session_it->second = session;
+
+          // Make sure to reject requestsbof the same use from the same batch
+          // too.
+          for (create_session_result& r : m_create_session_dispatch)
+            if (r.session == old_session)
+              {
+                r.state = create_session_result_state::rejected;
+                r.session = 0;
+                break;
+              }
+        }
+
+      ic_log(iscool::log::nature::info(), "session_service",
+             "Assigning user {} to session {}.", user_id, session);
+
+      const client_map::iterator client_it = m_clients.find(session);
       assert(client_it != m_clients.end());
 
       client_it->second.user_id = user_id;
 
       m_create_session_dispatch.push_back(
-          { create_session_result_state::accepted, token,
-            session_it->second });
+          { create_session_result_state::accepted, token, session });
     }
 
   m_ongoing_user_id_business_request = false;

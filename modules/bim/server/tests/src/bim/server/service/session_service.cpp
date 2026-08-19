@@ -310,15 +310,15 @@ TEST(session_service, user_id)
           sessions_ready = true;
           ASSERT_EQ(4, results.size());
 
+          // Rejected because the business session token is invalid.
           EXPECT_EQ(bim::server::create_session_result_state::rejected,
                     results[0].state);
           EXPECT_EQ(333, results[0].token);
 
-          EXPECT_EQ(bim::server::create_session_result_state::accepted,
+          // Rejected because the user is attached to another request below.
+          EXPECT_EQ(bim::server::create_session_result_state::rejected,
                     results[1].state);
           EXPECT_EQ(222, results[1].token);
-          EXPECT_EQ(2, results[1].session);
-          EXPECT_EQ(202, service.user_id(results[1].session));
 
           EXPECT_EQ(bim::server::create_session_result_state::accepted,
                     results[2].state);
@@ -326,6 +326,8 @@ TEST(session_service, user_id)
           EXPECT_EQ(1, results[2].session);
           EXPECT_EQ(101, service.user_id(results[2].session));
 
+          // This is the same session_token than session_2, thus the same game
+          // server session has been assigned.
           EXPECT_EQ(bim::server::create_session_result_state::accepted,
                     results[3].state);
           EXPECT_EQ(2222, results[3].token);
@@ -504,4 +506,155 @@ TEST(session_service, user_id_error)
 )" });
 
   ASSERT_TRUE(sessions_ready);
+}
+
+TEST(session_service, only_one_session_per_user)
+{
+  bim::server::tests::fake_scheduler scheduler;
+  std::optional<iscool::http::request> last_http_request;
+
+  const iscool::http::scoped_http_delegate http(
+      [&](iscool::http::request r) -> void
+        {
+          last_http_request = std::move(r);
+        });
+
+  bim::server::config config = bim::server::tests::new_test_config();
+  config.session_clean_up_interval = std::chrono::seconds(1);
+  config.session_removal_delay = std::chrono::seconds(5);
+  config.business_url = "biz/";
+
+  bim::server::statistics_service statistics(config);
+  bim::server::session_service service(config, statistics);
+
+  // Ten sessions for only two players, with different business session tokens.
+  for (std::size_t i = 0; i != 10; ++i)
+    {
+      const boost::asio::ip::address_v4 address((int)i);
+      const std::string session_token = std::to_string(i);
+
+      const bim::server::create_session_result session =
+          service.create_or_refresh_session(
+              address, i,
+              bim::net::session_token(session_token.begin(),
+                                      session_token.end()));
+      EXPECT_EQ(bim::server::create_session_result_state::pending,
+                session.state);
+    }
+
+  // The service should have queued the requests to send them all at once to
+  // the business server. Updating the scheduler should trigger the query to
+  // the business.
+  scheduler.tick(std::chrono::seconds(1));
+  ASSERT_TRUE(!!last_http_request);
+  EXPECT_EQ("biz/gs/user-id", last_http_request->url);
+
+  std::vector<iscool::net::session_id> sessions;
+  bool sessions_ready = false;
+  iscool::signals::connection connection = service.connect_to_sessions_ready(
+      [&](std::span<const bim::server::create_session_result> results)
+        {
+          sessions_ready = true;
+          ASSERT_EQ(10, results.size());
+
+          // Rejected because the user is attached to another request.
+          for (std::size_t i = 0; i != 8; ++i)
+            {
+              EXPECT_EQ(bim::server::create_session_result_state::rejected,
+                        results[i].state);
+              EXPECT_EQ(i, results[i].token);
+            }
+
+          // The last ones are accepted.
+          for (std::size_t i = 8; i != 10; ++i)
+            {
+              EXPECT_EQ(bim::server::create_session_result_state::accepted,
+                        results[i].state);
+              EXPECT_EQ(i, results[i].token);
+              sessions.push_back(results[i].session);
+              EXPECT_EQ(i % 2 + 1, service.user_id(results[i].session));
+            }
+        });
+
+  // The response for the first batch.
+  last_http_request->result_handler(iscool::http::response{ 200, R"(
+{
+  "tokens": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ],
+  "user_ids": [ 1, 2, 1, 2, 1, 2, 1, 2, 1, 2 ]
+}
+)" });
+
+  ASSERT_TRUE(sessions_ready);
+
+  ASSERT_EQ(2, sessions.size());
+  EXPECT_EQ(1, service.user_id(sessions[0]));
+  EXPECT_EQ(2, service.user_id(sessions[1]));
+  EXPECT_TRUE(service.refresh_session(sessions[0]));
+  EXPECT_TRUE(service.refresh_session(sessions[1]));
+
+  // Six sessions for the same two players, with different business session
+  // tokens. It should invalidate their previous sessions.
+  for (std::size_t i = 10; i != 16; ++i)
+    {
+      const boost::asio::ip::address_v4 address((int)i);
+      const std::string session_token = std::to_string(i);
+
+      const bim::server::create_session_result session =
+          service.create_or_refresh_session(
+              address, i,
+              bim::net::session_token(session_token.begin(),
+                                      session_token.end()));
+      EXPECT_EQ(bim::server::create_session_result_state::pending,
+                session.state);
+    }
+
+  sessions_ready = false;
+  connection.disconnect();
+  connection = service.connect_to_sessions_ready(
+      [&](std::span<const bim::server::create_session_result> results)
+        {
+          sessions_ready = true;
+          ASSERT_EQ(6, results.size());
+
+          // Rejected because the user is attached to another request.
+          for (std::size_t i = 0; i != 4; ++i)
+            {
+              EXPECT_EQ(bim::server::create_session_result_state::rejected,
+                        results[i].state);
+              EXPECT_EQ(10 + i, results[i].token);
+            }
+
+          // The last ones are accepted.
+          for (std::size_t i = 4; i != 6; ++i)
+            {
+              EXPECT_EQ(bim::server::create_session_result_state::accepted,
+                        results[i].state);
+              EXPECT_EQ(10 + i, results[i].token);
+              sessions.push_back(results[i].session);
+              EXPECT_EQ(i % 2 + 1, service.user_id(results[i].session));
+            }
+        });
+
+  last_http_request = std::nullopt;
+  scheduler.tick(std::chrono::seconds(1));
+  ASSERT_TRUE(!!last_http_request);
+  EXPECT_EQ("biz/gs/user-id", last_http_request->url);
+
+  // The response for the second batch.
+  last_http_request->result_handler(iscool::http::response{ 200, R"(
+{
+  "tokens": [ 10, 11, 12, 13, 14, 15 ],
+  "user_ids": [ 1, 2, 1, 2, 1, 2 ]
+}
+)" });
+
+  ASSERT_TRUE(sessions_ready);
+
+  ASSERT_EQ(4, sessions.size());
+  EXPECT_EQ(1, service.user_id(sessions[2]));
+  EXPECT_EQ(2, service.user_id(sessions[3]));
+  EXPECT_FALSE(service.refresh_session(sessions[0]));
+  EXPECT_FALSE(service.refresh_session(sessions[1]));
+  EXPECT_TRUE(service.refresh_session(sessions[2]));
+  EXPECT_TRUE(service.refresh_session(sessions[3]));
 }

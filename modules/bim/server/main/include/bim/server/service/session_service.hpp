@@ -58,6 +58,9 @@ namespace bim::server
     using session_map =
         boost::unordered_map<bim::net::client_token, iscool::net::session_id>;
 
+    using id_to_session_map =
+        boost::unordered_map<bim::net::user_id, iscool::net::session_id>;
+
     struct client_info;
 
     using client_map =
@@ -67,6 +70,7 @@ namespace bim::server
     std::chrono::nanoseconds date_for_next_release() const;
 
     void disconnect(const client_map::iterator& it);
+    void remove_client(const client_map::iterator& it);
 
     void schedule_clean_up();
     void clean_up();
@@ -85,6 +89,7 @@ namespace bim::server
     iscool::net::session_id m_next_bot_session_id;
 
     session_map m_sessions;
+    id_to_session_map m_id_to_session;
     client_map m_clients;
 
     iscool::schedule::scoped_connection m_clean_up_connection;
