@@ -363,7 +363,6 @@ TEST(session_service, user_id)
 
   ASSERT_TRUE(sessions_ready);
 
-  EXPECT_EQ(0, service.user_id(session_4.session));
   EXPECT_EQ(101, service.user_id(session_1_bis.session));
 
   sessions_ready = false;
@@ -475,8 +474,6 @@ TEST(session_service, user_id_error)
   last_http_request->result_handler(iscool::http::response{ 500, "" });
 
   ASSERT_FALSE(sessions_ready);
-
-  EXPECT_EQ(0, service.user_id(session_1.session));
 
   connection.disconnect();
   connection = service.connect_to_sessions_ready(

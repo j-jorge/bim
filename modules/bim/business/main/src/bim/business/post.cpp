@@ -48,9 +48,25 @@ std::string bim::business::detail::json_body_to_string(std::string_view url,
 {
   std::string body_string;
 
-  if (iscool::json::write_to_string(body_string, body))
+  if (!iscool::json::write_to_string(body_string, body))
     ic_log(iscool::log::nature::error(), "post",
            "Could not convert to body to string, url is {}.", url);
 
   return body_string;
+}
+
+void bim::business::post(std::string_view url,
+                         std::vector<std::string> headers,
+                         const Json::Value& body)
+{
+  std::string body_string = detail::json_body_to_string(url, body);
+
+  detail::post(
+      url, std::move(headers), std::move(body_string),
+      [](std::span<const char>)
+        {
+        },
+      []()
+        {
+        });
 }

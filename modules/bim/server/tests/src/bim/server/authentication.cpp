@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
+#include <bim/server/tests/fake_business.hpp>
 #include <bim/server/tests/fake_scheduler.hpp>
-
 #include <bim/server/tests/new_test_config.hpp>
 #include <bim/server/tests/statistics_log.hpp>
 
@@ -12,14 +12,9 @@
 #include <bim/net/message/protocol_version.hpp>
 #include <bim/net/message/try_deserialize_message.hpp>
 
-#include <iscool/http/request.hpp>
-#include <iscool/http/setup.hpp>
-#include <iscool/json/parse_string.hpp>
 #include <iscool/log/setup.hpp>
 #include <iscool/net/message_channel.hpp>
-#include <iscool/schedule/delayed_call.hpp>
 #include <iscool/schedule/manual_scheduler.hpp>
-#include <iscool/schedule/scoped_connection.hpp>
 #include <iscool/schedule/setup.hpp>
 #include <iscool/signals/scoped_connection.hpp>
 #include <iscool/time/setup.hpp>
@@ -38,16 +33,13 @@ protected:
   void test_full_exchange(const bim::net::authentication& message);
 
 private:
-  void process_http_request(const iscool::http::request& r) const;
   void interpret_received_message(bim::net::client_token token,
                                   const iscool::net::message& message);
 
 protected:
-  iscool::schedule::scoped_connection m_delayed_call_connection;
-
   iscool::log::scoped_initializer m_log;
   bim::server::tests::fake_scheduler m_scheduler;
-  const iscool::http::scoped_http_delegate m_http;
+  bim::server::tests::fake_business m_business;
   bim::server::tests::statistics_log m_statistics;
 
   const bim::server::config m_config;
@@ -61,18 +53,7 @@ protected:
 };
 
 authentication_test::authentication_test()
-  : m_http(
-        [this](const iscool::http::request& r) -> void
-          {
-            // Requests are processed with a delay in prod. Make sure we have
-            // one too.
-            m_delayed_call_connection = iscool::schedule::delayed_call(
-                [this, r]()
-                  {
-                    process_http_request(r);
-                  });
-          })
-  , m_config(
+  : m_config(
         [this]() -> bim::server::config
           {
             bim::server::config config = bim::server::tests::new_test_config();
@@ -105,41 +86,6 @@ void authentication_test::test_full_exchange(
     {
       m_message_channel.send(m);
       m_scheduler.tick(std::chrono::seconds(1));
-    }
-}
-
-void authentication_test::process_http_request(
-    const iscool::http::request& r) const
-{
-  if (r.url == "biz/gs/hello")
-    {
-      r.result_handler(iscool::http::response{
-          200, R"({"callback_delay_seconds": 3600})" });
-      return;
-    }
-
-  if (r.url == "biz/gs/user-id")
-    {
-      const Json::Value body = iscool::json::parse_string(r.body);
-      EXPECT_TRUE(body.isObject());
-
-      Json::Value response;
-      response["tokens"] = Json::arrayValue;
-      response["user_ids"] = Json::arrayValue;
-
-      for (Json::ArrayIndex i = 0, n = body["sessions"].size(); i != n; ++i)
-        {
-          response["tokens"].append(body["tokens"][i]);
-          const std::string s = body["sessions"][i].asString();
-
-          if (s.starts_with("invalid"))
-            response["user_ids"][i] = Json::nullValue;
-          else
-            response["user_ids"][i] = std::stol(s);
-        }
-
-      r.result_handler(
-          iscool::http::response{ 200, response.toStyledString() });
     }
 }
 

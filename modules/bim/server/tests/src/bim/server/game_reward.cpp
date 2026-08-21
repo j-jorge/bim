@@ -3,10 +3,6 @@
 
 #include <bim/server/tests/new_test_config.hpp>
 
-#include <bim/game/component/player_action_queue.hpp>
-#include <bim/game/component/player_movement.hpp>
-#include <bim/game/player_action.hpp>
-
 #include <gtest/gtest.h>
 
 class game_reward_test : public testing::TestWithParam<int>
@@ -15,7 +11,7 @@ public:
   game_reward_test();
 
 protected:
-  void drop_bombs_wait_game_over(int player_count, int surviving_player);
+  void drop_bombs_wait_game_over(int surviving_player);
 
 protected:
   bim::server::tests::client_server_simulator m_simulator;
@@ -44,43 +40,10 @@ game_reward_test::game_reward_test()
                   }())
 {}
 
-void game_reward_test::drop_bombs_wait_game_over(int player_count,
-                                                 int surviving_player)
+void game_reward_test::drop_bombs_wait_game_over(int surviving_player)
 {
-  // Everyone except the last player drop a bomb.
-  for (int i = 0; i != player_count; ++i)
-    if (i == surviving_player)
-      m_simulator.clients[i].set_action(bim::game::player_action{
-          .movement = bim::game::player_movement::idle, .drop_bomb = false });
-    else
-      m_simulator.clients[i].set_action(bim::game::player_action{
-          .movement = bim::game::player_movement::idle, .drop_bomb = true });
-
-  m_simulator.tick();
-
-  // Then wait for the bombs to to be applied, i.e. until they get out of the
-  // queue.
-  for (std::size_t tick_index = 0;
-       tick_index != bim::game::player_action_queue::queue_size; ++tick_index)
-    {
-      for (int i = 0; i != player_count; ++i)
-        m_simulator.clients[i].set_action({});
-
-      m_simulator.tick();
-    }
-
-  // Wait for the game to end.
-  const auto still_running = [this, player_count]() -> bool
-    {
-      for (int i = 0; i != player_count; ++i)
-        if (m_simulator.clients[i].result.still_running())
-          return true;
-
-      return false;
-    };
-
-  for (int i = 0; (i != 10) && still_running(); ++i)
-    m_simulator.tick(std::chrono::seconds(1));
+  m_simulator.drop_bombs(~(1 << surviving_player));
+  m_simulator.wait_game_over();
 }
 
 TEST_P(game_reward_test, winner_short_game)
@@ -92,7 +55,7 @@ TEST_P(game_reward_test, winner_short_game)
   const int last_player = player_count - 1;
   ASSERT_LE(0, last_player);
 
-  drop_bombs_wait_game_over(player_count, last_player);
+  drop_bombs_wait_game_over(last_player);
 
   // The game is over, check the rewards.
   for (int i = 0; i != player_count; ++i)
@@ -111,7 +74,7 @@ TEST_P(game_reward_test, draw_short_game)
 
   const int player_count = GetParam();
 
-  drop_bombs_wait_game_over(player_count, -1);
+  drop_bombs_wait_game_over(player_count);
 
   // The game is over, check the rewards.
   for (int i = 0; i != player_count; ++i)
@@ -130,7 +93,7 @@ TEST_P(game_reward_test, winner_long_game)
 
   m_simulator.tick(
       m_simulator.config.game_service_max_duration_for_short_game);
-  drop_bombs_wait_game_over(player_count, last_player);
+  drop_bombs_wait_game_over(last_player);
 
   // The game is over, check the rewards.
   for (int i = 0; i != player_count; ++i)
@@ -151,7 +114,7 @@ TEST_P(game_reward_test, draw_long_game)
 
   m_simulator.tick(
       m_simulator.config.game_service_max_duration_for_short_game);
-  drop_bombs_wait_game_over(player_count, -1);
+  drop_bombs_wait_game_over(player_count);
 
   // The game is over, check the rewards.
   for (int i = 0; i != player_count; ++i)

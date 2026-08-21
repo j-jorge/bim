@@ -1,14 +1,16 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/server/service/game_service.hpp>
 
-#include <bim/server/service/bot_availability.hpp>
-#include <bim/server/service/game_reward_availability.hpp>
-
+#include <bim/server/business/game_started.hpp>
 #include <bim/server/config.hpp>
+#include <bim/server/service/bot_availability.hpp>
 #include <bim/server/service/contest_timeline_service.hpp>
 #include <bim/server/service/game_info.hpp>
+#include <bim/server/service/game_reward_availability.hpp>
 #include <bim/server/service/session_service.hpp>
 #include <bim/server/service/statistics_service.hpp>
+
+#include <bim/business/post.hpp>
 
 #include <bim/net/message/game_over.hpp>
 #include <bim/net/message/game_update_from_client.hpp>
@@ -29,6 +31,7 @@
 #include <bim/game/game_state_checksum.hpp>
 #include <bim/game/kick_event.hpp>
 #include <bim/game/player_action.hpp>
+#include <bim/game/player_game_outcome.hpp>
 
 #include <bim/assume.hpp>
 
@@ -36,6 +39,8 @@
 #include <iscool/log/nature/info.hpp>
 #include <iscool/schedule/delayed_call.hpp>
 #include <iscool/time/now.hpp>
+
+#include <json/value.h>
 
 #include <algorithm>
 #include <array>
@@ -145,6 +150,8 @@ public:
                 .crate_probability = bim::game::g_default_crate_probability,
                 .arena_width = bim::game::g_default_arena_width,
                 .arena_height = bim::game::g_default_arena_height })
+    , business_id(bim::net::not_a_game)
+    , business_confirmed_game_over(false)
   {
     ready.fill(false);
     active.fill(false);
@@ -404,6 +411,10 @@ public:
 
   bim::game::contest_timeline_writer timeline_writer;
 
+  bim::net::game_id business_id;
+  bim::game::per_player_array<bim::net::user_id> user_ids;
+  bool business_confirmed_game_over;
+
 private:
   std::unique_ptr<bim::game::bot> m_bot;
 };
@@ -436,6 +447,14 @@ bim::server::game_service::game_service(const config& config,
   , m_coins_per_short_game_draw(config.game_service_coins_per_short_game_draw)
   , m_checksum_validation(config.game_service_enable_checksum_validation)
   , m_message_pool(64)
+  , m_game_started_url(config.business_url.empty()
+                           ? ""
+                           : config.business_url + "gs/game-started")
+  , m_game_over_url(config.business_url.empty()
+                        ? ""
+                        : config.business_url + "gs/game-over")
+  , m_request_headers(config.business_token)
+  , m_request_pool(16)
 {
   if (config.enable_contest_timeline_recording)
     m_contest_timeline_service.reset(new contest_timeline_service(config));
@@ -549,9 +568,51 @@ bim::server::game_info bim::server::game_service::new_game(
         channel, contest_fingerprint, game.bot);
 
   m_statistics.record_game_start(player_count);
+  bim::net::game_id business_id;
+
+  if (m_game_started_url.empty())
+    {
+      business_id = bim::net::not_a_game;
+      game.business_id = business_id;
+    }
+  else
+    {
+      business_id = bim::net::pending_game_id;
+
+      Json::Value body;
+      Json::Value& players = body["players"];
+
+      for (std::size_t i = 0; i != player_count; ++i)
+        {
+          game.user_ids[i] = m_session_service.user_id(game.sessions[i]);
+          players[(Json::ArrayIndex)i] = game.user_ids[i];
+        }
+
+      const iscool::http::request_connection_pool::slot slot =
+          m_request_pool.pick_available();
+
+      *slot.value =
+          bim::business::post<bim::server::business::game_started_response>(
+              m_game_started_url, m_request_headers.headers, body,
+              [this, s = slot.id,
+               channel](const bim::server::business::game_started_response& r)
+                {
+                  m_request_pool.release(s);
+
+                  const game_map::iterator it = m_games.find(channel);
+
+                  if (it != m_games.end())
+                    it->second.business_id = r.game_id;
+                },
+              [this, s = slot.id]()
+                {
+                  m_request_pool.release(s);
+                });
+    }
 
   return game_info{ .fingerprint = contest_fingerprint,
                     .channel = channel,
+                    .business_id = business_id,
                     .sessions = game.sessions };
 }
 
@@ -714,7 +775,9 @@ void bim::server::game_service::push_update(
           <= game.completed_tick_count_per_player[player_index])
         {
           do_send_actions = false;
-          send_game_over(endpoint, session, channel, game);
+
+          if (game.business_confirmed_game_over)
+            send_game_over(endpoint, session, channel, game);
         }
       break;
     }
@@ -905,7 +968,7 @@ void bim::server::game_service::send_actions(
 }
 
 void bim::server::game_service::record_game_over(
-    iscool::net::channel_id channel, game& game) const
+    iscool::net::channel_id channel, game& game)
 {
   assert(!game.contest_result.still_running());
 
@@ -928,6 +991,60 @@ void bim::server::game_service::record_game_over(
          "ticks={}, duration={}, short={}.",
          channel, game.winner_index, winner_session, game.game_over_tick,
          game_duration, short_game);
+
+  if (m_game_over_url.empty())
+    game.business_confirmed_game_over = true;
+  else
+    {
+      Json::Value body;
+      body["game_id"] = game.business_id;
+      body["duration_in_seconds"] =
+          std::chrono::seconds(game_duration).count();
+
+      Json::Value& players = body["players"];
+      Json::Value& outcome = body["outcome"];
+
+      for (std::size_t i = 0; i != game.player_count; ++i)
+        {
+          const Json::ArrayIndex ai = i;
+          players[ai] = game.user_ids[i];
+
+          switch (game.contest_result.outcome()[i])
+            {
+            case bim::game::player_game_outcome::defeated:
+              outcome[ai] = "defeated";
+              break;
+            case bim::game::player_game_outcome::kicked:
+              outcome[ai] = "kicked";
+              break;
+            case bim::game::player_game_outcome::draw:
+              outcome[ai] = "draw";
+              break;
+            case bim::game::player_game_outcome::victory:
+              outcome[ai] = "victory";
+              break;
+            }
+        }
+
+      const iscool::http::request_connection_pool::slot slot =
+          m_request_pool.pick_available();
+
+      *slot.value = bim::business::post(
+          m_game_over_url, m_request_headers.headers, body,
+          [this, s = slot.id, channel]()
+            {
+              m_request_pool.release(s);
+
+              const game_map::iterator it = m_games.find(channel);
+
+              if (it != m_games.end())
+                it->second.business_confirmed_game_over = true;
+            },
+          [this, s = slot.id]()
+            {
+              m_request_pool.release(s);
+            });
+    }
 
   const auto fill_rewards =
       [&game](std::uint16_t victory, std::uint16_t defeat)

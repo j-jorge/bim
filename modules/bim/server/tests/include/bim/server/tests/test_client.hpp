@@ -5,6 +5,7 @@
 #include <bim/net/exchange/game_launch_event.hpp>
 #include <bim/net/exchange/new_game_exchange.hpp>
 #include <bim/net/message/game_name.hpp>
+#include <bim/net/message/user_id.hpp>
 
 #include <bim/game/contest_result.hpp>
 #include <bim/game/feature_flags_fwd.hpp>
@@ -73,6 +74,7 @@ namespace bim::server::tests
     bim::game::contest_result result;
     int coins_reward;
     int player_index;
+    bim::net::user_id user_id;
 
   private:
     void launch_game(iscool::net::message_stream& stream,

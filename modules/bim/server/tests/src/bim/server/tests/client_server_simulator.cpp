@@ -5,7 +5,10 @@
 
 #include <bim/net/contest_runner.hpp>
 
+#include <bim/game/component/player_action_queue.hpp>
+#include <bim/game/component/player_movement.hpp>
 #include <bim/game/contest.hpp>
+#include <bim/game/player_action.hpp>
 
 #include <iscool/log/setup.hpp>
 #include <iscool/net/message_channel.hpp>
@@ -34,6 +37,22 @@ void bim::server::tests::client_server_simulator::authenticate()
   for (int i = 0; i != m_player_count; ++i)
     {
       clients[i].authenticate();
+      EXPECT_TRUE(!!clients[i].session) << "i=" << i;
+    }
+}
+
+void bim::server::tests::client_server_simulator::
+    authenticate_with_business_token()
+{
+  for (int i = 0; i != m_player_count; ++i)
+    {
+      clients[i].user_id = i + 1;
+      // The mockup for the business server will parse the session token to get
+      // the user ID.
+      const std::string user_id_str = std::to_string(clients[i].user_id);
+      clients[i].authenticate(
+          bim::net::session_token(user_id_str.begin(), user_id_str.end()));
+
       EXPECT_TRUE(!!clients[i].session) << "i=" << i;
     }
 }
@@ -163,4 +182,59 @@ void bim::server::tests::client_server_simulator::wait(
       if (ready())
         break;
     }
+}
+
+void bim::server::tests::client_server_simulator::drop_bombs(
+    std::uint8_t client_index_mask)
+{
+  // Everyone except the last player drop a bomb.
+  for (int i = 0; i != m_player_count; ++i)
+    if (client_index_mask & (1 << i))
+      clients[i].set_action(bim::game::player_action{
+          .movement = bim::game::player_movement::idle, .drop_bomb = true });
+    else
+      clients[i].set_action(bim::game::player_action{
+          .movement = bim::game::player_movement::idle, .drop_bomb = false });
+
+  tick();
+
+  // Then wait for the bombs to to be applied, i.e. until they get out of the
+  // queue.
+  for (std::size_t tick_index = 0;
+       tick_index != bim::game::player_action_queue::queue_size; ++tick_index)
+    {
+      for (int i = 0; i != m_player_count; ++i)
+        clients[i].set_action({});
+
+      tick();
+    }
+}
+
+void bim::server::tests::client_server_simulator::wait_game_over()
+{
+  // Wait for the game to end.
+  const auto still_running = [this]() -> bool
+    {
+      for (int i = 0; i != m_player_count; ++i)
+        if (clients[i].started && clients[i].result.still_running())
+          return true;
+
+      return false;
+    };
+
+  int d = std::chrono::seconds(bim::game::contest::max_game_duration).count();
+
+  // Try a quick loop for the cases where the game over is expected soon.
+  for (int i = 0; (i != 10) && still_running(); ++i, --d)
+    tick(std::chrono::seconds(1));
+
+  // Then do larger iterations if the game is still not over.
+  for (; (d > 60) && still_running(); d -= 60)
+    tick(std::chrono::minutes(1));
+
+  for (; (d > 10) && still_running(); d -= 10)
+    tick(std::chrono::seconds(10));
+
+  for (; (d > 0) && still_running(); --d)
+    tick(std::chrono::seconds(1));
 }

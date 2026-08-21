@@ -135,4 +135,23 @@ namespace bim::business
                           std::forward<ProcessResult>(ok),
                           std::forward<ProcessError>(error));
   }
+
+  template <typename ProcessResult, typename ProcessError>
+  iscool::http::request_connection
+  post(std::string_view url, std::vector<std::string> headers,
+       const Json::Value& body, ProcessResult&& ok, ProcessError&& error)
+  {
+    std::string body_string = detail::json_body_to_string(url, body);
+
+    return detail::post(
+        url, std::move(headers), std::move(body_string),
+        [ok = std::forward<ProcessResult>(ok)](std::span<const char>)
+          {
+            ok();
+          },
+        std::forward<ProcessError>(error));
+  }
+
+  void post(std::string_view url, std::vector<std::string> headers,
+            const Json::Value& body);
 }

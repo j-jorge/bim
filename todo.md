@@ -1,8 +1,5 @@
 # Next
 
-## Server
-- Inform the business server about the played games.
-
 ## Client
 - Send the stored inventory to the business server on start.
 - Get the player's inventory from the business server.

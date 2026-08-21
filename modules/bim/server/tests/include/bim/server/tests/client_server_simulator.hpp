@@ -22,6 +22,7 @@ namespace bim::server::tests
     ~client_server_simulator();
 
     void authenticate();
+    void authenticate_with_business_token();
     void join_game();
     void tick();
     void tick(std::chrono::nanoseconds d);
@@ -29,6 +30,9 @@ namespace bim::server::tests
     void tick(int client_index, std::size_t tick_count);
     void wait(std::chrono::milliseconds d);
     void wait(const std::function<bool()>& ready);
+
+    void drop_bombs(std::uint8_t client_index_mask);
+    void wait_game_over();
 
   private:
     const std::uint8_t m_player_count;

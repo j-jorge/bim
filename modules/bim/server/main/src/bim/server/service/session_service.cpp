@@ -177,7 +177,12 @@ bool bim::server::session_service::refresh_session(
 bim::net::user_id
 bim::server::session_service::user_id(iscool::net::session_id session) const
 {
+  if (session >= g_bot_min_session)
+    return 0;
+
   const client_map::const_iterator it = m_clients.find(session);
+
+  assert(it != m_clients.end());
 
   if (it == m_clients.end())
     return 0;

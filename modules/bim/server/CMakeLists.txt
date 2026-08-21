@@ -10,6 +10,7 @@ add_library(bim_server
   main/src/bim/server/rolling_statistics.cpp
   main/src/bim/server/server.cpp
 
+  main/src/bim/server/business/game_started.cpp
   main/src/bim/server/business/hello.cpp
   main/src/bim/server/business/user_id.cpp
 
@@ -45,6 +46,7 @@ endif()
 
 add_executable(server-tests
   tests/src/bim/server/authentication.cpp
+  tests/src/bim/server/game_business_request.cpp
   tests/src/bim/server/game_creation.cpp
   tests/src/bim/server/game_reward.cpp
   tests/src/bim/server/game_update.cpp
@@ -67,6 +69,7 @@ add_executable(server-tests
   tests/src/bim/server/service/statistics_service.cpp
 
   tests/src/bim/server/tests/client_server_simulator.cpp
+  tests/src/bim/server/tests/fake_business.cpp
   tests/src/bim/server/tests/fake_scheduler.cpp
   tests/src/bim/server/tests/new_test_config.cpp
   tests/src/bim/server/tests/statistics_log.cpp
