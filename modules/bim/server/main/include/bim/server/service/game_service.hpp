@@ -4,13 +4,15 @@
 #include <bim/server/service/bot_availability_fwd.hpp>
 #include <bim/server/service/game_reward_availability_fwd.hpp>
 
+#include <bim/business/request_headers.hpp>
+
 #include <bim/game/constant/max_player_count.hpp>
 #include <bim/game/feature_flags_fwd.hpp>
 #include <bim/game/per_player_array.hpp>
 
+#include <iscool/http/request_connection_pool.hpp>
 #include <iscool/net/message_pool.hpp>
 #include <iscool/net/message_stream.hpp>
-
 #include <iscool/schedule/scoped_connection.hpp>
 
 #include <boost/unordered/unordered_map.hpp>
@@ -122,5 +124,10 @@ namespace bim::server
     const bool m_checksum_validation;
 
     iscool::net::message_pool m_message_pool;
+
+    const std::string m_game_started_url;
+    const std::string m_game_over_url;
+    const bim::business::request_headers m_request_headers;
+    iscool::http::request_connection_pool m_request_pool;
   };
 }

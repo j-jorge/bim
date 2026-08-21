@@ -275,6 +275,14 @@ void bim::server::matchmaking_service::mark_as_ready(
              bim::to_underlying(game->fingerprint.features), enable_bot);
     }
 
+  if (game->business_id == bim::net::pending_game_id)
+    {
+      // We are waiting for the synchronization with the business.
+      send_game_on_hold(endpoint, request_token, session, encounter_id,
+                        encounter.player_count + enable_bot);
+      return;
+    }
+
   const bim::game::contest_fingerprint& fingerprint = game->fingerprint;
 
   const iscool::net::message_pool::slot s = m_message_pool.pick_available();

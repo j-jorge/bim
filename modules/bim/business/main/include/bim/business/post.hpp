@@ -135,4 +135,7 @@ namespace bim::business
                           std::forward<ProcessResult>(ok),
                           std::forward<ProcessError>(error));
   }
+
+  void post(std::string_view url, std::vector<std::string> headers,
+            const Json::Value& body);
 }

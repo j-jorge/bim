@@ -10,6 +10,7 @@ add_library(bim_server
   main/src/bim/server/rolling_statistics.cpp
   main/src/bim/server/server.cpp
 
+  main/src/bim/server/business/game_started.cpp
   main/src/bim/server/business/hello.cpp
   main/src/bim/server/business/user_id.cpp
 

@@ -1,14 +1,16 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/server/service/game_service.hpp>
 
-#include <bim/server/service/bot_availability.hpp>
-#include <bim/server/service/game_reward_availability.hpp>
-
+#include <bim/server/business/game_started.hpp>
 #include <bim/server/config.hpp>
+#include <bim/server/service/bot_availability.hpp>
 #include <bim/server/service/contest_timeline_service.hpp>
 #include <bim/server/service/game_info.hpp>
+#include <bim/server/service/game_reward_availability.hpp>
 #include <bim/server/service/session_service.hpp>
 #include <bim/server/service/statistics_service.hpp>
+
+#include <bim/business/post.hpp>
 
 #include <bim/net/message/game_over.hpp>
 #include <bim/net/message/game_update_from_client.hpp>
@@ -36,6 +38,8 @@
 #include <iscool/log/nature/info.hpp>
 #include <iscool/schedule/delayed_call.hpp>
 #include <iscool/time/now.hpp>
+
+#include <json/value.h>
 
 #include <algorithm>
 #include <array>
@@ -404,6 +408,8 @@ public:
 
   bim::game::contest_timeline_writer timeline_writer;
 
+  bim::net::game_id business_id;
+
 private:
   std::unique_ptr<bim::game::bot> m_bot;
 };
@@ -436,6 +442,14 @@ bim::server::game_service::game_service(const config& config,
   , m_coins_per_short_game_draw(config.game_service_coins_per_short_game_draw)
   , m_checksum_validation(config.game_service_enable_checksum_validation)
   , m_message_pool(64)
+  , m_game_started_url(config.business_url.empty()
+                           ? ""
+                           : config.business_url + "gs/game-started")
+  , m_game_over_url(config.business_url.empty()
+                        ? ""
+                        : config.business_url + "gs/game-over")
+  , m_request_headers(config.business_token)
+  , m_request_pool(16)
 {
   if (config.enable_contest_timeline_recording)
     m_contest_timeline_service.reset(new contest_timeline_service(config));
@@ -549,9 +563,49 @@ bim::server::game_info bim::server::game_service::new_game(
         channel, contest_fingerprint, game.bot);
 
   m_statistics.record_game_start(player_count);
+  bim::net::game_id business_id;
+
+  if (m_game_started_url.empty())
+    {
+      business_id = bim::net::not_a_game;
+      game.business_id = business_id;
+    }
+  else
+    {
+      business_id = bim::net::pending_game_id;
+
+      Json::Value body;
+      Json::Value& players = body["players"];
+
+      for (std::size_t i = 0; i != player_count; ++i)
+        players[(Json::ArrayIndex)i] =
+            m_session_service.user_id(game.sessions[i]);
+
+      const iscool::http::request_connection_pool::slot slot =
+          m_request_pool.pick_available();
+
+      *slot.value =
+          bim::business::post<bim::server::business::game_started_response>(
+              m_game_started_url, m_request_headers.headers, body,
+              [this, s = slot.id,
+               channel](const bim::server::business::game_started_response& r)
+                {
+                  m_request_pool.release(s);
+
+                  const game_map::iterator it = m_games.find(channel);
+
+                  if (it != m_games.end())
+                    it->second.business_id = r.game_id;
+                },
+              [this, s = slot.id]()
+                {
+                  m_request_pool.release(s);
+                });
+    }
 
   return game_info{ .fingerprint = contest_fingerprint,
                     .channel = channel,
+                    .business_id = business_id,
                     .sessions = game.sessions };
 }
 

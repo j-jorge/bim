@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #pragma once
 
+#include <bim/net/message/game_id.hpp>
+
 #include <bim/game/constant/max_player_count.hpp>
 #include <bim/game/contest_fingerprint.hpp>
 
@@ -16,6 +18,7 @@ namespace bim::server
     bim::game::contest_fingerprint fingerprint;
 
     iscool::net::channel_id channel;
+    bim::net::game_id business_id;
 
     std::array<iscool::net::session_id, bim::game::g_max_player_count>
         sessions;
