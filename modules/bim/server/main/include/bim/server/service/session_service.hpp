@@ -13,10 +13,10 @@
 #include <bim/net/message/session_token.hpp>
 #include <bim/net/message/user_id.hpp>
 
+#include <iscool/http/request_connection.hpp>
 #include <iscool/net/message/session_id.hpp>
 #include <iscool/schedule/scoped_connection.hpp>
 #include <iscool/signals/declare_signal.hpp>
-#include <iscool/signals/shared_connection_set.hpp>
 
 #include <boost/asio/ip/address.hpp>
 #include <boost/unordered/unordered_map.hpp>
@@ -99,7 +99,7 @@ namespace bim::server
     const std::string m_user_id_url;
     bim::business::request_headers m_request_headers;
     iscool::schedule::connection m_schedule_user_id_connection;
-    iscool::signals::shared_connection_set m_user_id_connections;
+    iscool::http::request_connection m_user_id_connections;
     Json::Value m_user_id_business_request;
     bim::server::business::user_id_response m_user_id_business_response;
     std::vector<create_session_result> m_create_session_dispatch;

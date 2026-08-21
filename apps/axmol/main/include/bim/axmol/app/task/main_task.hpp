@@ -6,9 +6,9 @@
 #include <bim/net/session_handler.hpp>
 
 #include <iscool/context.hpp>
+#include <iscool/http/request_connection.hpp>
 #include <iscool/signals/declare_signal.hpp>
 #include <iscool/signals/scoped_connection.hpp>
-#include <iscool/signals/shared_connection_set.hpp>
 #include <iscool/style/declaration.hpp>
 
 #include <cstdint>
@@ -128,7 +128,7 @@ namespace bim::axmol::app
         m_session_authentication_error_connection;
     iscool::signals::scoped_connection m_message_connection;
 
-    iscool::signals::shared_connection_set m_connections;
+    iscool::http::request_connection m_connections;
 
     bim::app::config m_config;
 

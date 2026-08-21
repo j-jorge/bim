@@ -12,6 +12,7 @@
 #include <bim/app/preference/wallet.hpp>
 
 #include <iscool/i18n/numeric.hpp>
+#include <iscool/memory/dynamic_pool.impl.hpp>
 #include <iscool/signals/implement_signal.hpp>
 
 #define x_widget_scope bim::axmol::app::wallet::

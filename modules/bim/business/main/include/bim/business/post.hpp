@@ -4,7 +4,6 @@
 #include <iscool/http/send.hpp>
 #include <iscool/json/bad_cast.hpp>
 #include <iscool/json/parse_string.hpp>
-#include <iscool/signals/shared_connection_set.hpp>
 
 #include <json/value.h>
 
@@ -26,7 +25,7 @@ namespace bim::business
                                     const Json::Value& body);
 
     template <typename ResultHandler, typename ProcessError>
-    iscool::signals::shared_connection_set
+    iscool::http::request_connection
     post(std::string_view url, std::vector<std::string> headers,
          std::string body, ResultHandler&& handle_result, ProcessError&& error)
     {
@@ -46,7 +45,7 @@ namespace bim::business
   }
 
   template <typename Response, typename ProcessResult, typename ProcessError>
-  iscool::signals::shared_connection_set
+  iscool::http::request_connection
   post(std::string_view url, std::vector<std::string> headers,
        std::string body, Response& response_storage, ProcessResult&& ok,
        ProcessError&& error)
@@ -80,7 +79,7 @@ namespace bim::business
   }
 
   template <typename Response, typename ProcessResult, typename ProcessError>
-  iscool::signals::shared_connection_set
+  iscool::http::request_connection
   post(std::string_view url, std::vector<std::string> headers,
        const Json::Value& body, Response& response_storage, ProcessResult&& ok,
        ProcessError&& error)
@@ -93,7 +92,7 @@ namespace bim::business
   }
 
   template <typename Response, typename ProcessResult, typename ProcessError>
-  iscool::signals::shared_connection_set
+  iscool::http::request_connection
   post(std::string_view url, std::vector<std::string> headers,
        std::string body, ProcessResult&& ok, ProcessError&& error)
   {
@@ -126,7 +125,7 @@ namespace bim::business
   }
 
   template <typename Response, typename ProcessResult, typename ProcessError>
-  iscool::signals::shared_connection_set
+  iscool::http::request_connection
   post(std::string_view url, std::vector<std::string> headers,
        const Json::Value& body, ProcessResult&& ok, ProcessError&& error)
   {

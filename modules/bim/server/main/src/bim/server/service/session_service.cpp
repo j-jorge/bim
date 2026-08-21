@@ -291,7 +291,7 @@ void bim::server::session_service::clean_up()
 void bim::server::session_service::schedule_user_id_request()
 {
   if (m_schedule_user_id_connection.connected()
-      || !m_user_id_connections.empty()
+      || m_user_id_connections.connected()
       || m_user_id_business_request["tokens"].empty())
     return;
 
@@ -401,7 +401,7 @@ void bim::server::session_service::user_id_response()
 
   m_ongoing_user_id_business_request = false;
 
-  m_user_id_connections.clear();
+  m_user_id_connections.disconnect();
   schedule_user_id_request();
 
   if (!m_create_session_dispatch.empty())
@@ -414,6 +414,6 @@ void bim::server::session_service::user_id_error()
          "Failed to fetch user IDs.");
   m_ongoing_user_id_business_request = false;
 
-  m_user_id_connections.clear();
+  m_user_id_connections.disconnect();
   schedule_user_id_request();
 }
