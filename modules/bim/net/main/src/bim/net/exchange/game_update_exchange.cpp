@@ -263,11 +263,13 @@ void bim::net::game_update_exchange::dispatch_game_over(
     }
 
   const std::uint8_t winner = message->get_winner_index();
+  const bim::game::per_player_array<bim::game::player_game_outcome> outcome =
+      message->get_outcome();
   const std::uint16_t coins_reward = message->get_coins_reward();
 
   if (winner == bim::game::g_max_player_count)
-    m_game_over(contest_result{ bim::game::contest_result::create_draw(),
-                                coins_reward });
+    m_game_over(contest_result{
+        bim::game::contest_result::create_game_over(outcome), coins_reward });
   else
     {
       if (winner >= m_player_count)
@@ -278,6 +280,7 @@ void bim::net::game_update_exchange::dispatch_game_over(
         }
 
       m_game_over(contest_result{
-          bim::game::contest_result::create_game_over(winner), coins_reward });
+          bim::game::contest_result::create_victory(winner, outcome),
+          coins_reward });
     }
 }

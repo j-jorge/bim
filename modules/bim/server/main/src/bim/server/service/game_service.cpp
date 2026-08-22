@@ -970,7 +970,8 @@ void bim::server::game_service::send_game_over(
   assert(!game.contest_result.still_running());
 
   const bim::net::game_over message(
-      game.winner_index, game.reward_coins[game.session_index(session)]);
+      game.winner_index, game.contest_result.outcome(),
+      game.reward_coins[game.session_index(session)]);
   const iscool::net::message_pool::slot s = m_message_pool.pick_available();
   message.build_message(*s.value);
 

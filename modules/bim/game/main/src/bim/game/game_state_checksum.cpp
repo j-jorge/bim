@@ -134,6 +134,15 @@ static void update_checksum(checksum_state& checksum_state,
 }
 
 static void update_checksum(checksum_state& checksum_state,
+                            const bim::game::player& c)
+{
+  push_checksum_bytes(checksum_state, c.index);
+  push_checksum_bytes(checksum_state, c.bomb_capacity);
+  push_checksum_bytes(checksum_state, c.bomb_available);
+  push_checksum_bytes(checksum_state, c.bomb_strength);
+}
+
+static void update_checksum(checksum_state& checksum_state,
                             const bim::game::player_action& c)
 {
   push_checksum_bytes(checksum_state, c.movement);
@@ -152,12 +161,10 @@ static void update_checksum(checksum_state& checksum_state,
 }
 
 static void update_checksum(checksum_state& checksum_state,
-                            const bim::game::player& c)
+                            const bim::game::player_death_marker& c)
 {
-  push_checksum_bytes(checksum_state, c.index);
-  push_checksum_bytes(checksum_state, c.bomb_capacity);
-  push_checksum_bytes(checksum_state, c.bomb_available);
-  push_checksum_bytes(checksum_state, c.bomb_strength);
+  push_checksum_bytes(checksum_state, c.player_index);
+  push_checksum_bytes(checksum_state, c.death_kind);
 }
 
 static void update_checksum(checksum_state& checksum_state,

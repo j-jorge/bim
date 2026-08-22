@@ -30,6 +30,7 @@
 #include <bim/game/component/player.hpp>
 #include <bim/game/component/player_action.hpp>
 #include <bim/game/component/player_action_queue.hpp>
+#include <bim/game/component/player_death_marker.hpp>
 #include <bim/game/component/position_on_grid.hpp>
 #include <bim/game/component/power_up.hpp>
 #include <bim/game/component/shallow.hpp>

@@ -54,6 +54,7 @@ add_library(bim_game
   main/src/bim/game/factory/main_clock.cpp
   main/src/bim/game/factory/main_timer.cpp
   main/src/bim/game/factory/player.cpp
+  main/src/bim/game/factory/player_death_marker.cpp
   main/src/bim/game/factory/power_up.cpp
   main/src/bim/game/factory/smoke_vfx.cpp
   main/src/bim/game/factory/wall.cpp

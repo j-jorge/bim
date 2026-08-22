@@ -33,6 +33,7 @@ bim_game_x_component(animation_state)                   //
     bim_game_x_component(player)                        //
     bim_game_x_component(player_action)                 //
     bim_game_x_component(player_action_queue)           //
+    bim_game_x_component(player_death_marker)           //
     bim_game_x_component(position_on_grid)              //
     bim_game_x_component(power_up)                      //
     bim_game_x_component(shallow)                       //

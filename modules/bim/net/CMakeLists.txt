@@ -8,6 +8,7 @@ add_library(bim_net STATIC
   main/src/bim/net/exchange/hello_exchange.cpp
   main/src/bim/net/exchange/new_game_exchange.cpp
 
+  main/src/bim/net/message/game_over.cpp
   main/src/bim/net/message/game_update_from_client.cpp
   main/src/bim/net/message/game_update_from_server.cpp
   main/src/bim/net/message/hello_ok.cpp
