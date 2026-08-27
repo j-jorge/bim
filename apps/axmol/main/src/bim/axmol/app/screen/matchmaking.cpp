@@ -15,11 +15,10 @@
 #include <bim/axmol/input/observer/single_key_observer.hpp>
 
 #include <bim/app/analytics/button_clicked.hpp>
+#include <bim/app/business/player_profile.hpp>
 #include <bim/app/constant/game_feature_slot_count.hpp>
 #include <bim/app/matchmaking_wait_message.hpp>
-#include <bim/app/preference/feature_flags.hpp>
 #include <bim/app/preference/user_language.hpp>
-#include <bim/app/preference/wallet.hpp>
 
 #include <bim/net/exchange/new_game_exchange.hpp>
 #include <bim/net/session_handler.hpp>
@@ -167,9 +166,8 @@ void bim::axmol::app::matchmaking::displayed()
         });
 
   assert(m_context.get_session_handler()->connected());
-  m_new_game->start(
-      m_context.get_session_handler()->session_id(),
-      bim::app::enabled_feature_flags(*m_context.get_local_preferences()));
+  m_new_game->start(m_context.get_session_handler()->session_id(),
+                    m_context.get_player_profile()->enabled_feature_flags());
 }
 
 void bim::axmol::app::matchmaking::closing()
@@ -197,7 +195,7 @@ void bim::axmol::app::matchmaking::update_display_with_game_proposal(
       m_new_game->stop();
       m_new_game->start(
           m_context.get_session_handler()->session_id(),
-          bim::app::enabled_feature_flags(*m_context.get_local_preferences()));
+          m_context.get_player_profile()->enabled_feature_flags());
       m_controls->ready_button->enable(true);
     }
 

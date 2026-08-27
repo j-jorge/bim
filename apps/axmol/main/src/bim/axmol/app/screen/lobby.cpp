@@ -19,8 +19,7 @@
 #include <bim/axmol/find_child_by_path.hpp>
 
 #include <bim/app/analytics/button_clicked.hpp>
-#include <bim/app/preference/arena_stats.hpp>
-#include <bim/app/preference/feature_flags.hpp>
+#include <bim/app/business/player_profile.hpp>
 
 #include <bim/net/exchange/hello_exchange.hpp>
 #include <bim/net/message/hello_ok.hpp>
@@ -69,8 +68,7 @@ bim::axmol::app::lobby::lobby(const context& context,
   , m_settings(new settings_popup(context, *style.get_declaration("settings")))
   , m_player_statistics(new player_statistics_popup(
         context, *style.get_declaration("player-statistics")))
-  , m_debug(
-        new debug_popup(context, *style.get_declaration("debug"), *m_wallet))
+  , m_debug(new debug_popup(context, *style.get_declaration("debug")))
   , m_debug_tap(*m_controls->debug_activator)
   , m_debug_activator_counter(0)
 {
@@ -172,8 +170,8 @@ void bim::axmol::app::lobby::displayed()
 
 void bim::axmol::app::lobby::displaying()
 {
-  m_feature_deck.features(
-      bim::app::enabled_feature_flags(*m_context.get_local_preferences()));
+  const bim::app::player_profile& profile = *m_context.get_player_profile();
+  m_feature_deck.features(profile.enabled_feature_flags());
 
   m_wallet->enter();
   const bim::net::session_handler& session_handler =

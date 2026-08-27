@@ -24,9 +24,9 @@ namespace bim::axmol::widget
   class context;
 }
 
-namespace iscool::preferences
+namespace bim::app
 {
-  class local_preferences;
+  class player_profile;
 }
 
 namespace iscool::style
@@ -52,8 +52,9 @@ namespace bim::axmol::app
     ic_declare_context(
         m_context,
         ic_context_declare_parent_properties(                      //
+            ((const bim::app::player_profile*)(player_profile))    //
             ((const bim::axmol::widget::context*)(widget_context)) //
-            ((iscool::preferences::local_preferences*)(local_preferences))),
+            ),
         ic_context_no_properties);
 
   public:

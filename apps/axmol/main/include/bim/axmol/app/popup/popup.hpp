@@ -44,6 +44,7 @@ namespace bim::axmol::app
     void show(const bim::axmol::widget::named_node_group& nodes,
               const iscool::style::declaration& bounds,
               const bim::axmol::input::node_reference& inputs);
+    bool is_shown() const;
     void hide();
 
   private:

@@ -79,6 +79,11 @@ void bim::axmol::app::popup::show(
         });
 }
 
+bool bim::axmol::app::popup::is_shown() const
+{
+  return m_shown;
+}
+
 void bim::axmol::app::popup::hide()
 {
   if (!m_shown)

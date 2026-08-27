@@ -8,8 +8,5 @@ namespace iscool::preferences
 
 namespace bim::app
 {
-  struct config;
-
-  void update_preferences(iscool::preferences::local_preferences& p,
-                          const config& config);
+  void update_preferences(iscool::preferences::local_preferences& p);
 }

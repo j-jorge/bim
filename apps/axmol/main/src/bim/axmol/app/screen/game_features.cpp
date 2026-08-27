@@ -29,9 +29,8 @@
 
 #include <bim/app/analytics/button_clicked.hpp>
 #include <bim/app/analytics/coins_transaction.hpp>
+#include <bim/app/business/player_profile.hpp>
 #include <bim/app/config.hpp>
-#include <bim/app/preference/feature_flags.hpp>
-#include <bim/app/preference/wallet.hpp>
 
 #include <bim/game/feature_flags.hpp>
 
@@ -161,14 +160,13 @@ bim::axmol::app::game_features::game_features(
           cancel();
         });
 
-  const iscool::preferences::local_preferences& preferences =
-      *m_context.get_local_preferences();
   const bim::app::config& config = *m_context.get_config();
+  const bim::app::player_profile& profile = *m_context.get_player_profile();
 
   for (std::size_t i = 0; i != bim::app::g_game_feature_slot_count; ++i)
     {
-      m_slot[i]->feature(bim::app::feature_flag_in_slot(preferences, i));
-      m_slot[i]->available(bim::app::available_feature_slot(preferences, i));
+      m_slot[i]->feature(profile.slot_feature[i]);
+      m_slot[i]->available(profile.slot_availability[i]);
       m_slot[i]->price(config.game_feature_slot_price[i]);
 
       m_slot[i]->connect_to_clicked(
@@ -233,9 +231,6 @@ bim::axmol::app::game_features::game_features(
   const iscool::style::declaration& item_selection_action_style =
       *style.get_declaration("action.item-selection");
 
-  const bim::game::feature_flags available_features =
-      bim::app::available_feature_flags(preferences);
-
   std::size_t i = 0;
   for (const bim::game::feature_flags f :
        { bim::game::feature_flags::falling_blocks,
@@ -244,7 +239,7 @@ bim::axmol::app::game_features::game_features(
          bim::game::feature_flags::fog_of_war })
     {
       game_feature_button& button =
-          new_button(i, button_on_style, !!(available_features & f));
+          new_button(i, button_on_style, !!(profile.available_features & f));
       button.feature(f);
       button.price(config.game_feature_price[f]);
 
@@ -321,13 +316,12 @@ void bim::axmol::app::game_features::start_erase_mode()
 
   assert(m_selected_feature == bim::game::feature_flags{});
 
-  const iscool::preferences::local_preferences& preferences =
-      *m_context.get_local_preferences();
+  const bim::app::player_profile& profile = *m_context.get_player_profile();
   bool slot_is_occupied[bim::app::g_game_feature_slot_count];
 
   for (std::size_t i = 0; i != bim::app::g_game_feature_slot_count; ++i)
-    slot_is_occupied[i] = bim::app::feature_flag_in_slot(preferences, i)
-                          != bim::game::feature_flags{};
+    slot_is_occupied[i] =
+        profile.slot_feature[i] != bim::game::feature_flags{};
 
   bool has_any_occupied_slot = false;
 
@@ -362,13 +356,11 @@ void bim::axmol::app::game_features::erase_slot(std::size_t i)
 {
   assert(m_monitor->is_erase_slot_state());
 
-  iscool::preferences::local_preferences& preferences =
-      *m_context.get_local_preferences();
+  bim::app::player_profile& profile = *m_context.get_player_profile();
 
-  if (bim::app::available_feature_slot(preferences, i))
+  if (profile.slot_availability[i])
     {
-      bim::app::feature_flag_in_slot(preferences, i,
-                                     bim::game::feature_flags{});
+      profile.slot_feature[i] = bim::game::feature_flags{};
       m_slot[i]->feature(bim::game::feature_flags{});
     }
 
@@ -381,10 +373,9 @@ void bim::axmol::app::game_features::assign_slot(std::size_t i)
 
   if (purchase_slot(i))
     {
-      iscool::preferences::local_preferences& preferences =
-          *m_context.get_local_preferences();
+      bim::app::player_profile& profile = *m_context.get_player_profile();
 
-      bim::app::feature_flag_in_slot(preferences, i, m_selected_feature);
+      profile.slot_feature[i] = m_selected_feature;
       m_slot[i]->feature(m_selected_feature);
     }
 
@@ -393,22 +384,21 @@ void bim::axmol::app::game_features::assign_slot(std::size_t i)
 
 bool bim::axmol::app::game_features::purchase_slot(std::size_t i)
 {
-  iscool::preferences::local_preferences& preferences =
-      *m_context.get_local_preferences();
+  bim::app::player_profile& profile = *m_context.get_player_profile();
 
-  if (bim::app::available_feature_slot(preferences, i))
+  if (profile.slot_availability[i])
     return true;
 
-  const std::int64_t coins = bim::app::coins_balance(preferences);
+  const std::int64_t coins = profile.coins;
   const std::int16_t price =
       m_context.get_config()->game_feature_slot_price[i];
 
   if (price <= coins)
     {
-      bim::app::consume_coins(preferences, price);
+      profile.coins -= price;
       coins_transaction(*m_context.get_analytics(), "feature-slot", -price);
       m_wallet->animate_cash_flow();
-      bim::app::available_feature_slot(preferences, i, true);
+      profile.slot_availability[i] = true;
       m_slot[i]->available(true);
       update_affordability();
       return true;
@@ -435,25 +425,21 @@ void bim::axmol::app::game_features::select_feature(bim::game::feature_flags f)
 
   button_clicked(*m_context.get_analytics(), "feature", "game-features");
 
-  iscool::preferences::local_preferences& preferences =
-      *m_context.get_local_preferences();
-  bim::game::feature_flags available_features =
-      bim::app::available_feature_flags(preferences);
-  bool available = !!(available_features & f);
+  bim::app::player_profile& profile = *m_context.get_player_profile();
+  bool available = !!(profile.available_features & f);
 
   if (!available)
     {
-      const std::int64_t coins = bim::app::coins_balance(preferences);
+      const std::int64_t coins = profile.coins;
       const std::int16_t price = m_context.get_config()->game_feature_price[f];
 
       if (price <= coins)
         {
-          bim::app::consume_coins(preferences, price);
+          profile.coins -= price;
           coins_transaction(*m_context.get_analytics(), "feature-item",
                             -price);
           m_wallet->animate_cash_flow();
-          available_features |= f;
-          bim::app::available_feature_flags(preferences, available_features);
+          profile.available_features |= f;
           m_catalog[f]->available(true);
           update_affordability();
           available = true;
@@ -531,8 +517,8 @@ void bim::axmol::app::game_features::show_feature_message(
 
 void bim::axmol::app::game_features::update_affordability()
 {
-  const std::int64_t coins =
-      bim::app::coins_balance(*m_context.get_local_preferences());
+  const bim::app::player_profile& profile = *m_context.get_player_profile();
+  const std::int64_t coins = profile.coins;
   const bim::app::config& config = *m_context.get_config();
 
   for (const bim::game::feature_flags f : bim::game::g_all_game_feature_flags)
@@ -608,20 +594,19 @@ void bim::axmol::app::game_features::select_random_features()
 
   cancel();
 
-  iscool::preferences::local_preferences& preferences =
-      *m_context.get_local_preferences();
+  bim::app::player_profile& profile = *m_context.get_player_profile();
   std::size_t slots[bim::app::g_game_feature_slot_count];
   std::size_t slot_count = 0;
 
   for (std::size_t i = 0; i != bim::app::g_game_feature_slot_count; ++i)
-    if (bim::app::available_feature_slot(preferences, i))
+    if (profile.slot_availability[i])
       {
         slots[slot_count] = i;
         ++slot_count;
       }
 
   const bim::game::feature_flags available_features =
-      bim::app::available_feature_flags(preferences);
+      profile.available_features;
   bim::game::feature_flags
       features[std::size(bim::game::g_all_game_feature_flags)];
   std::size_t feature_count = 0;
@@ -640,7 +625,7 @@ void bim::axmol::app::game_features::select_random_features()
     if (iscool::random::rand::get_default().random<std::size_t>(1, available)
         <= needed)
       {
-        bim::app::feature_flag_in_slot(preferences, slots[i], features[j]);
+        profile.slot_feature[slots[i]] = features[j];
         m_slot[slots[i]]->feature(features[j]);
         ++i;
         --needed;
@@ -648,8 +633,7 @@ void bim::axmol::app::game_features::select_random_features()
 
   for (std::size_t i = slot_count - needed; i != slot_count; ++i)
     {
-      bim::app::feature_flag_in_slot(preferences, slots[i],
-                                     bim::game::feature_flags{});
+      profile.slot_feature[slots[i]] = bim::game::feature_flags{};
       m_slot[i]->feature(bim::game::feature_flags{});
     }
 }

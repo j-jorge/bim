@@ -149,7 +149,7 @@ static bool parse_game_features(bim::app::config& result,
 
       std::string feature_name;
 
-      if (!read_value(feature_name, entry, "id"))
+      if (!read_value(feature_name, entry, "name"))
         return false;
 
       const std::optional<bim::game::feature_flags> flag =

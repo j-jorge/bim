@@ -46,8 +46,8 @@ namespace bim::business
 
   template <typename Response, typename ProcessResult, typename ProcessError>
   iscool::http::request_connection
-  post(std::string_view url, std::vector<std::string> headers,
-       std::string body, Response& response_storage, ProcessResult&& ok,
+  post(Response& response_storage, std::string_view url,
+       std::vector<std::string> headers, std::string body, ProcessResult&& ok,
        ProcessError&& error)
   {
     auto handle_result = [ok = std::forward<ProcessResult>(ok),
@@ -80,14 +80,25 @@ namespace bim::business
 
   template <typename Response, typename ProcessResult, typename ProcessError>
   iscool::http::request_connection
-  post(std::string_view url, std::vector<std::string> headers,
-       const Json::Value& body, Response& response_storage, ProcessResult&& ok,
-       ProcessError&& error)
+  post(Response& response_storage, std::string_view url,
+       std::vector<std::string> headers, const Json::Value& body,
+       ProcessResult&& ok, ProcessError&& error)
   {
     std::string body_string = detail::json_body_to_string(url, body);
 
-    return post<Response>(url, std::move(headers), std::move(body_string),
-                          response_storage, std::forward<ProcessResult>(ok),
+    return post<Response>(
+        response_storage, url, std::move(headers), std::move(body_string),
+        std::forward<ProcessResult>(ok), std::forward<ProcessError>(error));
+  }
+
+  template <typename Response, typename ProcessResult, typename ProcessError>
+  iscool::http::request_connection
+  post(Response& response_storage, std::string_view url,
+       std::vector<std::string> headers, ProcessResult&& ok,
+       ProcessError&& error)
+  {
+    return post<Response>(response_storage, url, std::move(headers),
+                          Json::objectValue, std::forward<ProcessResult>(ok),
                           std::forward<ProcessError>(error));
   }
 
@@ -145,6 +156,20 @@ namespace bim::business
 
     return detail::post(
         url, std::move(headers), std::move(body_string),
+        [ok = std::forward<ProcessResult>(ok)](std::span<const char>)
+          {
+            ok();
+          },
+        std::forward<ProcessError>(error));
+  }
+
+  template <typename ProcessResult, typename ProcessError>
+  iscool::http::request_connection
+  post(std::string_view url, std::vector<std::string> headers,
+       ProcessResult&& ok, ProcessError&& error)
+  {
+    return detail::post(
+        url, std::move(headers), "{}",
         [ok = std::forward<ProcessResult>(ok)](std::span<const char>)
           {
             ok();

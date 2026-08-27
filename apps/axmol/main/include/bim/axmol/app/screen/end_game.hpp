@@ -18,6 +18,7 @@ namespace bim
   namespace app
   {
     class analytics_service;
+    class player_profile;
   }
 
   namespace net
@@ -51,6 +52,7 @@ namespace bim::axmol::app
         ic_context_declare_parent_properties(                              //
             ((const bim::axmol::widget::context*)(widget_context))         //
             ((bim::app::analytics_service*)(analytics))                    //
+            ((const bim::app::player_profile*)(player_profile))            //
             ((iscool::preferences::local_preferences*)(local_preferences)) //
             ),
         ic_context_no_properties);

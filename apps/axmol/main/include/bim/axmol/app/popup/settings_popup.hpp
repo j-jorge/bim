@@ -44,6 +44,7 @@ namespace bim::axmol::widget
 namespace bim::app
 {
   class analytics_service;
+  class player_profile;
 }
 
 namespace bim::axmol::app
@@ -63,6 +64,7 @@ namespace bim::axmol::app
             ((const bim::axmol::widget::context*)(widget_context))         //
             ((main_scene*)(main_scene))                                    //
             ((bim::app::analytics_service*)(analytics))                    //
+            ((const bim::app::player_profile*)(player_profile))            //
             ((application_event_dispatcher*)(event_dispatcher))            //
             ((iscool::audio::mixer*)(audio))                               //
             ((iscool::preferences::local_preferences*)(local_preferences)) //
@@ -96,7 +98,7 @@ namespace bim::axmol::app
   private:
     bim::axmol::input::single_key_observer_handle m_escape;
 
-    bim_declare_controls_struct(controls, m_controls, 12);
+    bim_declare_controls_struct(controls, m_controls, 13);
     const iscool::style::declaration& m_style_bounds;
 
     const iscool::style::declaration& m_style_pad_on_the_left;

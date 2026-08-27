@@ -8,16 +8,16 @@ set(main_sources
   main/src/bim/app/analytics/coins_transaction.cpp
   main/src/bim/app/analytics/error.cpp
 
-  main/src/bim/app/preference/arena_stats.cpp
+  main/src/bim/app/business/player_profile.cpp
+  main/src/bim/app/business/player_profile_json.cpp
+
   main/src/bim/app/preference/audio.cpp
   main/src/bim/app/preference/controls.cpp
   main/src/bim/app/preference/date_of_next_version_update_message.cpp
   main/src/bim/app/preference/device_id.cpp
-  main/src/bim/app/preference/feature_flags.cpp
   main/src/bim/app/preference/haptic.cpp
   main/src/bim/app/preference/update_preferences.cpp
   main/src/bim/app/preference/user_language.cpp
-  main/src/bim/app/preference/wallet.cpp
 )
 
 set_source_files_properties(
@@ -69,7 +69,7 @@ endif()
 
 add_executable(app-tests
   tests/src/bim/app/config.cpp
-  tests/src/bim/app/preference/update_preferences.cpp
+  tests/src/bim/app/business/player_profile_json.cpp
 )
 target_link_libraries(
   app-tests

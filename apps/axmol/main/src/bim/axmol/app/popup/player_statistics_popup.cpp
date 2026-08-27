@@ -14,7 +14,7 @@
 #include <bim/axmol/widget/implement_widget.hpp>
 #include <bim/axmol/widget/ui/button.hpp>
 
-#include <bim/app/preference/arena_stats.hpp>
+#include <bim/app/business/player_profile.hpp>
 
 #include <axmol/2d/Label.h>
 #include <axmol/2d/ProgressTimer.h>
@@ -31,7 +31,6 @@
 #include <bim/axmol/widget/implement_controls_struct.hpp>
 
 #include <iscool/i18n/numeric.hpp>
-#include <iscool/preferences/local_preferences.hpp>
 
 #include <fmt/format.h>
 
@@ -66,13 +65,12 @@ void bim::axmol::app::player_statistics_popup::show()
 {
   m_popup->show(m_controls->all_nodes, m_style_bounds, m_inputs.root());
 
-  const iscool::preferences::local_preferences& preferences =
-      *m_context.get_local_preferences();
+  const bim::app::player_profile& profile = *m_context.get_player_profile();
 
-  const std::int64_t total_games = bim::app::games_in_arena(preferences);
-  const std::int64_t games_win = bim::app::victories_in_arena(preferences);
-  const std::int64_t games_defeat = bim::app::defeats_in_arena(preferences);
-  const std::int64_t games_draw = total_games - games_win - games_defeat;
+  const std::int64_t games_win = profile.arena_victories;
+  const std::int64_t games_defeat = profile.arena_defeats;
+  const std::int64_t games_draw = profile.arena_draws;
+  const std::int64_t total_games = games_win + games_defeat + games_draw;
 
   m_controls->arena_games_total->setString(
       iscool::i18n::numeric::to_string(total_games));

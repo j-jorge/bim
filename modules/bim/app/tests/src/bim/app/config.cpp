@@ -15,11 +15,11 @@ TEST(bim_app_config, load)
 {
   "game_features":
   [
-    {"id": "falling_blocks", "coins": 1},
-    {"id": "fences", "coins": 2},
-    {"id": "fog_of_war", "coins": 3},
-    {"id": "invisibility", "coins": 4},
-    {"id": "shield", "coins": 5}
+    {"name": "falling_blocks", "coins": 1},
+    {"name": "fences", "coins": 2},
+    {"name": "fog_of_war", "coins": 3},
+    {"name": "invisibility", "coins": 4},
+    {"name": "shield", "coins": 5}
   ],
   "game_feature_slots":
   [
@@ -94,11 +94,11 @@ TEST(bim_app_config, load_tolerance)
 {
   "game_features":
   [
-    {"id": "falling_blocks", "coins": 1},
-    {"id": "fences", "coins": 2},
-    {"id": "foobar", "coins": 3000},
-    {"id": "invisibility", "coins": 4},
-    {"id": "shield", "coins": 5}
+    {"name": "falling_blocks", "coins": 1},
+    {"name": "fences", "coins": 2},
+    {"name": "foobar", "coins": 3000},
+    {"name": "invisibility", "coins": 4},
+    {"name": "shield", "coins": 5}
   ],
   "game_feature_slots":
   [

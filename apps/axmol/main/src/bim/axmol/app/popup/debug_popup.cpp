@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/axmol/app/popup/debug_popup.hpp>
 
-#include <bim/axmol/app/part/wallet.hpp>
 #include <bim/axmol/app/popup/popup.hpp>
 
 #include <bim/axmol/widget/factory/label.hpp>
@@ -23,16 +22,11 @@
 #include <bim/axmol/input/observer/single_key_observer.hpp>
 
 #include <bim/app/analytics/coins_transaction.hpp>
-#include <bim/app/preference/arena_stats.hpp>
 #include <bim/app/preference/date_of_next_version_update_message.hpp>
-#include <bim/app/preference/feature_flags.hpp>
-#include <bim/app/preference/wallet.hpp>
 
 #include <bim/game/feature_flags.hpp>
 
 #include <bim/net/session_handler.hpp>
-
-#include <bim/dev.hpp>
 
 #include <iscool/preferences/local_preferences.hpp>
 #include <iscool/system/language_name.hpp>
@@ -79,8 +73,7 @@ namespace
 }
 
 bim::axmol::app::debug_popup::debug_popup(
-    const context& context, const iscool::style::declaration& style,
-    wallet& wallet)
+    const context& context, const iscool::style::declaration& style)
   : m_context(context)
   , m_controls(*context.get_widget_context(),
                *style.get_declaration("widgets"))
@@ -95,7 +88,6 @@ bim::axmol::app::debug_popup::debug_popup(
   , m_button_item_controls(*style.get_declaration("button-item-controls"))
   , m_button_item_bounds(*style.get_declaration("button-item-bounds"))
   , m_popup(new popup(context, *style.get_declaration("popup")))
-  , m_wallet(wallet)
   , m_escape(ax::EventKeyboard::KeyCode::KEY_BACK)
 {
   m_controls->close_button->connect_to_clicked(
@@ -121,44 +113,9 @@ void bim::axmol::app::debug_popup::show()
   m_inputs.push_back(m_controls->list->input_node());
   m_inputs.push_back(m_escape);
 
-  if constexpr (bim::built_for_developers)
-    {
-      add_title("FEATURES");
-      add_feature_item("Falling blocks",
-                       bim::game::feature_flags::falling_blocks);
-      add_feature_item("Fences", bim::game::feature_flags::fences);
-      add_feature_item("Fog of war", bim::game::feature_flags::fog_of_war);
-      add_feature_item("Invisibility", bim::game::feature_flags::invisibility);
-      add_feature_item("Shield", bim::game::feature_flags::shield);
-
-      add_title("WALLET");
-      add_button_item("Get 10 coins.",
-                      [this]() -> void
-                        {
-                          coin_transaction(10);
-                        });
-      add_button_item("Get 100 coins.",
-                      [this]() -> void
-                        {
-                          coin_transaction(100);
-                        });
-      add_button_item("Lose 100 coins.",
-                      [this]() -> void
-                        {
-                          coin_transaction(-100);
-                        });
-    }
-
   add_title("PREFERENCES");
   iscool::preferences::local_preferences& preferences =
       *m_context.get_local_preferences();
-
-  add_text_item("Game count in arena",
-                std::to_string(bim::app::games_in_arena(preferences)));
-  add_text_item("Victories in arena",
-                std::to_string(bim::app::victories_in_arena(preferences)));
-  add_text_item("Defeats in arena",
-                std::to_string(bim::app::defeats_in_arena(preferences)));
 
   {
     const std::chrono::hours now = iscool::time::now<std::chrono::hours>();
@@ -196,26 +153,6 @@ void bim::axmol::app::debug_popup::add_fps_entry()
                       director.setStatsDisplay(!director.isStatsDisplay());
                       return director.isStatsDisplay();
                     });
-}
-
-void bim::axmol::app::debug_popup::add_feature_item(
-    std::string_view label, bim::game::feature_flags flag)
-{
-  const bool available =
-      !!(bim::app::available_feature_flags(*m_context.get_local_preferences())
-         & flag);
-
-  const auto toggle_flag = [this, flag]() -> bool
-    {
-      const bim::game::feature_flags new_flags =
-          bim::app::available_feature_flags(*m_context.get_local_preferences())
-          ^ flag;
-      bim::app::available_feature_flags(*m_context.get_local_preferences(),
-                                        new_flags);
-      return !!(new_flags & flag);
-    };
-
-  add_toggle_item(label, available, toggle_flag);
 }
 
 void bim::axmol::app::debug_popup::add_title(std::string_view label)
@@ -284,23 +221,4 @@ void bim::axmol::app::debug_popup::add_item(
 
   item->fill(nodes, bounds);
   m_controls->list->push_back(*item);
-}
-
-void bim::axmol::app::debug_popup::coin_transaction(int amount) const
-{
-  bim::app::coins_transaction(*m_context.get_analytics(), "debug", amount);
-
-  iscool::preferences::local_preferences& preferences =
-      *m_context.get_local_preferences();
-
-  if (amount >= 0)
-    bim::app::add_coins(preferences, amount);
-  else
-    bim::app::consume_coins(
-        preferences,
-        std::min<int64_t>(-amount, bim::app::coins_balance(preferences)));
-
-  const ax::Node& n = *m_controls->close_button;
-
-  m_wallet.animate_cash_flow(n.convertToWorldSpace(n.getContentSize() / 2));
 }

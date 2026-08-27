@@ -27,6 +27,11 @@ namespace bim::axmol::widget
   class context;
 }
 
+namespace bim::app
+{
+  class player_profile;
+}
+
 namespace bim::axmol::app
 {
   class application_event_dispatcher;
@@ -41,6 +46,7 @@ namespace bim::axmol::app
             ((const bim::axmol::widget::context*)(widget_context))         //
             ((main_scene*)(main_scene))                                    //
             ((application_event_dispatcher*)(event_dispatcher))            //
+            ((const bim::app::player_profile*)(player_profile))            //
             ((iscool::preferences::local_preferences*)(local_preferences)) //
             ),
         ic_context_no_properties);

@@ -225,6 +225,10 @@
 
         "version": [
           "popup/settings/font/small"
+        ],
+
+        "user_id": [
+          "popup/settings/font/small"
         ]
       }
     ],
@@ -524,6 +528,15 @@
         ],
 
         "version": [
+          {
+            "anchor.x": 0.5,
+            "anchor.y": 0.5,
+            "anchor.reference.x": 0.5,
+            "anchor.reference.y": 0.06
+          }
+        ],
+
+        "user_id": [
           {
             "anchor.x": 0.5,
             "anchor.y": 0.5,

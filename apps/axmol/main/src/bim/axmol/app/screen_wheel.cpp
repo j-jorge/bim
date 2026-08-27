@@ -19,8 +19,8 @@
 
 #include <bim/app/analytics/error.hpp>
 #include <bim/app/analytics_service.hpp>
+#include <bim/app/business/player_profile.hpp>
 #include <bim/app/player_progress_tracker.hpp>
-#include <bim/app/preference/wallet.hpp>
 #include <bim/app/shop_support.hpp>
 
 #include <bim/net/exchange/game_launch_event.hpp>
@@ -61,8 +61,8 @@ bim::axmol::app::screen_wheel::screen_wheel(
   , m_main_container(ax::Node::create())
   , m_controls(*context.get_widget_context(),
                *style.get_declaration("widgets"))
-  , m_player_progress_tracker(new bim::app::player_progress_tracker(
-        *context.get_analytics(), *context.get_local_preferences()))
+  , m_player_progress_tracker(
+        new bim::app::player_progress_tracker(*context.get_analytics()))
   , m_lobby(new lobby(context, *style.get_declaration("lobby")))
   , m_matchmaking(
         new matchmaking(context, *style.get_declaration("matchmaking")))
@@ -455,8 +455,8 @@ void bim::axmol::app::screen_wheel::animate_game_features_to_shop(
 void bim::axmol::app::screen_wheel::display_lobby()
 {
   m_context.get_analytics()->screen(
-      "lobby", { { "coins", std::to_string(bim::app::coins_balance(
-                                *m_context.get_local_preferences())) } });
+      "lobby",
+      { { "coins", std::to_string(m_context.get_player_profile()->coins) } });
 
   m_lobby->displaying();
   switch_view(*m_controls->lobby);
@@ -508,8 +508,8 @@ void bim::axmol::app::screen_wheel::display_end_game(
     const bim::net::contest_result& result)
 {
   m_context.get_analytics()->screen(
-      "end-game", { { "coins", std::to_string(bim::app::coins_balance(
-                                   *m_context.get_local_preferences())) } });
+      "end-game",
+      { { "coins", std::to_string(m_context.get_player_profile()->coins) } });
 
   m_end_game->displaying(result);
   switch_view(*m_controls->end_game);

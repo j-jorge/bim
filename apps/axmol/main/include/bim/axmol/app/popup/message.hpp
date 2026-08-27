@@ -45,6 +45,8 @@ namespace bim::axmol::app
                   const iscool::style::declaration& style);
     ~message_popup();
 
+    bool is_shown() const;
+
     void show(std::string_view message);
     void show_yes_no(std::string_view message);
 

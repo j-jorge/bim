@@ -51,6 +51,7 @@ target_link_libraries(bim_axmol_app
   bim_axmol_schedule
   bim_axmol_widget
   bim_app
+  bim_business
   bim_net
   iscool_signals
   iscool_social

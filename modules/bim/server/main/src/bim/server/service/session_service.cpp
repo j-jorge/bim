@@ -311,8 +311,8 @@ void bim::server::session_service::schedule_user_id_request()
 void bim::server::session_service::fetch_user_ids()
 {
   m_user_id_connections = bim::business::post(
-      m_user_id_url, m_request_headers.headers, m_user_id_business_request,
-      m_user_id_business_response,
+      m_user_id_business_response, m_user_id_url, m_request_headers.headers,
+      m_user_id_business_request,
       [this]()
         {
           user_id_response();

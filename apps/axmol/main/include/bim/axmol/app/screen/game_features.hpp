@@ -38,6 +38,12 @@ namespace bim::axmol::widget
 namespace bim::app
 {
   struct config;
+  class player_profile;
+}
+
+namespace bim::business
+{
+  class request_headers;
 }
 
 namespace ax
@@ -76,6 +82,8 @@ namespace bim::axmol::app
     ic_declare_context(
         m_context,
         ic_context_declare_parent_properties(                              //
+            ((const bim::business::request_headers*)(request_headers))     //
+            ((bim::app::player_profile*)(player_profile))                  //
             ((const bim::axmol::widget::context*)(widget_context))         //
             ((main_scene*)(main_scene))                                    //
             ((bim::app::analytics_service*)(analytics))                    //

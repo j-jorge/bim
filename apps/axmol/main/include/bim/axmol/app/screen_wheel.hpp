@@ -29,7 +29,13 @@ namespace bim
   namespace app
   {
     struct config;
+    class player_profile;
     class player_progress_tracker;
+  }
+
+  namespace business
+  {
+    class request_headers;
   }
 
   namespace net
@@ -95,6 +101,8 @@ namespace bim::axmol::app
         m_context,
         ic_context_declare_parent_properties(                              //
             ((iscool::preferences::local_preferences*)(local_preferences)) //
+            ((const bim::business::request_headers*)(request_headers))     //
+            ((bim::app::player_profile*)(player_profile))                  //
             ((const bim::axmol::widget::context*)(widget_context))         //
             ((main_scene*)(main_scene))                                    //
             ((bim::app::analytics_service*)(analytics))                    //

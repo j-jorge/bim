@@ -14,8 +14,12 @@ namespace bim::business
   class request_headers
   {
   public:
+    request_headers();
     explicit request_headers(std::string_view authorization_token);
 
+    void push_authorization(std::string_view authorization_token);
+
+  public:
     std::vector<std::string> headers;
   };
 }

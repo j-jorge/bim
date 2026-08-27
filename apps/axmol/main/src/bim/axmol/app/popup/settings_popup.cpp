@@ -18,6 +18,7 @@
 
 #include <bim/app/analytics/button_clicked.hpp>
 #include <bim/app/analytics_service.hpp>
+#include <bim/app/business/player_profile.hpp>
 #include <bim/app/preference/audio.hpp>
 #include <bim/app/preference/controls.hpp>
 #include <bim/app/preference/haptic.hpp>
@@ -48,7 +49,8 @@
                           x_widget(bim::axmol::widget::toggle, d_pad_kind)    \
                               x_widget(bim::axmol::widget::button,            \
                                        language_button)                       \
-                                  x_widget(ax::Label, version)
+                                  x_widget(ax::Label, version)                \
+                                      x_widget(ax::Label, user_id)
 
 #include <bim/axmol/widget/implement_controls_struct.hpp>
 
@@ -101,6 +103,9 @@ bim::axmol::app::settings_popup::settings_popup(
       fmt::format(fmt::runtime(ic_gettext("Version {}")), bim::version);
 
   m_controls->version->setString(version);
+  m_controls->user_id->setString(
+      fmt::format(fmt::runtime(ic_gettext("User ID: {}")),
+                  m_context.get_player_profile()->user_id));
 
   m_controls->close_button->connect_to_clicked(
       [this]()

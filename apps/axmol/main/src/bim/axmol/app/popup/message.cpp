@@ -52,6 +52,11 @@ bim::axmol::app::message_popup::message_popup(
 
 bim::axmol::app::message_popup::~message_popup() = default;
 
+bool bim::axmol::app::message_popup::is_shown() const
+{
+  return m_popup->is_shown();
+}
+
 void bim::axmol::app::message_popup::show(std::string_view message)
 {
   show(message, m_yes_only_display, m_yes_only_bounds);

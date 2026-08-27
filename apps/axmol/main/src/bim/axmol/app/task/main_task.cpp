@@ -9,12 +9,15 @@
 
 #include <bim/app/analytics/error.hpp>
 #include <bim/app/analytics_service.hpp>
+#include <bim/app/business/player_profile_json.hpp>
 #include <bim/app/business_url.hpp>
 #include <bim/app/preference/date_of_next_version_update_message.hpp>
 #include <bim/app/preference/device_id.hpp>
 #include <bim/app/preference/update_preferences.hpp>
 
 #include <bim/net/message/protocol_version.hpp>
+
+#include <bim/business/post.hpp>
 
 #include <bim/dev.hpp>
 #include <bim/tracy.hpp>
@@ -48,21 +51,27 @@
 /*
   The opening process looks like this:
 
-  load_config   load_resources
-       |               |
-       +-------+-------+
-               |
-           create_ui
-     display_version_update
-     connect_to_business_server
-     connect_to_game_server
-               |
-             open
+ load_resources         fetch_remote_config
+create_minimal_ui                 |
+        |                         |
+        |           +-------------+-------------+
+        |           |                           |
+        |  display_version_update   connect_to_business_server
+        |                                       |
+        |                         +-------------+-------------+
+        |                         |                           |
+        |               connect_to_game_server        push_legacy_state
+        |                                           fetch_player_profile
+        |                                                     |
+        +-----------+-------------+---------------------------+
+                                  |
+                            create_main_ui
+                                 open
 */
 struct bim::axmol::app::main_task::steps
 {
-  static constexpr std::uint8_t config = 1 << 0;
-  static constexpr std::uint8_t resources = 1 << 1;
+  static constexpr std::uint8_t resources = 1 << 0;
+  static constexpr std::uint8_t player_profile = 1 << 1;
 };
 
 static std::string cached_remote_config_file()
@@ -77,10 +86,8 @@ bim::axmol::app::main_task::main_task(context context,
   : m_context(std::move(context))
   , m_loading_screen(new loading_screen(
         m_context, *style.get_declaration("loading-screen")))
-{
-  m_context.set_session_handler(&m_session_handler);
-  m_context.set_config(&m_config);
-}
+  , m_player_profile_url(bim::app::business_url + "/client/me")
+{}
 
 bim::axmol::app::main_task::~main_task() = default;
 
@@ -98,26 +105,22 @@ void bim::axmol::app::main_task::start()
   fetch_remote_config();
 }
 
+bool bim::axmol::app::main_task::check_done_steps(std::uint8_t steps) const
+{
+  return (m_done_steps && steps) == steps;
+}
+
 void bim::axmol::app::main_task::resources_loaded()
 {
   m_done_steps |= steps::resources;
   m_context.get_audio()->play_music("menu", iscool::audio::loop_mode::forever);
 
-  try_create_ui();
+  create_minimal_ui();
+
+  try_open();
 }
 
-void bim::axmol::app::main_task::try_create_ui()
-{
-  if (m_done_steps != (steps::resources | steps::config))
-    return;
-
-  create_ui();
-
-  if (!display_version_update_message())
-    connect_to_business_server();
-}
-
-void bim::axmol::app::main_task::create_ui()
+void bim::axmol::app::main_task::create_minimal_ui()
 {
   ZoneScoped;
 
@@ -125,6 +128,23 @@ void bim::axmol::app::main_task::create_ui()
 
   m_message_popup.reset(
       new message_popup(m_context, *m_style.get_declaration("message-popup")));
+  m_message_connection = m_message_popup->connect_to_ok(
+      [this]() -> void
+        {
+          try_show_message();
+        });
+
+  try_show_message();
+}
+
+void bim::axmol::app::main_task::create_main_ui()
+{
+  ZoneScoped;
+
+  m_context.set_session_handler(&m_session_handler);
+  m_context.set_config(&m_config);
+  m_context.set_request_headers(&m_request_headers);
+  m_context.set_player_profile(&m_player_profile);
 
   m_screen_wheel.reset(
       new screen_wheel(m_context, *m_style.get_declaration("screen-wheel")));
@@ -233,43 +253,31 @@ void bim::axmol::app::main_task::load_local_config()
 
 void bim::axmol::app::main_task::config_ready()
 {
-  m_done_steps |= steps::config;
+  bim::app::update_preferences(*m_context.get_local_preferences());
 
-  iscool::preferences::local_preferences& preferences =
-      *m_context.get_local_preferences();
-
-  bim::app::update_preferences(preferences, m_config);
-  bim::app::ensure_device_id_exists(preferences);
-
-  try_create_ui();
+  connect_to_business_server();
+  display_version_update_message();
 }
 
-bool bim::axmol::app::main_task::display_version_update_message()
+void bim::axmol::app::main_task::display_version_update_message()
 {
   if (m_config.most_recent_version <= bim::version_major)
-    return false;
+    return;
 
   const std::chrono::hours now = iscool::time::now<std::chrono::hours>();
   iscool::preferences::local_preferences& preferences =
       *m_context.get_local_preferences();
 
   if (now < bim::app::date_of_next_version_update_message(preferences))
-    return false;
+    return;
 
   bim::app::date_of_next_version_update_message(
       preferences, now + m_config.version_update_interval);
 
-  m_message_connection = m_message_popup->connect_to_ok(
-      [this]() -> void
-        {
-          m_message_connection.disconnect();
-          connect_to_business_server();
-        });
+  queue_message(ic_gettext("A new version of Bim! is available! "
+                           "Please update as soon as possible."));
 
-  m_message_popup->show(ic_gettext("A new version of Bim! is available! "
-                                   "Please update as soon as possible."));
-
-  return true;
+  return;
 }
 
 void bim::axmol::app::main_task::connect_to_business_server()
@@ -277,16 +285,17 @@ void bim::axmol::app::main_task::connect_to_business_server()
   ic_log(iscool::log::nature::info(), "main_task",
          "Connecting to business server at '{}'.", bim::app::business_url);
 
-  const iscool::preferences::local_preferences& preferences =
+  iscool::preferences::local_preferences& preferences =
       *m_context.get_local_preferences();
+
+  bim::app::ensure_device_id_exists(preferences);
 
   Json::Value body;
   body["device_id"] = bim::app::device_id(preferences);
 
   const auto on_result = [this](const Json::Value& r)
     {
-      connect_to_game_server(
-          iscool::json::cast<std::string>(r["session_token"]));
+      business_server_connection_success(r);
     };
   const auto on_error = [this](int status, std::span<const char> body)
     {
@@ -298,6 +307,22 @@ void bim::axmol::app::main_task::connect_to_business_server()
                                body, on_result, on_error);
 }
 
+void bim::axmol::app::main_task::business_server_connection_success(
+    const Json::Value& r)
+{
+  std::string session_token =
+      iscool::json::cast<std::string>(r["session_token"]);
+
+  ic_log(iscool::log::nature::info(), "main_task",
+         "Connected to business server. Session token is '{}'.",
+         session_token);
+
+  connect_to_game_server(session_token);
+  m_request_headers.push_authorization(session_token);
+
+  fetch_player_profile();
+}
+
 void bim::axmol::app::main_task::business_server_connection_error(
     int status, std::span<const char> body)
 {
@@ -305,7 +330,9 @@ void bim::axmol::app::main_task::business_server_connection_error(
          "Failed to connect to the business server ({}): {}.", status,
          std::string_view(body.begin(), body.end()).substr(0, 1024));
 
-  m_message_popup->show(
+  bim::app::error(*m_context.get_analytics(), "business-authentication");
+
+  queue_message(
       fmt::format(fmt::runtime(ic_gettext("Failed to authenticate with the "
                                           "business server. Status {}.")),
                   status));
@@ -314,38 +341,17 @@ void bim::axmol::app::main_task::business_server_connection_error(
 void bim::axmol::app::main_task::connect_to_game_server(
     const std::string& session_token)
 {
-  ic_log(iscool::log::nature::info(), "main_task",
-         "Connected to business server. Session token is '{}'.",
-         session_token);
-
   m_session_authentication_error_connection =
       m_session_handler.connect_to_authentication_error(
           [this](bim::net::authentication_error_code error_code)
             {
-              const std::string error = std::to_string(
-                  std::underlying_type_t<bim::net::authentication_error_code>(
-                      error_code));
-              m_context.get_analytics()->event(
-                  "error", { { "cause", "authentication-error" },
-                             { "error-code", error } });
-
               game_server_connection_error(error_code);
             });
 
-  const char* const env_server = std::getenv("BIM_GAME_SERVER_HOST");
-  std::string server_host;
-
-  if (env_server)
-    server_host = env_server;
-  else if (bim::built_for_developers)
-    server_host = "bim.jorge.st:30000";
-  else
-    server_host = m_config.game_server;
-
   ic_log(iscool::log::nature::info(), "main_task",
-         "Connecting to game server at '{}'.", server_host);
+         "Connecting to game server at '{}'.", m_config.game_server);
 
-  m_session_handler.connect(server_host, session_token);
+  m_session_handler.connect(m_config.game_server, session_token);
 }
 
 void bim::axmol::app::main_task::game_server_connection_error(
@@ -356,9 +362,77 @@ void bim::axmol::app::main_task::game_server_connection_error(
       "Failed to authenticate with the game server. Error code {}.",
       std::underlying_type_t<bim::net::authentication_error_code>(error_code));
 
-  m_message_popup->show(
+  const std::string error = std::to_string(
+      std::underlying_type_t<bim::net::authentication_error_code>(error_code));
+  m_context.get_analytics()->event(
+      "error",
+      { { "cause", "authentication-error" }, { "error-code", error } });
+
+  // Careful here, this is called even if we have already opened the main
+  // scene.
+  queue_message(
       fmt::format(fmt::runtime(ic_gettext("Failed to authenticate with the "
                                           "game server. Error code {}.")),
                   std::underlying_type_t<bim::net::authentication_error_code>(
                       error_code)));
+}
+
+void bim::axmol::app::main_task::fetch_player_profile()
+{
+  ic_log(iscool::log::nature::info(), "main_task",
+         "Fetching the player's profile.");
+
+  m_connections = bim::business::post(
+      m_player_profile, m_player_profile_url, m_request_headers.headers,
+      [this]()
+        {
+          fetch_player_profile_success();
+        },
+      [this]()
+        {
+          fetch_player_profile_error();
+        });
+}
+
+void bim::axmol::app::main_task::fetch_player_profile_success()
+{
+  ic_log(iscool::log::nature::info(), "main_task", "Player profile received.");
+
+  m_done_steps |= steps::player_profile;
+  try_open();
+}
+
+void bim::axmol::app::main_task::fetch_player_profile_error()
+{
+  ic_log(iscool::log::nature::error(), "main_task",
+         "Failed to fetch the player's profile.");
+
+  m_player_profile = {};
+  m_done_steps |= steps::player_profile;
+  try_open();
+}
+
+void bim::axmol::app::main_task::try_open()
+{
+  const std::uint8_t all_steps = steps::player_profile | steps::resources;
+
+  if ((m_done_steps & all_steps) == all_steps)
+    create_main_ui();
+}
+
+void bim::axmol::app::main_task::queue_message(std::string message)
+{
+  m_messages.emplace_back(std::move(message));
+  try_show_message();
+}
+
+void bim::axmol::app::main_task::try_show_message()
+{
+  if (!m_message_popup || m_messages.empty() || m_message_popup->is_shown())
+    return;
+
+  const std::string message = std::move(m_messages[0]);
+  m_messages.erase(m_messages.begin());
+
+  m_message_popup->show(message);
 }

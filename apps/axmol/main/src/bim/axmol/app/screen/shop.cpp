@@ -19,8 +19,8 @@
 #include <bim/app/analytics/coins_transaction.hpp>
 #include <bim/app/analytics/error.hpp>
 #include <bim/app/analytics_service.hpp>
+#include <bim/app/business/player_profile.hpp>
 #include <bim/app/config.hpp>
-#include <bim/app/preference/wallet.hpp>
 #include <bim/app/shop_service.hpp>
 #include <bim/app/shop_support.hpp>
 
@@ -270,7 +270,7 @@ void bim::axmol::app::shop::purchase_completed(std::string_view product,
               { "quantity", std::to_string(quantity) } });
 
         const std::int32_t amount = quantity * config.shop_product_coins[i];
-        bim::app::add_coins(*m_context.get_local_preferences(), amount);
+        m_context.get_player_profile()->coins += amount;
         bim::app::coins_transaction(*m_context.get_analytics(),
                                     "purchase-completed", amount);
         m_wallet->animate_cash_flow();

@@ -42,7 +42,6 @@ namespace bim::axmol::app
   class application_event_dispatcher;
   class main_scene;
   class popup;
-  class wallet;
 
   class debug_popup
   {
@@ -60,15 +59,13 @@ namespace bim::axmol::app
 
   public:
     debug_popup(const context& context,
-                const iscool::style::declaration& style, wallet& wallet);
+                const iscool::style::declaration& style);
     ~debug_popup();
 
     void show();
 
   private:
     void add_fps_entry();
-    void add_feature_item(std::string_view label,
-                          bim::game::feature_flags flag);
 
     void add_title(std::string_view label);
     void add_text_item(std::string_view label, std::string_view value);
@@ -78,8 +75,6 @@ namespace bim::axmol::app
                          std::function<void()> do_action);
     void add_item(const bim::axmol::widget::named_node_group& nodes,
                   const iscool::style::declaration& bounds);
-
-    void coin_transaction(int amount) const;
 
   private:
     bim_declare_controls_struct(controls, m_controls, 2);
@@ -97,7 +92,6 @@ namespace bim::axmol::app
     const iscool::style::declaration& m_button_item_bounds;
 
     std::unique_ptr<popup> m_popup;
-    wallet& m_wallet;
 
     bim::axmol::input::single_key_observer_handle m_escape;
     bim::axmol::input::tree m_inputs;

@@ -23,6 +23,7 @@ namespace bim::app
 {
   class analytics_service;
   class matchmaking_wait_message;
+  class player_profile;
 }
 
 namespace bim::net
@@ -58,6 +59,7 @@ namespace bim::axmol::app
         ic_context_declare_parent_properties(                              //
             ((const bim::axmol::widget::context*)(widget_context))         //
             ((bim::app::analytics_service*)(analytics))                    //
+            ((const bim::app::player_profile*)(player_profile))            //
             ((application_event_dispatcher*)(event_dispatcher))            //
             ((bim::net::session_handler*)(session_handler))                //
             ((iscool::preferences::local_preferences*)(local_preferences)) //

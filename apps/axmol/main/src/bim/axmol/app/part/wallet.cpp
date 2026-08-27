@@ -9,7 +9,7 @@
 
 #include <bim/axmol/find_child_by_path.hpp>
 
-#include <bim/app/preference/wallet.hpp>
+#include <bim/app/business/player_profile.hpp>
 
 #include <iscool/i18n/numeric.hpp>
 #include <iscool/memory/dynamic_pool.impl.hpp>
@@ -84,8 +84,7 @@ void bim::axmol::app::wallet::attached()
 
 void bim::axmol::app::wallet::enter()
 {
-  m_displayed_value =
-      bim::app::coins_balance(*m_context.get_local_preferences());
+  m_displayed_value = m_context.get_player_profile()->coins;
   m_balance_label->setString(
       iscool::i18n::numeric::to_string(m_displayed_value));
 }
@@ -99,8 +98,7 @@ void bim::axmol::app::wallet::animate_cash_flow(
     const ax::Vec2& source_world_position)
 {
   const std::int64_t from_amount = m_displayed_value;
-  m_displayed_value =
-      bim::app::coins_balance(*m_context.get_local_preferences());
+  m_displayed_value = m_context.get_player_profile()->coins;
   const std::int64_t to_amount = m_displayed_value;
 
   const float update_label_duration_seconds =
