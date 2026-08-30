@@ -8,6 +8,7 @@ set(main_sources
   main/src/bim/app/analytics/coins_transaction.cpp
   main/src/bim/app/analytics/error.cpp
 
+  main/src/bim/app/business/legacy_state.cpp
   main/src/bim/app/business/player_profile.cpp
   main/src/bim/app/business/player_profile_json.cpp
 
@@ -16,6 +17,7 @@ set(main_sources
   main/src/bim/app/preference/date_of_next_version_update_message.cpp
   main/src/bim/app/preference/device_id.cpp
   main/src/bim/app/preference/haptic.cpp
+  main/src/bim/app/preference/legacy.cpp
   main/src/bim/app/preference/update_preferences.cpp
   main/src/bim/app/preference/user_language.cpp
 )

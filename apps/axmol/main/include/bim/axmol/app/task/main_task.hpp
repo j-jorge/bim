@@ -53,6 +53,7 @@ namespace bim::axmol::widget
 namespace bim::app
 {
   class analytics_service;
+  struct legacy_state_transfer_response;
 }
 
 namespace Json
@@ -121,9 +122,15 @@ namespace bim::axmol::app
     void business_server_connection_error(int status,
                                           std::span<const char> body);
 
-    void connect_to_game_server(const std::string& session_token);
+    void try_connect_to_game_server();
+    void connect_to_game_server();
     void game_server_connection_error(
         bim::net::authentication_error_code error_code);
+
+    void push_legacy_state();
+    void push_legacy_state_success(
+        const bim::app::legacy_state_transfer_response& response);
+    void push_legacy_state_error();
 
     void fetch_player_profile();
     void fetch_player_profile_success();
@@ -148,9 +155,11 @@ namespace bim::axmol::app
     iscool::signals::scoped_connection m_message_connection;
 
     bim::business::request_headers m_request_headers;
+    iscool::http::request_connection m_config_connections;
     iscool::http::request_connection m_connections;
 
     bim::app::config m_config;
+    std::string m_session_token;
     bim::app::player_profile m_player_profile;
 
     std::uint8_t m_done_steps;
@@ -159,5 +168,6 @@ namespace bim::axmol::app
     std::vector<std::string> m_messages;
 
     std::string m_player_profile_url;
+    std::string m_legacy_state_url;
   };
 }

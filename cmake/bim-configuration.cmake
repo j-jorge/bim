@@ -57,7 +57,7 @@ elseif(CMAKE_BUILD_TYPE STREQUAL "Release"
     AND BIM_TARGET STREQUAL "android")
   set(bim_business_server_url "https://bim-prod.jorge.st")
 else()
-  set(bim_business_server_url "http://localhost:4209")
+  set(bim_business_server_url "http://localhost:4210")
 endif()
 
 set(BIM_BUSINESS_SERVER_URL

@@ -9,15 +9,19 @@
 
 #include <bim/app/analytics/error.hpp>
 #include <bim/app/analytics_service.hpp>
+#include <bim/app/business/legacy_state.hpp>
 #include <bim/app/business/player_profile_json.hpp>
 #include <bim/app/business_url.hpp>
 #include <bim/app/preference/date_of_next_version_update_message.hpp>
 #include <bim/app/preference/device_id.hpp>
+#include <bim/app/preference/legacy.hpp>
 #include <bim/app/preference/update_preferences.hpp>
 
 #include <bim/net/message/protocol_version.hpp>
 
 #include <bim/business/post.hpp>
+
+#include <bim/game/feature_flags_string.hpp>
 
 #include <bim/dev.hpp>
 #include <bim/tracy.hpp>
@@ -37,6 +41,7 @@
 #include <iscool/log/nature/error.hpp>
 #include <iscool/log/nature/info.hpp>
 #include <iscool/log/nature/warning.hpp>
+#include <iscool/preferences/local_preferences.hpp>
 #include <iscool/signals/implement_signal.hpp>
 #include <iscool/style/loader.hpp>
 #include <iscool/time/now.hpp>
@@ -51,19 +56,17 @@
 /*
   The opening process looks like this:
 
- load_resources         fetch_remote_config
-create_minimal_ui                 |
-        |                         |
-        |           +-------------+-------------+
-        |           |                           |
-        |  display_version_update   connect_to_business_server
-        |                                       |
-        |                         +-------------+-------------+
-        |                         |                           |
-        |               connect_to_game_server        push_legacy_state
-        |                                           fetch_player_profile
-        |                                                     |
-        +-----------+-------------+---------------------------+
+ load_resources       fetch_remote_config        connect_to_business_server
+create_minimal_ui   display_version_update                   |
+        |                       |                            |
+        |                       +--->+<----------------------+
+        |                            |                       |
+        |                 connect_to_game_server             |
+        |                                                    |
+        |                                            push_legacy_state
+        |                                          fetch_player_profile
+        |                                                    |
+        +-------------------------+--------------------------+
                                   |
                             create_main_ui
                                  open
@@ -71,7 +74,9 @@ create_minimal_ui                 |
 struct bim::axmol::app::main_task::steps
 {
   static constexpr std::uint8_t resources = 1 << 0;
-  static constexpr std::uint8_t player_profile = 1 << 1;
+  static constexpr std::uint8_t config = 1 << 1;
+  static constexpr std::uint8_t business = 1 << 2;
+  static constexpr std::uint8_t player_profile = 1 << 3;
 };
 
 static std::string cached_remote_config_file()
@@ -87,6 +92,8 @@ bim::axmol::app::main_task::main_task(context context,
   , m_loading_screen(new loading_screen(
         m_context, *style.get_declaration("loading-screen")))
   , m_player_profile_url(bim::app::business_url + "/client/me")
+  , m_legacy_state_url(bim::app::business_url
+                       + "/client/transfer-legacy-inventory")
 {}
 
 bim::axmol::app::main_task::~main_task() = default;
@@ -103,6 +110,7 @@ void bim::axmol::app::main_task::start()
   m_loading_screen->start();
 
   fetch_remote_config();
+  connect_to_business_server();
 }
 
 bool bim::axmol::app::main_task::check_done_steps(std::uint8_t steps) const
@@ -180,7 +188,7 @@ void bim::axmol::app::main_task::fetch_remote_config()
   body["client_version_major"] = bim::version_major;
   body["game_server_protocol_version"] = bim::net::protocol_version;
 
-  m_connections = iscool::http::json::post(
+  m_config_connections = iscool::http::json::post(
       bim::app::business_url + "/client/config", body, on_result, on_error);
 }
 
@@ -255,7 +263,9 @@ void bim::axmol::app::main_task::config_ready()
 {
   bim::app::update_preferences(*m_context.get_local_preferences());
 
-  connect_to_business_server();
+  m_done_steps |= steps::config;
+
+  try_connect_to_game_server();
   display_version_update_message();
 }
 
@@ -276,8 +286,6 @@ void bim::axmol::app::main_task::display_version_update_message()
 
   queue_message(ic_gettext("A new version of Bim! is available! "
                            "Please update as soon as possible."));
-
-  return;
 }
 
 void bim::axmol::app::main_task::connect_to_business_server()
@@ -310,17 +318,21 @@ void bim::axmol::app::main_task::connect_to_business_server()
 void bim::axmol::app::main_task::business_server_connection_success(
     const Json::Value& r)
 {
-  std::string session_token =
-      iscool::json::cast<std::string>(r["session_token"]);
+  m_session_token = iscool::json::cast<std::string>(r["session_token"]);
 
   ic_log(iscool::log::nature::info(), "main_task",
          "Connected to business server. Session token is '{}'.",
-         session_token);
+         m_session_token);
 
-  connect_to_game_server(session_token);
-  m_request_headers.push_authorization(session_token);
+  m_done_steps |= steps::business;
 
-  fetch_player_profile();
+  try_connect_to_game_server();
+  m_request_headers.push_authorization(m_session_token);
+
+  if (bim::app::legacy_inventory_pushed(*m_context.get_local_preferences()))
+    fetch_player_profile();
+  else
+    push_legacy_state();
 }
 
 void bim::axmol::app::main_task::business_server_connection_error(
@@ -336,10 +348,20 @@ void bim::axmol::app::main_task::business_server_connection_error(
       fmt::format(fmt::runtime(ic_gettext("Failed to authenticate with the "
                                           "business server. Status {}.")),
                   status));
+
+  // It won't work but we'll still continue toward opening the main screen.
+  fetch_player_profile();
 }
 
-void bim::axmol::app::main_task::connect_to_game_server(
-    const std::string& session_token)
+void bim::axmol::app::main_task::try_connect_to_game_server()
+{
+  const std::uint8_t needed_steps = steps::config | steps::business;
+
+  if ((m_done_steps & needed_steps) == needed_steps)
+    connect_to_game_server();
+}
+
+void bim::axmol::app::main_task::connect_to_game_server()
 {
   m_session_authentication_error_connection =
       m_session_handler.connect_to_authentication_error(
@@ -351,7 +373,7 @@ void bim::axmol::app::main_task::connect_to_game_server(
   ic_log(iscool::log::nature::info(), "main_task",
          "Connecting to game server at '{}'.", m_config.game_server);
 
-  m_session_handler.connect(m_config.game_server, session_token);
+  m_session_handler.connect(m_config.game_server, m_session_token);
 }
 
 void bim::axmol::app::main_task::game_server_connection_error(
@@ -375,6 +397,113 @@ void bim::axmol::app::main_task::game_server_connection_error(
                                           "game server. Error code {}.")),
                   std::underlying_type_t<bim::net::authentication_error_code>(
                       error_code)));
+}
+
+void bim::axmol::app::main_task::push_legacy_state()
+{
+  ic_log(iscool::log::nature::info(), "main_task",
+         "Sending the legacy state to the backend.");
+
+  const iscool::preferences::local_preferences& preferences =
+      *m_context.get_local_preferences();
+
+  Json::Value body;
+  body["coins"] = preferences.get_value("coins", (std::int64_t)0);
+
+  {
+    Json::Value& slots = body["slots"];
+
+    if (preferences.get_value("feature_flags.slot_0.available", false))
+      slots.append(0);
+
+    if (preferences.get_value("feature_flags.slot_1.available", false))
+      slots.append(1);
+  }
+
+  {
+    Json::Value& game_features = body["game_features"];
+    const bim::game::feature_flags owned_features =
+        (bim::game::feature_flags)preferences.get_value(
+            "feature_flags.available",
+            std::int64_t(bim::game::feature_flags{}));
+
+    for (const bim::game::feature_flags f :
+         bim::game::g_all_game_feature_flags)
+      if (!!(owned_features & f))
+        game_features.append(std::string(bim::game::to_simple_string(f)));
+  }
+
+  {
+    Json::Value& game_feature_selection = body["game_feature_selection"];
+
+    {
+      const bim::game::feature_flags f =
+          (bim::game::feature_flags)preferences.get_value(
+              "feature_flags.slot_0",
+              std::int64_t(bim::game::feature_flags{}));
+      Json::Value& selection =
+          game_feature_selection[game_feature_selection.size()];
+
+      selection["slot_index"] = 0;
+      selection["feature"] = std::string(bim::game::to_simple_string(f));
+    }
+
+    {
+      const bim::game::feature_flags f =
+          (bim::game::feature_flags)preferences.get_value(
+              "feature_flags.slot_1",
+              std::int64_t(bim::game::feature_flags{}));
+      Json::Value& selection =
+          game_feature_selection[game_feature_selection.size()];
+
+      selection["slot_index"] = 1;
+      selection["feature"] = std::string(bim::game::to_simple_string(f));
+    }
+  }
+
+  {
+    Json::Value& arena_stats = body["arena_stats"];
+
+    arena_stats["game_count"] =
+        preferences.get_value("arena_stats.game_count", (std::int64_t)0);
+    arena_stats["victory_count"] =
+        preferences.get_value("arena_stats.victory_count", (std::int64_t)0);
+    arena_stats["defeat_count"] =
+        preferences.get_value("arena_stats.defeat_count", (std::int64_t)0);
+  }
+
+  m_connections =
+      bim::business::post<bim::app::legacy_state_transfer_response>(
+          m_legacy_state_url, m_request_headers.headers, body,
+          [this](const bim::app::legacy_state_transfer_response& response)
+            {
+              push_legacy_state_success(response);
+            },
+          [this]()
+            {
+              push_legacy_state_error();
+            });
+}
+
+void bim::axmol::app::main_task::push_legacy_state_success(
+    const bim::app::legacy_state_transfer_response& response)
+{
+  ic_log(iscool::log::nature::info(), "main_task", "Legacy state sent: {}.",
+         (std::int64_t)response.transfer_state);
+
+  if ((response.transfer_state == bim::app::transfer_result::done)
+      || (response.transfer_state == bim::app::transfer_result::already_done))
+    bim::app::legacy_inventory_pushed(*m_context.get_local_preferences(),
+                                      true);
+
+  fetch_player_profile();
+}
+
+void bim::axmol::app::main_task::push_legacy_state_error()
+{
+  ic_log(iscool::log::nature::error(), "main_task",
+         "Failed to send the legacy state to the backend.");
+  fetch_player_profile();
 }
 
 void bim::axmol::app::main_task::fetch_player_profile()
@@ -414,9 +543,9 @@ void bim::axmol::app::main_task::fetch_player_profile_error()
 
 void bim::axmol::app::main_task::try_open()
 {
-  const std::uint8_t all_steps = steps::player_profile | steps::resources;
+  const std::uint8_t needed_steps = steps::player_profile | steps::resources;
 
-  if ((m_done_steps & all_steps) == all_steps)
+  if ((m_done_steps & needed_steps) == needed_steps)
     create_main_ui();
 }
 

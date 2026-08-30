@@ -1,7 +1,6 @@
 # Next
 
 ## Client
-- Send the stored inventory to the business server on start.
 - Get the player's inventory from the business server.
 - Fetch the game reward from the business server.
 - Allow to edit the player's name.
