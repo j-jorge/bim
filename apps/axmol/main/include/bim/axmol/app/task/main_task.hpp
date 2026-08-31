@@ -3,6 +3,8 @@
 
 #include <bim/app/business/player_profile.hpp>
 #include <bim/app/config.hpp>
+#include <bim/app/job/authenticate_with_business_job.hpp>
+#include <bim/app/job/fetch_config_job.hpp>
 
 #include <bim/business/request_headers.hpp>
 
@@ -53,6 +55,8 @@ namespace bim::axmol::widget
 namespace bim::app
 {
   class analytics_service;
+  class fetch_player_profile_job;
+  class push_legacy_state_job;
   struct legacy_state_transfer_response;
 }
 
@@ -102,39 +106,25 @@ namespace bim::axmol::app
     struct steps;
 
   private:
-    bool check_done_steps(std::uint8_t steps) const;
-
     void resources_loaded();
 
     void try_create_minimal_ui();
     void create_minimal_ui();
     void create_main_ui();
 
-    void fetch_remote_config();
-    void validate_remote_config(const Json::Value& json_config);
-    void load_local_config();
     void config_ready();
 
     void display_version_update_message();
 
-    void connect_to_business_server();
-    void business_server_connection_success(const Json::Value& response);
-    void business_server_connection_error(int status,
-                                          std::span<const char> body);
+    void business_server_connection_success(std::string session_token);
+    void business_server_connection_error(int status);
 
     void try_connect_to_game_server();
     void connect_to_game_server();
     void game_server_connection_error(
         bim::net::authentication_error_code error_code);
 
-    void push_legacy_state();
-    void push_legacy_state_success(
-        const bim::app::legacy_state_transfer_response& response);
-    void push_legacy_state_error();
-
-    void fetch_player_profile();
-    void fetch_player_profile_success();
-    void fetch_player_profile_error();
+    void start_authenticated_jobs();
 
     void try_open();
 
@@ -142,6 +132,8 @@ namespace bim::axmol::app
     void try_show_message();
 
   private:
+    const std::string m_device_id;
+
     iscool::style::declaration m_style;
     std::unique_ptr<loading_screen> m_loading_screen;
 
@@ -154,9 +146,13 @@ namespace bim::axmol::app
         m_session_authentication_error_connection;
     iscool::signals::scoped_connection m_message_connection;
 
+    bim::app::fetch_config_job m_fetch_config;
+    bim::app::authenticate_with_business_job m_authenticate_with_business;
+
+    std::unique_ptr<bim::app::push_legacy_state_job> m_push_legacy_state;
+    std::unique_ptr<bim::app::fetch_player_profile_job> m_fetch_player_profile;
+
     bim::business::request_headers m_request_headers;
-    iscool::http::request_connection m_config_connections;
-    iscool::http::request_connection m_connections;
 
     bim::app::config m_config;
     std::string m_session_token;
@@ -166,8 +162,5 @@ namespace bim::axmol::app
 
     /// Pending messages to be shown to the user.
     std::vector<std::string> m_messages;
-
-    std::string m_player_profile_url;
-    std::string m_legacy_state_url;
   };
 }
