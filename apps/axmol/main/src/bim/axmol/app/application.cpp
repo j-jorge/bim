@@ -524,7 +524,7 @@ bool bim::axmol::app::application::applicationDidFinishLaunching()
           iscool::to_string(iscool::system::get_language_name()) } });
 
   ic_log(iscool::log::nature::info(), g_log_context,
-         "Business server is '{}'.", bim::app::business_url);
+         "Business server is '{}'.", BIM_BUSINESS_SERVER_URL);
 
   m_session_systems.reset(new detail::session_systems(*this));
 

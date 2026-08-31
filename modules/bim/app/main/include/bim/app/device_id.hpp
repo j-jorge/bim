@@ -5,5 +5,5 @@
 
 namespace bim::app
 {
-  extern const std::string business_url;
+  std::string device_id();
 }

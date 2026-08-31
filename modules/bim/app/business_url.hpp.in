@@ -1,0 +1,3 @@
+#pragma once
+
+#define BIM_BUSINESS_SERVER_URL "@BIM_BUSINESS_SERVER_URL@"

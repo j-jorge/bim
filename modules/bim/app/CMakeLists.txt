@@ -1,6 +1,8 @@
+configure_file(business_url.hpp.in include/bim/app/business_url.hpp @ONLY)
+
 set(main_sources
-  main/src/bim/app/business_url.cpp
   main/src/bim/app/config.cpp
+  main/src/bim/app/device_id.cpp
   main/src/bim/app/matchmaking_wait_message.cpp
   main/src/bim/app/player_progress_tracker.cpp
 
@@ -12,25 +14,18 @@ set(main_sources
   main/src/bim/app/business/player_profile.cpp
   main/src/bim/app/business/player_profile_json.cpp
 
+  main/src/bim/app/job/authenticate_with_business_job.cpp
+  main/src/bim/app/job/fetch_config_job.cpp
+  main/src/bim/app/job/fetch_player_profile_job.cpp
+  main/src/bim/app/job/push_legacy_state_job.cpp
+
   main/src/bim/app/preference/audio.cpp
   main/src/bim/app/preference/controls.cpp
   main/src/bim/app/preference/date_of_next_version_update_message.cpp
-  main/src/bim/app/preference/device_id.cpp
   main/src/bim/app/preference/haptic.cpp
   main/src/bim/app/preference/legacy.cpp
   main/src/bim/app/preference/update_preferences.cpp
   main/src/bim/app/preference/user_language.cpp
-)
-
-set_source_files_properties(
-  main/src/bim/app/business_url.cpp
-  PROPERTIES
-  COMPILE_DEFINITIONS
-  # We must quote the URL in the preprocessor definition in order to
-  # produce a C-string as soon as possible. This is because the URL
-  # contains a double slash (https://) which is otherwise interpreted
-  # as a comment, thus causing the removal of the rest of the URL.
-  "BIM_BUSINESS_SERVER_URL_STR=\"${BIM_BUSINESS_SERVER_URL}\""
 )
 
 if (BIM_BUILDING_FOR_ANDROID)
@@ -55,11 +50,14 @@ target_include_directories(
   PUBLIC
   main/include
   ${platform_includes}
+  ${CMAKE_CURRENT_BINARY_DIR}/include
 )
 
 target_link_libraries(bim_app
   PUBLIC
+  bim_business
   bim_net
+  iscool_http
   iscool_i18n
   iscool_preferences
   iscool_system
