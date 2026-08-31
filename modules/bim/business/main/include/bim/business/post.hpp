@@ -10,6 +10,7 @@
 #include <cassert>
 #include <string>
 #include <string_view>
+#include <type_traits>
 #include <vector>
 
 namespace bim::business
@@ -156,6 +157,18 @@ namespace bim::business
                           std::forward<ProcessError>(error));
   }
 
+  template <typename Response, typename ProcessResult>
+  iscool::http::request_connection
+  post(std::string_view url, std::vector<std::string> headers,
+       const Json::Value& body, ProcessResult&& ok)
+  {
+    return post<Response>(url, std::move(headers), body,
+                          std::forward<ProcessResult>(ok),
+                          []()
+                            {
+                            });
+  }
+
   template <typename ProcessResult, typename ProcessError>
   iscool::http::request_connection
   post(std::string_view url, std::vector<std::string> headers,
@@ -172,7 +185,24 @@ namespace bim::business
         std::forward<ProcessError>(error));
   }
 
+  template <typename ProcessResult>
+  iscool::http::request_connection
+  post(std::string_view url, std::vector<std::string> headers,
+       const Json::Value& body, ProcessResult&& ok)
+  {
+    return post(url, std::move(headers), body, std::forward<ProcessResult>(ok),
+                []()
+                  {
+                  });
+  }
+
+  // The requires clause is here to distinguish this function from
+  // post(url, headers, Json::Value, ProcessResult).
   template <typename ProcessResult, typename ProcessError>
+    requires requires {
+      { ProcessResult{}() };
+      { ProcessError{}() };
+    }
   iscool::http::request_connection
   post(std::string_view url, std::vector<std::string> headers,
        ProcessResult&& ok, ProcessError&& error)
@@ -184,6 +214,17 @@ namespace bim::business
             ok();
           },
         std::forward<ProcessError>(error));
+  }
+
+  template <typename ProcessResult>
+  iscool::http::request_connection post(std::string_view url,
+                                        std::vector<std::string> headers,
+                                        ProcessResult&& ok)
+  {
+    return post(url, std::move(headers), std::forward<ProcessResult>(ok),
+                []()
+                  {
+                  });
   }
 
   void post(std::string_view url, std::vector<std::string> headers,

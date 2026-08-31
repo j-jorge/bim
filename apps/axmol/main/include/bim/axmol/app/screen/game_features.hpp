@@ -3,8 +3,6 @@
 
 #include <bim/axmol/app/shop_intent_fwd.hpp>
 
-#include <bim/app/constant/game_feature_slot_count.hpp>
-
 #include <bim/axmol/action/runner.hpp>
 #include <bim/axmol/input/node_pointer.hpp>
 #include <bim/axmol/input/observer/axmol_node_touch_observer_handle.hpp>
@@ -14,13 +12,19 @@
 #include <bim/axmol/ref_ptr.hpp>
 #include <bim/axmol/widget/declare_controls_struct.hpp>
 
+#include <bim/app/constant/game_feature_slot_count.hpp>
+
 #include <bim/game/feature_flags_fwd.hpp>
 
 #include <bim/bit_map.hpp>
 
 #include <iscool/context.hpp>
+#include <iscool/http/request_connection.hpp>
 #include <iscool/monitoring/declare_state_monitor.hpp>
+#include <iscool/schedule/connection.hpp>
 #include <iscool/signals/declare_signal.hpp>
+
+#include <json/value.h>
 
 #include <memory>
 
@@ -39,6 +43,9 @@ namespace bim::app
 {
   struct config;
   class player_profile;
+  class assign_feature_slots_job;
+  class buy_feature_job;
+  class buy_feature_slot_job;
 }
 
 namespace bim::business
@@ -114,11 +121,15 @@ namespace bim::axmol::app
     void select_slot(std::size_t i);
     void erase_slot(std::size_t i);
     void assign_slot(std::size_t i);
-    bool purchase_slot(std::size_t i);
+    void purchase_slot(std::size_t i);
 
     void select_feature(bim::game::feature_flags f);
+    void select_available_feature(bim::game::feature_flags f);
     void show_feature_message(bim::game::feature_flags f);
 
+    void update_slot_content();
+    void slot_purchase_success(std::size_t i);
+    void feature_purchase_success(bim::game::feature_flags f);
     void update_affordability();
 
     void cancel_assign_slot();
@@ -131,6 +142,7 @@ namespace bim::axmol::app
 
     void select_random_features();
 
+    void display_shortage_message();
     void open_shop_from_shortage();
     void open_shop_from_wallet();
 
@@ -168,5 +180,14 @@ namespace bim::axmol::app
     game_feature_button* m_slot[bim::app::g_game_feature_slot_count];
 
     std::unique_ptr<message_popup> m_message_popup;
+
+    std::unique_ptr<bim::app::buy_feature_job> m_buy_feature_job;
+    std::unique_ptr<bim::app::buy_feature_slot_job> m_buy_feature_slot_job;
+    std::unique_ptr<bim::app::assign_feature_slots_job>
+        m_assign_feature_slots_job;
+
+    iscool::signals::connection m_buy_feature_done_connection;
+    iscool::signals::connection m_buy_feature_slot_done_connection;
+    iscool::signals::connection m_assign_feature_slots_done_connection;
   };
 }

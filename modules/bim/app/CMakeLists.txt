@@ -14,7 +14,10 @@ set(main_sources
   main/src/bim/app/business/player_profile.cpp
   main/src/bim/app/business/player_profile_json.cpp
 
+  main/src/bim/app/job/assign_feature_slots_job.cpp
   main/src/bim/app/job/authenticate_with_business_job.cpp
+  main/src/bim/app/job/buy_feature_job.cpp
+  main/src/bim/app/job/buy_feature_slot_job.cpp
   main/src/bim/app/job/fetch_config_job.cpp
   main/src/bim/app/job/fetch_player_profile_job.cpp
   main/src/bim/app/job/push_legacy_state_job.cpp
@@ -70,6 +73,18 @@ endif()
 add_executable(app-tests
   tests/src/bim/app/config.cpp
   tests/src/bim/app/business/player_profile_json.cpp
+
+  tests/src/bim/app/job/assign_feature_slots_job.cpp
+  tests/src/bim/app/job/buy_feature_job.cpp
+  tests/src/bim/app/job/buy_feature_slot_job.cpp
+
+  tests/src/bim/app/tests/http_service.cpp
+  tests/src/bim/app/tests/scheduler.cpp
+)
+target_include_directories(
+  app-tests
+  PRIVATE
+  tests/include
 )
 target_link_libraries(
   app-tests
