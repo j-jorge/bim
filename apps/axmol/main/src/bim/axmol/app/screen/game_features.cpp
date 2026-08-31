@@ -31,8 +31,14 @@
 #include <bim/app/analytics/coins_transaction.hpp>
 #include <bim/app/business/player_profile.hpp>
 #include <bim/app/config.hpp>
+#include <bim/app/job/assign_feature_slots_job.hpp>
+#include <bim/app/job/buy_feature_job.hpp>
+#include <bim/app/job/buy_feature_slot_job.hpp>
+
+#include <bim/business/post.hpp>
 
 #include <bim/game/feature_flags.hpp>
+#include <bim/game/feature_flags_string.hpp>
 
 #include <bim/bit_map.impl.hpp>
 
@@ -89,6 +95,15 @@ bim::axmol::app::game_features::game_features(
   , m_slot{ m_controls->slot_0, m_controls->slot_1 }
   , m_message_popup(
         new message_popup(context, *style.get_declaration("message-popup")))
+  , m_buy_feature_job(new bim::app::buy_feature_job(
+        *m_context.get_analytics(), *m_context.get_request_headers(),
+        *m_context.get_config(), *m_context.get_player_profile()))
+  , m_buy_feature_slot_job(new bim::app::buy_feature_slot_job(
+        *m_context.get_analytics(), *m_context.get_request_headers(),
+        *m_context.get_config(), *m_context.get_player_profile()))
+  , m_assign_feature_slots_job(new bim::app::assign_feature_slots_job(
+        *m_context.get_analytics(), *m_context.get_request_headers(),
+        *m_context.get_player_profile()))
 {
   {
     const iscool::style::declaration& slot_action_style =
@@ -165,10 +180,7 @@ bim::axmol::app::game_features::game_features(
 
   for (std::size_t i = 0; i != bim::app::g_game_feature_slot_count; ++i)
     {
-      m_slot[i]->feature(profile.slot_feature[i]);
-      m_slot[i]->available(profile.slot_availability[i]);
       m_slot[i]->price(config.game_feature_slot_price[i]);
-
       m_slot[i]->connect_to_clicked(
           [this, i]()
             {
@@ -289,11 +301,39 @@ bim::axmol::app::game_features::display_nodes() const
 void bim::axmol::app::game_features::attached()
 {
   m_wallet->attached();
+
+  m_buy_feature_done_connection = m_buy_feature_job->connect_to_done(
+      [this](bim::game::feature_flags f)
+        {
+          feature_purchase_success(f);
+        });
+
+  m_buy_feature_slot_done_connection = m_buy_feature_slot_job->connect_to_done(
+      [this](std::size_t i)
+        {
+          slot_purchase_success(i);
+        });
+
+  m_assign_feature_slots_done_connection =
+      m_assign_feature_slots_job->connect_to_done(
+          [this]()
+            {
+              update_slot_content();
+            });
 }
 
 void bim::axmol::app::game_features::displaying()
 {
   m_wallet->enter();
+
+  const bim::app::player_profile& profile = *m_context.get_player_profile();
+
+  for (std::size_t i = 0; i != bim::app::g_game_feature_slot_count; ++i)
+    {
+      m_slot[i]->feature(profile.slot_feature[i]);
+      m_slot[i]->available(profile.slot_availability[i]);
+    }
+
   update_affordability();
 
   show_feature_message(m_selected_feature);
@@ -302,6 +342,10 @@ void bim::axmol::app::game_features::displaying()
 void bim::axmol::app::game_features::closing()
 {
   cancel();
+
+  m_buy_feature_done_connection.disconnect();
+  m_buy_feature_slot_done_connection.disconnect();
+  m_assign_feature_slots_done_connection.disconnect();
 }
 
 void bim::axmol::app::game_features::start_erase_mode()
@@ -340,16 +384,27 @@ void bim::axmol::app::game_features::start_erase_mode()
 
 void bim::axmol::app::game_features::select_slot(std::size_t i)
 {
-  if (m_monitor->is_idle_state())
+  if (m_monitor->is_erase_slot_state())
     {
-      purchase_slot(i);
+      erase_slot(i);
       return;
     }
 
-  if (m_monitor->is_erase_slot_state())
-    erase_slot(i);
-  else if (m_monitor->is_assign_slot_state())
-    assign_slot(i);
+  const bim::app::player_profile& profile = *m_context.get_player_profile();
+
+  if (m_monitor->is_assign_slot_state())
+    {
+      if (profile.slot_availability[i])
+        {
+          assign_slot(i);
+          return;
+        }
+
+      cancel_assign_slot();
+    }
+
+  if (!profile.slot_availability[i])
+    purchase_slot(i);
 }
 
 void bim::axmol::app::game_features::erase_slot(std::size_t i)
@@ -360,8 +415,8 @@ void bim::axmol::app::game_features::erase_slot(std::size_t i)
 
   if (profile.slot_availability[i])
     {
-      profile.slot_feature[i] = bim::game::feature_flags{};
       m_slot[i]->feature(bim::game::feature_flags{});
+      m_assign_feature_slots_job->clear_slot(i);
     }
 
   cancel_erase_slot();
@@ -371,42 +426,27 @@ void bim::axmol::app::game_features::assign_slot(std::size_t i)
 {
   assert(m_monitor->is_assign_slot_state());
 
-  if (purchase_slot(i))
-    {
-      bim::app::player_profile& profile = *m_context.get_player_profile();
+  bim::app::assign_feature_slots_job::slot_assignment assignment;
+  assignment[i] = m_selected_feature;
 
-      profile.slot_feature[i] = m_selected_feature;
-      m_slot[i]->feature(m_selected_feature);
-    }
+  m_assign_feature_slots_job->assign_slots(assignment);
 
   cancel_assign_slot();
 }
 
-bool bim::axmol::app::game_features::purchase_slot(std::size_t i)
+void bim::axmol::app::game_features::purchase_slot(std::size_t i)
 {
-  bim::app::player_profile& profile = *m_context.get_player_profile();
+  const bim::app::player_profile& profile = *m_context.get_player_profile();
 
-  if (profile.slot_availability[i])
-    return true;
+  assert(!profile.slot_availability[i]);
 
-  const std::int64_t coins = profile.coins;
   const std::int16_t price =
       m_context.get_config()->game_feature_slot_price[i];
 
-  if (price <= coins)
-    {
-      profile.coins -= price;
-      coins_transaction(*m_context.get_analytics(), "feature-slot", -price);
-      m_wallet->animate_cash_flow();
-      profile.slot_availability[i] = true;
-      m_slot[i]->available(true);
-      update_affordability();
-      return true;
-    }
-
-  m_message_popup->show(
-      ic_gettext("You need more coins to purchase this item!"));
-  return false;
+  if (price <= profile.coins)
+    m_buy_feature_slot_job->start(i);
+  else
+    display_shortage_message();
 }
 
 void bim::axmol::app::game_features::select_feature(bim::game::feature_flags f)
@@ -426,34 +466,31 @@ void bim::axmol::app::game_features::select_feature(bim::game::feature_flags f)
   button_clicked(*m_context.get_analytics(), "feature", "game-features");
 
   bim::app::player_profile& profile = *m_context.get_player_profile();
-  bool available = !!(profile.available_features & f);
 
-  if (!available)
+  if (!!(profile.available_features & f))
     {
-      const std::int64_t coins = profile.coins;
-      const std::int16_t price = m_context.get_config()->game_feature_price[f];
-
-      if (price <= coins)
-        {
-          profile.coins -= price;
-          coins_transaction(*m_context.get_analytics(), "feature-item",
-                            -price);
-          m_wallet->animate_cash_flow();
-          profile.available_features |= f;
-          m_catalog[f]->available(true);
-          update_affordability();
-          available = true;
-        }
-      else
-        {
-          if (m_monitor->is_assign_slot_state())
-            cancel_assign_slot();
-
-          m_message_popup->show(
-              ic_gettext("You need more coins to purchase this item!"));
-          return;
-        }
+      select_available_feature(f);
+      return;
     }
+
+  if (m_monitor->is_assign_slot_state())
+    cancel_assign_slot();
+
+  const std::int16_t price = m_context.get_config()->game_feature_price[f];
+
+  if (price <= profile.coins)
+    {
+      m_buy_feature_job->start(f);
+      return;
+    }
+
+  display_shortage_message();
+}
+
+void bim::axmol::app::game_features::select_available_feature(
+    bim::game::feature_flags f)
+{
+  assert(!!(m_context.get_player_profile()->available_features & f));
 
   if (m_monitor->is_assign_slot_state())
     deselect_item();
@@ -513,6 +550,32 @@ void bim::axmol::app::game_features::show_feature_message(
     }
 
   m_controls->feature_description_label->setString(message);
+}
+
+void bim::axmol::app::game_features::update_slot_content()
+{
+  const bim::app::player_profile& profile = *m_context.get_player_profile();
+
+  for (std::size_t i = 0; i != bim::app::g_game_feature_slot_count; ++i)
+    m_slot[i]->feature(profile.slot_feature[i]);
+}
+
+void bim::axmol::app::game_features::slot_purchase_success(std::size_t i)
+{
+  m_slot[i]->available(m_context.get_player_profile()->slot_availability[i]);
+
+  m_wallet->animate_cash_flow();
+  update_affordability();
+}
+
+void bim::axmol::app::game_features::feature_purchase_success(
+    bim::game::feature_flags f)
+{
+  m_catalog[f]->available(
+      !!(m_context.get_player_profile()->available_features & f));
+
+  m_wallet->animate_cash_flow();
+  update_affordability();
 }
 
 void bim::axmol::app::game_features::update_affordability()
@@ -618,6 +681,7 @@ void bim::axmol::app::game_features::select_random_features()
         ++feature_count;
       }
 
+  bim::app::assign_feature_slots_job::slot_assignment assignment;
   std::size_t needed = slot_count;
 
   for (std::size_t available = feature_count, i = 0, j = 0;
@@ -625,7 +689,7 @@ void bim::axmol::app::game_features::select_random_features()
     if (iscool::random::rand::get_default().random<std::size_t>(1, available)
         <= needed)
       {
-        profile.slot_feature[slots[i]] = features[j];
+        assignment[slots[i]] = features[j];
         m_slot[slots[i]]->feature(features[j]);
         ++i;
         --needed;
@@ -633,9 +697,20 @@ void bim::axmol::app::game_features::select_random_features()
 
   for (std::size_t i = slot_count - needed; i != slot_count; ++i)
     {
-      profile.slot_feature[slots[i]] = bim::game::feature_flags{};
-      m_slot[i]->feature(bim::game::feature_flags{});
+      assignment[slots[i]] = bim::game::feature_flags{};
+      m_slot[slots[i]]->feature(bim::game::feature_flags{});
     }
+
+  m_assign_feature_slots_job->assign_slots(assignment);
+}
+
+void bim::axmol::app::game_features::display_shortage_message()
+{
+  if (m_message_popup->is_shown())
+    return;
+
+  m_message_popup->show(
+      ic_gettext("You need more coins to purchase this item!"));
 }
 
 void bim::axmol::app::game_features::open_shop_from_shortage()
