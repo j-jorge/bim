@@ -3,6 +3,7 @@
 
 #include <iscool/json/parse_string.hpp>
 #include <iscool/json/write_to_string.hpp>
+#include <iscool/log/console_log.hpp>
 #include <iscool/log/log.hpp>
 #include <iscool/log/nature/error.hpp>
 #include <iscool/log/nature/info.hpp>
@@ -24,6 +25,19 @@ bool bim::business::detail::body_to_json(Json::Value& json_body,
          "Could not parse response: {}.", std::string_view(body));
 
   return false;
+}
+
+void bim::business::detail::log_request_body(std::string_view url,
+                                             std::string_view body)
+{
+  ic_console_log("business_interface", "Send '{}': {}.", url, body);
+}
+
+void bim::business::detail::log_request_response(std::string_view url,
+                                                 std::span<const char> body)
+{
+  ic_console_log("business_interface", "Request result for '{}': {}.", url,
+                 std::string_view(body));
 }
 
 void bim::business::detail::log_request_error(std::string_view url, int status,
