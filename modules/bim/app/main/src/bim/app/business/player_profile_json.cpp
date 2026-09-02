@@ -31,18 +31,14 @@ bool bim::app::from_json(player_profile& p, const Json::Value& json)
     {
       const Json::Value& feature_slot = feature_slots[i];
       const Json::Value& feature = feature_slot["feature"];
+      const std::size_t slot_index =
+          iscool::json::member_cast<std::uint64_t>(feature_slot, "slot_index");
+
+      if (slot_index >= p.slot_availability.size())
+        return false;
 
       if (!feature.isNull())
         {
-          const std::size_t slot_index =
-              iscool::json::member_cast<std::uint64_t>(feature_slot,
-                                                       "slot_index");
-
-          if ((slot_index < 0) || (slot_index >= p.slot_availability.size()))
-            return false;
-
-          p.slot_availability[slot_index] = true;
-
           const std::optional<bim::game::feature_flags> f =
               bim::game::from_simple_string(
                   iscool::json::cast<std::string>(feature));
@@ -52,6 +48,8 @@ bool bim::app::from_json(player_profile& p, const Json::Value& json)
 
           p.slot_feature[slot_index] = *f;
         }
+
+      p.slot_availability[slot_index] = true;
     }
 
   const Json::Value& available_features = json["available_features"];
