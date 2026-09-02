@@ -17,6 +17,9 @@ namespace bim::business
   namespace detail
   {
     bool body_to_json(Json::Value& json_body, std::span<const char> body);
+    void log_request_body(std::string_view url, std::string_view body);
+    void log_request_response(std::string_view url,
+                              std::span<const char> body);
     void log_request_error(std::string_view url, int status,
                            std::span<const char> body);
     void log_parse_error(std::string_view url, std::string_view error_message,
@@ -30,6 +33,8 @@ namespace bim::business
          std::string body, ResultHandler&& handle_result, ProcessError&& error)
     {
       assert(iscool::json::parse_string(body) != Json::nullValue);
+
+      log_request_body(url, body);
 
       auto handle_error = [error = std::forward<ProcessError>(error),
                            url](int status, std::span<const char> body)
@@ -54,6 +59,8 @@ namespace bim::business
                           &response_storage, url,
                           error](std::span<const char> body)
       {
+        detail::log_request_response(url, body);
+
         Json::Value json_body;
         bool valid = false;
 
@@ -110,6 +117,8 @@ namespace bim::business
     auto handle_result = [ok = std::forward<ProcessResult>(ok), url,
                           error](std::span<const char> body)
       {
+        detail::log_request_response(url, body);
+
         Json::Value json_body;
         bool valid = false;
         Response r;
