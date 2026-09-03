@@ -51,7 +51,7 @@ bim::net::contest_runner::contest_runner(bim::game::contest& contest,
         });
 
   update_exchange.connect_to_game_over(
-      [this](const contest_result& result) -> void
+      [this](const bim::game::contest_result& result) -> void
         {
           m_contest_result = result;
         });
@@ -67,7 +67,7 @@ std::uint32_t bim::net::contest_runner::confirmed_tick() const
   return m_confirmed_tick_count;
 }
 
-bim::net::contest_result
+bim::game::contest_result
 bim::net::contest_runner::run(std::chrono::nanoseconds elapsed_wall_time)
 {
   ZoneScopedC(0xa03636);
@@ -104,8 +104,7 @@ bim::net::contest_runner::run(std::chrono::nanoseconds elapsed_wall_time)
   m_update_exchange.send();
   m_completed_tick_count += tick_count;
 
-  return contest_result{ bim::game::contest_result::create_still_running(),
-                         0 };
+  return bim::game::contest_result::create_still_running();
 }
 
 void bim::net::contest_runner::queue_updates(const server_update& updates)

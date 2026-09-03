@@ -2,7 +2,6 @@
 #include <bim/server/service/named_game_encounter_service.hpp>
 
 #include <bim/server/service/bot_availability.hpp>
-#include <bim/server/service/game_reward_availability.hpp>
 #include <bim/server/service/game_service.hpp>
 
 #include <bim/net/message/accept_named_game.hpp>
@@ -21,7 +20,6 @@ bim::server::named_game_encounter_service::named_game_encounter_service(
     game_service& game_service)
   : m_game_service(game_service)
   , m_matchmaking_service(config, socket, game_service,
-                          game_reward_availability::unavailable,
                           bot_availability::unavailable)
 {}
 

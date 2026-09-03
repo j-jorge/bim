@@ -23,8 +23,7 @@ namespace bim::net
     game_over(
         std::uint8_t winner_index,
         const bim::game::per_player_array<bim::game::player_game_outcome>&
-            outcome,
-        std::uint16_t coins_reward);
+            outcome);
     game_over(const iscool::net::byte_array& raw_content);
 
     void build_message(iscool::net::message& message) const;
@@ -32,11 +31,9 @@ namespace bim::net
     std::uint8_t get_winner_index() const;
     const bim::game::per_player_array<bim::game::player_game_outcome>&
     get_outcome() const;
-    std::uint16_t get_coins_reward() const;
 
   private:
     std::uint8_t m_winner_index;
     bim::game::per_player_array<bim::game::player_game_outcome> m_outcome;
-    std::uint16_t m_coins_reward;
   };
 }

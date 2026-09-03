@@ -5,7 +5,6 @@
 #include <bim/server/config.hpp>
 #include <bim/server/service/bot_availability.hpp>
 #include <bim/server/service/game_info.hpp>
-#include <bim/server/service/game_reward_availability.hpp>
 #include <bim/server/service/game_service.hpp>
 #include <bim/server/service/session_service.hpp>
 #include <bim/server/service/statistics_service.hpp>
@@ -31,7 +30,6 @@ TEST(game_service, new_game)
 
   const bim::server::game_info game =
       service.new_game(4, features, { 11, 22, 33, 44 },
-                       bim::server::game_reward_availability::available,
                        bim::server::bot_availability::unavailable);
 
   // The server shuffles the sessions. We sort them back for the checks.

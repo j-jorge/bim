@@ -180,13 +180,15 @@ void bim::net::new_game_exchange::check_launch_game(
   if (message->get_request_token() != m_token)
     return;
 
-  ic_log(iscool::log::nature::info(), "new_game_exchange", "Launch game {}.",
-         *m_encounter_id);
+  ic_log(iscool::log::nature::info(), "new_game_exchange",
+         "Launch game encounter={}, game_id={}.", *m_encounter_id,
+         message->get_game_id());
 
   stop();
 
   m_launch_game(game_launch_event{
       .channel = message->get_game_channel(),
+      .game_id = message->get_game_id(),
       .fingerprint = { .seed = message->get_seed(),
                        .features = message->get_features(),
                        .player_count = message->get_player_count(),

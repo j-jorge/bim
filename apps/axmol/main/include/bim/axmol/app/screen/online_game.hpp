@@ -37,20 +37,15 @@ namespace bim::axmol::widget
 namespace bim::game
 {
   class contest;
+  class contest_result;
   struct animation_state;
   struct fractional_position_on_grid;
   struct invisibility_state;
   struct player;
 }
 
-namespace bim::app
-{
-  class player_progress_tracker;
-}
-
 namespace bim::net
 {
-  struct contest_result;
   class contest_runner;
   struct game_launch_event;
   class game_update_exchange;
@@ -97,17 +92,16 @@ namespace bim::axmol::app
 
   class online_game
   {
-    DECLARE_SIGNAL(void(const bim::net::contest_result&), game_over,
+    DECLARE_SIGNAL(void(const bim::game::contest_result&), game_over,
                    m_game_over)
 
     ic_declare_context(
         m_context,
-        ic_context_declare_parent_properties(                               //
-            ((const bim::axmol::widget::context*)(widget_context))          //
-            ((application_event_dispatcher*)(event_dispatcher))             //
-            ((bim::app::player_progress_tracker*)(player_progress_tracker)) //
-            ((bim::net::session_handler*)(session_handler))                 //
-            ((iscool::preferences::local_preferences*)(local_preferences))  //
+        ic_context_declare_parent_properties(                              //
+            ((const bim::axmol::widget::context*)(widget_context))         //
+            ((application_event_dispatcher*)(event_dispatcher))            //
+            ((bim::net::session_handler*)(session_handler))                //
+            ((iscool::preferences::local_preferences*)(local_preferences)) //
             ((iscool::system::haptic_feedback*)(haptic_feedback))),
         ic_context_no_properties);
 

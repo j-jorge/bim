@@ -97,39 +97,6 @@ namespace bim::server
     std::chrono::seconds game_service_max_duration_for_short_game;
 
     /**
-     * Coins reward for the winner of a game in random matchmaking.
-     */
-    std::uint16_t game_service_coins_per_victory;
-
-    /**
-     * Coins reward for the losers of a game in random matchmaking.
-     */
-    std::uint16_t game_service_coins_per_defeat;
-
-    /**
-     * Coins reward for all players of a draw game in random matchmaking.
-     */
-    std::uint16_t game_service_coins_per_draw;
-
-    /**
-     * Coins reward for the winner of a game in random matchmaking when the
-     * game was short.
-     */
-    std::uint16_t game_service_coins_per_short_game_victory;
-
-    /**
-     * Coins reward for the loser of a game in random matchmaking when the game
-     * was short..
-     */
-    std::uint16_t game_service_coins_per_short_game_defeat;
-
-    /**
-     * Coins reward for all players of a draw a game in random matchmaking when
-     * the game was short.
-     */
-    std::uint16_t game_service_coins_per_short_game_draw;
-
-    /**
      * Should we check the checksum of the game state against the checksum sent
      * by the clients.
      */
