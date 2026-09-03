@@ -6,7 +6,6 @@
 #include <bim/server/service/bot_availability.hpp>
 #include <bim/server/service/contest_timeline_service.hpp>
 #include <bim/server/service/game_info.hpp>
-#include <bim/server/service/game_reward_availability.hpp>
 #include <bim/server/service/session_service.hpp>
 #include <bim/server/service/statistics_service.hpp>
 
@@ -134,7 +133,6 @@ public:
   game(std::uint8_t player_count, std::uint64_t seed,
        bim::game::feature_flags features,
        const bim::game::per_player_array<iscool::net::session_id>& sessions,
-       game_reward_availability reward_availability,
        std::optional<std::uint8_t> bot_index)
     : seed(seed)
     , features(features)
@@ -143,7 +141,6 @@ public:
     , simulation_tick(0)
     , completed_tick_count_all(0)
     , contest_result(bim::game::contest_result::create_still_running())
-    , reward_availability(reward_availability)
     , contest({ .seed = seed,
                 .features = features,
                 .player_count = player_count,
@@ -403,9 +400,7 @@ public:
   std::uint32_t game_over_tick;
   bim::game::contest_result contest_result;
 
-  bim::game::per_player_array<std::uint16_t> reward_coins;
   std::int8_t winner_index;
-  game_reward_availability reward_availability;
 
   bim::game::contest contest;
 
@@ -437,14 +432,6 @@ bim::server::game_service::game_service(const config& config,
         config.game_service_disconnection_earliness_threshold_in_ticks)
   , m_disconnection_inactivity_delay(
         config.game_service_disconnection_inactivity_delay)
-  , m_coins_per_victory(config.game_service_coins_per_victory)
-  , m_coins_per_defeat(config.game_service_coins_per_defeat)
-  , m_coins_per_draw(config.game_service_coins_per_draw)
-  , m_coins_per_short_game_victory(
-        config.game_service_coins_per_short_game_victory)
-  , m_coins_per_short_game_defeat(
-        config.game_service_coins_per_short_game_defeat)
-  , m_coins_per_short_game_draw(config.game_service_coins_per_short_game_draw)
   , m_checksum_validation(config.game_service_enable_checksum_validation)
   , m_message_pool(64)
   , m_game_started_url(config.business_url.empty()
@@ -491,13 +478,14 @@ bim::server::game_service::find_game(iscool::net::channel_id channel) const
 
   return game_info{ .fingerprint = it->second.contest_fingerprint(),
                     .channel = channel,
+                    .business_id = it->second.business_id,
                     .sessions = it->second.sessions };
 }
 
 bim::server::game_info bim::server::game_service::new_game(
     std::uint8_t player_count, bim::game::feature_flags features,
     const bim::game::per_player_array<iscool::net::session_id>& sessions,
-    game_reward_availability reward_availability, bot_availability bot)
+    bot_availability bot)
 {
   const iscool::net::channel_id channel = m_next_game_channel;
   ++m_next_game_channel;
@@ -536,8 +524,7 @@ bim::server::game_info bim::server::game_service::new_game(
       m_games
           .emplace(std::piecewise_construct, std::forward_as_tuple(channel),
                    std::forward_as_tuple(player_count, m_random(), features,
-                                         final_sessions, reward_availability,
-                                         bot_index))
+                                         final_sessions, bot_index))
           .first->second;
 
   for (int i = 0; i != player_count; ++i)
@@ -1046,27 +1033,6 @@ void bim::server::game_service::record_game_over(
             });
     }
 
-  const auto fill_rewards =
-      [&game](std::uint16_t victory, std::uint16_t defeat)
-    {
-      for (int i = 0; i != game.player_count; ++i)
-        if (game.active[i])
-          game.reward_coins[i] = (i == game.winner_index) ? victory : defeat;
-        else
-          game.reward_coins[i] = 0;
-    };
-
-  if (game.reward_availability == game_reward_availability::unavailable)
-    game.reward_coins.fill(0);
-  else if (!has_a_winner)
-    game.reward_coins.fill(short_game ? m_coins_per_short_game_draw
-                                      : m_coins_per_draw);
-  else if (short_game)
-    fill_rewards(m_coins_per_short_game_victory,
-                 m_coins_per_short_game_defeat);
-  else
-    fill_rewards(m_coins_per_victory, m_coins_per_defeat);
-
   if (short_game)
     {
       // In doubt, we do not update the karma of the winner.
@@ -1086,9 +1052,8 @@ void bim::server::game_service::send_game_over(
 {
   assert(!game.contest_result.still_running());
 
-  const bim::net::game_over message(
-      game.winner_index, game.contest_result.outcome(),
-      game.reward_coins[game.session_index(session)]);
+  const bim::net::game_over message(game.winner_index,
+                                    game.contest_result.outcome());
   const iscool::net::message_pool::slot s = m_message_pool.pick_available();
   message.build_message(*s.value);
 

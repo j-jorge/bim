@@ -20,7 +20,6 @@
 #include <bim/app/analytics/error.hpp>
 #include <bim/app/analytics_service.hpp>
 #include <bim/app/business/player_profile.hpp>
-#include <bim/app/player_progress_tracker.hpp>
 #include <bim/app/shop_support.hpp>
 
 #include <bim/net/exchange/game_launch_event.hpp>
@@ -61,8 +60,6 @@ bim::axmol::app::screen_wheel::screen_wheel(
   , m_main_container(ax::Node::create())
   , m_controls(*context.get_widget_context(),
                *style.get_declaration("widgets"))
-  , m_player_progress_tracker(
-        new bim::app::player_progress_tracker(*context.get_analytics()))
   , m_lobby(new lobby(context, *style.get_declaration("lobby")))
   , m_matchmaking(
         new matchmaking(context, *style.get_declaration("matchmaking")))
@@ -79,8 +76,6 @@ bim::axmol::app::screen_wheel::screen_wheel(
   , m_leave_shop(nullptr)
 {
   m_main_container->setName("screen-wheel");
-
-  m_context.set_player_progress_tracker(m_player_progress_tracker.get());
 
   m_online_game.reset(
       new online_game(m_context, *style.get_declaration("online-game")));
@@ -202,7 +197,7 @@ void bim::axmol::app::screen_wheel::wire_permanent_connections()
         });
 
   m_online_game->connect_to_game_over(
-      [this](const bim::net::contest_result& result)
+      [this](const bim::game::contest_result& result)
         {
           animate_game_to_end_game(result);
         });
@@ -375,7 +370,7 @@ void bim::axmol::app::screen_wheel::animate_matchmaking_to_lobby()
 }
 
 void bim::axmol::app::screen_wheel::animate_game_to_end_game(
-    const bim::net::contest_result& result)
+    const bim::game::contest_result& result)
 {
   m_inputs.erase(m_online_game->input_node());
   m_online_game->closing();
@@ -505,7 +500,7 @@ void bim::axmol::app::screen_wheel::online_game_displayed()
 }
 
 void bim::axmol::app::screen_wheel::display_end_game(
-    const bim::net::contest_result& result)
+    const bim::game::contest_result& result)
 {
   m_context.get_analytics()->screen(
       "end-game",

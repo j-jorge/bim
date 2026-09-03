@@ -133,10 +133,7 @@ void bim::server::tests::test_client::accept_game()
 void bim::server::tests::test_client::tick(std::chrono::nanoseconds d)
 {
   ASSERT_NE(nullptr, contest_runner);
-  const bim::net::contest_result r = contest_runner->run(d);
-
-  result = r.game_result;
-  coins_reward = r.coins_reward;
+  result = contest_runner->run(d);
 }
 
 bool bim::server::tests::test_client::is_in_game() const

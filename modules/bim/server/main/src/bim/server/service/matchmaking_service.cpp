@@ -84,11 +84,9 @@ struct bim::server::matchmaking_service::encounter_info
 
 bim::server::matchmaking_service::matchmaking_service(
     const config& config, iscool::net::socket_stream& socket,
-    game_service& game_service, game_reward_availability reward_availability,
-    bot_availability bot)
+    game_service& game_service, bot_availability bot)
   : m_message_stream(socket)
   , m_game_service(game_service)
-  , m_reward_availability(reward_availability)
   , m_next_encounter_id(1)
   , m_enable_bots(config.enable_bots && (bot == bot_availability::available))
   , m_delay_for_bot(config.matchmaking_delay_for_bot)
@@ -264,7 +262,7 @@ void bim::server::matchmaking_service::mark_as_ready(
     {
       game = m_game_service.new_game(
           encounter.player_count, encounter.combine_features(),
-          encounter.sessions, m_reward_availability,
+          encounter.sessions,
           enable_bot ? bot_availability::available
                      : bot_availability::unavailable);
       encounter.channel = game->channel;
@@ -287,9 +285,9 @@ void bim::server::matchmaking_service::mark_as_ready(
 
   const iscool::net::message_pool::slot s = m_message_pool.pick_available();
 
-  bim::net::launch_game(request_token, fingerprint.seed, game->channel,
-                        fingerprint.features, fingerprint.player_count,
-                        game->session_index(session),
+  bim::net::launch_game(request_token, game->channel, game->business_id,
+                        fingerprint.seed, fingerprint.features,
+                        fingerprint.player_count, game->session_index(session),
                         fingerprint.crate_probability, fingerprint.arena_width,
                         fingerprint.arena_height)
       .build_message(*s.value);

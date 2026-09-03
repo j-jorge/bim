@@ -20,7 +20,6 @@
 #include <bim/axmol/widget/ui/soft_stick.hpp>
 #include <bim/axmol/widget/ui/tiling.hpp>
 
-#include <bim/app/player_progress_tracker.hpp>
 #include <bim/app/preference/controls.hpp>
 
 #include <bim/net/contest_runner.hpp>
@@ -635,7 +634,7 @@ void bim::axmol::app::online_game::tick()
           std::max(2 * runner_step / 3, std::min(adjusted_step, runner_step));
     }
 
-  const bim::net::contest_result result = m_contest_runner->run(final_step);
+  const bim::game::contest_result result = m_contest_runner->run(final_step);
 
   m_last_tick_date = now;
 
@@ -645,13 +644,11 @@ void bim::axmol::app::online_game::tick()
   TracyPlot("Entities",
             (std::int64_t)m_contest->registry().view<entt::entity>().size());
 
-  if (result.game_result.still_running())
+  if (result.still_running())
     schedule_tick();
   else
     {
       stop();
-      m_context.get_player_progress_tracker()->game_over_in_public_arena(
-          result, m_local_player_index);
       m_game_over(result);
     }
 }

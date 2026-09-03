@@ -9,11 +9,9 @@
 
 bim::net::game_over::game_over(
     std::uint8_t winner_index,
-    const bim::game::per_player_array<bim::game::player_game_outcome>& outcome,
-    std::uint16_t coins_reward)
+    const bim::game::per_player_array<bim::game::player_game_outcome>& outcome)
   : m_winner_index(winner_index)
   , m_outcome(outcome)
-  , m_coins_reward(coins_reward)
 {
   assert(winner_index <= bim::game::g_max_player_count);
 }
@@ -21,13 +19,13 @@ bim::net::game_over::game_over(
 bim::net::game_over::game_over(const iscool::net::byte_array& raw_content)
 {
   iscool::net::byte_array_reader reader(raw_content);
-  reader >> m_winner_index >> m_outcome >> m_coins_reward;
+  reader >> m_winner_index >> m_outcome;
 }
 
 void bim::net::game_over::build_message(iscool::net::message& message) const
 {
   message.reset(get_type());
-  message.get_content() << m_winner_index << m_outcome << m_coins_reward;
+  message.get_content() << m_winner_index << m_outcome;
 
   if (m_winner_index > bim::game::g_max_player_count)
     throw std::runtime_error("");
@@ -55,9 +53,4 @@ const bim::game::per_player_array<bim::game::player_game_outcome>&
 bim::net::game_over::get_outcome() const
 {
   return m_outcome;
-}
-
-std::uint16_t bim::net::game_over::get_coins_reward() const
-{
-  return m_coins_reward;
 }

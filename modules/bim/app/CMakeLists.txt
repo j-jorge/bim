@@ -4,12 +4,12 @@ set(main_sources
   main/src/bim/app/config.cpp
   main/src/bim/app/device_id.cpp
   main/src/bim/app/matchmaking_wait_message.cpp
-  main/src/bim/app/player_progress_tracker.cpp
 
   main/src/bim/app/analytics/button_clicked.cpp
   main/src/bim/app/analytics/coins_transaction.cpp
   main/src/bim/app/analytics/error.cpp
 
+  main/src/bim/app/business/consume_reward.cpp
   main/src/bim/app/business/legacy_state.cpp
   main/src/bim/app/business/player_profile.cpp
   main/src/bim/app/business/player_profile_json.cpp
@@ -18,6 +18,7 @@ set(main_sources
   main/src/bim/app/job/authenticate_with_business_job.cpp
   main/src/bim/app/job/buy_feature_job.cpp
   main/src/bim/app/job/buy_feature_slot_job.cpp
+  main/src/bim/app/job/consume_game_reward_job.cpp
   main/src/bim/app/job/fetch_config_job.cpp
   main/src/bim/app/job/fetch_player_profile_job.cpp
   main/src/bim/app/job/push_legacy_state_job.cpp
@@ -77,6 +78,7 @@ add_executable(app-tests
   tests/src/bim/app/job/assign_feature_slots_job.cpp
   tests/src/bim/app/job/buy_feature_job.cpp
   tests/src/bim/app/job/buy_feature_slot_job.cpp
+  tests/src/bim/app/job/consume_game_reward_job.cpp
 
   tests/src/bim/app/tests/http_service.cpp
   tests/src/bim/app/tests/scheduler.cpp

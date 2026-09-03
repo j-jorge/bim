@@ -2,12 +2,6 @@
   "enable-contest-timeline-recording": true,
   "contest-timeline-folder": "/opt/bim/persistent/contest/",
 
-  "game-service-coins-per-victory": 50,
-  "game-service-coins-per-defeat": 10,
-  "game-service-coins-per-draw": 10,
-  "game-service-coins-per-short-game-victory": 0,
-  "game-service-coins-per-short-game-defeat": 0,
-  "game-service-coins-per-short-game-draw": 0,
   "game-service-max-duration-for-short-game": 30,
 
   "enable-geolocation": true,

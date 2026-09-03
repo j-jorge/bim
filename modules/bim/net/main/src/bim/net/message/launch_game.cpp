@@ -12,14 +12,15 @@ iscool::net::message_type bim::net::launch_game::get_type()
 }
 
 bim::net::launch_game::launch_game(
-    client_token request_token, std::uint64_t seed,
-    iscool::net::channel_id game_channel, bim::game::feature_flags features,
+    client_token request_token, iscool::net::channel_id game_channel,
+    game_id gid, std::uint64_t seed, bim::game::feature_flags features,
     std::uint8_t player_count, std::uint8_t player_index,
     std::uint8_t crate_probability, std::uint8_t arena_width,
     std::uint8_t arena_height)
   : m_request_token(request_token)
-  , m_seed(seed)
   , m_game_channel(game_channel)
+  , m_game_id(gid)
+  , m_seed(seed)
   , m_features(features)
   , m_player_count(player_count)
   , m_player_index(player_index)
@@ -27,6 +28,7 @@ bim::net::launch_game::launch_game(
   , m_arena_width(arena_width)
   , m_arena_height(arena_height)
 {
+  assert(gid >= 0);
   assert(player_count >= 1);
   assert(player_count <= 4);
   assert(player_index <= 3);
@@ -34,8 +36,11 @@ bim::net::launch_game::launch_game(
 
 bim::net::launch_game::launch_game(const iscool::net::byte_array& raw_content)
 {
+  std::uint64_t gid;
   iscool::net::byte_array_reader reader(raw_content);
-  reader >> m_request_token >> m_seed >> m_game_channel >> m_features;
+  reader >> m_request_token >> m_game_channel >> gid >> m_seed >> m_features;
+
+  m_game_id = (game_id)gid;
 
   iscool::net::byte_array_bit_reader bits(reader);
 
@@ -50,7 +55,8 @@ void bim::net::launch_game::build_message(iscool::net::message& message) const
   message.reset(get_type());
   iscool::net::byte_array& content = message.get_content();
 
-  content << m_request_token << m_seed << m_game_channel << m_features;
+  content << m_request_token << m_game_channel << (std::uint64_t)m_game_id
+          << m_seed << m_features;
 
   iscool::net::byte_array_bit_inserter bits(content);
 
@@ -72,14 +78,19 @@ bim::net::client_token bim::net::launch_game::get_request_token() const
   return m_request_token;
 }
 
-std::uint64_t bim::net::launch_game::get_seed() const
-{
-  return m_seed;
-}
-
 iscool::net::channel_id bim::net::launch_game::get_game_channel() const
 {
   return m_game_channel;
+}
+
+bim::net::game_id bim::net::launch_game::get_game_id() const
+{
+  return m_game_id;
+}
+
+std::uint64_t bim::net::launch_game::get_seed() const
+{
+  return m_seed;
 }
 
 bim::game::feature_flags bim::net::launch_game::get_features() const

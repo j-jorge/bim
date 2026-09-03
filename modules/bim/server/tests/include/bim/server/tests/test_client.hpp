@@ -72,7 +72,6 @@ namespace bim::server::tests
     std::unique_ptr<bim::net::contest_runner> contest_runner;
     std::unique_ptr<bim::game::contest> contest;
     bim::game::contest_result result;
-    int coins_reward;
     int player_index;
     bim::net::user_id user_id;
 
