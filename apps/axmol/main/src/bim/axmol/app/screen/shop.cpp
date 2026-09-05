@@ -20,6 +20,7 @@
 #include <bim/app/analytics/error.hpp>
 #include <bim/app/analytics_service.hpp>
 #include <bim/app/business/player_profile.hpp>
+#include <bim/app/business/purchase_validation_status.hpp>
 #include <bim/app/config.hpp>
 #include <bim/app/shop_service.hpp>
 #include <bim/app/shop_support.hpp>
@@ -58,7 +59,9 @@ bim::axmol::app::shop::shop(const context& context,
   , m_controls(*context.get_widget_context(),
                *style.get_declaration("widgets"))
   , m_wallet(new wallet(context, *style.get_declaration("wallet")))
-  , m_shop(new bim::app::shop_service())
+  , m_shop(new bim::app::shop_service(*m_context.get_analytics(),
+                                      *m_context.get_request_headers(),
+                                      *m_context.get_player_profile()))
   , m_style_loading(*style.get_declaration("display.loading"))
   , m_style_ready(*style.get_declaration("display.ready"))
   , m_amount_label{ m_controls->coins_1_label, m_controls->coins_2_label,
@@ -129,16 +132,10 @@ bim::axmol::app::shop::shop(const context& context,
         {
           products_ready(products);
         });
-  m_products_error_connection = m_shop->connect_to_products_error(
-      [this]()
-        {
-          products_error();
-        });
   m_purchase_connection = m_shop->connect_to_purchase_completed(
-      [this](std::string_view product, std::size_t quantity,
-             std::string_view token)
+      [this](bim::app::purchase_validation_status status)
         {
-          purchase_completed(product, quantity, token);
+          purchase_completed(status);
         });
   m_purchase_error_connection = m_shop->connect_to_purchase_error(
       [this]()
@@ -178,7 +175,8 @@ void bim::axmol::app::shop::displaying()
 
 void bim::axmol::app::shop::displayed()
 {
-  m_shop->refresh_purchases();
+  if (!m_index_in_products.empty())
+    m_shop->refresh_purchases();
 }
 
 void bim::axmol::app::shop::dispatch_back()
@@ -193,11 +191,8 @@ void bim::axmol::app::shop::fetch_products()
       m_style_loading);
 
   const bim::app::config& config = *m_context.get_config();
-  std::vector<std::string_view> product_ids;
-  product_ids.reserve(config.shop_products.size());
-
-  for (const std::string& product_id : config.shop_products)
-    product_ids.push_back(product_id);
+  const std::vector<std::string_view> product_ids(config.shop_products.begin(),
+                                                  config.shop_products.end());
 
   m_shop->fetch_products(product_ids);
 }
@@ -233,14 +228,6 @@ void bim::axmol::app::shop::products_ready(
   m_context.get_event_dispatcher()->dispatch("products-ready");
 }
 
-void bim::axmol::app::shop::products_error()
-{
-  bim::app::error(*m_context.get_analytics(), "products-detail");
-
-  ic_log(iscool::log::nature::error(), "shop",
-         "Could not fetch the products detail.");
-}
-
 void bim::axmol::app::shop::start_purchase(std::size_t product_index)
 {
   if (product_index >= m_index_in_products.size())
@@ -250,52 +237,30 @@ void bim::axmol::app::shop::start_purchase(std::size_t product_index)
       m_context.get_config()
           ->shop_products[m_index_in_products[product_index]];
 
-  m_context.get_analytics()->event("purchase", { { "product", product_id } });
-
   m_shop->purchase(product_id);
 }
 
-void bim::axmol::app::shop::purchase_completed(std::string_view product,
-                                               std::size_t quantity,
-                                               std::string_view token)
+void bim::axmol::app::shop::purchase_completed(
+    bim::app::purchase_validation_status status)
 {
-  const bim::app::config& config = *m_context.get_config();
-
-  for (const std::size_t i : m_index_in_products)
-    if (config.shop_products[i] == product)
-      {
-        m_context.get_analytics()->event(
-            "purchase-completed",
-            { { "product", product },
-              { "quantity", std::to_string(quantity) } });
-
-        const std::int32_t amount = quantity * config.shop_product_coins[i];
-        m_context.get_player_profile()->coins += amount;
-        bim::app::coins_transaction(*m_context.get_analytics(),
-                                    "purchase-completed", amount);
-        m_wallet->animate_cash_flow();
-        m_shop->consume(token);
-        m_context.get_event_dispatcher()->dispatch("purchase-completed");
-        return;
-      }
-
-  m_context.get_analytics()->event(
-      "purchase-completed-error",
-      { { "product", product }, { "quantity", std::to_string(quantity) } });
-
-  ic_log(iscool::log::nature::warning(), "shop",
-         "Purchase completed on unknown product '{}'.", product);
-
-  m_context.get_event_dispatcher()->dispatch("purchase-completed");
+  switch (status)
+    {
+    case bim::app::purchase_validation_status::ok:
+      m_wallet->animate_cash_flow();
+      m_context.get_event_dispatcher()->dispatch("purchase-completed");
+      break;
+    case bim::app::purchase_validation_status::duplicate:
+      m_message_popup->show(ic_gettext("You already own this item."));
+      break;
+    case bim::app::purchase_validation_status::invalid:
+      m_message_popup->show(
+          ic_gettext("This purchase could not be validated."));
+      break;
+    }
 }
 
 void bim::axmol::app::shop::purchase_error()
 {
-  bim::app::error(*m_context.get_analytics(), "purchase");
-
-  ic_log(iscool::log::nature::error(), "shop",
-         "Could not perform the purchase.");
-
   m_message_popup->show(
       ic_gettext("An error occurred. The purchase could not be completed."));
 }

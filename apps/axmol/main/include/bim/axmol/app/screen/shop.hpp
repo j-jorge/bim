@@ -5,6 +5,8 @@
 #include <bim/axmol/input/tree.hpp>
 #include <bim/axmol/widget/declare_controls_struct.hpp>
 
+#include <bim/app/business/purchase_validation_status_fwd.hpp>
+
 #include <iscool/context.hpp>
 #include <iscool/signals/declare_signal.hpp>
 #include <iscool/signals/scoped_connection.hpp>
@@ -24,7 +26,13 @@ namespace bim::app
   class analytics_service;
   class player_profile;
   class shop_service;
+  class validate_purchase_job;
   struct config;
+}
+
+namespace bim::business
+{
+  class request_headers;
 }
 
 namespace iscool::preferences
@@ -56,6 +64,7 @@ namespace bim::axmol::app
     ic_declare_context(
         m_context,
         ic_context_declare_parent_properties(                              //
+            ((const bim::business::request_headers*)(request_headers))     //
             ((const bim::axmol::widget::context*)(widget_context))         //
             ((main_scene*)(main_scene))                                    //
             ((bim::app::analytics_service*)(analytics))                    //
@@ -83,11 +92,9 @@ namespace bim::axmol::app
     void fetch_products();
     void products_ready(
         const std::unordered_map<std::string, std::string>& products);
-    void products_error();
 
     void start_purchase(std::size_t product_index);
-    void purchase_completed(std::string_view product, std::size_t quantity,
-                            std::string_view token);
+    void purchase_completed(bim::app::purchase_validation_status status);
     void purchase_error();
 
   private:
@@ -101,7 +108,6 @@ namespace bim::axmol::app
 
     const std::unique_ptr<bim::app::shop_service> m_shop;
     iscool::signals::scoped_connection m_products_connection;
-    iscool::signals::scoped_connection m_products_error_connection;
     iscool::signals::scoped_connection m_purchase_connection;
     iscool::signals::scoped_connection m_purchase_error_connection;
 

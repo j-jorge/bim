@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-#include <bim/app/shop_service.hpp>
+#include <bim/app/shop_implementation.hpp>
 
 #include <iscool/jni/array_list.hpp>
 #include <iscool/jni/cast_hash_map.hpp>
@@ -11,13 +11,16 @@
 #include <iscool/jni/to_string.hpp>
 #include <iscool/signals/implement_signal.hpp>
 
-IMPLEMENT_SIGNAL(bim::app::shop_service, products_ready, m_products_ready)
-IMPLEMENT_SIGNAL(bim::app::shop_service, products_error, m_products_error)
-IMPLEMENT_SIGNAL(bim::app::shop_service, purchase_completed,
+IMPLEMENT_SIGNAL(bim::app::shop_implementation, products_ready,
+                 m_products_ready)
+IMPLEMENT_SIGNAL(bim::app::shop_implementation, products_error,
+                 m_products_error)
+IMPLEMENT_SIGNAL(bim::app::shop_implementation, purchase_completed,
                  m_purchase_completed)
-IMPLEMENT_SIGNAL(bim::app::shop_service, purchase_error, m_purchase_error)
+IMPLEMENT_SIGNAL(bim::app::shop_implementation, purchase_error,
+                 m_purchase_error)
 
-bim::app::shop_service::shop_service()
+bim::app::shop_implementation::shop_implementation()
   : m_products_ready_from_java(
         std::function<void(
             const iscool::jni::hash_map<jstring, jstring>& products)>(
@@ -54,7 +57,7 @@ bim::app::shop_service::shop_service()
                 m_purchase_error_from_java.get_id());
 }
 
-bim::app::shop_service::~shop_service()
+bim::app::shop_implementation::~shop_implementation()
 {
   const iscool::jni::static_method<void> set_callbacks(
       iscool::jni::get_static_method<void>("bim/app/ShopService",
@@ -62,7 +65,8 @@ bim::app::shop_service::~shop_service()
   set_callbacks(0, 0, 0, 0);
 }
 
-void bim::app::shop_service::fetch_products(std::span<std::string_view> ids)
+void bim::app::shop_implementation::fetch_products(
+    std::span<const std::string_view> ids)
 {
   iscool::jni::array_list<jstring> product_ids;
 
@@ -76,7 +80,7 @@ void bim::app::shop_service::fetch_products(std::span<std::string_view> ids)
   fetch_products(product_ids);
 }
 
-void bim::app::shop_service::refresh_purchases()
+void bim::app::shop_implementation::refresh_purchases()
 {
   const iscool::jni::static_method<void> refresh_purchases(
       iscool::jni::get_static_method<void>("bim/app/ShopService",
@@ -85,7 +89,7 @@ void bim::app::shop_service::refresh_purchases()
   refresh_purchases();
 }
 
-void bim::app::shop_service::purchase(std::string_view id)
+void bim::app::shop_implementation::purchase(std::string_view id)
 {
   const iscool::jni::static_method<void> purchase(
       iscool::jni::get_static_method<void>("bim/app/ShopService", "purchase",
@@ -94,16 +98,7 @@ void bim::app::shop_service::purchase(std::string_view id)
   purchase(iscool::jni::new_java_string(std::string(id)));
 }
 
-void bim::app::shop_service::consume(std::string_view token)
-{
-  const iscool::jni::static_method<void> purchase(
-      iscool::jni::get_static_method<void>(
-          "bim/app/ShopService", "consumePurchase", "(Ljava/lang/String;)V"));
-
-  purchase(iscool::jni::new_java_string(std::string(token)));
-}
-
-void bim::app::shop_service::dispatch_products_ready(
+void bim::app::shop_implementation::dispatch_products_ready(
     const iscool::jni::hash_map<jstring, jstring>& products) const
 {
   std::unordered_map<std::string, std::string> p;

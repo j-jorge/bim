@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #pragma once
 
-#include <iscool/schedule/scoped_connection.hpp>
+#include <iscool/jni/hash_map.hpp>
+#include <iscool/jni/scoped_native_callback.hpp>
 #include <iscool/signals/declare_signal.hpp>
 
 #include <span>
@@ -11,8 +12,7 @@
 
 namespace bim::app
 {
-  /// Shop service that returns mockup responses.
-  class shop_service
+  class shop_implementation
   {
     DECLARE_SIGNAL(void(const std::unordered_map<std::string, std::string>&),
                    products_ready, m_products_ready)
@@ -22,27 +22,21 @@ namespace bim::app
     DECLARE_VOID_SIGNAL(purchase_error, m_purchase_error)
 
   public:
-    shop_service();
-    ~shop_service();
+    shop_implementation();
+    ~shop_implementation();
 
-    void fetch_products(std::span<std::string_view> ids);
+    void fetch_products(std::span<const std::string_view> ids);
     void refresh_purchases();
     void purchase(std::string_view id);
-    void consume(std::string_view token);
 
   private:
-    /**
-     * These flags are toggled on each request such that the response is
-     * sometimes positive, sometimes negative.
-     */
-    bool m_fetch_ok;
-    bool m_refresh_ok;
-    bool m_purchase_ok;
+    void dispatch_products_ready(
+        const iscool::jni::hash_map<jstring, jstring>& products) const;
 
-    iscool::schedule::scoped_connection m_fetch_response;
-    iscool::schedule::scoped_connection m_refresh_response;
-    iscool::schedule::scoped_connection m_purchase_response;
-
-    std::vector<std::string> m_product_ids;
+  private:
+    iscool::jni::scoped_native_callback m_products_ready_from_java;
+    iscool::jni::scoped_native_callback m_products_error_from_java;
+    iscool::jni::scoped_native_callback m_purchase_completed_from_java;
+    iscool::jni::scoped_native_callback m_purchase_error_from_java;
   };
 }

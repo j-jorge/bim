@@ -69,16 +69,4 @@ class ShopService
         Log.e("Bim", "Error in purchase(" + id + ")", e);
       }
   }
-
-  static public void consumePurchase(String token)
-  {
-    try
-      {
-        m_impl.consumePurchase(token);
-      }
-    catch (Throwable e)
-      {
-        Log.e("Bim", "Error in consumePurchase(" + token + ")", e);
-      }
-  }
 }
