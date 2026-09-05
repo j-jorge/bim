@@ -40,7 +40,4 @@ class PlayServicesShop implements IShop
     if (m_purchase_error != 0)
       NativeCall.call(m_purchase_error);
   }
-
-  public void consumePurchase(String token)
-  {}
 }

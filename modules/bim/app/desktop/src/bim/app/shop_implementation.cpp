@@ -1,26 +1,30 @@
 // SPDX-License-Identifier: AGPL-3.0-only
-#include <bim/app/shop_service.hpp>
+#include <bim/app/shop_implementation.hpp>
 
 #include <iscool/log/log.hpp>
 #include <iscool/log/nature/info.hpp>
 #include <iscool/schedule/delayed_call.hpp>
 #include <iscool/signals/implement_signal.hpp>
 
-IMPLEMENT_SIGNAL(bim::app::shop_service, products_ready, m_products_ready)
-IMPLEMENT_SIGNAL(bim::app::shop_service, products_error, m_products_error)
-IMPLEMENT_SIGNAL(bim::app::shop_service, purchase_completed,
+IMPLEMENT_SIGNAL(bim::app::shop_implementation, products_ready,
+                 m_products_ready)
+IMPLEMENT_SIGNAL(bim::app::shop_implementation, products_error,
+                 m_products_error)
+IMPLEMENT_SIGNAL(bim::app::shop_implementation, purchase_completed,
                  m_purchase_completed)
-IMPLEMENT_SIGNAL(bim::app::shop_service, purchase_error, m_purchase_error)
+IMPLEMENT_SIGNAL(bim::app::shop_implementation, purchase_error,
+                 m_purchase_error)
 
-bim::app::shop_service::shop_service()
+bim::app::shop_implementation::shop_implementation()
   : m_fetch_ok(true)
   , m_refresh_ok(true)
   , m_purchase_ok(true)
 {}
 
-bim::app::shop_service::~shop_service() = default;
+bim::app::shop_implementation::~shop_implementation() = default;
 
-void bim::app::shop_service::fetch_products(std::span<std::string_view> ids)
+void bim::app::shop_implementation::fetch_products(
+    std::span<const std::string_view> ids)
 {
   m_fetch_ok = !m_fetch_ok;
 
@@ -56,7 +60,7 @@ void bim::app::shop_service::fetch_products(std::span<std::string_view> ids)
         std::chrono::seconds(1));
 }
 
-void bim::app::shop_service::refresh_purchases()
+void bim::app::shop_implementation::refresh_purchases()
 {
   m_refresh_ok = !m_refresh_ok;
 
@@ -69,7 +73,7 @@ void bim::app::shop_service::refresh_purchases()
         std::chrono::seconds(1));
 }
 
-void bim::app::shop_service::purchase(std::string_view id)
+void bim::app::shop_implementation::purchase(std::string_view id)
 {
   m_purchase_ok = !m_purchase_ok;
 
@@ -87,10 +91,4 @@ void bim::app::shop_service::purchase(std::string_view id)
             m_purchase_error();
           },
         std::chrono::seconds(1));
-}
-
-void bim::app::shop_service::consume(std::string_view token)
-{
-  ic_log(iscool::log::nature::info(), "shop_service",
-         "Consume purchase with token='{}'.", token);
 }
