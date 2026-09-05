@@ -3,13 +3,10 @@ package bim.app;
 
 import android.app.Activity;
 import bim.app.IShop;
-import com.android.billingclient.api.AcknowledgePurchaseParams;
 import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.BillingClientStateListener;
 import com.android.billingclient.api.BillingFlowParams;
 import com.android.billingclient.api.BillingResult;
-import com.android.billingclient.api.ConsumeParams;
-import com.android.billingclient.api.ConsumeResponseListener;
 import com.android.billingclient.api.PendingPurchasesParams;
 import com.android.billingclient.api.ProductDetails;
 import com.android.billingclient.api.ProductDetailsResponseListener;
@@ -68,19 +65,6 @@ class PlayServicesShop implements IShop
                                              List<Purchase> purchases)
         {
           processPurchases(result, purchases);
-        }
-      };
-
-  private final ConsumeResponseListener m_consume_response_listener =
-      new ConsumeResponseListener() {
-        @Override
-        public void onConsumeResponse(BillingResult result,
-                                      String purchaseToken)
-        {
-          if (result.getResponseCode() != BillingClient.BillingResponseCode.OK)
-            Log.e("Bim",
-                  "Consume error, response_code=" + result.getResponseCode()
-                      + ": " + result.getDebugMessage());
         }
       };
 
@@ -190,14 +174,6 @@ class PlayServicesShop implements IShop
       }
   }
 
-  public void consumePurchase(String token)
-  {
-    final ConsumeParams params =
-        ConsumeParams.newBuilder().setPurchaseToken(token).build();
-
-    m_client.consumeAsync(params, m_consume_response_listener);
-  }
-
   private void connectClient()
   {
     m_client.startConnection(m_client_state_listener);
@@ -241,26 +217,9 @@ class PlayServicesShop implements IShop
       }
 
     for (Purchase purchase : purchases)
-      {
-        if (purchase.getPurchaseState() != Purchase.PurchaseState.PURCHASED)
-          continue;
-
-        if (purchase.isAcknowledged())
-          {
-            notifyPurchase(purchase);
-            continue;
-          }
-
-        final AcknowledgePurchaseParams params =
-            AcknowledgePurchaseParams.newBuilder()
-                .setPurchaseToken(purchase.getPurchaseToken())
-                .build();
-
-        m_client.acknowledgePurchase(params, r -> {
-          if (r.getResponseCode() == BillingClient.BillingResponseCode.OK)
-            notifyPurchase(purchase);
-        });
-      }
+      if ((purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED)
+          && !purchase.isAcknowledged())
+        notifyPurchase(purchase);
   }
 
   private void notifyPurchase(Purchase purchase)

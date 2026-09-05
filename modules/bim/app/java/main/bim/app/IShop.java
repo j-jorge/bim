@@ -13,5 +13,4 @@ interface IShop
   void fetchProducts(List<String> ids);
   void refreshPurchases();
   void purchase(String id);
-  void consumePurchase(String token);
 }

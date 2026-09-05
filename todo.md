@@ -3,7 +3,6 @@
 ## Client
 - Allow to edit the player's name.
 - Display the opponents' names on the matchmaking screen.
-- Forward the purchases to the business for validation and credit.
 
 # Nice to have
 
