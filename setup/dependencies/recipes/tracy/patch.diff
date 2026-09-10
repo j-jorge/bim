@@ -1,0 +1,12 @@
+diff --git a/server/tracy_robin_hood.h b/server/tracy_robin_hood.h
+index 65f6fc1..9e78d0c 100644
+--- a/server/tracy_robin_hood.h
++++ b/server/tracy_robin_hood.h
+@@ -39,6 +39,7 @@
+ #define ROBIN_HOOD_VERSION_PATCH 5  // for backwards-compatible bug fixes
+ 
+ #include <algorithm>
++#include <cstdint>
+ #include <cstdlib>
+ #include <cstring>
+ #include <functional>
