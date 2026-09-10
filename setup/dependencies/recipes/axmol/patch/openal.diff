@@ -1,0 +1,13 @@
+diff --git a/3rdparty/openal/core/uhjfilter.h b/3rdparty/openal/core/uhjfilter.h
+index df30809..4dd6d42 100644
+--- a/3rdparty/openal/core/uhjfilter.h
++++ b/3rdparty/openal/core/uhjfilter.h
+@@ -2,7 +2,8 @@
+ #define CORE_UHJFILTER_H
+ 
+ #include <array>
++#include <cstdint>
+ 
+ #include "almalloc.h"
+ #include "alspan.h"
+ #include "bufferline.h"

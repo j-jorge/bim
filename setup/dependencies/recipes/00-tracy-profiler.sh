@@ -12,7 +12,7 @@ set -euo pipefail
 # the final product.
 [[ "$bim_product_mode" = 0 ]] || exit 0
 
-package_revision=5
+package_revision=6
 version="$tracy_version"-"$package_revision"
 build_type=release
 
@@ -26,6 +26,10 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd)"
 
 bim-git-clone-repository \
     "$tracy_repository" "v$tracy_version" "$source_dir"
+
+cd "$source_dir"
+patch -p1 < "$script_dir"/tracy/patch.diff
+cd - >/dev/null
 
 bim-cmake-build \
     --build-dir "$build_dir-profiler" \
