@@ -1,4 +1,7 @@
 {
+  "enable-bots": true,
+  "matchmaking-delay-for-bot": 5,
+
   "enable-contest-timeline-recording": true,
   "contest-timeline-folder": "/opt/bim/persistent/contest/",
 

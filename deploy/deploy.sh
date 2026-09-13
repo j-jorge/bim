@@ -5,17 +5,9 @@ set -euo pipefail
 dev=0
 config_tag=prod
 set_up=
-temp_client_config=
-temp_server_config=
-client_config=0
 
 function clean_up()
 {
-    if [[ -n "${temp_client_config:-}" ]]
-    then
-        rm --force "$temp_client_config"
-    fi
-
     if [[ -n "${temp_server_config:-}" ]]
     then
         rm --force "$temp_server_config"
@@ -47,8 +39,6 @@ Usage:
 Where OPTIONS is:
   --build-dir DIR
      Mandatory. The build directory from which bim-server will be copied.
-  --client-config
-     Send the client config only.
   --dev
      Inform the script that this is a server for developers.
   -h, --help
@@ -75,9 +65,6 @@ do
         --build-dir)
             build_dir="${1:-}"
             shift
-            ;;
-        --client-config)
-            client_config=1
             ;;
         --dev)
             dev=1
@@ -110,36 +97,6 @@ then
 fi
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd)"
-
-function send_client_config()
-{
-    echo "Sending client config."
-
-    local temp_client_config
-    temp_client_config="$(mktemp)"
-
-    sed "s/PORT/$port/" "$script_dir"/client-config.json \
-        > "$temp_client_config"
-    python3 -m json.tool \
-            --compact "$temp_client_config" "$temp_client_config"
-
-    rsync "$temp_client_config" "$login_at_host":./
-
-    local client_config_base_name
-    client_config_base_name="$(basename "$temp_client_config")"
-
-    ssh "$login_at_host" \
-        chmod a+r "$client_config_base_name" \
-        '&&' mv --backup \
-        "$client_config_base_name" /srv/www/bim/client-config.json
-}
-
-send_client_config
-
-if ((client_config == 1))
-then
-    exit
-fi
 
 echo "Replacing server listening on port $port in 5 seconds."
 sleep 5
