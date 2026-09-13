@@ -36,7 +36,7 @@ jobs:
 
       - name: Install dependencies
         run: >
-          ./ci/install-minimal-environment.sh
+          ./setup/install-minimal-environment.sh
           --compiler g++
           --target-platform android
 

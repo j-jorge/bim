@@ -1,4 +1,5 @@
-FROM ubuntu:25.10
+# Latest LTS.
+FROM ubuntu:latest
 
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive \
@@ -7,6 +8,5 @@ RUN apt-get update \
     cron \
     curl \
     logrotate \
-    && apt-get clean \
-    && rm --recursive --force /var/lib/apt/lists/*
+    && apt-get clean
 

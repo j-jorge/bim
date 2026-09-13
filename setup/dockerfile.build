@@ -1,0 +1,8 @@
+# Latest LTS.
+FROM ubuntu:latest
+
+COPY ./install-minimal-environment.sh /
+
+RUN /install-minimal-environment.sh --compiler g++ --target-platform linux \
+    && apt-get clean \
+    && rm /install-minimal-environment.sh

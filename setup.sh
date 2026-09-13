@@ -44,7 +44,7 @@ check_host_dependency()
 usage()
 {
     cat <<EOF
-Usage: build.sh OPTIONS
+Usage: $0 OPTIONS
 
 Where OPTIONS is
   --build-type T
