@@ -33,11 +33,14 @@ bim::server::business_registration_service::business_registration_service(
       return;
     }
 
+  const std::string my_url = config.host + ':' + std::to_string(config.port);
+
   ic_log(iscool::log::nature::info(), "business_registration_service",
-         "Starting, business URL is '{}'.", config.business_url);
+         "Starting, business URL is '{}'. Registering as '{}'",
+         config.business_url, my_url);
 
   Json::Value body;
-  body["host"] = config.host + ':' + std::to_string(config.port);
+  body["host"] = my_url;
   body["version"] = bim::version_major;
   body["protocol_version"] = bim::net::protocol_version;
 
