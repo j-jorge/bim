@@ -16,8 +16,8 @@
 #include <entt/entity/registry.hpp>
 
 #include <cassert>
+#include <climits>
 #include <cstring>
-#include <iostream>
 
 bim::game::contest_timeline::contest_timeline() = default;
 bim::game::contest_timeline::~contest_timeline() = default;

@@ -18,6 +18,7 @@
 
 #include <entt/entity/registry.hpp>
 
+#include <climits>
 #include <utility>
 
 static void serialize_actions(int player_count, const entt::registry& registry,
