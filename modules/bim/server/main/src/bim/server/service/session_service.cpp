@@ -4,6 +4,7 @@
 #include <bim/server/config.hpp>
 #include <bim/server/service/statistics_service.hpp>
 
+#include <bim/business/business_url.hpp>
 #include <bim/business/post.hpp>
 
 #include <iscool/log/log.hpp>
@@ -40,7 +41,7 @@ bim::server::session_service::session_service(const config& config,
   , m_clean_up_interval(config.session_clean_up_interval)
   , m_session_removal_delay(config.session_removal_delay)
   , m_user_id_url(
-        config.business_url.empty() ? "" : config.business_url + "gs/user-id")
+        config.enable_business ? (BIM_BUSINESS_SERVER_URL "/gs/user-id") : "")
   , m_request_headers(config.business_token)
   , m_ongoing_user_id_business_request(false)
 {

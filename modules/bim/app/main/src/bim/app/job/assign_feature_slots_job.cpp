@@ -3,8 +3,8 @@
 
 #include <bim/app/analytics/error.hpp>
 #include <bim/app/business/player_profile.hpp>
-#include <bim/app/business_url.hpp>
 
+#include <bim/business/business_url.hpp>
 #include <bim/business/post.hpp>
 #include <bim/business/request_headers.hpp>
 

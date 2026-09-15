@@ -4,6 +4,8 @@
 #include <bim/server/config.hpp>
 #include <bim/server/server.hpp>
 
+#include <bim/business/business_url.hpp>
+
 #include <bim/net/message/protocol_version.hpp>
 
 #include <bim/tracy.hpp>
@@ -277,8 +279,7 @@ static command_line parse_command_line(int argc, char* argv[])
                                "The public address of the device hosting this "
                                "server, without the port.");
   config_options.add_options()(
-      "business-url", boost::program_options::value<std::string>(),
-      "Address of the business server, to which we register.");
+      "enable-business", "Register to and work with the business server.");
   config_options.add_options()(
       "business-token", boost::program_options::value<std::string>(),
       "Token to pass to the business server for authenticated requests.");
@@ -540,7 +541,7 @@ static command_line parse_command_line(int argc, char* argv[])
   parse_config_option(session_clean_up_interval);
   parse_config_option(session_removal_delay);
 
-  parse_config_option(business_url);
+  parse_config_option(enable_business);
   parse_config_option(business_token);
   parse_config_option(business_registration_pulse_seconds);
   parse_config_option(enable_bots);
@@ -668,6 +669,8 @@ int main(int argc, char* argv[])
 
   std::cout << "Press Ctrl+C to exit.\n";
   ic_log(iscool::log::nature::info(), "server", "Bim! {}.", bim::version);
+  ic_log(iscool::log::nature::info(), "server", "Business is {}.",
+         BIM_BUSINESS_SERVER_URL);
   ic_log(iscool::log::nature::info(), "server", "Running on port {}.",
          command_line.options->config.port);
 

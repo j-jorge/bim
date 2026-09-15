@@ -4,9 +4,9 @@
 #include <bim/app/analytics/coins_transaction.hpp>
 #include <bim/app/analytics/error.hpp>
 #include <bim/app/business/player_profile.hpp>
-#include <bim/app/business_url.hpp>
 #include <bim/app/config.hpp>
 
+#include <bim/business/business_url.hpp>
 #include <bim/business/post.hpp>
 #include <bim/business/request_headers.hpp>
 

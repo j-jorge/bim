@@ -2,8 +2,9 @@
 #include <bim/app/job/fetch_config_job.hpp>
 
 #include <bim/app/analytics/error.hpp>
-#include <bim/app/business_url.hpp>
 #include <bim/app/config.hpp>
+
+#include <bim/business/business_url.hpp>
 
 #include <bim/net/message/protocol_version.hpp>
 

@@ -342,7 +342,8 @@ configure()
             ;;
         release)
             cmake_options=(-DCMAKE_BUILD_TYPE=Release
-                           -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON)
+                           -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON
+                           -DBIM_PROD_BUILD=ON)
             ;;
         tsan)
             cmake_options=(-DCMAKE_BUILD_TYPE=RelWithDebInfo

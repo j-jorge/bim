@@ -34,7 +34,7 @@ game_business_request_test::game_business_request_test()
           {
             bim::server::config config = bim::server::tests::new_test_config();
 
-            config.business_url = "biz/";
+            config.enable_business = true;
             config.game_service_disconnection_inactivity_delay =
                 std::chrono::seconds(50);
 

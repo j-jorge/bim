@@ -27,9 +27,10 @@
 #include <bim/axmol/ref_ptr.impl.hpp>
 
 #include <bim/app/analytics_service.hpp>
-#include <bim/app/business_url.hpp>
 #include <bim/app/preference/audio.hpp>
 #include <bim/app/preference/haptic.hpp>
+
+#include <bim/business/business_url.hpp>
 
 #include <iscool/audio/default_mixer.hpp>
 #include <iscool/audio/mixer.hpp>

@@ -2,16 +2,16 @@
 
 namespace bim
 {
-#cmakedefine01 BIM_ANDROID_DEV
+#cmakedefine01 BIM_PROD_BUILD
 
-#if BIM_ANDROID_DEV || !defined(NDEBUG)
-  #define BIM_DEV 1
-#else
+#if BIM_PROD_BUILD && defined(NDEBUG)
   #define BIM_DEV 0
+#else
+  #define BIM_DEV 1
 #endif
 
   constexpr bool built_for_developers = BIM_DEV;
 
 #undef BIM_DEV
-#undef BIM_ANDROID_DEV
+#undef BIM_PROD_BUILD
 }

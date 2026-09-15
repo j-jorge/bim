@@ -38,11 +38,12 @@ option(BIM_BUILD_SERVER
   ON)
 
 option(
-  BIM_ANDROID_DEV
-  "Create an Android build for developers, with a different app ID."
+  BIM_PROD_BUILD
+  "Create a build for production.\
+Target non-prod business and use a different Android app ID."
   OFF
 )
-message(STATUS "Developer build is ${BIM_ANDROID_DEV}")
+message(STATUS "Production build is ${BIM_PROD_BUILD}")
 
 option(
   BIM_PURE_FOSS
@@ -51,11 +52,10 @@ option(
 )
 message(STATUS "Building with FOSS software only: ${BIM_PURE_FOSS}")
 
-if(BIM_ANDROID_DEV)
-  set(bim_business_server_url "https://bim-stage.jorge.st")
-elseif(CMAKE_BUILD_TYPE STREQUAL "Release"
-    AND BIM_TARGET STREQUAL "android")
+if(BIM_PROD_BUILD)
   set(bim_business_server_url "https://bim-prod.jorge.st")
+elseif(BIM_TARGET STREQUAL "android")
+  set(bim_business_server_url "https://bim-stage.jorge.st")
 else()
   set(bim_business_server_url "http://localhost:4210")
 endif()

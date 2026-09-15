@@ -5,12 +5,12 @@
 namespace bim
 {
 #cmakedefine01 BIM_PURE_FOSS
-#cmakedefine01 BIM_ANDROID_DEV
+#cmakedefine01 BIM_PROD_BUILD
 
-#if BIM_ANDROID_DEV || !defined(NDEBUG)
-  #define BIM_DEV 1
-#else
+#if BIM_PROD_BUILD && defined(NDEBUG)
   #define BIM_DEV 0
+#else
+  #define BIM_DEV 1
 #endif
 
   constexpr std::string_view version = "@CMAKE_PROJECT_VERSION@"
@@ -23,7 +23,7 @@ namespace bim
       ;
 
 #undef BIM_DEV
-#undef BIM_ANDROID_DEV
+#undef BIM_PROD_BUILD
 #undef BIM_PURE_FOSS
 
   constexpr int version_major = @CMAKE_PROJECT_VERSION_MAJOR@;

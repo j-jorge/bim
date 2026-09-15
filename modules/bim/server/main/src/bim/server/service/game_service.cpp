@@ -9,6 +9,7 @@
 #include <bim/server/service/session_service.hpp>
 #include <bim/server/service/statistics_service.hpp>
 
+#include <bim/business/business_url.hpp>
 #include <bim/business/post.hpp>
 
 #include <bim/net/message/game_over.hpp>
@@ -434,12 +435,12 @@ bim::server::game_service::game_service(const config& config,
         config.game_service_disconnection_inactivity_delay)
   , m_checksum_validation(config.game_service_enable_checksum_validation)
   , m_message_pool(64)
-  , m_game_started_url(config.business_url.empty()
-                           ? ""
-                           : config.business_url + "gs/game-started")
-  , m_game_over_url(config.business_url.empty()
-                        ? ""
-                        : config.business_url + "gs/game-over")
+  , m_game_started_url(config.enable_business
+                           ? (BIM_BUSINESS_SERVER_URL "/gs/game-started")
+                           : "")
+  , m_game_over_url(config.enable_business
+                        ? (BIM_BUSINESS_SERVER_URL "/gs/game-over")
+                        : "")
   , m_request_headers(config.business_token)
   , m_request_pool(16)
 {

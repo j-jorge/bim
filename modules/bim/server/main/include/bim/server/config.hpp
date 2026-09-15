@@ -145,8 +145,8 @@ namespace bim::server
     /** Path to the folder where to store the server stats. */
     std::string statistics_log_file;
 
-    /** Address of the business server, to which we register. */
-    std::string business_url;
+    /** Register to and work with the business server. */
+    bool enable_business;
 
     /** Token to pass to the business server for authenticated requests. */
     std::string business_token;

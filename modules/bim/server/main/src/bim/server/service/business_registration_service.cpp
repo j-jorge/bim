@@ -7,6 +7,7 @@
 
 #include <bim/net/message/protocol_version.hpp>
 
+#include <bim/business/business_url.hpp>
 #include <bim/business/post.hpp>
 #include <bim/business/request_headers.hpp>
 
@@ -22,11 +23,11 @@
 
 bim::server::business_registration_service::business_registration_service(
     const config& config, const bim::business::request_headers& headers)
-  : m_url(config.business_url + "gs/hello")
+  : m_url(BIM_BUSINESS_SERVER_URL "/gs/hello")
   , m_request_headers(headers)
   , m_pulse(config.business_registration_pulse_seconds)
 {
-  if (config.business_url.empty())
+  if (!config.enable_business)
     {
       ic_log(iscool::log::nature::info(), "business_registration_service",
              "Disabled.");
@@ -36,8 +37,7 @@ bim::server::business_registration_service::business_registration_service(
   const std::string my_url = config.host + ':' + std::to_string(config.port);
 
   ic_log(iscool::log::nature::info(), "business_registration_service",
-         "Starting, business URL is '{}'. Registering as '{}'",
-         config.business_url, my_url);
+         "Starting, registering as '{}'", my_url);
 
   Json::Value body;
   body["host"] = my_url;

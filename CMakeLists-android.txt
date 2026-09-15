@@ -10,14 +10,14 @@ find_program(paco_info_bin paco-info REQUIRED)
 # in Android builds below.
 cmake_path(GET magick PARENT_PATH host_bin)
 
-if(BIM_ANDROID_DEV)
-  set(bim_android_app_id "bim.app.dev")
-  set(bim_android_app_name "Bim! (dev)")
-  set(bim_android_signing_key_alias "bim-dev-release")
-else()
+if(BIM_PROD_BUILD)
   set(bim_android_app_id "bim.app")
   set(bim_android_app_name "Bim!")
   set(bim_android_signing_key_alias "bim-release")
+else()
+  set(bim_android_app_id "bim.app.dev")
+  set(bim_android_app_name "Bim! (dev)")
+  set(bim_android_signing_key_alias "bim-dev-release")
 endif()
 
 # These variables will be injected in the Groovy scripts to build the
@@ -151,11 +151,12 @@ function(recursive_android_build)
       -DCMAKE_UNITY_BUILD=${CMAKE_UNITY_BUILD}
       -DCMAKE_UNITY_BUILD_BATCH_SIZE=${CMAKE_UNITY_BUILD_BATCH_SIZE}
       -DBIM_HOST_BIN="${host_bin}"
-      -DBIM_ANDROID_DEV=${BIM_ANDROID_DEV}
+      -DBIM_PROD_BUILD=${BIM_PROD_BUILD}
       -DBIM_BUILDING_FOR_ANDROID=TRUE
       -DBIM_BUILD_BENCHMARKS=${BIM_BUILD_BENCHMARKS}
       -DBIM_BUILD_TESTS=FALSE
       -DBIM_BUILD_SERVER=FALSE
+      -DBIM_BUSINESS_SERVER_URL=${BIM_BUSINESS_SERVER_URL}
       -DBIM_ENABLE_TRACY=${BIM_ENABLE_TRACY}
       -DBIM_INSTALL_AXMOL_SHADERS=${ARG_AXMOL_SHADERS}
       -DBIM_PURE_FOSS="${BIM_PURE_FOSS}"
@@ -290,10 +291,10 @@ function(generate_legacy_icon output dpi size)
   # Size for the rounded corners.
   math(EXPR ref_size_20_percents "20 * ${ref_size} / 100")
 
-  if (BIM_ANDROID_DEV)
-    set(additional_imagemagick_args -channel RGB -negate)
-  else()
+  if (BIM_PROD_BUILD)
     set(additional_imagemagick_args)
+  else()
+    set(additional_imagemagick_args -channel RGB -negate)
   endif()
 
   add_custom_command(
@@ -332,10 +333,10 @@ function(generate_adaptive_icon output dpi size)
   # The master icon has extra margins that we are going to remove.
   math(EXPR ref_size "125 * ${master_icon_size} / 100")
 
-  if (BIM_ANDROID_DEV)
-    set(additional_imagemagick_args -channel RGB -negate)
-  else()
+  if (BIM_PROD_BUILD)
     set(additional_imagemagick_args)
+  else()
+    set(additional_imagemagick_args -channel RGB -negate)
   endif()
 
   add_custom_command(
@@ -402,7 +403,7 @@ add_custom_target(apk-install
   USES_TERMINAL
 )
 
-if (BIM_ANDROID_DEV)
+if (NOT BIM_PROD_BUILD)
   add_custom_command(
     TARGET aab apk apk-install
     POST_BUILD

@@ -2,7 +2,8 @@
 #include <bim/app/job/authenticate_with_business_job.hpp>
 
 #include <bim/app/analytics/error.hpp>
-#include <bim/app/business_url.hpp>
+
+#include <bim/business/business_url.hpp>
 
 #include <bim/net/message/protocol_version.hpp>
 

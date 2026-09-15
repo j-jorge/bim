@@ -6,6 +6,8 @@
 #include <bim/server/tests/fake_scheduler.hpp>
 #include <bim/server/tests/new_test_config.hpp>
 
+#include <bim/business/business_url.hpp>
+
 #include <iscool/http/request.hpp>
 #include <iscool/http/setup.hpp>
 #include <iscool/json/parse_string.hpp>
@@ -226,7 +228,7 @@ TEST(session_service, user_id)
   bim::server::config config = bim::server::tests::new_test_config();
   config.session_clean_up_interval = std::chrono::seconds(1);
   config.session_removal_delay = std::chrono::seconds(5);
-  config.business_url = "biz/";
+  config.enable_business = true;
 
   bim::server::statistics_service statistics(config);
   bim::server::session_service service(config, statistics);
@@ -287,7 +289,7 @@ TEST(session_service, user_id)
   // the business.
   scheduler.tick(std::chrono::seconds(1));
   ASSERT_TRUE(!!last_http_request);
-  EXPECT_EQ("biz/gs/user-id", last_http_request->url);
+  EXPECT_EQ(BIM_BUSINESS_SERVER_URL "/gs/user-id", last_http_request->url);
 
   Json::Value body = iscool::json::parse_string(last_http_request->body);
   EXPECT_TRUE(body.isObject());
@@ -383,7 +385,7 @@ TEST(session_service, user_id)
   last_http_request = std::nullopt;
   scheduler.tick(std::chrono::seconds(1));
   ASSERT_TRUE(!!last_http_request);
-  EXPECT_EQ("biz/gs/user-id", last_http_request->url);
+  EXPECT_EQ(BIM_BUSINESS_SERVER_URL "/gs/user-id", last_http_request->url);
 
   body = iscool::json::parse_string(last_http_request->body);
   EXPECT_TRUE(body.isObject());
@@ -418,7 +420,7 @@ TEST(session_service, user_id_error)
   bim::server::config config = bim::server::tests::new_test_config();
   config.session_clean_up_interval = std::chrono::seconds(1);
   config.session_removal_delay = std::chrono::seconds(5);
-  config.business_url = "biz/";
+  config.enable_business = true;
 
   bim::server::statistics_service statistics(config);
   bim::server::session_service service(config, statistics);
@@ -443,7 +445,7 @@ TEST(session_service, user_id_error)
   // the business.
   scheduler.tick(std::chrono::seconds(1));
   ASSERT_TRUE(!!last_http_request);
-  EXPECT_EQ("biz/gs/user-id", last_http_request->url);
+  EXPECT_EQ(BIM_BUSINESS_SERVER_URL "/gs/user-id", last_http_request->url);
 
   const Json::Value body = iscool::json::parse_string(last_http_request->body);
   EXPECT_TRUE(body.isObject());
@@ -492,7 +494,7 @@ TEST(session_service, user_id_error)
   last_http_request = std::nullopt;
   scheduler.tick(std::chrono::seconds(1));
   ASSERT_TRUE(!!last_http_request);
-  EXPECT_EQ("biz/gs/user-id", last_http_request->url);
+  EXPECT_EQ(BIM_BUSINESS_SERVER_URL "/gs/user-id", last_http_request->url);
 
   // The response for the second batch.
   last_http_request->result_handler(iscool::http::response{ 200, R"(
@@ -519,7 +521,7 @@ TEST(session_service, only_one_session_per_user)
   bim::server::config config = bim::server::tests::new_test_config();
   config.session_clean_up_interval = std::chrono::seconds(1);
   config.session_removal_delay = std::chrono::seconds(5);
-  config.business_url = "biz/";
+  config.enable_business = true;
 
   bim::server::statistics_service statistics(config);
   bim::server::session_service service(config, statistics);
@@ -544,7 +546,7 @@ TEST(session_service, only_one_session_per_user)
   // the business.
   scheduler.tick(std::chrono::seconds(1));
   ASSERT_TRUE(!!last_http_request);
-  EXPECT_EQ("biz/gs/user-id", last_http_request->url);
+  EXPECT_EQ(BIM_BUSINESS_SERVER_URL "/gs/user-id", last_http_request->url);
 
   std::vector<iscool::net::session_id> sessions;
   bool sessions_ready = false;
@@ -635,7 +637,7 @@ TEST(session_service, only_one_session_per_user)
   last_http_request = std::nullopt;
   scheduler.tick(std::chrono::seconds(1));
   ASSERT_TRUE(!!last_http_request);
-  EXPECT_EQ("biz/gs/user-id", last_http_request->url);
+  EXPECT_EQ(BIM_BUSINESS_SERVER_URL "/gs/user-id", last_http_request->url);
 
   // The response for the second batch.
   last_http_request->result_handler(iscool::http::response{ 200, R"(

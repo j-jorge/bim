@@ -1,5 +1,3 @@
-configure_file(business_url.hpp.in include/bim/app/business_url.hpp @ONLY)
-
 set(main_sources
   main/src/bim/app/config.cpp
   main/src/bim/app/device_id.cpp
@@ -57,7 +55,6 @@ target_include_directories(
   PUBLIC
   main/include
   ${platform_includes}
-  ${CMAKE_CURRENT_BINARY_DIR}/include
 )
 
 target_link_libraries(bim_app

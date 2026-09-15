@@ -3,9 +3,9 @@
 
 #include <bim/app/analytics/error.hpp>
 #include <bim/app/business/legacy_state.hpp>
-#include <bim/app/business_url.hpp>
 #include <bim/app/preference/legacy.hpp>
 
+#include <bim/business/business_url.hpp>
 #include <bim/business/post.hpp>
 #include <bim/business/request_headers.hpp>
 
