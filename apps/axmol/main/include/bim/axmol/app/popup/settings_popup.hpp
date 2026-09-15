@@ -69,7 +69,9 @@ namespace bim::axmol::app
             ((iscool::audio::mixer*)(audio))                               //
             ((iscool::preferences::local_preferences*)(local_preferences)) //
             ((iscool::social::service*)(social))                           //
-            ((iscool::system::haptic_feedback*)(haptic_feedback))),
+            ((iscool::system::haptic_feedback*)(haptic_feedback))          //
+            ((const std::string&)(device_id))                              //
+            ),
         ic_context_no_properties);
 
   public:

@@ -72,6 +72,10 @@ bim::axmol::app::main_task::main_task(context context,
   , m_fetch_config(*m_context.get_analytics())
   , m_authenticate_with_business(*m_context.get_analytics())
 {
+  ic_log(iscool::log::nature::info(), "main_task", "Device ID is '{}'.",
+         m_device_id);
+  m_context.set_device_id(m_device_id);
+
   m_fetch_config.connect_to_done(
       [this]()
         {

@@ -88,12 +88,14 @@ namespace bim::axmol::app
             ((iscool::preferences::local_preferences*)(local_preferences)) //
             ((iscool::social::service*)(social))                           //
             ((iscool::system::haptic_feedback*)(haptic_feedback))          //
-            ((bool)(enable_debug))),
+            ((bool)(enable_debug))                                         //
+            ),
         ic_context_declare_properties(                                 //
             ((bim::net::session_handler*)(session_handler))            //
             ((bim::app::config*)(config))                              //
             ((const bim::business::request_headers*)(request_headers)) //
             ((bim::app::player_profile*)(player_profile))              //
+            ((const std::string&)(device_id))                          //
             ));
 
   public:

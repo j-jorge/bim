@@ -318,8 +318,23 @@ void bim::axmol::app::settings_popup::open_github()
 void bim::axmol::app::settings_popup::open_mail()
 {
   bim::app::button_clicked(*m_context.get_analytics(), "mail", "settings");
+
+  const std::string body = fmt::format(
+      R"(-------------------------------------------------------------------------------
+{}
+-------------------------------------------------------------------------------
+User ID: {}
+Device ID: {}
+Version: {}
+-------------------------------------------------------------------------------
+)",
+      ic_gettext(
+          "Please keep the informations below available if you need support."),
+      m_context.get_player_profile()->user_id, m_context.get_device_id(),
+      bim::version);
+
   iscool::system::send_mail("bim-game@gmx.com",
-                            ic_gettext("Feedback about Bim!"), "");
+                            ic_gettext("Feedback about Bim!"), body);
   m_context.get_event_dispatcher()->dispatch("mail");
 }
 

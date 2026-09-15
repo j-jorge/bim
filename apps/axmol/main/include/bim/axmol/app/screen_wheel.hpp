@@ -116,6 +116,7 @@ namespace bim::axmol::app
             ((iscool::social::service*)(social))                           //
             ((iscool::system::haptic_feedback*)(haptic_feedback))          //
             ((bool)(enable_debug))                                         //
+            ((const std::string&)(device_id))                              //
             ),
         ic_context_no_properties);
 
