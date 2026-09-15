@@ -35,10 +35,24 @@
     </p>
 
     <p>
-      Note that since this is an online game, I must also necessarily
-      get your device's IP address. At the time of this writing this
-      address is stored in a single place, in the logs of the web
-      server when the game fetches the server list at launch time.
+      Additionally, a normal workflow for this game requires many
+      connections to its server during the session, in order to manage
+      the player's state. The device is recognized by the server using
+      a random identifier generated on the client when the app is
+      launched for the first time. If no user exists for this device,
+      the server will silently create one.
+    </p>
+
+    <p>
+      The device ID is not shared with any other service. Also, note
+      that the device ID will change if you wipe de app's data. Your
+      account may not be recoverable.
+    </p>
+
+    <p>
+      Finally since this is an online game, I must also necessarily
+      get your device's IP address. This address will appear in the
+      logs of the web services.
     </p>
 
     <p>
