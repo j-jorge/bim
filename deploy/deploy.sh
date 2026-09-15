@@ -2,10 +2,6 @@
 
 set -euo pipefail
 
-dev=0
-config_tag=prod
-set_up=
-
 function clean_up()
 {
     if [[ -n "${temp_server_config:-}" ]]
@@ -13,9 +9,9 @@ function clean_up()
         rm --force "$temp_server_config"
     fi
 
-    if [[ -n "${set_up:-}" ]]
+    if [[ -n "${set_up_script:-}" ]]
     then
-        rm --force "$set_up"
+        rm --force "$set_up_script"
     fi
 }
 
@@ -25,8 +21,7 @@ function usage()
 Deploy the server application (bim-server) to the given server and
 with the given user.
 
-The port on which the server listens must be passed as an argument to
-this script. The deployment is done in a directory named with this
+The deployment is done in a directory named with the server's
 port, thus allowing multiple servers to run on the same host with
 different ports. The idea being that it would make the transition
 smoother for the clients: once a server is deployed all new
@@ -39,14 +34,11 @@ Usage:
 Where OPTIONS is:
   --build-dir DIR
      Mandatory. The build directory from which bim-server will be copied.
-  --dev
-     Inform the script that this is a server for developers.
+  --config FILE
+     The config file from which we get the configuration of this
+     script for the app.
   -h, --help
      Display this message and exit.
-  --port PORT
-     Mandatory. The port on which the server will listen.
-  --target LOGIN@HOST
-     Mandatory. The destination onto which the server will be deployed.
 EOF
 }
 
@@ -54,6 +46,12 @@ if [[ $# -eq 0 ]]
 then
     usage
     exit 1
+fi
+
+if printf '%s\n' "$@" | grep --quiet '^\(-h\|--help\)$'
+then
+    usage
+    exit 0
 fi
 
 while [[ $# -ne 0 ]]
@@ -66,47 +64,64 @@ do
             build_dir="${1:-}"
             shift
             ;;
-        --dev)
-            dev=1
-            ;;
-        -h|--help)
-            usage
-            exit 0
-            ;;
-        --target)
-            login_at_host="${1:-}"
-            shift
-            ;;
-        --port)
-            port="${1:-}"
-            shift
+        --config)
+            if [[ "$#" -eq 0 ]]
+            then
+                echo "Missing value for --config." >&2
+                exit 1
+            fi
+            config_file="$1"
             ;;
     esac
 done
 
-if [[ -z "${login_at_host:-}" ]]
+if [[ -z "${build_dir:-}" ]]
 then
-    echo "Missing value for --target. See --help for details." >&2
+    echo "--build-dir is required." >&2
     exit 1
 fi
 
-if [[ -z "${port:-}" ]]
+if [[ -z "${config_file:-}" ]]
 then
-    echo "Missing value for --port. See --help for details." >&2
+    echo "--config is required." >&2
     exit 1
 fi
+
+# shellcheck disable=SC1090
+. "$config_file"
+
+if [[ -z "${bim_etc:-}" ]]
+then
+    echo "bim_etc must be set." >&2
+    exit 1
+fi
+
+if [[ -z "${bim_host:-}" ]]
+then
+    echo "bim_host must be set." >&2
+    exit 1
+fi
+
+if [[ -z "${bim_port:-}" ]]
+then
+    echo "bim_port must be set." >&2
+    exit 1
+fi
+
+if [[ -z "${bim_server_config:-}" ]]
+then
+    echo "bim_server_config:- must be set." >&2
+    exit 1
+fi
+
+bim_prod_or_dev="${bim_prod_or_dev:-prod}"
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd)"
 
-echo "Replacing server listening on port $port in 5 seconds."
+echo "Replacing server listening on port $bim_port in 5 seconds."
 sleep 5
 
 echo "GO!"
-
-if (( dev == 1 ))
-then
-    config_tag=dev
-fi
 
 if [[ -z "${build_dir:-}" ]]
 then
@@ -117,32 +132,32 @@ fi
 temp_server_config="$(mktemp)"
 jq --compact-output --slurp '.[0] * .[1]' \
    "$script_dir"/server-config.json \
-   "$script_dir"/server-config-"${config_tag}".json \
+   "$bim_server_config" \
    > "$temp_server_config"
 
-set_up="$(mktemp)"
+set_up_script="$(mktemp)"
 
-cat > "$set_up" <<EOF
+cat > "$set_up_script" <<EOF
 #!/bin/bash
 
 set -euo pipefail
 
-if [[ -e bim/"$port"/lock ]]
+if [[ -e bim/"$bim_port"/lock ]]
 then
-    echo "'bim/$port/lock' exists. Aborting."
+    echo "'bim/$bim_port/lock' exists. Aborting."
     exit 1
 fi
 
-mkdir --parents bim/"$port"/{bin,etc} \
-      bim/"$port"/persistent/{log,contest}
+mkdir --parents bim/"$bim_port"/{bin,etc/bim} \
+      bim/"$bim_port"/persistent/{log,contest}
 
-cd bim/"$port"/
-[[ ! -f docker-compose.yml ]] || PORT="$port" docker-compose down
+cd bim/"$bim_port"/
+[[ ! -f docker-compose.yml ]] || PORT="$bim_port" docker-compose down
 EOF
 
-rsync "$set_up" "$login_at_host":/tmp/bim-set-up.sh
+rsync "$set_up_script" "$bim_host":/tmp/bim-set-up.sh
 
-ssh "$login_at_host" \
+ssh "$bim_host" \
     chmod u+x /tmp/bim-set-up.sh \
     '&&' /tmp/bim-set-up.sh \
     '&&' rm --force /tmp/bim-set-up.sh
@@ -154,25 +169,24 @@ bin_files=("$build_dir"/apps/server/bim-server
     || bin_files+=("$build_dir"/apps/server/bim-server.dbg)
 
 rsync "${bin_files[@]}" \
-      "$login_at_host":bim/"$port"/bin/
+      "$bim_host":bim/"$bim_port"/bin/
 
 rsync --recursive \
       "$script_dir"/bin \
       "$script_dir"/docker-compose.yml \
       "$script_dir"/Dockerfile \
       "$script_dir"/etc \
-      "$login_at_host":bim/"$port"/
+      "$bim_etc" \
+      "$bim_host":bim/"$bim_port"/
 
-ssh "$login_at_host" mkdir --parents bim/"$port"/etc/bim
 rsync "$temp_server_config" \
-      "$login_at_host":bim/"$port"/etc/bim/server-config.json
+      "$bim_host":bim/"$bim_port"/etc/bim/server-config.json
 
-ssh "$login_at_host" \
-    cd bim/"$port"/  \
-    '&&' PORT="$port" docker-compose up --build --detach
+ssh "$bim_host" \
+    cd bim/"$bim_port"/  \
+    '&&' PORT="$bim_port" docker-compose up --build --detach
 
-if (( dev == 0 ))
+if [[ "$bim_prod_or_dev" = prod ]]
 then
-    ssh "$login_at_host" \
-        touch bim/"$port"/lock
+    ssh "$bim_host" touch bim/"$bim_port"/lock
 fi
