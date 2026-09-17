@@ -10,12 +10,23 @@
 #include <iscool/json/cast_int64.hpp>
 #include <iscool/json/cast_string.hpp>
 #include <iscool/json/cast_uint64.hpp>
+#include <iscool/time/parse_timestamp.hpp>
 
 #include <json/value.h>
+
+#include <ctime>
+#include <iomanip>
 
 bool bim::app::from_json(player_profile& p, const Json::Value& json)
 {
   p.nickname = iscool::json::member_cast<std::string>(json, "nickname");
+
+  if (!iscool::time::parse_timestamp(
+          p.nickname_change_allowed_date,
+          iscool::json::member_cast<std::string>(
+              json, "nickname_change_allowed_date")))
+    return false;
+
   p.coins = iscool::json::member_cast<std::int64_t>(json, "coins");
   p.user_id = iscool::json::member_cast<bim::net::user_id>(json, "user_id");
 

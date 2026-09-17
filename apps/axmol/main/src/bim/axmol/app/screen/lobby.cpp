@@ -3,6 +3,8 @@
 
 #include <bim/axmol/app/part/wallet.hpp>
 #include <bim/axmol/app/popup/debug_popup.hpp>
+#include <bim/axmol/app/popup/message.hpp>
+#include <bim/axmol/app/popup/nickname_editor_popup.hpp>
 #include <bim/axmol/app/popup/player_statistics_popup.hpp>
 #include <bim/axmol/app/popup/settings_popup.hpp>
 #include <bim/axmol/app/shop_intent.hpp>
@@ -73,6 +75,10 @@ bim::axmol::app::lobby::lobby(const context& context,
   , m_settings(new settings_popup(context, *style.get_declaration("settings")))
   , m_player_statistics(new player_statistics_popup(
         context, *style.get_declaration("player-statistics")))
+  , m_nickname_editor(new nickname_editor_popup(
+        context, *style.get_declaration("nickname-editor")))
+  , m_message(
+        new message_popup(context, *style.get_declaration("message-popup")))
   , m_debug(new debug_popup(context, *style.get_declaration("debug")))
   , m_debug_tap(*m_controls->debug_activator)
   , m_debug_activator_counter(0)
@@ -105,6 +111,11 @@ bim::axmol::app::lobby::lobby(const context& context,
         });
 
   m_inputs.push_back(m_controls->player_profile_button->input_node());
+  m_controls->player_profile_button->connect_to_clicked(
+      [this]()
+        {
+          open_nickname_editor();
+        });
 
   m_inputs.push_back(m_controls->game_features_button->input_node());
   m_controls->game_features_button->connect_to_clicked(
@@ -151,6 +162,13 @@ bim::axmol::app::lobby::lobby(const context& context,
       [this]()
         {
           play_online();
+        });
+
+  m_nickname_editor->connect_to_closed(
+      [this]()
+        {
+          m_player_name_label.setString(
+              m_context.get_player_profile()->nickname);
         });
 }
 
@@ -357,4 +375,47 @@ void bim::axmol::app::lobby::open_player_stats() const
   bim::app::button_clicked(*m_context.get_analytics(), "player-stats",
                            "lobby");
   m_player_statistics->show();
+}
+
+void bim::axmol::app::lobby::open_nickname_editor() const
+{
+  bim::app::button_clicked(*m_context.get_analytics(), "nickname-editor",
+                           "lobby");
+
+  const std::chrono::system_clock::time_point now =
+      std::chrono::system_clock::now();
+
+  if (now >= m_context.get_player_profile()->nickname_change_allowed_date)
+    {
+      m_nickname_editor->show();
+      return;
+    }
+
+  std::chrono::seconds seconds =
+      std::chrono::duration_cast<std::chrono::seconds>(
+          m_context.get_player_profile()->nickname_change_allowed_date - now);
+
+  const std::chrono::hours hours =
+      std::chrono::duration_cast<std::chrono::hours>(seconds);
+  seconds -= hours;
+
+  const std::chrono::minutes minutes =
+      std::chrono::duration_cast<std::chrono::minutes>(seconds);
+  seconds -= minutes;
+
+  if (hours.count() > 0)
+    m_message->show(fmt::format(
+        fmt::runtime(ic_gettext("Nickname change is not available yet. Come "
+                                "back in {}_h. {}_min. {}  s.")),
+        hours.count(), minutes.count(), seconds.count()));
+  else if (minutes.count() > 0)
+    m_message->show(fmt::format(
+        fmt::runtime(ic_gettext("Nickname change is not available yet. Come "
+                                "back in {} min. {} s.")),
+        minutes.count(), seconds.count()));
+  else if (seconds.count() > 0)
+    m_message->show(fmt::format(
+        fmt::runtime(ic_gettext("Nickname change is not available yet. Come "
+                                "back in {} s.")),
+        seconds.count()));
 }
