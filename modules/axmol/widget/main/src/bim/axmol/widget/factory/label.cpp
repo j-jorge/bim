@@ -2,19 +2,10 @@
 #include <bim/axmol/widget/factory/label.hpp>
 
 #include <bim/axmol/widget/context.hpp>
-#include <bim/axmol/widget/font_catalog.hpp>
-#include <bim/axmol/widget/log_context.hpp>
+#include <bim/axmol/widget/label_style.hpp>
 
 #include <bim/axmol/style/apply_display.hpp>
 #include <bim/axmol/style/cache.hpp>
-
-#include <bim/axmol/colour_chart.hpp>
-
-#include <iscool/i18n/gettext.hpp>
-#include <iscool/log/log.hpp>
-#include <iscool/log/nature/error.hpp>
-#include <iscool/optional.impl.tpp>
-#include <iscool/style/declaration.hpp>
 
 #include <axmol/2d/Label.h>
 
@@ -22,80 +13,16 @@ bim::axmol::ref_ptr<ax::Label> bim::axmol::widget::factory<ax::Label>::create(
     const bim::axmol::widget::context& context,
     const iscool::style::declaration& style)
 {
-  const iscool::optional<const std::string&> font_path =
-      style.get_string("font.file");
+  const label_style ls(context, style);
 
-  if (!font_path)
-    {
-      ic_log(iscool::log::nature::error(), g_log_context, "Missing font.");
-      return ax::Label::create();
-    }
-
-  ax::TTFConfig ttf_config;
-  if (style.get_boolean("font.substitutable", true))
-    {
-      const bim::axmol::widget::font_catalog::resolve_result font =
-          context.fonts.resolve(*font_path);
-      ttf_config.fontFilePath = font.name;
-      ttf_config.italics =
-          font.force_italics || style.get_boolean("font.italics", false);
-    }
-  else
-    {
-      ttf_config.fontFilePath = *font_path;
-      ttf_config.italics = style.get_boolean("font.italics", false);
-    }
-
-  const int outline_size = style.get_number("outline.size", 0);
-  ttf_config.outlineSize = outline_size;
-
-  ttf_config.fontSize =
-      style.get_number("font.size", 12) * context.device_scale;
-  ttf_config.bold = style.get_boolean("font.bold", false);
-  ttf_config.underline = style.get_boolean("font.underline", false);
-  ttf_config.strikethrough = style.get_boolean("font.strikethrough", false);
-
-  const iscool::optional<const std::string&> horizontal_align_string =
-      style.get_string("align.horizontal");
-  ax::TextHAlignment horizontal_align = ax::TextHAlignment::LEFT;
-
-  if (horizontal_align_string)
-    {
-      if (*horizontal_align_string == "center")
-        horizontal_align = ax::TextHAlignment::CENTER;
-      else if (*horizontal_align_string == "right")
-        horizontal_align = ax::TextHAlignment::RIGHT;
-      else if (*horizontal_align_string != "left")
-        ic_log(iscool::log::nature::error(), g_log_context,
-               "Unknown horizontal text alignment: '{}'.",
-               *horizontal_align_string);
-    }
-
-  const iscool::optional<const std::string&> vertical_align_string =
-      style.get_string("align.vertical");
-  ax::TextVAlignment vertical_align = ax::TextVAlignment::CENTER;
-
-  if (vertical_align_string)
-    {
-      if (*vertical_align_string == "top")
-        vertical_align = ax::TextVAlignment::TOP;
-      else if (*vertical_align_string == "bottom")
-        vertical_align = ax::TextVAlignment::BOTTOM;
-      else if (*vertical_align_string != "center")
-        ic_log(iscool::log::nature::error(), g_log_context,
-               "Unknown vertical text alignment: '{}'.",
-               *vertical_align_string);
-    }
-
-  iscool::optional<const std::string&> localized_text =
-      style.get_string("text.i18n");
-  const std::string text = localized_text ? ic_gettext(localized_text->c_str())
-                                          : style.get_string("text", "");
+  if (ls.ttf_config.fontFilePath.empty())
+    return ax::Label::create();
 
   bim::axmol::ref_ptr<ax::Label> result =
-      ax::Label::createWithTTF(ttf_config, text, horizontal_align);
-  result->setVerticalAlignment(vertical_align);
+      ax::Label::createWithTTF(ls.ttf_config, ls.text, ls.horizontal_align);
 
+  result->setTextColor(ls.color);
+  result->setVerticalAlignment(ls.vertical_align);
   result->enableWrap(style.get_boolean("wrap", false));
 
   iscool::optional<const std::string&> overflow_string =
@@ -113,10 +40,6 @@ bim::axmol::ref_ptr<ax::Label> bim::axmol::widget::factory<ax::Label>::create(
         result->setOverflow(ax::Label::Overflow::RESIZE_HEIGHT);
     }
 
-  iscool::optional<const std::string&> color = style.get_string("font.color");
-  result->setTextColor(color ? context.colors.to_color_4b(*color)
-                             : ax::Color4B::WHITE);
-
   const ax::Vec2 shadow_offset(style.get_number("shadow.offset.x", 0),
                                style.get_number("shadow.offset.y", 0));
 
@@ -133,7 +56,7 @@ bim::axmol::ref_ptr<ax::Label> bim::axmol::widget::factory<ax::Label>::create(
       result->enableShadow(shadow_color, shadow_offset * context.device_scale);
     }
 
-  if (outline_size != 0)
+  if (ls.ttf_config.outlineSize != 0)
     {
       const iscool::optional<const std::string&> outline_color_string =
           style.get_string("outline.color");
@@ -144,7 +67,7 @@ bim::axmol::ref_ptr<ax::Label> bim::axmol::widget::factory<ax::Label>::create(
               : ax::Color4B::BLACK;
 
       result->enableOutline(outline_color,
-                            outline_size * context.device_scale);
+                            ls.ttf_config.outlineSize * context.device_scale);
     }
 
   result->setLineSpacing(style.get_number("line-spacing", 0)

@@ -10,6 +10,7 @@ add_library(bim_axmol_widget
   main/src/bim/axmol/widget/dynamic_factory.cpp
   main/src/bim/axmol/widget/font_catalog.cpp
   main/src/bim/axmol/widget/instantiate_widgets.cpp
+  main/src/bim/axmol/widget/label_style.cpp
   main/src/bim/axmol/widget/merge_named_node_groups.cpp
   main/src/bim/axmol/widget/register_widgets.cpp
   main/src/bim/axmol/widget/set_node_parents.cpp
@@ -20,6 +21,7 @@ add_library(bim_axmol_widget
   main/src/bim/axmol/widget/factory/animation.cpp
   main/src/bim/axmol/widget/factory/clipping_node.cpp
   main/src/bim/axmol/widget/factory/clipping_rectangle_node.cpp
+  main/src/bim/axmol/widget/factory/edit_box.cpp
   main/src/bim/axmol/widget/factory/label.cpp
   main/src/bim/axmol/widget/factory/layer.cpp
   main/src/bim/axmol/widget/factory/layer_color.cpp
