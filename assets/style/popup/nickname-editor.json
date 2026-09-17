@@ -1,0 +1,151 @@
+{
+  "style": {
+    "popup": [
+      "popup/full-screen",
+      {
+        "widgets/container/name": "nickname-editor"
+      }
+    ],
+
+    "message-popup": [
+      "popup/yes-no-message"
+    ],
+
+    "widgets": [
+      {
+        "title": [
+          "font/bold",
+          {
+            "instantiate": "ax::Label",
+            "text.i18n": "Nickname change",
+            "font.color": "desert-storm",
+            "font.size": 90,
+            "align.horizontal": "center",
+            "align.vertical": "center",
+            "overflow": "shrink"
+          }
+        ],
+
+        "description": [
+          "font/bold",
+          {
+            "instantiate": "ax::Label",
+            "font.size": 50,
+            "font.color": "desert-storm",
+            "align.horizontal": "center",
+            "wrap": true,
+            "overflow": "shrink",
+            "text.i18n": "Enter the desired nickname below."
+          }
+        ],
+
+        "constraints_label": [
+          "font/bold",
+          {
+            "anchor.x": 0.5,
+            "anchor.y": 0.5,
+            "font.size": 50,
+            "font.color": "desert-storm",
+            "align.horizontal": "center",
+            "wrap": true,
+            "overflow": "shrink"
+          }
+        ],
+
+        "edit_box": [
+          "edit-box/bold-center-normal-size"
+        ],
+
+        "error_label": [
+          "font/bold",
+          {
+            "anchor.x": 0.5,
+            "anchor.y": 1,
+            "font.size": 40,
+            "font.color": "monza",
+            "align.horizontal": "center",
+            "overflow": "shrink",
+            "wrap": true,
+          }
+        ],
+
+        "close_button": [
+          "button/yellow-with-label",
+          {
+            "widgets/label/text.i18n": "DONE"
+          }
+        ]
+      }
+    ],
+
+    "bounds": [
+      {
+        "title": [
+          {
+            "anchor.x": 0.5,
+            "anchor.y": 0.5,
+            "anchor.reference.x": 0.5,
+            "anchor.reference.y": 0.95,
+            "width.percents": 95,
+            "height.percents": 10
+          }
+        ],
+
+        "description": [
+          {
+            "anchor.x": 0.5,
+            "anchor.y": 0.5,
+            "anchor.reference.x": 0.5,
+            "anchor.reference.y": 0.75,
+            "width.percents": 75,
+            "height.percents": 12
+          }
+        ],
+
+        "constraints_label": [
+          {
+            "anchor.x": 0.5,
+            "anchor.y": 0.5,
+            "anchor.reference.x": 0.5,
+            "anchor.reference.y": 0.6,
+            "width.percents": 75,
+            "height.percents": 12
+          }
+        ],
+
+        "edit_box": [
+          {
+            "anchor.x": 0.5,
+            "anchor.y": 0.5,
+            "anchor.reference.x": 0.5,
+            "anchor.reference.y": 0.5,
+            "width.percents": 90,
+            "height.percents": 5
+          }
+        ],
+
+        "error_label": [
+          {
+            "anchor.x": 0.5,
+            "anchor.y": 1,
+            "anchor.reference.x": 0.5,
+            "anchor.reference.y": 0.46,
+            "width.percents": 90,
+            "height.percents": 5
+          }
+        ],
+
+        "close_button": [
+          {
+            "anchor.x": 0.5,
+            "anchor.y": 0.5,
+            "anchor.reference.x": 0.5,
+            "anchor.reference.y": 0.13,
+            "width.percents": 48,
+            "height.percents": 10
+          }
+        ]
+      }
+    ]
+  }
+}

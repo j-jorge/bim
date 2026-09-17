@@ -1,0 +1,46 @@
+{
+  "style": {
+    "widgets/background": [
+      {
+        "instantiate": "nine_slices",
+        "widgets/sprite": [
+          {
+            "frame": "sprites/menu/dot-100.png",
+            "insets.left": 49,
+            "insets.top": 49,
+            "insets.width": 1,
+            "insets.height": 1
+          }
+        ],
+        "stretch-direction.vertical": false,
+        "color": "desert-storm",
+        "z-order": -1000
+      }
+    ],
+
+    "bounds/background": [
+      "layout/fill"
+    ],
+
+    "widgets/input": [
+      "font/bold-center-normal-size",
+      {
+        "background": [
+          {
+            "frame": "sprites/transparent.png",
+            "insets.left": 0,
+            "insets.top": 0,
+            "insets.width": 1,
+            "insets.height": 1
+          }
+        ],
+        "font.color": "cod-gray",
+        "input-mode": "single-line"
+      }
+    ],
+
+    "bounds/input": [
+      "layout/fill"
+    ]
+  }
+}

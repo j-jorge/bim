@@ -3,6 +3,7 @@
 
 #include <bim/axmol/app/part/wallet.hpp>
 #include <bim/axmol/app/popup/debug_popup.hpp>
+#include <bim/axmol/app/popup/nickname_editor_popup.hpp>
 #include <bim/axmol/app/popup/player_statistics_popup.hpp>
 #include <bim/axmol/app/popup/settings_popup.hpp>
 #include <bim/axmol/app/shop_intent.hpp>
@@ -73,6 +74,8 @@ bim::axmol::app::lobby::lobby(const context& context,
   , m_settings(new settings_popup(context, *style.get_declaration("settings")))
   , m_player_statistics(new player_statistics_popup(
         context, *style.get_declaration("player-statistics")))
+  , m_nickname_editor(new nickname_editor_popup(
+        context, *style.get_declaration("nickname-editor")))
   , m_debug(new debug_popup(context, *style.get_declaration("debug")))
   , m_debug_tap(*m_controls->debug_activator)
   , m_debug_activator_counter(0)
@@ -105,6 +108,11 @@ bim::axmol::app::lobby::lobby(const context& context,
         });
 
   m_inputs.push_back(m_controls->player_profile_button->input_node());
+  m_controls->player_profile_button->connect_to_clicked(
+      [this]()
+        {
+          open_nickname_editor();
+        });
 
   m_inputs.push_back(m_controls->game_features_button->input_node());
   m_controls->game_features_button->connect_to_clicked(
@@ -357,4 +365,11 @@ void bim::axmol::app::lobby::open_player_stats() const
   bim::app::button_clicked(*m_context.get_analytics(), "player-stats",
                            "lobby");
   m_player_statistics->show();
+}
+
+void bim::axmol::app::lobby::open_nickname_editor() const
+{
+  bim::app::button_clicked(*m_context.get_analytics(), "nickname-editor",
+                           "lobby");
+  m_nickname_editor->show();
 }

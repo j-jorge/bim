@@ -10,6 +10,9 @@
     "player-statistics": [
       "popup/player-statistics"
     ],
+    "nickname-editor": [
+      "popup/nickname-editor"
+    ],
     "settings": [
       "popup/settings"
     ],
