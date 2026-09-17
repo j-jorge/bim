@@ -273,6 +273,8 @@ bim::app::config::config()
                 + std::to_string(20000 + bim::version_major * 100
                                  + bim::net::protocol_version))
   , version_update_interval(std::chrono::days(1))
+  , nickname_length_min(5)
+  , nickname_length_max(10)
 {
   game_feature_price[bim::game::feature_flags::falling_blocks] = 50;
   game_feature_price[bim::game::feature_flags::shield] = 250;
@@ -304,6 +306,12 @@ std::optional<bim::app::config> bim::app::load_config(const Json::Value& json)
     return std::nullopt;
 
   if (!parse_shop_products(result, json, "shop"))
+    return std::nullopt;
+
+  if (!read_value(result.nickname_length_min, json, "nickname_length_min"))
+    return std::nullopt;
+
+  if (!read_value(result.nickname_length_max, json, "nickname_length_max"))
     return std::nullopt;
 
   return result;

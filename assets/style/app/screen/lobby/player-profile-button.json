@@ -1,0 +1,109 @@
+{
+  "meta": {
+    "overrides": [
+      "button/purple-with-label"
+    ]
+  },
+
+  "style": {
+    "widgets": [
+      {
+        "decorum-on/widgets/fill": [
+          {
+            "frame": "sprites/menu/vertical-grayish-gradient.png"
+          }
+        ],
+
+        "avatar-background": [
+          {
+            "instantiate": "nine_slices",
+            "widgets/sprite": [
+              {
+                "frame": "sprites/menu/avatar-background-12-26.png",
+                "insets.left": 12,
+                "insets.top": 26,
+                "insets.width": 1,
+                "insets.height": 1
+              }
+            ],
+            "z-order": 6,
+            "rotation": -10
+          }
+        ],
+
+        "avatar": [
+          {
+            "instantiate": "ax::Sprite",
+            "frame": "sprites/menu/avatar-silhouette.png",
+            "z-order": 7,
+            "rotation": -10
+          }
+        ],
+
+        "avatar-border": [
+          {
+            "instantiate": "nine_slices",
+            "widgets/sprite": [
+              {
+                "frame": "sprites/menu/frame-10deg-12-26.png",
+                "insets.left": 12,
+                "insets.top": 26,
+                "insets.width": 1,
+                "insets.height": 1
+              }
+            ],
+            "z-order": 8,
+            "rotation": -10
+          }
+        ],
+
+        "label": [
+          "font/bold-center-with-outline-and-shadow",
+          {
+            "font.size": 50,
+            "align.vertical": "center",
+            "overflow": "shrink",
+            "text": "-"
+          }
+        ]
+      }
+    ],
+
+    "bounds": [
+      {
+        "avatar-background": [
+          {
+            "anchor.x": 0.5,
+            "anchor.y": 0.5,
+            "anchor.reference.x": 0.17,
+            "anchor.reference.y": 0.5,
+            "height.percents": 60,
+            "width-ratio": 0.886
+          }
+        ],
+
+        "avatar": [
+          "layout/fill",
+          {
+            "reference": "avatar-background"
+          }
+        ],
+
+        "avatar-border": [
+          "layout/fill",
+          {
+            "reference": "avatar-background"
+          }
+        ],
+
+        "label": [
+          {
+            "offset.x": -5,
+            "anchor.reference.x": 0.63,
+            "width.percents": 65
+          }
+        ]
+      }
+    ]
+  }
+}

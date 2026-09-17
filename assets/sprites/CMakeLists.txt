@@ -1,9 +1,11 @@
 set(sprites
+  "sprites/menu/avatar-background-12-26.png"
   "sprites/menu/bevel-invert-24-24.png"
   "sprites/menu/checkmark.png"
   "sprites/menu/dice.png"
   "sprites/menu/discord.png"
   "sprites/menu/discord-background-1-1-1-1.png"
+  "sprites/menu/frame-10deg-12-26.png"
   "sprites/menu/horizontal-edge-1-76.png"
   "sprites/menu/price-tag-88-40.png"
   "sprites/menu/round-button-yellow-small.png"
@@ -59,6 +61,7 @@ set(sprites_crop
   "sprites/features/shield.png"
 
   "sprites/menu/audio.png"
+  "sprites/menu/avatar-silhouette.png"
   "sprites/menu/back.png"
   "sprites/menu/bluesky.png"
   "sprites/menu/coin.png"
@@ -358,6 +361,7 @@ set(sprites_bleeding
   "sprites/menu/red-stripe-1-7-1-136.png"
   "sprites/menu/vertical-gradient.png"
   "sprites/menu/vertical-gray-gradient.png"
+  "sprites/menu/vertical-grayish-gradient.png"
   "sprites/menu/vertical-green-gradient.png"
   "sprites/menu/vertical-purple-gradient.png"
   "sprites/menu/vertical-red-gradient.png"

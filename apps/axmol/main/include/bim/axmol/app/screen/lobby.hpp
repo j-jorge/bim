@@ -132,8 +132,9 @@ namespace bim::axmol::app
 
   private:
     bim::axmol::input::tree m_inputs;
-    bim_declare_controls_struct(controls, m_controls, 7);
+    bim_declare_controls_struct(controls, m_controls, 8);
     ax::Label& m_server_statistics_label;
+    ax::Label& m_player_name_label;
     feature_deck& m_feature_deck;
 
     std::unique_ptr<bim::net::hello_exchange> m_hello_exchange;

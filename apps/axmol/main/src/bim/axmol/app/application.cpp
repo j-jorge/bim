@@ -52,6 +52,7 @@
 #include <iscool/system/language_name.hpp>
 #include <iscool/time/now.hpp>
 
+#include <axmol/2d/FontFallback.h>
 #include <axmol/2d/FontFreeType.h>
 #include <axmol/2d/Scene.h>
 #include <axmol/2d/SpriteFrameCache.h>
@@ -119,6 +120,8 @@ private:
   application_event_dispatcher m_event_dispatcher;
 
   ax::EventListenerCustom* m_frame_event_listener;
+
+  std::unique_ptr<ax::FontFallback> m_font_fallback;
 };
 
 struct bim::axmol::app::detail::session_systems
@@ -258,12 +261,19 @@ void bim::axmol::app::detail::persistent_systems::start_display()
   m_application.m_main_view.reset(new bim::axmol::display::main_view(
       "Bim!", m_application.m_screen_config.size,
       m_application.m_screen_config.scale));
+
+  const std::string fonts[] = { "font/NotoColorEmoji.ttf" };
+
+  m_font_fallback.reset(new ax::FontFallback(fonts, true));
+  ax::FontFreeType::setFontEngine(m_font_fallback.get());
 }
 
 void bim::axmol::app::detail::persistent_systems::stop_display()
 {
   ic_log(iscool::log::nature::info(), g_log_context, "Stop: display.");
 
+  ax::FontFreeType::setFontEngine(nullptr);
+  m_font_fallback.reset();
   m_application.m_main_view.reset();
 }
 

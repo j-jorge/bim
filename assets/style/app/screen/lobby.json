@@ -2,6 +2,7 @@
   "style": {
     "feature-deck-path": "container/feature-deck",
     "play-button-server-stats-label-path": "container/server-statistics",
+    "player-name-label-path": "container/label",
 
     "debug": [
       "popup/debug"
@@ -72,6 +73,10 @@
               }
             ]
           }
+        ],
+
+        "player_profile_button": [
+          "app/screen/lobby/player-profile-button"
         ],
 
         "stats_button": [

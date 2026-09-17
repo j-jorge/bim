@@ -6,6 +6,10 @@ static-assets/font/DaysOne-Regular.ttf
 Jovanny Lemonad
 SIL Open Font License 1.1.
 
+static-assets/font/NotoColorEmoji.ttf
+Google Inc.
+SIL Open Font License 1.1.
+
 static-assets/font/NotoSansKR-Regular.ttf
 static-assets/font/NotoSansKR-ExtraBold.ttf
 Adobe.
@@ -147,6 +151,10 @@ CC-BY-SA 3.0
 assets/sprites/bomb.png
 assets/sprites/crate/idle.png
 Aryeom.
+CC-BY-SA 4.0.
+
+assets/sprites/menu/avatar-silhouette.png
+Julien Jorge, based on the work of Aryeom.
 CC-BY-SA 4.0.
 
 assets/sprites/crate/burning-0.png
@@ -314,6 +322,7 @@ assets/sprites/fog/roll-in-3.png
 assets/sprites/fog/roll-in-4.png
 assets/sprites/fog/roll-in-5.png
 assets/sprites/fog/roll-in-6.png
+assets/sprites/menu/avatar-background-12-26.png
 assets/sprites/menu/back.png
 assets/sprites/menu/bevel-invert-24-24.png
 assets/sprites/menu/checkmark.png
@@ -325,6 +334,7 @@ assets/sprites/menu/coins-pack-4.png
 assets/sprites/menu/discord-background-1-1-1-1.png
 assets/sprites/menu/dot-100.png
 assets/sprites/menu/dot-70.png
+assets/sprites/menu/frame-10deg-12-26.png
 assets/sprites/menu/gamepad-d-pad-left.png
 assets/sprites/menu/gamepad-d-pad-right.png
 assets/sprites/menu/glow.png
@@ -354,6 +364,7 @@ assets/sprites/menu/success-rate-disc-empty.png
 assets/sprites/menu/top-panel-114-114.png
 assets/sprites/menu/vertical-gradient.png
 assets/sprites/menu/vertical-gray-gradient.png
+assets/sprites/menu/vertical-grayish-gradient.png
 assets/sprites/menu/vertical-green-gradient.png
 assets/sprites/menu/vertical-purple-gradient.png
 assets/sprites/menu/vertical-red-gradient.png
