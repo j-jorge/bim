@@ -32,6 +32,7 @@ set(application_style_files
   app/screen/font/stripe-title.json
 
   app/screen/lobby/game-features-button.json
+  app/screen/lobby/player-profile-button.json
   app/screen/lobby/stat-background.json
   app/screen/lobby/stat-background-bounds.json
   app/screen/lobby/stat-title.json
@@ -87,6 +88,7 @@ set(application_style_files
   font/bold.json
   font/bold-center-normal-size.json
   font/bold-center-normal-size-with-outline.json
+  font/bold-center-with-outline-and-shadow.json
   font/center-normal-size.json
   font/regular.json
   font/fancy-regular.json

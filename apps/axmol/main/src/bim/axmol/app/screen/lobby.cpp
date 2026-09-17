@@ -36,12 +36,13 @@
 #define x_widget_type_name controls
 #define x_widget_controls                                                     \
   x_widget(bim::axmol::widget::button, settings_button)                       \
-      x_widget(bim::axmol::widget::button, play_button)                       \
-          x_widget(bim::axmol::widget::button, game_features_button)          \
-              x_widget(bim::axmol::widget::button, shop_button)               \
-                  x_widget(bim::axmol::widget::button, stats_button)          \
-                      x_widget(bim::axmol::widget::button, debug_button)      \
-                          x_widget(ax::Node, debug_activator)
+      x_widget(bim::axmol::widget::button, player_profile_button)             \
+          x_widget(bim::axmol::widget::button, play_button)                   \
+              x_widget(bim::axmol::widget::button, game_features_button)      \
+                  x_widget(bim::axmol::widget::button, shop_button)           \
+                      x_widget(bim::axmol::widget::button, stats_button)      \
+                          x_widget(bim::axmol::widget::button, debug_button)  \
+                              x_widget(ax::Node, debug_activator)
 
 #include <bim/axmol/widget/implement_controls_struct.hpp>
 
@@ -59,6 +60,10 @@ bim::axmol::app::lobby::lobby(const context& context,
         *dynamic_cast<ax::Label*>(bim::axmol::find_child_by_path(
             *m_controls->play_button,
             *style.get_string("play-button-server-stats-label-path"))))
+  , m_player_name_label(
+        *dynamic_cast<ax::Label*>(bim::axmol::find_child_by_path(
+            *m_controls->player_profile_button,
+            *style.get_string("player-name-label-path"))))
   , m_feature_deck(*dynamic_cast<feature_deck*>(bim::axmol::find_child_by_path(
         *m_controls->game_features_button,
         *style.get_string("feature-deck-path"))))
@@ -98,6 +103,8 @@ bim::axmol::app::lobby::lobby(const context& context,
         {
           open_shop_from_button();
         });
+
+  m_inputs.push_back(m_controls->player_profile_button->input_node());
 
   m_inputs.push_back(m_controls->game_features_button->input_node());
   m_controls->game_features_button->connect_to_clicked(
@@ -163,6 +170,8 @@ bim::axmol::app::lobby::nodes() const
 void bim::axmol::app::lobby::attached()
 {
   m_wallet->attached();
+
+  m_player_name_label.setString(m_context.get_player_profile()->nickname);
 }
 
 void bim::axmol::app::lobby::displayed()

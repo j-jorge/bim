@@ -1,0 +1,57 @@
+{
+  "meta": {
+    "overrides": [
+      "button/purple-with-label"
+    ]
+  },
+
+  "style": {
+    "widgets": [
+      {
+        "decorum-on": [
+          {
+            "widgets/pattern": [
+              {
+                "instantiate": "texture",
+                "parent": "clipping_node",
+                "widgets/sprite/frame":
+                    "texture/features-background-pattern.png",
+                "scroll-per-second.x": 20,
+                "scroll-per-second.y": 10,
+                "rotation": -10,
+                "color": "heliotrope",
+                "scale": 0.5,
+                "opacity": 48,
+                "z-order": 10
+              }
+            ],
+            "bounds/pattern": [
+              "layout/fill"
+            ]
+
+          }
+        ],
+
+        "label": [
+          "font/bold-center-with-outline-and-shadow",
+          {
+            "font.size": 50,
+            "overflow": "shrink"
+          }
+        ]
+      }
+    ],
+
+    "bounds": [
+      {
+        "label": [
+          {
+            "anchor.reference.y": 0.1,
+            "offset.y": 60,
+            "width.percents": 90
+          }
+        ]
+      }
+    ]
+  }
+}

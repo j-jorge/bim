@@ -32,6 +32,9 @@ namespace bim::app
 
     std::vector<std::string> shop_products;
     std::vector<int> shop_product_coins;
+
+    std::size_t nickname_length_min;
+    std::size_t nickname_length_max;
   };
 
   std::optional<config> load_config(const Json::Value& json);
