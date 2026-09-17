@@ -45,6 +45,17 @@
       }
     ],
 
+    "player_profile_button": [
+      {
+        "anchor.x": 0.5,
+        "anchor.y": 0.5,
+        "anchor.reference.x": 0.5,
+        "anchor.reference.y": 0.75,
+        "height.percents": 7,
+        "width.percents": 35
+      }
+    ],
+
     "stats_button": [
       {
         "anchor.x": 0.5,
