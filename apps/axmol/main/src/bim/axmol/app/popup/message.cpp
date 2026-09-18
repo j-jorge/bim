@@ -22,6 +22,7 @@
 #include <bim/axmol/widget/implement_controls_struct.hpp>
 
 IMPLEMENT_SIGNAL(bim::axmol::app::message_popup, ok, m_ok);
+IMPLEMENT_SIGNAL(bim::axmol::app::message_popup, nope, m_nope);
 
 bim::axmol::app::message_popup::message_popup(
     const context& context, const iscool::style::declaration& style)
@@ -47,6 +48,7 @@ bim::axmol::app::message_popup::message_popup(
       [this]()
         {
           m_popup->hide();
+          m_nope();
         });
 }
 
