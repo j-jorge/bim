@@ -20,6 +20,8 @@ else()
   set(bim_android_signing_key_alias "bim-dev-release")
 endif()
 
+message(STATUS "Android app ID is ${bim_android_app_id}")
+
 # These variables will be injected in the Groovy scripts to build the
 # Android app.
 if(BIM_PURE_FOSS)
