@@ -30,6 +30,7 @@ namespace bim::axmol::app
   class message_popup
   {
     DECLARE_VOID_SIGNAL(ok, m_ok)
+    DECLARE_VOID_SIGNAL(nope, m_nope)
 
     ic_declare_context(
         m_context,
