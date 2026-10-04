@@ -8,7 +8,7 @@ set -euo pipefail
 : "${bim_packages_root:-}"
 
 : "${axmol_repository:=https://github.com/j-jorge/axmol/}"
-: "${axmol_version:=2.11.2.2j}"
+: "${axmol_version:=2.11.2.3j}"
 package_revision=1
 version="$axmol_version"-"$package_revision"
 flavor="$bim_build_type"
@@ -129,9 +129,23 @@ mkdir --parents "$source_dir" "$build_dir" "$install_dir"
 bim-git-clone-repository \
     "$axmol_repository" v"$axmol_version" "$source_dir"
 
-cd "$source_dir"
-patch -p1 < "$script_dir"/axmol/patch/openal.diff
-cd - >/dev/null
+# Predownload the dependencies to use the local cache rather than
+# always downloading them.
+deps_version=v110
+deps_url=https://github.com/simdsoft/1kiss/releases/download/
+
+download \
+    --mime-type application/zip \
+    --url "$deps_url"/"$deps_version"/jpeg-turbo.zip \
+    --target_file "$source_dir"/cache/1kdist/"$deps_version"/jpeg-turbo.zip
+download \
+    --mime-type application/zip \
+    --url "$deps_url"/"$deps_version"/openssl.zip \
+    --target_file "$source_dir"/cache/1kdist/"$deps_version"/openssl.zip
+download \
+    --mime-type application/zip \
+    --url "$deps_url"/"$deps_version"/zlib.zip \
+    --target_file "$source_dir"/cache/1kdist/"$deps_version"/zlib.zip
 
 install_power_shell()
 {

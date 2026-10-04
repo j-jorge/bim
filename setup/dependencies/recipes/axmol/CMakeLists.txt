@@ -174,6 +174,7 @@ macro(assign_common_sources)
     ${source_root}/2d/FontAtlas.cpp
     ${source_root}/2d/FontAtlasCache.cpp
     ${source_root}/2d/FontCharMap.cpp
+    ${source_root}/2d/FontFallback.cpp
     ${source_root}/2d/FontFNT.cpp
     ${source_root}/2d/FontFreeType.cpp
     ${source_root}/2d/Grid.cpp
@@ -351,6 +352,7 @@ macro(assign_platform_sources)
       ${source_root}/platform/linux/Application-linux.cpp
       ${source_root}/platform/linux/Common-linux.cpp
       ${source_root}/platform/linux/FileUtils-linux.cpp
+      ${source_root}/platform/linux/SystemFonts-linux.cpp
       ${source_root}/ui/UIEditBox/UIEditBoxImpl-linux.cpp
     )
     set(
@@ -367,6 +369,7 @@ macro(assign_platform_sources)
       ${source_root}/platform/android/FileUtils-android.cpp
       ${source_root}/platform/android/javaactivity-android.cpp
       ${source_root}/platform/android/RenderViewImpl-android.cpp
+      ${source_root}/platform/android/SystemFonts-android.cpp
       ${source_root}/platform/android/jni/JniHelper.cpp
       ${source_root}/platform/android/jni/Java_dev_axmol_lib_AxmolEngine.cpp
       ${source_root}/platform/android/jni/Java_dev_axmol_lib_AxmolRenderer.cpp
@@ -444,6 +447,7 @@ macro(compile_shaders)
   ax_target_compile_shaders(
     axmol
     FILES
+    ${source_root}/renderer/shaders/label_color.frag
     ${source_root}/renderer/shaders/label_normal.frag
     ${source_root}/renderer/shaders/label_outline.frag
     ${source_root}/renderer/shaders/positionColor.frag
