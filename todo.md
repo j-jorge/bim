@@ -1,7 +1,6 @@
 # Next
 
 ## Client
-- Allow to edit the player's name.
 - Display the opponents' names on the matchmaking screen.
 
 # Nice to have

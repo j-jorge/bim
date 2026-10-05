@@ -116,7 +116,7 @@ namespace bim::business
        std::string body, ProcessResult&& ok, ProcessError&& error)
   {
     auto handle_result = [ok = std::forward<ProcessResult>(ok), url,
-                          error](std::span<const char> body)
+                          error](std::span<const char> body) mutable
       {
         detail::log_request_response(url, body);
 
@@ -178,7 +178,7 @@ namespace bim::business
 
     return detail::post(
         url, std::move(headers), std::move(body_string),
-        [ok = std::forward<ProcessResult>(ok)](std::span<const char>)
+        [ok = std::forward<ProcessResult>(ok)](std::span<const char>) mutable
           {
             ok();
           },

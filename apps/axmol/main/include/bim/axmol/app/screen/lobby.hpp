@@ -32,6 +32,7 @@ namespace bim::app
 {
   class analytics_service;
   class player_profile;
+  struct config;
 }
 
 namespace iscool::audio
@@ -70,6 +71,8 @@ namespace bim::axmol::app
   class debug_popup;
   class feature_deck;
   class main_scene;
+  class message_popup;
+  class nickname_editor_popup;
   class player_statistics_popup;
   class settings_popup;
   class wallet;
@@ -86,6 +89,7 @@ namespace bim::axmol::app
         ic_context_declare_parent_properties(                              //
             ((const bim::business::request_headers*)(request_headers))     //
             ((bim::app::player_profile*)(player_profile))                  //
+            ((const bim::app::config*)(config))                            //
             ((const bim::axmol::widget::context*)(widget_context))         //
             ((main_scene*)(main_scene))                                    //
             ((bim::app::analytics_service*)(analytics))                    //
@@ -130,6 +134,8 @@ namespace bim::axmol::app
     void open_game_features() const;
     void open_player_stats() const;
 
+    void open_nickname_editor() const;
+
   private:
     bim::axmol::input::tree m_inputs;
     bim_declare_controls_struct(controls, m_controls, 8);
@@ -143,6 +149,8 @@ namespace bim::axmol::app
 
     std::unique_ptr<settings_popup> m_settings;
     std::unique_ptr<player_statistics_popup> m_player_statistics;
+    std::unique_ptr<nickname_editor_popup> m_nickname_editor;
+    std::unique_ptr<message_popup> m_message;
     std::unique_ptr<debug_popup> m_debug;
 
     iscool::signals::scoped_connection m_session_connection;

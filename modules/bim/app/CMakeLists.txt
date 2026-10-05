@@ -12,6 +12,7 @@ set(main_sources
   main/src/bim/app/business/legacy_state.cpp
   main/src/bim/app/business/player_profile.cpp
   main/src/bim/app/business/player_profile_json.cpp
+  main/src/bim/app/business/update_nickname.cpp
   main/src/bim/app/business/validate_purchase.cpp
 
   main/src/bim/app/job/assign_feature_slots_job.cpp
@@ -22,6 +23,7 @@ set(main_sources
   main/src/bim/app/job/fetch_config_job.cpp
   main/src/bim/app/job/fetch_player_profile_job.cpp
   main/src/bim/app/job/push_legacy_state_job.cpp
+  main/src/bim/app/job/update_nickname_job.cpp
   main/src/bim/app/job/validate_purchase_job.cpp
 
   main/src/bim/app/preference/audio.cpp
@@ -79,6 +81,7 @@ add_executable(app-tests
   tests/src/bim/app/job/buy_feature_job.cpp
   tests/src/bim/app/job/buy_feature_slot_job.cpp
   tests/src/bim/app/job/consume_game_reward_job.cpp
+  tests/src/bim/app/job/update_nickname_job.cpp
   tests/src/bim/app/job/validate_purchase_job.cpp
 
   tests/src/bim/app/tests/http_service.cpp

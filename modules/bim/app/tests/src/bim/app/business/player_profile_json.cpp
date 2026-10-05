@@ -13,6 +13,7 @@ TEST(bim_app_player_profile, from_json)
 {
   Json::Value json;
   json["nickname"] = "the-nickname";
+  json["nickname_change_allowed_date"] = "1971-02-03T04:05:06.123456Z";
   json["coins"] = 1;
   json["user_id"] = 11;
   json["feature_slots"][0]["slot_index"] = 1;
@@ -26,6 +27,7 @@ TEST(bim_app_player_profile, from_json)
 
   bim::app::player_profile profile = {
     .nickname = "nick",
+    .nickname_change_allowed_date = std::chrono::system_clock::now(),
     .coins = 99,
     .user_id = 99,
     .slot_availability = { true, false },
@@ -40,6 +42,18 @@ TEST(bim_app_player_profile, from_json)
   EXPECT_TRUE(bim::app::from_json(profile, json));
 
   EXPECT_EQ("the-nickname", profile.nickname);
+
+  const std::chrono::system_clock::time_point
+      expected_nickname_change_allowed_date =
+          std::chrono::sys_days(std::chrono::year_month_day(
+              std::chrono::year(1971), std::chrono::February,
+              std::chrono::day{ 3 }))
+          + std::chrono::hours(4) + std::chrono::minutes(5)
+          + std::chrono::seconds(6) + std::chrono::microseconds(123456);
+
+  EXPECT_EQ(expected_nickname_change_allowed_date,
+            profile.nickname_change_allowed_date);
+
   EXPECT_EQ(1, profile.coins);
   EXPECT_EQ(11, profile.user_id);
   EXPECT_FALSE(profile.slot_availability[0]);
@@ -59,6 +73,7 @@ TEST(bim_app_player_profile, from_json_empty_slot)
 {
   Json::Value json;
   json["nickname"] = "the-nickname";
+  json["nickname_change_allowed_date"] = "1971-02-03T04:05:06.123456Z";
   json["coins"] = 1;
   json["user_id"] = 11;
   json["feature_slots"][0]["slot_index"] = 0;

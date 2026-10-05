@@ -85,6 +85,8 @@ set(application_style_files
   button/yellow-round-with-icon-and-label.json
   button/white-with-icon.json
 
+  edit-box/bold-center-normal-size.json
+
   font/bold.json
   font/bold-center-normal-size.json
   font/bold-center-normal-size-with-outline.json
@@ -109,6 +111,7 @@ set(application_style_files
   popup/full-screen.json
   popup/language.json
   popup/message.json
+  popup/nickname-editor.json
   popup/player-statistics.json
   popup/settings.json
   popup/small.json

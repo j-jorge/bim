@@ -7,6 +7,7 @@
 
 #include <bim/game/feature_flags_fwd.hpp>
 
+#include <chrono>
 #include <cstdint>
 #include <string>
 
@@ -19,6 +20,8 @@ namespace bim::app
 
   public:
     std::string nickname;
+    std::chrono::system_clock::time_point nickname_change_allowed_date;
+
     std::int64_t coins;
 
     bim::net::user_id user_id;
