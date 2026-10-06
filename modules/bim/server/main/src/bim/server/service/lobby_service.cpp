@@ -7,12 +7,13 @@
 #include <bim/net/message/new_random_game_request.hpp>
 #include <bim/net/message/try_deserialize_message.hpp>
 
-bim::server::lobby_service::lobby_service(const config& config,
-                                          iscool::net::socket_stream& socket,
-                                          game_service& game_service)
+bim::server::lobby_service::lobby_service(
+    const config& config, iscool::net::socket_stream& socket,
+    const session_service& session_service, game_service& game_service)
   : m_discord_publisher(config)
-  , m_named_game_encounter(config, socket, game_service)
-  , m_random_game_encounter(config, socket, game_service, m_discord_publisher)
+  , m_named_game_encounter(config, socket, session_service, game_service)
+  , m_random_game_encounter(config, socket, session_service, game_service,
+                            m_discord_publisher)
 {}
 
 bim::server::lobby_service::~lobby_service() = default;

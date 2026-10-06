@@ -45,9 +45,10 @@ void bim::server::tests::test_client::authenticate()
   authenticate({});
 }
 
-void bim::server::tests::test_client::authenticate(
-    const bim::net::session_token& session_token)
+void bim::server::tests::test_client::authenticate(std::string_view token)
 {
+  const bim::net::session_token session_token(token.begin(), token.end());
+
   session = std::nullopt;
   authentication_error = std::nullopt;
 
@@ -65,12 +66,13 @@ void bim::server::tests::test_client::new_game()
   m_game_update.reset();
   contest.reset();
   started = std::nullopt;
-  player_count_proposal = std::nullopt;
+  players_proposal = std::nullopt;
 
   m_game_proposal_connection = m_new_game.connect_to_game_proposal(
-      [this](int player_count) -> void
+      [this](std::span<const bim::net::user_id> players) -> void
         {
-          player_count_proposal = player_count;
+          players_proposal =
+              std::vector<bim::net::user_id>(players.begin(), players.end());
         });
 
   m_new_game.start(*session, {});
@@ -90,12 +92,16 @@ void bim::server::tests::test_client::new_game_auto_accept(
   m_game_update.reset();
   contest.reset();
   started = std::nullopt;
-  player_count_proposal = std::nullopt;
+  players_proposal = std::nullopt;
 
   m_game_proposal_connection = m_new_game.connect_to_game_proposal(
-      [this](int player_count) -> void
+      [this](std::span<const bim::net::user_id> players) -> void
         {
-          player_count_proposal = player_count;
+          if (players.size() <= 1)
+            return;
+
+          players_proposal =
+              std::vector<bim::net::user_id>(players.begin(), players.end());
           accept_game();
         });
 
@@ -111,12 +117,16 @@ void bim::server::tests::test_client::new_game_auto_accept(
   m_game_update.reset();
   contest.reset();
   started = std::nullopt;
-  player_count_proposal = std::nullopt;
+  players_proposal = std::nullopt;
 
   m_game_proposal_connection = m_new_game.connect_to_game_proposal(
-      [this](int player_count) -> void
+      [this](std::span<const bim::net::user_id> players) -> void
         {
-          player_count_proposal = player_count;
+          if (players.size() <= 1)
+            return;
+
+          players_proposal =
+              std::vector<bim::net::user_id>(players.begin(), players.end());
           accept_game();
         });
 

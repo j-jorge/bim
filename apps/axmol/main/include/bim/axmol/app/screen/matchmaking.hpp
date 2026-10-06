@@ -80,7 +80,8 @@ namespace bim::axmol::app
     void closing();
 
   private:
-    void update_display_with_game_proposal(unsigned player_count);
+    void update_display_with_game_proposal(
+        std::span<const bim::net::user_id> players);
     void run_actions(bim::axmol::action::runner& runner,
                      const iscool::style::declaration& style) const;
 

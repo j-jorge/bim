@@ -21,6 +21,7 @@ namespace bim::server
   {
   public:
     lobby_service(const config& config, iscool::net::socket_stream& socket,
+                  const session_service& session_service,
                   game_service& game_service);
     ~lobby_service();
 

@@ -117,7 +117,7 @@ void new_game_test::client::send_new_named_game_request(
               if (answer->get_request_token() != token)
                 return;
 
-              game_on_hold_answer = std::move(*answer);
+              game_on_hold_answer = *answer;
             });
 
   ASSERT_NE(nullptr, m_message_channel);
@@ -214,7 +214,7 @@ TEST_F(new_game_test, answer_is_game_on_hold)
   ASSERT_TRUE(!!m_clients[0].game_on_hold_answer);
 
   EXPECT_EQ(token, m_clients[0].game_on_hold_answer->get_request_token());
-  EXPECT_EQ(1, m_clients[0].game_on_hold_answer->get_player_count());
+  EXPECT_EQ(1, m_clients[0].game_on_hold_answer->get_users().size());
 }
 
 /** Many new game requests add to the player count. */
@@ -235,7 +235,7 @@ TEST_F(new_game_test, join_game)
   ASSERT_TRUE(!!m_clients[0].game_on_hold_answer);
 
   EXPECT_EQ(tokens[0], m_clients[0].game_on_hold_answer->get_request_token());
-  EXPECT_EQ(1, m_clients[0].game_on_hold_answer->get_player_count());
+  EXPECT_EQ(1, m_clients[0].game_on_hold_answer->get_users().size());
 
   // Second player connects.
   m_clients[1].send_new_named_game_request(
@@ -246,7 +246,7 @@ TEST_F(new_game_test, join_game)
   EXPECT_EQ(tokens[1], m_clients[1].game_on_hold_answer->get_request_token());
 
   // There are now two connected players.
-  EXPECT_EQ(2, m_clients[1].game_on_hold_answer->get_player_count());
+  EXPECT_EQ(2, m_clients[1].game_on_hold_answer->get_users().size());
 
   // First player keep asking for a game
   m_clients[0].send_new_named_game_request(
@@ -256,7 +256,7 @@ TEST_F(new_game_test, join_game)
   EXPECT_EQ(tokens[0], m_clients[0].game_on_hold_answer->get_request_token());
 
   // First player should now see two connected players.
-  EXPECT_EQ(2, m_clients[0].game_on_hold_answer->get_player_count());
+  EXPECT_EQ(2, m_clients[0].game_on_hold_answer->get_users().size());
 
   // Third player connects.
   m_clients[2].send_new_named_game_request(
@@ -265,7 +265,7 @@ TEST_F(new_game_test, join_game)
   ASSERT_TRUE(!!m_clients[2].game_on_hold_answer);
 
   EXPECT_EQ(tokens[2], m_clients[2].game_on_hold_answer->get_request_token());
-  EXPECT_EQ(3, m_clients[2].game_on_hold_answer->get_player_count());
+  EXPECT_EQ(3, m_clients[2].game_on_hold_answer->get_users().size());
 
   // Fourth player connects.
   m_clients[3].send_new_named_game_request(
@@ -274,7 +274,7 @@ TEST_F(new_game_test, join_game)
   ASSERT_TRUE(!!m_clients[3].game_on_hold_answer);
 
   EXPECT_EQ(tokens[3], m_clients[3].game_on_hold_answer->get_request_token());
-  EXPECT_EQ(4, m_clients[3].game_on_hold_answer->get_player_count());
+  EXPECT_EQ(4, m_clients[3].game_on_hold_answer->get_users().size());
 
   // New tokens for the next requests.
   for (int i = 0; i != 4; ++i)
@@ -293,7 +293,7 @@ TEST_F(new_game_test, join_game)
       EXPECT_EQ(tokens[i],
                 m_clients[i].game_on_hold_answer->get_request_token())
           << "i=" << i;
-      EXPECT_EQ(4, m_clients[i].game_on_hold_answer->get_player_count())
+      EXPECT_EQ(4, m_clients[i].game_on_hold_answer->get_users().size())
           << "i=" << i;
     }
 
@@ -327,7 +327,7 @@ TEST_F(new_game_test, player_leaving_on_new_game)
   for (int i = 0; i != 4; ++i)
     {
       ASSERT_TRUE(!!m_clients[i].game_on_hold_answer) << "i=" << i;
-      EXPECT_EQ(4, m_clients[i].game_on_hold_answer->get_player_count())
+      EXPECT_EQ(4, m_clients[i].game_on_hold_answer->get_users().size())
           << "i=" << i;
     }
 
@@ -351,7 +351,7 @@ TEST_F(new_game_test, player_leaving_on_new_game)
     if (i != inactive_index)
       {
         ASSERT_TRUE(!!m_clients[i].game_on_hold_answer) << "i=" << i;
-        EXPECT_EQ(3, m_clients[i].game_on_hold_answer->get_player_count())
+        EXPECT_EQ(3, m_clients[i].game_on_hold_answer->get_users().size())
             << "i=" << i;
       }
 
@@ -435,7 +435,7 @@ TEST_F(new_game_test, player_leaving_on_accept_named_game)
   for (int i = 0; i != 4; ++i)
     {
       ASSERT_TRUE(!!m_clients[i].game_on_hold_answer) << "i=" << i;
-      EXPECT_EQ(4, m_clients[i].game_on_hold_answer->get_player_count())
+      EXPECT_EQ(4, m_clients[i].game_on_hold_answer->get_users().size())
           << "i=" << i;
     }
 
@@ -490,7 +490,7 @@ TEST_F(new_game_test, no_single_player_game)
       new_client_token(), features, game_name));
 
   ASSERT_TRUE(!!m_clients[0].game_on_hold_answer);
-  EXPECT_EQ(1, m_clients[0].game_on_hold_answer->get_player_count());
+  EXPECT_EQ(1, m_clients[0].game_on_hold_answer->get_users().size());
 
   m_clients[0].send_accept_named_game(bim::net::accept_named_game(
       new_client_token(),
@@ -522,11 +522,11 @@ TEST_F(new_game_test, late_second_player)
 
   // The first player only knows about him.
   ASSERT_TRUE(!!m_clients[0].game_on_hold_answer);
-  EXPECT_EQ(1, m_clients[0].game_on_hold_answer->get_player_count());
+  EXPECT_EQ(1, m_clients[0].game_on_hold_answer->get_users().size());
 
   // The second player knows about the first player.
   ASSERT_TRUE(!!m_clients[1].game_on_hold_answer);
-  EXPECT_EQ(2, m_clients[1].game_on_hold_answer->get_player_count());
+  EXPECT_EQ(2, m_clients[1].game_on_hold_answer->get_users().size());
 
   // The acceptance order is first player then second player, thus only the
   // second player should have received the launch_game.
@@ -618,7 +618,7 @@ TEST_F(new_game_test, max_players_in_game)
   for (int i = 0; i != 4; ++i)
     {
       ASSERT_TRUE(!!m_clients[i].game_on_hold_answer) << "i=" << i;
-      EXPECT_EQ(4, m_clients[i].game_on_hold_answer->get_player_count())
+      EXPECT_EQ(4, m_clients[i].game_on_hold_answer->get_users().size())
           << "i=" << i;
     }
 

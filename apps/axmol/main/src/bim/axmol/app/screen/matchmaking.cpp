@@ -155,9 +155,9 @@ void bim::axmol::app::matchmaking::displaying()
 void bim::axmol::app::matchmaking::displayed()
 {
   m_game_proposal_connection = m_new_game->connect_to_game_proposal(
-      [this](unsigned player_count)
+      [this](std::span<const bim::net::user_id> players)
         {
-          update_display_with_game_proposal(player_count);
+          update_display_with_game_proposal(players);
         });
   m_launch_connection = m_new_game->connect_to_launch_game(
       [this](const bim::net::game_launch_event& event)
@@ -184,8 +184,10 @@ void bim::axmol::app::matchmaking::closing()
 }
 
 void bim::axmol::app::matchmaking::update_display_with_game_proposal(
-    unsigned player_count)
+    std::span<const bim::net::user_id> players)
 {
+  const std::size_t player_count = players.size();
+
   // If we tried to launch the game but we are back to a single player
   // (i.e. the local player), then the request has failed. Let's start a new
   // request.

@@ -15,10 +15,11 @@
 
 bim::server::random_game_encounter_service::random_game_encounter_service(
     const config& config, iscool::net::socket_stream& socket,
-    game_service& game_service, discord_publisher_service& discord)
+    const session_service& session_service, game_service& game_service,
+    discord_publisher_service& discord)
   : m_game_service(game_service)
   , m_discord(discord)
-  , m_matchmaking_service(config, socket, game_service,
+  , m_matchmaking_service(config, socket, session_service, game_service,
                           bot_availability::available)
   , m_auto_start_delay(config.random_game_auto_start_delay)
 {}

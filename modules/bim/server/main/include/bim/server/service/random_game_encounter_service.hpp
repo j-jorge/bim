@@ -33,6 +33,7 @@ namespace bim::server
   public:
     random_game_encounter_service(const config& config,
                                   iscool::net::socket_stream& socket,
+                                  const session_service& session_service,
                                   game_service& game_service,
                                   discord_publisher_service& discord);
     ~random_game_encounter_service();

@@ -17,9 +17,9 @@ struct bim::server::named_game_encounter_service::encounter_info
 
 bim::server::named_game_encounter_service::named_game_encounter_service(
     const config& config, iscool::net::socket_stream& socket,
-    game_service& game_service)
+    const session_service& session_service, game_service& game_service)
   : m_game_service(game_service)
-  , m_matchmaking_service(config, socket, game_service,
+  , m_matchmaking_service(config, socket, session_service, game_service,
                           bot_availability::unavailable)
 {}
 

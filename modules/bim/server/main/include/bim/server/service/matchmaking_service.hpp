@@ -5,6 +5,7 @@
 
 #include <bim/net/message/client_token.hpp>
 #include <bim/net/message/encounter_id.hpp>
+#include <bim/net/message/user_id.hpp>
 
 #include <bim/game/feature_flags_fwd.hpp>
 
@@ -22,6 +23,7 @@
 namespace bim::server
 {
   class game_service;
+  class session_service;
 
   struct config;
 
@@ -49,6 +51,7 @@ namespace bim::server
   public:
     matchmaking_service(const config& config,
                         iscool::net::socket_stream& socket,
+                        const session_service& session_service,
                         game_service& game_service, bot_availability b);
     ~matchmaking_service();
 
@@ -96,7 +99,7 @@ namespace bim::server
                            bim::net::client_token token,
                            iscool::net::session_id session,
                            bim::net::encounter_id encounter_id,
-                           std::uint8_t player_count);
+                           const encounter_info& encounter, bool enable_bot);
 
     void remove_non_ready_players(bim::net::encounter_id encounter_id,
                                   encounter_info& encounter);
@@ -113,6 +116,7 @@ namespace bim::server
 
   private:
     iscool::net::message_stream m_message_stream;
+    const session_service& m_session_service;
     game_service& m_game_service;
 
     encounter_map m_encounters;

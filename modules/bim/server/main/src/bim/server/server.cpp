@@ -17,7 +17,7 @@ bim::server::server::server(const config& config)
   , m_session_service(config, m_statistics)
   , m_authentication_service(config, m_socket, m_session_service, m_statistics)
   , m_game_service(config, m_socket, m_session_service, m_statistics)
-  , m_lobby_service(config, m_socket, m_game_service)
+  , m_lobby_service(config, m_socket, m_session_service, m_game_service)
 {
   ic_log(iscool::log::nature::info(), "server", "Server is up on port {}.",
          config.port);

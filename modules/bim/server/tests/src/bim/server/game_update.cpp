@@ -95,7 +95,7 @@ game_update_test::client::client(bim::server::tests::fake_scheduler& scheduler,
         });
 
   m_game_proposal_connection = m_new_game.connect_to_game_proposal(
-      [this](int) -> void
+      [this](std::span<const bim::net::user_id>) -> void
         {
           m_game_proposal_connection.disconnect();
           m_new_game.accept();

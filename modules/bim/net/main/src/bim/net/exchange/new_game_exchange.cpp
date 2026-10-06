@@ -161,7 +161,7 @@ void bim::net::new_game_exchange::check_on_hold(const iscool::net::message& m)
 
   m_encounter_id = message->get_encounter_id();
 
-  m_game_proposal(message->get_player_count());
+  m_game_proposal(message->get_users());
 }
 
 void bim::net::new_game_exchange::check_launch_game(

@@ -108,7 +108,7 @@ void game_creation_test::client::new_game_auto_accept(
   ASSERT_TRUE(!!m_session);
 
   m_game_proposal_connection = m_new_game.connect_to_game_proposal(
-      [this](int) -> void
+      [this](std::span<const bim::net::user_id>) -> void
         {
           m_game_proposal_connection.disconnect();
           m_new_game.accept();
@@ -123,7 +123,7 @@ void game_creation_test::client::new_game_auto_accept(
   ASSERT_TRUE(!!m_session);
 
   m_game_proposal_connection = m_new_game.connect_to_game_proposal(
-      [this](int) -> void
+      [this](std::span<const bim::net::user_id>) -> void
         {
           m_game_proposal_connection.disconnect();
           m_new_game.accept();

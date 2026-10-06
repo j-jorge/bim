@@ -1,10 +1,14 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/server/tests/test_client.hpp>
 
+#include <bim/server/tests/fake_business.hpp>
 #include <bim/server/tests/fake_scheduler.hpp>
 #include <bim/server/tests/new_test_config.hpp>
 
 #include <bim/server/server.hpp>
+
+#include <algorithm>
+#include <vector>
 
 #include <gtest/gtest.h>
 
@@ -20,6 +24,7 @@ protected:
   bim::server::server m_server;
   iscool::net::socket_stream m_socket_stream;
   iscool::net::message_stream m_message_stream;
+  bim::server::tests::fake_business m_business;
 
   std::array<bim::server::tests::test_client, 2> m_clients;
 };
@@ -33,6 +38,7 @@ server_bots_test::server_bots_test()
             config.enable_bots = true;
             config.matchmaking_delay_for_bot = std::chrono::seconds(1);
             config.random_game_auto_start_delay = std::chrono::seconds(5);
+            config.enable_business = true;
 
             return config;
           }())
@@ -46,8 +52,8 @@ server_bots_test::server_bots_test()
 
 TEST_F(server_bots_test, start_with_a_bot)
 {
-  m_clients[0].authenticate();
-  m_clients[1].authenticate();
+  m_clients[0].authenticate("123");
+  m_clients[1].authenticate("456");
 
   // Start a game with only the first player. A bot should be provided by the
   // server.
@@ -64,6 +70,15 @@ TEST_F(server_bots_test, start_with_a_bot)
     }
 
   ASSERT_TRUE(!!m_clients[0].game_launch_event);
+
+  ASSERT_TRUE(!!m_clients[0].players_proposal);
+  ASSERT_EQ(2, m_clients[0].players_proposal->size());
+
+  std::vector<bim::net::user_id> users(*m_clients[0].players_proposal);
+  std::sort(users.begin(), users.end());
+
+  EXPECT_EQ(bim::net::not_a_user, users[0]);
+  EXPECT_EQ(123, users[1]);
 
   // Start another game with only the second player. Since the first player is
   // in a game, a bot should be provided by the server.
@@ -84,12 +99,21 @@ TEST_F(server_bots_test, start_with_a_bot)
   // The players should be in different games.
   EXPECT_NE(m_clients[0].game_launch_event->channel,
             m_clients[1].game_launch_event->channel);
+
+  ASSERT_TRUE(!!m_clients[1].players_proposal);
+  ASSERT_EQ(2, m_clients[1].players_proposal->size());
+
+  users = std::vector<bim::net::user_id>(*m_clients[1].players_proposal);
+  std::sort(users.begin(), users.end());
+
+  EXPECT_EQ(bim::net::not_a_user, users[0]);
+  EXPECT_EQ(456, users[1]);
 }
 
 TEST_F(server_bots_test, human_replaces_the_bot)
 {
-  m_clients[0].authenticate();
-  m_clients[1].authenticate();
+  m_clients[0].authenticate("11");
+  m_clients[1].authenticate("22");
 
   // Start a game with only the first player. A bot should be provided by the
   // server.
@@ -101,11 +125,21 @@ TEST_F(server_bots_test, human_replaces_the_bot)
     {
       m_scheduler.tick(std::chrono::seconds(1));
 
-      if (!!m_clients[0].player_count_proposal)
+      if (!!m_clients[0].players_proposal
+          && (m_clients[0].players_proposal->size() == 2))
         break;
     }
 
-  ASSERT_TRUE(!!m_clients[0].player_count_proposal);
+  ASSERT_TRUE(!!m_clients[0].players_proposal);
+
+  ASSERT_TRUE(!!m_clients[0].players_proposal);
+  ASSERT_EQ(2, m_clients[0].players_proposal->size());
+
+  std::vector<bim::net::user_id> users(*m_clients[0].players_proposal);
+  std::sort(users.begin(), users.end());
+
+  EXPECT_EQ(bim::net::not_a_user, users[0]);
+  EXPECT_EQ(11, users[1]);
 
   // Start another game with only the second player. Since the first player has
   // not accept the proposed game, both players should be matched.
@@ -117,11 +151,11 @@ TEST_F(server_bots_test, human_replaces_the_bot)
     {
       m_scheduler.tick(std::chrono::seconds(1));
 
-      if (!!m_clients[1].player_count_proposal)
+      if (!!m_clients[1].players_proposal)
         break;
     }
 
-  ASSERT_TRUE(!!m_clients[1].player_count_proposal);
+  ASSERT_TRUE(!!m_clients[1].players_proposal);
 
   m_clients[0].accept_game();
   m_clients[1].accept_game();
@@ -140,16 +174,29 @@ TEST_F(server_bots_test, human_replaces_the_bot)
   // The players should be in the same game.
   EXPECT_EQ(m_clients[0].game_launch_event->channel,
             m_clients[1].game_launch_event->channel);
+
+  ASSERT_TRUE(!!m_clients[0].players_proposal);
+  ASSERT_TRUE(!!m_clients[1].players_proposal);
+
+  // The last proposal for m_client[0] may be the one with the bot, but
+  // m_clients[1] should have a proposal with m_client[0].
+
+  ASSERT_EQ(2, m_clients[1].players_proposal->size());
+
+  users = std::vector<bim::net::user_id>(*m_clients[1].players_proposal);
+  std::sort(users.begin(), users.end());
+
+  EXPECT_EQ(11, users[0]);
+  EXPECT_EQ(22, users[1]);
 }
 
 TEST_F(server_bots_test, bot_replaces_the_human)
 {
-  m_clients[0].authenticate();
-  m_clients[1].authenticate();
+  m_clients[0].authenticate("111");
+  m_clients[1].authenticate("222");
 
   // Start a game request for both players, they should be matched. Only the
   // first player accepts the game.
-  // server.
   m_clients[0].new_game_auto_accept();
   m_clients[1].new_game();
 
@@ -159,16 +206,15 @@ TEST_F(server_bots_test, bot_replaces_the_human)
     {
       m_scheduler.tick(std::chrono::seconds(1));
 
-      if (!!m_clients[0].game_launch_event
-          && !!m_clients[1].player_count_proposal)
+      if (!!m_clients[0].game_launch_event && !!m_clients[1].players_proposal)
         break;
     }
 
   // The first player is in a game, a bot should have been provided.
-  ASSERT_TRUE(!!m_clients[0].player_count_proposal);
+  ASSERT_TRUE(!!m_clients[0].players_proposal);
   ASSERT_TRUE(!!m_clients[0].game_launch_event);
 
   // The second player is not in a game.
-  ASSERT_TRUE(!!m_clients[1].player_count_proposal);
+  ASSERT_TRUE(!!m_clients[1].players_proposal);
   ASSERT_FALSE(!!m_clients[1].game_launch_event);
 }

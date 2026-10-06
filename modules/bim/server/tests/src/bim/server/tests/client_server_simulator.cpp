@@ -50,8 +50,7 @@ void bim::server::tests::client_server_simulator::
       // The mockup for the business server will parse the session token to get
       // the user ID.
       const std::string user_id_str = std::to_string(clients[i].user_id);
-      clients[i].authenticate(
-          bim::net::session_token(user_id_str.begin(), user_id_str.end()));
+      clients[i].authenticate(user_id_str);
 
       EXPECT_TRUE(!!clients[i].session) << "i=" << i;
     }

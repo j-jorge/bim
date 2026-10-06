@@ -16,6 +16,7 @@
 #include <chrono>
 #include <memory>
 #include <optional>
+#include <string_view>
 
 namespace iscool::net
 {
@@ -49,7 +50,7 @@ namespace bim::server::tests
     ~test_client();
 
     void authenticate();
-    void authenticate(const bim::net::session_token& session_token);
+    void authenticate(std::string_view token);
     void new_game();
     void new_game_auto_accept();
     void new_game_auto_accept(bim::game::feature_flags f);
@@ -66,7 +67,7 @@ namespace bim::server::tests
     std::optional<iscool::net::session_id> session;
     std::optional<bim::net::authentication_error_code> authentication_error;
 
-    std::optional<std::uint8_t> player_count_proposal;
+    std::optional<std::vector<bim::net::user_id>> players_proposal;
     std::optional<bim::net::game_launch_event> game_launch_event;
     std::optional<bool> started;
     std::unique_ptr<bim::net::contest_runner> contest_runner;

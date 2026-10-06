@@ -4,6 +4,7 @@
 #include <bim/net/message/client_token.hpp>
 #include <bim/net/message/encounter_id.hpp>
 #include <bim/net/message/game_name.hpp>
+#include <bim/net/message/user_id.hpp>
 
 #include <bim/game/feature_flags_fwd.hpp>
 
@@ -14,6 +15,7 @@
 #include <iscool/signals/scoped_connection.hpp>
 
 #include <optional>
+#include <span>
 
 namespace bim::net
 {
@@ -21,7 +23,8 @@ namespace bim::net
 
   class new_game_exchange
   {
-    DECLARE_SIGNAL(void(unsigned), game_proposal, m_game_proposal)
+    DECLARE_SIGNAL(void(std::span<const user_id>), game_proposal,
+                   m_game_proposal)
     DECLARE_SIGNAL(void(const game_launch_event&), launch_game, m_launch_game)
 
   public:
