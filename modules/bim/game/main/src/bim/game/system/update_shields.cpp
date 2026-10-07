@@ -15,6 +15,6 @@ void bim::game::update_shields(entt::registry& registry)
           registry.erase<burning>(e);
           registry.erase<shield>(e);
 
-          invincibility_state_factory(registry, e, std::chrono::seconds(5));
+          invincibility_state_factory(registry, e, std::chrono::seconds(2));
         });
 }
