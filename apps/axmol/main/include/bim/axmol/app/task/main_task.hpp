@@ -57,6 +57,7 @@ namespace bim::app
   class analytics_service;
   class fetch_player_profile_job;
   class push_legacy_state_job;
+  class user_profile_cache;
   struct legacy_state_transfer_response;
 }
 
@@ -95,6 +96,7 @@ namespace bim::axmol::app
             ((bim::app::config*)(config))                              //
             ((const bim::business::request_headers*)(request_headers)) //
             ((bim::app::player_profile*)(player_profile))              //
+            ((bim::app::user_profile_cache*)(profile_cache))           //
             ((const std::string&)(device_id))                          //
             ));
 
@@ -141,6 +143,7 @@ namespace bim::axmol::app
 
     bim::net::session_handler m_session_handler;
     std::unique_ptr<message_popup> m_message_popup;
+    std::unique_ptr<bim::app::user_profile_cache> m_profiles;
     std::unique_ptr<screen_wheel> m_screen_wheel;
 
     iscool::signals::scoped_connection m_loader_connection;

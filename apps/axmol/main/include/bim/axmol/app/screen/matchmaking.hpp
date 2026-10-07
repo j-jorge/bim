@@ -6,13 +6,19 @@
 #include <bim/axmol/input/tree.hpp>
 #include <bim/axmol/widget/declare_controls_struct.hpp>
 
+#include <bim/net/message/user_id.hpp>
+
 #include <bim/game/feature_flags_fwd.hpp>
+#include <bim/game/per_player_array.hpp>
 
 #include <iscool/context.hpp>
 #include <iscool/monitoring/declare_state_monitor.hpp>
 #include <iscool/net/message/channel_id.hpp>
 #include <iscool/signals/declare_signal.hpp>
 #include <iscool/signals/scoped_connection.hpp>
+
+#include <span>
+#include <string_view>
 
 namespace bim::axmol::widget
 {
@@ -24,6 +30,7 @@ namespace bim::app
   class analytics_service;
   class matchmaking_wait_message;
   class player_profile;
+  class user_profile_cache;
 }
 
 namespace bim::net
@@ -43,6 +50,11 @@ namespace iscool::style
   class declaration;
 }
 
+namespace ax
+{
+  class Label;
+}
+
 namespace bim::axmol::app
 {
   class application_event_dispatcher;
@@ -57,6 +69,7 @@ namespace bim::axmol::app
     ic_declare_context(
         m_context,
         ic_context_declare_parent_properties(                              //
+            ((bim::app::user_profile_cache*)(profile_cache))               //
             ((const bim::axmol::widget::context*)(widget_context))         //
             ((bim::app::analytics_service*)(analytics))                    //
             ((const bim::app::player_profile*)(player_profile))            //
@@ -82,6 +95,8 @@ namespace bim::axmol::app
   private:
     void update_display_with_game_proposal(
         std::span<const bim::net::user_id> players);
+    void update_nicknames(std::span<const bim::net::user_id> players);
+    void set_nickname(std::size_t i, std::string_view n);
     void run_actions(bim::axmol::action::runner& runner,
                      const iscool::style::declaration& style) const;
 
@@ -98,9 +113,13 @@ namespace bim::axmol::app
 
     bim::axmol::input::single_key_observer_handle m_escape;
     bim::axmol::input::tree m_inputs;
-    bim_declare_controls_struct(controls, m_controls, 4);
+    bim_declare_controls_struct(controls, m_controls, 8);
 
     const std::unique_ptr<wallet> m_wallet;
+    bim::game::per_player_array<iscool::signals::scoped_connection>
+        m_profile_connection;
+    const bim::game::per_player_array<ax::Label*> m_nickname;
+    std::string_view m_bot_name;
 
     std::unique_ptr<bim::net::new_game_exchange> m_new_game;
 

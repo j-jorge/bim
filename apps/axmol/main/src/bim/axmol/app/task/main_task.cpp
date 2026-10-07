@@ -14,6 +14,7 @@
 #include <bim/app/job/push_legacy_state_job.hpp>
 #include <bim/app/preference/date_of_next_version_update_message.hpp>
 #include <bim/app/preference/update_preferences.hpp>
+#include <bim/app/user_profile_cache.hpp>
 
 #include <bim/tracy.hpp>
 #include <bim/version.hpp>
@@ -145,6 +146,10 @@ void bim::axmol::app::main_task::create_main_ui()
   m_context.set_config(&m_config);
   m_context.set_request_headers(&m_request_headers);
   m_context.set_player_profile(&m_player_profile);
+
+  m_profiles.reset(new bim::app::user_profile_cache(*m_context.get_analytics(),
+                                                    m_request_headers));
+  m_context.set_profile_cache(m_profiles.get());
 
   m_screen_wheel.reset(
       new screen_wheel(m_context, *m_style.get_declaration("screen-wheel")));

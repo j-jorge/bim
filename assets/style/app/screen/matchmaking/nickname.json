@@ -1,0 +1,18 @@
+{
+  "meta": {
+    "overrides": [
+      "font/bold-outline-and-shadow"
+    ]
+  },
+
+  "style": {
+    "anchor-point.x": 0.5,
+    "anchor-point.y": 0.5,
+    "z-order": 10,
+    "font.size": 32,
+    "shadow.offset.x": -1,
+    "font.italics": true,
+    "text": "-",
+    "rotation": -10
+  }
+}

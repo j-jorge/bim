@@ -32,6 +32,7 @@ namespace bim::app
 {
   class analytics_service;
   class player_profile;
+  class user_profile_cache;
   struct config;
 }
 
@@ -89,6 +90,7 @@ namespace bim::axmol::app
         ic_context_declare_parent_properties(                              //
             ((const bim::business::request_headers*)(request_headers))     //
             ((bim::app::player_profile*)(player_profile))                  //
+            ((bim::app::user_profile_cache*)(profile_cache))               //
             ((const bim::app::config*)(config))                            //
             ((const bim::axmol::widget::context*)(widget_context))         //
             ((main_scene*)(main_scene))                                    //

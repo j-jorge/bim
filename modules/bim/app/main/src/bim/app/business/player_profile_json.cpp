@@ -14,9 +14,6 @@
 
 #include <json/value.h>
 
-#include <ctime>
-#include <iomanip>
-
 bool bim::app::from_json(player_profile& p, const Json::Value& json)
 {
   p.nickname = iscool::json::member_cast<std::string>(json, "nickname");

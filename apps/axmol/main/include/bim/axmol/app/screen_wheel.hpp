@@ -30,6 +30,7 @@ namespace bim
   {
     struct config;
     class player_profile;
+    class user_profile_cache;
   }
 
   namespace business
@@ -106,6 +107,7 @@ namespace bim::axmol::app
             ((iscool::preferences::local_preferences*)(local_preferences)) //
             ((const bim::business::request_headers*)(request_headers))     //
             ((bim::app::player_profile*)(player_profile))                  //
+            ((bim::app::user_profile_cache*)(profile_cache))               //
             ((const bim::axmol::widget::context*)(widget_context))         //
             ((main_scene*)(main_scene))                                    //
             ((bim::app::analytics_service*)(analytics))                    //

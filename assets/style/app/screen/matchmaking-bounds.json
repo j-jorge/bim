@@ -109,6 +109,38 @@
       }
     ],
 
+    "player_nickname_0": [
+      "app/screen/matchmaking/nickname-bounds",
+      {
+        "anchor.reference.x": 0.57,
+        "anchor.reference.y": 0.38
+      }
+    ],
+
+    "player_nickname_1": [
+      "app/screen/matchmaking/nickname-bounds",
+      {
+        "anchor.reference.x": 0.42,
+        "anchor.reference.y": 0.34
+      }
+    ],
+
+    "player_nickname_2": [
+      "app/screen/matchmaking/nickname-bounds",
+      {
+        "anchor.reference.x": 0.25,
+        "anchor.reference.y": 0.35
+      }
+    ],
+
+    "player_nickname_3": [
+      "app/screen/matchmaking/nickname-bounds",
+      {
+        "anchor.reference.x": 0.75,
+        "anchor.reference.y": 0.37
+      }
+    ],
+
     "wait_message": [
       {
         "anchor.x": 0.5,

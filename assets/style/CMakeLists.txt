@@ -38,6 +38,9 @@ set(application_style_files
   app/screen/lobby/stat-title.json
   app/screen/lobby/stat-value-label.json
 
+  app/screen/matchmaking/nickname.json
+  app/screen/matchmaking/nickname-bounds.json
+
   app/screen/online-game/control-panel-decorum.json
   app/screen/online-game/control-panel-edging.json
   app/screen/online-game/fog-display.json
@@ -88,6 +91,7 @@ set(application_style_files
   edit-box/bold-center-normal-size.json
 
   font/bold.json
+  font/bold-outline-and-shadow.json
   font/bold-center-normal-size.json
   font/bold-center-normal-size-with-outline.json
   font/bold-center-with-outline-and-shadow.json

@@ -22,6 +22,7 @@
 
 #include <bim/app/analytics/button_clicked.hpp>
 #include <bim/app/business/player_profile.hpp>
+#include <bim/app/user_profile_cache.hpp>
 
 #include <bim/net/exchange/hello_exchange.hpp>
 #include <bim/net/message/hello_ok.hpp>
@@ -169,6 +170,8 @@ bim::axmol::app::lobby::lobby(const context& context,
         {
           m_player_name_label.setString(
               m_context.get_player_profile()->nickname);
+          m_context.get_profile_cache()->invalidate(
+              m_context.get_player_profile()->user_id);
         });
 }
 

@@ -123,6 +123,19 @@
           }
         ],
 
+        "player_nickname_0": [
+          "app/screen/matchmaking/nickname"
+        ],
+        "player_nickname_1": [
+          "app/screen/matchmaking/nickname"
+        ],
+        "player_nickname_2": [
+          "app/screen/matchmaking/nickname"
+        ],
+        "player_nickname_3": [
+          "app/screen/matchmaking/nickname"
+        ],
+
         "wait_message": [
           "font/bold-center-normal-size",
           {
@@ -203,6 +216,21 @@
             "visible": false
           }
         ],
+        "player_nickname_1": [
+          {
+            "visible": false
+          }
+        ],
+        "player_nickname_2": [
+          {
+            "visible": false
+          }
+        ],
+        "player_nickname_3": [
+          {
+            "visible": false
+          }
+        ],
         "label-2": [
           {
             "visible": false
@@ -261,6 +289,21 @@
             "instantiate": "hide"
           }
         ],
+        "player_nickname_1": [
+          {
+            "instantiate": "hide"
+          }
+        ],
+        "player_nickname_2": [
+          {
+            "instantiate": "hide"
+          }
+        ],
+        "player_nickname_3": [
+          {
+            "instantiate": "hide"
+          }
+        ],
         "label-2": [
           {
             "instantiate": "hide"
@@ -307,6 +350,21 @@
           }
         ],
         "player-4": [
+          {
+            "instantiate": "hide"
+          }
+        ],
+        "player_nickname_1": [
+          {
+            "instantiate": "show"
+          }
+        ],
+        "player_nickname_2": [
+          {
+            "instantiate": "hide"
+          }
+        ],
+        "player_nickname_3": [
           {
             "instantiate": "hide"
           }
@@ -361,6 +419,21 @@
             "instantiate": "hide"
           }
         ],
+        "player_nickname_1": [
+          {
+            "instantiate": "show"
+          }
+        ],
+        "player_nickname_2": [
+          {
+            "instantiate": "show"
+          }
+        ],
+        "player_nickname_3": [
+          {
+            "instantiate": "hide"
+          }
+        ],
         "label-2": [
           {
             "instantiate": "hide"
@@ -407,6 +480,21 @@
           }
         ],
         "player-4": [
+          {
+            "instantiate": "show"
+          }
+        ],
+        "player_nickname_1": [
+          {
+            "instantiate": "show"
+          }
+        ],
+        "player_nickname_2": [
+          {
+            "instantiate": "show"
+          }
+        ],
+        "player_nickname_3": [
           {
             "instantiate": "show"
           }

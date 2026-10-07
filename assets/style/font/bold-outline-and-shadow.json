@@ -1,0 +1,15 @@
+{
+  "meta": {
+    "overrides": [
+      "font/bold"
+    ]
+  },
+
+  "style": {
+    "font.color": "desert-storm",
+    "shadow.color": "cod-gray",
+    "shadow.offset.y": -8,
+    "outline.color": "cod-gray",
+    "outline.size": 5
+  }
+}

@@ -1,8 +1,5 @@
 # Next
 
-## Client
-- Display the opponents' names on the matchmaking screen.
-
 # Nice to have
 
 - Hot reload of the config on the server.

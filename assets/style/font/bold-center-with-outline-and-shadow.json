@@ -1,16 +1,11 @@
 {
   "meta": {
     "overrides": [
-      "font/bold"
+      "font/bold-outline-and-shadow"
     ]
   },
 
   "style": {
-    "font.color": "white",
-    "shadow.color": "cod-gray",
-    "shadow.offset.y": -8,
-    "outline.color": "cod-gray",
-    "outline.size": 5,
     "align.horizontal": "center"
   }
 }

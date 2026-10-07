@@ -16,9 +16,12 @@
 
 #include <bim/app/analytics/button_clicked.hpp>
 #include <bim/app/business/player_profile.hpp>
+#include <bim/app/business/user_profile.hpp>
 #include <bim/app/constant/game_feature_slot_count.hpp>
 #include <bim/app/matchmaking_wait_message.hpp>
 #include <bim/app/preference/user_language.hpp>
+#include <bim/app/random_bot_name.hpp>
+#include <bim/app/user_profile_cache.hpp>
 
 #include <bim/net/exchange/new_game_exchange.hpp>
 #include <bim/net/session_handler.hpp>
@@ -42,7 +45,11 @@
   x_widget(bim::axmol::widget::button, ready_button)                          \
       x_widget(bim::axmol::widget::button, discord_button)                    \
           x_widget(bim::axmol::widget::button, back_button)                   \
-              x_widget(ax::Label, wait_message)
+              x_widget(ax::Label, wait_message)                               \
+                  x_widget(ax::Label, player_nickname_0)                      \
+                      x_widget(ax::Label, player_nickname_1)                  \
+                          x_widget(ax::Label, player_nickname_2)              \
+                              x_widget(ax::Label, player_nickname_3)
 #include <bim/axmol/widget/implement_controls_struct.hpp>
 
 IMPLEMENT_SIGNAL(bim::axmol::app::matchmaking, start_game, m_start_game);
@@ -66,6 +73,9 @@ bim::axmol::app::matchmaking::matchmaking(
   , m_controls(*context.get_widget_context(),
                *style.get_declaration("widgets"))
   , m_wallet(new wallet(context, *style.get_declaration("wallet")))
+  , m_nickname({ m_controls->player_nickname_0, m_controls->player_nickname_1,
+                 m_controls->player_nickname_2,
+                 m_controls->player_nickname_3 })
   , m_new_game(new bim::net::new_game_exchange(
         m_context.get_session_handler()->message_stream()))
   , m_wait_message(new bim::app::matchmaking_wait_message(
@@ -139,6 +149,8 @@ void bim::axmol::app::matchmaking::displaying()
 {
   m_wallet->enter();
 
+  m_bot_name = bim::app::random_bot_name();
+
   m_player_count_monitor->set_waiting_state();
 
   bim::axmol::widget::apply_display(
@@ -150,6 +162,11 @@ void bim::axmol::app::matchmaking::displaying()
 
   m_controls->ready_button->enable(true);
   m_controls->wait_message->setString("");
+
+  for (std::size_t i = 0, n = m_nickname.size(); i != n; ++i)
+    // Keep a space in the string otherwise the label's content size becomes
+    // zero.
+    m_nickname[i]->setString(" ");
 }
 
 void bim::axmol::app::matchmaking::displayed()
@@ -181,11 +198,18 @@ void bim::axmol::app::matchmaking::closing()
 
   m_game_proposal_connection.disconnect();
   m_new_game->stop();
+
+  m_launch_connection.disconnect();
+
+  for (const iscool::signals::scoped_connection& c : m_profile_connection)
+    c.disconnect();
 }
 
 void bim::axmol::app::matchmaking::update_display_with_game_proposal(
     std::span<const bim::net::user_id> players)
 {
+  update_nicknames(players);
+
   const std::size_t player_count = players.size();
 
   // If we tried to launch the game but we are back to a single player
@@ -241,6 +265,39 @@ void bim::axmol::app::matchmaking::update_display_with_game_proposal(
     }
 
   run_actions(m_state_actions, *action);
+}
+
+void bim::axmol::app::matchmaking::update_nicknames(
+    std::span<const bim::net::user_id> players)
+{
+  bim::app::user_profile_cache& profiles = *m_context.get_profile_cache();
+
+  for (std::size_t i = 0, n = players.size(); i != n; ++i)
+    if (players[i] == bim::net::not_a_user)
+      set_nickname(i, m_bot_name);
+    else
+      {
+        const bim::app::user_profile* const p = profiles.get(players[i]);
+
+        if (p)
+          set_nickname(i, p->nickname);
+        else
+          m_profile_connection[i] =
+              profiles.fetch(players[i],
+                             [this, i](const bim::app::user_profile& p)
+                               {
+                                 set_nickname(i, p.nickname);
+                               });
+      }
+
+  for (std::size_t i = players.size(), n = m_nickname.size(); i != n; ++i)
+    set_nickname(i, "");
+}
+
+void bim::axmol::app::matchmaking::set_nickname(std::size_t i,
+                                                std::string_view n)
+{
+  m_nickname[i]->setString(n);
 }
 
 void bim::axmol::app::matchmaking::run_actions(
