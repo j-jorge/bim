@@ -35,8 +35,37 @@ msgid "Do you really want to change the language setting?"
 msgstr "Volètz vertadièrament cambiar lo paramètre fe lenga ?"
 
 #, c++-format
+msgid "Your nickname must have between {} and {} symbols."
+msgstr ""
+
+msgid "Invalid nickname."
+msgstr ""
+
+msgid "Too short."
+msgstr ""
+
+msgid "Too long."
+msgstr ""
+
+#, c++-format
+msgid ""
+"Change your nickname for \"{}\"? You won't be able to change it again before "
+"a couple of hours."
+msgstr ""
+
+msgid "Request error."
+msgstr ""
+
+#, c++-format
 msgid "Version {}"
 msgstr "Version {}"
+
+#, c++-format
+msgid "User ID: {}"
+msgstr ""
+
+msgid "Please keep the informations below available if you need support."
+msgstr ""
 
 msgid "Feedback about Bim!"
 msgstr "Comentris a prepaus de Bim!"
@@ -44,9 +73,6 @@ msgstr "Comentris a prepaus de Bim!"
 #, c++-format
 msgid "Come play a game of Bim! {}"
 msgstr "Ven jogar a una partida de Bim! {}"
-
-msgid "You need more coins to purchase this item!"
-msgstr "Vos cal mai de pèças per comprar aqueste article !"
 
 #, c++-format
 msgid "Customize your games with up to {} feature."
@@ -75,6 +101,9 @@ msgid "Find this incredibly strong barrel, it will save you from one hit!"
 msgstr ""
 "Trobatz aquest barril d'una robustesa excepcionala, que vos salvarà d'un còp "
 "unic !"
+
+msgid "You need more coins to purchase this item!"
+msgstr "Vos cal mai de pèças per comprar aqueste article !"
 
 #, c++-format
 msgid "{} game being played right now."
@@ -128,6 +157,18 @@ msgstr[1] "{} jogaires connectats los darrièrs 30 jorns."
 msgid "Connected to {}."
 msgstr "Connectat a {}."
 
+#, c++-format
+msgid "Nickname change is not available yet. Come back in {} h. {} min. {}  s."
+msgstr ""
+
+#, c++-format
+msgid "Nickname change is not available yet. Come back in {} min. {} s."
+msgstr ""
+
+#, c++-format
+msgid "Nickname change is not available yet. Come back in {} s."
+msgstr ""
+
 msgid "An error occurred. The purchase could not be completed."
 msgstr "Una error s'es producha. La crompa a pas pogut èsser finalizada."
 
@@ -135,6 +176,10 @@ msgid "A new version of Bim! is available! Please update as soon as possible."
 msgstr ""
 "Una novèla version de Bim! es disponibla! Mercés de la metre a jorn tre que "
 "possible."
+
+#, fuzzy, c++-format
+msgid "Failed to authenticate with the business server. Status {}."
+msgstr "Fracàs de l'autentificacion al servidor de jòc. Còdi d'error {}."
 
 #, c++-format
 msgid "Failed to authenticate with the game server. Error code {}."
@@ -188,6 +233,21 @@ msgstr "Sens"
 msgid "On"
 msgstr "Amb"
 
+msgid "No"
+msgstr "Non"
+
+msgid "Yes"
+msgstr "Òc"
+
+msgid "DONE"
+msgstr ""
+
+msgid "Enter the desired nickname below."
+msgstr ""
+
+msgid "Nickname change"
+msgstr ""
+
 msgid "Defeats"
 msgstr "Desfachas"
 
@@ -206,18 +266,8 @@ msgstr "Vòstras estatisticas"
 msgid "Success rate"
 msgstr "Taus de victòrias"
 
-msgid "No"
-msgstr "Non"
-
-msgid "Yes"
-msgstr "Òc"
-
-msgid ""
-"Is your language missing? Add it on <a href='#"
-"'>Weblate</a>!"
-msgstr ""
-"Vòstra lenga i es pas ? Apondètz-la sus <a href='#"
-"'>Weblate</a> !"
+msgid "Is your language missing? Add it on <a href='#'>Weblate</a>!"
+msgstr "Vòstra lenga i es pas ? Apondètz-la sus <a href='#'>Weblate</a> !"
 
 msgid "Language"
 msgstr "Lenga"

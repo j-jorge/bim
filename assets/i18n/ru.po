@@ -37,8 +37,37 @@ msgid "Do you really want to change the language setting?"
 msgstr "Вы действительно хотите изменить настройки языка?"
 
 #, c++-format
+msgid "Your nickname must have between {} and {} symbols."
+msgstr ""
+
+msgid "Invalid nickname."
+msgstr ""
+
+msgid "Too short."
+msgstr ""
+
+msgid "Too long."
+msgstr ""
+
+#, c++-format
+msgid ""
+"Change your nickname for \"{}\"? You won't be able to change it again before "
+"a couple of hours."
+msgstr ""
+
+msgid "Request error."
+msgstr ""
+
+#, c++-format
 msgid "Version {}"
 msgstr "Версия {}"
+
+#, c++-format
+msgid "User ID: {}"
+msgstr ""
+
+msgid "Please keep the informations below available if you need support."
+msgstr ""
 
 msgid "Feedback about Bim!"
 msgstr "Отзыв о Bim!"
@@ -46,9 +75,6 @@ msgstr "Отзыв о Bim!"
 #, c++-format
 msgid "Come play a game of Bim! {}"
 msgstr "Переходи играть в Bim! {}"
-
-msgid "You need more coins to purchase this item!"
-msgstr "Вам нужно больше монет, чтобы купить этот товар!"
 
 #, c++-format
 msgid "Customize your games with up to {} feature."
@@ -74,6 +100,9 @@ msgstr ""
 
 msgid "Find this incredibly strong barrel, it will save you from one hit!"
 msgstr "Найдите значок прочной бочки, она избавит вас от одного удара!"
+
+msgid "You need more coins to purchase this item!"
+msgstr "Вам нужно больше монет, чтобы купить этот товар!"
 
 #, c++-format
 msgid "{} game being played right now."
@@ -135,11 +164,27 @@ msgstr[2] "{} игроков присоединились за последни�
 msgid "Connected to {}."
 msgstr "Присоединиться к {}."
 
+#, c++-format
+msgid "Nickname change is not available yet. Come back in {} h. {} min. {}  s."
+msgstr ""
+
+#, c++-format
+msgid "Nickname change is not available yet. Come back in {} min. {} s."
+msgstr ""
+
+#, c++-format
+msgid "Nickname change is not available yet. Come back in {} s."
+msgstr ""
+
 msgid "An error occurred. The purchase could not be completed."
 msgstr "Произошла ошибка. Покупка не может быть завершена."
 
 msgid "A new version of Bim! is available! Please update as soon as possible."
 msgstr "Доступна новая версия Bim!! Пожалуйста, обновите как можно скорее."
+
+#, fuzzy, c++-format
+msgid "Failed to authenticate with the business server. Status {}."
+msgstr "Не удалось аутентифицироваться с сервером игры. Код ошибки {}."
 
 #, c++-format
 msgid "Failed to authenticate with the game server. Error code {}."
@@ -193,6 +238,21 @@ msgstr "Выключить"
 msgid "On"
 msgstr "Включить"
 
+msgid "No"
+msgstr "Нет"
+
+msgid "Yes"
+msgstr "Да"
+
+msgid "DONE"
+msgstr ""
+
+msgid "Enter the desired nickname below."
+msgstr ""
+
+msgid "Nickname change"
+msgstr ""
+
 msgid "Defeats"
 msgstr "Поражения"
 
@@ -213,18 +273,8 @@ msgstr ""
 "Показатель\n"
 "успешности"
 
-msgid "No"
-msgstr "Нет"
-
-msgid "Yes"
-msgstr "Да"
-
-msgid ""
-"Is your language missing? Add it on <a href='#"
-"'>Weblate</a>!"
-msgstr ""
-"Ваш язык отсутствует? Добавьте его на <a href='#"
-"'>Weblate</a>!"
+msgid "Is your language missing? Add it on <a href='#'>Weblate</a>!"
+msgstr "Ваш язык отсутствует? Добавьте его на <a href='#'>Weblate</a>!"
 
 msgid "Language"
 msgstr "Язык"

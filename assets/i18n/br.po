@@ -41,8 +41,37 @@ msgid "Do you really want to change the language setting?"
 msgstr "Ha sur oc'h e fell deoc'h cheñch an arventennoù yezh ?"
 
 #, c++-format
+msgid "Your nickname must have between {} and {} symbols."
+msgstr ""
+
+msgid "Invalid nickname."
+msgstr ""
+
+msgid "Too short."
+msgstr ""
+
+msgid "Too long."
+msgstr ""
+
+#, c++-format
+msgid ""
+"Change your nickname for \"{}\"? You won't be able to change it again before "
+"a couple of hours."
+msgstr ""
+
+msgid "Request error."
+msgstr ""
+
+#, c++-format
 msgid "Version {}"
 msgstr "Stumm {}"
+
+#, c++-format
+msgid "User ID: {}"
+msgstr ""
+
+msgid "Please keep the informations below available if you need support."
+msgstr ""
 
 msgid "Feedback about Bim!"
 msgstr "Evezhiadennoù diwar-benn Bim!"
@@ -50,9 +79,6 @@ msgstr "Evezhiadennoù diwar-benn Bim!"
 #, c++-format
 msgid "Come play a game of Bim! {}"
 msgstr "Deuit da c'hoari ur bartiad Bim! {}"
-
-msgid "You need more coins to purchase this item!"
-msgstr "Ezhomm ho peus eus muioc'h a bezhioù evit prenañ an dra-mañ !"
 
 #, c++-format
 msgid "Customize your games with up to {} feature."
@@ -85,6 +111,9 @@ msgstr ""
 msgid "Find this incredibly strong barrel, it will save you from one hit!"
 msgstr ""
 "Kavit an donell solut ha kalet-mañ, gwarezet e viot diouzh un dagadenn !"
+
+msgid "You need more coins to purchase this item!"
+msgstr "Ezhomm ho peus eus muioc'h a bezhioù evit prenañ an dra-mañ !"
 
 #, c++-format
 msgid "{} game being played right now."
@@ -162,6 +191,18 @@ msgstr[4] "{} c'hoarier zo bet kevreet en 30 devezh tremenet."
 msgid "Connected to {}."
 msgstr "Kevreet da {}."
 
+#, c++-format
+msgid "Nickname change is not available yet. Come back in {} h. {} min. {}  s."
+msgstr ""
+
+#, c++-format
+msgid "Nickname change is not available yet. Come back in {} min. {} s."
+msgstr ""
+
+#, c++-format
+msgid "Nickname change is not available yet. Come back in {} s."
+msgstr ""
+
 msgid "An error occurred. The purchase could not be completed."
 msgstr "Ur fazi zo bet. N'eo ket bet posupl mont betek penn ar brenadenn."
 
@@ -169,6 +210,10 @@ msgid "A new version of Bim! is available! Please update as soon as possible."
 msgstr ""
 "Ur stumm nevez eus Bim! zo da gaout ! Hizivait an abretañ ar gwellañ mar "
 "plij."
+
+#, fuzzy, c++-format
+msgid "Failed to authenticate with the business server. Status {}."
+msgstr "Ne c'haller ket bezañ anavezet gant servijer ar c'hoari. Kod fazi {}."
 
 #, c++-format
 msgid "Failed to authenticate with the game server. Error code {}."
@@ -222,6 +267,21 @@ msgstr "Lazhet"
 msgid "On"
 msgstr "Enaouet"
 
+msgid "No"
+msgstr "Ket"
+
+msgid "Yes"
+msgstr "Ya"
+
+msgid "DONE"
+msgstr ""
+
+msgid "Enter the desired nickname below."
+msgstr ""
+
+msgid "Nickname change"
+msgstr ""
+
 msgid "Defeats"
 msgstr "Kollet"
 
@@ -240,18 +300,8 @@ msgstr "Ho stadegoù"
 msgid "Success rate"
 msgstr "Feur trec'hiñ"
 
-msgid "No"
-msgstr "Ket"
-
-msgid "Yes"
-msgstr "Ya"
-
-msgid ""
-"Is your language missing? Add it on <a href='#"
-"'>Weblate</a>!"
-msgstr ""
-"Ha mankout a ra ho yezh ? Ouzhpennañ e <a href='#"
-"'>Weblate</a> !"
+msgid "Is your language missing? Add it on <a href='#'>Weblate</a>!"
+msgstr "Ha mankout a ra ho yezh ? Ouzhpennañ e <a href='#'>Weblate</a> !"
 
 msgid "Language"
 msgstr "Yezh"

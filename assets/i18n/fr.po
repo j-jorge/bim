@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-03-09 22:26+0100\n"
-"PO-Revision-Date: 2026-01-22 18:24+0100\n"
+"PO-Revision-Date: 2026-10-07 07:26+0200\n"
 "Last-Translator: Quentin PAGÈS <quentinantonin@free.fr>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/bim/gettext-files/"
 "fr/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Poedit 3.7\n"
+"X-Generator: Poedit 3.9\n"
 
 msgid "Please wait"
 msgstr "Juste un instant"
@@ -36,8 +36,40 @@ msgid "Do you really want to change the language setting?"
 msgstr "Veux-tu vraiment changer le paramètre de langue ?"
 
 #, c++-format
+msgid "Your nickname must have between {} and {} symbols."
+msgstr "Ton pseudo doit avoir entre {} et {} caractères."
+
+msgid "Invalid nickname."
+msgstr "Pseudo invalide."
+
+msgid "Too short."
+msgstr "Trop court."
+
+msgid "Too long."
+msgstr "Trop long."
+
+#, c++-format
+msgid ""
+"Change your nickname for \"{}\"? You won't be able to change it again before "
+"a couple of hours."
+msgstr ""
+"Changer ton pseudo pour « {} » ? Tu ne pourras pas le changer à nouveau "
+"pendant quelques heures."
+
+msgid "Request error."
+msgstr "Requête en échec."
+
+#, c++-format
 msgid "Version {}"
 msgstr "Version {}"
+
+#, c++-format
+msgid "User ID: {}"
+msgstr "ID d'utilisateur: {}"
+
+msgid "Please keep the informations below available if you need support."
+msgstr ""
+"Merci de laisser les informations ci-dessous si tu fais une demande d'aide."
 
 msgid "Feedback about Bim!"
 msgstr "Commentaires à propos de Bim!"
@@ -45,9 +77,6 @@ msgstr "Commentaires à propos de Bim!"
 #, c++-format
 msgid "Come play a game of Bim! {}"
 msgstr "Viens faire une partie de Bim! {}"
-
-msgid "You need more coins to purchase this item!"
-msgstr "Il te faut d'avantage de pièces pour acheter cela !"
 
 #, c++-format
 msgid "Customize your games with up to {} feature."
@@ -76,6 +105,9 @@ msgstr ""
 msgid "Find this incredibly strong barrel, it will save you from one hit!"
 msgstr ""
 "Trouve cet incroyablement solide tonneau, il te protégera d'une attaque !"
+
+msgid "You need more coins to purchase this item!"
+msgstr "Il te faut d'avantage de pièces pour acheter cela !"
 
 #, c++-format
 msgid "{} game being played right now."
@@ -129,6 +161,21 @@ msgstr[1] "{} joueurs connectés dans les 30 derniers jours."
 msgid "Connected to {}."
 msgstr "Connecté à {}."
 
+#, c++-format
+msgid "Nickname change is not available yet. Come back in {} h. {} min. {}  s."
+msgstr ""
+"Le changement de pseudo n'est pas disponible. Reviens dans {} h. {} min. {}  "
+"s."
+
+#, c++-format
+msgid "Nickname change is not available yet. Come back in {} min. {} s."
+msgstr ""
+"Le changement de pseudo n'est pas disponible. Reviens dans {} min. {}  s."
+
+#, c++-format
+msgid "Nickname change is not available yet. Come back in {} s."
+msgstr "Le changement de pseudo n'est pas disponible. Reviens dans {}  s."
+
 msgid "An error occurred. The purchase could not be completed."
 msgstr "Une erreur s'est produite, l'achat n'a pu se conclure."
 
@@ -137,8 +184,12 @@ msgstr ""
 "Une nouvelle version de Bim! est disponible ! Mets à jour dès que possible."
 
 #, c++-format
+msgid "Failed to authenticate with the business server. Status {}."
+msgstr "Impossible de s'identifier auprès du serveur. Status {}."
+
+#, c++-format
 msgid "Failed to authenticate with the game server. Error code {}."
-msgstr "Impossible de s'identifier auprès du serveur. Code d'erreur {}."
+msgstr "Impossible de s'identifier auprès du serveur de jeu. Code d'erreur {}."
 
 msgid "Cancel"
 msgstr "Annuler"
@@ -188,6 +239,21 @@ msgstr "Sans"
 msgid "On"
 msgstr "Avec"
 
+msgid "No"
+msgstr "Non"
+
+msgid "Yes"
+msgstr "Oui"
+
+msgid "DONE"
+msgstr "FAIT"
+
+msgid "Enter the desired nickname below."
+msgstr "Entre ton nouveau pseudo ci-dessous."
+
+msgid "Nickname change"
+msgstr "Changement de pseudo"
+
 msgid "Defeats"
 msgstr "Défaites"
 
@@ -206,15 +272,7 @@ msgstr "Tes statistiques"
 msgid "Success rate"
 msgstr "Taux de victoires"
 
-msgid "No"
-msgstr "Non"
-
-msgid "Yes"
-msgstr "Oui"
-
-msgid ""
-"Is your language missing? Add it on <a href='#"
-"'>Weblate</a>!"
+msgid "Is your language missing? Add it on <a href='#'>Weblate</a>!"
 msgstr ""
 "Ta langue est-elle absente ? Ajoute-la sur <a href='https://"
 "hosted.weblate.org/projects/bim/gettext-files/'>Weblate</a> !"

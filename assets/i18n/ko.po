@@ -35,8 +35,37 @@ msgid "Do you really want to change the language setting?"
 msgstr "정말로 언어 설정을 변경하고 싶으신가요?"
 
 #, c++-format
+msgid "Your nickname must have between {} and {} symbols."
+msgstr ""
+
+msgid "Invalid nickname."
+msgstr ""
+
+msgid "Too short."
+msgstr ""
+
+msgid "Too long."
+msgstr ""
+
+#, c++-format
+msgid ""
+"Change your nickname for \"{}\"? You won't be able to change it again before "
+"a couple of hours."
+msgstr ""
+
+msgid "Request error."
+msgstr ""
+
+#, c++-format
 msgid "Version {}"
 msgstr "버전 {}"
+
+#, c++-format
+msgid "User ID: {}"
+msgstr ""
+
+msgid "Please keep the informations below available if you need support."
+msgstr ""
 
 msgid "Feedback about Bim!"
 msgstr "Bim!에 대한 피드백"
@@ -44,9 +73,6 @@ msgstr "Bim!에 대한 피드백"
 #, c++-format
 msgid "Come play a game of Bim! {}"
 msgstr "Bim! 한번 해봐! {}"
-
-msgid "You need more coins to purchase this item!"
-msgstr "이 아이템을 구매하려면 더 많은 코인이 필요합니다!"
 
 #, c++-format
 msgid "Customize your games with up to {} feature."
@@ -70,6 +96,9 @@ msgstr "다른 사람들의 화면에서 없어지려면 투명화 파워업을 
 
 msgid "Find this incredibly strong barrel, it will save you from one hit!"
 msgstr "이 튼튼한 통을 찾으세요, 한 번의 공격은 막아줄 수 있습니다!"
+
+msgid "You need more coins to purchase this item!"
+msgstr "이 아이템을 구매하려면 더 많은 코인이 필요합니다!"
 
 #, c++-format
 msgid "{} game being played right now."
@@ -115,11 +144,27 @@ msgstr[0] "지난 30일 동안 {}명의 플레이어들이 활동했습니다."
 msgid "Connected to {}."
 msgstr "{}에 연결되었습니다."
 
+#, c++-format
+msgid "Nickname change is not available yet. Come back in {} h. {} min. {}  s."
+msgstr ""
+
+#, c++-format
+msgid "Nickname change is not available yet. Come back in {} min. {} s."
+msgstr ""
+
+#, c++-format
+msgid "Nickname change is not available yet. Come back in {} s."
+msgstr ""
+
 msgid "An error occurred. The purchase could not be completed."
 msgstr "문제가 발생했습니다. 구매를 완료할 수 없습니다."
 
 msgid "A new version of Bim! is available! Please update as soon as possible."
 msgstr "Bim!의 새 버전을 사용할 수 있습니다. 빠른 시일 내에 업데이트해 주세요."
+
+#, fuzzy, c++-format
+msgid "Failed to authenticate with the business server. Status {}."
+msgstr "게임 서버와의 인증 실패. 에러 코드 {}."
 
 #, c++-format
 msgid "Failed to authenticate with the game server. Error code {}."
@@ -173,6 +218,21 @@ msgstr "꺼짐"
 msgid "On"
 msgstr "켜짐"
 
+msgid "No"
+msgstr "아니요"
+
+msgid "Yes"
+msgstr "네"
+
+msgid "DONE"
+msgstr ""
+
+msgid "Enter the desired nickname below."
+msgstr ""
+
+msgid "Nickname change"
+msgstr ""
+
 msgid "Defeats"
 msgstr "패배"
 
@@ -191,15 +251,7 @@ msgstr "내 통계"
 msgid "Success rate"
 msgstr "성공률"
 
-msgid "No"
-msgstr "아니요"
-
-msgid "Yes"
-msgstr "네"
-
-msgid ""
-"Is your language missing? Add it on <a href='#"
-"'>Weblate</a>!"
+msgid "Is your language missing? Add it on <a href='#'>Weblate</a>!"
 msgstr ""
 "사용하시는 언어가 없나요? <a href='https://hosted.weblate.org/projects/bim/"
 "gettext-files/'>Weblate</a> 에서 추가하세요!"

@@ -36,8 +36,37 @@ msgid "Do you really want to change the language setting?"
 msgstr "Gerçekten dil ayarını değiştirmek istiyor musun?"
 
 #, c++-format
+msgid "Your nickname must have between {} and {} symbols."
+msgstr ""
+
+msgid "Invalid nickname."
+msgstr ""
+
+msgid "Too short."
+msgstr ""
+
+msgid "Too long."
+msgstr ""
+
+#, c++-format
+msgid ""
+"Change your nickname for \"{}\"? You won't be able to change it again before "
+"a couple of hours."
+msgstr ""
+
+msgid "Request error."
+msgstr ""
+
+#, c++-format
 msgid "Version {}"
 msgstr "Sürüm {}"
+
+#, c++-format
+msgid "User ID: {}"
+msgstr ""
+
+msgid "Please keep the informations below available if you need support."
+msgstr ""
 
 msgid "Feedback about Bim!"
 msgstr "Bim! hakkında geri bildirim ver!"
@@ -45,9 +74,6 @@ msgstr "Bim! hakkında geri bildirim ver!"
 #, c++-format
 msgid "Come play a game of Bim! {}"
 msgstr "Bim! oyununu oynamaya gel! {}"
-
-msgid "You need more coins to purchase this item!"
-msgstr "Bu ögeyi almak için daha fazla para gerekiyor!"
 
 #, c++-format
 msgid "Customize your games with up to {} feature."
@@ -72,6 +98,9 @@ msgstr ""
 
 msgid "Find this incredibly strong barrel, it will save you from one hit!"
 msgstr "Bu inanılmaz güçlü varili bul, seni tek bir hasardan kurtaracak!"
+
+msgid "You need more coins to purchase this item!"
+msgstr "Bu ögeyi almak için daha fazla para gerekiyor!"
 
 #, c++-format
 msgid "{} game being played right now."
@@ -125,11 +154,27 @@ msgstr[1] "Son 30 günde {} oyuncu çevrimiçiydi."
 msgid "Connected to {}."
 msgstr "Şuna bağlanıldı: {}."
 
+#, c++-format
+msgid "Nickname change is not available yet. Come back in {} h. {} min. {}  s."
+msgstr ""
+
+#, c++-format
+msgid "Nickname change is not available yet. Come back in {} min. {} s."
+msgstr ""
+
+#, c++-format
+msgid "Nickname change is not available yet. Come back in {} s."
+msgstr ""
+
 msgid "An error occurred. The purchase could not be completed."
 msgstr "Bir hata oluştu. Satın alma işlemi tamamlanamadı."
 
 msgid "A new version of Bim! is available! Please update as soon as possible."
 msgstr "Bim!'in yeni sürümü yayında! Lütfen en kısa sürede güncelle."
+
+#, fuzzy, c++-format
+msgid "Failed to authenticate with the business server. Status {}."
+msgstr "Oyun sunucusuyla kimlik doğrulaması yapılamadı. Hata kodu {}."
 
 #, c++-format
 msgid "Failed to authenticate with the game server. Error code {}."
@@ -183,6 +228,21 @@ msgstr "Kapalı"
 msgid "On"
 msgstr "Açık"
 
+msgid "No"
+msgstr "Hayır"
+
+msgid "Yes"
+msgstr "Evet"
+
+msgid "DONE"
+msgstr ""
+
+msgid "Enter the desired nickname below."
+msgstr ""
+
+msgid "Nickname change"
+msgstr ""
+
 msgid "Defeats"
 msgstr "Yenilgiler"
 
@@ -201,15 +261,7 @@ msgstr "İstatistiklerin"
 msgid "Success rate"
 msgstr "Başarı oranı"
 
-msgid "No"
-msgstr "Hayır"
-
-msgid "Yes"
-msgstr "Evet"
-
-msgid ""
-"Is your language missing? Add it on <a href='#"
-"'>Weblate</a>!"
+msgid "Is your language missing? Add it on <a href='#'>Weblate</a>!"
 msgstr ""
 "Kendi dilin eksik mi? <a href='https://hosted.weblate.org/projects/bim/"
 "gettext-files/'>Weblate</a> üzerinden ekleyebilirsin!"

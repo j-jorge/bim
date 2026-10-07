@@ -35,8 +35,37 @@ msgid "Do you really want to change the language setting?"
 msgstr "மொழி அமைப்பை உண்மையில் மாற்ற விரும்புகிறீர்களா?"
 
 #, c++-format
+msgid "Your nickname must have between {} and {} symbols."
+msgstr ""
+
+msgid "Invalid nickname."
+msgstr ""
+
+msgid "Too short."
+msgstr ""
+
+msgid "Too long."
+msgstr ""
+
+#, c++-format
+msgid ""
+"Change your nickname for \"{}\"? You won't be able to change it again before "
+"a couple of hours."
+msgstr ""
+
+msgid "Request error."
+msgstr ""
+
+#, c++-format
 msgid "Version {}"
 msgstr "பதிப்பு {}"
+
+#, c++-format
+msgid "User ID: {}"
+msgstr ""
+
+msgid "Please keep the informations below available if you need support."
+msgstr ""
 
 msgid "Feedback about Bim!"
 msgstr "பிம் பற்றிய கருத்து!"
@@ -44,9 +73,6 @@ msgstr "பிம் பற்றிய கருத்து!"
 #, c++-format
 msgid "Come play a game of Bim! {}"
 msgstr "பிம் விளையாட்டை விளையாட வாருங்கள்! {}"
-
-msgid "You need more coins to purchase this item!"
-msgstr "இந்த பொருளை வாங்க உங்களுக்கு அதிக நாணயங்கள் தேவை!"
 
 #, c++-format
 msgid "Customize your games with up to {} feature."
@@ -73,7 +99,11 @@ msgstr ""
 
 msgid "Find this incredibly strong barrel, it will save you from one hit!"
 msgstr ""
-"இந்த நம்பமுடியாத வலுவான பீப்பாயைக் கண்டுபிடி, அது ஒரு வெற்றியிலிருந்து உங்களைக் காப்பாற்றும்!"
+"இந்த நம்பமுடியாத வலுவான பீப்பாயைக் கண்டுபிடி, அது ஒரு வெற்றியிலிருந்து உங்களைக் "
+"காப்பாற்றும்!"
+
+msgid "You need more coins to purchase this item!"
+msgstr "இந்த பொருளை வாங்க உங்களுக்கு அதிக நாணயங்கள் தேவை!"
 
 #, c++-format
 msgid "{} game being played right now."
@@ -127,11 +157,27 @@ msgstr[1] "கடந்த 30 நாட்களில் {} வீரர்க�
 msgid "Connected to {}."
 msgstr "{} உடன் இணைக்கப்பட்டது."
 
+#, c++-format
+msgid "Nickname change is not available yet. Come back in {} h. {} min. {}  s."
+msgstr ""
+
+#, c++-format
+msgid "Nickname change is not available yet. Come back in {} min. {} s."
+msgstr ""
+
+#, c++-format
+msgid "Nickname change is not available yet. Come back in {} s."
+msgstr ""
+
 msgid "An error occurred. The purchase could not be completed."
 msgstr "பிழை ஏற்பட்டது. வாங்குதலை முடிக்க முடியவில்லை."
 
 msgid "A new version of Bim! is available! Please update as soon as possible."
 msgstr "Bim இன் புதிய பதிப்பு! கிடைக்கிறது! கூடிய விரைவில் புதுப்பிக்கவும்."
+
+#, fuzzy, c++-format
+msgid "Failed to authenticate with the business server. Status {}."
+msgstr "கேம் சர்வர் மூலம் அங்கீகரிக்க முடியவில்லை. பிழைக் குறியீடு {}."
 
 #, c++-format
 msgid "Failed to authenticate with the game server. Error code {}."
@@ -185,6 +231,21 @@ msgstr "அணை"
 msgid "On"
 msgstr "அன்று"
 
+msgid "No"
+msgstr "இல்லை"
+
+msgid "Yes"
+msgstr "ஆம்"
+
+msgid "DONE"
+msgstr ""
+
+msgid "Enter the desired nickname below."
+msgstr ""
+
+msgid "Nickname change"
+msgstr ""
+
 msgid "Defeats"
 msgstr "தோல்விகள்"
 
@@ -203,12 +264,6 @@ msgstr "உங்கள் புள்ளிவிவரங்கள்"
 msgid "Success rate"
 msgstr "செய் விகிதம்"
 
-msgid "No"
-msgstr "இல்லை"
-
-msgid "Yes"
-msgstr "ஆம்"
-
 msgid "Is your language missing? Add it on <a href='#'>Weblate</a>!"
 msgstr "உங்கள் மொழி காணவில்லையா? <a href='#'>Weblate</a> இல் சேர்க்கவும்!"
 
@@ -222,8 +277,7 @@ msgid "Directional pad, at a fixed position on the screen."
 msgstr "திசை திண்டு, திரையில் ஒரு நிலையான நிலையில்."
 
 msgid "Analog stick, it pops where you tap and follows the drag."
-msgstr ""
-"அனலாக் ச்டிக், நீங்கள் தட்டும்போது அது தோன்றும் மற்றும் இழுவைப் பின்தொடர்கிறது."
+msgstr "அனலாக் ச்டிக், நீங்கள் தட்டும்போது அது தோன்றும் மற்றும் இழுவைப் பின்தொடர்கிறது."
 
 msgid "Controls"
 msgstr "கட்டுப்பாடுகள்"
@@ -272,7 +326,8 @@ msgstr "மற்ற வீரர்களைச் சந்திக்க எ
 
 msgid "You can start a two-players game now or wait for more players!"
 msgstr ""
-"நீங்கள் இப்போது இருவர் விளையாடும் விளையாட்டைத் தொடங்கலாம் அல்லது அதிக வீரர்களுக்காக காத்திருக்கலாம்!"
+"நீங்கள் இப்போது இருவர் விளையாடும் விளையாட்டைத் தொடங்கலாம் அல்லது அதிக வீரர்களுக்காக "
+"காத்திருக்கலாம்!"
 
 msgid "You can start a three-players game now or wait for more players!"
 msgstr ""

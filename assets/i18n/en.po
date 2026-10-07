@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-03-09 22:26+0100\n"
-"PO-Revision-Date: 2026-01-22 18:24+0100\n"
+"PO-Revision-Date: 2026-10-07 07:22+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.7\n"
+"X-Generator: Poedit 3.9\n"
 
 msgid "Please wait"
 msgstr "Please wait"
@@ -36,8 +36,39 @@ msgid "Do you really want to change the language setting?"
 msgstr "Do you really want to change the language setting?"
 
 #, c++-format
+msgid "Your nickname must have between {} and {} symbols."
+msgstr "Your nickname must have between {} and {} symbols."
+
+msgid "Invalid nickname."
+msgstr "Invalid nickname."
+
+msgid "Too short."
+msgstr "Too short."
+
+msgid "Too long."
+msgstr "Too long."
+
+#, c++-format
+msgid ""
+"Change your nickname for \"{}\"? You won't be able to change it again before "
+"a couple of hours."
+msgstr ""
+"Change your nickname for \"{}\"? You won't be able to change it again before "
+"a couple of hours."
+
+msgid "Request error."
+msgstr "Request error."
+
+#, c++-format
 msgid "Version {}"
 msgstr "Version {}"
+
+#, c++-format
+msgid "User ID: {}"
+msgstr "User ID: {}"
+
+msgid "Please keep the informations below available if you need support."
+msgstr "Please keep the informations below available if you need support."
 
 msgid "Feedback about Bim!"
 msgstr "Feedback about Bim!"
@@ -45,9 +76,6 @@ msgstr "Feedback about Bim!"
 #, c++-format
 msgid "Come play a game of Bim! {}"
 msgstr "Come play a game of Bim! {}"
-
-msgid "You need more coins to purchase this item!"
-msgstr "You need more coins to purchase this item!"
 
 #, c++-format
 msgid "Customize your games with up to {} feature."
@@ -73,6 +101,9 @@ msgstr ""
 
 msgid "Find this incredibly strong barrel, it will save you from one hit!"
 msgstr "Find this incredibly strong barrel, it will save you from one hit!"
+
+msgid "You need more coins to purchase this item!"
+msgstr "You need more coins to purchase this item!"
 
 #, c++-format
 msgid "{} game being played right now."
@@ -126,11 +157,28 @@ msgstr[1] "{} players connected in the last 30 days."
 msgid "Connected to {}."
 msgstr "Connected to {}."
 
+#, c++-format
+msgid "Nickname change is not available yet. Come back in {} h. {} min. {}  s."
+msgstr ""
+"Nickname change is not available yet. Come back in {} h. {} min. {}  s."
+
+#, c++-format
+msgid "Nickname change is not available yet. Come back in {} min. {} s."
+msgstr "Nickname change is not available yet. Come back in {} min. {} s."
+
+#, c++-format
+msgid "Nickname change is not available yet. Come back in {} s."
+msgstr "Nickname change is not available yet. Come back in {} s."
+
 msgid "An error occurred. The purchase could not be completed."
 msgstr "An error occurred. The purchase could not be completed."
 
 msgid "A new version of Bim! is available! Please update as soon as possible."
 msgstr "A new version of Bim! is available! Please update as soon as possible."
+
+#, c++-format
+msgid "Failed to authenticate with the business server. Status {}."
+msgstr "Failed to authenticate with the business server. Status {}."
 
 #, c++-format
 msgid "Failed to authenticate with the game server. Error code {}."
@@ -184,6 +232,21 @@ msgstr "Off"
 msgid "On"
 msgstr "On"
 
+msgid "No"
+msgstr "No"
+
+msgid "Yes"
+msgstr "Yes"
+
+msgid "DONE"
+msgstr "DONE"
+
+msgid "Enter the desired nickname below."
+msgstr "Enter the desired nickname below."
+
+msgid "Nickname change"
+msgstr "Nickname change"
+
 msgid "Defeats"
 msgstr "Defeats"
 
@@ -202,18 +265,8 @@ msgstr "Your statistics"
 msgid "Success rate"
 msgstr "Success rate"
 
-msgid "No"
-msgstr "No"
-
-msgid "Yes"
-msgstr "Yes"
-
-msgid ""
-"Is your language missing? Add it on <a href='#"
-"'>Weblate</a>!"
-msgstr ""
-"Is your language missing? Add it on <a href='#"
-"'>Weblate</a>!"
+msgid "Is your language missing? Add it on <a href='#'>Weblate</a>!"
+msgstr "Is your language missing? Add it on <a href='#'>Weblate</a>!"
 
 msgid "Language"
 msgstr "Language"
