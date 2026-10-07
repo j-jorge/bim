@@ -301,6 +301,11 @@ bim::axmol::app::game_features::display_nodes() const
 void bim::axmol::app::game_features::attached()
 {
   m_wallet->attached();
+}
+
+void bim::axmol::app::game_features::displaying()
+{
+  m_wallet->enter();
 
   m_buy_feature_done_connection = m_buy_feature_job->connect_to_done(
       [this](bim::game::feature_flags f)
@@ -320,11 +325,6 @@ void bim::axmol::app::game_features::attached()
             {
               update_slot_content();
             });
-}
-
-void bim::axmol::app::game_features::displaying()
-{
-  m_wallet->enter();
 
   const bim::app::player_profile& profile = *m_context.get_player_profile();
 
