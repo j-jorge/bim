@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2026-04-26 19:09+0000\n"
+"PO-Revision-Date: 2026-10-08 07:51+0000\n"
 "Last-Translator: Oğuz Ersen <oguz@ersen.moe>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/bim/gettext-"
 "files/tr/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.17.1-dev\n"
+"X-Generator: Weblate 2026.10.1.dev0\n"
 
 msgid "Please wait"
 msgstr "Lütfen bekleyin"
@@ -37,25 +37,27 @@ msgstr "Gerçekten dil ayarını değiştirmek istiyor musun?"
 
 #, c++-format
 msgid "Your nickname must have between {} and {} symbols."
-msgstr ""
+msgstr "Takma adınız {} ile {} arasında karakter içermelidir."
 
 msgid "Invalid nickname."
-msgstr ""
+msgstr "Geçersiz takma ad."
 
 msgid "Too short."
-msgstr ""
+msgstr "Çok kısa."
 
 msgid "Too long."
-msgstr ""
+msgstr "Çok uzun."
 
 #, c++-format
 msgid ""
 "Change your nickname for \"{}\"? You won't be able to change it again before "
 "a couple of hours."
 msgstr ""
+"\"{}\" için takma adınız değiştirilsin mi? Birkaç saat geçmeden tekrar "
+"değiştiremezsin."
 
 msgid "Request error."
-msgstr ""
+msgstr "İstek hatası."
 
 #, c++-format
 msgid "Version {}"
@@ -63,10 +65,10 @@ msgstr "Sürüm {}"
 
 #, c++-format
 msgid "User ID: {}"
-msgstr ""
+msgstr "Kullanıcı kimliği: {}"
 
 msgid "Please keep the informations below available if you need support."
-msgstr ""
+msgstr "Destek gerekirse, lütfen aşağıdaki bilgileri hazır bulundurun."
 
 msgid "Feedback about Bim!"
 msgstr "Bim! hakkında geri bildirim ver!"
@@ -157,14 +159,18 @@ msgstr "Şuna bağlanıldı: {}."
 #, c++-format
 msgid "Nickname change is not available yet. Come back in {} h. {} min. {}  s."
 msgstr ""
+"Takma ad değiştirme henüz kullanılamıyor. {} sa. {} dak. {}  sn. sonra "
+"tekrar deneyin."
 
 #, c++-format
 msgid "Nickname change is not available yet. Come back in {} min. {} s."
 msgstr ""
+"Takma ad değiştirme henüz kullanılamıyor. {} dak. {}  sn. sonra tekrar "
+"deneyin."
 
 #, c++-format
 msgid "Nickname change is not available yet. Come back in {} s."
-msgstr ""
+msgstr "Takma ad değiştirme henüz kullanılamıyor. {}  sn. sonra tekrar deneyin."
 
 msgid "An error occurred. The purchase could not be completed."
 msgstr "Bir hata oluştu. Satın alma işlemi tamamlanamadı."
@@ -172,9 +178,9 @@ msgstr "Bir hata oluştu. Satın alma işlemi tamamlanamadı."
 msgid "A new version of Bim! is available! Please update as soon as possible."
 msgstr "Bim!'in yeni sürümü yayında! Lütfen en kısa sürede güncelle."
 
-#, fuzzy, c++-format
+#, c++-format
 msgid "Failed to authenticate with the business server. Status {}."
-msgstr "Oyun sunucusuyla kimlik doğrulaması yapılamadı. Hata kodu {}."
+msgstr "İş sunucusuyla kimlik doğrulaması yapılamadı. Durum {}."
 
 #, c++-format
 msgid "Failed to authenticate with the game server. Error code {}."
@@ -235,13 +241,13 @@ msgid "Yes"
 msgstr "Evet"
 
 msgid "DONE"
-msgstr ""
+msgstr "BİTTİ"
 
 msgid "Enter the desired nickname below."
-msgstr ""
+msgstr "Aşağıya istediğiniz takma adı girin."
 
 msgid "Nickname change"
-msgstr ""
+msgstr "Takma ad değişikliği"
 
 msgid "Defeats"
 msgstr "Yenilgiler"
