@@ -81,7 +81,7 @@ jobs:
         run: >
           ninja -C build/linux/${{matrix.build_type}} clean
           && cmake build/linux/${{matrix.build_type}} -DBIM_ENABLE_CLANG_TIDY=ON
-          && ninja -C build/linux/${{matrix.build_type}}
+          && ninja -C build/linux/${{matrix.build_type}} -k 0
 
       # Valgrind tests runs for a single configuration only because
       # they are very slow.
