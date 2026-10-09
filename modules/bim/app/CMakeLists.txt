@@ -86,6 +86,7 @@ add_executable(app-tests
   tests/src/bim/app/job/buy_feature_slot_job.cpp
   tests/src/bim/app/job/consume_game_reward_job.cpp
   tests/src/bim/app/job/fetch_user_profiles_job.cpp
+  tests/src/bim/app/job/push_legacy_state_job.cpp
   tests/src/bim/app/job/update_nickname_job.cpp
   tests/src/bim/app/job/validate_purchase_job.cpp
 
