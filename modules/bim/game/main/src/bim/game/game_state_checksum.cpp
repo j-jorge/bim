@@ -25,7 +25,7 @@ namespace
 static std::uint32_t sum(const char* b, std::size_t n, std::uint32_t v)
 {
   for (std::size_t i = 0; i != n; ++i)
-    v += b[i];
+    v += (std::uint8_t)b[i];
 
   return v;
 }
