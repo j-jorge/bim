@@ -5,11 +5,22 @@ set -euo pipefail
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd)"
 repo_root="$(cd "$script_dir"/../; pwd)"
 pids=()
+exit_code=0
 
-build_dir=
+db_container_name="ui-test-business"
+game_server_port=10000
+business_server_db_port=5432
+business_server_app_port=4210
+# Export required for CLI tools from the business repo.
+export BIM_BUSINESS_SERVER_URL="http://localhost:$business_server_app_port"
+export BIM_BUSINESS_CLI_SILENT=1
+
+bim_build_dir=
+business_build_dir=
+business_setup=
+use_gdb=0
 use_valgrind=0
 montage=
-port=
 scripts=()
 user_working_directory=
 
@@ -19,22 +30,74 @@ function fail()
     exit 1
 }
 
+function clean_up()
+{
+    if (( $? != 0 ))
+    then
+        exit_code=$((exit_code + 1))
+    fi
+
+    if [[ -n "${business_server_pid:-}" ]]
+    then
+        echo "Killing business server, pid='$business_server_pid'."
+
+        kill -15 "$business_server_pid" 2>/dev/null || true
+
+        # Check that the server is not running. If it still is then we
+        # kill it.
+        ! kill -0 "$business_server_pid" || kill -9 "$business_server_pid"
+    fi
+
+    echo "Stopping container '$db_container_name'."
+    docker stop "$db_container_name" || true
+
+    if [[ -n "${game_server_pid:-}" ]]
+    then
+        kill -INT "$game_server_pid"
+
+        if ! wait "$game_server_pid"
+        then
+            echo "Server has failed."
+            exit_code=$((exit_code + 1))
+        fi
+    fi
+
+    if [[ -d "${tmp_dir:-}" ]]
+    then
+        if (( exit_code == 0 ))
+        then
+            rm --force --recursive "$tmp_dir"
+        else
+            echo "Logs are in $tmp_dir"
+        fi
+    fi
+
+    return "$exit_code"
+}
+
+trap clean_up EXIT
+
 function usage()
 {
     cat <<EOF
 Run Bim! client with the given scripts.
 
 OPTIONS
-  --build DIR
-     Path to the build directory.
+  --bim-build-dir DIR
+     Path to the build directory of Bim!.
+  --business-build-dir DIR
+     Path to the build directory of the business server.
+  --business-setup SCRIPT
+     Path to a script to launch to set the initial state of the
+     business server.
   --help, -h
      Display this message then exit.
   --montage FILE
      Create a montage with all the captures from the working directory.
   --script FILE…
      The scripts to launch. Run one client per script.
-  --server PORT
-     Run a game server on the given port before launching the scripts.
+  --use-gdb
+     Run the test programs with GDB.
   --use-valgrind
      Run the test programs with Valgrind. The test failures will be
      ignored, and the exit code will reflect the existence of errors
@@ -56,14 +119,34 @@ do
     shift
 
     case "$arg" in
-        --build)
+        --bim-build-dir)
             if (( $# == 0 ))
             then
-                echo "Missing value for --build" >&2
+                echo "Missing value for --bim-build-dir" >&2
                 exit 1
             fi
 
-            build_dir="$1"
+            bim_build_dir="$1"
+            shift
+            ;;
+        --business-build-dir)
+            if (( $# == 0 ))
+            then
+                echo "Missing value for --business-build-dir" >&2
+                exit 1
+            fi
+
+            business_build_dir="$1"
+            shift
+            ;;
+        --business-setup)
+            if (( $# == 0 ))
+            then
+                echo "Missing value for --business-setup" >&2
+                exit 1
+            fi
+
+            business_setup="$1"
             shift
             ;;
         --montage)
@@ -89,15 +172,8 @@ do
                 shift
             done
             ;;
-        --server)
-            if (( $# == 0 ))
-            then
-                echo "Missing value for --server" >&2
-                exit 1
-            fi
-
-            port="$1"
-            shift
+        --use-gdb)
+            use_gdb=1
             ;;
         --use-valgrind)
             use_valgrind=1
@@ -122,12 +198,16 @@ do
     esac
 done
 
-[[ -n "${build_dir:-}" ]] || fail "--build is not set."
+[[ -n "${bim_build_dir:-}" ]] || fail "--bim-build-dir is not set."
+[[ -n "${business_build_dir:-}" ]] || fail "--business-build-dir is not set."
 (( "${#scripts[@]}" != 0 )) || fail "--scripts is not set."
 
-build_dir="$(readlink --canonicalize "$build_dir")"
-bim="$build_dir"/apps/linux/bim
-server="$build_dir"/apps/server/bim-server
+bim_build_dir="$(readlink --canonicalize "$bim_build_dir")"
+bim="$bim_build_dir"/apps/linux/bim
+game_server="$bim_build_dir"/apps/server/bim-server
+business_build_dir="$(readlink --canonicalize "$business_build_dir")"
+business_server="$business_build_dir"/bim-business
+business_repo="$(cd "$business_build_dir"/../../; pwd)"
 
 command=()
 
@@ -137,11 +217,12 @@ command=()
                                      "--track-origins=yes"
                                      "--exit-on-first-error=yes"
                                      --)
+(( use_gdb == 0 )) || command+=(gdb "--args")
 
 command+=("$bim"
           --assets
           "$repo_root"/static-assets/
-          "$build_dir"/assets/generated/
+          "$bim_build_dir"/assets/generated/
           --console-log)
 
 (( use_valgrind == 0 )) || command+=(--script-step-timeout 20)
@@ -156,21 +237,67 @@ else
 fi
 
 tmp_dir="$(mktemp --directory)"
-server_pid=
+mkdir --parents "$tmp_dir"/business
 
-if [[ -n "$port" ]]
-then
-    "$server" --console-log \
-              --name "Bim! World's Server" \
-              --port "$port" \
-              > "$tmp_dir"/server.out \
-              2> "$tmp_dir"/server.err &
+# Start the business server.
+"$business_repo"/tests/start-server.sh \
+                "$business_server" \
+                "$db_container_name" \
+                ui-test-user \
+                ui-test-password \
+                ui-test-db \
+                "$business_server_db_port" \
+                "$business_server_app_port" \
+                "$tmp_dir"/business \
+    | tee "$tmp_dir"/start-server.txt
 
-    server_pid="$!"
-    echo "Server PID is $server_pid."
+business_server_pid="$( (grep --max-count 1 '^PID=[0-9]\+$' \
+                              "$tmp_dir"/start-server.txt \
+                              | cut -d= -f2) \
+                        || true)"
 
-    export BIM_GAME_SERVER_HOST=localhost:"$port"
-fi
+export PATH="$business_repo"/cli/bin/:"$PATH"
+
+# Create an admin.
+BIM_BUSINESS_LEAD_TOKEN="$(bim-lead-create.sh \
+                                | tee "$tmp_dir"/lead-create.json \
+                                | jq -r .)"
+export BIM_BUSINESS_LEAD_TOKEN
+
+# Populate the shop.
+
+# Register the game server.
+game_server_token="$(bim-game-server-create.sh \
+                          --name ui-tests \
+                          --description "UI tests" \
+                          | tee "$tmp_dir"/game-server-create.json \
+                          | jq -r .token)"
+
+"$game_server" --console-log \
+               --name "Bim! World's Server" \
+               --enable-business \
+               --business-token "$game_server_token" \
+               --port "$game_server_port" \
+               > "$tmp_dir"/game-server.out \
+               2> "$tmp_dir"/game-server.err &
+
+game_server_pid="$!"
+echo "Server PID is $game_server_pid."
+
+# Populate the business server to get something to show on the clients.
+bim-game-feature-update.sh falling_blocks 50 \
+                invisibility 250 \
+                shield 250 \
+                fences 500 \
+                fog_of_war 1000
+
+bim-game-feature-slots-update.sh 1 250
+
+bim-shop-update.sh coins_small 50 \
+                coins_medium 250 \
+                coins_large 500 \
+                coins_huge 1000
+
 
 initial_directory="$(pwd)"
 working_directory=()
@@ -199,6 +326,11 @@ do
     fi
 done
 
+if [[ -n "$business_setup" ]]
+then
+    "$business_setup"
+fi
+
 i=0
 for script in "${scripts[@]}"
 do
@@ -218,12 +350,19 @@ do
 
     echo "Running" "${client_command[@]}"
 
-    "${client_command[@]}" > "$tmp_dir"/client.$i.out \
-                           2> "$tmp_dir"/client.$i.err &
-    p="$!"
-    echo "Client #$i PID is $p."
-    pids+=("$p")
-    process_name["$p"]="Client #$i"
+    if (( use_gdb == 0 ))
+    then
+        "${client_command[@]}" > "$tmp_dir"/client.$i.out \
+                               2> "$tmp_dir"/client.$i.err &
+
+        p="$!"
+        echo "Client #$i PID is $p."
+        pids+=("$p")
+        process_name["$p"]="Client #$i"
+    else
+        "${client_command[@]}"
+    fi
+
 
     i=$((i+1))
     cd "$initial_directory"
@@ -242,24 +381,6 @@ do
     fi
     i=$((i+1))
 done
-
-if [[ -n "${server_pid:-}" ]]
-then
-    kill -INT "$server_pid"
-
-    if ! wait "$server_pid"
-    then
-        echo "Server has failed."
-        exit_code=1
-    fi
-fi
-
-if (( exit_code == 0 ))
-then
-    rm --force --recursive "$tmp_dir"
-else
-    echo "Logs are in $tmp_dir"
-fi
 
 if [[ -n "$montage" ]]
 then
@@ -288,5 +409,3 @@ then
         fi
     done
 fi
-
-exit "$exit_code"

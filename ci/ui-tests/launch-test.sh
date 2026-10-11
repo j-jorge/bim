@@ -3,7 +3,9 @@
 set -euo pipefail
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd)"
+use_gdb=0
 use_valgrind=0
+business_setup=
 
 function fail()
 {
@@ -19,10 +21,17 @@ Run one UI test of Bim!
 ${BASH_SOURCE[0]} [OPTIONS] SCRIPTS…
 
 OPTIONS
-  --build DIR
-     Path to the build directory.
+  --bim-build-dir DIR
+     Path to the build directory of Bim!.
+  --business-build-dir DIR
+     Path to the build directory of the business server.
+  --business-setup SCRIPT
+     Path to a script to launch to set the initial state of the
+     business server.
   --help, -h
      Display this message then exit.
+  --use-gdb
+     Run the test programs with GDB.
   --use-valgrind
      Run the test programs with Valgrind. The test failures will be
      ignored, and the exit code will reflect the existence of errors
@@ -56,15 +65,38 @@ do
     shift
 
     case "$arg" in
-        --build)
+        --bim-build-dir)
             if (( $# == 0 ))
             then
-                echo "Missing value for --build" >&2
+                echo "Missing value for --bim-build-dir" >&2
                 exit 1
             fi
 
-            build_dir="$1"
+            bim_build_dir="$1"
             shift
+            ;;
+        --business-build-dir)
+            if (( $# == 0 ))
+            then
+                echo "Missing value for --business-build-dir" >&2
+                exit 1
+            fi
+
+            business_build_dir="$1"
+            shift
+            ;;
+        --business-setup)
+            if (( $# == 0 ))
+            then
+                echo "Missing value for --business-setup" >&2
+                exit 1
+            fi
+
+            business_setup="$1"
+            shift
+            ;;
+        --use-gdb)
+            use_gdb=1
             ;;
         --use-valgrind)
             use_valgrind=1
@@ -88,26 +120,38 @@ do
     esac
 done
 
-[[ -n "${build_dir:-}" ]] || fail "--build is not set."
+[[ -n "${bim_build_dir:-}" ]] || fail "--bim-build-dir is not set."
+[[ -n "${business_build_dir:-}" ]] || fail "--business-build-dir is not set."
 [[ "${#scripts[@]}" -ne 0 ]] || fail "No script provided."
 
-build_dir="$(readlink --canonicalize "$build_dir")"
-working_directory="$build_dir"/ui-tests
+bim_build_dir="$(readlink --canonicalize "$bim_build_dir")"
+business_build_dir="$(readlink --canonicalize "$business_build_dir")"
+working_directory="$bim_build_dir"/ui-tests
 
 rm --force --recursive "$working_directory"
 mkdir --parents "$working_directory"
 cd "$working_directory"
 
 command=("$script_dir"/../run-ui-script.sh
-         --build "$build_dir"
+         --bim-build-dir "$bim_build_dir"
+         --business-build-dir "$business_build_dir"
          --script "${scripts[@]}"
-         --server 10000
          --montage montage.png)
+
+if [[ -n "$business_setup" ]]
+then
+    command+=(--business-setup "$business_setup")
+fi
 
 if [[ -n "$test_directory" ]]
 then
     mkdir --parents "$test_directory"
     command+=(--working-directory "$test_directory")
+fi
+
+if (( use_gdb == 1 ))
+then
+    command+=(--use-gdb)
 fi
 
 if (( use_valgrind == 1 ))

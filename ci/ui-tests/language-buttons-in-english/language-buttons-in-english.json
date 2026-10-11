@@ -154,15 +154,6 @@
       "event": "popup-hidden"
     },
     {
-      "kind": "swipe",
-      "from-node": "overlay/language/client_container/list/view////pt_PT",
-      "to-node": "overlay/language/client_container/list/view////fr_FR"
-    },
-    {
-      "kind": "click",
-      "node": "overlay/language/client_container/list/view"
-    },
-    {
       "kind": "click",
       "node": "overlay/language/client_container/list/view////ta_IN",
       "event": "popup-shown"
@@ -207,11 +198,6 @@
       "kind": "click",
       "node": "overlay/container/client_container/no_button",
       "event": "popup-hidden"
-    },
-    {
-      "kind": "swipe",
-      "from-node": "overlay/language/client_container/list/view////tr_TR",
-      "to-node": "overlay/language/client_container/list/view////fr_FR"
     },
     {
       "kind": "click",

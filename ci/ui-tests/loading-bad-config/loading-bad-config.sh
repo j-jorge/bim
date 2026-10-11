@@ -7,6 +7,5 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")"; pwd)"
 
 "$script_dir"/../launch-test.sh \
              "$@" \
+             --business-setup "$script_dir"/business-setup.sh \
              "$script_dir"/loading-bad-config.json \
-             -- \
-             --http-mockup "$script_dir"/http-mockup.json

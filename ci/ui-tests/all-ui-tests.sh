@@ -10,8 +10,10 @@ function usage()
 Run all UI tests of Bim!
 
 OPTIONS
-  --build DIR
-     Path to the build directory.
+  --bim-build-dir DIR
+     Path to the build directory of Bim!.
+  --business-build-dir DIR
+     Path to the build directory of the business server.
   --help, -h
      Display this message then exit.
   --use-valgrind
