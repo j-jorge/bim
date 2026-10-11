@@ -94,11 +94,15 @@ void bim::app::push_legacy_state_job::start()
             (bim::game::feature_flags)m_preferences.get_value(
                 "feature_flags.slot_0",
                 std::int64_t(bim::game::feature_flags{}));
-        Json::Value& selection =
-            game_feature_selection[game_feature_selection.size()];
 
-        selection["slot_index"] = 0;
-        selection["feature"] = std::string(bim::game::to_simple_string(f));
+        if (f != bim::game::feature_flags{})
+          {
+            Json::Value& selection =
+                game_feature_selection[game_feature_selection.size()];
+
+            selection["slot_index"] = 0;
+            selection["feature"] = std::string(bim::game::to_simple_string(f));
+          }
       }
 
     if (available[1])
@@ -107,11 +111,15 @@ void bim::app::push_legacy_state_job::start()
             (bim::game::feature_flags)m_preferences.get_value(
                 "feature_flags.slot_1",
                 std::int64_t(bim::game::feature_flags{}));
-        Json::Value& selection =
-            game_feature_selection[game_feature_selection.size()];
 
-        selection["slot_index"] = 1;
-        selection["feature"] = std::string(bim::game::to_simple_string(f));
+        if (f != bim::game::feature_flags{})
+          {
+            Json::Value& selection =
+                game_feature_selection[game_feature_selection.size()];
+
+            selection["slot_index"] = 1;
+            selection["feature"] = std::string(bim::game::to_simple_string(f));
+          }
       }
   }
 
