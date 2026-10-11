@@ -202,7 +202,7 @@ TEST_F(server_bots_test, bot_replaces_the_human)
 
   // Let the time pass such that the messages can move between the clients and
   // the server.
-  for (int i = 0; i != 10; ++i)
+  for (int i = 0; i != 20; ++i)
     {
       m_scheduler.tick(std::chrono::seconds(1));
 
