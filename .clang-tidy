@@ -21,7 +21,7 @@ Checks: |
   -bugprone-throwing-static-initialization,
   # Too many occurrences, mostly in tests. Contrary to what the
   # documuntation claims, calls to ASSERT_TRUE(optional.has_value())
-  # are not detected.
+  # are not detected as a valid check prior access.
   -bugprone-unchecked-optional-access,
   misc-*,
   # I prefer static functions over functions in anonymous namespace as
@@ -38,6 +38,11 @@ Checks: |
   # No rationale in the doc. I barely use inheritance and the
   # occurrences are related to Axmol. Let's keep the code as it is.
   -misc-multiple-inheritance,
+  # Incorrectly triggers on assert(false) in code that depends on
+  # runtime decisions (e.g. marking switch cases as invalid). Since
+  # assert(false) is the debug behavior of bim_unreachable this
+  # causes many false positives.
+  -misc-static-assert,
   performance-*,
   portability-*,
   # I'm okay with not supporting compilers that do not support #pragma
