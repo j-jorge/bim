@@ -128,6 +128,6 @@ android {
         implementation "commons-codec:commons-codec:1.19.0"
 
         if (!@bim_pure_foss@)
-            implementation 'com.android.billingclient:billing:7.0.0'
+            implementation 'com.android.billingclient:billing:9.1.0'
     }
 }

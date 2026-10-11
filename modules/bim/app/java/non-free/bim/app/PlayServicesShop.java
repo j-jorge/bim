@@ -14,6 +14,7 @@ import com.android.billingclient.api.Purchase;
 import com.android.billingclient.api.PurchasesResponseListener;
 import com.android.billingclient.api.PurchasesUpdatedListener;
 import com.android.billingclient.api.QueryProductDetailsParams;
+import com.android.billingclient.api.QueryProductDetailsResult;
 import com.android.billingclient.api.QueryPurchasesParams;
 import iscool.jni.NativeCall;
 import iscool.log.Log;
@@ -41,10 +42,11 @@ class PlayServicesShop implements IShop
 
   private final ProductDetailsResponseListener m_product_detail_listener =
       new ProductDetailsResponseListener() {
-        public void onProductDetailsResponse(BillingResult result,
-                                             List<ProductDetails> products)
+        public void onProductDetailsResponse(
+            BillingResult result,
+            QueryProductDetailsResult product_details_result)
         {
-          setProducts(result, products);
+          setProducts(result, product_details_result);
         }
       };
 
@@ -179,7 +181,8 @@ class PlayServicesShop implements IShop
     m_client.startConnection(m_client_state_listener);
   }
 
-  private void setProducts(BillingResult result, List<ProductDetails> products)
+  private void setProducts(BillingResult result,
+                           QueryProductDetailsResult product_details_result)
   {
     if (result.getResponseCode() != BillingClient.BillingResponseCode.OK)
       {
@@ -196,7 +199,7 @@ class PlayServicesShop implements IShop
 
     final HashMap<String, String> prices = new HashMap<String, String>();
 
-    for (ProductDetails p : products)
+    for (ProductDetails p : product_details_result.getProductDetailsList())
       {
         m_products.put(p.getProductId(), p);
         prices.put(p.getProductId(),
