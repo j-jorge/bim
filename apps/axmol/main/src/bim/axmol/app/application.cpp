@@ -294,8 +294,11 @@ void bim::axmol::app::detail::persistent_systems::stop_haptic_feedback()
 {
   ic_log(iscool::log::nature::info(), g_log_context, "Stop: haptic feedback.");
 
-  delete m_application.m_context.get_haptic_feedback();
-  m_application.m_context.reset_haptic_feedback();
+  if (m_application.m_context.is_haptic_feedback_set())
+    {
+      delete m_application.m_context.get_haptic_feedback();
+      m_application.m_context.reset_haptic_feedback();
+    }
 }
 
 void bim::axmol::app::detail::persistent_systems::start_social()
@@ -313,8 +316,11 @@ void bim::axmol::app::detail::persistent_systems::stop_social()
 {
   ic_log(iscool::log::nature::info(), g_log_context, "Stop: social.");
 
-  delete m_application.m_context.get_social();
-  m_application.m_context.reset_social();
+  if (m_application.m_context.is_social_set())
+    {
+      delete m_application.m_context.get_social();
+      m_application.m_context.reset_social();
+    }
 }
 
 void bim::axmol::app::detail::persistent_systems::start_audio()
@@ -332,9 +338,12 @@ void bim::axmol::app::detail::persistent_systems::stop_audio()
 {
   ic_log(iscool::log::nature::info(), g_log_context, "Stop: audio.");
 
-  iscool::audio::clear_default_mixer();
-  delete m_application.m_context.get_audio();
-  m_application.m_context.reset_audio();
+  if (m_application.m_context.is_audio_set())
+    {
+      iscool::audio::clear_default_mixer();
+      delete m_application.m_context.get_audio();
+      m_application.m_context.reset_audio();
+    }
 }
 
 void bim::axmol::app::detail::persistent_systems::listen_to_frame_event()
@@ -648,10 +657,13 @@ void bim::axmol::app::application::tear_down_local_preferences()
   ic_log(iscool::log::nature::info(), g_log_context,
          "Stop: local preferences.");
 
-  flush_local_preferences();
-  delete m_context.get_local_preferences();
+  if (m_context.is_local_preferences_set())
+    {
+      flush_local_preferences();
+      delete m_context.get_local_preferences();
 
-  m_context.reset_local_preferences();
+      m_context.reset_local_preferences();
+    }
 }
 
 void bim::axmol::app::application::flush_local_preferences()
