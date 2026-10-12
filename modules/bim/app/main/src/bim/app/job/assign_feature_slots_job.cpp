@@ -47,6 +47,8 @@ void bim::app::assign_feature_slots_job::assign_slots(
       {
         m_task[i].action = action_kind::assign;
         m_task[i].feature = *assignment[i];
+
+        assert(m_task[i].feature != bim::game::feature_flags{});
       }
 
   start_task();

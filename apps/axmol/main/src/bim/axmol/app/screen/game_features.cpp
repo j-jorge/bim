@@ -668,6 +668,9 @@ void bim::axmol::app::game_features::select_random_features()
         ++slot_count;
       }
 
+  if (slot_count == 0)
+    return;
+
   const bim::game::feature_flags available_features =
       profile.available_features;
   bim::game::feature_flags
@@ -680,6 +683,9 @@ void bim::axmol::app::game_features::select_random_features()
         features[feature_count] = f;
         ++feature_count;
       }
+
+  if (feature_count == 0)
+    return;
 
   bim::app::assign_feature_slots_job::slot_assignment assignment;
   std::size_t needed = slot_count;
@@ -697,7 +703,7 @@ void bim::axmol::app::game_features::select_random_features()
 
   for (std::size_t i = slot_count - needed; i != slot_count; ++i)
     {
-      assignment[slots[i]] = bim::game::feature_flags{};
+      m_assign_feature_slots_job->clear_slot(slots[i]);
       m_slot[slots[i]]->feature(bim::game::feature_flags{});
     }
 
