@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2026-01-26 13:01+0000\n"
-"Last-Translator: Anna Al Lae <anna.allae@opab.bzh>\n"
+"PO-Revision-Date: 2026-10-13 06:51+0000\n"
+"Last-Translator: Anna Al Lae <anna.allae@users.noreply.hosted.weblate.org>\n"
 "Language-Team: Breton <https://hosted.weblate.org/projects/bim/gettext-files/"
 "br/>\n"
 "Language: br\n"
@@ -21,7 +21,7 @@ msgstr ""
 "&& n % 100 != 92) ? 1 : ((((n % 10 == 3 || n % 10 == 4) || n % 10 == 9) && "
 "(n % 100 < 10 || n % 100 > 19) && (n % 100 < 70 || n % 100 > 79) && (n % 100 "
 "< 90 || n % 100 > 99)) ? 2 : ((n != 0 && n % 1000000 == 0) ? 3 : 4)));\n"
-"X-Generator: Weblate 5.16-dev\n"
+"X-Generator: Weblate 2026.11.dev0\n"
 
 msgid "Please wait"
 msgstr "Gortozit mar plij"
@@ -42,25 +42,27 @@ msgstr "Ha sur oc'h e fell deoc'h cheñch an arventennoù yezh ?"
 
 #, c++-format
 msgid "Your nickname must have between {} and {} symbols."
-msgstr ""
+msgstr "Rankout a ra ho lesanv bezañ etre {} ha {} arouezenn ennañ."
 
 msgid "Invalid nickname."
-msgstr ""
+msgstr "Lesanv diwiriek."
 
 msgid "Too short."
-msgstr ""
+msgstr "Re verr."
 
 msgid "Too long."
-msgstr ""
+msgstr "Re hir."
 
 #, c++-format
 msgid ""
 "Change your nickname for \"{}\"? You won't be able to change it again before "
 "a couple of hours."
 msgstr ""
+"Lakaat ho lesanv da \"{}\" ? Ne c'halloc'h cheñch anezhañ en-dro nemet a-"
+"benn un nebeud eurvezhioù."
 
 msgid "Request error."
-msgstr ""
+msgstr "Fazi er goulenn."
 
 #, c++-format
 msgid "Version {}"
@@ -68,10 +70,11 @@ msgstr "Stumm {}"
 
 #, c++-format
 msgid "User ID: {}"
-msgstr ""
+msgstr "Anv implijer : {}"
 
 msgid "Please keep the informations below available if you need support."
 msgstr ""
+"Lezel an titouroù amañ dindan m'ho peus ezhomm goulenn sikour, mar plij."
 
 msgid "Feedback about Bim!"
 msgstr "Evezhiadennoù diwar-benn Bim!"
@@ -194,14 +197,15 @@ msgstr "Kevreet da {}."
 #, c++-format
 msgid "Nickname change is not available yet. Come back in {} h. {} min. {}  s."
 msgstr ""
+"Ne c'haller ket cheñch al lesanv c'hoazh. Dont en-dro a-benn {}e. {}mn. {}s."
 
 #, c++-format
 msgid "Nickname change is not available yet. Come back in {} min. {} s."
-msgstr ""
+msgstr "Ne c'haller ket cheñch al lesanv c'hoazh. Dont en-dro a-benn {}mn. {}s."
 
 #, c++-format
 msgid "Nickname change is not available yet. Come back in {} s."
-msgstr ""
+msgstr "Ne c'haller ket cheñch al lesanv c'hoazh. Dont en-dro a-benn {}s."
 
 msgid "An error occurred. The purchase could not be completed."
 msgstr "Ur fazi zo bet. N'eo ket bet posupl mont betek penn ar brenadenn."
@@ -211,9 +215,9 @@ msgstr ""
 "Ur stumm nevez eus Bim! zo da gaout ! Hizivait an abretañ ar gwellañ mar "
 "plij."
 
-#, fuzzy, c++-format
+#, c++-format
 msgid "Failed to authenticate with the business server. Status {}."
-msgstr "Ne c'haller ket bezañ anavezet gant servijer ar c'hoari. Kod fazi {}."
+msgstr "Ne c'haller ket bezañ anavezet gant ar pennservijer. Kod fazi {}."
 
 #, c++-format
 msgid "Failed to authenticate with the game server. Error code {}."
@@ -274,13 +278,13 @@ msgid "Yes"
 msgstr "Ya"
 
 msgid "DONE"
-msgstr ""
+msgstr "GRAET"
 
 msgid "Enter the desired nickname below."
-msgstr ""
+msgstr "Lakaat ho lesanv nevez amañ dindan."
 
 msgid "Nickname change"
-msgstr ""
+msgstr "Cheñch lesanv"
 
 msgid "Defeats"
 msgstr "Kollet"
