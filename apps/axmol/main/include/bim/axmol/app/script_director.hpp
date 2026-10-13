@@ -43,6 +43,7 @@ namespace bim::axmol::app
 
   private:
     void schedule_tick();
+    void schedule_tick(std::chrono::nanoseconds delay);
     void tick();
 
     void capture(const std::string& file_name) const;

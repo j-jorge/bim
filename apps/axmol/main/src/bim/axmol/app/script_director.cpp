@@ -207,13 +207,20 @@ bim::axmol::app::script_director::~script_director() = default;
 
 void bim::axmol::app::script_director::schedule_tick()
 {
-  // Sets a delay to ensure that it won't run in the same game tick.
+  // We need a delay, even if it's zero, to ensure that it won't run in the
+  // same game tick.
+  schedule_tick(std::chrono::seconds(0));
+}
+
+void bim::axmol::app::script_director::schedule_tick(
+    std::chrono::nanoseconds delay)
+{
   m_tick_connection = iscool::schedule::delayed_call(
       [this]()
         {
           tick();
         },
-      std::chrono::seconds(0));
+      delay);
 }
 
 void bim::axmol::app::script_director::tick()
@@ -265,7 +272,9 @@ void bim::axmol::app::script_director::tick()
              m_swipe_steps[i + 1]);
 
       success = swipe(m_swipe_steps[i], m_swipe_steps[i + 1]);
-      schedule_tick();
+
+      // Give a small delay to allow potential animations to end.
+      schedule_tick(std::chrono::seconds(1));
       break;
     case step_kind::wait:
       ic_log(iscool::log::nature::info(), "script_director", "Wait '{}'.",
