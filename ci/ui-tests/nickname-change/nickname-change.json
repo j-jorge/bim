@@ -1,0 +1,90 @@
+{
+  "actions": [
+    {
+      "kind": "wait",
+      "event": "loaded"
+    },
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/lobby/player_profile_button",
+      "event": "popup-shown"
+    },
+    {
+      "kind": "capture",
+      "file": "nickname-editor.png"
+    },
+    {
+      "kind": "set-text",
+      "node": "overlay/nickname-editor/client_container/edit_box",
+      "text": "a"
+    },
+    {
+      "kind": "capture",
+      "file": "nickname-too-short.png"
+    },
+    {
+      "kind": "set-text",
+      "node": "overlay/nickname-editor/client_container/edit_box",
+      "text": "abcdefghijklmnopqrstuvwxyz"
+    },
+    {
+      "kind": "capture",
+      "file": "nickname-too-long.png"
+    },
+    {
+      "kind": "set-text",
+      "node": "overlay/nickname-editor/client_container/edit_box",
+      "text": "abdcef"
+    },
+    {
+      "kind": "capture",
+      "file": "nickname-ok.png"
+    },
+    {
+      "kind": "click",
+      "node": "overlay/nickname-editor/client_container/close_button",
+      "event": "popup-shown"
+    },
+    {
+      "kind": "capture",
+      "file": "confirm.png"
+    },
+    {
+      "kind": "click",
+      "node": "overlay/container/client_container/no_button",
+      "event": "popup-hidden"
+    },
+    {
+      "kind": "capture",
+      "file": "lobby-no-change.png"
+    },
+    {
+      "kind": "click",
+      "node": "main/screen-wheel/lobby/player_profile_button",
+      "event": "popup-shown"
+    },
+    {
+      "kind": "set-text",
+      "node": "overlay/nickname-editor/client_container/edit_box",
+      "text": "John"
+    },
+    {
+      "kind": "click",
+      "node": "overlay/nickname-editor/client_container/close_button",
+      "event": "popup-shown"
+    },
+    {
+      "kind": "click",
+      "node": "overlay/container/client_container/yes_button",
+      "event": "popup-hidden"
+    },
+    {
+      "kind": "wait",
+      "event": "popup-hidden"
+    },
+    {
+      "kind": "capture",
+      "file": "lobby-changed.png"
+    }
+  ]
+}

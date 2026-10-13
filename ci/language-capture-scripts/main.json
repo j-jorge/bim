@@ -6,6 +6,34 @@
     },
     {
       "kind": "click",
+      "node": "main/screen-wheel/lobby/player_profile_button",
+      "event": "popup-shown"
+    },
+    {
+      "kind": "capture",
+      "file": "nickname-editor.png"
+    },
+    {
+      "kind": "set-text",
+      "node": "overlay/nickname-editor/client_container/edit_box",
+      "text": "John"
+    },
+    {
+      "kind": "click",
+      "node": "overlay/nickname-editor/client_container/close_button",
+      "event": "popup-shown"
+    },
+    {
+      "kind": "click",
+      "node": "overlay/container/client_container/yes_button",
+      "event": "popup-hidden"
+    },
+    {
+      "kind": "wait",
+      "event": "popup-hidden"
+    },
+    {
+      "kind": "click",
       "node": "main/screen-wheel/lobby/stats_button",
       "event": "popup-shown"
     },

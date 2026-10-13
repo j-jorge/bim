@@ -17,8 +17,10 @@ function usage()
 Generate the screen captures for the metadata folder.
 
 OPTIONS
-  --build DIR
-     Path to the build directory.
+  --bim-build-dir DIR
+     Path to the build directory of Bim!.
+  --business-build-dir DIR
+     Path to the build directory of the business server.
   --help, -h
      Display this message then exit.
   --language LANGUAGE_CODE…
@@ -38,14 +40,24 @@ do
     shift
 
     case "$arg" in
-        --build)
+        --bim-build-dir)
             if (( $# == 0 ))
             then
-                echo "Missing value for --build" >&2
+                echo "Missing value for --bim-build-dir" >&2
                 exit 1
             fi
 
-            build_dir="$1"
+            bim_build_dir="$1"
+            shift
+            ;;
+        --business-build-dir)
+            if (( $# == 0 ))
+            then
+                echo "Missing value for --business-build-dir" >&2
+                exit 1
+            fi
+
+            business_build_dir="$1"
             shift
             ;;
         --language)
@@ -64,9 +76,11 @@ do
     esac
 done
 
-[[ -n "${build_dir:-}" ]] || fail "--build is not set."
+[[ -n "${bim_build_dir:-}" ]] || fail "--bim-build-dir is not set."
+[[ -n "${business_build_dir:-}" ]] || fail "--business-build-dir is not set."
 
-build_dir="$(readlink --canonicalize "$build_dir")"
+bim_build_dir="$(readlink --canonicalize "$bim_build_dir")"
+business_build_dir="$(readlink --canonicalize "$business_build_dir")"
 
 failing=()
 run_count=0
@@ -83,7 +97,7 @@ function run_script()
     printf -- '-%.0s' {1..80}
     echo
 
-    local working_directory="$build_dir"/captures/"$lang"
+    local working_directory="$bim_build_dir"/captures/"$lang"
 
     rm --force --recursive "$working_directory"
     mkdir --parents "$working_directory"
@@ -92,9 +106,9 @@ function run_script()
                    "$script_dir"/language-capture-scripts/opponent.json)
 
     local command=("$script_dir"/run-ui-script.sh
-                   --build "$build_dir"
+                   --bim-build-dir "$bim_build_dir"
+                   --business-build-dir "$business_build_dir"
                    --script "${scripts[@]}"
-                   --server 10000
                    --working-directory "$working_directory"
                    --montage montage.png
                    --

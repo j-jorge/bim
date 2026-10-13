@@ -229,13 +229,6 @@ command+=("$bim"
 
 command+=("$@")
 
-if printf '%s\n' "$@" | grep --quiet '^--app-dir'
-then
-    add_app_dir=0
-else
-    add_app_dir=1
-fi
-
 tmp_dir="$(mktemp --directory)"
 mkdir --parents "$tmp_dir"/business
 
@@ -264,8 +257,6 @@ BIM_BUSINESS_LEAD_TOKEN="$(bim-lead-create.sh \
                                 | jq -r .)"
 export BIM_BUSINESS_LEAD_TOKEN
 
-# Populate the shop.
-
 # Register the game server.
 game_server_token="$(bim-game-server-create.sh \
                           --name ui-tests \
@@ -293,6 +284,7 @@ bim-game-feature-update.sh falling_blocks 50 \
 
 bim-game-feature-slots-update.sh 1 250
 
+# Populate the shop.
 bim-shop-update.sh coins_small 50 \
                 coins_medium 250 \
                 coins_large 500 \
@@ -341,11 +333,12 @@ do
     mkdir --parents "$app_dir"
 
     client_command=("${command[@]}"
-                    --script "$script")
+                    --script "$script"
+                    --app-dir "$app_dir")
 
-    if (( add_app_dir == 1 ))
+    if [[ -n "$business_setup" ]]
     then
-        client_command+=(--app-dir "$app_dir")
+        "$business_setup" "$i" "$tmp_dir"/"$i"
     fi
 
     echo "Running" "${client_command[@]}"

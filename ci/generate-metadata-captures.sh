@@ -17,8 +17,10 @@ function usage()
 Generate the screen captures for the metadata folder.
 
 OPTIONS
-  --build DIR
-     Path to the build directory.
+  --bim-build-dir DIR
+     Path to the build directory of Bim!.
+  --business-build-dir DIR
+     Path to the build directory of the business server.
   --help, -h
      Display this message then exit.
   --language LANGUAGE_CODE…
@@ -38,14 +40,24 @@ do
     shift
 
     case "$arg" in
-        --build)
+        --bim-build-dir)
             if (( $# == 0 ))
             then
-                echo "Missing value for --build" >&2
+                echo "Missing value for --bim-build-dir" >&2
                 exit 1
             fi
 
-            build_dir="$1"
+            bim_build_dir="$1"
+            shift
+            ;;
+        --business-build-dir)
+            if (( $# == 0 ))
+            then
+                echo "Missing value for --business-build-dir" >&2
+                exit 1
+            fi
+
+            business_build_dir="$1"
             shift
             ;;
         --language)
@@ -64,9 +76,11 @@ do
     esac
 done
 
-[[ -n "${build_dir:-}" ]] || fail "--build is not set."
+[[ -n "${bim_build_dir:-}" ]] || fail "--bim-build-dir is not set."
+[[ -n "${business_build_dir:-}" ]] || fail "--business-build-dir is not set."
 
-build_dir="$(readlink --canonicalize "$build_dir")"
+bim_build_dir="$(readlink --canonicalize "$bim_build_dir")"
+business_build_dir="$(readlink --canonicalize "$business_build_dir")"
 repo_root="$(readlink --canonicalize "$script_dir"/..)"
 metadata_dir="$repo_root"/metadata
 
@@ -90,12 +104,12 @@ function run_script()
     done
 
     local command=("$script_dir"/run-ui-script.sh
-                 --build "$build_dir"
-                 --script "${scripts[@]}"
-                 --server 10000
-                 --working-directory "$working_directory"
-                 --
-                 --app-dir "$config_dir")
+                   --bim-build-dir "$bim_build_dir"
+                   --business-build-dir "$business_build_dir"
+                   --business-setup
+                   "$script_dir"/metadata-scripts/business-setup.sh
+                   --script "${scripts[@]}"
+                   --working-directory "$working_directory")
 
     printf -- '-%.0s' {1..80}
     echo
@@ -162,6 +176,19 @@ all_directories=(br-FR
                  tr-TR
                  uk-UA
                 )
+readarray -t supported_languages < \
+          <(find "$script_dir/../assets/i18n/" \
+                 -name "*.po" \
+                 -exec basename --suffix .po '{}' ';'
+           )
+if (( "${#supported_languages[@]}" != "${#all_directories[@]}" ))
+then
+    echo "Missing languages. Got:"
+    printf ' - %s\n' "${all_directories[@]}"
+    echo "Need:"
+    printf ' - %s\n' "${supported_languages[@]}"
+    exit 1
+fi
 
 if [[ "${#languages[@]}" -eq 0 ]]
 then
