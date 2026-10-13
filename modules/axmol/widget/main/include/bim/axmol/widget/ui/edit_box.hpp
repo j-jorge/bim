@@ -37,6 +37,11 @@ namespace bim::axmol::widget
              const iscool::style::declaration& style);
     ~edit_box();
 
+    // Normally the client code should not trigger a change event but it is
+    // quite convenient to allow it for the automatic UI tests with the script
+    // director.
+    void dispatch_changed();
+
     bim::axmol::input::node_reference input_node() const;
 
     void enable(bool enabled);

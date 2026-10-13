@@ -3,6 +3,8 @@
 
 #include <bim/axmol/app/application_event_listener.hpp>
 
+#include <bim/axmol/widget/ui/edit_box.hpp>
+
 #include <bim/axmol/find_child_by_path.hpp>
 
 #include <iscool/json/from_file.hpp>
@@ -41,6 +43,7 @@ enum class bim::axmol::app::script_director::step_kind : std::uint8_t
   wait,
   click,
   swipe,
+  text_edit,
   capture
 };
 
@@ -54,6 +57,12 @@ struct bim::axmol::app::script_director::click_target
 {
   std::string node_path;
   std::string event;
+};
+
+struct bim::axmol::app::script_director::text_edit
+{
+  std::string node_path;
+  std::string text;
 };
 
 bim::axmol::app::script_director::script_director(
@@ -168,6 +177,21 @@ bim::axmol::app::script_director::script_director(
           m_steps.emplace_back(step_kind::click, m_click_steps.size());
           m_click_steps.emplace_back(std::move(path), std::move(event));
         }
+      else if (kind_string == "set-text")
+        {
+          std::string path;
+
+          if (!action_property_to_string(path, action, "node", i))
+            continue;
+
+          std::string text;
+
+          if (!action_property_to_string(text, action, "text", i))
+            continue;
+
+          m_steps.emplace_back(step_kind::text_edit, m_text_edit_steps.size());
+          m_text_edit_steps.emplace_back(std::move(path), std::move(text));
+        }
       else if (kind_string == "swipe")
         {
           std::string path_from;
@@ -266,6 +290,15 @@ void bim::axmol::app::script_director::tick()
         schedule_timeout();
 
       break;
+    case step_kind::text_edit:
+      ic_log(iscool::log::nature::info(), "script_director",
+             "Set text of '{}' to '{}'.", m_text_edit_steps[i].node_path,
+             m_text_edit_steps[i].text);
+
+      success = set_text(m_text_edit_steps[i]);
+
+      schedule_tick();
+      break;
     case step_kind::swipe:
       ic_log(iscool::log::nature::info(), "script_director",
              "Swipe from '{}' to '{}'.", m_swipe_steps[i],
@@ -330,6 +363,43 @@ bool bim::axmol::app::script_director::click(
   // We need to set it twice, otherwise the release event is ignored.
   touch.setTouchInfo(0, p.x, p.y);
   release(touch);
+
+  return true;
+}
+
+bool bim::axmol::app::script_director::set_text(const text_edit& s)
+{
+  ax::Director& director = *ax::Director::getInstance();
+
+  ax::Node* const n =
+      bim::axmol::find_child_by_path(*director.getRunningScene(), s.node_path);
+
+  if (n == nullptr)
+    {
+      dump_node(*director.getRunningScene(), 0);
+      ic_log(iscool::log::nature::error(), "script_director",
+             "Cannot find node '{}'.", s.node_path);
+
+      return false;
+    }
+
+  bim::axmol::widget::edit_box* const e =
+      dynamic_cast<bim::axmol::widget::edit_box*>(n);
+
+  if (!e)
+    {
+      ic_log(iscool::log::nature::error(), "script_director",
+             "Node '{}' is not an edit_box.", s.node_path);
+      return false;
+    }
+
+  e->set_text(s.text.c_str());
+
+  m_delayed_call_connection = iscool::schedule::delayed_call(
+      [e]()
+        {
+          e->dispatch_changed();
+        });
 
   return true;
 }

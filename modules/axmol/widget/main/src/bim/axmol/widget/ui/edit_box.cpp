@@ -70,6 +70,11 @@ bim::axmol::widget::edit_box::edit_box(
 
 bim::axmol::widget::edit_box::~edit_box() = default;
 
+void bim::axmol::widget::edit_box::dispatch_changed()
+{
+  m_changed();
+}
+
 bim::axmol::input::node_reference
 bim::axmol::widget::edit_box::input_node() const
 {

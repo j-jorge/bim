@@ -39,6 +39,7 @@ namespace bim::axmol::app
   private:
     enum class step_kind : std::uint8_t;
     struct click_target;
+    struct text_edit;
     struct step;
 
   private:
@@ -49,6 +50,7 @@ namespace bim::axmol::app
     void capture(const std::string& file_name) const;
 
     bool click(const std::string& node_path) const;
+    bool set_text(const text_edit& s);
     bool swipe(const std::string& from_node_path,
                const std::string& to_node_path) const;
     void press(ax::Touch& touch) const;
@@ -66,6 +68,7 @@ namespace bim::axmol::app
     std::vector<click_target> m_click_steps;
     std::vector<std::string> m_capture_steps;
     std::vector<std::string> m_swipe_steps;
+    std::vector<text_edit> m_text_edit_steps;
     std::string_view m_pending_event;
     std::size_t m_next_step;
     std::chrono::seconds m_timeout;
@@ -73,5 +76,6 @@ namespace bim::axmol::app
     const iscool::signals::scoped_connection m_event_connection;
     iscool::schedule::scoped_connection m_tick_connection;
     iscool::schedule::scoped_connection m_timeout_connection;
+    iscool::schedule::scoped_connection m_delayed_call_connection;
   };
 }
