@@ -1,5 +1,6 @@
 - Introduction d'un serveur pour les aspects administratifs (e.g. profil et inventaire des joueurs).
 - Le joueur a maintenant un pseudo, celui-ci est affiché sur l'écran de recherche d'adversaire.
-- Changement d'une règle du jeu : la durée de l'invincibilité temporaire lors de la perte du bouclier est réduite.
+- La durée de l'invincibilité temporaire lors de la perte du bouclier est réduite.
+- Les joueurs qui perdent avant la fin d'un match nul sont considérés comme perdants.
 - Nouvelle traduction : Tamil.
 - Mise à jour des traductions : breton, italien, portugais, turque, ukrainien.

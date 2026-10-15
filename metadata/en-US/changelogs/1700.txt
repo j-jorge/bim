@@ -1,5 +1,6 @@
 - Introduction of the business server to handle the player's profile and inventory, and more.
 - The player now has a nickname, it is shown on the matchmaking screen.
-- Gameplay change: the duration of the invincibility state when losing a shield has been reduced.
+- The duration of the invincibility state when losing a shield has been reduced.
+- Players who lose before the end of a draw game are considered as defeated.
 - New translation: Tamil.
 - Updated translations: Breton, Italian, Portuguese, Turkish, Ukrainian.
