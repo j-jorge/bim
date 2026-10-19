@@ -79,7 +79,7 @@ bim::axmol::app::nickname_editor_popup::nickname_editor_popup(
   m_controls->edit_box->connect_to_cancel(
       [this]()
         {
-          reset_display();
+          check_new_nickname();
         });
   m_message_popup->connect_to_ok(
       [this]()
