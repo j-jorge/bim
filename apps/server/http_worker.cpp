@@ -50,7 +50,7 @@ public:
               });
 
         if (m_thread_shared.quit)
-          return;
+          break;
 
         iscool::http::request request =
             std::move(m_thread_shared.request_queue[0]);
