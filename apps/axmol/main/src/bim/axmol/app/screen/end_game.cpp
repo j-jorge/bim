@@ -12,11 +12,13 @@
 #include <bim/axmol/widget/ui/button.hpp>
 
 #include <bim/app/analytics/button_clicked.hpp>
+#include <bim/app/business/player_profile.hpp>
 #include <bim/app/job/consume_game_reward_job.hpp>
 
 #include <bim/net/exchange/game_launch_event.hpp>
 
 #include <bim/game/contest_result.hpp>
+#include <bim/game/player_game_outcome.hpp>
 
 #include <iscool/i18n/gettext.hpp>
 #include <iscool/signals/implement_signal.hpp>
@@ -101,23 +103,38 @@ void bim::axmol::app::end_game::game_started(
 void bim::axmol::app::end_game::displaying(
     const bim::game::contest_result& result)
 {
-  const iscool::style::declaration* action_style;
-
-  if (!result.has_a_winner())
-    action_style = &m_action_draw;
-  else if (result.winning_player() == m_player_index)
-    action_style = &m_action_win;
-  else
-    action_style = &m_action_lose;
-
   m_main_actions.stop();
+
+  m_displayed = false;
+  m_display_action = display_action::wait;
+
+  const iscool::style::declaration* action_style = nullptr;
+
+  switch (result.outcome()[m_player_index])
+    {
+    case bim::game::player_game_outcome::defeated:
+      ++m_context.get_player_profile()->arena_defeats;
+      action_style = &m_action_lose;
+      break;
+    case bim::game::player_game_outcome::kicked:
+      assert(false);
+      return;
+    case bim::game::player_game_outcome::draw:
+      ++m_context.get_player_profile()->arena_draws;
+      action_style = &m_action_draw;
+      break;
+    case bim::game::player_game_outcome::victory:
+      ++m_context.get_player_profile()->arena_victories;
+      action_style = &m_action_win;
+      break;
+    }
+
+  if (!action_style)
+    return;
 
   bim::axmol::widget::apply_actions(m_main_actions,
                                     *m_context.get_widget_context(),
                                     m_all_nodes, *action_style);
-
-  m_displayed = false;
-  m_display_action = display_action::wait;
 
   m_reward_success_connection = m_consume_reward_job->connect_to_done(
       [this](std::int64_t coins)
