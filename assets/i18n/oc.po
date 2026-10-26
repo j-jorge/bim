@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-01-26 13:01+0000\n"
-"Last-Translator: Quentin PAGÈS <quentinantonin@free.fr>\n"
+"PO-Revision-Date: 2026-10-27 11:51+0000\n"
+"Last-Translator: Quentin PAGÈS <quenti@users.noreply.hosted.weblate.org>\n"
 "Language-Team: Occitan <https://hosted.weblate.org/projects/bim/gettext-"
 "files/oc/>\n"
 "Language: oc\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.16-dev\n"
+"X-Generator: Weblate 2026.11.dev0\n"
 
 msgid "Please wait"
 msgstr "Un momenton"
@@ -36,25 +36,27 @@ msgstr "Volètz vertadièrament cambiar lo paramètre fe lenga ?"
 
 #, c++-format
 msgid "Your nickname must have between {} and {} symbols."
-msgstr ""
+msgstr "Vòstre escais-nom deu comptar entre {} e {} caractèrs."
 
 msgid "Invalid nickname."
-msgstr ""
+msgstr "Escais invalid."
 
 msgid "Too short."
-msgstr ""
+msgstr "Tròp cort."
 
 msgid "Too long."
-msgstr ""
+msgstr "Tròp long."
 
 #, c++-format
 msgid ""
 "Change your nickname for \"{}\"? You won't be able to change it again before "
 "a couple of hours."
 msgstr ""
+"Cambiar ton pseudonim per « {} »? Lo podràs pas tornar cambiar pendent "
+"qualques oras."
 
 msgid "Request error."
-msgstr ""
+msgstr "Fracàs de la requèsta."
 
 #, c++-format
 msgid "Version {}"
@@ -62,10 +64,11 @@ msgstr "Version {}"
 
 #, c++-format
 msgid "User ID: {}"
-msgstr ""
+msgstr "ID d'utilizaire : {}"
 
 msgid "Please keep the informations below available if you need support."
 msgstr ""
+"Mercés de conservar las informacions çai jos a disposicion se te cal d’ajuda."
 
 msgid "Feedback about Bim!"
 msgstr "Comentris a prepaus de Bim!"
@@ -160,14 +163,17 @@ msgstr "Connectat a {}."
 #, c++-format
 msgid "Nickname change is not available yet. Come back in {} h. {} min. {}  s."
 msgstr ""
+"Lo cambiament de pseudonim es pas disponible. Torna d’aquí {} h, {} min e {} "
+"s."
 
 #, c++-format
 msgid "Nickname change is not available yet. Come back in {} min. {} s."
 msgstr ""
+"Lo cambiament de pseudonim es pas disponible. Torna d’aquí {} min e {} s."
 
 #, c++-format
 msgid "Nickname change is not available yet. Come back in {} s."
-msgstr ""
+msgstr "Lo cambiament de pseudonim es pas disponible. Torna d’aquí {} s."
 
 msgid "An error occurred. The purchase could not be completed."
 msgstr "Una error s'es producha. La crompa a pas pogut èsser finalizada."
@@ -177,9 +183,9 @@ msgstr ""
 "Una novèla version de Bim! es disponibla! Mercés de la metre a jorn tre que "
 "possible."
 
-#, fuzzy, c++-format
+#, c++-format
 msgid "Failed to authenticate with the business server. Status {}."
-msgstr "Fracàs de l'autentificacion al servidor de jòc. Còdi d'error {}."
+msgstr "Fracàs de l’autentificacion al servidor de l’entrepresa. Estat {}."
 
 #, c++-format
 msgid "Failed to authenticate with the game server. Error code {}."
@@ -240,13 +246,13 @@ msgid "Yes"
 msgstr "Òc"
 
 msgid "DONE"
-msgstr ""
+msgstr "FACH"
 
 msgid "Enter the desired nickname below."
-msgstr ""
+msgstr "Pica ton escais novèl çai jos."
 
 msgid "Nickname change"
-msgstr ""
+msgstr "Cambiament d’escais"
 
 msgid "Defeats"
 msgstr "Desfachas"
