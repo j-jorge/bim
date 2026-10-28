@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-10-20 17:51+0000\n"
+"PO-Revision-Date: 2026-10-29 20:51+0000\n"
 "Last-Translator: arkeelin <arkeelin@users.noreply.hosted.weblate.org>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/bim/gettext-"
 "files/uk/>\n"
@@ -69,6 +69,8 @@ msgstr "ID користувача: {}"
 
 msgid "Please keep the informations below available if you need support."
 msgstr ""
+"Якщо вам потрібна допомога, будь ласка, зверніть увагу на нведену нижче "
+"інформацію."
 
 msgid "Feedback about Bim!"
 msgstr "Відгук про Bim!"
@@ -182,9 +184,9 @@ msgstr "Сталася помилка. Не вдалося завершити п
 msgid "A new version of Bim! is available! Please update as soon as possible."
 msgstr "Доступна нова версія Bim! Будь ласка, онови за першої ж можливості."
 
-#, fuzzy, c++-format
+#, c++-format
 msgid "Failed to authenticate with the business server. Status {}."
-msgstr "Не вдалося з’єднатися з серверами гри. Код помилки {}."
+msgstr "Не вдалося з’єднатися з грою, сервер заповнено. Статус {}."
 
 #, c++-format
 msgid "Failed to authenticate with the game server. Error code {}."
