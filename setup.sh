@@ -18,6 +18,7 @@ build_steps=()
 all_build_steps=(dependencies configure build test)
 foss_only=0
 product_mode=0
+targets=()
 
 export bim_host_prefix="$host_prefix"
 export PATH="$script_dir/setup/bin/:$PATH"
@@ -68,6 +69,8 @@ Where OPTIONS is
      Do not build the developer's tools.
   --target-platform P
      Build for platform P (either linux or android).
+  --targets T…
+     List of targets to build.
   --tag T
      Use this tag to name the build folder, as in build/linux/T. The
      default is to use the build type as the tag.
@@ -153,6 +156,19 @@ do
 
             target_platform="$1"
             shift
+            ;;
+        --targets)
+            if (( $# == 0 ))
+            then
+                echo "Missing value for --targets." >&2
+                exit 1
+            fi
+
+            while (( $# != 0 )) && [[ "$1" != --* ]]
+            do
+                targets+=("$1")
+                shift
+            done
             ;;
         *)
             echo "Unknown argument '$arg'." >&2
@@ -378,8 +394,18 @@ configure()
 
 launch_build()
 {
-    echo -e "${green_bold}Building '$build_type'.${term_color}"
-    cmake --build "$build_dir" --parallel
+    local targets_arg=()
+    local targets_log=""
+
+    if (( ${#targets[@]} != 0 ))
+    then
+        targets_arg=("--target" "${targets[@]}")
+        targets_log=" ($(printf '%s ' "${targets[@]}"))"
+        targets_log="${targets_log/ )/)}"
+    fi
+
+    echo -e "${green_bold}Building '$build_type'${targets_log}.${term_color}"
+    cmake --build "$build_dir" --parallel "${targets_arg[@]}"
 }
 
 launch_tests()

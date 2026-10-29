@@ -57,6 +57,7 @@ jobs:
           --build-steps dependencies configure build
           --foss-only
           --product
+          --targets apk
 
       - name: Archive artifacts
         uses: actions/upload-artifact@v4
