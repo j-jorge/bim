@@ -2,8 +2,8 @@
 #pragma once
 
 #ifndef NDEBUG
-  #include <cassert>
-  #define bim_unreachable assert(false)
+  #include <bim/assert.hpp>
+  #define bim_unreachable bim_assert(false)
   #define bim_unreachable_in_release                                          \
     do                                                                        \
       {                                                                       \

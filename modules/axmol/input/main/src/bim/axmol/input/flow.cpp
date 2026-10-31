@@ -42,10 +42,10 @@ bim::axmol::input::flow::~flow()
   ax::EventDispatcher& dispatcher(
       *ax::Director::getInstance()->getEventDispatcher());
 
-  assert(m_key_listener != nullptr);
+  bim_assert(m_key_listener != nullptr);
   dispatcher.removeEventListener(m_key_listener.get());
 
-  assert(m_touch_listener != nullptr);
+  bim_assert(m_touch_listener != nullptr);
   dispatcher.removeEventListener(m_touch_listener.get());
 }
 

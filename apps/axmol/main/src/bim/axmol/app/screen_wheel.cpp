@@ -217,7 +217,7 @@ void bim::axmol::app::screen_wheel::wire_permanent_connections()
   m_shop->connect_to_back(
       [this]()
         {
-          assert(m_leave_shop != nullptr);
+          bim_assert(m_leave_shop != nullptr);
           (this->*m_leave_shop)();
         });
 
@@ -308,7 +308,7 @@ void bim::axmol::app::screen_wheel::configure_screen_transitions()
 
 void bim::axmol::app::screen_wheel::switch_view(ax::Node& new_view)
 {
-  assert(&new_view != m_active_view);
+  bim_assert(&new_view != m_active_view);
 
   m_main_container->addChild(&new_view);
 
@@ -316,7 +316,7 @@ void bim::axmol::app::screen_wheel::switch_view(ax::Node& new_view)
       m_screen_index[m_active_view], m_screen_index[&new_view]);
 
   const ax::Vec2 size = m_main_container->getContentSize();
-  assert(new_view.getContentSize() == size);
+  bim_assert(new_view.getContentSize() == size);
 
   const ax::Vec2 half_size = size / 2;
   const ax::Vec2 start_middle =

@@ -1,11 +1,12 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/server/business/user_id.hpp>
 
+#include <bim/assert.hpp>
+
 #include <iscool/json/cast_int64.hpp>
 
 #include <json/value.h>
 
-#include <cassert>
 
 bool bim::server::business::from_json(user_id_response& r,
                                       const Json::Value& json)
@@ -43,7 +44,7 @@ bool bim::server::business::from_json(user_id_response& r,
 
       const bim::net::user_id user_id(
           iscool::json::cast<bim::net::user_id>(users[i]));
-      assert(user_id != 0);
+      bim_assert(user_id != 0);
 
       r.accepted.emplace_back(token);
       r.user_id.emplace_back(user_id);

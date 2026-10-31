@@ -3,9 +3,10 @@
 
 #include <bim/game/player_game_outcome.hpp>
 
+#include <bim/assert.hpp>
+
 #include <iscool/net/byte_array_serialization/byte_array_array_serialization.hpp>
 
-#include <cassert>
 
 bim::net::game_over::game_over(
     std::uint8_t winner_index,
@@ -13,7 +14,7 @@ bim::net::game_over::game_over(
   : m_winner_index(winner_index)
   , m_outcome(outcome)
 {
-  assert(winner_index <= bim::game::g_max_player_count);
+  bim_assert(winner_index <= bim::game::g_max_player_count);
 }
 
 bim::net::game_over::game_over(const iscool::net::byte_array& raw_content)

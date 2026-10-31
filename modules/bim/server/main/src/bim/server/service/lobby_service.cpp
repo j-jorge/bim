@@ -21,7 +21,7 @@ bim::server::lobby_service::~lobby_service() = default;
 void bim::server::lobby_service::process(const iscool::net::endpoint& endpoint,
                                          const iscool::net::message& message)
 {
-  assert(message.get_session_id() != 0);
+  bim_assert(message.get_session_id() != 0);
 
   if (message.get_channel_id() != 0)
     return;

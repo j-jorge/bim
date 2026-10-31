@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/net/session_handler.hpp>
 
+#include <bim/assert.hpp>
 #include <bim/tracy.hpp>
 
 #include <iscool/log/log.hpp>
 #include <iscool/log/nature/error.hpp>
 #include <iscool/signals/implement_signal.hpp>
 
-#include <cassert>
 
 IMPLEMENT_SIGNAL(bim::net::session_handler, connected, m_connected);
 IMPLEMENT_SIGNAL(bim::net::session_handler, authentication_error,
@@ -63,7 +63,7 @@ void bim::net::session_handler::connect(std::string host,
 
 void bim::net::session_handler::reconnect()
 {
-  assert(!m_host.empty());
+  bim_assert(!m_host.empty());
 
   m_authentication.stop();
   m_session_id = std::nullopt;
@@ -95,6 +95,6 @@ bool bim::net::session_handler::connected() const
 
 iscool::net::session_id bim::net::session_handler::session_id() const
 {
-  assert(m_session_id);
+  bim_assert(m_session_id);
   return *m_session_id;
 }

@@ -250,7 +250,7 @@ void bim::axmol::app::script_director::schedule_tick(
 void bim::axmol::app::script_director::tick()
 {
   const std::size_t step_count = m_steps.size();
-  assert(m_next_step <= step_count);
+  bim_assert(m_next_step <= step_count);
 
   if (m_next_step == step_count)
     {

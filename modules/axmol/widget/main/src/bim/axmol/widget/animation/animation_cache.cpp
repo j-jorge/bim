@@ -261,6 +261,6 @@ bim::axmol::widget::animation_cache::get(const std::string_view& name) const
 
 #endif
 
-  assert(it != m_animations.end());
+  bim_assert(it != m_animations.end());
   return it->second;
 }

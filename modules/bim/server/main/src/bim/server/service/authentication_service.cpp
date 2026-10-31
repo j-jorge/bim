@@ -241,7 +241,7 @@ void bim::server::authentication_service::sessions_ready(
 
   for (const create_session_result& r : results)
     {
-      assert(r.state != create_session_result_state::pending);
+      bim_assert(r.state != create_session_result_state::pending);
 
       const pending_authentication_map::iterator it =
           m_pending_authentication.find(r.token);
@@ -256,7 +256,7 @@ void bim::server::authentication_service::sessions_ready(
             .build_message(*slot.value);
       else
         {
-          assert(r.state == create_session_result_state::rejected);
+          bim_assert(r.state == create_session_result_state::rejected);
 
           ic_log(iscool::log::nature::info(), "authentication_service",
                  "Authentication refused for IP {}.",

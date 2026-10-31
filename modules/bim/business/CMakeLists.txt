@@ -11,4 +11,4 @@ target_include_directories(
   main/include
   ${CMAKE_CURRENT_BINARY_DIR}/include
 )
-target_link_libraries(bim_business PUBLIC iscool_http)
+target_link_libraries(bim_business PUBLIC bim_core iscool_http)

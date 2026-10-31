@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/server/rolling_statistics.hpp>
 
-#include <cassert>
+#include <bim/assert.hpp>
+
 
 bim::server::rolling_statistics::rolling_statistics(
     std::chrono::nanoseconds bucket_duration,
@@ -35,7 +36,7 @@ void bim::server::rolling_statistics::push(std::chrono::nanoseconds now,
 
   for (std::size_t j = 0; j != i; ++j)
     {
-      assert(m_values[j] <= m_total);
+      bim_assert(m_values[j] <= m_total);
       m_total -= m_values[j];
     }
 

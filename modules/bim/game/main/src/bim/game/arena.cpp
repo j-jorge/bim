@@ -52,8 +52,8 @@ bool bim::game::arena::is_static_wall(std::uint8_t x, std::uint8_t y) const
 void bim::game::arena::set_static_wall(std::uint8_t x, std::uint8_t y,
                                        cell_neighborhood n)
 {
-  assert(m_fences(x, y) == cell_edge::none);
-  assert(!m_is_static_wall(x, y));
+  bim_assert(m_fences(x, y) == cell_edge::none);
+  bim_assert(!m_is_static_wall(x, y));
 
   m_static_walls.emplace_back(static_wall{ x, y, n });
   m_is_static_wall(x, y) = true;
@@ -67,13 +67,13 @@ bim::game::cell_edge bim::game::arena::fences(std::uint8_t x,
 
 void bim::game::arena::add_fence(std::uint8_t x, std::uint8_t y, cell_edge e)
 {
-  assert(!m_is_static_wall(x, y));
+  bim_assert(!m_is_static_wall(x, y));
   m_fences(x, y) |= e;
 }
 
 void bim::game::arena::remove_fence(std::uint8_t x, std::uint8_t y,
                                     cell_edge e)
 {
-  assert(!m_is_static_wall(x, y));
+  bim_assert(!m_is_static_wall(x, y));
   m_fences(x, y) &= ~e;
 }

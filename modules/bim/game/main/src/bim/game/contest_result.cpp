@@ -3,7 +3,8 @@
 
 #include <bim/game/player_game_outcome.hpp>
 
-#include <cassert>
+#include <bim/assert.hpp>
+
 
 enum class bim::game::contest_result::state : std::uint8_t
 {
@@ -23,8 +24,8 @@ bim::game::contest_result bim::game::contest_result::create_victory(
     std::uint8_t winning_player,
     const per_player_array<player_game_outcome>& outcome)
 {
-  assert(winning_player < outcome.size());
-  assert(outcome[winning_player] == player_game_outcome::victory);
+  bim_assert(winning_player < outcome.size());
+  bim_assert(outcome[winning_player] == player_game_outcome::victory);
 
   contest_result result;
   result.m_winning_player = winning_player;
@@ -56,13 +57,13 @@ bool bim::game::contest_result::has_a_winner() const
 
 std::uint8_t bim::game::contest_result::winning_player() const
 {
-  assert(has_a_winner());
+  bim_assert(has_a_winner());
   return m_winning_player;
 }
 
 const bim::game::per_player_array<bim::game::player_game_outcome>&
 bim::game::contest_result::outcome() const
 {
-  assert(!still_running());
+  bim_assert(!still_running());
   return m_outcome;
 }

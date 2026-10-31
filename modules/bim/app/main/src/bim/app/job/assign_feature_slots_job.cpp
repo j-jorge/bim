@@ -48,7 +48,7 @@ void bim::app::assign_feature_slots_job::assign_slots(
         m_task[i].action = action_kind::assign;
         m_task[i].feature = *assignment[i];
 
-        assert(m_task[i].feature != bim::game::feature_flags{});
+        bim_assert(m_task[i].feature != bim::game::feature_flags{});
       }
 
   start_task();
@@ -86,7 +86,7 @@ void bim::app::assign_feature_slots_job::start_task()
 
 void bim::app::assign_feature_slots_job::send_clear_request(std::size_t i)
 {
-  assert(!m_connection.connected());
+  bim_assert(!m_connection.connected());
 
   Json::Value body;
   body["slot_index"] = i;
@@ -107,7 +107,7 @@ void bim::app::assign_feature_slots_job::send_clear_request(std::size_t i)
 
 void bim::app::assign_feature_slots_job::send_assign_request()
 {
-  assert(!m_connection.connected());
+  bim_assert(!m_connection.connected());
 
   Json::Value body;
   Json::Value& selection = body["selection"];

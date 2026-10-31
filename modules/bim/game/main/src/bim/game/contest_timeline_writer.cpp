@@ -41,7 +41,7 @@ static void serialize_actions(int player_count, const entt::registry& registry,
       const bim::game::player_action& a = actions[i];
       constexpr int bits_in_movement = 3;
 
-      assert((int)a.movement <= ((1 << bits_in_movement) - 1));
+      bim_assert((int)a.movement <= ((1 << bits_in_movement) - 1));
       (void)bits_in_movement;
 
       std::byte b = (std::byte)a.movement;

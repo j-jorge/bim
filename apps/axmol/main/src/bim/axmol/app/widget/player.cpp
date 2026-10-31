@@ -10,6 +10,8 @@
 
 #include <bim/game/component/animation_state.hpp>
 
+#include <bim/assert.hpp>
+
 #include <axmol/2d/Sprite.h>
 
 #define x_widget_scope bim::axmol::app::player::
@@ -19,7 +21,6 @@
 
 #include <bim/game/context/player_animations.hpp>
 
-#include <cassert>
 
 bim_implement_widget(bim::axmol::app::player);
 
@@ -96,7 +97,7 @@ void bim::axmol::app::player::set_animation(
         }
     }
 
-  assert(m_animations.find(state.model) != m_animations.end());
+  bim_assert(m_animations.find(state.model) != m_animations.end());
 
   m_animations.find(state.model)->second->apply(*m_controls->body, state);
 }

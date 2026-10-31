@@ -52,11 +52,11 @@ bim::server::geolocation_service::lookup(const std::string& ip)
   const id_to_info_map::iterator it_info = m_address_info.find(it_id->second);
   const std::chrono::seconds now = iscool::time::now<std::chrono::seconds>();
 
-  assert(it_info != m_address_info.end());
+  bim_assert(it_info != m_address_info.end());
 
   internal_info* info = &it_info->second;
 
-  assert(info->ip == ip);
+  bim_assert(info->ip == ip);
 
   if (info->database_version == m_database_version)
     {
@@ -226,7 +226,7 @@ void bim::server::geolocation_service::clean_up()
       {
         const id_to_info_map::iterator it_info =
             m_address_info.find(it->first);
-        assert(it_info != m_address_info.end());
+        bim_assert(it_info != m_address_info.end());
         m_ip_to_id.erase(it_info->second.ip);
         m_address_info.erase(it_info);
 
@@ -235,8 +235,8 @@ void bim::server::geolocation_service::clean_up()
     else
       ++it;
 
-  assert(m_ip_to_id.size() == m_address_info.size());
-  assert(m_ip_to_id.size() == m_release_date.size());
+  bim_assert(m_ip_to_id.size() == m_address_info.size());
+  bim_assert(m_ip_to_id.size() == m_release_date.size());
 
   schedule_clean_up();
 }

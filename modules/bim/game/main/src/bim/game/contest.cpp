@@ -44,6 +44,7 @@
 #include <bim/game/level_generation.hpp>
 #include <bim/game/random_generator.hpp>
 
+#include <bim/assert.hpp>
 #include <bim/assume.hpp>
 #include <bim/tracy.hpp>
 
@@ -51,7 +52,6 @@
 
 #include <boost/random/uniform_int_distribution.hpp>
 
-#include <cassert>
 
 namespace bim::game
 {
@@ -276,7 +276,7 @@ bim::game::contest_result bim::game::contest::tick()
   for (std::size_t y = 0; y != m_arena->height(); ++y)
     for (std::size_t x = 0; x != m_arena->width(); ++x)
       for (const entt::entity e : m_entity_world_map->entities_at(x, y))
-        assert(m_registry->valid(e));
+        bim_assert(m_registry->valid(e));
 #endif
 
   return check_game_over(*m_context, *m_registry);

@@ -14,7 +14,7 @@ void bim::game::refresh_bomb_inventory(entt::registry& registry)
   registry.view<bomb>().each(
       [&](const bomb& bomb) -> void
         {
-          assert(bomb.player_index < g_max_player_count);
+          bim_assert(bomb.player_index < g_max_player_count);
           ++active_bombs_per_player[bomb.player_index];
         });
 

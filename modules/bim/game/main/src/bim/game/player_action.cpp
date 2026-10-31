@@ -33,7 +33,7 @@ void bim::game::collect_player_actions(std::span<player_action*> actions,
       [actions](const bim::game::player& player,
                 bim::game::player_action& action)
         {
-          assert(player.index < actions.size());
+          bim_assert(player.index < actions.size());
           actions[player.index] = &action;
         });
 }

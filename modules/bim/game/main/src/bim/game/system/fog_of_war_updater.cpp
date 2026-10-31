@@ -11,11 +11,11 @@
 #include <bim/game/component/timer.hpp>
 #include <bim/game/constant/fog_roll_in_duration.hpp>
 
+#include <bim/assert.hpp>
 #include <bim/table_2d.impl.hpp>
 
 #include <entt/entity/registry.hpp>
 
-#include <cassert>
 
 template class bim::table_2d<bim::game::fog_of_war*>;
 
@@ -82,7 +82,7 @@ namespace bim::game::detail
 
     f->state = fog_state::hiding;
 
-    assert(p.timer(x, y) != nullptr);
+    bim_assert(p.timer(x, y) != nullptr);
     p.timer(x, y)->duration =
         f->opacity * g_fog_hide_duration / fog_of_war::full_opacity;
 
@@ -100,7 +100,7 @@ namespace bim::game::detail
     f->state = fog_state::blown;
 
     timer* const t = p.timer(x, y);
-    assert(t != nullptr);
+    bim_assert(t != nullptr);
     t->duration = f->opacity * g_fog_blow_duration / fog_of_war::full_opacity;
 
     uncover(p, x, y);
@@ -142,7 +142,7 @@ bim::game::fog_of_war_updater::~fog_of_war_updater() = default;
 const bim::table_2d<bim::game::fog_of_war*>&
 bim::game::fog_of_war_updater::fog(std::size_t player_index) const
 {
-  assert(player_index <= m_tables.size());
+  bim_assert(player_index <= m_tables.size());
   return m_tables[player_index].fog;
 }
 
@@ -212,7 +212,7 @@ void bim::game::fog_of_war_updater::update_opacity_from_timers(
         if (!f)
           continue;
 
-        assert(p.timer(x, y) != nullptr);
+        bim_assert(p.timer(x, y) != nullptr);
         timer* const t = p.timer(x, y);
 
         switch (f->state)

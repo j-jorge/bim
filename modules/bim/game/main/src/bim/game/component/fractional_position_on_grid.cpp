@@ -1,9 +1,10 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/game/component/fractional_position_on_grid.hpp>
 
+#include <bim/assert.hpp>
+
 #include <fpm/math.hpp>
 
-#include <cassert>
 
 bim::game::fractional_position_on_grid::fractional_position_on_grid() =
     default;

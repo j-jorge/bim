@@ -5,10 +5,11 @@
 #include <bim/axmol/input/node_reference.hpp>
 #include <bim/axmol/input/touch_observer.hpp>
 
+#include <bim/assert.hpp>
+
 #include <axmol/base/Touch.h>
 
 #include <algorithm>
-#include <cassert>
 #include <iterator>
 #include <sstream>
 
@@ -29,40 +30,40 @@ bim::axmol::input::node::node(key_observer_pointer instance)
 
 void bim::axmol::input::node::attach(touch_observer_pointer observer)
 {
-  assert(observer.lock());
+  bim_assert(observer.lock());
   m_touch_observer = std::move(observer);
 }
 
 void bim::axmol::input::node::attach(key_observer_pointer observer)
 {
-  assert(observer.lock());
+  bim_assert(observer.lock());
   m_key_observer = std::move(observer);
 }
 
 void bim::axmol::input::node::push_front(const node_reference& child)
 {
-  assert(child.m_node);
+  bim_assert(child.m_node);
   m_children.insert(m_children.begin(), child.m_node);
-  assert(check_no_duplicates());
+  bim_assert(check_no_duplicates());
 }
 
 void bim::axmol::input::node::push_back(touch_observer_pointer observer)
 {
-  assert(observer.lock());
+  bim_assert(observer.lock());
   push_back(std::make_shared<node>(std::move(observer)));
 }
 
 void bim::axmol::input::node::push_back(key_observer_pointer observer)
 {
-  assert(observer.lock());
+  bim_assert(observer.lock());
   push_back(std::make_shared<node>(std::move(observer)));
 }
 
 void bim::axmol::input::node::push_back(const node_reference& child)
 {
-  assert(child.m_node);
+  bim_assert(child.m_node);
   m_children.push_back(child.m_node);
-  assert(check_no_duplicates());
+  bim_assert(check_no_duplicates());
 }
 
 void bim::axmol::input::node::pop_back()
@@ -85,7 +86,7 @@ void bim::axmol::input::node::erase(const node_reference& child)
 
 void bim::axmol::input::node::erase(const touch_observer_pointer& observer)
 {
-  assert(!observer.expired());
+  bim_assert(!observer.expired());
 
   const std::shared_ptr<touch_observer> pointer = observer.lock();
   const auto predicate = [&pointer](const node_pointer& p) -> bool
@@ -96,14 +97,14 @@ void bim::axmol::input::node::erase(const touch_observer_pointer& observer)
   const children_vector::iterator it =
       std::ranges::find_if(m_children, predicate);
 
-  assert(it != m_children.end());
+  bim_assert(it != m_children.end());
   (*it)->unplugged();
   m_children.erase(it);
 }
 
 void bim::axmol::input::node::erase(const key_observer_pointer& observer)
 {
-  assert(!observer.expired());
+  bim_assert(!observer.expired());
 
   const std::shared_ptr<key_observer> pointer = observer.lock();
   const auto predicate = [&pointer](const node_pointer& p) -> bool
@@ -114,7 +115,7 @@ void bim::axmol::input::node::erase(const key_observer_pointer& observer)
   const children_vector::iterator it =
       std::ranges::find_if(m_children, predicate);
 
-  assert(it != m_children.end());
+  bim_assert(it != m_children.end());
   (*it)->unplugged();
   m_children.erase(it);
 }
@@ -144,8 +145,8 @@ void bim::axmol::input::node::touch_pressed(touch_event& touch)
       if (observer->may_process(touch))
         {
           const int id = touch.get()->getID();
-          assert(id >= 0);
-          assert((size_t)id < sizeof(m_touch_pressed_mask) * 8);
+          bim_assert(id >= 0);
+          bim_assert((size_t)id < sizeof(m_touch_pressed_mask) * 8);
           m = 1 << id;
         }
 
@@ -381,7 +382,7 @@ void bim::axmol::input::node::unplugged()
 template <typename Enter, typename Visit>
 void bim::axmol::input::node::depth_first_scan(Enter&& enter, Visit&& visit)
 {
-  assert(!m_selected_in_scan);
+  bim_assert(!m_selected_in_scan);
   m_selected_in_scan = true;
 
   visit_selected(depth_first_select(*this, std::forward<Enter>(enter)), visit);
@@ -414,7 +415,7 @@ bim::axmol::input::node::depth_first_select(const node& root, Enter&& enter)
 
       if (enter(*child))
         {
-          assert(!child->m_selected_in_scan);
+          bim_assert(!child->m_selected_in_scan);
           child->m_selected_in_scan = true;
 
           selected.push_back(child);

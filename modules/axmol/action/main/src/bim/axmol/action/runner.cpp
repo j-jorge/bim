@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/axmol/action/runner.hpp>
 
+#include <bim/assert.hpp>
+
 #include <axmol/2d/ActionInterval.h>
 #include <axmol/2d/ActionManager.h>
 #include <axmol/2d/Node.h>
@@ -9,7 +11,6 @@
 
 #include <fmt/format.h>
 
-#include <cassert>
 
 bim::axmol::action::runner::runner()
   : m_action_manager(new ax::ActionManager())
@@ -81,7 +82,7 @@ void bim::axmol::action::runner::update(float elapsed_time)
 
 void bim::axmol::action::runner::unschedule_update()
 {
-  assert(m_update_scheduled);
+  bim_assert(m_update_scheduled);
 
   ax::Director::getInstance()->getScheduler()->unschedule(m_scheduler_key,
                                                           this);

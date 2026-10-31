@@ -39,7 +39,7 @@ void bim::net::game_update_from_server::build_message(
   iscool::net::byte_array& content = message.get_content();
 
   const std::uint8_t player_count = actions.size();
-  assert(player_count > 0);
+  bim_assert(player_count > 0);
 
   content << from_tick << final_checksum << player_count;
 

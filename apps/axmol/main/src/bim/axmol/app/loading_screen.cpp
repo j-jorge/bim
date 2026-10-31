@@ -218,7 +218,7 @@ void bim::axmol::app::loading_screen::load_styles()
 
 void bim::axmol::app::loading_screen::one_loaded_texture()
 {
-  assert(m_pending_textures > 0);
+  bim_assert(m_pending_textures > 0);
   --m_pending_textures;
 
   if (m_pending_textures == 0)
@@ -232,7 +232,7 @@ void bim::axmol::app::loading_screen::one_loaded_texture()
 
 void bim::axmol::app::loading_screen::one_loaded_resource()
 {
-  assert(m_pending_resources > 0);
+  bim_assert(m_pending_resources > 0);
   --m_pending_resources;
 
   if (m_pending_resources == 0)
@@ -246,7 +246,7 @@ void bim::axmol::app::loading_screen::one_loaded_resource()
 
 void bim::axmol::app::loading_screen::stopped()
 {
-  assert(m_container->isRunning());
+  bim_assert(m_container->isRunning());
   m_context.get_main_scene()->remove_from_overlays(*m_container);
   m_context.get_event_dispatcher()->dispatch("loaded");
 

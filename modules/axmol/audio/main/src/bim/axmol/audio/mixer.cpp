@@ -1,11 +1,12 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/axmol/audio/mixer.hpp>
 
+#include <bim/assert.hpp>
+
 #include <iscool/audio/loop_mode.hpp>
 
 #include <axmol/audio/AudioEngine.h>
 
-#include <cassert>
 
 static const iscool::audio::track_id g_invalid_audio_id =
     ax::AudioEngine::INVALID_AUDIO_ID;
@@ -39,7 +40,7 @@ bim::axmol::audio::mixer::play_effect(const std::string& file_path,
 {
   // Handling the volume of looping effects is not implemented, so we are just
   // going to forbid loops.
-  assert(loop == iscool::audio::loop_mode::once);
+  bim_assert(loop == iscool::audio::loop_mode::once);
   (void)loop;
 
   return ax::AudioEngine::play2d(file_path, false, m_effects_muted ? 0 : 1);
@@ -47,7 +48,7 @@ bim::axmol::audio::mixer::play_effect(const std::string& file_path,
 
 void bim::axmol::audio::mixer::stop_effect(iscool::audio::track_id id)
 {
-  assert(id != m_current_music_id);
+  bim_assert(id != m_current_music_id);
   ax::AudioEngine::stop(id);
 }
 

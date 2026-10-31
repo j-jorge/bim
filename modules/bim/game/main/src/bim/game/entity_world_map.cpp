@@ -3,9 +3,9 @@
 
 #include <entt/entity/registry.hpp>
 
+#include <bim/assert.hpp>
 #include <bim/table_2d.impl.hpp>
 
-#include <cassert>
 
 bim::game::entity_world_map::entity_world_map() = default;
 
@@ -37,7 +37,7 @@ void bim::game::entity_world_map::put_entity(entt::entity e, std::uint8_t x,
 {
 #ifndef NDEBUG
   for (const entity_vector& v : m_entities)
-    assert(std::ranges::find(v, e) == v.end());
+    bim_assert(std::ranges::find(v, e) == v.end());
 #endif
 
   m_entities(x, y).push_back(e);

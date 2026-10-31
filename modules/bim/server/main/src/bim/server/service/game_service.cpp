@@ -242,7 +242,7 @@ private:
                               simulation_checksum.begin() + offset_to_all);
 
     completed_tick_count_all += offset_to_all;
-    assert(completed_tick_count_all <= simulation_tick);
+    bim_assert(completed_tick_count_all <= simulation_tick);
   }
 
   /**
@@ -270,7 +270,7 @@ private:
             offset_to_simulation = player_offset_to_simulation;
         }
 
-    assert(offset_to_simulation != std::numeric_limits<std::uint32_t>::max());
+    bim_assert(offset_to_simulation != std::numeric_limits<std::uint32_t>::max());
 
     if ((offset_to_simulation == 0)
         || (offset_to_simulation == std::numeric_limits<std::uint32_t>::max()))
@@ -281,7 +281,7 @@ private:
     const bool game_over_reached = seal_player_actions(offset_to_simulation);
 
     simulation_tick += offset_to_simulation;
-    assert(simulation_tick >= completed_tick_count_all);
+    bim_assert(simulation_tick >= completed_tick_count_all);
 
     if (game_over_reached)
       return simulation_state::over;
@@ -300,7 +300,7 @@ private:
   {
     bool reached_game_over = false;
 
-    assert(simulation_tick >= completed_tick_count_all);
+    bim_assert(simulation_tick >= completed_tick_count_all);
     const std::size_t action_base_index =
         simulation_tick - completed_tick_count_all;
 
@@ -320,11 +320,11 @@ private:
 
                   if (m_bot && (p == m_bot->player_index()))
                     {
-                      assert(action_index == actions[p].size());
+                      bim_assert(action_index == actions[p].size());
                       actions[p].push_back(m_bot->think(contest));
                     }
 
-                  assert(action_index < actions[p].size());
+                  bim_assert(action_index < actions[p].size());
                   *player_actions[p] = actions[p][action_index];
                 }
             }
@@ -501,7 +501,7 @@ bim::server::game_info bim::server::game_service::new_game(
 
   if (bot == bot_availability::available)
     {
-      assert(player_count == 1);
+      bim_assert(player_count == 1);
 
       bot_index =
           std::uniform_int_distribution<int>(0, player_count)(m_random);
@@ -515,7 +515,7 @@ bim::server::game_info bim::server::game_service::new_game(
 #ifndef NDEBUG
   for (std::size_t i = 0, n = player_count; i != n - 1; ++i)
     for (std::size_t j = i + 1; j != n; ++j)
-      assert(final_sessions[i] != final_sessions[j]);
+      bim_assert(final_sessions[i] != final_sessions[j]);
 #endif
 
   ic_log(iscool::log::nature::info(), "game_service",
@@ -607,7 +607,7 @@ bim::server::game_info bim::server::game_service::new_game(
 void bim::server::game_service::process(const iscool::net::endpoint& endpoint,
                                         const iscool::net::message& message)
 {
-  assert(message.get_session_id() != 0);
+  bim_assert(message.get_session_id() != 0);
 
   const iscool::net::channel_id channel = message.get_channel_id();
   const game_map::iterator it = m_games.find(channel);
@@ -958,7 +958,7 @@ void bim::server::game_service::send_actions(
 void bim::server::game_service::record_game_over(
     iscool::net::channel_id channel, game& game)
 {
-  assert(!game.contest_result.still_running());
+  bim_assert(!game.contest_result.still_running());
 
   const bool has_a_winner = game.contest_result.has_a_winner();
 
@@ -1051,7 +1051,7 @@ void bim::server::game_service::send_game_over(
     const iscool::net::endpoint& endpoint, iscool::net::session_id session,
     iscool::net::channel_id channel, const game& game)
 {
-  assert(!game.contest_result.still_running());
+  bim_assert(!game.contest_result.still_running());
 
   const bim::net::game_over message(game.winner_index,
                                     game.contest_result.outcome());
@@ -1075,7 +1075,7 @@ void bim::server::game_service::check_drop_desynchronized_player(
                "lateness. No news since {}.",
                i, game.sessions[i], channel, m_disconnection_inactivity_delay);
 
-        assert(!game.bot[i]);
+        bim_assert(!game.bot[i]);
 
         game.active[i] = false;
         m_session_service.update_karma_disconnection(game.sessions[i]);
@@ -1101,7 +1101,7 @@ void bim::server::game_service::check_drop_desynchronized_player(
             }
       }
 
-  assert(
+  bim_assert(
       std::is_sorted(player_tick.begin(), player_tick.begin() + player_count));
 
   if (player_count < 2)
@@ -1122,7 +1122,7 @@ void bim::server::game_service::check_drop_desynchronized_player(
              second_slowest_tick - slowest_tick, second_slowest_tick,
              m_disconnection_lateness_threshold_in_ticks);
 
-      assert(!game.bot[i]);
+      bim_assert(!game.bot[i]);
 
       game.active[i] = false;
       m_session_service.update_karma_disconnection(game.sessions[i]);
@@ -1145,7 +1145,7 @@ void bim::server::game_service::check_drop_desynchronized_player(
              fastest_tick - second_fastest_tick, second_fastest_tick,
              m_disconnection_earliness_threshold_in_ticks);
 
-      assert(!game.bot[i]);
+      bim_assert(!game.bot[i]);
 
       game.active[i] = false;
       m_session_service.update_karma_disconnection(game.sessions[i]);

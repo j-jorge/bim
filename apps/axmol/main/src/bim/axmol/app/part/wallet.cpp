@@ -20,6 +20,8 @@
 #define x_widget_controls x_widget(bim::axmol::widget::button, wallet_button)
 #include <bim/axmol/widget/implement_controls_struct.hpp>
 
+#include <bim/assert.hpp>
+
 #include <axmol/2d/ActionEase.h>
 #include <axmol/2d/ActionInstant.h>
 #include <axmol/2d/ActionInterval.h>
@@ -28,7 +30,6 @@
 
 #include <iscool/random/rand.hpp>
 
-#include <cassert>
 
 IMPLEMENT_SIGNAL(bim::axmol::app::wallet, clicked, m_clicked)
 
@@ -216,7 +217,7 @@ void bim::axmol::app::wallet::prepare_coin_assets(
     {
       ax::Node& s = **slot.value;
 
-      assert(s.getParent() == nullptr);
+      bim_assert(s.getParent() == nullptr);
       wallet.addChild(&s);
       s.setScale(1);
       s.setPosition(source_position);

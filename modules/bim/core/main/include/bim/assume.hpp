@@ -1,10 +1,9 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #pragma once
 
-#include <cassert>
-
 #ifndef NDEBUG
-  #define bim_assume(b) assert(b)
+  #include <bim/assert.hpp>
+  #define bim_assume(b) bim_assert(b)
 #elif defined(__GNUC__)
   #define bim_assume(b)                                                       \
     do                                                                        \

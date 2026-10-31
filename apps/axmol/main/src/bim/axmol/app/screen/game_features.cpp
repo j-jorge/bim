@@ -358,7 +358,7 @@ void bim::axmol::app::game_features::start_erase_mode()
 
   button_clicked(*m_context.get_analytics(), "erase", "game-features");
 
-  assert(m_selected_feature == bim::game::feature_flags{});
+  bim_assert(m_selected_feature == bim::game::feature_flags{});
 
   const bim::app::player_profile& profile = *m_context.get_player_profile();
   bool slot_is_occupied[bim::app::g_game_feature_slot_count];
@@ -409,7 +409,7 @@ void bim::axmol::app::game_features::select_slot(std::size_t i)
 
 void bim::axmol::app::game_features::erase_slot(std::size_t i)
 {
-  assert(m_monitor->is_erase_slot_state());
+  bim_assert(m_monitor->is_erase_slot_state());
 
   bim::app::player_profile& profile = *m_context.get_player_profile();
 
@@ -424,7 +424,7 @@ void bim::axmol::app::game_features::erase_slot(std::size_t i)
 
 void bim::axmol::app::game_features::assign_slot(std::size_t i)
 {
-  assert(m_monitor->is_assign_slot_state());
+  bim_assert(m_monitor->is_assign_slot_state());
 
   bim::app::assign_feature_slots_job::slot_assignment assignment;
   assignment[i] = m_selected_feature;
@@ -438,7 +438,7 @@ void bim::axmol::app::game_features::purchase_slot(std::size_t i)
 {
   const bim::app::player_profile& profile = *m_context.get_player_profile();
 
-  assert(!profile.slot_availability[i]);
+  bim_assert(!profile.slot_availability[i]);
 
   const std::int16_t price =
       m_context.get_config()->game_feature_slot_price[i];
@@ -490,13 +490,13 @@ void bim::axmol::app::game_features::select_feature(bim::game::feature_flags f)
 void bim::axmol::app::game_features::select_available_feature(
     bim::game::feature_flags f)
 {
-  assert(!!(m_context.get_player_profile()->available_features & f));
+  bim_assert(!!(m_context.get_player_profile()->available_features & f));
 
   if (m_monitor->is_assign_slot_state())
     deselect_item();
   else
     {
-      assert(m_monitor->is_idle_state());
+      bim_assert(m_monitor->is_idle_state());
 
       for (std::size_t i = 0; i != bim::app::g_game_feature_slot_count; ++i)
         m_slot_animation.run(*m_slot_selection_action[i]);
@@ -748,7 +748,7 @@ void bim::axmol::app::game_features::cancel()
     cancel_assign_slot();
   else
     {
-      assert(m_monitor->is_erase_slot_state());
+      bim_assert(m_monitor->is_erase_slot_state());
       cancel_erase_slot();
     }
 }

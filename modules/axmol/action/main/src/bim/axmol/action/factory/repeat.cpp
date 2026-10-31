@@ -5,11 +5,12 @@
 
 #include <bim/axmol/ref_ptr.impl.hpp>
 
+#include <bim/assert.hpp>
+
 #include <iscool/style/declaration.hpp>
 
 #include <axmol/2d/ActionInterval.h>
 
-#include <cassert>
 
 bim::axmol::ref_ptr<ax::ActionInterval>
 bim::axmol::action::repeat_from_style(const dynamic_factory& factory,
@@ -19,7 +20,7 @@ bim::axmol::action::repeat_from_style(const dynamic_factory& factory,
   const bim::axmol::ref_ptr<ax::FiniteTimeAction> action =
       factory.create(colors, *style.get_declaration("action"));
 
-  assert(dynamic_cast<ax::ActionInterval*>(action.get()) != nullptr);
+  bim_assert(dynamic_cast<ax::ActionInterval*>(action.get()) != nullptr);
   ax::ActionInterval* const inner_action = (ax::ActionInterval*)action.get();
 
   // It seems that we cannot combine RepeatForever and TargetedAction, thus we

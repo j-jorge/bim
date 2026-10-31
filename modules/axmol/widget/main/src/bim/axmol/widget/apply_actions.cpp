@@ -7,6 +7,7 @@
 #include <bim/axmol/action/dynamic_factory.hpp>
 #include <bim/axmol/action/runner.hpp>
 
+#include <bim/assert.hpp>
 #include <bim/unreachable.hpp>
 
 #include <iscool/log/log.hpp>
@@ -16,7 +17,6 @@
 #include <axmol/2d/ActionInstant.h>
 #include <axmol/2d/ActionInterval.h>
 
-#include <cassert>
 
 static bim::axmol::ref_ptr<ax::Spawn>
 create_actions(const bim::axmol::widget::context& context,
@@ -85,7 +85,7 @@ void bim::axmol::widget::apply_actions(bim::axmol::action::runner& runner,
                                        const iscool::style::declaration& style,
                                        const std::function<void()>& on_done)
 {
-  assert(on_done);
+  bim_assert(on_done);
 
   const bim::axmol::ref_ptr<ax::Spawn> action =
       create_actions(context, nodes, style);

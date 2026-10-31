@@ -1,10 +1,11 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/net/message/launch_game.hpp>
 
+#include <bim/assert.hpp>
+
 #include <iscool/net/byte_array_bit_inserter.hpp>
 #include <iscool/net/byte_array_bit_reader.hpp>
 
-#include <cassert>
 
 iscool::net::message_type bim::net::launch_game::get_type()
 {
@@ -28,10 +29,10 @@ bim::net::launch_game::launch_game(
   , m_arena_width(arena_width)
   , m_arena_height(arena_height)
 {
-  assert(gid >= 0);
-  assert(player_count >= 1);
-  assert(player_count <= 4);
-  assert(player_index <= 3);
+  bim_assert(gid >= 0);
+  bim_assert(player_count >= 1);
+  bim_assert(player_count <= 4);
+  bim_assert(player_index <= 3);
 }
 
 bim::net::launch_game::launch_game(const iscool::net::byte_array& raw_content)

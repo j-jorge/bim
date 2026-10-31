@@ -17,6 +17,7 @@
 #define x_widget_controls x_widget(ax::Node, fog_container)
 #include <bim/axmol/widget/implement_controls_struct.hpp>
 
+#include <bim/assert.hpp>
 #include <bim/table_2d.hpp>
 #include <bim/tracy.hpp>
 
@@ -25,7 +26,6 @@
 
 #include <entt/entity/registry.hpp>
 
-#include <cassert>
 
 static bim::game::cell_neighborhood
 canonicalize_neighborhood(bim::game::cell_neighborhood n)
@@ -99,7 +99,7 @@ bim::axmol::app::fog_display::fog_display(
           canonicalize_neighborhood((bim::game::cell_neighborhood)i));
       m_sprite_frame[i] = bim::axmol::ref_ptr<ax::SpriteFrame>(
           sprite_frames.getSpriteFrameByName(sprite_frame_name));
-      assert(m_sprite_frame[i] != nullptr);
+      bim_assert(m_sprite_frame[i] != nullptr);
     }
 }
 

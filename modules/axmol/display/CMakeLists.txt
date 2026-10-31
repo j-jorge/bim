@@ -12,5 +12,6 @@ target_include_directories(bim_axmol_display PUBLIC main/include)
 target_link_libraries(
   bim_axmol_display
   PUBLIC
+  bim_core
   axmol::axmol
 )

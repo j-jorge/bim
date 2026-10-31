@@ -348,7 +348,7 @@ void bim::game::insert_random_fences(
               good = nav_check.reachable(arena, x, y, x, y - 1);
               break;
             default:
-              assert(e[i] == cell_edge::down);
+              bim_assert(e[i] == cell_edge::down);
               good = nav_check.reachable(arena, x, y, x, y + 1);
             }
 
