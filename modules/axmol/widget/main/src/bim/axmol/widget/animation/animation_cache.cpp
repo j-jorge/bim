@@ -3,6 +3,8 @@
 
 #include <bim/axmol/widget/animation/animation.hpp>
 
+#include <bim/assert.hpp>
+
 #include <iscool/json/cast_bool.hpp>
 #include <iscool/json/cast_float.hpp>
 #include <iscool/json/cast_string.hpp>
@@ -261,6 +263,6 @@ bim::axmol::widget::animation_cache::get(const std::string_view& name) const
 
 #endif
 
-  assert(it != m_animations.end());
+  bim_assert(it != m_animations.end());
   return it->second;
 }

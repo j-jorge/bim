@@ -10,6 +10,8 @@
 
 #include <bim/axmol/style/apply_size.hpp>
 
+#include <bim/assert.hpp>
+
 #include <axmol/extensions/GUI/ScrollView/TableView.h>
 
 #include <iscool/style/declaration.hpp>
@@ -76,11 +78,11 @@ private:
         cell->autorelease();
       }
 
-    assert(cell->getChildrenCount() == 0);
+    bim_assert(cell->getChildrenCount() == 0);
 
     // Put the client node into the cell.
     ax::Node* const node = m_items[index].get();
-    assert(node != nullptr);
+    bim_assert(node != nullptr);
 
     cell->addChild(node);
 
@@ -197,7 +199,7 @@ bool bim::axmol::widget::list::init()
 
 void bim::axmol::widget::list::update(float delta)
 {
-  assert(m_dirty);
+  bim_assert(m_dirty);
 
   ax::Node::update(delta);
 
@@ -208,8 +210,8 @@ void bim::axmol::widget::list::update(float delta)
 
 void bim::axmol::widget::list::create_view()
 {
-  assert(!m_table_view);
-  assert(m_table_view_bridge);
+  bim_assert(!m_table_view);
+  bim_assert(m_table_view_bridge);
 
   const ax::Size size = getContentSize();
 

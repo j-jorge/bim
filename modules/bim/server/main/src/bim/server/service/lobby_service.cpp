@@ -7,6 +7,8 @@
 #include <bim/net/message/new_random_game_request.hpp>
 #include <bim/net/message/try_deserialize_message.hpp>
 
+#include <bim/assert.hpp>
+
 bim::server::lobby_service::lobby_service(
     const config& config, iscool::net::socket_stream& socket,
     const session_service& session_service, game_service& game_service)
@@ -21,7 +23,7 @@ bim::server::lobby_service::~lobby_service() = default;
 void bim::server::lobby_service::process(const iscool::net::endpoint& endpoint,
                                          const iscool::net::message& message)
 {
-  assert(message.get_session_id() != 0);
+  bim_assert(message.get_session_id() != 0);
 
   if (message.get_channel_id() != 0)
     return;

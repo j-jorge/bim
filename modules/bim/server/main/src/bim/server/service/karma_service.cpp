@@ -3,6 +3,8 @@
 
 #include <bim/server/config.hpp>
 
+#include <bim/assert.hpp>
+
 #include <iscool/log/log.hpp>
 #include <iscool/log/nature/info.hpp>
 #include <iscool/schedule/delayed_call.hpp>
@@ -102,7 +104,7 @@ bim::server::karma_service::add_karma(const boost::asio::ip::address& address,
     return update_result::accept;
 
   const client_map::iterator it = m_client.find(address);
-  assert(it != m_client.end());
+  bim_assert(it != m_client.end());
 
   it->second.karma = std::max(-128, std::min(it->second.karma + karma, 127));
 

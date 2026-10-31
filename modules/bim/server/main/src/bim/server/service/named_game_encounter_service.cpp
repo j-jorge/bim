@@ -7,6 +7,8 @@
 #include <bim/net/message/accept_named_game.hpp>
 #include <bim/net/message/new_named_game_request.hpp>
 
+#include <bim/assert.hpp>
+
 #include <iscool/log/log.hpp>
 #include <iscool/log/nature/info.hpp>
 
@@ -80,7 +82,7 @@ void bim::server::named_game_encounter_service::create_encounter(
 
   m_encounter_ids[name] = encounter_id;
 
-  assert(m_encounters.find(encounter_id) == m_encounters.end());
+  bim_assert(m_encounters.find(encounter_id) == m_encounters.end());
 
   encounter_info& encounter = m_encounters[encounter_id];
   encounter.name = std::move(name);

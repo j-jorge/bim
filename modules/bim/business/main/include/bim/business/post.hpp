@@ -1,13 +1,14 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #pragma once
 
+#include <bim/assert.hpp>
+
 #include <iscool/http/send.hpp>
 #include <iscool/json/bad_cast.hpp>
 #include <iscool/json/parse_string.hpp>
 
 #include <json/value.h>
 
-#include <cassert>
 #include <string>
 #include <string_view>
 #include <type_traits>
@@ -33,7 +34,7 @@ namespace bim::business
     post(std::string_view url, std::vector<std::string> headers,
          std::string body, ResultHandler&& handle_result, ProcessError&& error)
     {
-      assert(iscool::json::parse_string(body) != Json::nullValue);
+      bim_assert(iscool::json::parse_string(body) != Json::nullValue);
 
       log_request_body(url, body);
 

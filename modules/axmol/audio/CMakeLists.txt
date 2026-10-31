@@ -10,6 +10,7 @@ target_include_directories(bim_axmol_audio PUBLIC main/include)
 target_link_libraries(
   bim_axmol_audio
   PUBLIC
+  bim_core
   iscool_audio
   axmol::axmol
 )

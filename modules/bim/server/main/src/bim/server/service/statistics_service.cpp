@@ -3,13 +3,14 @@
 
 #include <bim/server/config.hpp>
 
+#include <bim/assert.hpp>
+
 #include <iscool/log/log.hpp>
 #include <iscool/log/nature/error.hpp>
 #include <iscool/log/nature/info.hpp>
 #include <iscool/schedule/delayed_call.hpp>
 #include <iscool/time/now.hpp>
 
-#include <cassert>
 #include <chrono>
 #include <ctime>
 
@@ -131,7 +132,7 @@ void bim::server::statistics_service::record_session_disconnected(
   if (count == 0)
     return;
 
-  assert(count <= m_active_sessions_instant);
+  bim_assert(count <= m_active_sessions_instant);
 
   m_active_sessions_instant -= count;
 
@@ -155,8 +156,8 @@ void bim::server::statistics_service::record_game_start(
 void bim::server::statistics_service::record_game_end(
     std::uint8_t player_count)
 {
-  assert(m_games_instant > 0);
-  assert(player_count <= m_players_in_games_instant);
+  bim_assert(m_games_instant > 0);
+  bim_assert(player_count <= m_players_in_games_instant);
 
   --m_games_instant;
   m_players_in_games_instant -= player_count;

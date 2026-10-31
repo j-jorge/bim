@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <bim/app/matchmaking_wait_message.hpp>
 
+#include <bim/assert.hpp>
+
 #include <iscool/files/read_file.hpp>
 #include <iscool/i18n/gettext.hpp>
 #include <iscool/monitoring/implement_state_monitor.hpp>
@@ -137,13 +139,13 @@ void bim::app::matchmaking_wait_message::start_default_script()
 
 void bim::app::matchmaking_wait_message::next_script()
 {
-  assert(m_next_script != 0);
+  bim_assert(m_next_script != 0);
   m_current_line = 0;
 
   if (m_current_script == 0)
     {
       // On the default script there are many iterations.
-      assert(m_remaining_loops_on_default_script > 0);
+      bim_assert(m_remaining_loops_on_default_script > 0);
       --m_remaining_loops_on_default_script;
 
       if (m_remaining_loops_on_default_script == 0)
@@ -203,8 +205,8 @@ void bim::app::matchmaking_wait_message::tick()
 
 void bim::app::matchmaking_wait_message::dispatch_updated()
 {
-  assert(m_current_script < m_scripts.size());
-  assert(m_current_line < m_scripts[m_current_script].size());
+  bim_assert(m_current_script < m_scripts.size());
+  bim_assert(m_current_line < m_scripts[m_current_script].size());
 
   m_updated(m_scripts[m_current_script][m_current_line]);
 }

@@ -1,12 +1,13 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include "http_worker.hpp"
 
+#include <bim/assert.hpp>
+
 #include <iscool/log/log.hpp>
 #include <iscool/log/nature/error.hpp>
 
 #include <curl/curl.h>
 
-#include <cassert>
 #include <utility>
 
 static size_t write_callback(char* ptr, size_t, size_t nmemb, void* userdata)
@@ -234,7 +235,7 @@ void http_worker::push(iscool::http::request request)
 
 void http_worker::dispatch_responses()
 {
-  assert(m_result_queue.empty());
+  bim_assert(m_result_queue.empty());
 
   {
     const std::lock_guard lock(m_thread_shared.out_mutex);

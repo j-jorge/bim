@@ -34,6 +34,7 @@
 #include <bim/game/static_wall.hpp>
 #include <bim/game/system/move_player.hpp>
 
+#include <bim/assert.hpp>
 #include <bim/assume.hpp>
 #include <bim/dev.hpp>
 #include <bim/table_2d.impl.hpp>
@@ -269,8 +270,8 @@ int bim::game::bot::build_visibility_map(const contest& contest)
 
   const bim::table_2d<fog_of_war*>& fog_map = contest.fog_map(m_player_index);
 
-  assert(fog_map.width() == m_visibility_map.width());
-  assert(fog_map.height() == m_visibility_map.height());
+  bim_assert(fog_map.width() == m_visibility_map.width());
+  bim_assert(fog_map.height() == m_visibility_map.height());
 
   for (std::size_t y = 0, h = fog_map.height(); y != h; ++y)
     for (std::size_t x = 0, w = fog_map.width(); x != w; ++x)

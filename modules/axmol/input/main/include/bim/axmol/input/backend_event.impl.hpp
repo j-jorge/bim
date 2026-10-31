@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #pragma once
 
-#include <cassert>
+#include <bim/assert.hpp>
 
 template <typename T>
 bim::axmol::input::backend_event<T>::backend_event(T data)
@@ -12,7 +12,7 @@ bim::axmol::input::backend_event<T>::backend_event(T data)
 template <typename T>
 void bim::axmol::input::backend_event<T>::consume()
 {
-  assert(is_available());
+  bim_assert(is_available());
   m_is_available = false;
 }
 

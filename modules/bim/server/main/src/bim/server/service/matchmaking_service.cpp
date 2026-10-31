@@ -13,6 +13,7 @@
 #include <bim/game/constant/max_player_count.hpp>
 #include <bim/game/per_player_array.hpp>
 
+#include <bim/assert.hpp>
 #include <bim/to_underlying.hpp>
 
 #include <iscool/log/log.hpp>
@@ -21,7 +22,6 @@
 #include <iscool/time/now.hpp>
 
 #include <algorithm>
-#include <cassert>
 #include <optional>
 
 struct bim::server::matchmaking_service::encounter_info
@@ -48,7 +48,7 @@ struct bim::server::matchmaking_service::encounter_info
   void insert(iscool::net::session_id session, bim::net::user_id user_id,
               bim::game::feature_flags f)
   {
-    assert(player_count < sessions.size());
+    bim_assert(player_count < sessions.size());
 
     const std::size_t new_index = player_count;
     ++player_count;
@@ -61,7 +61,7 @@ struct bim::server::matchmaking_service::encounter_info
 
   void erase(std::size_t i)
   {
-    assert(i < player_count);
+    bim_assert(i < player_count);
 
     std::copy(features.begin() + i + 1, features.begin() + player_count,
               features.begin() + i);
@@ -122,7 +122,7 @@ bim::net::encounter_id bim::server::matchmaking_service::new_encounter(
   const std::chrono::nanoseconds now =
       iscool::time::now<std::chrono::nanoseconds>();
 
-  assert(m_encounters.find(encounter_id) == m_encounters.end());
+  bim_assert(m_encounters.find(encounter_id) == m_encounters.end());
   encounter_info& encounter = m_encounters[encounter_id];
 
   encounter.player_count = 1;
@@ -180,7 +180,7 @@ bim::server::matchmaking_service::add_in_any_encounter(
         continue;
 
       const std::size_t session_index = encounter.session_index(session);
-      assert(session_index == encounter.player_count);
+      bim_assert(session_index == encounter.player_count);
 
       refresh_encounter(encounter_id, encounter, endpoint, session,
                         request_token, features, session_index);

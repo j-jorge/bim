@@ -7,9 +7,9 @@
 #include <bim/axmol/style/bounds_property_flags.hpp>
 #include <bim/axmol/style/scale_mode.hpp>
 
-#include <axmol/2d/Node.h>
+#include <bim/assert.hpp>
 
-#include <cassert>
+#include <axmol/2d/Node.h>
 
 static void apply_scale(ax::Node& node, const ax::Node& reference,
                         const bim::axmol::style::bounds_properties& bounds,
@@ -27,8 +27,8 @@ void bim::axmol::style::apply_bounds(const bounds_properties& bounds,
                                      ax::Node& node, const ax::Node& reference,
                                      float device_scale)
 {
-  assert((&reference == node.getParent())
-         || (reference.getParent() == node.getParent()));
+  bim_assert((&reference == node.getParent())
+             || (reference.getParent() == node.getParent()));
 
   apply_size(node, reference, bounds);
   apply_scale(node, reference, bounds, device_scale);

@@ -20,6 +20,8 @@
 #include <bim/game/contest_result.hpp>
 #include <bim/game/player_game_outcome.hpp>
 
+#include <bim/unreachable.hpp>
+
 #include <iscool/i18n/gettext.hpp>
 #include <iscool/signals/implement_signal.hpp>
 
@@ -117,7 +119,7 @@ void bim::axmol::app::end_game::displaying(
       action_style = &m_action_lose;
       break;
     case bim::game::player_game_outcome::kicked:
-      assert(false);
+      bim_unreachable;
       return;
     case bim::game::player_game_outcome::draw:
       ++m_context.get_player_profile()->arena_draws;

@@ -4,10 +4,11 @@
 #include <bim/game/component/player_action.hpp>
 #include <bim/game/component/player_movement.hpp>
 
+#include <bim/assert.hpp>
+
 #include <iscool/net/byte_array_bit_inserter.hpp>
 #include <iscool/net/byte_array_bit_reader.hpp>
 
-#include <cassert>
 #include <stdexcept>
 
 static constexpr int g_bits_in_movement = 3;
@@ -27,7 +28,7 @@ void bim::net::read(bim::game::player_action& action,
 void bim::net::write(iscool::net::byte_array_bit_inserter& bits,
                      const bim::game::player_action& action)
 {
-  assert((int)action.movement <= ((1 << g_bits_in_movement) - 1));
+  bim_assert((int)action.movement <= ((1 << g_bits_in_movement) - 1));
   bits.append(action.movement, 3);
   bits.append(action.drop_bomb, 1);
 }

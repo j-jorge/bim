@@ -3,9 +3,10 @@
 
 #include <bim/axmol/ref_ptr.hpp>
 
+#include <bim/assert.hpp>
+
 #include <axmol/base/Object.h>
 
-#include <cassert>
 #include <utility>
 
 template <typename T>
@@ -179,14 +180,14 @@ bim::axmol::ref_ptr<T>::operator=(ref_ptr<U>&& that) noexcept
 template <typename T>
 T& bim::axmol::ref_ptr<T>::operator*() const
 {
-  assert(m_ptr != nullptr);
+  bim_assert(m_ptr != nullptr);
   return *m_ptr;
 }
 
 template <typename T>
 T* bim::axmol::ref_ptr<T>::operator->() const
 {
-  assert(m_ptr != nullptr);
+  bim_assert(m_ptr != nullptr);
   return m_ptr;
 }
 

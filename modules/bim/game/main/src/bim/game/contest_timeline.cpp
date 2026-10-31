@@ -6,6 +6,7 @@
 #include <bim/game/contest_timeline_serialization.hpp>
 #include <bim/game/kick_event.hpp>
 
+#include <bim/assert.hpp>
 #include <bim/assume.hpp>
 
 #include <iscool/log/log.hpp>
@@ -15,7 +16,6 @@
 
 #include <entt/entity/registry.hpp>
 
-#include <cassert>
 #include <climits>
 #include <cstring>
 
@@ -238,9 +238,9 @@ std::size_t bim::game::contest_timeline::tick_count() const
 void bim::game::contest_timeline::load_tick(std::uint32_t tick,
                                             entt::registry& registry) const
 {
-  assert(!m_actions.empty());
-  assert(m_fingerprint.player_count != 0);
-  assert(tick < m_actions.size() / m_fingerprint.player_count);
+  bim_assert(!m_actions.empty());
+  bim_assert(m_fingerprint.player_count != 0);
+  bim_assert(tick < m_actions.size() / m_fingerprint.player_count);
 
   const std::size_t kick_index =
       std::find(m_kick_event_tick.begin(),

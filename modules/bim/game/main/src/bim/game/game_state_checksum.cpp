@@ -3,6 +3,7 @@
 
 #include <bim/game/all_components.hpp>
 
+#include <bim/assert.hpp>
 #include <bim/tracy.hpp>
 
 #include <iscool/meta/underlying_type.hpp>
@@ -226,7 +227,7 @@ std::uint32_t bim::game::game_state_checksum(const entt::registry& registry)
   for (const entt::entity e : registry.view<entt::entity>())
     all_entities.push_back(e);
 
-  assert(all_entities.capacity() <= 1024);
+  bim_assert(all_entities.capacity() <= 1024);
 
   std::sort(all_entities.begin(), all_entities.end(),
             [](entt::entity lhs, entt::entity rhs)

@@ -7,6 +7,7 @@
 #include <bim/axmol/style/apply_bounds.hpp>
 #include <bim/axmol/style/cache.hpp>
 
+#include <bim/assert.hpp>
 #include <bim/unreachable.hpp>
 
 #include <iscool/log/log.hpp>
@@ -18,8 +19,6 @@
 #include <boost/unordered/unordered_flat_map.hpp>
 
 #include <axmol/2d/Node.h>
-
-#include <cassert>
 
 namespace
 {

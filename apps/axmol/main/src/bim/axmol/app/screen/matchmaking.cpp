@@ -26,6 +26,7 @@
 #include <bim/net/exchange/new_game_exchange.hpp>
 #include <bim/net/session_handler.hpp>
 
+#include <bim/assert.hpp>
 #include <bim/bit_map.impl.hpp>
 
 #include <iscool/i18n/gettext.hpp>
@@ -182,7 +183,7 @@ void bim::axmol::app::matchmaking::displayed()
           launch_game(event);
         });
 
-  assert(m_context.get_session_handler()->connected());
+  bim_assert(m_context.get_session_handler()->connected());
   m_new_game->start(m_context.get_session_handler()->session_id(),
                     m_context.get_player_profile()->enabled_feature_flags());
 }

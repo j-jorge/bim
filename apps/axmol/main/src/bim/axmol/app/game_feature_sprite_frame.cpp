@@ -3,6 +3,8 @@
 
 #include <bim/game/feature_flags.hpp>
 
+#include <bim/assert.hpp>
+
 #include <axmol/2d/SpriteFrameCache.h>
 
 ax::SpriteFrame&
@@ -29,6 +31,6 @@ bim::axmol::app::game_feature_sprite_frame(bim::game::feature_flags f)
       break;
     }
 
-  assert(sprite_frame_name != nullptr);
+  bim_assert(sprite_frame_name != nullptr);
   return *ax::SpriteFrameCache::getInstance()->findFrame(sprite_frame_name);
 }

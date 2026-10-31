@@ -7,14 +7,14 @@
 #include <bim/business/business_url.hpp>
 #include <bim/business/post.hpp>
 
+#include <bim/assert.hpp>
+
 #include <iscool/log/log.hpp>
 #include <iscool/log/nature/error.hpp>
 #include <iscool/log/nature/info.hpp>
 #include <iscool/schedule/delayed_call.hpp>
 #include <iscool/signals/implement_signal.hpp>
 #include <iscool/time/now.hpp>
-
-#include <cassert>
 
 struct bim::server::session_service::client_info
 {
@@ -162,7 +162,7 @@ bim::server::session_service::create_or_refresh_session(
 bool bim::server::session_service::refresh_session(
     iscool::net::session_id session)
 {
-  assert(session < g_bot_min_session);
+  bim_assert(session < g_bot_min_session);
 
   const client_map::iterator it = m_clients.find(session);
 
@@ -183,7 +183,7 @@ bim::server::session_service::user_id(iscool::net::session_id session) const
 
   const client_map::const_iterator it = m_clients.find(session);
 
-  assert(it != m_clients.end());
+  bim_assert(it != m_clients.end());
 
   if (it == m_clients.end())
     return 0;
@@ -194,7 +194,7 @@ bim::server::session_service::user_id(iscool::net::session_id session) const
 void bim::server::session_service::update_karma_disconnection(
     iscool::net::session_id session)
 {
-  assert(session < g_bot_min_session);
+  bim_assert(session < g_bot_min_session);
 
   const client_map::iterator it = m_clients.find(session);
 
@@ -211,7 +211,7 @@ void bim::server::session_service::update_karma_disconnection(
 void bim::server::session_service::update_karma_short_game(
     iscool::net::session_id session)
 {
-  assert(session < g_bot_min_session);
+  bim_assert(session < g_bot_min_session);
 
   const client_map::iterator it = m_clients.find(session);
 
@@ -226,7 +226,7 @@ void bim::server::session_service::update_karma_short_game(
 void bim::server::session_service::update_karma_good_behavior(
     iscool::net::session_id session)
 {
-  assert(session < g_bot_min_session);
+  bim_assert(session < g_bot_min_session);
 
   const client_map::iterator it = m_clients.find(session);
 
@@ -397,7 +397,7 @@ void bim::server::session_service::user_id_response()
              "Assigning user {} to session {}.", user_id, session);
 
       const client_map::iterator client_it = m_clients.find(session);
-      assert(client_it != m_clients.end());
+      bim_assert(client_it != m_clients.end());
 
       client_it->second.user_id = user_id;
 

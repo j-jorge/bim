@@ -32,6 +32,8 @@
 
 #include <bim/business/business_url.hpp>
 
+#include <bim/assert.hpp>
+
 #include <iscool/audio/default_mixer.hpp>
 #include <iscool/audio/mixer.hpp>
 #include <iscool/files/file_exists.hpp>
@@ -212,7 +214,7 @@ void bim::axmol::app::detail::persistent_systems::set_up_colour_chart()
     }
 
   const Json::Value colors(iscool::json::from_file(color_file));
-  assert(colors.isObject());
+  bim_assert(colors.isObject());
 
   for (Json::Value::const_iterator it = colors.begin(), end = colors.end();
        it != end; ++it)
@@ -235,7 +237,8 @@ void bim::axmol::app::detail::persistent_systems::start_log_system()
 
   iscool::log::add_file_sink(log_file_path);
 
-  ic_log(iscool::log::nature::info(), g_log_context, "Log system initialized");
+  ic_log(iscool::log::nature::info(), g_log_context,
+         "Log system initialized: '{}'", log_file_path);
 
   std::tm now(iscool::system::device_date());
   char now_str[32];
@@ -257,7 +260,7 @@ void bim::axmol::app::detail::persistent_systems::stop_log_system()
 void bim::axmol::app::detail::persistent_systems::start_display()
 {
   ic_log(iscool::log::nature::info(), g_log_context, "Start: display.");
-  assert(m_application.m_main_view == nullptr);
+  bim_assert(m_application.m_main_view == nullptr);
   m_application.m_main_view.reset(new bim::axmol::display::main_view(
       "Bim!", m_application.m_screen_config.size,
       m_application.m_screen_config.scale));
@@ -282,7 +285,7 @@ void bim::axmol::app::detail::persistent_systems::start_haptic_feedback()
   ic_log(iscool::log::nature::info(), g_log_context,
          "Start: haptic feedback.");
 
-  assert(!m_application.m_context.is_haptic_feedback_set());
+  bim_assert(!m_application.m_context.is_haptic_feedback_set());
 
   iscool::system::haptic_feedback* const feedback(
       new iscool::system::haptic_feedback());
@@ -305,7 +308,7 @@ void bim::axmol::app::detail::persistent_systems::start_social()
 {
   ic_log(iscool::log::nature::info(), g_log_context, "Start: social.");
 
-  assert(!m_application.m_context.is_social_set());
+  bim_assert(!m_application.m_context.is_social_set());
 
   iscool::social::service* const service(new iscool::social::service());
 
@@ -368,7 +371,7 @@ void bim::axmol::app::detail::persistent_systems::start_root_scene()
 {
   ic_log(iscool::log::nature::info(), g_log_context, "Start: root scene.");
 
-  assert(m_root_scene == nullptr);
+  bim_assert(m_root_scene == nullptr);
 
   m_root_scene = bim::axmol::app::root_scene::create();
 
@@ -422,7 +425,7 @@ bim::axmol::app::detail::session_systems::~session_systems()
 const iscool::style::declaration&
 bim::axmol::app::detail::session_systems::root_style() const
 {
-  assert(m_style);
+  bim_assert(m_style);
   return *m_style;
 }
 
@@ -637,7 +640,7 @@ void bim::axmol::app::application::set_up_local_preferences()
   ic_log(iscool::log::nature::info(), g_log_context,
          "Start: local preferences.");
 
-  assert(!m_context.is_local_preferences_set());
+  bim_assert(!m_context.is_local_preferences_set());
 
   constexpr std::chrono::minutes flush_interval(5);
   const std::string path(iscool::files::get_writable_path()
@@ -727,7 +730,7 @@ void bim::axmol::app::application::end()
 void bim::axmol::app::application::start_script()
 {
 #if !__ANDROID__
-  assert(m_script_info);
+  bim_assert(m_script_info);
 
   m_script_director.reset(new script_director(
       application_event_listener(*m_context.get_event_dispatcher()),

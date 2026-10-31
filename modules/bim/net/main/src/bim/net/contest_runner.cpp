@@ -14,6 +14,7 @@
 #include <bim/game/kick_event.hpp>
 #include <bim/game/player_action.hpp>
 
+#include <bim/assert.hpp>
 #include <bim/assume.hpp>
 #include <bim/tracy.hpp>
 
@@ -127,7 +128,8 @@ void bim::net::contest_runner::queue_updates(const server_update& updates)
                            remote_actions.end());
     }
 
-  assert(updates.from_tick == m_confirmed_tick_count + pre_update_tick_count);
+  bim_assert(updates.from_tick
+             == m_confirmed_tick_count + pre_update_tick_count);
 
   m_server_checksum = updates.final_checksum;
 }
@@ -158,7 +160,7 @@ void bim::net::contest_runner::sync_with_server(entt::registry& registry)
                m_confirmed_tick_count - 1, m_last_confirmed_checksum,
                m_server_checksum);
 
-      assert(m_last_confirmed_checksum == m_server_checksum);
+      bim_assert(m_last_confirmed_checksum == m_server_checksum);
 
       drop_confirmed_actions();
     }
@@ -222,7 +224,7 @@ void bim::net::contest_runner::apply_server_actions(entt::registry& registry)
       }
 
   m_confirmed_tick_count += tick_count;
-  assert(m_confirmed_tick_count <= m_completed_tick_count);
+  bim_assert(m_confirmed_tick_count <= m_completed_tick_count);
 
   for (int player_index = 0; player_index != m_player_count; ++player_index)
     m_server_actions[player_index].clear();

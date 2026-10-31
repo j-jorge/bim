@@ -10,6 +10,8 @@
 
 #include <bim/axmol/colour_chart.hpp>
 
+#include <bim/assert.hpp>
+
 #include <axmol/2d/Label.h>
 #include <axmol/2d/Sprite.h>
 
@@ -20,8 +22,6 @@
 #include <bim/axmol/widget/implement_controls_struct.hpp>
 
 #include <iscool/i18n/numeric.hpp>
-
-#include <cassert>
 
 bim_implement_widget(bim::axmol::app::game_feature_button);
 

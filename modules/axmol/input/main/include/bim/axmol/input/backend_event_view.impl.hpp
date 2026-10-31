@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #pragma once
 
-#include <cassert>
+#include <bim/assert.hpp>
 
 template <typename Event>
 bim::axmol::input::backend_event_view<Event>::backend_event_view(
@@ -57,6 +57,6 @@ template <typename Event>
 Event&
 bim::axmol::input::backend_event_view<Event>::operator[](std::size_t i) const
 {
-  assert(i < m_events.size());
+  bim_assert(i < m_events.size());
   return m_events[i];
 }

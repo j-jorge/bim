@@ -70,6 +70,7 @@
 #include <bim/game/player_action.hpp>
 #include <bim/game/static_wall.hpp>
 
+#include <bim/assert.hpp>
 #include <bim/assume.hpp>
 #include <bim/bit_map.impl.hpp>
 #include <bim/tracy.hpp>
@@ -107,8 +108,6 @@
 #include <entt/entity/registry.hpp>
 
 #include <fmt/format.h>
-
-#include <cassert>
 
 template <typename T>
 static void hide_all(const std::vector<T*>& nodes)
@@ -1108,7 +1107,7 @@ void bim::axmol::app::online_game::display_at(std::size_t arena_y,
   node.setPosition(position);
   node.setVisible(true);
 
-  assert(arena_y < m_z_order.size());
+  bim_assert(arena_y < m_z_order.size());
   node.setLocalZOrder(m_z_order[arena_y]);
   ++m_z_order[arena_y];
 }

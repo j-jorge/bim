@@ -10,6 +10,8 @@
 #include <bim/net/message/new_random_game_request.hpp>
 #include <bim/net/message/try_deserialize_message.hpp>
 
+#include <bim/assert.hpp>
+
 #include <iscool/log/log.hpp>
 #include <iscool/log/nature/info.hpp>
 #include <iscool/monitoring/implement_state_monitor.hpp>
@@ -67,12 +69,12 @@ void bim::net::new_game_exchange::start(iscool::net::session_id session,
 
 void bim::net::new_game_exchange::accept()
 {
-  assert(!!m_encounter_id);
+  bim_assert(!!m_encounter_id);
 
   ic_log(iscool::log::nature::info(), "new_game_exchange",
          "Accepting encounter {}.", *m_encounter_id);
 
-  assert(m_update_connection.connected());
+  bim_assert(m_update_connection.connected());
 
   if (m_monitor->is_start_named_state())
     {
@@ -105,7 +107,7 @@ void bim::net::new_game_exchange::stop()
 void bim::net::new_game_exchange::internal_start(
     iscool::net::session_id session)
 {
-  assert(!m_encounter_id);
+  bim_assert(!m_encounter_id);
 
   m_message_channel.rebind(session, 0);
 
@@ -118,7 +120,7 @@ void bim::net::new_game_exchange::internal_start(
 
 void bim::net::new_game_exchange::tick()
 {
-  assert(!m_monitor->is_idle_state());
+  bim_assert(!m_monitor->is_idle_state());
 
   m_update_connection = iscool::schedule::delayed_call(
       std::bind(&new_game_exchange::tick, this), std::chrono::seconds(1));

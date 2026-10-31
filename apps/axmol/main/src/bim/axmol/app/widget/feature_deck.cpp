@@ -8,6 +8,8 @@
 #include <bim/axmol/widget/factory/sprite.hpp>
 #include <bim/axmol/widget/implement_widget.hpp>
 
+#include <bim/assert.hpp>
+
 #include <axmol/2d/Sprite.h>
 
 #define x_widget_scope bim::axmol::app::feature_deck::
@@ -15,8 +17,6 @@
 #define x_widget_controls                                                     \
   x_widget(ax::Sprite, slot_0) x_widget(ax::Sprite, slot_1)
 #include <bim/axmol/widget/implement_controls_struct.hpp>
-
-#include <cassert>
 
 bim_implement_widget(bim::axmol::app::feature_deck);
 
@@ -50,7 +50,7 @@ void bim::axmol::app::feature_deck::features(bim::game::feature_flags flags)
   for (const bim::game::feature_flags f : bim::game::g_all_game_feature_flags)
     if (!!(flags & f))
       {
-        assert(i < bim::app::g_game_feature_slot_count);
+        bim_assert(i < bim::app::g_game_feature_slot_count);
         m_slot[i]->setSpriteFrame(&game_feature_sprite_frame(f));
         ++i;
       }

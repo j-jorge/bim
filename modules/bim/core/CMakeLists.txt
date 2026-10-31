@@ -18,7 +18,7 @@ target_include_directories(
   ${CMAKE_CURRENT_BINARY_DIR}/include
 )
 
-target_link_libraries(bim_core PRIVATE Boost::boost)
+target_link_libraries(bim_core PRIVATE Boost::boost iscool_log)
 
 if (BIM_ENABLE_TRACY)
   target_link_libraries(bim_core PUBLIC Tracy::TracyClient)
@@ -32,7 +32,6 @@ if (BIM_BUILD_TESTS)
     bim_gtest_main
     PRIVATE
     GTest::gtest
-    iscool_log
   )
 
   add_executable(core-tests

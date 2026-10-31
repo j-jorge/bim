@@ -41,7 +41,7 @@ void key_observer_mockup::do_pressed(const bim::axmol::input::key_event_view&)
 
 void key_observer_mockup::do_released(const bim::axmol::input::key_event_view&)
 {
-  assert(false);
+  ASSERT_TRUE(false);
 }
 
 class node_key_observer_test : public ::testing::Test
