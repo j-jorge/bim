@@ -511,6 +511,7 @@ bim::axmol::app::application::application(
   , m_input_root(m_reset_key_observer)
   , m_screen_config{ screen_size, screen_scale }
   , m_script_info(script)
+  , m_enter_background_date()
 {
   ax::FontFreeType::setStreamParsingEnabled(false);
   ax::Image::setPNGPremultipliedAlphaEnabled(false);
@@ -563,6 +564,8 @@ bool bim::axmol::app::application::applicationDidFinishLaunching()
 
 void bim::axmol::app::application::applicationDidEnterBackground()
 {
+  m_enter_background_date = std::chrono::steady_clock::now();
+
   flush_local_preferences();
 
   m_context.get_audio()->pause();
@@ -574,7 +577,13 @@ void bim::axmol::app::application::applicationWillEnterForeground()
 {
   ax::Director::getInstance()->startAnimation();
 
-  m_context.get_audio()->resume();
+  const std::chrono::steady_clock::time_point now =
+      std::chrono::steady_clock::now();
+
+  if (now - m_enter_background_date >= std::chrono::seconds(7))
+    reset();
+  else
+    m_context.get_audio()->resume();
 }
 
 void bim::axmol::app::application::complete_launch()

@@ -13,6 +13,7 @@
 
 #include <axmol/platform/Application.h>
 
+#include <chrono>
 #include <string>
 #include <vector>
 
@@ -146,5 +147,7 @@ namespace bim::axmol::app
 
     script_info* const m_script_info;
     std::unique_ptr<script_director> m_script_director;
+
+    std::chrono::steady_clock::time_point m_enter_background_date;
   };
 }
