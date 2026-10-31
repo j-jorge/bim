@@ -1,5 +1,10 @@
 # Next
 
+- Update the Gradle plugin.
+- Move the Discord button to the settings.
+- Display the number of active games on the matchmaking screen.
+- Swamps.
+
 # Nice to have
 
 - Hot reload of the config on the server.
