@@ -49,7 +49,7 @@ do
             basename "$path"
             ;;
         --gradle-plugin-version)
-            echo 8.13.0
+            echo 9.5.0
             ;;
         --gradle-root)
             echo "$android_root"
@@ -97,7 +97,7 @@ do
                                         -mindepth 1 -maxdepth 1 -type d)
             if [[ "${#paths[@]}" -ne 1 ]]
             then
-                printf 'Unepected build tools count, need 1, got %s.\n' \
+                printf 'Unexpected build tools count, need 1, got %s.\n' \
                        "${#paths[@]}" >&2
                 printf ' - %s\n' "${paths[@]}" >&2
                 exit 1

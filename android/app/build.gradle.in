@@ -2,9 +2,9 @@
 apply plugin: 'com.android.application'
 
 android {
-    namespace '@bim_android_app_id@'
-    compileSdk @bim_android_target_sdk_version@
-    ndkVersion "@bim_android_ndk_version@"
+    namespace = '@bim_android_app_id@'
+    compileSdk = @bim_android_target_sdk_version@
+    ndkVersion = "@bim_android_ndk_version@"
 
     repositories {
         maven {
@@ -14,11 +14,11 @@ android {
     }
 
     defaultConfig {
-        applicationId '@bim_android_app_id@'
-        minSdkVersion @bim_android_min_sdk_version@
-        targetSdkVersion @bim_android_target_sdk_version@
-        versionCode @android_version_code@
-        versionName '@CMAKE_PROJECT_VERSION@'
+        applicationId = '@bim_android_app_id@'
+        minSdkVersion = @bim_android_min_sdk_version@
+        targetSdkVersion = @bim_android_target_sdk_version@
+        versionCode = @android_version_code@
+        versionName = '@CMAKE_PROJECT_VERSION@'
         resValue "string", "app_name", "@bim_android_app_name@"
         resValue "string", "app_fileprovider",
             "@bim_android_app_name@.fileprovider"
@@ -55,22 +55,22 @@ android {
                     '@this_file_directory@/keystore.properties'
                 ).newDataInputStream())
 
-            keyAlias '@bim_android_signing_key_alias@'
-            keyPassword properties['keyPassword']
-            storeFile file('@this_file_directory@/release.keystore')
-            storePassword properties['storePassword']
+            keyAlias = '@bim_android_signing_key_alias@'
+            keyPassword = properties['keyPassword']
+            storeFile = file('@this_file_directory@/release.keystore')
+            storePassword = properties['storePassword']
         }
     }
 
     buildTypes {
         release {
-            debuggable false
-            jniDebuggable false
-            minifyEnabled true
-            shrinkResources true
+            debuggable = false
+            jniDebuggable = false
+            minifyEnabled = true
+            shrinkResources = true
 
             if (signingConfigs.release.storeFile.exists())
-                signingConfig signingConfigs.release
+                signingConfig = signingConfigs.release
 
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -79,8 +79,8 @@ android {
         }
 
         debug {
-            debuggable true
-            jniDebuggable true
+            debuggable = true
+            jniDebuggable = true
         }
     }
 
@@ -89,25 +89,26 @@ android {
     }
 
     buildFeatures {
-        aidl true
+        aidl = true
+        resValues = true
     }
 
     bundle {
         density {
             // Different APKs are generated for devices with different
             // screen densities; true by default.
-            enableSplit false
+            enableSplit = false
         }
         abi {
             // Different APKs are generated for devices with different
             // CPU architectures; true by default.
-            enableSplit true
+            enableSplit = true
         }
         language {
             // This is disabled so that the App Bundle does NOT split
             // the APK for each language. We're gonna use the same
             // APK for all languages.
-            enableSplit false
+            enableSplit = false
         }
     }
 
