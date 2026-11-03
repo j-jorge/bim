@@ -103,8 +103,6 @@ namespace bim::axmol::app
     void accept_game();
     void launch_game(const bim::net::game_launch_event& event);
 
-    void open_discord() const;
-
     void dispatch_back() const;
 
   private:
@@ -113,7 +111,7 @@ namespace bim::axmol::app
 
     bim::axmol::input::single_key_observer_handle m_escape;
     bim::axmol::input::tree m_inputs;
-    bim_declare_controls_struct(controls, m_controls, 8);
+    bim_declare_controls_struct(controls, m_controls, 7);
 
     const std::unique_ptr<wallet> m_wallet;
     bim::game::per_player_array<iscool::signals::scoped_connection>

@@ -331,7 +331,6 @@ assets/sprites/menu/coins-pack-1.png
 assets/sprites/menu/coins-pack-2.png
 assets/sprites/menu/coins-pack-3.png
 assets/sprites/menu/coins-pack-4.png
-assets/sprites/menu/discord-background-1-1-1-1.png
 assets/sprites/menu/dot-100.png
 assets/sprites/menu/dot-70.png
 assets/sprites/menu/frame-10deg-12-26.png

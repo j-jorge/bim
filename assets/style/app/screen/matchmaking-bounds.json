@@ -8,41 +8,6 @@
   },
 
   "style": {
-    "discord-stripe": [
-      {
-        "anchor.x": 0.5,
-        "anchor.y": 0.5,
-        "anchor.reference.x": 0.5,
-        "anchor.reference.y": 0.70,
-        "width.percents": 120,
-        "height.percents": 10
-      }
-    ],
-
-    "discord-background": [
-      "layout/fill"
-    ],
-
-    "discord-label": [
-      {
-        "anchor.x": 0,
-        "anchor.y": 0.5,
-        "anchor.reference.x": 0.15,
-        "anchor.reference.y": 0.57
-      }
-    ],
-
-    "discord_button": [
-      {
-        "anchor.x": 0.5,
-        "anchor.y": 0.5,
-        "anchor.reference.x": 0.84,
-        "anchor.reference.y": 0.4,
-        "height.percents": 70,
-        "width-ratio": 1
-      }
-    ],
-
     "rays": [
       {
         "anchor.x": 0.5,

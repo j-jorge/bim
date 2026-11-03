@@ -46,6 +46,11 @@
     },
     {
       "kind": "click",
+      "node": "overlay/settings/client_container/discord_button",
+      "event": "discord"
+    },
+    {
+      "kind": "click",
       "node": "overlay/settings/client_container/bluesky_button",
       "event": "bluesky"
     },

@@ -39,10 +39,11 @@
 #define x_widget_controls                                                     \
   x_widget(bim::axmol::widget::button,                                        \
            close_button) x_widget(bim::axmol::widget::button, bluesky_button) \
-      x_widget(bim::axmol::widget::button, github_button) x_widget(           \
+      x_widget(bim::axmol::widget::button, discord_button) x_widget(          \
           bim::axmol::widget::button,                                         \
-          mail_button) x_widget(bim::axmol::widget::button, share_button)     \
-          x_widget(bim::axmol::widget::toggle, music)                         \
+          github_button) x_widget(bim::axmol::widget::button, mail_button)    \
+          x_widget(bim::axmol::widget::button,                                \
+                   share_button) x_widget(bim::axmol::widget::toggle, music)  \
               x_widget(bim::axmol::widget::toggle, sound_effects)             \
                   x_widget(bim::axmol::widget::toggle, vibrations)            \
                       x_widget(bim::axmol::widget::toggle, d_pad_position)    \
@@ -88,6 +89,7 @@ bim::axmol::app::settings_popup::settings_popup(
 
   m_inputs.push_back(m_escape);
   m_inputs.push_back(m_controls->close_button->input_node());
+  m_inputs.push_back(m_controls->discord_button->input_node());
   m_inputs.push_back(m_controls->bluesky_button->input_node());
   m_inputs.push_back(m_controls->github_button->input_node());
   m_inputs.push_back(m_controls->mail_button->input_node());
@@ -128,6 +130,12 @@ bim::axmol::app::settings_popup::settings_popup(
       [this]()
         {
           m_reset();
+        });
+
+  m_controls->discord_button->connect_to_clicked(
+      [this]()
+        {
+          open_discord();
         });
 
   m_controls->bluesky_button->connect_to_clicked(
@@ -297,27 +305,34 @@ void bim::axmol::app::settings_popup::set_d_pad_kind_preference()
 
 void bim::axmol::app::settings_popup::show_language_selection()
 {
-  bim::app::button_clicked(*m_context.get_analytics(), "language", "settings");
+  button_clicked(*m_context.get_analytics(), "language", "settings");
   m_language_popup->show();
+}
+
+void bim::axmol::app::settings_popup::open_discord()
+{
+  button_clicked(*m_context.get_analytics(), "discord", "settings");
+  iscool::system::open_url("https://discord.gg/HqJtXB8Czy");
+  m_context.get_event_dispatcher()->dispatch("discord");
 }
 
 void bim::axmol::app::settings_popup::open_bluesky()
 {
-  bim::app::button_clicked(*m_context.get_analytics(), "bluesky", "settings");
+  button_clicked(*m_context.get_analytics(), "bluesky", "settings");
   iscool::system::open_url("https://bsky.app/profile/j-jorge.bsky.social");
   m_context.get_event_dispatcher()->dispatch("bluesky");
 }
 
 void bim::axmol::app::settings_popup::open_github()
 {
-  bim::app::button_clicked(*m_context.get_analytics(), "github", "settings");
+  button_clicked(*m_context.get_analytics(), "github", "settings");
   iscool::system::open_url("https://github.com/j-jorge/bim/");
   m_context.get_event_dispatcher()->dispatch("github");
 }
 
 void bim::axmol::app::settings_popup::open_mail()
 {
-  bim::app::button_clicked(*m_context.get_analytics(), "mail", "settings");
+  button_clicked(*m_context.get_analytics(), "mail", "settings");
 
   const std::string body = fmt::format(
       R"(-------------------------------------------------------------------------------
@@ -340,7 +355,7 @@ Version: {}
 
 void bim::axmol::app::settings_popup::open_share()
 {
-  bim::app::button_clicked(*m_context.get_analytics(), "share", "settings");
+  button_clicked(*m_context.get_analytics(), "share", "settings");
   m_context.get_social()->share_message(
       fmt::format(fmt::runtime(ic_gettext("Come play a game of Bim! {}")),
                   "https://play.google.com/store/apps/details?id=bim.app"));

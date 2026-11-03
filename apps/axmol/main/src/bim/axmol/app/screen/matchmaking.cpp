@@ -14,7 +14,6 @@
 #include <bim/axmol/input/key_observer_handle.impl.hpp>
 #include <bim/axmol/input/observer/single_key_observer.hpp>
 
-#include <bim/app/analytics/button_clicked.hpp>
 #include <bim/app/business/player_profile.hpp>
 #include <bim/app/business/user_profile.hpp>
 #include <bim/app/constant/game_feature_slot_count.hpp>
@@ -44,13 +43,12 @@
 #define x_widget_type_name controls
 #define x_widget_controls                                                     \
   x_widget(bim::axmol::widget::button, ready_button)                          \
-      x_widget(bim::axmol::widget::button, discord_button)                    \
-          x_widget(bim::axmol::widget::button, back_button)                   \
-              x_widget(ax::Label, wait_message)                               \
-                  x_widget(ax::Label, player_nickname_0)                      \
-                      x_widget(ax::Label, player_nickname_1)                  \
-                          x_widget(ax::Label, player_nickname_2)              \
-                              x_widget(ax::Label, player_nickname_3)
+      x_widget(bim::axmol::widget::button, back_button)                       \
+          x_widget(ax::Label, wait_message)                                   \
+              x_widget(ax::Label, player_nickname_0)                          \
+                  x_widget(ax::Label, player_nickname_1)                      \
+                      x_widget(ax::Label, player_nickname_2)                  \
+                          x_widget(ax::Label, player_nickname_3)
 #include <bim/axmol/widget/implement_controls_struct.hpp>
 
 IMPLEMENT_SIGNAL(bim::axmol::app::matchmaking, start_game, m_start_game);
@@ -93,7 +91,6 @@ bim::axmol::app::matchmaking::matchmaking(
                                               m_wallet->display_nodes());
 
   m_inputs.push_back(m_controls->ready_button->input_node());
-  m_inputs.push_back(m_controls->discord_button->input_node());
   m_inputs.push_back(m_escape);
   m_inputs.push_back(m_controls->back_button->input_node());
 
@@ -101,12 +98,6 @@ bim::axmol::app::matchmaking::matchmaking(
       [this]()
         {
           accept_game();
-        });
-
-  m_controls->discord_button->connect_to_clicked(
-      [this]()
-        {
-          open_discord();
         });
 
   m_escape->connect_to_released(
@@ -324,15 +315,6 @@ void bim::axmol::app::matchmaking::launch_game(
   m_game_proposal_connection.disconnect();
   m_launch_connection.disconnect();
   m_start_game(event);
-}
-
-void bim::axmol::app::matchmaking::open_discord() const
-{
-  if (!m_player_count_monitor->is_waiting_state())
-    return;
-
-  button_clicked(*m_context.get_analytics(), "discord", "matchmaking");
-  iscool::system::open_url("https://discord.gg/HqJtXB8Czy");
 }
 
 void bim::axmol::app::matchmaking::dispatch_back() const

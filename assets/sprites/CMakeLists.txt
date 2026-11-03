@@ -4,7 +4,6 @@ set(sprites
   "sprites/menu/checkmark.png"
   "sprites/menu/dice.png"
   "sprites/menu/discord.png"
-  "sprites/menu/discord-background-1-1-1-1.png"
   "sprites/menu/frame-10deg-12-26.png"
   "sprites/menu/horizontal-edge-1-76.png"
   "sprites/menu/price-tag-88-40.png"

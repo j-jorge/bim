@@ -92,6 +92,7 @@ namespace bim::axmol::app
     void set_d_pad_kind_preference();
 
     void show_language_selection();
+    void open_discord();
     void open_bluesky();
     void open_github();
     void open_mail();
@@ -100,7 +101,7 @@ namespace bim::axmol::app
   private:
     bim::axmol::input::single_key_observer_handle m_escape;
 
-    bim_declare_controls_struct(controls, m_controls, 13);
+    bim_declare_controls_struct(controls, m_controls, 14);
     const iscool::style::declaration& m_style_bounds;
 
     const iscool::style::declaration& m_style_pad_on_the_left;

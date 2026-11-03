@@ -177,6 +177,14 @@
           "button/flat-with-label"
         ],
 
+        "discord_button": [
+          "button/white-with-icon",
+          {
+            "widgets/icon/frame": "sprites/menu/discord.png",
+            "bounds/icon/height.percents": 45
+          }
+        ],
+
         "bluesky_button": [
           "button/white-with-icon",
           {
@@ -472,11 +480,22 @@
           }
         ],
 
+        "discord_button": [
+          {
+            "anchor.x": 0.5,
+            "anchor.y": 0.5,
+            "anchor.reference.x": 0.12,
+            "anchor.reference.y": 0.25,
+            "height.percents": 8,
+            "width-ratio": 0.95
+          }
+        ],
+
         "bluesky_button": [
           {
             "anchor.x": 0.5,
             "anchor.y": 0.5,
-            "anchor.reference.x": 0.19,
+            "anchor.reference.x": 0.31,
             "anchor.reference.y": 0.25,
             "height.percents": 8,
             "width-ratio": 0.95
@@ -487,7 +506,7 @@
           {
             "anchor.x": 0.5,
             "anchor.y": 0.5,
-            "anchor.reference.x": 0.4,
+            "anchor.reference.x": 0.5,
             "anchor.reference.y": 0.25,
             "height.percents": 8,
             "width-ratio": 0.95
@@ -498,7 +517,7 @@
           {
             "anchor.x": 0.5,
             "anchor.y": 0.5,
-            "anchor.reference.x": 0.6,
+            "anchor.reference.x": 0.69,
             "anchor.reference.y": 0.25,
             "height.percents": 8,
             "width-ratio": 0.95
@@ -509,7 +528,7 @@
           {
             "anchor.x": 0.5,
             "anchor.y": 0.5,
-            "anchor.reference.x": 0.81,
+            "anchor.reference.x": 0.88,
             "anchor.reference.y": 0.25,
             "height.percents": 8,
             "width-ratio": 0.95

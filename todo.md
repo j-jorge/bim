@@ -1,6 +1,5 @@
 # Next
 
-- Move the Discord button to the settings.
 - Display the number of active games on the matchmaking screen.
 - Swamps.
 
