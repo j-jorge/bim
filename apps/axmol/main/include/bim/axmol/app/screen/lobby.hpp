@@ -145,7 +145,7 @@ namespace bim::axmol::app
     ax::Label& m_player_name_label;
     feature_deck& m_feature_deck;
 
-    std::unique_ptr<bim::net::hello_exchange> m_hello_exchange;
+    const std::unique_ptr<bim::net::hello_exchange> m_hello_exchange;
 
     const std::unique_ptr<wallet> m_wallet;
 

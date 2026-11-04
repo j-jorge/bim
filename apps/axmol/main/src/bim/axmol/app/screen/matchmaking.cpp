@@ -17,18 +17,20 @@
 #include <bim/app/business/player_profile.hpp>
 #include <bim/app/business/user_profile.hpp>
 #include <bim/app/constant/game_feature_slot_count.hpp>
-#include <bim/app/matchmaking_wait_message.hpp>
 #include <bim/app/preference/user_language.hpp>
 #include <bim/app/random_bot_name.hpp>
 #include <bim/app/user_profile_cache.hpp>
 
+#include <bim/net/exchange/hello_exchange.hpp>
 #include <bim/net/exchange/new_game_exchange.hpp>
+#include <bim/net/message/hello_ok.hpp>
 #include <bim/net/session_handler.hpp>
 
 #include <bim/assert.hpp>
 #include <bim/bit_map.impl.hpp>
 
 #include <iscool/i18n/gettext.hpp>
+#include <iscool/i18n/numeric.hpp>
 #include <iscool/monitoring/implement_state_monitor.hpp>
 #include <iscool/preferences/local_preferences.hpp>
 #include <iscool/signals/implement_signal.hpp>
@@ -71,20 +73,23 @@ bim::axmol::app::matchmaking::matchmaking(
   , m_escape(ax::EventKeyboard::KeyCode::KEY_BACK)
   , m_controls(*context.get_widget_context(),
                *style.get_declaration("widgets"))
+  , m_hello_exchange(new bim::net::hello_exchange(
+        context.get_session_handler()->message_stream(),
+        std::chrono::seconds(10)))
   , m_wallet(new wallet(context, *style.get_declaration("wallet")))
   , m_nickname({ m_controls->player_nickname_0, m_controls->player_nickname_1,
                  m_controls->player_nickname_2,
                  m_controls->player_nickname_3 })
   , m_new_game(new bim::net::new_game_exchange(
         m_context.get_session_handler()->message_stream()))
-  , m_wait_message(new bim::app::matchmaking_wait_message(
-        bim::app::user_language(*context.get_local_preferences())))
   , m_style_displaying(*style.get_declaration("display.displaying"))
   , m_action_displaying(*style.get_declaration("actions.displaying"))
   , m_action_wait(*style.get_declaration("actions.wait"))
   , m_action_2_players(*style.get_declaration("actions.2-players"))
   , m_action_3_players(*style.get_declaration("actions.3-players"))
   , m_action_4_players(*style.get_declaration("actions.4-players"))
+  , m_player_count(0)
+  , m_online_game_count(0)
 {
   m_all_nodes = m_controls->all_nodes;
   bim::axmol::widget::merge_named_node_groups(m_all_nodes,
@@ -111,10 +116,10 @@ bim::axmol::app::matchmaking::matchmaking(
           dispatch_back();
         });
 
-  m_wait_message->connect_to_updated(
-      [this](std::string_view m) -> void
+  m_hello_exchange->connect_to_updated(
+      [this](const bim::net::hello_ok& message)
         {
-          m_controls->wait_message->setString(m);
+          update_server_stats(message);
         });
 }
 
@@ -139,6 +144,10 @@ void bim::axmol::app::matchmaking::attached()
 
 void bim::axmol::app::matchmaking::displaying()
 {
+  m_player_count = 0;
+  m_online_game_count = 0;
+
+  m_hello_exchange->start();
   m_wallet->enter();
 
   m_bot_name = bim::app::random_bot_name();
@@ -153,12 +162,13 @@ void bim::axmol::app::matchmaking::displaying()
   run_actions(m_state_actions, m_action_wait);
 
   m_controls->ready_button->enable(true);
-  m_controls->wait_message->setString("");
 
   for (std::size_t i = 0, n = m_nickname.size(); i != n; ++i)
     // Keep a space in the string otherwise the label's content size becomes
     // zero.
     m_nickname[i]->setString(" ");
+
+  update_wait_message();
 }
 
 void bim::axmol::app::matchmaking::displayed()
@@ -181,10 +191,10 @@ void bim::axmol::app::matchmaking::displayed()
 
 void bim::axmol::app::matchmaking::closing()
 {
+  m_hello_exchange->stop();
   m_main_actions.stop();
   m_state_actions.stop();
 
-  m_wait_message->stop();
   m_player_count_monitor->set_off_state();
   m_launch_monitor->set_off_state();
 
@@ -197,12 +207,28 @@ void bim::axmol::app::matchmaking::closing()
     c.disconnect();
 }
 
+void bim::axmol::app::matchmaking::update_server_stats(
+    const bim::net::hello_ok& message)
+{
+  if (message.games_now == m_online_game_count)
+    return;
+
+  m_online_game_count = message.games_now;
+  update_wait_message();
+}
+
 void bim::axmol::app::matchmaking::update_display_with_game_proposal(
     std::span<const bim::net::user_id> players)
 {
   update_nicknames(players);
 
   const std::size_t player_count = players.size();
+
+  if (player_count != m_player_count)
+    {
+      m_player_count = player_count;
+      update_wait_message();
+    }
 
   // If we tried to launch the game but we are back to a single player
   // (i.e. the local player), then the request has failed. Let's start a new
@@ -218,11 +244,6 @@ void bim::axmol::app::matchmaking::update_display_with_game_proposal(
     }
 
   const iscool::style::declaration* action;
-
-  if (player_count == 1)
-    m_wait_message->start();
-  else
-    m_wait_message->pause();
 
   switch (player_count)
     {
@@ -257,6 +278,45 @@ void bim::axmol::app::matchmaking::update_display_with_game_proposal(
     }
 
   run_actions(m_state_actions, *action);
+}
+
+void bim::axmol::app::matchmaking::update_wait_message()
+{
+  std::string message;
+
+  switch (m_player_count)
+    {
+    case 0:
+    case 1:
+      message = ic_gettext("Please wait.");
+      break;
+    case 2:
+      message = ic_gettext(
+          "You can start a two-players game now or wait for more players!");
+      break;
+    case 3:
+      message = ic_gettext(
+          "You can start a three-players game now or wait for more players!");
+      break;
+    default:
+      m_controls->wait_message->setString(ic_gettext("Start the game now!"));
+      return;
+    }
+
+  message += '\n';
+
+  if (m_online_game_count == 0)
+    message +=
+        ic_gettext("There is currently no game being played on the server.");
+  else
+    message += fmt::format(
+        fmt::runtime(ic_ngettext(
+            "There is {} game being played on the server right now.",
+            "There is {} games being played on the server right now.",
+            m_online_game_count)),
+        iscool::i18n::numeric::to_string(m_online_game_count));
+
+  m_controls->wait_message->setString(message);
 }
 
 void bim::axmol::app::matchmaking::update_nicknames(

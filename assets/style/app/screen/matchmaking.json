@@ -100,29 +100,6 @@
           }
         ],
 
-        "label-2": [
-          "app/screen/part/matchmaking-player-label",
-          {
-            "text.i18n":
-                "You can start a two-players game now or wait for more players!"
-          }
-        ],
-
-        "label-3": [
-          "app/screen/part/matchmaking-player-label",
-          {
-            "text.i18n":
-                "You can start a three-players game now or wait for more players!"
-          }
-        ],
-
-        "label-4": [
-          "app/screen/part/matchmaking-player-label",
-          {
-            "text.i18n": "Start the game now!"
-          }
-        ],
-
         "label-background": [
           "nine-slice/stripe",
           {
@@ -147,11 +124,6 @@
 
     "display.displaying": [
       {
-        "wait_message": [
-          {
-            "visible": false
-          }
-        ],
         "player-2": [
           {
             "visible": false
@@ -178,21 +150,6 @@
           }
         ],
         "player_nickname_3": [
-          {
-            "visible": false
-          }
-        ],
-        "label-2": [
-          {
-            "visible": false
-          }
-        ],
-        "label-3": [
-          {
-            "visible": false
-          }
-        ],
-        "label-4": [
           {
             "visible": false
           }
@@ -220,11 +177,6 @@
             "instantiate": "show"
           }
         ],
-        "wait_message": [
-          {
-            "instantiate": "show"
-          }
-        ],
         "player-2": [
           {
             "instantiate": "hide"
@@ -251,21 +203,6 @@
           }
         ],
         "player_nickname_3": [
-          {
-            "instantiate": "hide"
-          }
-        ],
-        "label-2": [
-          {
-            "instantiate": "hide"
-          }
-        ],
-        "label-3": [
-          {
-            "instantiate": "hide"
-          }
-        ],
-        "label-4": [
           {
             "instantiate": "hide"
           }
@@ -285,11 +222,6 @@
             "instantiate": "hide"
           }
         ],
-        "wait_message": [
-          {
-            "instantiate": "hide"
-          }
-        ],
         "player-2": [
           {
             "instantiate": "show"
@@ -316,21 +248,6 @@
           }
         ],
         "player_nickname_3": [
-          {
-            "instantiate": "hide"
-          }
-        ],
-        "label-2": [
-          {
-            "instantiate": "show"
-          }
-        ],
-        "label-3": [
-          {
-            "instantiate": "hide"
-          }
-        ],
-        "label-4": [
           {
             "instantiate": "hide"
           }
@@ -350,11 +267,6 @@
             "instantiate": "hide"
           }
         ],
-        "wait_message": [
-          {
-            "instantiate": "hide"
-          }
-        ],
         "player-2": [
           {
             "instantiate": "show"
@@ -381,21 +293,6 @@
           }
         ],
         "player_nickname_3": [
-          {
-            "instantiate": "hide"
-          }
-        ],
-        "label-2": [
-          {
-            "instantiate": "hide"
-          }
-        ],
-        "label-3": [
-          {
-            "instantiate": "show"
-          }
-        ],
-        "label-4": [
           {
             "instantiate": "hide"
           }
@@ -415,11 +312,6 @@
             "instantiate": "hide"
           }
         ],
-        "wait_message": [
-          {
-            "instantiate": "hide"
-          }
-        ],
         "player-2": [
           {
             "instantiate": "show"
@@ -446,21 +338,6 @@
           }
         ],
         "player_nickname_3": [
-          {
-            "instantiate": "show"
-          }
-        ],
-        "label-2": [
-          {
-            "instantiate": "hide"
-          }
-        ],
-        "label-3": [
-          {
-            "instantiate": "hide"
-          }
-        ],
-        "label-4": [
           {
             "instantiate": "show"
           }

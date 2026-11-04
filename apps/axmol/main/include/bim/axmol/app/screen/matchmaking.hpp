@@ -28,13 +28,14 @@ namespace bim::axmol::widget
 namespace bim::app
 {
   class analytics_service;
-  class matchmaking_wait_message;
   class player_profile;
   class user_profile_cache;
 }
 
 namespace bim::net
 {
+  class hello_exchange;
+  class hello_ok;
   class new_game_exchange;
   class session_handler;
   struct game_launch_event;
@@ -93,8 +94,12 @@ namespace bim::axmol::app
     void closing();
 
   private:
+    void update_server_stats(const bim::net::hello_ok& message);
+
     void update_display_with_game_proposal(
         std::span<const bim::net::user_id> players);
+    void update_wait_message();
+
     void update_nicknames(std::span<const bim::net::user_id> players);
     void set_nickname(std::size_t i, std::string_view n);
     void run_actions(bim::axmol::action::runner& runner,
@@ -113,6 +118,7 @@ namespace bim::axmol::app
     bim::axmol::input::tree m_inputs;
     bim_declare_controls_struct(controls, m_controls, 7);
 
+    const std::unique_ptr<bim::net::hello_exchange> m_hello_exchange;
     const std::unique_ptr<wallet> m_wallet;
     bim::game::per_player_array<iscool::signals::scoped_connection>
         m_profile_connection;
@@ -123,8 +129,6 @@ namespace bim::axmol::app
 
     iscool::signals::scoped_connection m_game_proposal_connection;
     iscool::signals::scoped_connection m_launch_connection;
-
-    std::unique_ptr<bim::app::matchmaking_wait_message> m_wait_message;
 
     const iscool::style::declaration& m_style_displaying;
     const iscool::style::declaration& m_action_displaying;
@@ -138,5 +142,8 @@ namespace bim::axmol::app
     bim::axmol::action::runner m_state_actions;
 
     bim::axmol::widget::named_node_group m_all_nodes;
+
+    std::size_t m_player_count;
+    std::size_t m_online_game_count;
   };
 }

@@ -1,7 +1,6 @@
 set(main_sources
   main/src/bim/app/config.cpp
   main/src/bim/app/device_id.cpp
-  main/src/bim/app/matchmaking_wait_message.cpp
   main/src/bim/app/random_bot_name.cpp
   main/src/bim/app/shop_service.cpp
   main/src/bim/app/user_profile_cache.cpp

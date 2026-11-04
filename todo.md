@@ -1,6 +1,5 @@
 # Next
 
-- Display the number of active games on the matchmaking screen.
 - Swamps.
 
 # Nice to have
