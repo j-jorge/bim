@@ -47,6 +47,7 @@ endif()
 add_executable(server-tests
   tests/src/bim/server/authentication.cpp
   tests/src/bim/server/game_business_request.cpp
+  tests/src/bim/server/game_count.cpp
   tests/src/bim/server/game_creation.cpp
   tests/src/bim/server/game_update.cpp
   tests/src/bim/server/hello.cpp

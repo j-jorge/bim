@@ -758,6 +758,7 @@ void bim::server::game_service::push_update(
     case simulation_state::playing:
       break;
     case simulation_state::over:
+      m_statistics.record_game_end(game.player_count);
       record_game_over(channel, game);
       [[fallthrough]];
     case simulation_state::flushing:
@@ -1192,7 +1193,8 @@ void bim::server::game_service::clean_up(iscool::net::channel_id channel,
   ic_log(iscool::log::nature::info(), "game_service", "Cleaning up game {}.",
          channel);
 
-  m_statistics.record_game_end(g.player_count);
+  if (g.contest_result.still_running())
+    m_statistics.record_game_end(g.player_count);
 
   const session_to_channel_map::const_iterator eit =
       m_session_to_channel.end();

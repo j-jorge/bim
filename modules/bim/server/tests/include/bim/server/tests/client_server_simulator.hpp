@@ -42,9 +42,9 @@ namespace bim::server::tests
 
     bim::server::server m_server;
     iscool::net::socket_stream m_socket_stream;
-    iscool::net::message_stream m_message_stream;
 
   public:
+    iscool::net::message_stream message_stream;
     const bim::server::config config;
     std::array<bim::server::tests::test_client, 4> clients;
   };

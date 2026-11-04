@@ -21,12 +21,12 @@ bim::server::tests::client_server_simulator::client_server_simulator(
   , m_server(config)
   , m_socket_stream("localhost:" + std::to_string(config.port),
                     iscool::net::socket_mode::client{})
-  , m_message_stream(m_socket_stream)
+  , message_stream(m_socket_stream)
   , config(config)
-  , clients{ bim::server::tests::test_client(m_scheduler, m_message_stream),
-             bim::server::tests::test_client(m_scheduler, m_message_stream),
-             bim::server::tests::test_client(m_scheduler, m_message_stream),
-             bim::server::tests::test_client(m_scheduler, m_message_stream) }
+  , clients{ bim::server::tests::test_client(m_scheduler, message_stream),
+             bim::server::tests::test_client(m_scheduler, message_stream),
+             bim::server::tests::test_client(m_scheduler, message_stream),
+             bim::server::tests::test_client(m_scheduler, message_stream) }
 {}
 
 bim::server::tests::client_server_simulator::~client_server_simulator() =
