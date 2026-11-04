@@ -16,7 +16,8 @@ namespace bim::net
     DECLARE_SIGNAL(void(const hello_ok&), updated, m_updated)
 
   public:
-    explicit hello_exchange(const iscool::net::message_stream& stream);
+    hello_exchange(const iscool::net::message_stream& stream,
+                   std::chrono::seconds refresh_interval);
     ~hello_exchange();
 
     void start();
@@ -35,6 +36,7 @@ namespace bim::net
     iscool::schedule::scoped_connection m_send_message_connection;
     iscool::schedule::scoped_connection m_refresh_connection;
 
+    std::chrono::seconds m_refresh_interval;
     std::chrono::seconds m_last_update;
 
     client_token m_token;

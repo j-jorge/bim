@@ -13,13 +13,13 @@
 #include <iscool/signals/implement_signal.hpp>
 #include <iscool/time/now.hpp>
 
-static constexpr std::chrono::seconds g_hello_ok_refresh_interval(30);
-
 IMPLEMENT_SIGNAL(bim::net::hello_exchange, updated, m_updated);
 
 bim::net::hello_exchange::hello_exchange(
-    const iscool::net::message_stream& stream)
+    const iscool::net::message_stream& stream,
+    std::chrono::seconds refresh_interval)
   : m_message_channel(stream, 0, 0)
+  , m_refresh_interval(refresh_interval)
   , m_last_update(0)
 {}
 
@@ -30,10 +30,15 @@ void bim::net::hello_exchange::start()
   if (m_send_message_connection.connected())
     return;
 
+  if (m_last_update.count() == 0)
+    {
+      refresh();
+      return;
+    }
+
   const std::chrono::seconds now = iscool::time::now<std::chrono::seconds>();
 
-  if ((m_last_update.count() == 0)
-      || (now - m_last_update >= g_hello_ok_refresh_interval))
+  if (now - m_last_update >= m_refresh_interval)
     refresh();
   else
     m_refresh_connection = iscool::schedule::delayed_call(
@@ -41,7 +46,7 @@ void bim::net::hello_exchange::start()
           {
             refresh();
           },
-        g_hello_ok_refresh_interval - (now - m_last_update));
+        m_refresh_interval - (now - m_last_update));
 }
 
 void bim::net::hello_exchange::stop()
@@ -100,7 +105,7 @@ void bim::net::hello_exchange::check_ok(const iscool::net::message& m)
         {
           refresh();
         },
-      g_hello_ok_refresh_interval);
+      m_refresh_interval);
 
   m_updated(*message);
 }

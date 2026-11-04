@@ -71,7 +71,8 @@ bim::axmol::app::lobby::lobby(const context& context,
         *m_controls->game_features_button,
         *style.get_string("feature-deck-path"))))
   , m_hello_exchange(new bim::net::hello_exchange(
-        context.get_session_handler()->message_stream()))
+        context.get_session_handler()->message_stream(),
+        std::chrono::seconds(30)))
   , m_wallet(new wallet(context, *style.get_declaration("wallet")))
   , m_settings(new settings_popup(context, *style.get_declaration("settings")))
   , m_player_statistics(new player_statistics_popup(
