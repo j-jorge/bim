@@ -4,8 +4,8 @@ set -euo pipefail
 
 [[ "${bim_target_platform:-}" == "linux" ]] || exit 0
 
-curl_version=8.18.0
-package_revision=3
+curl_version=8.23.0
+package_revision=1
 version="$curl_version"-"$package_revision"
 build_type=release
 
@@ -112,7 +112,5 @@ bim-cmake-build \
     --cmake -DUSE_OPENSSL_QUIC=OFF \
     --cmake -DUSE_QUICHE=OFF \
     --cmake -DUSE_SSLS_EXPORT=OFF
-
-rm "$install_dir"/bin/wcurl
 
 bim-package-and-install "$install_dir" curl "$version" "$build_type"
