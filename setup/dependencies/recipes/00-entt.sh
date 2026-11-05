@@ -3,8 +3,8 @@
 set -euo pipefail
 
 : "${entt_repository:=https://github.com/skypjack/entt/}"
-: "${entt_version:=3.16.0}"
-package_revision=3
+: "${entt_version:=4.0.0}"
+package_revision=1
 package_version="$entt_version"-"$package_revision"
 build_type=release
 
