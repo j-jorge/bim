@@ -127,8 +127,8 @@ void bim::axmol::app::main_task::create_minimal_ui()
 
   m_style = iscool::style::loader::load("application");
 
-  m_message_popup.reset(
-      new message_popup(m_context, *m_style.get_declaration("message-popup")));
+  m_message_popup = std::make_unique<message_popup>(
+      m_context, *m_style.get_declaration("message-popup"));
   m_message_connection = m_message_popup->connect_to_ok(
       [this]() -> void
         {
@@ -147,12 +147,12 @@ void bim::axmol::app::main_task::create_main_ui()
   m_context.set_request_headers(&m_request_headers);
   m_context.set_player_profile(&m_player_profile);
 
-  m_profiles.reset(new bim::app::user_profile_cache(*m_context.get_analytics(),
-                                                    m_request_headers));
+  m_profiles = std::make_unique<bim::app::user_profile_cache>(
+      *m_context.get_analytics(), m_request_headers);
   m_context.set_profile_cache(m_profiles.get());
 
-  m_screen_wheel.reset(
-      new screen_wheel(m_context, *m_style.get_declaration("screen-wheel")));
+  m_screen_wheel = std::make_unique<screen_wheel>(
+      m_context, *m_style.get_declaration("screen-wheel"));
   m_screen_wheel->connect_to_reset(
       [this]() -> void
         {
@@ -262,11 +262,12 @@ void bim::axmol::app::main_task::game_server_connection_error(
 
 void bim::axmol::app::main_task::start_authenticated_jobs()
 {
-  m_push_legacy_state.reset(new bim::app::push_legacy_state_job(
+  m_push_legacy_state = std::make_unique<bim::app::push_legacy_state_job>(
       *m_context.get_analytics(), m_request_headers,
-      *m_context.get_local_preferences()));
-  m_fetch_player_profile.reset(new bim::app::fetch_player_profile_job(
-      *m_context.get_analytics(), m_request_headers));
+      *m_context.get_local_preferences());
+  m_fetch_player_profile =
+      std::make_unique<bim::app::fetch_player_profile_job>(
+          *m_context.get_analytics(), m_request_headers);
 
   m_fetch_player_profile->connect_to_done(
       [this]()

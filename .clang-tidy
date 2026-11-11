@@ -2,7 +2,7 @@
 Checks: |
   -*,
   bugprone-*,
-  # Too many occurrences and workarounds are cumbersome.
+  # Too many occurrences, and workarounds are cumbersome.
   -bugprone-easily-swappable-parameters,
   # Too many reports about u8 * u8 being casted into a size_t. It's
   # okay, u8 * u8 is performed as i32 * i32 and is in range
@@ -43,6 +43,38 @@ Checks: |
   # assert(false) is the debug behavior of bim_unreachable this
   # causes many false positives.
   -misc-static-assert,
+  modernize-*,
+  # The rationale does not convince me. C-arrays are often the
+  # simplest solution.
+  -modernize-avoid-c-arrays,
+  # Enough with the hoops of initialization in C++. `return Foo(baz)`
+  # is explicit and readable, and I keep the braces for the
+  # aggregates.
+  -modernize-return-braced-init-list,
+  # I prefer to have a uniform way to find the type of a variable
+  # rather than having to randomly check on the left side (int a = …)
+  # and the right side (auto a = (int)…). Moreover this is reported on
+  # places where the code does not tell everything, e.g.
+  #
+  #   const foo& f = context.get<const foo>();
+  #
+  # nothing says that the result of `context.get<T>()` is of type `T`.
+  -modernize-use-auto,
+  # I prefer to have members always initialized in the constructor
+  # rather than having them sometimes initialized in the header and
+  # sometimes in the implementation. Moreover initialization in the
+  # header adds coupling from the client code with the initial values
+  # of those members.
+  -modernize-use-default-member-init,
+  # This one is very noisy, and complains about such things as a loop
+  # like `for (int i = 0; i != <std::uint8_t>; ++i)`. I'm okay with not
+  # supporting platforms where an unsigned 8-bit value does not fit in
+  # an int.
+  -modernize-use-integer-sign-comparison,
+  # Absolutely no benefit from this.
+  -modernize-use-trailing-return-type,
+  # Probably great but too many occurrences.
+  -modernize-avoid-c-style-cast,
   performance-*,
   portability-*,
   # I'm okay with not supporting compilers that do not support #pragma
@@ -65,3 +97,5 @@ CheckOptions:
   # Too many occurrences in GoogleTests and I don't want to wrap all
   # tests in an anonymous namespace.
   misc-use-internal-linkage.AnalyzeTypes: false
+  # A destructor always overrides, and more.
+  modernize-use-override.IgnoreDestructors: true

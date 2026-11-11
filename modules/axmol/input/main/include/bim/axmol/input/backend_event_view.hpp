@@ -20,13 +20,13 @@ namespace bim::axmol::input
     explicit backend_event_view(event_span span);
 
     void consume_all() const;
-    bool is_fully_consumed() const;
+    [[nodiscard]] bool is_fully_consumed() const;
 
-    iterator begin() const;
-    iterator end() const;
+    [[nodiscard]] iterator begin() const;
+    [[nodiscard]] iterator end() const;
 
-    std::size_t size() const;
-    bool empty() const;
+    [[nodiscard]] std::size_t size() const;
+    [[nodiscard]] bool empty() const;
 
     Event& operator[](std::size_t i) const;
 

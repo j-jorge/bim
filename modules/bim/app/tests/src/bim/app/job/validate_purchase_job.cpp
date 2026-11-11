@@ -24,7 +24,9 @@ TEST(bim_app_validate_purchase_job, success_ok)
   Json::Value response;
   response["coins"] = 213;
 
-  http.next_response["client/billing/validate-purchase"] = { 200, response };
+  http.next_response["client/billing/validate-purchase"] = { .status = 200,
+                                                             .body =
+                                                                 response };
 
   bool done_called = false;
   bim::app::validate_purchase_job job(analytics, headers, profile);

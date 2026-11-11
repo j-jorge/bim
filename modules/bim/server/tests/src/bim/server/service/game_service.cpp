@@ -34,7 +34,7 @@ TEST(game_service, new_game)
 
   // The server shuffles the sessions. We sort them back for the checks.
   std::array<iscool::net::session_id, 4> sorted_sessions(game.sessions);
-  std::sort(sorted_sessions.begin(), sorted_sessions.end());
+  std::ranges::sort(sorted_sessions);
 
   EXPECT_EQ(4, game.fingerprint.player_count);
   EXPECT_EQ(features, game.fingerprint.features);

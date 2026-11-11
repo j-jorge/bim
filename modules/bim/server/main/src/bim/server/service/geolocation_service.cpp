@@ -31,7 +31,7 @@ bim::server::geolocation_service::geolocation_service(const config& config)
 {
   if (config.enable_geolocation)
     {
-      m_mmdb.reset(new MMDB_s{});
+      m_mmdb = std::make_unique<MMDB_s>();
       schedule_clean_up();
       update_mmdb();
     }
@@ -63,7 +63,9 @@ bim::server::geolocation_service::lookup(const std::string& ip)
   if (info->database_version == m_database_version)
     {
       m_release_date[it_id->second] = now + m_clean_up_interval;
-      return { it_id->second, info->country_code, info->country };
+      return { .id = it_id->second,
+               .country_code = info->country_code,
+               .country = info->country };
     }
 
   // The database has changed since the last time we got this IP, we'll do
@@ -90,7 +92,9 @@ bim::server::geolocation_service::lookup(const std::string& ip)
       info->ip = ip;
     }
 
-  return { it_id->second, info->country_code, info->country };
+  return { .id = it_id->second,
+           .country_code = info->country_code,
+           .country = info->country };
 }
 
 bim::server::geolocation_service::address_info
@@ -108,7 +112,9 @@ bim::server::geolocation_service::insert_new_ip(const std::string& ip)
   info.ip = ip;
   fill_info(info);
 
-  return { id, info.country_code, info.country };
+  return { .id = id,
+           .country_code = info.country_code,
+           .country = info.country };
 }
 
 void bim::server::geolocation_service::fill_info(internal_info& info)

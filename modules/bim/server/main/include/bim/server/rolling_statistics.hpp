@@ -14,7 +14,7 @@ namespace bim::server
                        std::chrono::nanoseconds window_duration);
     ~rolling_statistics();
 
-    std::uint32_t total() const;
+    [[nodiscard]] std::uint32_t total() const;
 
     void push(std::chrono::nanoseconds now, std::uint32_t value);
 

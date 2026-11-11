@@ -94,7 +94,7 @@ namespace bim::axmol
     T& operator*() const;
     T* operator->() const;
 
-    T* get() const;
+    [[nodiscard]] T* get() const;
 
   private:
     T* m_ptr;

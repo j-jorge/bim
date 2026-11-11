@@ -209,7 +209,7 @@ read_config_option(std::string name, T& value,
                    boost::program_options::variables_map& variables,
                    const Json::Value& json_config)
 {
-  std::replace(name.begin(), name.end(), '_', '-');
+  std::ranges::replace(name, '_', '-');
 
   const boost::program_options::variables_map::const_iterator it =
       variables.find(name);

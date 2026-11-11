@@ -55,10 +55,10 @@ namespace bim::axmol::input
     void key_pressed(const key_event_view& keys);
     void key_released(const key_event_view& keys);
 
-    std::string string_id() const;
-    std::string to_string() const;
+    [[nodiscard]] std::string string_id() const;
+    [[nodiscard]] std::string to_string() const;
 
-    bool check_no_duplicates() const;
+    [[nodiscard]] bool check_no_duplicates() const;
 
   private:
     using children_vector = std::vector<node_pointer>;

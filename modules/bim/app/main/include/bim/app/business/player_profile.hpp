@@ -16,7 +16,7 @@ namespace bim::app
   class player_profile
   {
   public:
-    bim::game::feature_flags enabled_feature_flags() const;
+    [[nodiscard]] bim::game::feature_flags enabled_feature_flags() const;
 
   public:
     std::string nickname;

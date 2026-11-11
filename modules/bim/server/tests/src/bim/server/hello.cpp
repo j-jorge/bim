@@ -69,8 +69,11 @@ void hello_test::test_full_exchange(const bim::net::hello& message)
 {
   const iscool::signals::scoped_connection connection =
       m_message_channel.connect_to_message(
-          std::bind(&hello_test::interpret_received_message, this,
-                    message.get_request_token(), std::placeholders::_2));
+          [this, token = message.get_request_token()](
+              auto&&, const iscool::net::message& message)
+            {
+              interpret_received_message(token, message);
+            });
 
   iscool::net::message m;
   message.build_message(m);

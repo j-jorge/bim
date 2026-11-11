@@ -25,9 +25,9 @@ namespace bim::net
 
     void build_message(iscool::net::message& message) const;
 
-    client_token get_request_token() const;
-    encounter_id get_encounter_id() const;
-    std::span<const user_id> get_users() const;
+    [[nodiscard]] client_token get_request_token() const;
+    [[nodiscard]] encounter_id get_encounter_id() const;
+    [[nodiscard]] std::span<const user_id> get_users() const;
 
   private:
     client_token m_request_token;

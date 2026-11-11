@@ -26,7 +26,8 @@ TEST(bim_app_consume_game_reward_job, success)
   Json::Value response;
   response["coins"] = reward;
 
-  http.next_response["client/game/consume-reward"] = { 200, response };
+  http.next_response["client/game/consume-reward"] = { .status = 200,
+                                                       .body = response };
 
   bool done_called = false;
   bim::app::consume_game_reward_job job(analytics, headers, profile);
@@ -62,8 +63,9 @@ TEST(bim_app_consume_game_reward_job, error)
 
   profile.coins = 1000;
 
-  http.next_response["client/game/consume-reward"] = { 422,
-                                                       Json::objectValue };
+  http.next_response["client/game/consume-reward"] = { .status = 422,
+                                                       .body =
+                                                           Json::objectValue };
 
   bool error_called = false;
   bim::app::consume_game_reward_job job(analytics, headers, profile);

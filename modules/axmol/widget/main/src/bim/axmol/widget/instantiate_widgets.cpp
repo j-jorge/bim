@@ -32,8 +32,7 @@ void bim::axmol::widget::instantiate_widgets(
   for (const iscool::style::declaration::declaration_map::value_type& d :
        style.get_declarations())
     {
-      if (std::find(excluded.begin(), excluded.end(), d.first)
-          != excluded.end())
+      if (std::ranges::find(excluded, d.first) != excluded.end())
         continue;
 
       const iscool::optional<const std::string&> type =

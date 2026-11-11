@@ -73,13 +73,17 @@ bim::server::session_service::create_or_refresh_session(
     const bim::net::session_token& session_token)
 {
   if (!m_karma.allowed(address))
-    return { create_session_result_state::rejected, token, 0 };
+    return { .state = create_session_result_state::rejected,
+             .token = token,
+             .session = 0 };
 
   if (m_next_real_session_id == g_bot_min_session)
     {
       ic_log(iscool::log::nature::info(), "session_service",
              "Max session reached, no new session can be created.");
-      return { create_session_result_state::rejected, token, 0 };
+      return { .state = create_session_result_state::rejected,
+               .token = token,
+               .session = 0 };
     }
 
   const iscool::net::session_id session = m_next_real_session_id;
@@ -92,7 +96,9 @@ bim::server::session_service::create_or_refresh_session(
   if (!inserted)
     {
       if (m_user_id_url.empty())
-        return { create_session_result_state::accepted, token, it->second };
+        return { .state = create_session_result_state::accepted,
+                 .token = token,
+                 .session = it->second };
 
       const client_map::const_iterator client_it = m_clients.find(it->second);
 
@@ -100,13 +106,16 @@ bim::server::session_service::create_or_refresh_session(
         {
           ic_log(iscool::log::nature::info(), "session_service",
                  "Unexpected same client token for different session tokens.");
-          return { create_session_result_state::rejected, token, 0 };
+          return { .state = create_session_result_state::rejected,
+                   .token = token,
+                   .session = 0 };
         }
 
-      return { (client_it->second.user_id == 0)
-                   ? create_session_result_state::pending
-                   : create_session_result_state::accepted,
-               token, it->second };
+      return { .state = (client_it->second.user_id == 0)
+                            ? create_session_result_state::pending
+                            : create_session_result_state::accepted,
+               .token = token,
+               .session = it->second };
     }
 
   for (std::size_t i = 0, n = session_token.size(); i != n; ++i)
@@ -120,7 +129,9 @@ bim::server::session_service::create_or_refresh_session(
           ic_log(iscool::log::nature::error(), "session_service",
                  "Token does not seems base64-encoded. Character {} is {}.", i,
                  (int)c);
-          return { create_session_result_state::rejected, token, 0 };
+          return { .state = create_session_result_state::rejected,
+                   .token = token,
+                   .session = 0 };
         }
     }
 
@@ -149,14 +160,18 @@ bim::server::session_service::create_or_refresh_session(
   m_karma.add(address);
 
   if (m_user_id_url.empty())
-    return { create_session_result_state::accepted, token, session };
+    return { .state = create_session_result_state::accepted,
+             .token = token,
+             .session = session };
 
   m_user_id_business_request["tokens"].append(token);
   m_user_id_business_request["sessions"].append(session_token_str);
 
   schedule_user_id_request();
 
-  return { create_session_result_state::pending, token, 0 };
+  return { .state = create_session_result_state::pending,
+           .token = token,
+           .session = 0 };
 }
 
 bool bim::server::session_service::refresh_session(
@@ -339,7 +354,9 @@ void bim::server::session_service::user_id_response()
   for (const bim::net::client_token token :
        m_user_id_business_response.rejected)
     m_create_session_dispatch.push_back(
-        { create_session_result_state::rejected, token, 0 });
+        { .state = create_session_result_state::rejected,
+          .token = token,
+          .session = 0 });
 
   for (std::size_t i = 0; i != accepted_count; ++i)
     {
@@ -403,7 +420,9 @@ void bim::server::session_service::user_id_response()
       client_it->second.user_id = user_id;
 
       m_create_session_dispatch.push_back(
-          { create_session_result_state::accepted, token, session });
+          { .state = create_session_result_state::accepted,
+            .token = token,
+            .session = session });
     }
 
   m_ongoing_user_id_business_request = false;

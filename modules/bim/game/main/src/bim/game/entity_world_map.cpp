@@ -47,7 +47,7 @@ void bim::game::entity_world_map::erase_entity(entt::entity e, std::uint8_t x,
 {
   entity_vector& v = m_entities(x, y);
 
-  v.erase(std::remove(v.begin(), v.end(), e), v.end());
+  v.erase(std::ranges::remove(v, e).begin(), v.end());
 }
 
 void bim::game::entity_world_map::erase_entities(std::uint8_t x,

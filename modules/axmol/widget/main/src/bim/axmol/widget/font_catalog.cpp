@@ -16,14 +16,15 @@ bim::axmol::widget::font_catalog::resolve(const std::string& name) const
   const alias_map::const_iterator it = m_alias.find(name);
 
   if (it != m_alias.end())
-    return { it->second.name, it->second.force_italics };
+    return { .name = it->second.name,
+             .force_italics = it->second.force_italics };
 
-  return { name, false };
+  return { .name = name, .force_italics = false };
 }
 
 void bim::axmol::widget::font_catalog::set_alias(const std::string& key,
                                                  const std::string& font,
                                                  bool force_italics)
 {
-  m_alias[key] = { font, force_italics };
+  m_alias[key] = { .name = font, .force_italics = force_italics };
 }

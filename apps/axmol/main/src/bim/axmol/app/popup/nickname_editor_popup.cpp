@@ -34,6 +34,8 @@
 
 #include <axmol/base/UTF8.h>
 
+#include <ranges>
+
 IMPLEMENT_SIGNAL(bim::axmol::app::nickname_editor_popup, closed, m_closed);
 
 bim::axmol::app::nickname_editor_popup::nickname_editor_popup(
@@ -133,17 +135,17 @@ void bim::axmol::app::nickname_editor_popup::check_new_nickname()
   ax::StringUtils::UTF8ToUTF32(nickname, nickname_utf32);
 
   const std::u32string::const_iterator start =
-      std::find_if(nickname_utf32.cbegin(), nickname_utf32.cend(),
-                   [](char32_t c)
-                     {
-                       return !ax::StringUtils::isUnicodeSpace(c);
-                     });
+      std::ranges::find_if(nickname_utf32,
+                           [](char32_t c)
+                             {
+                               return !ax::StringUtils::isUnicodeSpace(c);
+                             });
   const std::u32string::const_reverse_iterator rstart =
-      std::find_if(nickname_utf32.crbegin(), nickname_utf32.crend(),
-                   [](char32_t c)
-                     {
-                       return !ax::StringUtils::isUnicodeSpace(c);
-                     });
+      std::ranges::find_if(std::views::reverse(nickname_utf32),
+                           [](char32_t c)
+                             {
+                               return !ax::StringUtils::isUnicodeSpace(c);
+                             });
 
   const std::u32string_view nickname_utf32_trimmed(&*start,
                                                    &*rstart - &*start + 1);

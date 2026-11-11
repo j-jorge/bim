@@ -26,8 +26,9 @@ TEST(bim_app_buy_feature_slot_job, success)
   config.game_feature_slot_price[1] = 7;
   profile.coins = 1000;
 
-  http.next_response["client/game-feature/buy-slot"] = { 200,
-                                                         Json::objectValue };
+  http.next_response["client/game-feature/buy-slot"] = {
+    .status = 200, .body = Json::objectValue
+  };
 
   bool bought[bim::app::g_game_feature_slot_count]{};
 

@@ -33,7 +33,9 @@ void bim_app_push_legacy_state_job::start_job(
   Json::Value response;
   response["transfer_state"] = 1;
 
-  m_http.next_response["client/transfer-legacy-inventory"] = { 200, response };
+  m_http.next_response["client/transfer-legacy-inventory"] = { .status = 200,
+                                                               .body =
+                                                                   response };
 
   bool done_called = false;
   bim::app::push_legacy_state_job job(m_analytics, m_headers, preferences);

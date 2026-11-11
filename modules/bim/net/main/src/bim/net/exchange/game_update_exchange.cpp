@@ -35,8 +35,11 @@ bim::net::game_update_exchange::game_update_exchange(
   : m_message_channel(channel)
   , m_player_count(player_count)
 {
-  m_channel_signal_connection = m_message_channel.connect_to_message(std::bind(
-      &game_update_exchange::deserialize, this, std::placeholders::_2));
+  m_channel_signal_connection = m_message_channel.connect_to_message(
+      [this](auto&&, const iscool::net::message& message)
+        {
+          deserialize(message);
+        });
 
   m_current_update.from_tick = 0;
 }
@@ -126,7 +129,10 @@ void bim::net::game_update_exchange::internal_send()
   m_message_channel.send(m_client_out_message);
 
   m_send_connection = iscool::schedule::delayed_call(
-      std::bind(&game_update_exchange::internal_send, this),
+      [this]()
+        {
+          internal_send();
+        },
       std::chrono::milliseconds(15));
 }
 
@@ -214,8 +220,7 @@ void bim::net::game_update_exchange::store_server_frames(
           m_server_update.actions[player_index];
 
       local_actions.resize(server_actions.size());
-      std::copy(server_actions.begin(), server_actions.end(),
-                local_actions.begin());
+      std::ranges::copy(server_actions, local_actions.begin());
     }
 }
 

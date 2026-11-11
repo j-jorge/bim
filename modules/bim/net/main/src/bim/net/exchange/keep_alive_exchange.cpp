@@ -54,7 +54,11 @@ void bim::net::keep_alive_exchange::tick()
     }
 
   m_update_connection = iscool::schedule::delayed_call(
-      std::bind(&keep_alive_exchange::tick, this), std::chrono::seconds(1));
+      [this]()
+        {
+          tick();
+        },
+      std::chrono::seconds(1));
 
   --m_retry_count;
   m_message_channel.send(m_client_message);

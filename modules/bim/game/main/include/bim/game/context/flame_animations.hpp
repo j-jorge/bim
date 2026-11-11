@@ -7,7 +7,7 @@ namespace bim::game
 {
   struct flame_animations
   {
-    bool is_burning(animation_id id) const;
+    [[nodiscard]] bool is_burning(animation_id id) const;
 
     animation_id warm_up;
     animation_id burn;

@@ -79,8 +79,8 @@ bim::axmol::app::screen_wheel::screen_wheel(
 {
   m_main_container->setName("screen-wheel");
 
-  m_online_game.reset(
-      new online_game(m_context, *style.get_declaration("online-game")));
+  m_online_game = std::make_unique<online_game>(
+      m_context, *style.get_declaration("online-game"));
 
   m_context.get_main_scene()->add_in_main_canvas(*m_main_container,
                                                  m_inputs.root());

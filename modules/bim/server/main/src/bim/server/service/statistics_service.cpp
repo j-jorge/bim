@@ -13,6 +13,7 @@
 
 #include <chrono>
 #include <ctime>
+#include <print>
 
 bim::server::statistics_service::rolling_measure::rolling_measure()
   : last_hour(std::chrono::minutes(1), std::chrono::hours(1))
@@ -199,8 +200,8 @@ void bim::server::statistics_service::dump_stats_to_file()
       return;
     }
 
-  std::fprintf(
-      m_log_file, "%s %u %u %u %lu %lu %u %u %u %u %u %u %u %u %u\n",
+  std::println(
+      m_log_file, "{} {} {} {} {}u {}u {} {} {} {} {} {} {} {} {}",
       date_string, m_active_sessions_instant, m_players_in_games_instant,
       m_games_instant, m_network_bytes_in, m_network_bytes_out,
       m_active_sessions.last_hour.total(), m_active_sessions.last_day.total(),

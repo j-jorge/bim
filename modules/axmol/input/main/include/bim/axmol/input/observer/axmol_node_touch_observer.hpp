@@ -16,7 +16,7 @@ namespace bim::axmol::input
   public:
     explicit axmol_node_touch_observer(const ax::Node& node);
 
-    bool should_ignore_touches() const;
+    [[nodiscard]] bool should_ignore_touches() const;
     bool contains_touch(touch_event& touch) const;
 
   private:

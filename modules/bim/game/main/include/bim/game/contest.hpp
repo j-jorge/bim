@@ -35,17 +35,17 @@ namespace bim::game
 
     contest_result tick();
 
-    const bim::game::context& context() const;
+    [[nodiscard]] const bim::game::context& context() const;
 
-    entt::registry& registry();
-    const entt::registry& registry() const;
+    [[nodiscard]] entt::registry& registry();
+    [[nodiscard]] const entt::registry& registry() const;
 
-    const bim::game::arena& arena() const;
+    [[nodiscard]] const bim::game::arena& arena() const;
 
-    const bim::game::entity_world_map& entity_map() const;
+    [[nodiscard]] const bim::game::entity_world_map& entity_map() const;
     void entity_map(const bim::game::entity_world_map& m);
 
-    const bim::table_2d<bim::game::fog_of_war*>&
+    [[nodiscard]] const bim::table_2d<bim::game::fog_of_war*>&
     fog_map(std::size_t player_index) const;
 
   private:

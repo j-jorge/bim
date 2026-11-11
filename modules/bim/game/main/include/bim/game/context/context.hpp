@@ -17,25 +17,25 @@ namespace bim::game
   {
   public:
     template <typename T, typename... Args>
-    T& create(Args&&... args)
+    [[nodiscard]] T& create(Args&&... args)
     {
       return m_registry.ctx().emplace<T>(std::forward<Args>(args)...);
     }
 
     template <typename T>
-    T& get() const
+    [[nodiscard]] T& get() const
     {
       return m_registry.ctx().get<T>();
     }
 
     template <typename T>
-    T& get()
+    [[nodiscard]] T& get()
     {
       return m_registry.ctx().get<T>();
     }
 
     template <typename T>
-    T* try_get() const
+    [[nodiscard]] T* try_get() const
     {
       return m_registry.ctx().find<T>();
     }

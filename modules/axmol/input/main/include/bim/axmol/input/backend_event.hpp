@@ -14,10 +14,10 @@ namespace bim::axmol::input
   public:
     explicit backend_event(T data);
 
-    bool is_available() const;
+    [[nodiscard]] bool is_available() const;
     void consume();
 
-    T get() const;
+    [[nodiscard]] T get() const;
 
   private:
     T m_data;

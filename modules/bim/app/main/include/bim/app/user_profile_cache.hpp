@@ -35,7 +35,7 @@ namespace bim::app
 
     void invalidate(bim::net::user_id id);
 
-    const user_profile* get(bim::net::user_id id) const;
+    [[nodiscard]] const user_profile* get(bim::net::user_id id) const;
 
     iscool::signals::connection
     fetch(bim::net::user_id id,

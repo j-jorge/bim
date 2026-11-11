@@ -24,17 +24,17 @@ namespace bim
     T& operator()(std::size_t x, std::size_t y);
     const T& operator()(std::size_t x, std::size_t y) const;
 
-    std::size_t width() const;
-    std::size_t height() const;
+    [[nodiscard]] std::size_t width() const;
+    [[nodiscard]] std::size_t height() const;
 
     void resize(std::size_t w, std::size_t h);
     void fill(const T& v);
 
-    T* begin();
-    T* begin() const;
+    [[nodiscard]] T* begin();
+    [[nodiscard]] T* begin() const;
 
-    T* end();
-    T* end() const;
+    [[nodiscard]] T* end();
+    [[nodiscard]] T* end() const;
 
   private:
     std::size_t m_width;

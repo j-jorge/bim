@@ -76,7 +76,7 @@ private:
         if (headers)
           curl_slist_free_all(headers);
 
-        const std::lock_guard lock(m_thread_shared.out_mutex);
+        const std::scoped_lock lock(m_thread_shared.out_mutex);
         m_thread_shared.result_queue.emplace_back(
             std::move(request.result_handler), std::move(response_data),
             response_code);
@@ -210,7 +210,7 @@ http_worker::http_worker()
 http_worker::~http_worker()
 {
   {
-    const std::lock_guard lock(m_thread_shared.in_mutex);
+    const std::scoped_lock lock(m_thread_shared.in_mutex);
     m_thread_shared.quit = true;
     m_thread_shared.request_queue.clear();
   }
@@ -226,7 +226,7 @@ http_worker::~http_worker()
 void http_worker::push(iscool::http::request request)
 {
   {
-    const std::lock_guard lock(m_thread_shared.in_mutex);
+    const std::scoped_lock lock(m_thread_shared.in_mutex);
     m_thread_shared.request_queue.push_back(std::move(request));
   }
 
@@ -238,7 +238,7 @@ void http_worker::dispatch_responses()
   bim_assert(m_result_queue.empty());
 
   {
-    const std::lock_guard lock(m_thread_shared.out_mutex);
+    const std::scoped_lock lock(m_thread_shared.out_mutex);
     m_result_queue.swap(m_thread_shared.result_queue);
   }
 

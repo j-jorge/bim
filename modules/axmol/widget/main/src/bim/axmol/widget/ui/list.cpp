@@ -27,7 +27,7 @@ public:
   void push_back(ax::Node& item)
   {
     item.setAnchorPoint(ax::Vec2(0, 0));
-    m_items.push_back(&item);
+    m_items.emplace_back(&item);
   }
 
   void remove_all_from_parents()
@@ -41,12 +41,12 @@ public:
     m_items.clear();
   }
 
-  std::size_t item_count() const
+  [[nodiscard]] std::size_t item_count() const
   {
     return m_items.size();
   }
 
-  ax::Node& at(std::size_t i) const
+  [[nodiscard]] ax::Node& at(std::size_t i) const
   {
     return *m_items[i];
   }
@@ -231,8 +231,9 @@ void bim::axmol::widget::list::create_view()
 
   addChild(m_table_view.get());
 
-  m_scroll_view_inputs.reset(
-      new bim::axmol::input::scroll_view_glue_handle(*m_table_view));
+  m_scroll_view_inputs =
+      std::make_unique<bim::axmol::input::scroll_view_glue_handle>(
+          *m_table_view);
 
   m_inputs.attach_to_root(*m_scroll_view_inputs);
 }

@@ -25,6 +25,7 @@
 
 #include <iostream>
 #include <optional>
+#include <print>
 #include <random>
 
 namespace
@@ -274,21 +275,21 @@ int main(int argc, char* argv[])
       run_contest(bots, contest,
                   [&]()
                     {
-                      fprintf(output_file, "When tick #%zu begins.\n", t);
+                      std::println(output_file, "When tick #{} begins.", t);
                       ++t;
 
                       bim::game::dump_arena(
                           output_file, contest.arena(), contest.entity_map(),
                           contest.context(), contest.registry());
-                      fprintf(output_file, "%s\n", page_separator.c_str());
+                      std::println(output_file, "{}", page_separator);
                     });
 
-      fprintf(output_file, "Final state.\n");
+      std::println(output_file, "Final state.");
       bim::game::dump_arena(output_file, contest.arena(), contest.entity_map(),
                             contest.context(), contest.registry());
-      fprintf(output_file, "%s\n", page_separator.c_str());
+      std::println(output_file, "{}", page_separator);
 
-      fprintf(output_file, "%zu ticks.\n", t);
+      std::println(output_file, "{} ticks.", t);
 
       if (output_file != stdout)
         std::fclose(output_file);

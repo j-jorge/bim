@@ -389,10 +389,10 @@ void bim::axmol::app::online_game::displaying(
       *m_style_player[std::min<std::size_t>(event.player_index,
                                             m_style_player.size())]);
 
-  m_contest.reset(new bim::game::contest(event.fingerprint));
-  m_game_channel.reset(new iscool::net::message_channel(
+  m_contest = std::make_unique<bim::game::contest>(event.fingerprint);
+  m_game_channel = std::make_unique<iscool::net::message_channel>(
       m_context.get_session_handler()->message_stream(),
-      m_context.get_session_handler()->session_id(), event.channel));
+      m_context.get_session_handler()->session_id(), event.channel);
 
   const int player_count = event.fingerprint.player_count;
   const bim::game::player_animations& player_animations =
@@ -454,8 +454,8 @@ void bim::axmol::app::online_game::displaying(
     m_animations[animations.in_out] = &m_animation_cache->get("smoke.in_out");
   }
 
-  m_update_exchange.reset(
-      new bim::net::game_update_exchange(*m_game_channel, player_count));
+  m_update_exchange = std::make_unique<bim::net::game_update_exchange>(
+      *m_game_channel, player_count);
   m_update_exchange->connect_to_started(
       [this]() -> void
         {
@@ -468,8 +468,8 @@ void bim::axmol::app::online_game::displaying(
           m_context.get_event_dispatcher()->dispatch("game-started");
           schedule_tick();
         });
-  m_contest_runner.reset(new bim::net::contest_runner(
-      *m_contest, *m_update_exchange, event.player_index, player_count));
+  m_contest_runner = std::make_unique<bim::net::contest_runner>(
+      *m_contest, *m_update_exchange, event.player_index, player_count);
 
   m_local_player_index = event.player_index;
 

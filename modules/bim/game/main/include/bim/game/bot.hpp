@@ -35,7 +35,7 @@ namespace bim::game
     bot& operator=(const bot&) noexcept;
     bot& operator=(bot&&) noexcept;
 
-    std::uint8_t player_index() const;
+    [[nodiscard]] std::uint8_t player_index() const;
 
     player_action think(const contest& contest);
 
@@ -55,7 +55,7 @@ namespace bim::game
     };
 
   private:
-    bool can_start(const contest& contest) const;
+    [[nodiscard]] bool can_start(const contest& contest) const;
 
     void find_players(
         const contest& contest, per_player_array<bool>& opponent_is_valid,
@@ -101,8 +101,8 @@ namespace bim::game
                  const player& bot_player, bool bot_has_shield,
                  bool bot_in_open_area, std::size_t x, std::size_t y) const;
     void store_goal_path();
-    int sum_to(std::uint8_t x, std::uint8_t y,
-               const bim::table_2d<bool>& table) const;
+    [[nodiscard]] int sum_to(std::uint8_t x, std::uint8_t y,
+                             const bim::table_2d<bool>& table) const;
 
     player_action action_toward_goal(
         const contest& contest, const player& bot_player,

@@ -24,9 +24,11 @@ TEST(bim_axmol_widget_factory_node, factory)
   const bim::axmol::widget::dynamic_factory widget_factory;
   const bim::axmol::action::dynamic_factory action_factory;
   bim::axmol::widget::font_catalog fonts;
-  const bim::axmol::widget::context context{ colors, style_cache,
-                                             widget_factory, action_factory,
-                                             fonts };
+  const bim::axmol::widget::context context{ .colors = colors,
+                                             .style_cache = style_cache,
+                                             .factory = widget_factory,
+                                             .action_factory = action_factory,
+                                             .fonts = fonts };
 
   iscool::style::declaration style;
   style.set_number("anchor-point.x", 0.1);

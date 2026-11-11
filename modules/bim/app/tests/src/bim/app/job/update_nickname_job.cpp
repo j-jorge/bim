@@ -26,7 +26,8 @@ TEST(bim_app_update_nickname_job, success)
   Json::Value r;
   r["nickname_change_allowed_date"] = "1971-02-03T04:05:06.123456Z";
 
-  http.next_response["client/account/update-nickname"] = { 200, r };
+  http.next_response["client/account/update-nickname"] = { .status = 200,
+                                                           .body = r };
 
   const std::chrono::system_clock::time_point
       expected_nickname_change_allowed_date =

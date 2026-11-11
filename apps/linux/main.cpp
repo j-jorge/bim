@@ -58,9 +58,11 @@ namespace
       boost::container::flat_map<std::string, screen_size, std::less<>>;
 }
 
-static device_screen_map g_device_screens = { { "iphone15", { 1179, 2556 } },
-                                              { "pixel3a", { 1080, 2220 } },
-                                              { "nexus4", { 768, 1280 } } };
+static device_screen_map g_device_screens = {
+  { "iphone15", { .width = 1179, .height = 2556 } },
+  { "pixel3a", { .width = 1080, .height = 2220 } },
+  { "nexus4", { .width = 768, .height = 1280 } }
+};
 
 static bool parse_screen_size(screen_size& size, std::string_view id)
 {
@@ -202,7 +204,7 @@ static command_line parse_command_line(int argc, char* argv[])
       if (screen_id == "list")
         {
           display_known_devices();
-          return command_line{ std::nullopt, true };
+          return command_line{ .options = std::nullopt, .valid = true };
         }
 
       if (!parse_screen_size(result.screen_resolution, screen_id))
@@ -244,8 +246,8 @@ int main(int argc, char* argv[])
   if (!options.app_dir.empty())
     ax::FileUtils::getInstance()->setWritablePath(options.app_dir);
 
-  std::unique_ptr<bim::axmol::app::bridge> bridge(
-      new bim::axmol::app::bridge());
+  std::unique_ptr<bim::axmol::app::bridge> bridge =
+      std::make_unique<bim::axmol::app::bridge>();
 
   if (options.console_log)
     iscool::log::enable_console_log();
@@ -260,10 +262,12 @@ int main(int argc, char* argv[])
 
   const bool scripted = !options.script_path.empty();
 
-  bim::axmol::app::script_info script_info{ std::move(options.script_path),
-                                            options.script_step_timeout,
-                                            options.number_screenshots,
-                                            false };
+  bim::axmol::app::script_info script_info{
+    .file_path = std::move(options.script_path),
+    .timeout = options.script_step_timeout,
+    .number_screenshots = options.number_screenshots,
+    .passed = false
+  };
 
   const bim::axmol::app::application app(
       options.asset_directories,

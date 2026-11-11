@@ -97,8 +97,7 @@ add_players(const bim::game::context& context, entt::registry& registry,
 
       for (const int y : { -1, 0, 1 })
         for (const int x : { -1, 0, 1 })
-          positions_around_players.push_back(
-              bim::game::position_on_grid(player_x + x, player_y + y));
+          positions_around_players.emplace_back(player_x + x, player_y + y);
     }
 
   return positions_around_players;
@@ -195,9 +194,9 @@ bim::game::contest::contest(const contest_fingerprint& fingerprint)
     add_fog_of_war(*m_registry, fingerprint.player_count,
                    fingerprint.arena_width, fingerprint.arena_height, random);
 
-  m_arena_reduction.reset(new arena_reduction(*m_arena));
-  m_fog_of_war.reset(
-      new fog_of_war_updater(*m_arena, fingerprint.player_count));
+  m_arena_reduction = std::make_unique<arena_reduction>(*m_arena);
+  m_fog_of_war =
+      std::make_unique<fog_of_war_updater>(*m_arena, fingerprint.player_count);
 }
 
 bim::game::contest::~contest() = default;

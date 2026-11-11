@@ -44,6 +44,7 @@
 #include <entt/entity/registry.hpp>
 
 #include <format>
+#include <print>
 #include <type_traits>
 
 static const entt::id_type g_type_void = entt::type_index<void>::value();
@@ -369,11 +370,10 @@ void bim::game::bot::build_danger_map(
   // immediate danger.
 
   // Insert planned bomb droppings.
-  for (std::size_t i = 0; i != player_action_queue::queue_size; ++i)
-    if (queued_actions.m_queue[i].action.drop_bomb)
+  for (const queued_action& a : queued_actions.m_queue)
+    if (a.action.drop_bomb)
       {
-        const position_on_grid p(queued_actions.m_queue[i].arena_x,
-                                 queued_actions.m_queue[i].arena_y);
+        const position_on_grid p(a.arena_x, a.arena_y);
         store_bomb_danger(m_danger_map, contest, p, bot_player.bomb_strength);
 
         if (m_immediate_danger_map(p.x, p.y))
@@ -659,9 +659,9 @@ bool bim::game::bot::update_safety_goal(const contest& contest,
     return false;
 
   if (m_log)
-    fprintf(m_log, "New goal found, distance %d -> %d, danger %d -> %d.",
-            old_goal_distance, shortest_distance, old_danger_count,
-            danger_count);
+    std::println(m_log, "New goal found, distance {} -> {}, danger {} -> {}.",
+                 old_goal_distance, shortest_distance, old_danger_count,
+                 danger_count);
 
   m_goal = new_goal;
   return true;
@@ -699,8 +699,8 @@ bool bim::game::bot::find_exploration_goal(
   }
 
   if (m_log)
-    fprintf(m_log, "exploration target, has_shield=%d, in_open_area=%d\n",
-            has_shield, in_open_area);
+    std::println(m_log, "exploration target, has_shield={}, in_open_area={}",
+                 has_shield, in_open_area);
 
   m_candidate_goals.clear();
   int best_reward = std::numeric_limits<int>::min();
@@ -870,7 +870,7 @@ void bim::game::bot::store_goal_path()
       m_goal_path.push_back(p);
     }
 
-  std::reverse(m_goal_path.begin(), m_goal_path.end());
+  std::ranges::reverse(m_goal_path);
 }
 
 int bim::game::bot::sum_to(std::uint8_t x, std::uint8_t y,
@@ -920,9 +920,9 @@ bim::game::player_action bim::game::bot::action_toward_goal(
   if (bot_position == m_goal_path[m_goal_step])
     {
       if (m_log)
-        fprintf(m_log,
-                "Moving from step #%zu to next step, bot_position=(%d, %d)\n",
-                m_goal_step, bot_position.x, bot_position.y);
+        std::println(
+            m_log, "Moving from step #{} to next step, bot_position=({}, {})",
+            m_goal_step, bot_position.x, bot_position.y);
 
       ++m_goal_step;
 
@@ -1132,9 +1132,8 @@ void bim::game::bot::flush_bot_actions(
   const entity_world_map& entity_map = contest.entity_map();
   const arena& arena = contest.arena();
 
-  for (std::size_t i = 0; i != player_action_queue::queue_size; ++i)
-    move_player(bot_fractional_position,
-                queued_actions.m_queue[i].action.movement, registry, arena,
+  for (const queued_action& a : queued_actions.m_queue)
+    move_player(bot_fractional_position, a.action.movement, registry, arena,
                 entity_map);
 }
 
@@ -1238,7 +1237,7 @@ void bim::game::bot::simulate_bomb_explosion(const contest& contest,
 void bim::game::bot::log_event(const char* name) const
 {
   if (m_log)
-    fprintf(m_log, "%s\n", name);
+    std::println(m_log, "{}", name);
 }
 
 void bim::game::bot::log_initial_state(const contest& contest) const
@@ -1246,18 +1245,18 @@ void bim::game::bot::log_initial_state(const contest& contest) const
   if (!m_log)
     return;
 
-  fprintf(m_log, "Thinking in state ");
+  std::print(m_log, "Thinking in state ");
 
   switch (m_state)
     {
     case state::start:
-      fprintf(m_log, "'start'.\n");
+      std::println(m_log, "'start'.");
       break;
     case state::conquer:
-      fprintf(m_log, "'conquer'.\n");
+      std::println(m_log, "'conquer'.");
       break;
     case state::reach_for_safety:
-      fprintf(m_log, "'reach_for_safety'.\n");
+      std::println(m_log, "'reach_for_safety'.");
       break;
     }
 
@@ -1272,21 +1271,21 @@ void bim::game::bot::log_player_array(const char* name,
   if (!m_log)
     return;
 
-  fprintf(m_log, "%s:", name);
+  std::print(m_log, "{}:", name);
   const char* separator = "";
 
   for (const T& v : a)
     {
-      fprintf(m_log, "%s ", separator);
+      std::print(m_log, "{} ", separator);
       separator = ",";
 
       if constexpr (std::is_same_v<T, position_on_grid>)
-        fprintf(m_log, "(%x, %x)", v.x, v.y);
+        std::print(m_log, "({:x}, {:x})", v.x, v.y);
       else
-        fprintf(m_log, "%d", v);
+        std::print(m_log, "{}", v);
     }
 
-  fprintf(m_log, "\n");
+  std::println(m_log, "");
 }
 
 template <typename T>
@@ -1298,22 +1297,22 @@ void bim::game::bot::log_map(const char* name, const bim::table_2d<T>& m) const
   const std::size_t w = m.width();
   const std::size_t h = m.height();
 
-  fprintf(m_log, "%s:\n ", name);
+  std::print(m_log, "{}:\n ", name);
   constexpr int cw = std::is_same_v<T, bool> ? 1 : 3;
 
   for (std::size_t i = 0; i != w; ++i)
-    fprintf(m_log, "%.*zx", cw, i);
+    std::print(m_log, "{:{}x}", i, cw);
 
-  fprintf(m_log, "\n");
+  std::println(m_log, "");
 
   for (std::size_t y = 0; y != h; ++y)
     {
-      fprintf(m_log, "%zx", y);
+      std::print(m_log, "{:x}", y);
 
       for (std::size_t x = 0; x != w; ++x)
-        fprintf(m_log, "%.*d", cw, (int)m(x, y));
+        std::print(m_log, "{:{}}", (int)m(x, y), cw);
 
-      fprintf(m_log, "\n");
+      std::println(m_log, "");
     }
 }
 
@@ -1324,24 +1323,25 @@ void bim::game::bot::log_goal() const
 
   if (!m_goal)
     {
-      fprintf(m_log, "goal: none\n");
+      std::println(m_log, "goal: none");
       return;
     }
 
-  fprintf(m_log, "goal:\n");
-  fprintf(m_log, "  target: %x, %x\n", m_goal->target.x, m_goal->target.y);
+  std::println(m_log, "goal:");
+  std::println(m_log, "  target: {:x}, {:x}", m_goal->target.x,
+               m_goal->target.y);
 
   if (m_goal_step < m_goal_path.size())
-    fprintf(m_log, "  current: %x, %x\n", m_goal_path[m_goal_step].x,
-            m_goal_path[m_goal_step].y);
+    std::println(m_log, "  current: {:x}, {:x}", m_goal_path[m_goal_step].x,
+                 m_goal_path[m_goal_step].y);
   else
-    fprintf(m_log, "  current: none\n");
+    std::println(m_log, "  current: none");
 
-  fprintf(m_log, "  drop_bomb: %d\n", m_goal->drop_bomb);
-  fprintf(m_log, "  crate_count: %d\n", m_goal->crate_count);
-  fprintf(m_log, "  power_up: %d\n", m_goal->power_up);
-  fprintf(m_log, "  opponent_in_danger: %d\n", m_goal->opponent_in_danger);
-  fprintf(m_log, "  step: %zu/%zu\n", m_goal_step, m_goal_path.size());
+  std::println(m_log, "  drop_bomb: {}", m_goal->drop_bomb);
+  std::println(m_log, "  crate_count: {}", m_goal->crate_count);
+  std::println(m_log, "  power_up: {}", m_goal->power_up);
+  std::println(m_log, "  opponent_in_danger: {}", m_goal->opponent_in_danger);
+  std::println(m_log, "  step: {}/{}", m_goal_step, m_goal_path.size());
 
   const std::size_t w = m_visibility_map.width();
   const std::size_t h = m_visibility_map.height();
@@ -1361,15 +1361,15 @@ void bim::game::bot::log_goal() const
         ++c;
     }
 
-  fprintf(m_log, " ");
+  std::print(m_log, " ");
 
   for (std::size_t i = 0; i != w; ++i)
-    fprintf(m_log, "%zx", i);
+    std::print(m_log, "{:x}", i);
 
-  fprintf(m_log, "\n");
+  std::println(m_log, "");
 
   for (std::size_t y = 0; y != h; ++y)
-    fprintf(m_log, "%zx%s\n", y, s[y].c_str());
+    std::println(m_log, "{:x}{}", y, s[y]);
 }
 
 void bim::game::bot::log_goal_summary(const goal& g, int reward) const
@@ -1377,12 +1377,12 @@ void bim::game::bot::log_goal_summary(const goal& g, int reward) const
   if (!m_log)
     return;
 
-  fprintf(m_log, "goal candidate:\n");
-  fprintf(m_log, "  target: %x, %x\n", g.target.x, g.target.y);
-  fprintf(m_log, "  drop_bomb: %d\n", g.drop_bomb);
-  fprintf(m_log, "  crate_count: %d\n", g.crate_count);
-  fprintf(m_log, "  power_up: %d\n", g.power_up);
-  fprintf(m_log, "  opponent_in_danger: %d\n", g.opponent_in_danger);
-  fprintf(m_log, "  distance: %d\n", m_distance(g.target.x, g.target.y));
-  fprintf(m_log, "  reward: %d\n", reward);
+  std::println(m_log, "goal candidate:");
+  std::println(m_log, "  target: {:x}, {:x}", g.target.x, g.target.y);
+  std::println(m_log, "  drop_bomb: {}", g.drop_bomb);
+  std::println(m_log, "  crate_count: {}", g.crate_count);
+  std::println(m_log, "  power_up: {}", g.power_up);
+  std::println(m_log, "  opponent_in_danger: {}", g.opponent_in_danger);
+  std::println(m_log, "  distance: {}", m_distance(g.target.x, g.target.y));
+  std::println(m_log, "  reward: {}", reward);
 }

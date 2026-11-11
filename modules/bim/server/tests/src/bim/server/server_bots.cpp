@@ -75,7 +75,7 @@ TEST_F(server_bots_test, start_with_a_bot)
   ASSERT_EQ(2, m_clients[0].players_proposal->size());
 
   std::vector<bim::net::user_id> users(*m_clients[0].players_proposal);
-  std::sort(users.begin(), users.end());
+  std::ranges::sort(users);
 
   EXPECT_EQ(bim::net::not_a_user, users[0]);
   EXPECT_EQ(123, users[1]);
@@ -104,7 +104,7 @@ TEST_F(server_bots_test, start_with_a_bot)
   ASSERT_EQ(2, m_clients[1].players_proposal->size());
 
   users = std::vector<bim::net::user_id>(*m_clients[1].players_proposal);
-  std::sort(users.begin(), users.end());
+  std::ranges::sort(users);
 
   EXPECT_EQ(bim::net::not_a_user, users[0]);
   EXPECT_EQ(456, users[1]);
@@ -136,7 +136,7 @@ TEST_F(server_bots_test, human_replaces_the_bot)
   ASSERT_EQ(2, m_clients[0].players_proposal->size());
 
   std::vector<bim::net::user_id> users(*m_clients[0].players_proposal);
-  std::sort(users.begin(), users.end());
+  std::ranges::sort(users);
 
   EXPECT_EQ(bim::net::not_a_user, users[0]);
   EXPECT_EQ(11, users[1]);
@@ -184,7 +184,7 @@ TEST_F(server_bots_test, human_replaces_the_bot)
   ASSERT_EQ(2, m_clients[1].players_proposal->size());
 
   users = std::vector<bim::net::user_id>(*m_clients[1].players_proposal);
-  std::sort(users.begin(), users.end());
+  std::ranges::sort(users);
 
   EXPECT_EQ(11, users[0]);
   EXPECT_EQ(22, users[1]);

@@ -28,8 +28,10 @@ namespace bim::net
 
     void build_message(iscool::net::message& message) const;
 
-    std::uint8_t get_winner_index() const;
-    const bim::game::per_player_array<bim::game::player_game_outcome>&
+    [[nodiscard]] std::uint8_t get_winner_index() const;
+
+    [[nodiscard]] const bim::game::per_player_array<
+        bim::game::player_game_outcome>&
     get_outcome() const;
 
   private:

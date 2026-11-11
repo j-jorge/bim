@@ -73,8 +73,8 @@ new_game_test::client::client(bim::server::tests::fake_scheduler& scheduler,
   m_authentication.connect_to_authenticated(
       [this, &message_stream](iscool::net::session_id session) -> void
         {
-          m_message_channel.reset(
-              new iscool::net::message_channel(message_stream, session, 0));
+          m_message_channel = std::make_unique<iscool::net::message_channel>(
+              message_stream, session, 0);
         });
 
   m_authentication.connect_to_error(
@@ -277,8 +277,8 @@ TEST_F(new_game_test, join_game)
   EXPECT_EQ(4, m_clients[3].game_on_hold_answer->get_users().size());
 
   // New tokens for the next requests.
-  for (int i = 0; i != 4; ++i)
-    tokens[i] = new_client_token();
+  for (bim::net::client_token& token : tokens)
+    token = new_client_token();
 
   // Refresh the request for all players.
   for (int i = 0; i != 4; ++i)

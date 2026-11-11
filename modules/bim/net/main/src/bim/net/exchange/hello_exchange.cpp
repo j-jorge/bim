@@ -62,8 +62,10 @@ void bim::net::hello_exchange::refresh()
   hello(m_token).build_message(m_client_message);
 
   m_channel_signal_connection = m_message_channel.connect_to_message(
-      std::bind(&hello_exchange::interpret_received_message, this,
-                std::placeholders::_2));
+      [this](auto&&, const iscool::net::message& message)
+        {
+          interpret_received_message(message);
+        });
 
   send_message();
 }

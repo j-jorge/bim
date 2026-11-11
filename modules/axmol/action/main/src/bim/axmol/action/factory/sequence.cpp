@@ -25,12 +25,13 @@ bim::axmol::action::sequence_from_style(
        style.get_declarations())
     styles.push_back(&*entry.second);
 
-  std::sort(styles.begin(), styles.end(),
-            [](const iscool::style::declaration* a,
-               const iscool::style::declaration* b)
-              {
-                return *a->get_number("index") < *b->get_number("index");
-              });
+  std::ranges::sort(styles,
+                    [](const iscool::style::declaration* a,
+                       const iscool::style::declaration* b)
+                      {
+                        return *a->get_number("index")
+                               < *b->get_number("index");
+                      });
 
   ax::Vector<ax::FiniteTimeAction*> actions(styles.size());
 

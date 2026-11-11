@@ -11,6 +11,7 @@
 
 #include <algorithm>
 #include <iterator>
+#include <ranges>
 #include <sstream>
 
 static std::size_t g_next_node_id = 0;
@@ -431,12 +432,10 @@ template <typename Visit>
 void bim::axmol::input::node::visit_selected(const children_vector& selected,
                                              Visit&& visit)
 {
-  for (children_vector::const_reverse_iterator it = selected.rbegin(),
-                                               eit = selected.rend();
-       it != eit; ++it)
-    if ((*it)->m_selected_in_scan)
+  for (const node_pointer& p : std::views::reverse(selected))
+    if (p->m_selected_in_scan)
       {
-        visit(**it);
-        (*it)->m_selected_in_scan = false;
+        visit(*p);
+        p->m_selected_in_scan = false;
       }
 }

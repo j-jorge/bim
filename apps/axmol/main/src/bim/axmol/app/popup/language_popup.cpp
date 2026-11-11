@@ -66,8 +66,9 @@ bim::axmol::app::language_popup::language_popup(
         new message_popup(context, *style.get_declaration("message-popup")))
   , m_escape(ax::EventKeyboard::KeyCode::KEY_BACK)
 {
-  m_add_language_inputs.reset(
-      new bim::axmol::input::rich_text_glue_handle(*m_controls->add_language));
+  m_add_language_inputs =
+      std::make_unique<bim::axmol::input::rich_text_glue_handle>(
+          *m_controls->add_language);
 
   m_inputs.push_back(*m_add_language_inputs);
 

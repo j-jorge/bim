@@ -6,6 +6,5 @@
 std::size_t
 bim::server::game_info::session_index(iscool::net::session_id session) const
 {
-  return std::find(sessions.begin(), sessions.end(), session)
-         - sessions.begin();
+  return std::ranges::find(sessions, session) - sessions.begin();
 }

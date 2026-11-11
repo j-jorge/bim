@@ -25,7 +25,8 @@ TEST(bim_app_fetch_user_profiles_job, success)
   response["profiles"][1]["user_id"] = 22;
   response["profiles"][1]["nickname"] = "bar";
 
-  http.next_response["client/users/profiles"] = { 200, response };
+  http.next_response["client/users/profiles"] = { .status = 200,
+                                                  .body = response };
 
   int expected_step = 0;
   bim::app::fetch_user_profiles_job job(analytics, headers);
@@ -46,7 +47,9 @@ TEST(bim_app_fetch_user_profiles_job, success)
               response["profiles"][0]["user_id"] = 33;
               response["profiles"][0]["nickname"] = "baz";
 
-              http.next_response["client/users/profiles"] = { 200, response };
+              http.next_response["client/users/profiles"] = { .status = 200,
+                                                              .body =
+                                                                  response };
             }
           else if (expected_step == 1)
             {

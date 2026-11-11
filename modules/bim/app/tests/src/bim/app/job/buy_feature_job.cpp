@@ -32,7 +32,7 @@ TEST(bim_app_buy_feature_job, success)
   profile.coins = 1000;
 
   http.next_response["client/game-feature/buy-feature"] = {
-    200, Json::objectValue
+    .status = 200, .body = Json::objectValue
   };
 
   bim::game::feature_flags done_flags{};
@@ -41,7 +41,7 @@ TEST(bim_app_buy_feature_job, success)
       [&](bim::game::feature_flags f)
         {
           http.next_response["client/game-feature/buy-feature"] = {
-            200, Json::objectValue
+            .status = 200, .body = Json::objectValue
           };
 
           EXPECT_FALSE(!!(done_flags & f));

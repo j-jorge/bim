@@ -229,18 +229,18 @@ std::uint32_t bim::game::game_state_checksum(const entt::registry& registry)
 
   bim_assert(all_entities.capacity() <= 1024);
 
-  std::sort(all_entities.begin(), all_entities.end(),
-            [](entt::entity lhs, entt::entity rhs)
-              {
-                return entt::to_entity(lhs) < entt::to_entity(rhs);
-              });
+  std::ranges::sort(all_entities,
+                    [](entt::entity lhs, entt::entity rhs)
+                      {
+                        return entt::to_entity(lhs) < entt::to_entity(rhs);
+                      });
 
   checksum_state checksum;
   checksum.length = 0;
   checksum.result = 0;
 
-  for (std::size_t i = 0, n = all_entities.size(); i != n; ++i)
-    update_checksum(checksum, all_entities[i]);
+  for (const entt::entity e : all_entities)
+    update_checksum(checksum, e);
 
   push_checksum_bytes(checksum, all_entities.size());
 

@@ -163,10 +163,10 @@ void bim::axmol::app::matchmaking::displaying()
 
   m_controls->ready_button->enable(true);
 
-  for (std::size_t i = 0, n = m_nickname.size(); i != n; ++i)
+  for (ax::Label* const label : m_nickname)
     // Keep a space in the string otherwise the label's content size becomes
     // zero.
-    m_nickname[i]->setString(" ");
+    label->setString(" ");
 
   update_wait_message();
 }

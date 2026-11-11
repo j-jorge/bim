@@ -19,8 +19,8 @@
 #include <entt/entity/registry.hpp>
 
 #include <algorithm>
-#include <cstdio>
 #include <numeric>
+#include <print>
 
 #include <gtest/gtest.h>
 
@@ -45,11 +45,11 @@ static void validate_distribution(const bim::table_2d<int>& sum_per_cell,
         {
           for (int x = 0; x != width; ++x)
             if ((y == cy) && (x == cx))
-              printf(" [%.3d]", sum_per_cell(x, y));
+              std::print(" [{:3}]", sum_per_cell(x, y));
             else
-              printf("  %.3d ", sum_per_cell(x, y));
+              std::print("  {:3} ", sum_per_cell(x, y));
 
-          printf("\n");
+          std::println("");
         }
     };
 

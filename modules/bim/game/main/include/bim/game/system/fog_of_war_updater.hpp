@@ -33,7 +33,8 @@ namespace bim::game
     fog_of_war_updater(const arena& arena, std::uint8_t player_count);
     ~fog_of_war_updater();
 
-    const bim::table_2d<fog_of_war*>& fog(std::size_t player_index) const;
+    [[nodiscard]] const bim::table_2d<fog_of_war*>&
+    fog(std::size_t player_index) const;
 
     void update(entt::registry& registry);
 

@@ -31,8 +31,10 @@ void bim::net::authentication_exchange::start(const session_token& t)
   authentication(protocol_version, m_token, t).build_message(m_client_message);
 
   m_channel_signal_connection = m_message_channel.connect_to_message(
-      std::bind(&authentication_exchange::interpret_received_message, this,
-                std::placeholders::_2));
+      [this](auto&&, const iscool::net::message& message)
+        {
+          interpret_received_message(message);
+        });
 
   tick();
 }
@@ -60,7 +62,10 @@ void bim::net::authentication_exchange::stop()
 void bim::net::authentication_exchange::tick()
 {
   m_update_connection = iscool::schedule::delayed_call(
-      std::bind(&authentication_exchange::tick, this),
+      [this]()
+        {
+          tick();
+        },
       std::chrono::seconds(1));
   m_message_channel.send(m_client_message);
 }

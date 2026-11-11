@@ -13,8 +13,8 @@
 #include <bim/game/player_action.hpp>
 
 #include <charconv>
-#include <cstdio>
 #include <cstring>
+#include <print>
 #include <random>
 
 #include <gtest/gtest.h>
@@ -63,7 +63,7 @@ void bim_game_bot_test::SetUp()
 void bim_game_bot_test::TearDown()
 {
   if (HasFailure())
-    printf("Seed is %lu.\n", m_seed);
+    std::println("Seed is {}.", m_seed);
 }
 
 TEST_P(bim_game_bot_test, think)

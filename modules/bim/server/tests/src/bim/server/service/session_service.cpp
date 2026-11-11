@@ -356,7 +356,8 @@ TEST(session_service, user_id)
             session_1_bis.state);
 
   // The response for the first batch.
-  last_http_request->result_handler(iscool::http::response{ 200, R"(
+  last_http_request->result_handler(
+      iscool::http::response{ .status = 200, .body = R"(
 {
   "tokens": [ 222, 111, 333, 2222 ],
   "user_ids": [ 202, 101, null, 202 ]
@@ -396,7 +397,8 @@ TEST(session_service, user_id)
   EXPECT_EQ(444, body["tokens"][0].asInt());
 
   // The response for the second batch.
-  last_http_request->result_handler(iscool::http::response{ 200, R"(
+  last_http_request->result_handler(
+      iscool::http::response{ .status = 200, .body = R"(
 {
   "tokens": [ 444 ],
   "user_ids": [ 404 ]
@@ -473,7 +475,8 @@ TEST(session_service, user_id_error)
             session_2.state);
 
   // The response for the first batch.
-  last_http_request->result_handler(iscool::http::response{ 500, "" });
+  last_http_request->result_handler(
+      iscool::http::response{ .status = 500, .body = "" });
 
   ASSERT_FALSE(sessions_ready);
 
@@ -497,7 +500,8 @@ TEST(session_service, user_id_error)
   EXPECT_EQ(BIM_BUSINESS_SERVER_URL "/gs/user-id", last_http_request->url);
 
   // The response for the second batch.
-  last_http_request->result_handler(iscool::http::response{ 200, R"(
+  last_http_request->result_handler(
+      iscool::http::response{ .status = 200, .body = R"(
 {
   "tokens": [ 222 ],
   "user_ids": [ 202 ]
@@ -576,7 +580,8 @@ TEST(session_service, only_one_session_per_user)
         });
 
   // The response for the first batch.
-  last_http_request->result_handler(iscool::http::response{ 200, R"(
+  last_http_request->result_handler(
+      iscool::http::response{ .status = 200, .body = R"(
 {
   "tokens": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ],
   "user_ids": [ 1, 2, 1, 2, 1, 2, 1, 2, 1, 2 ]
@@ -640,7 +645,8 @@ TEST(session_service, only_one_session_per_user)
   EXPECT_EQ(BIM_BUSINESS_SERVER_URL "/gs/user-id", last_http_request->url);
 
   // The response for the second batch.
-  last_http_request->result_handler(iscool::http::response{ 200, R"(
+  last_http_request->result_handler(
+      iscool::http::response{ .status = 200, .body = R"(
 {
   "tokens": [ 10, 11, 12, 13, 14, 15 ],
   "user_ids": [ 1, 2, 1, 2, 1, 2 ]

@@ -166,12 +166,13 @@ public:
     if (bot_index)
       {
         bot[*bot_index] = true;
-        m_bot.reset(new bim::game::bot(*bot_index, contest.arena().width(),
-                                       contest.arena().height(), seed));
+        m_bot = std::make_unique<bim::game::bot>(
+            *bot_index, contest.arena().width(), contest.arena().height(),
+            seed);
       }
   }
 
-  bim::game::contest_fingerprint contest_fingerprint() const
+  [[nodiscard]] bim::game::contest_fingerprint contest_fingerprint() const
   {
     return { .seed = seed,
              .features = features,
@@ -181,10 +182,10 @@ public:
              .arena_height = contest.arena().height() };
   }
 
-  std::size_t session_index(iscool::net::session_id session) const
+  [[nodiscard]] std::size_t
+  session_index(iscool::net::session_id session) const
   {
-    return std::find(sessions.begin(), sessions.end(), session)
-           - sessions.begin();
+    return std::ranges::find(sessions, session) - sessions.begin();
   }
 
   simulation_state update()
@@ -447,7 +448,8 @@ bim::server::game_service::game_service(const config& config,
   , m_request_pool(16)
 {
   if (config.enable_contest_timeline_recording)
-    m_contest_timeline_service.reset(new contest_timeline_service(config));
+    m_contest_timeline_service =
+        std::make_unique<contest_timeline_service>(config);
 
   schedule_clean_up();
 }

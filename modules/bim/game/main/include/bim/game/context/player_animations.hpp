@@ -7,7 +7,7 @@ namespace bim::game
 {
   struct player_animations
   {
-    bool is_alive(animation_id id) const;
+    [[nodiscard]] bool is_alive(animation_id id) const;
 
     animation_id idle_down;
     animation_id idle_left;

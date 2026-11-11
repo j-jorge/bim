@@ -51,7 +51,8 @@ namespace bim::axmol::app
                 const iscool::style::declaration& style);
     ~fog_display();
 
-    const bim::axmol::widget::named_node_group& display_nodes() const;
+    [[nodiscard]] const bim::axmol::widget::named_node_group&
+    display_nodes() const;
 
     void attached(const arena_display_config& display_config);
     void displaying(std::uint8_t displayed_player_index);

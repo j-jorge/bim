@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #include <cpptrace/cpptrace.hpp>
 
-#include <cstdio>
 #include <iostream>
+#include <print>
 
 int main()
 {
@@ -18,7 +18,7 @@ int main()
 
       if (res != 1)
         {
-          std::fprintf(stderr, "Failed to read stack frame from stdin.\n");
+          std::println(stderr, "Failed to read stack frame from stdin.");
           break;
         }
 

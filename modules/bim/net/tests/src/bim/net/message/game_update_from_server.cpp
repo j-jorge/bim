@@ -17,19 +17,31 @@ TEST(bim_net_game_update_from_server, serialization)
 
   source.actions.resize(4);
 
-  source.actions[0].push_back({ bim::game::player_movement::idle, false });
-  source.actions[0].push_back({ bim::game::player_movement::left, false });
-  source.actions[0].push_back({ bim::game::player_movement::right, false });
-  source.actions[1].push_back({ bim::game::player_movement::up, false });
-  source.actions[1].push_back({ bim::game::player_movement::down, false });
+  source.actions[0].push_back(
+      { .movement = bim::game::player_movement::idle, .drop_bomb = false });
+  source.actions[0].push_back(
+      { .movement = bim::game::player_movement::left, .drop_bomb = false });
+  source.actions[0].push_back(
+      { .movement = bim::game::player_movement::right, .drop_bomb = false });
+  source.actions[1].push_back(
+      { .movement = bim::game::player_movement::up, .drop_bomb = false });
+  source.actions[1].push_back(
+      { .movement = bim::game::player_movement::down, .drop_bomb = false });
 
-  source.actions[1].push_back({ bim::game::player_movement::idle, true });
-  source.actions[2].push_back({ bim::game::player_movement::left, true });
-  source.actions[2].push_back({ bim::game::player_movement::right, true });
-  source.actions[2].push_back({ bim::game::player_movement::up, true });
-  source.actions[3].push_back({ bim::game::player_movement::down, true });
-  source.actions[3].push_back({ bim::game::player_movement::down, true });
-  source.actions[3].push_back({ bim::game::player_movement::down, true });
+  source.actions[1].push_back(
+      { .movement = bim::game::player_movement::idle, .drop_bomb = true });
+  source.actions[2].push_back(
+      { .movement = bim::game::player_movement::left, .drop_bomb = true });
+  source.actions[2].push_back(
+      { .movement = bim::game::player_movement::right, .drop_bomb = true });
+  source.actions[2].push_back(
+      { .movement = bim::game::player_movement::up, .drop_bomb = true });
+  source.actions[3].push_back(
+      { .movement = bim::game::player_movement::down, .drop_bomb = true });
+  source.actions[3].push_back(
+      { .movement = bim::game::player_movement::down, .drop_bomb = true });
+  source.actions[3].push_back(
+      { .movement = bim::game::player_movement::down, .drop_bomb = true });
 
   iscool::net::message message;
   source.build_message(message);

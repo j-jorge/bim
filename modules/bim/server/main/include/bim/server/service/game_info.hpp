@@ -23,6 +23,7 @@ namespace bim::server
     std::array<iscool::net::session_id, bim::game::g_max_player_count>
         sessions;
 
-    std::size_t session_index(iscool::net::session_id session) const;
+    [[nodiscard]] std::size_t
+    session_index(iscool::net::session_id session) const;
   };
 }

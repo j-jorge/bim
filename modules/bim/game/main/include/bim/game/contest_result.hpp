@@ -18,11 +18,11 @@ namespace bim::game
     static contest_result
     create_game_over(const per_player_array<player_game_outcome>& outcome);
 
-    bool still_running() const;
-    bool has_a_winner() const;
-    std::uint8_t winning_player() const;
+    [[nodiscard]] bool still_running() const;
+    [[nodiscard]] bool has_a_winner() const;
+    [[nodiscard]] std::uint8_t winning_player() const;
 
-    const per_player_array<player_game_outcome>& outcome() const;
+    [[nodiscard]] const per_player_array<player_game_outcome>& outcome() const;
 
   private:
     enum class state : std::uint8_t;

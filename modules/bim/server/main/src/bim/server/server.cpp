@@ -24,8 +24,12 @@ bim::server::server::server(const config& config)
   ic_log(iscool::log::nature::info(), "server", "Protocol version is {}.",
          bim::net::protocol_version);
 
-  m_authentication_service.connect_to_message(std::bind(
-      &server::dispatch, this, std::placeholders::_1, std::placeholders::_2));
+  m_authentication_service.connect_to_message(
+      [this](const iscool::net::endpoint& endpoint,
+             const iscool::net::message& message)
+        {
+          dispatch(endpoint, message);
+        });
 }
 
 void bim::server::server::dispatch(const iscool::net::endpoint& endpoint,

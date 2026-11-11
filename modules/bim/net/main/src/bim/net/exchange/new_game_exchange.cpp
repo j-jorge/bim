@@ -114,8 +114,10 @@ void bim::net::new_game_exchange::internal_start(
   m_token = iscool::random::rand::get_default().random<client_token>();
 
   m_channel_signal_connection = m_message_channel.connect_to_message(
-      std::bind(&new_game_exchange::interpret_received_message, this,
-                std::placeholders::_2));
+      [this](auto&&, const iscool::net::message& message)
+        {
+          interpret_received_message(message);
+        });
 }
 
 void bim::net::new_game_exchange::tick()
@@ -123,7 +125,11 @@ void bim::net::new_game_exchange::tick()
   bim_assert(!m_monitor->is_idle_state());
 
   m_update_connection = iscool::schedule::delayed_call(
-      std::bind(&new_game_exchange::tick, this), std::chrono::seconds(1));
+      [this]()
+        {
+          tick();
+        },
+      std::chrono::seconds(1));
   m_message_channel.send(m_client_message);
 }
 

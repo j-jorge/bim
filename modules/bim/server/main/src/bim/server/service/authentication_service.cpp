@@ -54,8 +54,11 @@ bim::server::authentication_service::authentication_service(
   m_hello_ok.name = config.name;
 
   m_message_stream.connect_to_message(
-      std::bind(&authentication_service::check_session, this,
-                std::placeholders::_1, std::placeholders::_2));
+      [this](const iscool::net::endpoint& endpoint,
+             const iscool::net::message& message)
+        {
+          check_session(endpoint, message);
+        });
 
 #if BIM_ENABLE_TRACY
   TracyPlotConfig("Bytes in", tracy::PlotFormatType::Memory, true, false, 0);

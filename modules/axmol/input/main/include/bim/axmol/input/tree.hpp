@@ -14,8 +14,8 @@ namespace bim::axmol::input
   public:
     tree();
 
-    node_reference root() const;
-    std::string to_string() const;
+    [[nodiscard]] node_reference root() const;
+    [[nodiscard]] std::string to_string() const;
 
     void push_front(const node_reference& child);
 

@@ -101,9 +101,11 @@ game_update_test::client::client(bim::server::tests::fake_scheduler& scheduler,
           m_new_game.accept();
         });
 
-  m_new_game.connect_to_launch_game(std::bind(&client::launch_game, this,
-                                              std::ref(message_stream),
-                                              std::placeholders::_1));
+  m_new_game.connect_to_launch_game(
+      [this, &message_stream](const bim::net::game_launch_event& event)
+        {
+          launch_game(message_stream, event);
+        });
 }
 
 void game_update_test::client::authenticate()
@@ -131,10 +133,10 @@ void game_update_test::client::launch_game(
 
   m_player_index = event.player_index;
 
-  m_message_channel.reset(
-      new iscool::net::message_channel(stream, *m_session, event.channel));
-  m_game_update.reset(new bim::net::game_update_exchange(
-      *m_message_channel, event.fingerprint.player_count));
+  m_message_channel = std::make_unique<iscool::net::message_channel>(
+      stream, *m_session, event.channel);
+  m_game_update = std::make_unique<bim::net::game_update_exchange>(
+      *m_message_channel, event.fingerprint.player_count);
 
   m_game_update->connect_to_started(
       [this]() -> void

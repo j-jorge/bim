@@ -66,8 +66,7 @@ bim::app::user_profile_cache::get(bim::net::user_id id) const
 iscool::signals::connection bim::app::user_profile_cache::fetch(
     bim::net::user_id id, std::function<void(const user_profile&)> ready)
 {
-  if (std::find(m_to_be_fetched.begin(), m_to_be_fetched.end(), id)
-      == m_to_be_fetched.end())
+  if (std::ranges::find(m_to_be_fetched, id) == m_to_be_fetched.end())
     {
       m_to_be_fetched.push_back(id);
 

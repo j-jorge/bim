@@ -28,40 +28,40 @@
 
 #include <entt/entity/registry.hpp>
 
-#include <cstdio>
+#include <print>
 #include <string>
 #include <vector>
 
 static void dump_column(std::FILE* f, bool valid, float value)
 {
   if (valid)
-    fprintf(f, "%10.4f", value);
+    std::print(f, "{:10.4f}", value);
   else
-    fprintf(f, "         x");
+    std::print(f, "         x");
 }
 
 static void dump_column(std::FILE* f, bool valid, int value)
 {
   if (valid)
-    fprintf(f, "%10d", value);
+    std::print(f, "{:10}", value);
   else
-    fprintf(f, "         x");
+    std::print(f, "         x");
 }
 
 static void dump_column_hex(std::FILE* f, bool valid, int value)
 {
   if (valid)
-    fprintf(f, "%10x", value);
+    std::print(f, "{:10x}", value);
   else
-    fprintf(f, "         x");
+    std::print(f, "         x");
 }
 
 static void dump_column(std::FILE* f, bool valid, const char* value)
 {
   if (valid)
-    fprintf(f, "%10s", value);
+    std::print(f, "{:>10}", value);
   else
-    fprintf(f, "         x");
+    std::print(f, "         x");
 }
 
 static const char* animation_name(const bim::game::context& context,
@@ -268,12 +268,12 @@ void bim::game::dump_arena(std::FILE* f, const arena& arena,
           bombs.emplace_back(b.strength, b.player_index, pos.x, pos.y);
         });
 
-  std::sort(bombs.begin(), bombs.end(),
-            [](bomb_state lhs, bomb_state rhs) -> bool
-              {
-                return (lhs.y < rhs.y)
-                       || ((lhs.y == rhs.y) && (lhs.x < rhs.x));
-              });
+  std::ranges::sort(bombs,
+                    [](bomb_state lhs, bomb_state rhs) -> bool
+                      {
+                        return (lhs.y < rhs.y)
+                               || ((lhs.y == rhs.y) && (lhs.x < rhs.x));
+                      });
 
   registry.view<bomb_power_up, position_on_grid>().each(
       [&](position_on_grid pos) -> void
@@ -287,99 +287,99 @@ void bim::game::dump_arena(std::FILE* f, const arena& arena,
     {
       if (arena_print_y >= h)
         {
-          fprintf(f, "%*c", w + 2, eol);
+          std::print(f, "{:{}}", eol, w + 2);
           return;
         }
 
-      fprintf(f, "%x", arena_print_y);
+      std::print(f, "{:x}", arena_print_y);
       for (int x = 0; x != w; ++x)
-        fprintf(f, "%s", arena_str[arena_print_y][x].c_str());
-      fprintf(f, "%c", eol);
+        std::print(f, "{}", arena_str[arena_print_y][x]);
+      std::print(f, "{}", eol);
 
       ++arena_print_y;
     };
 
-  fprintf(f, " ");
+  std::print(f, " ");
   for (int i = 0; i != w; ++i)
-    fprintf(f, "%x", i);
+    std::print(f, "{:x}", i);
 
-  fprintf(f, " %-15s", "player_index");
+  std::print(f, " {:15}", "player_index");
   for (int i = 0; i != player_count; ++i)
     dump_column(f, valid[i], (int)players[i].index);
-  fprintf(f, "\n");
+  std::println(f, "");
 
   print_arena_line(' ');
-  fprintf(f, "%-15s", "player_entity");
+  std::print(f, "{:15}", "player_entity");
   for (int i = 0; i != player_count; ++i)
     dump_column_hex(f, valid[i], (int)player_entities[i]);
-  fprintf(f, "\n");
+  std::println(f, "");
 
   print_arena_line(' ');
-  fprintf(f, "%-15s", "animation");
+  std::print(f, "{:15}", "animation");
   for (int i = 0; i != player_count; ++i)
     dump_column(f, valid[i],
                 animation_name(context, player_entities[i], registry));
-  fprintf(f, "\n");
+  std::println(f, "");
 
   print_arena_line(' ');
-  fprintf(f, "%-15s", "bomb_capacity");
+  std::print(f, "{:15}", "bomb_capacity");
   for (int i = 0; i != player_count; ++i)
     dump_column(f, valid[i], (int)players[i].bomb_capacity);
-  fprintf(f, "\n");
+  std::println(f, "");
 
   print_arena_line(' ');
-  fprintf(f, "%-15s", "bomb_available");
+  std::print(f, "{:15}", "bomb_available");
   for (int i = 0; i != player_count; ++i)
     dump_column(f, valid[i], (int)players[i].bomb_available);
-  fprintf(f, "\n");
+  std::println(f, "");
 
   print_arena_line(' ');
-  fprintf(f, "%-15s", "bomb_strength");
+  std::print(f, "{:15}", "bomb_strength");
   for (int i = 0; i != player_count; ++i)
     dump_column(f, valid[i], (int)players[i].bomb_strength);
-  fprintf(f, "\n");
+  std::println(f, "");
 
   print_arena_line(' ');
-  fprintf(f, "%-15s", "invisible");
+  std::print(f, "{:15}", "invisible");
   for (int i = 0; i != player_count; ++i)
     dump_column(f, valid[i], (int)is_invisible(registry, player_entities[i]));
-  fprintf(f, "\n");
+  std::println(f, "");
 
   print_arena_line(' ');
-  fprintf(f, "%-15s", "shield");
+  std::print(f, "{:15}", "shield");
   for (int i = 0; i != player_count; ++i)
     dump_column(f, valid[i], (int)has_shield(registry, player_entities[i]));
-  fprintf(f, "\n");
+  std::println(f, "");
 
   print_arena_line(' ');
-  fprintf(f, "%-15s", "invincible");
+  std::print(f, "{:15}", "invincible");
   for (int i = 0; i != player_count; ++i)
     dump_column(f, valid[i], (int)is_invincible(registry, player_entities[i]));
-  fprintf(f, "\n");
+  std::println(f, "");
 
   print_arena_line(' ');
-  fprintf(f, "%-15s", "x");
+  std::print(f, "{:15}", "x");
   for (int i = 0; i != player_count; ++i)
     dump_column(f, valid[i], player_position[i].x_float());
-  fprintf(f, "\n");
+  std::println(f, "");
 
   print_arena_line(' ');
-  fprintf(f, "%-15s", "y");
+  std::print(f, "{:15}", "y");
   for (int i = 0; i != player_count; ++i)
     dump_column(f, valid[i], player_position[i].y_float());
-  fprintf(f, "\n");
+  std::println(f, "");
 
   print_arena_line(' ');
-  fprintf(f, "%-15s", "x_grid");
+  std::print(f, "{:15}", "x_grid");
   for (int i = 0; i != player_count; ++i)
     dump_column(f, valid[i], (int)player_position[i].grid_aligned_x());
-  fprintf(f, "\n");
+  std::println(f, "");
 
   print_arena_line(' ');
-  fprintf(f, "%-15s", "y_grid");
+  std::print(f, "{:15}", "y_grid");
   for (int i = 0; i != player_count; ++i)
     dump_column(f, valid[i], (int)player_position[i].grid_aligned_y());
-  fprintf(f, "\n");
+  std::println(f, "");
 
   std::array<player_action, g_max_player_count> queued_actions;
 
@@ -395,10 +395,10 @@ void bim::game::dump_arena(std::FILE* f, const arena& arena,
           const std::array<player_action, g_max_player_count>& actions) -> void
     {
       print_arena_line(' ');
-      fprintf(f, "%-15s", title);
+      std::print(f, "{:15}", title);
       for (int i = 0; i != player_count; ++i)
         if (!valid[i])
-          fprintf(f, "       xx");
+          std::print(f, "       xx");
         else
           {
             char d = '.';
@@ -422,9 +422,9 @@ void bim::game::dump_arena(std::FILE* f, const arena& arena,
                 break;
               };
 
-            fprintf(f, "       %c%c", d, actions[i].drop_bomb ? 'b' : '.');
+            std::print(f, "       {}{}", d, actions[i].drop_bomb ? 'b' : '.');
           }
-      fprintf(f, "\n");
+      std::println(f, "");
     };
 
   print_actions("queued actions", queued_actions);
@@ -452,10 +452,10 @@ void bim::game::dump_arena(std::FILE* f, const arena& arena,
   if (print_kick_events)
     {
       print_arena_line(' ');
-      fprintf(f, "%-15s", "kicked");
+      std::print(f, "{:15}", "kicked");
       for (int i = 0; i != player_count; ++i)
-        fprintf(f, "%9d", (int)kick_events[i]);
-      fprintf(f, "\n");
+        std::print(f, "{:9}", (int)kick_events[i]);
+      std::println(f, "");
     }
 
   std::size_t bomb_print_i = 0;
@@ -470,13 +470,13 @@ void bim::game::dump_arena(std::FILE* f, const arena& arena,
           ++bomb_print_i;
 
           if (i != 0)
-            fprintf(f, " ");
+            std::print(f, " ");
 
-          fprintf(f, "(%d, %d, %d, %d)", (int)b.x, (int)b.y, (int)b.player,
-                  (int)b.strength);
+          std::print(f, "({}, {}, {}, {})", (int)b.x, (int)b.y, (int)b.player,
+                     (int)b.strength);
         }
 
-      fprintf(f, "\n");
+      std::println(f, "");
     };
 
   while (arena_print_y != h)
@@ -485,7 +485,7 @@ void bim::game::dump_arena(std::FILE* f, const arena& arena,
   int bomb_lines = 0;
   if (!bombs.empty())
     {
-      fprintf(f, "bombs(x, y, player, strength): ");
+      std::print(f, "bombs(x, y, player, strength): ");
       while (bomb_print_i != bombs.size())
         {
           print_bombs_line();
@@ -496,5 +496,5 @@ void bim::game::dump_arena(std::FILE* f, const arena& arena,
   // Try to keep a fixed number of lines after the arena, it makes paging
   // easier.
   for (; bomb_lines < 3; ++bomb_lines)
-    fprintf(f, "\n");
+    std::println(f, "");
 }

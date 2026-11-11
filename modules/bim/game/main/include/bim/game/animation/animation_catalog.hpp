@@ -14,7 +14,8 @@ namespace bim::game
     ~animation_catalog();
 
     animation_id new_animation();
-    const animation_specifications& get_animation(animation_id id) const;
+    [[nodiscard]] const animation_specifications&
+    get_animation(animation_id id) const;
     void replace_animation(animation_id id,
                            animation_specifications animation);
 

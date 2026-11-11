@@ -35,7 +35,7 @@ struct bim::server::matchmaking_service::encounter_info
   bim::game::per_player_array<bool> ready;
   std::optional<iscool::net::channel_id> channel;
 
-  bim::game::feature_flags combine_features() const
+  [[nodiscard]] bim::game::feature_flags combine_features() const
   {
     bim::game::feature_flags result = features[0];
 
@@ -55,7 +55,7 @@ struct bim::server::matchmaking_service::encounter_info
     features[new_index] = f;
     sessions[new_index] = session;
     users[new_index] = user_id;
-    ready[new_index] = 0;
+    ready[new_index] = false;
     channel = std::nullopt;
   }
 
@@ -79,7 +79,7 @@ struct bim::server::matchmaking_service::encounter_info
     --player_count;
   }
 
-  size_t session_index(iscool::net::session_id session) const
+  [[nodiscard]] size_t session_index(iscool::net::session_id session) const
   {
     return std::find(sessions.begin(), sessions.begin() + player_count,
                      session)
@@ -184,7 +184,8 @@ bim::server::matchmaking_service::add_in_any_encounter(
 
       refresh_encounter(encounter_id, encounter, endpoint, session,
                         request_token, features, session_index);
-      return join_encounter_result{ encounter_id, encounter.player_count };
+      return join_encounter_result{ .id = encounter_id,
+                                    .player_count = encounter.player_count };
     }
 
   return {};

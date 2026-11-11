@@ -14,11 +14,11 @@ namespace bim::game
     fractional_position_on_grid(value_type x, value_type y);
     fractional_position_on_grid(std::uint8_t x, std::uint8_t y);
 
-    std::uint8_t grid_aligned_x() const;
-    std::uint8_t grid_aligned_y() const;
+    [[nodiscard]] std::uint8_t grid_aligned_x() const;
+    [[nodiscard]] std::uint8_t grid_aligned_y() const;
 
-    float x_float() const;
-    float y_float() const;
+    [[nodiscard]] float x_float() const;
+    [[nodiscard]] float y_float() const;
 
   public:
     value_type x;

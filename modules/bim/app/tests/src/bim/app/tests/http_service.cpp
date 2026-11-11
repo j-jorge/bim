@@ -63,5 +63,5 @@ void bim::app::tests::http_service::process_request(
   const int status = it->second.status;
   next_response.erase(it);
 
-  r.result_handler({ status, std::move(body) });
+  r.result_handler({ .status = status, .body = std::move(body) });
 }

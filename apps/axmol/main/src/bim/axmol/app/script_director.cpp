@@ -28,11 +28,13 @@
 
 #include <fmt/format.h>
 
+#include <print>
+
 static void dump_node(const ax::Node& n, int indent)
 {
   const std::string_view name = n.getName();
 
-  printf("%*s- %*s\n", indent, "", (int)name.size(), name.data());
+  std::println("{:>{}}- {}", "", indent, name);
 
   for (const ax::Node* const c : n.getChildren())
     dump_node(*c, indent + 2);

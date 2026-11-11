@@ -26,7 +26,7 @@ namespace bim::server
     explicit karma_service(const config& config);
     ~karma_service();
 
-    bool allowed(const boost::asio::ip::address& address) const;
+    [[nodiscard]] bool allowed(const boost::asio::ip::address& address) const;
 
     void add(const boost::asio::ip::address& address);
     void remove(const boost::asio::ip::address& address);

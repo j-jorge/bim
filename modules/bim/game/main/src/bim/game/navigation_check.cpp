@@ -109,8 +109,7 @@ void bim::game::navigation_check::paths(
 
           // std::find will necessarily find (nx, ny) since it is in
           // m_queued.
-          k = std::find(m_pending.begin(), m_pending.end(),
-                        position_on_grid(nx, ny))
+          k = std::ranges::find(m_pending, position_on_grid(nx, ny))
               - m_pending.begin();
         }
       else

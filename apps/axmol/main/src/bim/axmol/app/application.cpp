@@ -68,6 +68,7 @@
 
 #include <ctime>
 #include <iomanip>
+#include <print>
 #include <sstream>
 
 static const char* const g_log_context = "StartUp";
@@ -133,7 +134,7 @@ public:
   session_systems(const session_systems&) = delete;
   ~session_systems();
 
-  const iscool::style::declaration& root_style() const;
+  [[nodiscard]] const iscool::style::declaration& root_style() const;
 
 private:
   void start_widgets();
@@ -196,7 +197,14 @@ bim::axmol::app::detail::persistent_systems::~persistent_systems()
     }
   catch (const std::format_error& e)
     {
-      printf("ERROR: %s: %s\n", __PRETTY_FUNCTION__, e.what());
+      try
+        {
+          std::println("ERROR: {}: {}", __PRETTY_FUNCTION__, e.what());
+        }
+      catch (const std::format_error& e)
+        {
+          (void)0;
+        }
     }
 }
 
@@ -261,13 +269,13 @@ void bim::axmol::app::detail::persistent_systems::start_display()
 {
   ic_log(iscool::log::nature::info(), g_log_context, "Start: display.");
   bim_assert(m_application.m_main_view == nullptr);
-  m_application.m_main_view.reset(new bim::axmol::display::main_view(
+  m_application.m_main_view = std::make_unique<bim::axmol::display::main_view>(
       "Bim!", m_application.m_screen_config.size,
-      m_application.m_screen_config.scale));
+      m_application.m_screen_config.scale);
 
   const std::string fonts[] = { "font/NotoColorEmoji.ttf" };
 
-  m_font_fallback.reset(new ax::FontFallback(fonts, true));
+  m_font_fallback = std::make_unique<ax::FontFallback>(fonts, true);
   ax::FontFreeType::setFontEngine(m_font_fallback.get());
 }
 
@@ -415,7 +423,14 @@ bim::axmol::app::detail::session_systems::~session_systems()
     }
   catch (const std::format_error& e)
     {
-      printf("ERROR: %s: %s\n", __PRETTY_FUNCTION__, e.what());
+      try
+        {
+          std::println("ERROR: {}: {}", __PRETTY_FUNCTION__, e.what());
+        }
+      catch (const std::format_error& e)
+        {
+          (void)0;
+        }
     }
 
   ax::SpriteFrameCache::getInstance()->removeSpriteFrames();
@@ -433,12 +448,12 @@ void bim::axmol::app::detail::session_systems::start_widgets()
 {
   ic_log(iscool::log::nature::info(), g_log_context, "Start: widgets.");
 
-  m_widget_context.reset(new bim::axmol::widget::context{
+  m_widget_context = std::make_unique<bim::axmol::widget::context>(
       m_application.m_persistent_systems->m_colors,
       m_application.m_persistent_systems->m_style_cache,
       m_application.m_persistent_systems->m_widget_factory,
       m_application.m_persistent_systems->m_action_factory, m_font_catalog,
-      bim::axmol::display::device_scale(1080, 2220) });
+      bim::axmol::display::device_scale(1080, 2220));
 
   m_application.m_context.set_widget_context(m_widget_context.get());
 }
@@ -457,8 +472,8 @@ void bim::axmol::app::detail::session_systems::start_styles()
 
   iscool::style::initialize({ "style/" });
 
-  m_style.reset(new iscool::style::declaration(
-      iscool::style::loader::load("launch/application")));
+  m_style = std::make_unique<iscool::style::declaration>(
+      iscool::style::loader::load("launch/application"));
 }
 
 void bim::axmol::app::detail::session_systems::stop_styles()
@@ -490,9 +505,9 @@ void bim::axmol::app::detail::session_systems::stop_main_scene()
 
 void bim::axmol::app::detail::session_systems::start_inputs()
 {
-  m_input_flow.reset(new bim::axmol::input::flow(
+  m_input_flow = std::make_unique<bim::axmol::input::flow>(
       m_application.m_persistent_systems->root_scene(),
-      m_application.m_input_root));
+      m_application.m_input_root);
 }
 
 void bim::axmol::app::detail::session_systems::stop_inputs()
@@ -511,7 +526,7 @@ bim::axmol::app::application::application(
   , m_screen_capture_key_observer(ax::EventKeyboard::KeyCode::KEY_C)
   , m_reset_key_observer(ax::EventKeyboard::KeyCode::KEY_R)
   , m_input_root(m_reset_key_observer)
-  , m_screen_config{ screen_size, screen_scale }
+  , m_screen_config{ .size = screen_size, .scale = screen_scale }
   , m_script_info(script)
   , m_enter_background_date()
 {
@@ -540,7 +555,7 @@ bool bim::axmol::app::application::applicationDidFinishLaunching()
 {
   set_up_file_utils();
 
-  m_persistent_systems.reset(new detail::persistent_systems(*this));
+  m_persistent_systems = std::make_unique<detail::persistent_systems>(*this);
 
   m_context.get_analytics()->event(
       "launched",
@@ -550,7 +565,7 @@ bool bim::axmol::app::application::applicationDidFinishLaunching()
   ic_log(iscool::log::nature::info(), g_log_context,
          "Business server is '{}'.", BIM_BUSINESS_SERVER_URL);
 
-  m_session_systems.reset(new detail::session_systems(*this));
+  m_session_systems = std::make_unique<detail::session_systems>(*this);
 
   if (m_script_info)
     start_script();
@@ -625,7 +640,7 @@ void bim::axmol::app::application::reset()
   ax::Director::getInstance()->getTextureCache()->unbindAllImageAsync();
   ax::Director::getInstance()->getTextureCache()->removeAllTextures();
 
-  m_session_systems.reset(new detail::session_systems(*this));
+  m_session_systems = std::make_unique<detail::session_systems>(*this);
 
   m_launch_connection = iscool::schedule::delayed_call(
       [this]()
@@ -705,9 +720,9 @@ void bim::axmol::app::application::launch_game()
 {
   ic_log(iscool::log::nature::info(), g_log_context, "Launching the game.");
 
-  m_main_task.reset(new main_task(
+  m_main_task = std::make_unique<main_task>(
       m_context,
-      *m_session_systems->root_style().get_declaration("main-task")));
+      *m_session_systems->root_style().get_declaration("main-task"));
   m_main_task->connect_to_reset(
       [this]() -> void
         {
@@ -741,10 +756,10 @@ void bim::axmol::app::application::start_script()
 #if !__ANDROID__
   bim_assert(m_script_info);
 
-  m_script_director.reset(new script_director(
+  m_script_director = std::make_unique<script_director>(
       application_event_listener(*m_context.get_event_dispatcher()),
       m_script_info->file_path, m_script_info->number_screenshots,
-      m_script_info->timeout));
+      m_script_info->timeout);
   m_script_director->connect_to_done(
       [this](script_director::result r)
         {

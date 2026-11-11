@@ -26,7 +26,7 @@ TEST(bim_app_assign_feature_slots_job, success)
   profile.coins = 1000;
 
   http.next_response["client/game-feature/assign-slots"] = {
-    200, Json::objectValue
+    .status = 200, .body = Json::objectValue
   };
 
   bool done_called = false;
@@ -35,7 +35,7 @@ TEST(bim_app_assign_feature_slots_job, success)
       [&]()
         {
           http.next_response["client/game-feature/assign-slots"] = {
-            200, Json::objectValue
+            .status = 200, .body = Json::objectValue
           };
 
           done_called = true;
@@ -62,8 +62,9 @@ TEST(bim_app_assign_feature_slots_job, success)
 
   job.assign_slots({ bim::game::feature_flags::falling_blocks, std::nullopt });
 
-  http.next_response["client/game-feature/clear-slot"] = { 200,
-                                                           Json::objectValue };
+  http.next_response["client/game-feature/clear-slot"] = {
+    .status = 200, .body = Json::objectValue
+  };
 
   job.clear_slot(0);
 

@@ -26,11 +26,11 @@ namespace bim::game
     contest_timeline();
     ~contest_timeline();
 
-    int game_version() const;
-    const bim::game::contest_fingerprint& fingerprint() const;
-    const per_player_array<bool>& bot() const;
+    [[nodiscard]] int game_version() const;
+    [[nodiscard]] const bim::game::contest_fingerprint& fingerprint() const;
+    [[nodiscard]] const per_player_array<bool>& bot() const;
 
-    std::size_t tick_count() const;
+    [[nodiscard]] std::size_t tick_count() const;
 
     void load_tick(std::uint32_t tick, entt::registry& registry) const;
 

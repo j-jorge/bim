@@ -23,8 +23,8 @@ namespace bim::game
     entity_world_map& operator=(const entity_world_map& that);
     entity_world_map& operator=(entity_world_map&& that) noexcept;
 
-    std::span<const entt::entity> entities_at(std::uint8_t x,
-                                              std::uint8_t y) const;
+    [[nodiscard]] std::span<const entt::entity>
+    entities_at(std::uint8_t x, std::uint8_t y) const;
     void put_entity(entt::entity e, std::uint8_t x, std::uint8_t y);
     void erase_entity(entt::entity e, std::uint8_t x, std::uint8_t y);
     void erase_entities(std::uint8_t x, std::uint8_t y);

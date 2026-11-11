@@ -22,7 +22,7 @@ namespace bim::axmol
 
     void add_alias(std::string name, std::string_view color);
 
-    ax::Color4B to_color_4b(std::string_view color) const;
+    [[nodiscard]] ax::Color4B to_color_4b(std::string_view color) const;
 
   private:
     using alias_map =

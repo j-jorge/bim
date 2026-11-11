@@ -12,12 +12,13 @@ class bim::axmol::files::bridge::delegates final
   : public iscool::files::file_system_delegates
 {
 public:
-  std::unique_ptr<std::istream>
+  [[nodiscard]] std::unique_ptr<std::istream>
   read_file(const std::string& path) const override;
 
-  std::string get_writable_path() const override;
-  bool file_exists(const std::string& path) const override;
-  std::string get_full_path(const std::string& path) const override;
+  [[nodiscard]] std::string get_writable_path() const override;
+  [[nodiscard]] bool file_exists(const std::string& path) const override;
+  [[nodiscard]] std::string
+  get_full_path(const std::string& path) const override;
 };
 
 bim::axmol::files::bridge::bridge()

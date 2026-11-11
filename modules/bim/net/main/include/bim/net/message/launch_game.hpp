@@ -28,16 +28,16 @@ namespace bim::net
 
     void build_message(iscool::net::message& message) const;
 
-    client_token get_request_token() const;
-    iscool::net::channel_id get_game_channel() const;
-    game_id get_game_id() const;
-    std::uint64_t get_seed() const;
-    bim::game::feature_flags get_features() const;
-    std::uint8_t get_player_count() const;
-    std::uint8_t get_player_index() const;
-    std::uint8_t get_crate_probability() const;
-    std::uint8_t get_arena_width() const;
-    std::uint8_t get_arena_height() const;
+    [[nodiscard]] client_token get_request_token() const;
+    [[nodiscard]] iscool::net::channel_id get_game_channel() const;
+    [[nodiscard]] game_id get_game_id() const;
+    [[nodiscard]] std::uint64_t get_seed() const;
+    [[nodiscard]] bim::game::feature_flags get_features() const;
+    [[nodiscard]] std::uint8_t get_player_count() const;
+    [[nodiscard]] std::uint8_t get_player_index() const;
+    [[nodiscard]] std::uint8_t get_crate_probability() const;
+    [[nodiscard]] std::uint8_t get_arena_width() const;
+    [[nodiscard]] std::uint8_t get_arena_height() const;
 
   private:
     client_token m_request_token;

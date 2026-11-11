@@ -31,7 +31,7 @@
 
 #include <entt/entity/registry.hpp>
 
-#include <cstdio>
+#include <print>
 
 #include <gtest/gtest.h>
 
@@ -207,7 +207,7 @@ void bim_game_apply_player_action_test::run_all_forward_move_tests(
                             end_y);
 
       if (HasFailure())
-        std::printf("Obstacle was '%s'.\n", obstacle_name(o));
+        std::println("Obstacle was '{}'.", obstacle_name(o));
     }
 }
 
@@ -265,7 +265,7 @@ void bim_game_apply_player_action_test::run_all_dodge_move_tests(
                           end_x, end_y);
 
       if (HasFailure())
-        std::printf("Obstacle was '%s'.\n", obstacle_name(o));
+        std::println("Obstacle was '{}'.", obstacle_name(o));
     }
 }
 
@@ -403,11 +403,12 @@ void bim_game_apply_player_action_test::run_all_cannot_dodge_tests(
 
           if (HasFailure())
             {
-              std::printf("front=%s, side[%d]=(%s,0x%x), corner=%s, "
-                          "can_move_on_the_side=%d\n",
-                          obstacle_name(front), (int)i,
-                          obstacle_name(side_obstacles[i]), (int)side_edges[i],
-                          obstacle_name(corner), can_move_on_the_side);
+              std::println("front={}, side[{}]=({},0x{:x}), corner={}, "
+                           "can_move_on_the_side={}",
+                           obstacle_name(front), i,
+                           obstacle_name(side_obstacles[i]),
+                           (int)side_edges[i], obstacle_name(corner),
+                           can_move_on_the_side);
               return;
             }
         }
@@ -1012,10 +1013,10 @@ TEST_F(bim_game_apply_player_action_test, cannot_drop_bomb_on_existing_bomb)
 
   constexpr int bomb_capacity = 2;
 
-  for (int i = 0; i != player_count; ++i)
+  for (bim::game::player* const p : player)
     {
-      player[i]->bomb_capacity = bomb_capacity;
-      player[i]->bomb_available = bomb_capacity;
+      p->bomb_capacity = bomb_capacity;
+      p->bomb_available = bomb_capacity;
     }
 
   bim::game::player_action* const action[player_count] = {
@@ -1026,8 +1027,8 @@ TEST_F(bim_game_apply_player_action_test, cannot_drop_bomb_on_existing_bomb)
   };
 
   // One bomb
-  for (int i = 0; i != player_count; ++i)
-    action[i]->drop_bomb = true;
+  for (bim::game::player_action* const a : action)
+    a->drop_bomb = true;
 
   // Flush the queue.
   flush_actions();

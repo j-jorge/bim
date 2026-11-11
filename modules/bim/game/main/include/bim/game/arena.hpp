@@ -31,17 +31,17 @@ namespace bim::game
     arena& operator=(const arena& that) noexcept;
     arena& operator=(arena&& that) noexcept;
 
-    std::uint8_t width() const;
-    std::uint8_t height() const;
+    [[nodiscard]] std::uint8_t width() const;
+    [[nodiscard]] std::uint8_t height() const;
 
-    std::span<const static_wall> static_walls() const;
+    [[nodiscard]] std::span<const static_wall> static_walls() const;
 
-    bool is_static_wall(std::uint8_t x, std::uint8_t y) const;
+    [[nodiscard]] bool is_static_wall(std::uint8_t x, std::uint8_t y) const;
     void set_static_wall(std::uint8_t x, std::uint8_t y, cell_neighborhood n);
 
-    std::span<const fence> fences() const;
+    [[nodiscard]] std::span<const fence> fences() const;
 
-    cell_edge fences(std::uint8_t x, std::uint8_t y) const;
+    [[nodiscard]] cell_edge fences(std::uint8_t x, std::uint8_t y) const;
     void add_fence(std::uint8_t x, std::uint8_t y, cell_edge e);
     void remove_fence(std::uint8_t x, std::uint8_t y, cell_edge e);
 

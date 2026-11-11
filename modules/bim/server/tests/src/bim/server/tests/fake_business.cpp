@@ -15,7 +15,8 @@ static void dispatch_ok(const iscool::http::request& r,
 {
   std::string str;
   EXPECT_TRUE(iscool::json::write_to_string(str, body));
-  r.result_handler(iscool::http::response{ 200, std::move(str) });
+  r.result_handler(
+      iscool::http::response{ .status = 200, .body = std::move(str) });
 }
 
 bim::server::tests::fake_business::fake_business()
@@ -58,7 +59,7 @@ void bim::server::tests::fake_business::process_request(
       last_game_over_request = iscool::json::parse_string(r.body);
       EXPECT_TRUE(last_game_over_request.isObject());
 
-      r.result_handler(iscool::http::response{ 200, "{}" });
+      r.result_handler(iscool::http::response{ .status = 200, .body = "{}" });
       return;
     }
 

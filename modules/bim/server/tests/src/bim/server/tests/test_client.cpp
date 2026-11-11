@@ -177,14 +177,14 @@ void bim::server::tests::test_client::launch_game(
   player_index = event.player_index;
   game_launch_event = event;
 
-  m_message_channel.reset(
-      new iscool::net::message_channel(stream, *session, event.channel));
-  m_game_update.reset(new bim::net::game_update_exchange(
-      *m_message_channel, event.fingerprint.player_count));
-  contest.reset(new bim::game::contest(event.fingerprint));
-  contest_runner.reset(new bim::net::contest_runner(
+  m_message_channel = std::make_unique<iscool::net::message_channel>(
+      stream, *session, event.channel);
+  m_game_update = std::make_unique<bim::net::game_update_exchange>(
+      *m_message_channel, event.fingerprint.player_count);
+  contest = std::make_unique<bim::game::contest>(event.fingerprint);
+  contest_runner = std::make_unique<bim::net::contest_runner>(
       *contest, *m_game_update, event.player_index,
-      event.fingerprint.player_count));
+      event.fingerprint.player_count);
 
   m_game_update->connect_to_started(
       [this]() -> void

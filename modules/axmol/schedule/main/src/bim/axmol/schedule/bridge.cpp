@@ -14,9 +14,12 @@ bim::axmol::schedule::bridge::bridge()
 {
   m_call_key_buffer.reserve(m_key_prefix.size() + 10);
 
-  iscool::schedule::initialize(std::bind(&bridge::delayed_call, this,
-                                         std::placeholders::_1,
-                                         std::placeholders::_2));
+  iscool::schedule::initialize(
+      [this](const std::function<void()>& f,
+             const std::chrono::nanoseconds& delay)
+        {
+          delayed_call(f, delay);
+        });
 }
 
 bim::axmol::schedule::bridge::~bridge()
@@ -32,7 +35,10 @@ void bim::axmol::schedule::bridge::delayed_call(
   ax::Scheduler& scheduler(*ax::Director::getInstance()->getScheduler());
 
   scheduler.runOnAxmolThread(
-      std::bind(&bridge::schedule_call, this, f, delay));
+      [this, f, delay]
+        {
+          schedule_call(f, delay);
+        });
 }
 
 void bim::axmol::schedule::bridge::schedule_call(
@@ -49,6 +55,9 @@ void bim::axmol::schedule::bridge::schedule_call(
   ++m_next_call_id;
 
   ax::Director::getInstance()->getScheduler()->schedule(
-      std::bind(f), this, interval, repeat, delay_in_seconds, false,
-      m_call_key_buffer);
+      [&f](float)
+        {
+          f();
+        },
+      this, interval, repeat, delay_in_seconds, false, m_call_key_buffer);
 }

@@ -6,8 +6,8 @@
 #include <filesystem>
 #include <fstream>
 #include <iomanip>
+#include <print>
 #include <sstream>
-
 #include <unistd.h>
 
 #include <gtest/gtest.h>
@@ -36,13 +36,28 @@ bim::server::tests::statistics_log::~statistics_log()
 {
   if (::testing::Test::HasFailure())
     {
-      printf("Statistics log file is '%s'\n", m_log_file.c_str());
+      try
+        {
+          std::println("Statistics log file is '{}'", m_log_file);
+        }
+      catch (const std::format_error& e)
+        {
+          (void)0;
+        }
+
       return;
     }
 
   if (remove(m_log_file.c_str()) != 0)
-    printf("Failed to remove statistics log file '%s': %s\n",
-           m_log_file.c_str(), strerror(errno));
+    try
+      {
+        std::println("Failed to remove statistics log file '{}': {}",
+                     m_log_file, strerror(errno));
+      }
+    catch (const std::format_error& e)
+      {
+        (void)0;
+      }
 }
 
 std::vector<bim::server::tests::statistics_log_line>

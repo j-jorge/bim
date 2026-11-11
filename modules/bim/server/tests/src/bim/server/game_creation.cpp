@@ -89,7 +89,10 @@ game_creation_test::client::client(
         });
 
   m_new_game.connect_to_launch_game(
-      std::bind(&client::launch_game, this, std::placeholders::_1));
+      [this](const bim::net::game_launch_event& event)
+        {
+          launch_game(event);
+        });
 }
 
 void game_creation_test::client::authenticate()

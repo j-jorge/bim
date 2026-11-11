@@ -370,8 +370,8 @@ void bim::axmol::app::game_features::start_erase_mode()
 
   bool has_any_occupied_slot = false;
 
-  for (std::size_t i = 0; i != bim::app::g_game_feature_slot_count; ++i)
-    has_any_occupied_slot |= slot_is_occupied[i];
+  for (const bool o : slot_is_occupied)
+    has_any_occupied_slot |= o;
 
   if (!has_any_occupied_slot)
     return;
@@ -499,8 +499,8 @@ void bim::axmol::app::game_features::select_available_feature(
     {
       bim_assert(m_monitor->is_idle_state());
 
-      for (std::size_t i = 0; i != bim::app::g_game_feature_slot_count; ++i)
-        m_slot_animation.run(*m_slot_selection_action[i]);
+      for (const action_ptr& action : m_slot_selection_action)
+        m_slot_animation.run(*action);
 
       m_monitor->set_assign_slot_state();
     }
@@ -615,13 +615,13 @@ void bim::axmol::app::game_features::stop_slot_animations()
 {
   m_slot_animation.stop();
 
-  for (std::size_t i = 0; i != bim::app::g_game_feature_slot_count; ++i)
+  for (game_feature_button* const button : m_slot)
     {
       bim::axmol::style::apply_bounds(
-          m_slot_bounds_off, *m_slot[i], *m_slot[i]->getParent(),
+          m_slot_bounds_off, *button, *button->getParent(),
           m_context.get_widget_context()->device_scale);
 
-      bim::axmol::style::apply_display(m_slot_display_off, *m_slot[i]);
+      bim::axmol::style::apply_display(m_slot_display_off, *button);
     }
 }
 

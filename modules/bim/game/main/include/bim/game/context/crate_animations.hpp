@@ -7,7 +7,7 @@ namespace bim::game
 {
   struct crate_animations
   {
-    bool is_burning(animation_id id) const;
+    [[nodiscard]] bool is_burning(animation_id id) const;
 
     animation_id idle;
     animation_id burn;

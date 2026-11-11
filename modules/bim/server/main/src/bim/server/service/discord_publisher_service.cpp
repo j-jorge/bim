@@ -17,7 +17,7 @@ bim::server::discord_publisher_service::discord_publisher_service(
               ? config.discord_matchmaking_notification_url
               : "")
   , m_headers({ "Content-Type: application/json" })
-  , m_body("{\"content\":\"A player is looking for an opponent! Go!\"}")
+  , m_body(R"({"content":"A player is looking for an opponent! Go!"})")
   , m_delay_between_notifications(
         config.discord_matchmaking_notification_interval)
   , m_date_for_next_notification(0)
