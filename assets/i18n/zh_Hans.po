@@ -1,0 +1,339 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: 2026-11-13 12:51+0000\n"
+"Last-Translator: 洞真（无悟） <yiy255083@users.noreply.hosted.weblate.org>\n"
+"Language-Team: Chinese (Simplified Han script) <https://hosted.weblate.org/"
+"projects/bim/gettext-files/zh_Hans/>\n"
+"Language: zh_Hans\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 2026.12.dev0\n"
+
+msgid "Please wait"
+msgstr "请等待"
+
+msgid "You have been disconnected :("
+msgstr "已断开连接 :("
+
+msgid ""
+"The shop is not available on this platform, yet you can support the "
+"developers with donations! Should I open the donations page?"
+msgstr ""
+"该商店在此平台上不可用，但您可以通过捐赠来支持开发者！需要为您打开捐赠页面吗"
+"？"
+
+msgid "Do you really want to change the language setting?"
+msgstr "你确定要更改语言设置吗？"
+
+#, c++-format
+msgid "Your nickname must have between {} and {} symbols."
+msgstr "你的昵称长度必须在 {} 与{} 之内。"
+
+msgid "Invalid nickname."
+msgstr "昵称无效。"
+
+msgid "Too short."
+msgstr "过短。"
+
+msgid "Too long."
+msgstr "过长。"
+
+#, c++-format
+msgid ""
+"Change your nickname for \"{}\"? You won't be able to change it again before "
+"a couple of hours."
+msgstr "将确定更改昵称 \"{}\"吗？几小时内你将无法再次更改。"
+
+msgid "Request error."
+msgstr "请求错误。"
+
+#, c++-format
+msgid "Version {}"
+msgstr "版本 {}"
+
+#, c++-format
+msgid "User ID: {}"
+msgstr "用户ID: {}"
+
+msgid "Please keep the informations below available if you need support."
+msgstr "如需寻求支持，请准备好以下信息。"
+
+msgid "Feedback about Bim!"
+msgstr "关于反馈Bim!"
+
+#, c++-format
+msgid "Come play a game of Bim! {}"
+msgstr "来玩局 Bim!吧 {}"
+
+#, c++-format
+msgid "Customize your games with up to {} feature."
+msgid_plural "Customize your games with up to {} features."
+msgstr[0] "通过最多 {} 项功能来自定义你的游戏。"
+
+msgid "Falling blocks reduce the arena after two minutes!"
+msgstr "两分钟后，下落的方块会使竞技场缩小！"
+
+msgid "Fences block the players, but the flames can go through!"
+msgstr "栅栏会挡住玩家，但火焰可以过去！"
+
+msgid "A thick fog covers the arena. You can't see were you did not go!"
+msgstr "浓雾笼罩着竞技场。你没去过的地方都看不见！"
+
+msgid ""
+"Find the invisibility power up to disappear from the screen of all other "
+"players!"
+msgstr "找到隐身道具，就能从其他玩家的屏幕上消失！"
+
+msgid "Find this incredibly strong barrel, it will save you from one hit!"
+msgstr "找到这个极其坚固的桶，它能帮你挡下一次攻击！"
+
+msgid "You need more coins to purchase this item!"
+msgstr "你需要更多金币才能购买此物品！"
+
+#, c++-format
+msgid "{} game being played right now."
+msgid_plural "{} games being played right now."
+msgstr[0] "{} 游戏正在火热进行中。"
+
+#, c++-format
+msgid "{} player connected right now."
+msgid_plural "{} players connected right now."
+msgstr[0] "{} 名玩家已连接。"
+
+#, c++-format
+msgid "{} game played in the last hour."
+msgid_plural "{} games played in the last hour."
+msgstr[0] "过去一小时内进行了 {} 场游戏。"
+
+#, c++-format
+msgid "{} player connected in the last hour."
+msgid_plural "{} players connected in the last hour."
+msgstr[0] "过去一小时内连接了 {} 名玩家。"
+
+#, c++-format
+msgid "{} game played in the last 24 hours."
+msgid_plural "{} games played in the last 24 hours."
+msgstr[0] "过去24小时内进行了 {} 场游戏。"
+
+#, c++-format
+msgid "{} player connected in the last 24 hours."
+msgid_plural "{} players connected in the last 24 hours."
+msgstr[0] "过去24小时内连接了 {} 名玩家。"
+
+#, c++-format
+msgid "{} game played in the last 30 days."
+msgid_plural "{} games played in the last 30 days."
+msgstr[0] "过去30天内进行了 {} 场游戏。"
+
+#, c++-format
+msgid "{} player connected in the last 30 days."
+msgid_plural "{} players connected in the last 30 days."
+msgstr[0] "过去30天内连接了 {} 名玩家。"
+
+#, c++-format
+msgid "Connected to {}."
+msgstr "已连接到 {}。"
+
+#, c++-format
+msgid "Nickname change is not available yet. Come back in {} h. {} min. {}  s."
+msgstr "昵称修改暂不可用。请在 {} 小时 {} 分钟 {} 秒后再来。"
+
+#, c++-format
+msgid "Nickname change is not available yet. Come back in {} min. {} s."
+msgstr "昵称修改暂不可用。请在 {} 小时 {} 分钟 {} 秒后再来。"
+
+#, c++-format
+msgid "Nickname change is not available yet. Come back in {} s."
+msgstr "昵称修改暂不可用。请在 {} 秒后再试。"
+
+msgid "An error occurred. The purchase could not be completed."
+msgstr "发生错误，购买未能完成。"
+
+msgid "A new version of Bim! is available! Please update as soon as possible."
+msgstr "Bim! 新版本已发布！请尽快更新。"
+
+#, c++-format
+msgid "Failed to authenticate with the business server. Status {}."
+msgstr "与业务服务器认证失败。状态：{}。"
+
+#, c++-format
+msgid "Failed to authenticate with the game server. Error code {}."
+msgstr "与游戏服务器认证失败。错误代码：{}。"
+
+msgid "Cancel"
+msgstr "取消"
+
+msgid "OK"
+msgstr "确定"
+
+msgid ""
+"NEW\n"
+"GAME"
+msgstr ""
+"新\n"
+"游戏"
+
+msgid ""
+"Start a new game\n"
+"and get your revenge!"
+msgstr ""
+"开始新游戏，\n"
+"来报仇吧！"
+
+msgid ""
+"Was it pure luck?\n"
+"Confirm your skills in a new game!"
+msgstr ""
+"那只是运气吗？\n"
+"来新一局游戏中证明你的实力吧！"
+
+msgid "Draw game!"
+msgstr "平局！"
+
+msgid "You lost!"
+msgstr "你输了！"
+
+msgid "You won!"
+msgstr "你赢了！"
+
+msgid "ERASE"
+msgstr "清除"
+
+msgid "RANDOM"
+msgstr "随机"
+
+msgid "Off"
+msgstr "关闭"
+
+msgid "On"
+msgstr "打开"
+
+msgid "No"
+msgstr "否"
+
+msgid "Yes"
+msgstr "是"
+
+msgid "DONE"
+msgstr "完成"
+
+msgid "Enter the desired nickname below."
+msgstr "请在下方输入你想要的昵称。"
+
+msgid "Nickname change"
+msgstr "昵称修改"
+
+msgid "Defeats"
+msgstr "失败次数"
+
+msgid "Draws"
+msgstr "平局次数"
+
+msgid "Games"
+msgstr "游戏次数"
+
+msgid "Victories"
+msgstr "胜利次数"
+
+msgid "Your statistics"
+msgstr "你的统计数据"
+
+msgid "Success rate"
+msgstr "胜率"
+
+msgid "Is your language missing? Add it on <a href='#'>Weblate</a>!"
+msgstr "你的语言缺失了吗？在 <a href='#'>Weblate</a> 上添加它吧！"
+
+msgid "Language"
+msgstr "语言"
+
+msgid "Directions kind"
+msgstr "使用说明"
+
+msgid "Directional pad, at a fixed position on the screen."
+msgstr "方向键，固定在屏幕上的某一位置。"
+
+msgid "Analog stick, it pops where you tap and follows the drag."
+msgstr "虚拟摇杆，在你点按的位置弹出，并跟随拖动。"
+
+msgid "Controls"
+msgstr "控制方式"
+
+msgid "Directions on the left, actions on the right."
+msgstr "左侧为方向控制，右侧为动作操作。"
+
+msgid "Directions on the right, actions on the left."
+msgstr "右侧为方向控制，左侧为动作操作。"
+
+msgid "D-pad"
+msgstr "方向键"
+
+msgid "Stick"
+msgstr "摇杆"
+
+msgid "Music"
+msgstr "音乐"
+
+msgid "Sound effects"
+msgstr "音效"
+
+msgid "Settings"
+msgstr "设置"
+
+msgid "Vibrations"
+msgstr "震动"
+
+msgid "Features"
+msgstr "功能"
+
+msgid "PLAY ONLINE"
+msgstr "在线游戏"
+
+msgid "SHOP"
+msgstr "商店"
+
+msgid "STATISTICS"
+msgstr "统计"
+
+msgid "ALPHA VERSION"
+msgstr "内测版本"
+
+msgid "Join our Discord to meet other players."
+msgstr "加入我们的 Discord，结识其他玩家吧。"
+
+msgid "You can start a two-players game now or wait for more players!"
+msgstr "你现在可以开始一场双人游戏，或者等待更多玩家加入！"
+
+msgid "You can start a three-players game now or wait for more players!"
+msgstr "你现在可以开始一场三人游戏，或者等待更多玩家加入！"
+
+msgid "Start the game now!"
+msgstr "现在开始游戏！"
+
+msgid "FIGHT!"
+msgstr "战斗！"
+
+msgid ""
+"Waiting for your opponents…\n"
+"Tell your friends to join!"
+msgstr ""
+"正在等待你的对手……\n"
+"叫上你的朋友一起来加入吧！"
+
+msgid "Online Game"
+msgstr "在线游戏"
+
+msgid "×1000"
+msgstr "×1000"
+
+msgid "LOADING…"
+msgstr "加载中…"
