@@ -86,6 +86,10 @@ assets/i18n/uk.po
 Максим Горпиніч, Andrij Mizyk, arkeelin, via Weblate.
 CC-BY-SA 4.0.
 
+assets/i18n/zh_Hans.po
+洞真 (无悟), via Weblate.
+CC-BY-SA 4.0.
+
 assets/sprites/menu/language.png
 Based on https://commons.wikimedia.org/wiki/File:Codex_icon_language.svg
 CC-BY 4.0 Wikimedia Design & OOUI team and other contributors
