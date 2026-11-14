@@ -51,6 +51,8 @@ bim::app::user_language(const iscool::preferences::local_preferences& p)
       return iscool::language_name::tr_TR;
     case iscool::iso_639_language_code::uk:
       return iscool::language_name::uk_UA;
+    case iscool::iso_639_language_code::zh:
+      return iscool::language_name::zh_Hans;
     default:
       return iscool::language_name::en_GB;
     }

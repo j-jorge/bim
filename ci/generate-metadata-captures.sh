@@ -175,6 +175,7 @@ all_directories=(br-FR
                  ta-IN
                  tr-TR
                  uk-UA
+                 zh-Hans
                 )
 readarray -t supported_languages < \
           <(find "$script_dir/../assets/i18n/" \
