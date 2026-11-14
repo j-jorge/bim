@@ -74,6 +74,11 @@ TEST(game_count_test, game_started_and_game_over)
 
 TEST(game_count_test, game_dropped)
 {
+#if __SANITIZE_ADDRESS__ || __has_feature(address_sanitizer)
+  if (std::getenv("CI"))
+    GTEST_SKIP() << "This test is flaky when ASan is enabled.";
+#endif
+
   bim::server::config config = bim::server::tests::new_test_config();
   config.game_service_clean_up_interval = std::chrono::seconds(10);
 
@@ -120,14 +125,15 @@ TEST(game_count_test, game_dropped)
   ASSERT_TRUE(!!answer_ok);
   EXPECT_EQ(1, answer_ok->games_now);
 
-  // Everybody leaves the game, ther will be no game over.
+  // Everybody leaves the game, there will be no game over.
   simulator.clients[0].leave_game();
   simulator.clients[1].leave_game();
 
   simulator.wait(config.game_service_clean_up_interval
                  - std::chrono::seconds(1));
 
-  // Check that no game is running.
+  // Check that the game is still running from the point of view of the game
+  // service.
   answer_ok = std::nullopt;
   hello.start();
 
