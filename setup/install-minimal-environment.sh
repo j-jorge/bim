@@ -141,9 +141,14 @@ fi
 case "$target_platform" in
     linux)
         packages+=(libgtk-3-dev
-                   mold
                    patch
                    valgrind)
+
+        # mold has been removed from forky at the time of this writing.
+        if ! grep --quiet '^VERSION_CODENAME=forky$' /etc/os-release
+        then
+            packages+=(mold)
+        fi
         ;;
     android)
         packages+=(gradle)
