@@ -378,11 +378,12 @@ void bim::server::session_service::user_id_response()
             {
               m_sessions.erase(it->second.token);
               m_clients.erase(it);
+              m_statistics.record_session_disconnected(1);
             }
 
           user_session_it->second = session;
 
-          // Make sure to reject requestsbof the same use from the same batch
+          // Make sure to reject requests of the same user from the same batch
           // too.
           for (create_session_result& r : m_create_session_dispatch)
             if (r.session == old_session)
