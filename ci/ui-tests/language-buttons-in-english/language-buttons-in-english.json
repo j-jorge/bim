@@ -89,15 +89,6 @@
       "event": "popup-hidden"
     },
     {
-      "kind": "swipe",
-      "from-node": "overlay/language/client_container/list/view////fr_FR",
-      "to-node": "overlay/language/client_container/list/view////br_FR"
-    },
-    {
-      "kind": "click",
-      "node": "overlay/language/client_container/list/view"
-    },
-    {
       "kind": "click",
       "node": "overlay/language/client_container/list/view////ko_KR",
       "event": "popup-shown"
@@ -124,6 +115,15 @@
       "kind": "click",
       "node": "overlay/container/client_container/no_button",
       "event": "popup-hidden"
+    },
+    {
+      "kind": "swipe",
+      "from-node": "overlay/language/client_container/list/view////fr_FR",
+      "to-node": "overlay/language/client_container/list/view////br_FR"
+    },
+    {
+      "kind": "click",
+      "node": "overlay/language/client_container/list/view"
     },
     {
       "kind": "click",
@@ -210,12 +210,26 @@
     },
     {
       "kind": "click",
+      "node": "overlay/container/client_container/no_button",
+      "event": "popup-hidden"
+    },
+    {
+      "kind": "click",
+      "node": "overlay/language/client_container/list/view////zh_Hans",
+      "event": "popup-shown"
+    },
+    {
+      "kind": "capture",
+      "file": "chinese.png"
+    },
+    {
+      "kind": "click",
       "node": "overlay/container/client_container/yes_button",
       "event": "loaded"
     },
     {
       "kind": "capture",
-      "file": "lobby-ukrainian.png"
+      "file": "lobby-chinese.png"
     }
   ]
 }
