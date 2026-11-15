@@ -1,5 +1,10 @@
 # Next
 
+- Disable the very long tests when Valgrind is enabled, or at least
+  reduce their work.
+- Graceful shutdown of the game server on signal: stop registering to
+  the business, exit when there is no remaining active session.
+- Use a shader to derive the color of the players.
 - Swamps.
 
 # Nice to have
