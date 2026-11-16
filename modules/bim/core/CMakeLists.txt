@@ -26,13 +26,22 @@ endif()
 
 if (BIM_BUILD_TESTS)
   add_library(bim_gtest_main
-    tests/src/gtest-main/gtest_main.cpp
+    tests/gtest-main/gtest_main.cpp
   )
   target_link_libraries(
     bim_gtest_main
     PRIVATE
     GTest::gtest
   )
+
+  add_library(bim_testing
+    tests/testing/src/bim/testing/valgrind.cpp
+  )
+  target_include_directories(
+    bim_testing
+    PUBLIC
+    tests/testing/include/
+    )
 
   add_executable(core-tests
     tests/src/bim/core/bit_map.cpp
