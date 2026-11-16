@@ -20,6 +20,8 @@
 #include <bim/net/message/start.hpp>
 #include <bim/net/message/try_deserialize_message.hpp>
 
+#include <bim/testing/valgrind.hpp>
+
 #include <charconv>
 #include <cstdlib>
 #include <cstring>
@@ -55,7 +57,7 @@ protected:
     else
       {
         m_first_seed = random();
-        m_loops = 100;
+        m_loops = bim::testing::is_running_in_valgrind() ? 1 : 100;
       }
   }
 

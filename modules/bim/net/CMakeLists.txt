@@ -37,4 +37,4 @@ add_executable(net-tests
   tests/src/bim/net/message/hello_ok.cpp
   tests/src/bim/net/message/launch_game.cpp
 )
-target_link_libraries(net-tests PRIVATE bim_net GTest::gtest bim_gtest_main)
+target_link_libraries(net-tests PRIVATE bim_net bim_testing bim_gtest_main)
