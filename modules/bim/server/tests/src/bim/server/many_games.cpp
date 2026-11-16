@@ -14,12 +14,16 @@
 #include <bim/game/feature_flags.hpp>
 #include <bim/game/player_action.hpp>
 
+#include <bim/testing/valgrind.hpp>
+
 #include <iscool/log/log.hpp>
 #include <iscool/log/nature/info.hpp>
 
+#include <algorithm>
 #include <format>
 #include <iostream>
 #include <memory>
+#include <random>
 #include <vector>
 
 #include <gtest/gtest.h>
@@ -73,7 +77,17 @@ TEST_F(many_games_test, run)
     for (std::size_t i = 0, n = all_feature_flags_combined.size(); i != n; ++i)
       all_feature_flags_combined.push_back(all_feature_flags_combined[i] | f);
 
+  const bool is_running_in_valgrind = bim::testing::is_running_in_valgrind();
+
+  if (is_running_in_valgrind)
+    {
+      std::mt19937 rand(std::random_device{}());
+      std::ranges::shuffle(all_feature_flags_combined, rand);
+      all_feature_flags_combined.resize(10);
+    }
+
   std::size_t batch_size = 1;
+  const std::size_t max_batch_size = is_running_in_valgrind ? 2 : 4;
 
   ic_log(iscool::log::nature::info(), "many_games_test",
          "Instantiating clients for {} games.",
@@ -123,9 +137,10 @@ TEST_F(many_games_test, run)
                   m_clients[first_client + i]->game_launch_event->channel)
             << "first_client=" << first_client << ", i=" << i;
 
-      ++batch_size;
-      if (batch_size == 5)
+      if (batch_size == max_batch_size)
         batch_size = 1;
+      else
+        ++batch_size;
     }
 
   const std::size_t client_count = m_clients.size();

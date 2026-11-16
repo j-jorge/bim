@@ -81,6 +81,6 @@ target_link_libraries(
   server-tests
   PRIVATE
   bim_server
-  GTest::gtest
+  bim_testing
   bim_gtest_main
 )
