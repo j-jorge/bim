@@ -93,6 +93,23 @@ if ((CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 
     set(use_mold_default OFF)
   else()
+    if (DEFINED ENV{CI})
+      set(optimized_debug_default TRUE)
+    else()
+      set(optimized_debug_default FALSE)
+    endif()
+
+    option(
+      BIM_OPTIMIZED_DEBUG
+      "Enable some optimization in the debug build."
+      ${optimized_debug_default}
+    )
+
+    message(STATUS "Optimized debug: ${BIM_OPTIMIZED_DEBUG}")
+    if (BIM_OPTIMIZED_DEBUG)
+      add_compile_options(-Og)
+    endif()
+
     try_compile(
       use_mold_default
       SOURCE_FROM_CONTENT main.cpp "int main(){return 0;}"
