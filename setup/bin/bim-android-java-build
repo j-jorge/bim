@@ -172,13 +172,13 @@ android {
   }
 
   repositories {
-    google()
-    mavenCentral()
-
     maven {
       name = 'LocalMaven'
       url = uri('file://$publishing_repository')
     }
+
+    google()
+    mavenCentral()
   }
 
   buildTypes {
