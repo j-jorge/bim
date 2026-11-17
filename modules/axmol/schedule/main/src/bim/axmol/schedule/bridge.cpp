@@ -15,10 +15,9 @@ bim::axmol::schedule::bridge::bridge()
   m_call_key_buffer.reserve(m_key_prefix.size() + 10);
 
   iscool::schedule::initialize(
-      [this](const std::function<void()>& f,
-             const std::chrono::nanoseconds& delay)
+      [this](std::function<void()> f, const std::chrono::nanoseconds& delay)
         {
-          delayed_call(f, delay);
+          delayed_call(std::move(f), delay);
         });
 }
 
@@ -30,19 +29,19 @@ bim::axmol::schedule::bridge::~bridge()
 }
 
 void bim::axmol::schedule::bridge::delayed_call(
-    const std::function<void()>& f, const std::chrono::nanoseconds& delay)
+    std::function<void()> f, const std::chrono::nanoseconds& delay)
 {
   ax::Scheduler& scheduler(*ax::Director::getInstance()->getScheduler());
 
   scheduler.runOnAxmolThread(
-      [this, f, delay]
+      [this, f = std::move(f), delay] mutable
         {
-          schedule_call(f, delay);
+          schedule_call(std::move(f), delay);
         });
 }
 
 void bim::axmol::schedule::bridge::schedule_call(
-    const std::function<void()>& f, const std::chrono::nanoseconds& delay)
+    std::function<void()> f, const std::chrono::nanoseconds& delay)
 {
   constexpr float interval = 0;
   constexpr unsigned int repeat = 0;
@@ -55,7 +54,7 @@ void bim::axmol::schedule::bridge::schedule_call(
   ++m_next_call_id;
 
   ax::Director::getInstance()->getScheduler()->schedule(
-      [&f](float)
+      [f = std::move(f)](float)
         {
           f();
         },

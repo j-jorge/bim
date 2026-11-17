@@ -17,10 +17,10 @@ namespace bim::axmol::schedule
     bridge& operator=(const bridge&) = delete;
 
   private:
-    void delayed_call(const std::function<void()>& f,
+    void delayed_call(std::function<void()> f,
                       const std::chrono::nanoseconds& delay);
 
-    void schedule_call(const std::function<void()>& f,
+    void schedule_call(std::function<void()> f,
                        const std::chrono::nanoseconds& delay);
 
   private:
