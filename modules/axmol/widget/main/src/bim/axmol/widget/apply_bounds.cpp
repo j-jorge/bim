@@ -40,17 +40,14 @@ static void apply_styling(const bim::axmol::widget::context& context,
 
   s.done = true;
 
-  if (s.reference)
-    {
-      const styling_queue::iterator r = queue.find(s.reference);
+  const styling_queue::iterator r = queue.find(s.reference);
 
-      // If the reference is in the queue then it must be processed before the
-      // current node. Otherwise the reference may either be the parent node or
-      // it may have been set in another call. In both cases we consider the
-      // reference to be ready and proceed with the current node.
-      if (r != queue.end())
-        apply_styling(context, queue, *r->first, r->second);
-    }
+  // If the reference is in the queue then it must be processed before the
+  // current node. Otherwise the reference may either be the parent node or it
+  // may have been set in another call. In both cases we consider the reference
+  // to be ready and proceed with the current node.
+  if (r != queue.end())
+    apply_styling(context, queue, *r->first, r->second);
 
   bim::axmol::style::apply_bounds(context.style_cache.get_bounds(*s.style),
                                   node, *s.reference, context.device_scale);

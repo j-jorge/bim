@@ -401,7 +401,7 @@ void bim::game::dump_arena(std::FILE* f, const arena& arena,
           std::print(f, "       xx");
         else
           {
-            char d = '.';
+            char d = '?';
 
             switch (actions[i].movement)
               {

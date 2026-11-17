@@ -662,7 +662,6 @@ void bim::server::game_service::mark_as_ready(
     }
 
   game.ready[existing_index] = true;
-  game.active[existing_index] = true;
 
   game.release_player_at_this_date[existing_index] =
       now + m_disconnection_inactivity_delay;

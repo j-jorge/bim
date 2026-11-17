@@ -471,9 +471,8 @@ bool bim::game::bot::goal_is_feasible(const contest& contest,
           const std::uint8_t next_x = m_goal_path[next].x;
           const std::uint8_t next_y = m_goal_path[next].y;
 
-          if ((next < m_goal_path.size())
-              && is_solid(contest.registry(), contest.entity_map(), next_x,
-                          next_y))
+          if (is_solid(contest.registry(), contest.entity_map(), next_x,
+                       next_y))
             {
               log_event("Goal is infeasible: solid.");
               return false;

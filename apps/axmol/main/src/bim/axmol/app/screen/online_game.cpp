@@ -386,8 +386,7 @@ void bim::axmol::app::online_game::displaying(
 
   bim::axmol::widget::apply_display(
       m_context.get_widget_context()->style_cache, m_controls->all_nodes,
-      *m_style_player[std::min<std::size_t>(event.player_index,
-                                            m_style_player.size())]);
+      *m_style_player[event.player_index]);
 
   m_contest = std::make_unique<bim::game::contest>(event.fingerprint);
   m_game_channel = std::make_unique<iscool::net::message_channel>(

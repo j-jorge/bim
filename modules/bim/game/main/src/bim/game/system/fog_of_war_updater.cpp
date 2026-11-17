@@ -141,7 +141,7 @@ bim::game::fog_of_war_updater::~fog_of_war_updater() = default;
 const bim::table_2d<bim::game::fog_of_war*>&
 bim::game::fog_of_war_updater::fog(std::size_t player_index) const
 {
-  bim_assert(player_index <= m_tables.size());
+  bim_assert(player_index < m_tables.size());
   return m_tables[player_index].fog;
 }
 

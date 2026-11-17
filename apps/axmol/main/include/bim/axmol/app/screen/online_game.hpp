@@ -10,6 +10,7 @@
 #include <bim/game/cell_edge_fwd.hpp>
 #include <bim/game/cell_neighborhood_fwd.hpp>
 #include <bim/game/component/flame_direction_fwd.hpp>
+#include <bim/game/per_player_array.hpp>
 
 #include <bim/bit_map.hpp>
 
@@ -183,7 +184,8 @@ namespace bim::axmol::app
     const iscool::style::declaration& m_style_pad_on_the_right;
     const iscool::style::declaration& m_style_use_joystick;
     const iscool::style::declaration& m_style_use_d_pad;
-    const std::array<const iscool::style::declaration*, 4> m_style_player;
+    const bim::game::per_player_array<const iscool::style::declaration*>
+        m_style_player;
 
     iscool::schedule::scoped_connection m_tick_connection;
 
