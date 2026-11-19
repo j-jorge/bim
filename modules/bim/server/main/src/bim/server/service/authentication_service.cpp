@@ -49,6 +49,7 @@ bim::server::authentication_service::authentication_service(
   , m_clean_up_interval(config.authentication_clean_up_interval)
   , m_pending_authentication_removal_delay(
         config.pending_authentication_removal_delay)
+  , m_shutting_down(false)
 {
   m_hello_ok.version = bim::net::protocol_version;
   m_hello_ok.name = config.name;
@@ -76,6 +77,11 @@ bim::server::authentication_service::authentication_service(
 }
 
 bim::server::authentication_service::~authentication_service() = default;
+
+void bim::server::authentication_service::shut_down()
+{
+  m_shutting_down = true;
+}
 
 void bim::server::authentication_service::check_session(
     const iscool::net::endpoint& endpoint, const iscool::net::message& message)
@@ -120,11 +126,26 @@ void bim::server::authentication_service::check_authentication(
   ic_log(iscool::log::nature::info(), "authentication_service",
          "Received authentication request from token {}.", token);
 
+  if (m_shutting_down)
+    {
+      ic_log(iscool::log::nature::info(), "authentication_service",
+             "Authentication request from token {}: maintenance.", token);
+
+      send_error(endpoint, token,
+                 bim::net::authentication_error_code::maintenance);
+      return;
+    }
+
   const std::string client_ip_address = endpoint.address().to_string();
 
   if (message->get_protocol_version() != bim::net::protocol_version)
     {
-      send_bad_protocol(endpoint, client_ip_address, *message);
+      ic_log(iscool::log::nature::info(), "authentication_service",
+             "Authentication request from token {}: bad protocol {}.", token,
+             message->get_protocol_version());
+
+      send_error(endpoint, token,
+                 bim::net::authentication_error_code::bad_protocol);
       return;
     }
 
@@ -134,8 +155,14 @@ void bim::server::authentication_service::check_authentication(
   switch (r.state)
     {
     case create_session_result_state::rejected:
-      send_refused(endpoint, client_ip_address, token);
-      break;
+      {
+        ic_log(iscool::log::nature::info(), "authentication_service",
+               "Authentication refused for IP {}.", client_ip_address);
+        send_error(endpoint, token,
+                   bim::net::authentication_error_code::refused);
+
+        break;
+      }
     case create_session_result_state::accepted:
       send_accepted(endpoint, token, r.session);
       break;
@@ -159,37 +186,12 @@ void bim::server::authentication_service::send_accepted(
   m_message_pool.release(s.id);
 }
 
-void bim::server::authentication_service::send_bad_protocol(
-    const iscool::net::endpoint& endpoint,
-    const std::string& client_ip_address,
-    const bim::net::authentication& message)
+void bim::server::authentication_service::send_error(
+    const iscool::net::endpoint& endpoint, bim::net::client_token token,
+    bim::net::authentication_error_code e)
 {
-  const bim::net::client_token token = message.get_request_token();
-
-  ic_log(iscool::log::nature::info(), "authentication_service",
-         "Authentication request from token {}: bad protocol {}.", token,
-         client_ip_address, message.get_protocol_version());
-
   const iscool::net::message_pool::slot s = m_message_pool.pick_available();
-  bim::net::authentication_ko(
-      token, bim::net::authentication_error_code::bad_protocol)
-      .build_message(*s.value);
-
-  m_message_stream.send(endpoint, *s.value);
-  m_message_pool.release(s.id);
-}
-
-void bim::server::authentication_service::send_refused(
-    const iscool::net::endpoint& endpoint,
-    const std::string& client_ip_address, bim::net::client_token token)
-{
-  ic_log(iscool::log::nature::info(), "authentication_service",
-         "Authentication refused for IP {}.", client_ip_address);
-
-  const iscool::net::message_pool::slot s = m_message_pool.pick_available();
-  bim::net::authentication_ko(token,
-                              bim::net::authentication_error_code::refused)
-      .build_message(*s.value);
+  bim::net::authentication_ko(token, e).build_message(*s.value);
 
   m_message_stream.send(endpoint, *s.value);
   m_message_pool.release(s.id);

@@ -16,16 +16,22 @@ bim::server::lobby_service::lobby_service(
   , m_named_game_encounter(config, socket, session_service, game_service)
   , m_random_game_encounter(config, socket, session_service, game_service,
                             m_discord_publisher)
+  , m_shutting_down(false)
 {}
 
 bim::server::lobby_service::~lobby_service() = default;
+
+void bim::server::lobby_service::shut_down()
+{
+  m_shutting_down = true;
+}
 
 void bim::server::lobby_service::process(const iscool::net::endpoint& endpoint,
                                          const iscool::net::message& message)
 {
   bim_assert(message.get_session_id() != 0);
 
-  if (message.get_channel_id() != 0)
+  if (m_shutting_down || (message.get_channel_id() != 0))
     return;
 
   switch (message.get_type())

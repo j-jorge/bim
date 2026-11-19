@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-only
 #pragma once
 
+#include <bim/net/message/authentication_error_code.hpp>
 #include <bim/net/message/client_token.hpp>
 #include <bim/net/message/hello_ok.hpp>
 
@@ -37,15 +38,19 @@ namespace bim::server
                            statistics_service& statistics);
     ~authentication_service();
 
+    void shut_down();
+
   private:
     void check_session(const iscool::net::endpoint& endpoint,
                        const iscool::net::message& message);
 
     void check_authentication(const iscool::net::endpoint& endpoint,
                               const iscool::net::message& m);
-    void send_bad_protocol(const iscool::net::endpoint& endpoint,
-                           const std::string& client_ip_address,
-                           const bim::net::authentication& message);
+    void send_error(const iscool::net::endpoint& endpoint,
+                    bim::net::client_token token,
+                    bim::net::authentication_error_code e);
+    void send_maintenance(const iscool::net::endpoint& endpoint,
+                          const bim::net::authentication& message);
     void send_accepted(const iscool::net::endpoint& endpoint,
                        bim::net::client_token token,
                        iscool::net::session_id session);
@@ -88,5 +93,7 @@ namespace bim::server
     iscool::schedule::scoped_connection m_clean_up_connection;
     const std::chrono::seconds m_clean_up_interval;
     const std::chrono::seconds m_pending_authentication_removal_delay;
+
+    bool m_shutting_down;
   };
 }

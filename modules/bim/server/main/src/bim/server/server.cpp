@@ -32,6 +32,17 @@ bim::server::server::server(const config& config)
         });
 }
 
+void bim::server::server::shut_down()
+{
+  m_authentication_service.shut_down();
+  m_lobby_service.shut_down();
+}
+
+bool bim::server::server::has_any_activity() const
+{
+  return m_game_service.has_active_games();
+}
+
 void bim::server::server::dispatch(const iscool::net::endpoint& endpoint,
                                    const iscool::net::message& message)
 {

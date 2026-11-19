@@ -456,6 +456,11 @@ bim::server::game_service::game_service(const config& config,
 
 bim::server::game_service::~game_service() = default;
 
+bool bim::server::game_service::has_active_games() const
+{
+  return !m_games.empty();
+}
+
 bool bim::server::game_service::is_in_active_game(
     iscool::net::session_id session) const
 {

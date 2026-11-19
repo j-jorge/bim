@@ -30,6 +30,8 @@ namespace bim::server::tests
     void tick(int client_index, std::size_t tick_count);
     void wait(std::chrono::milliseconds d);
     void wait(const std::function<bool()>& ready);
+    void wait(const std::function<bool()>& ready,
+              std::chrono::milliseconds tick_delay);
 
     void drop_bombs(std::uint8_t client_index_mask);
     void wait_game_over();
@@ -40,10 +42,10 @@ namespace bim::server::tests
     iscool::log::scoped_initializer m_log;
     bim::server::tests::fake_scheduler m_scheduler;
 
-    bim::server::server m_server;
     iscool::net::socket_stream m_socket_stream;
 
   public:
+    bim::server::server server;
     iscool::net::message_stream message_stream;
     const bim::server::config config;
     std::array<bim::server::tests::test_client, 4> clients;

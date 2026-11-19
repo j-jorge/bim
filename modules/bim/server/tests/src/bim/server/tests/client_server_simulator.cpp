@@ -18,9 +18,9 @@
 bim::server::tests::client_server_simulator::client_server_simulator(
     std::uint8_t player_count, const bim::server::config& config)
   : m_player_count(player_count)
-  , m_server(config)
   , m_socket_stream("localhost:" + std::to_string(config.port),
                     iscool::net::socket_mode::client{})
+  , server(config)
   , message_stream(m_socket_stream)
   , config(config)
   , clients{ bim::server::tests::test_client(m_scheduler, message_stream),
@@ -173,10 +173,16 @@ void bim::server::tests::client_server_simulator::wait(
 void bim::server::tests::client_server_simulator::wait(
     const std::function<bool()>& ready)
 {
+  wait(ready, std::chrono::milliseconds(20));
+}
+
+void bim::server::tests::client_server_simulator::wait(
+    const std::function<bool()>& ready, std::chrono::milliseconds tick_delay)
+{
   for (int i = 0; i != 500; ++i)
     {
       std::this_thread::sleep_for(std::chrono::seconds(0));
-      m_scheduler.tick(std::chrono::milliseconds(20));
+      m_scheduler.tick(tick_delay);
 
       if (ready())
         break;

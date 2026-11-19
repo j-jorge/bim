@@ -22,6 +22,9 @@ namespace bim::server
   public:
     explicit server(const config& config);
 
+    void shut_down();
+    [[nodiscard]] bool has_any_activity() const;
+
   private:
     void dispatch(const iscool::net::endpoint& endpoint,
                   const iscool::net::message& message);

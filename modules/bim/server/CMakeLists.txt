@@ -58,6 +58,7 @@ add_executable(server-tests
   tests/src/bim/server/player_disconnection.cpp
   tests/src/bim/server/rolling_statistics.cpp
   tests/src/bim/server/server_bots.cpp
+  tests/src/bim/server/shut_down.cpp
 
   tests/src/bim/server/business/hello.cpp
   tests/src/bim/server/business/user_id.cpp

@@ -31,12 +31,14 @@
 
 #include <cpptrace/cpptrace.hpp>
 
+#include <atomic>
 #include <chrono>
 #include <csignal>
 #include <cstdio>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
+#include <optional>
 #include <random>
 #include <stdexcept>
 #include <string_view>
@@ -44,7 +46,10 @@
 #include <thread>
 #include <unistd.h>
 
-static bool g_keep_running = true;
+constexpr std::chrono::minutes g_shut_down_delay(5);
+
+static std::atomic_flag g_shut_down(false);
+static std::atomic_flag g_quit(false);
 static std::string g_stack_trace_dumper;
 
 namespace
@@ -69,7 +74,8 @@ namespace
 
 static void interrupt_handler(int)
 {
-  g_keep_running = false;
+  if (g_shut_down.test_and_set())
+    g_quit.test_and_set();
 }
 
 static void print_error_safe(const char* message)
@@ -426,7 +432,7 @@ static command_line parse_command_line(int argc, char* argv[])
   boost::program_options::options_description game_options(
       "Game config options");
   game_options.add_options()(
-      "game-service-clean-up_interval",
+      "game-service-clean-up-interval",
       boost::program_options::value<std::int64_t>(),
       "Time interval at which we remove the games for which no activity has"
       " been observed, in seconds.");
@@ -674,20 +680,38 @@ int main(int argc, char* argv[])
   ic_log(iscool::log::nature::info(), "server", "Running on port {}.",
          command_line.options->config.port);
 
-  const bim::server::server server(command_line.options->config);
+  bim::server::server server(command_line.options->config);
 
   using clock = std::chrono::steady_clock;
 
   std::chrono::nanoseconds slice_duration(0);
   clock::time_point last_update = clock::now();
+  std::optional<clock::time_point> shut_down_date;
 
   constexpr std::chrono::milliseconds tick_interval(10);
 
-  while (g_keep_running)
+  while (!g_quit.test())
     {
       const clock::time_point start = clock::now();
       slice_duration += start - last_update;
       last_update = start;
+      const bool shut_down = g_shut_down.test();
+
+      if (shut_down_date)
+        {
+          if (start - *shut_down_date >= g_shut_down_delay)
+            break;
+        }
+      else if (shut_down)
+        {
+          ic_log(iscool::log::nature::info(), "server", "Shutting down in {}.",
+                 g_shut_down_delay);
+          shut_down_date = start;
+          server.shut_down();
+        }
+
+      if (shut_down && !server.has_any_activity())
+        break;
 
       if (slice_duration >= std::chrono::milliseconds(1))
         {

@@ -40,6 +40,8 @@ namespace bim::server
                  session_service& session, statistics_service& statistics);
     ~game_service();
 
+    bool has_active_games() const;
+
     bool is_in_active_game(iscool::net::session_id session) const;
     bool is_playing(iscool::net::channel_id channel) const;
 

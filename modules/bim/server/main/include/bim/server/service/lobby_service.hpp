@@ -25,6 +25,8 @@ namespace bim::server
                   game_service& game_service);
     ~lobby_service();
 
+    void shut_down();
+
     void process(const iscool::net::endpoint& endpoint,
                  const iscool::net::message& message);
 
@@ -42,5 +44,7 @@ namespace bim::server
     discord_publisher_service m_discord_publisher;
     named_game_encounter_service m_named_game_encounter;
     random_game_encounter_service m_random_game_encounter;
+
+    bool m_shutting_down;
   };
 }
