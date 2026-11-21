@@ -3,7 +3,6 @@
 
 #include <bim/server/config.hpp>
 #include <bim/server/service/bot_availability.hpp>
-#include <bim/server/service/discord_publisher_service.hpp>
 #include <bim/server/service/game_service.hpp>
 
 #include <bim/net/message/accept_random_game.hpp>
@@ -15,10 +14,8 @@
 
 bim::server::random_game_encounter_service::random_game_encounter_service(
     const config& config, iscool::net::socket_stream& socket,
-    const session_service& session_service, game_service& game_service,
-    discord_publisher_service& discord)
+    const session_service& session_service, game_service& game_service)
   : m_game_service(game_service)
-  , m_discord(discord)
   , m_matchmaking_service(config, socket, session_service, game_service,
                           bot_availability::available)
   , m_auto_start_delay(config.random_game_auto_start_delay)
@@ -58,24 +55,11 @@ void bim::server::random_game_encounter_service::process(
       m_matchmaking_service.add_in_any_encounter(
           endpoint, session, request_token, request.get_features());
 
-  bool send_notification = true;
-
   if (encounter)
-    {
-      m_session_to_encounter[session] = encounter->id;
-
-      // If there is a single player in the encounter, it is the player who
-      // sent the request we are currently processing. This happens when the
-      // matchmaking_service finds existing encounter and remove all its
-      // sessions due to inactivity.
-      send_notification &= (encounter->player_count == 1);
-    }
+    m_session_to_encounter[session] = encounter->id;
   else
     m_session_to_encounter[session] = m_matchmaking_service.new_encounter(
         endpoint, session, request_token, request.get_features());
-
-  if (send_notification)
-    m_discord.send_matchmaking_notification();
 
   clean_up();
 }

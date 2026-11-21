@@ -12,10 +12,8 @@
 bim::server::lobby_service::lobby_service(
     const config& config, iscool::net::socket_stream& socket,
     const session_service& session_service, game_service& game_service)
-  : m_discord_publisher(config)
-  , m_named_game_encounter(config, socket, session_service, game_service)
-  , m_random_game_encounter(config, socket, session_service, game_service,
-                            m_discord_publisher)
+  : m_named_game_encounter(config, socket, session_service, game_service)
+  , m_random_game_encounter(config, socket, session_service, game_service)
   , m_shutting_down(false)
 {}
 

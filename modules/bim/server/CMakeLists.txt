@@ -17,7 +17,6 @@ add_library(bim_server
   main/src/bim/server/service/authentication_service.cpp
   main/src/bim/server/service/business_registration_service.cpp
   main/src/bim/server/service/contest_timeline_service.cpp
-  main/src/bim/server/service/discord_publisher_service.cpp
   main/src/bim/server/service/game_info.cpp
   main/src/bim/server/service/game_service.cpp
   main/src/bim/server/service/geolocation_service.cpp

@@ -166,24 +166,6 @@ namespace bim::server
     std::string host;
 
     /**
-     * Whether or not we send notifications to a Discord channel when players
-     * are waiting for a random opponent.
-     */
-    bool enable_discord_matchmaking_notifications;
-
-    /**
-     * Discord endpoint where to send a message when a player is waiting for a
-     * random opponent.
-     */
-    std::string discord_matchmaking_notification_url;
-
-    /**
-     * How long we wait between two messages sent to
-     * discord_matchmaking_notification_url.
-     */
-    std::chrono::seconds discord_matchmaking_notification_interval;
-
-    /**
      * Whether or not we should enable the karma service to filter incoming
      * connections.
      */

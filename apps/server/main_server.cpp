@@ -413,20 +413,6 @@ static command_line parse_command_line(int argc, char* argv[])
       "How long to wait for the players to be ready before automatically"
       " launching a random game, in seconds.");
 
-  matchmaking_options.add_options()(
-      "enable-discord-matchmaking-notifications",
-      "Whether or not we send notifications to a Discord channel when players "
-      "are waiting for a random opponent.");
-  matchmaking_options.add_options()(
-      "discord-matchmaking-notification-interval",
-      boost::program_options::value<std::int64_t>(),
-      "Interval in seconds between two messages sent "
-      "to --discord-matchmaking-notification-url.");
-  matchmaking_options.add_options()(
-      "discord-matchmaking-notification-url",
-      boost::program_options::value<std::string>(),
-      "Discord endpoint where to send a message when "
-      "a player is waiting for a random opponent");
   all_options.add(matchmaking_options);
 
   boost::program_options::options_description game_options(
@@ -567,14 +553,6 @@ static command_line parse_command_line(int argc, char* argv[])
 
   if (result.config.enable_contest_timeline_recording)
     parse_config_option(contest_timeline_folder);
-
-  parse_config_option(enable_discord_matchmaking_notifications);
-
-  if (result.config.enable_discord_matchmaking_notifications)
-    {
-      parse_config_option(discord_matchmaking_notification_url);
-      parse_config_option(discord_matchmaking_notification_interval);
-    }
 
   parse_config_option(enable_geolocation);
 
