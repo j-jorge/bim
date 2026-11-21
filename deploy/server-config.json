@@ -5,7 +5,7 @@
   "enable-contest-timeline-recording": true,
   "contest-timeline-folder": "/opt/bim/persistent/contest/",
 
-  "game-service-max-duration-for-short-game": 30,
+  "game-service-max-duration-for-short-game": 20,
 
   "enable-geolocation": true,
   "geolocation-clean-up-interval": 86400,
